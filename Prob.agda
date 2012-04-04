@@ -3,20 +3,23 @@ module Prob where
 open import Data.Bool
 open import Data.Nat
 open import Data.Vec
+open import Data.Unit using (⊤)
+open import Data.Empty using (⊥)
 
 open import Function
 
 open import Relation.Binary.PropositionalEquality.NP
 open import Relation.Nullary
 
-record ]0,1]-ops (]0,1] : Set) : Set where
+record ]0,1]-ops (]0,1] : Set) (_≤E_ : ]0,1] → ]0,1] → Set) : Set where
+  constructor mk
   field     
     1E : ]0,1]
     _+E_ : ]0,1] → ]0,1] → ]0,1]
     _·E_ : ]0,1] → ]0,1] → ]0,1]
-    1/E_ : ]0,1] → ]0,1]
+    _/E_<_> : (x y : ]0,1]) → x ≤E y → ]0,1]
 
-module [0,1] {]0,1]}(]0,1]R : ]0,1]-ops ]0,1]) where
+module [0,1] {]0,1] _≤E_} (]0,1]R : ]0,1]-ops ]0,1] _≤E_) where
 
   open ]0,1]-ops ]0,1]R public
 
@@ -27,18 +30,20 @@ module [0,1] {]0,1]}(]0,1]R : ]0,1]-ops ]0,1]) where
    0I : [0,1]
    _I : ]0,1] → [0,1]
 
+  data _≤I_ : [0,1] → [0,1] → Set where
+    z≤n : ∀ {n} → 0I ≤I n
+    E≤E : ∀ {x y} → x ≤E y → (x I) ≤I (y I)
+
   1I : [0,1]
   1I = 1E I
 
   Pos : [0,1] → Set
-  Pos x = ¬ (x ≡ 0I)
+  Pos 0I    = ⊥
+  Pos (_ I) = ⊤
 
   _<_> : (x : [0,1]) → Pos x → ]0,1] 
-  0I < pos > with pos refl
-  ... | ()
+  0I < () >
   (x I) < pos > = x
-
-  
 
   _+I_ : [0,1] → [0,1] → [0,1]
   0I +I x = x
@@ -50,11 +55,12 @@ module [0,1] {]0,1]}(]0,1]R : ]0,1]-ops ]0,1]) where
   (x I) ·I 0I = 0I
   (x I) ·I (x₁ I) = (x ·E x₁) I
 
-  1/I_ : ]0,1] → [0,1]
-  1/I x = (1/E x) I
+  -- 1/I1+_ : ℕ → [0,1]
 
-  _/I_ : [0,1] → ]0,1] → [0,1]
-  x /I y = x ·I (1/I y)
+  _/I_<_,_> : (x y : [0,1]) → x ≤I y → Pos y → [0,1]
+  _  /I 0I < _ , () >
+  0I /I _  < _ , _ > = 0I
+  (x I) /I (y I) < E≤E pf , _ > = (x /E y < pf >)I
 
   +I-identity : (x : [0,1]) → x ≡ 0I +I x
   +I-identity x = refl
@@ -63,14 +69,13 @@ module [0,1] {]0,1]}(]0,1]R : ]0,1]-ops ]0,1]) where
     +I-sym : (x y : [0,1]) → x +I y ≡ y +I x
     +I-assoc : (x y z : [0,1]) → x +I y +I z ≡ x +I (y +I z)
 
-    _≤I_ : [0,1] → [0,1] → Set
     ≤I-refl : {x : [0,1]} → x ≤I x
 
     ≤I-trans : {x y z : [0,1]} → x ≤I y → y ≤I z → x ≤I z
     ≤I-mono  : (x : [0,1]){y z : [0,1]} → y ≤I z → y ≤I z +I x
     ≤I-pres  : (x : [0,1]){y z : [0,1]} → y ≤I z → x +I y ≤I x +I z
 
-module Univ ( ]0,1] : Set)(]0,1]R : ]0,1]-ops ]0,1])
+module Univ {]0,1] _≤E_} (]0,1]R : ]0,1]-ops ]0,1] _≤E_)
             (U : Set)
             (size-1 : ℕ) 
             (allU : Vec U (suc size-1))
@@ -97,14 +102,30 @@ module Univ ( ]0,1] : Set)(]0,1]R : ]0,1]-ops ]0,1])
     _∩_ : Event → Event → Event
     A₁ ∩ A₂ = λ x → A₁ x ∧ A₂ x
 
+    _⊆_ : Event → Event → Set
+    A ⊆ B = ∀ x → T(A x) → T(B x)
+
     ℂ[_] : Event → Event
     ℂ[ A ] = not ∘ A
 
     Pr[_] : Event → [0,1]
     Pr[ A ] = sumP (pr_∋_ A) allU
 
+    postulate
+      Pr-mono : ∀ {A B} → A ⊆ B → Pr[ A ] ≤I Pr[ B ]
+
+    ∪-lem : ∀ {A} B → A ⊆ (A ∪ B)
+    ∪-lem {A} _ x with A x
+    ... | true = id
+    ... | false = λ()
+
+    ∩-lem : ∀ A {B} → (A ∩ B) ⊆ B
+    ∩-lem A x with A x
+    ... | true  = id
+    ... | false = λ()
+
     Pr[_∣_]<_> : (A B : Event)(pf : Pos Pr[ B ]) → [0,1]   
-    Pr[ A ∣ B ]< pr > = Pr[ A ∩ B ] /I Pr[ B ] < pr >  
+    Pr[ A ∣ B ]< pr > = Pr[ A ∩ B ] /I Pr[ B ] < Pr-mono (∩-lem A) , pr >
 
     _ind_ : (A B : Event) → Set
     A ind B = Pr[ A ] ·I Pr[ B ] ≡ Pr[ A ∩ B ]
@@ -146,4 +167,4 @@ module Univ ( ]0,1] : Set)(]0,1]R : ]0,1]-ops ]0,1])
  
        -- ∀ (a b) . Pr[X = a and Y = b] = Pr[X = a] · Pr[Y = b]
        _indRV_ : RV → RV → Set
-       X indRV Y = (a b : V) → (X ^-1 a) ind (Y ^-1 b) 
+       X indRV Y = (a b : V) → (X ^-1 a) ind (Y ^-1 b)
