@@ -217,8 +217,14 @@ module Univ {]0,1[ _<E_} (]0,1[R : ]0,1[-ops ]0,1[ _<E_)
   sumP P []       = 0I
   sumP P (x ∷ xs) = (P x) +I (sumP P xs)
 
-  module Prob (P : U → [0,1])
-              (sumP≡1 : sumP P allU ≡ 1I) where
+  record Distr : Set where
+    constructor _,_
+    field
+      P : U → [0,1]
+      sumP≡1 : sumP P allU ≡ 1I
+
+  module Prob (d : Distr) where
+    open Distr d
     
     Event : Set
     Event = U → Bool 
