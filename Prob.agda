@@ -15,7 +15,7 @@ open import Relation.Nullary
 record ]0,1[-ops (]0,1[ : Set) (_<E_ : ]0,1[ → ]0,1[ → Set) : Set where
   constructor mk
 
-  field     
+  field
     -- 1E : ]0,1]
     1+_/1+x_ : ℕ → ℕ → ]0,1[
     _+E_ : ]0,1[ → ]0,1[ → ]0,1[
@@ -33,7 +33,7 @@ record ]0,1[-ops (]0,1[ : Set) (_<E_ : ]0,1[ → ]0,1[ → Set) : Set where
     ·E-anti₂ : (x : ]0,1[){y z : ]0,1[} → y <E z → (x ·E y) <E z
     ·/E-assoc : (x y z : ]0,1[)(pf : y <E z) → x ·E (y /E z < pf >) ≡ (x ·E y) /E z < ·E-anti₂ x pf >
 
-  -- proofs ≡ maybe should be some Equivalence ≈ 
+  -- proofs ≡ maybe should be some Equivalence ≈
   field
     +E-sym : (x y : ]0,1[) → x +E y ≡ y +E x
     +E-assoc : (x y z : ]0,1[) → (x +E y) +E z ≡ x +E (y +E z)
@@ -44,14 +44,14 @@ module ]0,1[-ℚ where
     1+_/2+x+_ : ℕ → ℕ → ]0,1[
   -- toℚ : ]0,1] → ℚ
   -- toℚ (1+ x /1+x+ y) = (1 + x) /ℚ (1 + x + y)
-  
+
   postulate
     _<E_ : ]0,1[ → ]0,1[ → Set
   -- (1+ x /1+x+ y) ≤E (1+ x' /1+x+ y') = ?
   -- (1 + x' + y') * (1 + x) ≤E (1 + x + y) * (1 + x') = ?
   postulate
     _+E_ : ]0,1[ → ]0,1[ → ]0,1[
-    _·E_ : ]0,1[ → ]0,1[ → ]0,1[ 
+    _·E_ : ]0,1[ → ]0,1[ → ]0,1[
     _/E_<_> : (x y : ]0,1[) → x <E y → ]0,1[
 
   postulate
@@ -106,7 +106,7 @@ module [0,1] {]0,1[ _<E_} (]0,1[R : ]0,1[-ops ]0,1[ _<E_) where
   Inc 1I = ⊥
   Inc (x I) = ⊤
 
-  _<_> : (x : [0,1]) → Inc x → ]0,1[ 
+  _<_> : (x : [0,1]) → Inc x → ]0,1[
   0I < () >
   1I < () >
   (x I) < pos > = x
@@ -127,12 +127,12 @@ module [0,1] {]0,1[ _<E_} (]0,1[R : ]0,1[-ops ]0,1[ _<E_) where
 
   -- 1/I1+_ : ℕ → [0,1]
 
- 
+
   _/I_<_,_> : (x y : [0,1]) → x ≤I y → Pos y → [0,1]
   x /I 0I    < _        , () >
   x /I 1I    < _        , _  > = x
   0I /I _    < _        , _  > = 0I
-  1I /I _ I  < ()       , _  > 
+  1I /I _ I  < ()       , _  >
   (x I) /I y I < E≤E pf , _  > = (x /E y < pf >) I
   (x I) /I .x I < E≡E   , _  > = 1I
 
@@ -207,9 +207,9 @@ module [0,1] {]0,1[ _<E_} (]0,1[R : ]0,1[-ops ]0,1[ _<E_) where
 
 module Univ {]0,1[ _<E_} (]0,1[R : ]0,1[-ops ]0,1[ _<E_)
             (U : Set)
-            (size-1 : ℕ) 
+            (size-1 : ℕ)
             (allU : Vec U (suc size-1))
-            (x∈allU : (x : U) → x ∈ allU)  where 
+            (x∈allU : (x : U) → x ∈ allU)  where
 
   open [0,1] ]0,1[R
 
@@ -225,10 +225,10 @@ module Univ {]0,1[ _<E_} (]0,1[R : ]0,1[-ops ]0,1[ _<E_)
 
   module Prob (d : Distr) where
     open Distr d
-    
+
     Event : Set
-    Event = U → Bool 
-  
+    Event = U → Bool
+
     pr_∋_ : Event → U → [0,1]
     pr A ∋ x = if A x then P x else 0I
 
@@ -260,7 +260,7 @@ module Univ {]0,1[ _<E_} (]0,1[R : ]0,1[-ops ]0,1[ _<E_)
     ... | true  = id
     ... | false = λ()
 
-    Pr[_∣_]<_> : (A B : Event)(pf : Pos Pr[ B ]) → [0,1]   
+    Pr[_∣_]<_> : (A B : Event)(pf : Pos Pr[ B ]) → [0,1]
     Pr[ A ∣ B ]< pr > = Pr[ A ∩ B ] /I Pr[ B ] < Pr-mono (∩-lem A) , pr >
 
     _ind_ : (A B : Event) → Set
@@ -274,33 +274,33 @@ module Univ {]0,1[ _<E_} (]0,1[R : ]0,1[-ops ]0,1[ _<E_)
       sA₂ = sumP (pr_∋_ A₂)
       go : {n : ℕ}(xs : Vec U n) → sumP (pr_∋_ (A₁ ∪ A₂)) xs ≤I sumP (pr_∋_ A₁) xs +I sumP (pr_∋_ A₂) xs
       go [] = ≤I-refl
-      go (x ∷ xs) with A₁ x | A₂ x 
+      go (x ∷ xs) with A₁ x | A₂ x
       ... | true  | true  rewrite +I-assoc (P x) (sA₁ xs) (P x +I sA₂ xs)
                                 | +I-sym (P x) (sA₂ xs)
                                 | sym (+I-assoc (sA₁ xs) (sA₂ xs) (P x))
-                                = ≤I-pres (P x) (≤I-mono (P x) (go xs)) 
+                                = ≤I-pres (P x) (≤I-mono (P x) (go xs))
       ... | true  | false rewrite +I-assoc (P x) (sA₁ xs) (sA₂ xs)
                                 = ≤I-pres (P x) (go xs)
       ... | false | true  rewrite sym (+I-assoc (sA₁ xs) (P x) (sA₂ xs))
                                 | +I-sym (sA₁ xs) (P x)
                                 | +I-assoc (P x) (sA₁ xs) (sA₂ xs)
                                 = ≤I-pres (P x) (go xs)
-      ... | false | false = go xs 
+      ... | false | false = go xs
 
     module RandomVar (V : Set) (_==V_ : V → V → Bool) where
        RV : Set
        RV = U → V
 
        _^-1_ : RV → V → Event
-       RV ^-1 v = λ x → RV x ==V v 
+       RV ^-1 v = λ x → RV x ==V v
 
-       _≡r_ : RV → V → Event 
+       _≡r_ : RV → V → Event
        RV ≡r v = RV ^-1 v
- 
+
        -- sugar, socker et sucre
        Pr[_≡_] : RV → V → [0,1]
        Pr[ X ≡ v ] = Pr[ X ≡r v ]
- 
+
        -- ∀ (a b) . Pr[X = a and Y = b] = Pr[X = a] · Pr[Y = b]
        _indRV_ : RV → RV → Set
        X indRV Y = (a b : V) → (X ^-1 a) ind (Y ^-1 b)
