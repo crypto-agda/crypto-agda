@@ -21,6 +21,7 @@ record ]0,1[-ops (]0,1[ : Set) (_<E_ : ]0,1[ → ]0,1[ → Set) : Set where
     _+E_ : ]0,1[ → ]0,1[ → ]0,1[
     _·E_ : ]0,1[ → ]0,1[ → ]0,1[
     _/E_<_> : (x y : ]0,1[) → x <E y → ]0,1[
+    1-E_ : ]0,1[ → ]0,1[
 
    -- proofs <E
   field
@@ -49,10 +50,39 @@ module ]0,1[-ℚ where
     _<E_ : ]0,1[ → ]0,1[ → Set
   -- (1+ x /1+x+ y) ≤E (1+ x' /1+x+ y') = ?
   -- (1 + x' + y') * (1 + x) ≤E (1 + x + y) * (1 + x') = ?
+
+  -- 1 - ((1 + x) / (2 + x + y))
+  --  ≡ (2 + x + y - (1 + x)) / (2 + x + y)
+  --  ≡ (1 + y) / (2 + x + y)
+  --  ≡ (1 + y) / (2 + y + x)
+  1-E_ : ]0,1[ → ]0,1[
+  1-E (1+ x /2+x+ y) = 1+ y /2+x+ x
+
+  -- ((1 + x) / (2 + x + y)) · ((1 + x') / (2 + x' + y'))
+  --  ≡ ((1 + x) · (1 + x')) / ((2 + x + y) · (2 + x' + y'))
+  --  ≡ (1 + x + x' + x · x') / (4 + 2x + 2y + 2x' + 2y' + xx' + xy' + yx' + yy')
+  --  ≡ (1 + (x + x' + xx')) / (2 + (x + x' + xx') + (2 + x + 2y + x' + xy' + yx' + yy'))
+  _·E_ : ]0,1[ → ]0,1[ → ]0,1[
+  (1+ x /2+x+ y) ·E (1+ x' /2+x+ y') = 1+ x'' /2+x+ y''
+    where x'' = x + x' + x * x'
+          y'' = 2 + x + 2 * y + x' + x * y' + y * x' + y * y'
+
+  -- ((1 + x) / (2 + x + y)) / ((1 + x') / (2 + x' + y'))
+  --   ≡ ((1 + x) · (2 + x' + y')) / ((1 + x') · (2 + x + y))
+  --   ≡ (2 + x' + y' + 2x + xx' + xy') / (2 + x + y + 2x' + xx' + x'y)
+  --   ≡ (1 + (1 + x' + y' + 2x + xx' + xy')) / (2 + (1 + x' + y' + 2x + xx' + xy') + y + x' + x'y - (1 + y' + x + xy'))
+  --   ok provided that:
+  --   ((1 + x) / (2 + x + y)) < ((1 + x') / (2 + x' + y'))
+  --   implies
+  --   (1 + y' + x + xy') ≤ (y + x' + x'y)
+  --   which remains to be checked
+  _/E_<_> : (x y : ]0,1[) → x <E y → ]0,1[
+  (1+ x /2+x+ y) /E (1+ x' /2+x+ y') < _ > = 1+ x'' /2+x+ y''
+    where x'' = 1 + x' + y' + 2 * x + x * x' + x * y'
+          y'' = y + x' + x' * y ∸ 1 ∸ y' ∸ x ∸ x * y'
+
   postulate
     _+E_ : ]0,1[ → ]0,1[ → ]0,1[
-    _·E_ : ]0,1[ → ]0,1[ → ]0,1[
-    _/E_<_> : (x y : ]0,1[) → x <E y → ]0,1[
 
   postulate
     <E-trans : ∀ {x y z} → x <E y → y <E z → x <E z
@@ -70,7 +100,7 @@ module ]0,1[-ℚ where
     ·/E-identity : (x : ]0,1[) {y : ]0,1[} → x ≡ (x ·E y) /E y < ·E-anti₁ x >
 
   ops : ]0,1[-ops ]0,1[ _<E_
-  ops = mk 1+_/2+x+_ _+E_ _·E_ _/E_<_> <E-trans +E-mono₁ +E-mono₂ ·E-anti₁ ·E-anti₂ ·/E-assoc +E-sym +E-assoc ·/E-identity
+  ops = mk 1+_/2+x+_ _+E_ _·E_ _/E_<_> 1-E_ <E-trans +E-mono₁ +E-mono₂ ·E-anti₁ ·E-anti₂ ·/E-assoc +E-sym +E-assoc ·/E-identity
 
 module [0,1] {]0,1[ _<E_} (]0,1[R : ]0,1[-ops ]0,1[ _<E_) where
 
