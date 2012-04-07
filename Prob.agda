@@ -147,11 +147,11 @@ module [0,1] {]0,1[ _<E_} (]0,1[R : ]0,1[-ops ]0,1[ _<E_) where
   1-I (x I) = (1-E x) I
 
   _+I_ : [0,1] → [0,1] → [0,1]
-  0I +I x = x
-  1I +I _ = 1I
-  x I +I 0I = x I
-  x I +I 1I = 1I
-  x I +I x₁ I = (x +E x₁) I
+  0I  +I x    = x
+  x I +I 0I   = x I
+  1I  +I _    = 1I -- troublesome
+  x I +I 1I   = 1I -- troublesome
+  x I +I x₁ I = (x +E x₁) I -- faithful
 
   _·I_ : [0,1] → [0,1] → [0,1]
   0I ·I y = 0I
