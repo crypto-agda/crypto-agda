@@ -117,9 +117,8 @@ module [0,1] {]0,1[ _<E_} (]0,1[R : ]0,1[-ops ]0,1[ _<E_) where
   data _≤I_ : [0,1] → [0,1] → Set where
     z≤n : ∀ {n} → 0I ≤I n
     n≤1 : ∀ {n} → n ≤I 1I
-    E≤E : ∀ {x y} → x <E y → (x I) ≤I (y I)
+    E<E : ∀ {x y} → x <E y → (x I) ≤I (y I)
     E≡E : ∀ {x} → x I ≤I x I
-
 
   ≤I-refl : ∀ {x} → x ≤I x
   ≤I-refl {0I} = z≤n
@@ -168,7 +167,7 @@ module [0,1] {]0,1[ _<E_} (]0,1[R : ]0,1[-ops ]0,1[ _<E_) where
   x /I 1I    < _        , _  > = x
   0I /I _    < _        , _  > = 0I
   1I /I _ I  < ()       , _  >
-  (x I) /I y I < E≤E pf , _  > = (x /E y < pf >) I
+  (x I) /I y I < E<E pf , _  > = (x /E y < pf >) I
   (x I) /I .x I < E≡E   , _  > = 1I
 
 
@@ -180,8 +179,8 @@ module [0,1] {]0,1[ _<E_} (]0,1[R : ]0,1[-ops ]0,1[ _<E_) where
   *-anti 1I le = le
   *-anti (x I) z≤n = z≤n
   *-anti (x I) n≤1 = n≤1
-  *-anti (x I) (E≤E pf) = E≤E (·E-anti₂ x pf)
-  *-anti (x I) E≡E = E≤E (·E-anti₁ x)
+  *-anti (x I) (E<E pf) = E<E (·E-anti₂ x pf)
+  *-anti (x I) E≡E = E<E (·E-anti₁ x)
 
   */-assoc : (x y z : [0,1])(pr : y ≤I z)(pos : Pos z) → (x ·I (y /I z < pr , pos >)) ≡ (x ·I y) /I z < *-anti x pr , pos >
   */-assoc x y 0I pr ()
@@ -190,7 +189,7 @@ module [0,1] {]0,1[ _<E_} (]0,1[R : ]0,1[-ops ]0,1[ _<E_) where
   */-assoc 1I y (z I) pr pos = refl
   */-assoc (x I) 0I (z I) pr pos = refl
   */-assoc (x I) 1I (z I) () pos
-  */-assoc (x I) (y I) (z I) (E≤E pf) pos = cong _I (·/E-assoc x y z pf)
+  */-assoc (x I) (y I) (z I) (E<E pf) pos = cong _I (·/E-assoc x y z pf)
   */-assoc (x I) (y I) (.y I) E≡E pos = cong _I (·/E-identity x)
 
   +I-sym : (x y : [0,1]) → x +I y ≡ y +I x
@@ -216,9 +215,9 @@ module [0,1] {]0,1[ _<E_} (]0,1[R : ]0,1[-ops ]0,1[ _<E_) where
   ≤I-trans : {x y z : [0,1]} → x ≤I y → y ≤I z → x ≤I z
   ≤I-trans z≤n le2 = z≤n
   ≤I-trans n≤1 n≤1 = n≤1
-  ≤I-trans (E≤E x₁) n≤1 = n≤1
-  ≤I-trans (E≤E x₁) (E≤E x₂) = E≤E (<E-trans x₁ x₂)
-  ≤I-trans (E≤E x₁) E≡E = E≤E x₁
+  ≤I-trans (E<E x₁) n≤1 = n≤1
+  ≤I-trans (E<E x₁) (E<E x₂) = E<E (<E-trans x₁ x₂)
+  ≤I-trans (E<E x₁) E≡E = E<E x₁
   ≤I-trans E≡E le2 = le2
 
   ≤I-mono  : (x : [0,1]){y z : [0,1]} → y ≤I z → y ≤I z +I x
@@ -226,17 +225,17 @@ module [0,1] {]0,1[ _<E_} (]0,1[R : ]0,1[-ops ]0,1[ _<E_) where
   ≤I-mono 1I {z = z} le rewrite +I-sym z 1I = n≤1
   ≤I-mono (x I) z≤n = z≤n
   ≤I-mono (x I) n≤1 = n≤1
-  ≤I-mono (x I) (E≤E x₂) = E≤E (<E-trans x₂ (+E-mono₁ x))
-  ≤I-mono (x I) E≡E = E≤E (+E-mono₁ x)
+  ≤I-mono (x I) (E<E x₂) = E<E (<E-trans x₂ (+E-mono₁ x))
+  ≤I-mono (x I) E≡E = E<E (+E-mono₁ x)
 
   ≤I-pres  : (x : [0,1]){y z : [0,1]} → y ≤I z → x +I y ≤I x +I z
   ≤I-pres 0I le = le
   ≤I-pres 1I le = n≤1
   ≤I-pres (x I) {.0I} {0I} z≤n = E≡E
   ≤I-pres (x I) {.0I} {1I} z≤n = n≤1
-  ≤I-pres (x I) {.0I} {x₁ I} z≤n = E≤E (+E-mono₁ x₁)
+  ≤I-pres (x I) {.0I} {x₁ I} z≤n = E<E (+E-mono₁ x₁)
   ≤I-pres (x I) n≤1 = n≤1
-  ≤I-pres (x I) (E≤E x₂) = E≤E (+E-mono₂ x x₂)
+  ≤I-pres (x I) (E<E x₂) = E<E (+E-mono₂ x x₂)
   ≤I-pres (x I) E≡E = E≡E
 
 
