@@ -244,14 +244,15 @@ module Univ {]0,1[ _<E_} (]0,1[R : ]0,1[-ops ]0,1[ _<E_)
   open [0,1] ]0,1[R
 
   sumP : {n : ℕ} → (U → [0,1]) → Vec U n → [0,1]
-  sumP P []       = 0I
-  sumP P (x ∷ xs) = (P x) +I (sumP P xs)
+  sumP pmf []       = 0I
+  sumP pmf (x ∷ xs) = (pmf x) +I (sumP pmf xs)
 
   record Distr : Set where
     constructor _,_
     field
-      P : U → [0,1]
-      sumP≡1 : sumP P allU ≡ 1I
+      -- Probability mass function: http://en.wikipedia.org/wiki/Probability_mass_function
+      pmf    : U → [0,1]
+      sum≡1 : sumP pmf allU ≡ 1I
 
   module Prob (d : Distr) where
     open Distr d
@@ -260,7 +261,7 @@ module Univ {]0,1[ _<E_} (]0,1[R : ]0,1[-ops ]0,1[ _<E_)
     Event = U → Bool
 
     pr_∋_ : Event → U → [0,1]
-    pr A ∋ x = if A x then P x else 0I
+    pr A ∋ x = if A x then pmf x else 0I
 
     _∪_ : Event → Event → Event
     A₁ ∪ A₂ = λ x → A₁ x ∨ A₂ x
@@ -305,16 +306,16 @@ module Univ {]0,1[ _<E_} (]0,1[R : ]0,1[-ops ]0,1[ _<E_)
       go : {n : ℕ}(xs : Vec U n) → sumP (pr_∋_ (A₁ ∪ A₂)) xs ≤I sumP (pr_∋_ A₁) xs +I sumP (pr_∋_ A₂) xs
       go [] = ≤I-refl
       go (x ∷ xs) with A₁ x | A₂ x
-      ... | true  | true  rewrite +I-assoc (P x) (sA₁ xs) (P x +I sA₂ xs)
-                                | +I-sym (P x) (sA₂ xs)
-                                | sym (+I-assoc (sA₁ xs) (sA₂ xs) (P x))
-                                = ≤I-pres (P x) (≤I-mono (P x) (go xs))
-      ... | true  | false rewrite +I-assoc (P x) (sA₁ xs) (sA₂ xs)
-                                = ≤I-pres (P x) (go xs)
-      ... | false | true  rewrite sym (+I-assoc (sA₁ xs) (P x) (sA₂ xs))
-                                | +I-sym (sA₁ xs) (P x)
-                                | +I-assoc (P x) (sA₁ xs) (sA₂ xs)
-                                = ≤I-pres (P x) (go xs)
+      ... | true  | true  rewrite +I-assoc (pmf x) (sA₁ xs) (pmf x +I sA₂ xs)
+                                | +I-sym (pmf x) (sA₂ xs)
+                                | sym (+I-assoc (sA₁ xs) (sA₂ xs) (pmf x))
+                                = ≤I-pres (pmf x) (≤I-mono (pmf x) (go xs))
+      ... | true  | false rewrite +I-assoc (pmf x) (sA₁ xs) (sA₂ xs)
+                                = ≤I-pres (pmf x) (go xs)
+      ... | false | true  rewrite sym (+I-assoc (sA₁ xs) (pmf x) (sA₂ xs))
+                                | +I-sym (sA₁ xs) (pmf x)
+                                | +I-assoc (pmf x) (sA₁ xs) (sA₂ xs)
+                                = ≤I-pres (pmf x) (go xs)
       ... | false | false = go xs
 
     module RandomVar (V : Set) (_==V_ : V → V → Bool) where
