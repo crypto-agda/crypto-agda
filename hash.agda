@@ -1,7 +1,7 @@
 module hash where
 
 open import Data.Bits
-open import Data.Fin as Fin hiding (_<_; fromℕ) renaming (_+_ to _+f_)
+open import Data.Fin as Fin hiding (_<_; _≤_; fromℕ) renaming (_+_ to _+f_)
 open import Data.Fin.Props
 open import Data.Vec hiding (last)
 open import Data.Nat.NP
