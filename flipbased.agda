@@ -8,7 +8,7 @@ open import Data.Nat.NP
 open import Data.Nat.Properties
 open import Data.Product using (proj₁; proj₂; _,_; swap; _×_)
 open import Data.Bits hiding (replicateM)
-open import Data.Vec using (Vec; []; _∷_; take; drop)
+open import Data.Vec using (Vec; []; _∷_; take; drop; head)
 open import Relation.Binary
 import Relation.Binary.PropositionalEquality as ≡
 open ≡ using (_≡_)
@@ -19,10 +19,10 @@ record M {a} n (A : Set a) : Set a where
     run : Bits n → A
 
 flip′ : M 1 Bit
-flip′ = mk (λ { (b ∷ []) → b })
+flip′ = mk head
 
 return′ : ∀ {a} {A : Set a} → A → M 0 A
-return′ x = mk (λ _ → x)
+return′ = mk ∘ const
 
 pure′ : ∀ {a} {A : Set a} → A → M 0 A
 pure′ = return′
@@ -120,6 +120,11 @@ flips : ∀ {n} → M n (Bits n)
 flips {zero}  = ⟪ [] ⟫
 flips {suc _} = ⟪ _∷_ · flip′ · flips ⟫
 
+-- Another name for flips
+random : ∀ {n} → M n (Bits n)
+random = flips
+
+
 record ProgEquiv a ℓ : Set (L.suc ℓ L⊔ L.suc a) where
   infix 2 _≈_ _≋_
   field
@@ -138,11 +143,15 @@ record ProgEquiv a ℓ : Set (L.suc ℓ L⊔ L.suc a) where
     where m≤n⊔m : ∀ m n → m ≤ n ⊔ m
           m≤n⊔m m n rewrite ⊔°.+-comm n m = m≤m⊔n m n
 
+  -- Another name for _≋_
+  _looks_ : ∀ {n₁ n₂} {A : Set a} → M n₁ A → M n₂ A → Set ℓ
+  _looks_ = _≋_
+
 module WithEquiv (progEq : ProgEquiv L.zero L.zero) where
   open ProgEquiv progEq
 
-  SecPRG : ∀ {k n} (prg : Bits k → Bits n) → Set
-  SecPRG prg = ⟪ prg · flips ⟫ ≋ flips
+  SecPRG : ∀ {k n} (prg : (key : Bits k) → Bits n) → Set
+  SecPRG prg = this looks random where this = ⟪ prg · flips ⟫
 
   record PRG k n : Set where
     constructor _,_
@@ -150,8 +159,9 @@ module WithEquiv (progEq : ProgEquiv L.zero L.zero) where
       prg : Bits k → Bits n
       sec : SecPRG prg
 
-  SecPRF : ∀ {k m n} (prf : Bits k → Bits m → Bits n) → Set
-  SecPRF prf = ∀ {xs} → ⟪ prf · flips · ⟪ xs ⟫′ ⟫ ≋ flips
+  SecPRF : ∀ {k m n} (prf : (key : Bits k) (msg : Bits m) → Bits n) → Set
+  SecPRF prf = ∀ {xs} → let this = ⟪ prf · flips · ⟪ xs ⟫′ ⟫ in
+                         this looks random
 
   record PRF k m n : Set where
     constructor _,_
@@ -180,7 +190,7 @@ module Examples (progEq : ProgEquiv L.zero L.zero) where
 
   ex₂ = p ≈ map swap p where p = flip′ ⟨,⟩ flip′ 
 
-  ex₃ = ∀ {n} {xs : Bits n} → map (_⊕_ xs) flips ≈ flips
+  ex₃ = ∀ {n} → SecPRF {n} _⊕_
 
   ex₄ = ∀ {k n} (prg : PRG k n) → SecPRF (λ key xs → xs ⊕ PRG.prg prg key)
 
