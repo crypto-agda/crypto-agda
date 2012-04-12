@@ -3,7 +3,7 @@ module flipbased where
 open import Algebra
 import Level as L
 open L using () renaming (_⊔_ to _L⊔_)
-open import Function using (id; _∘_; const; _$_)
+open import Function
 open import Data.Nat.NP
 open import Data.Nat.Properties
 open import Data.Product using (proj₁; proj₂; _,_; swap; _×_)
@@ -18,8 +18,8 @@ record M {a} n (A : Set a) : Set a where
   field
     run : Bits n → A
 
-flip′ : M 1 Bit
-flip′ = mk head
+toss′ : M 1 Bit
+toss′ = mk head
 
 return′ : ∀ {a} {A : Set a} → A → M 0 A
 return′ = mk ∘ const
@@ -47,8 +47,8 @@ weaken≤ p = comap (take≤ p)
 coerce : ∀ {m n a} {A : Set a} → m ≡ n → M m A → M n A
 coerce ≡.refl = id
 
-flip : ∀ {n} → M (1 + n) Bit
-flip = weaken′ flip′
+toss : ∀ {n} → M (1 + n) Bit
+toss = weaken′ toss′
 
 return : ∀ {n a} {A : Set a} → A → M n A
 return = weaken′ ∘ return′
@@ -115,15 +115,16 @@ replicateM : ∀ {n m} {a} {A : Set a} → M m A → M (n * m) (Vec A n)
 replicateM {zero}  _ = ⟪ [] ⟫
 replicateM {suc _} x = ⟪ _∷_ · x · replicateM x ⟫
 
-flips : ∀ {n} → M n (Bits n)
--- flips = coerce ? (replicateM flip) -- specialized version for now to avoid coerce
-flips {zero}  = ⟪ [] ⟫
-flips {suc _} = ⟪ _∷_ · flip′ · flips ⟫
-
--- Another name for flips
 random : ∀ {n} → M n (Bits n)
-random = flips
+-- random = coerce ? (replicateM toss) -- specialized version for now to avoid coerce
+random {zero}  = ⟪ [] ⟫
+random {suc _} = ⟪ _∷_ · toss′ · random ⟫
 
+randomTbl : ∀ m n → M (2 ^ m * n) (Vec (Bits n) (2 ^ m))
+randomTbl m n = replicateM random
+
+randomFun : ∀ m n → M (2 ^ m * n) (Bits m → Bits n)
+randomFun m n = ⟪ funFromTbl · randomTbl m n ⟫
 
 record ProgEquiv a ℓ : Set (L.suc ℓ L⊔ L.suc a) where
   infix 2 _≈_ _≋_
@@ -151,7 +152,7 @@ module WithEquiv (progEq : ProgEquiv L.zero L.zero) where
   open ProgEquiv progEq
 
   SecPRG : ∀ {k n} (prg : (key : Bits k) → Bits n) → Set
-  SecPRG prg = this looks random where this = ⟪ prg · flips ⟫
+  SecPRG prg = this looks random where this = ⟪ prg · random ⟫
 
   record PRG k n : Set where
     constructor _,_
@@ -159,18 +160,21 @@ module WithEquiv (progEq : ProgEquiv L.zero L.zero) where
       prg : Bits k → Bits n
       sec : SecPRG prg
 
-  SecPRF : ∀ {k m n} (prf : (key : Bits k) (msg : Bits m) → Bits n) → Set
-  SecPRF prf = ∀ {xs} → let this = ⟪ prf · flips · ⟪ xs ⟫′ ⟫ in
-                         this looks random
+  OneTimeSecPRF : ∀ {k m n} (prf : (key : Bits k) (msg : Bits m) → Bits n) → Set
+  OneTimeSecPRF prf = ∀ {xs} → let this = ⟪ prf · random · ⟪ xs ⟫′ ⟫ in
+                                this looks random
 
   record PRF k m n : Set where
     constructor _,_
     field
       prf : Bits k → Bits m → Bits n
-      sec : SecPRF prf 
+      sec : OneTimeSecPRF prf
+
+OTP : ∀ {n} → Bits n → Bits n → Bits n
+OTP key msg = key ⊕ msg
 
 init : ∀ {k a} {A : Set a} → (Bits k → A) → M k A
-init f = map f flips
+init f = ⟪ f · random ⟫
 
 module Examples (progEq : ProgEquiv L.zero L.zero) where
   open ProgEquiv progEq
@@ -186,12 +190,12 @@ module Examples (progEq : ProgEquiv L.zero L.zero) where
   assoc-law′ = ∀ {A B C : Set} {n₁ n₂ n₃} {x : M n₁ A} {f : A → M n₂ B} {g : B → M n₃ C}
               → (x >>= f) >>= g ≈ coerce (≡.sym (ℕ°.+-assoc n₁ n₂ n₃)) (x >>= (λ x → f x >>= g))
 
-  ex₁ = ∀ {x} → flip′ ⟨xor⟩ ⟪ x ⟫′ ≈ ⟪ x ⟫
+  ex₁ = ∀ {x} → toss′ ⟨xor⟩ ⟪ x ⟫′ ≈ ⟪ x ⟫
 
-  ex₂ = p ≈ map swap p where p = flip′ ⟨,⟩ flip′ 
+  ex₂ = p ≈ map swap p where p = toss′ ⟨,⟩ toss′
 
-  ex₃ = ∀ {n} → SecPRF {n} _⊕_
+  ex₃ = ∀ {n} → OneTimeSecPRF {n} OTP
 
-  ex₄ = ∀ {k n} (prg : PRG k n) → SecPRF (λ key xs → xs ⊕ PRG.prg prg key)
+  ex₄ = ∀ {k n} (prg : PRG k n) → OneTimeSecPRF (λ key xs → xs ⊕ PRG.prg prg key)
 
   ex₅ = ∀ {k n} → PRG k n → PRF k n n
