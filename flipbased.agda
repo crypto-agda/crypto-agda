@@ -5,6 +5,7 @@ import Level as L
 open L using () renaming (_⊔_ to _L⊔_)
 open import Function hiding (_⟨_⟩_)
 open import Data.Nat.NP
+open import Data.Bool
 open import Data.Nat.Properties
 open import Data.Product using (proj₁; proj₂; _,_; swap; _×_)
 open import Data.Bits hiding (replicateM)
@@ -102,6 +103,9 @@ x ⟨ f ⟩ y = map f x ⊛ y
 ⟪_·_·_·_⟫ : ∀ {a b c d} {A : Set a} {B : Set b} {C : Set c} {D : Set d} {m n o} →
               (A → B → C → D) → M m A → M n B → M o C → M (m + n + o) D
 ⟪ f · x · y · z ⟫ = map f x ⊛ y ⊛ z
+
+choose : ∀ {n a} {A : Set a} → M n A → M n A → M (suc n) A
+choose x y = ⟪ if_then_else_ · toss · x · y ⟫
 
 _⟨,⟩_ : ∀ {a b} {A : Set a} {B : Set b} {m n} → M m A → M n B → M (m + n) (A × B)
 x ⟨,⟩ y = ⟪ _,_ · x · y ⟫
