@@ -29,17 +29,17 @@ module CryptoGames where
     SemSecAdv : Set
     SemSecAdv = C → Bit
 
-    CPAAdv : Set
+    CPAAdv : Set₁
     CPAAdv = ∀ {☐_} (enc : M → ☐ C) → Strategy ☐_ Bit
 
-    data CPAWinner b : Strategy ☐_ Bit → Set where
-      win : CPAWinner b (say b)
-      ask : CPAWinner b s → CPAWinner b (ask ? (λ ? → ))
+    data CPAWinner (enc : M → C) b : Strategy id Bit → Set₁ where
+      win : CPAWinner enc b (say b)
+      ask : ∀ {m f} → CPAWinner enc b (f (enc m)) → CPAWinner enc b (ask (enc m) f)
 
   module MACGames (M T : Set) where
-    MacAdv : Set
+    MacAdv : Set₁
     MacAdv = ∀ {☐_} (mac : M → ☐ T) → Strategy ☐_ (M × T)
 
-    data MACWinner (mac : M → T) : Strategy id (M × T) → Set where
+    data MACWinner (mac : M → T) : Strategy id (M × T) → Set₁ where
       win : ∀ {m} → MACWinner mac (say (m , mac m))
       ask : ∀ {m f} → MACWinner mac (f (mac m)) → MACWinner mac (ask (mac m) f)
