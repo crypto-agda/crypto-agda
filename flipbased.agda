@@ -3,12 +3,13 @@ module flipbased where
 open import Algebra
 import Level as L
 open L using () renaming (_⊔_ to _L⊔_)
-open import Function
+open import Function hiding (_⟨_⟩_)
 open import Data.Nat.NP
 open import Data.Nat.Properties
 open import Data.Product using (proj₁; proj₂; _,_; swap; _×_)
 open import Data.Bits hiding (replicateM)
-open import Data.Vec using (Vec; []; _∷_; take; drop; head)
+open import Data.Bool
+open import Data.Vec using (Vec; []; _∷_; take; drop; head; tail)
 open import Relation.Binary
 import Relation.Binary.PropositionalEquality as ≡
 open ≡ using (_≡_)
@@ -125,6 +126,28 @@ randomTbl m n = replicateM random
 
 randomFun : ∀ m n → M (2 ^ m * n) (Bits m → Bits n)
 randomFun m n = ⟪ funFromTbl · randomTbl m n ⟫
+
+randomFunExt : ∀ {n k a} {A : Set a} → M k (Bits n → A) → M (k + k) (Bits (suc n) → A)
+randomFunExt f = ⟪ comb · f · f ⟫ where comb = λ g₁ g₂ xs → (if head xs then g₁ else g₂) (tail xs)
+
+2*_ : ℕ → ℕ
+2* x = x + x
+
+2^_ : ℕ → ℕ
+2^ 0       = 1
+2^ (suc n) = 2* (2^ n)
+
+costRndFun : ℕ → ℕ → ℕ
+costRndFun zero n = n
+costRndFun (suc m) n = 2* (costRndFun m n)
+
+lem : ∀ m n → costRndFun m n ≡ 2 ^ m * n
+lem zero n rewrite ℕ°.+-comm n 0 = ≡.refl
+lem (suc m) n rewrite lem m n | ℕ°.*-assoc 2 (2 ^ m) n | ℕ°.+-comm (2 ^ m * n) 0 = ≡.refl
+
+randomFun′ : ∀ {m n} → M (costRndFun m n) (Bits m → Bits n)
+randomFun′ {zero}  = ⟪ const · random ⟫
+randomFun′ {suc m} = randomFunExt (randomFun′ {m})
 
 record ProgEquiv a ℓ : Set (L.suc ℓ L⊔ L.suc a) where
   infix 2 _≈_ _≋_
