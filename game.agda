@@ -25,7 +25,12 @@ pattern not-random   = 1b
 
 module CryptoGames where
 
-  module CipherGames (M C : Set) where
+  module CipherGames (|M| |C| : ℕ) where
+    M : Set
+    M = Bits |M|
+    C : Set
+    C = Bits |C|
+
     SemSecAdv : Set
     SemSecAdv = C → Bit
 
@@ -35,6 +40,12 @@ module CryptoGames where
     data CPAWinner (enc : M → C) b : Strategy id Bit → Set₁ where
       win : CPAWinner enc b (say b)
       ask : ∀ {m f} → CPAWinner enc b (f (enc m)) → CPAWinner enc b (ask (enc m) f)
+
+    CPA2Sem : SemSecAdv → CPAAdv
+    CPA2Sem semAdv enc = ask (enc 0…) (λ c → say (semAdv c))
+
+    CPA2Sem-correct : SemSecWinner semAdv → CPAWinner enc b (CPA2Sem semAdv)
+    CPA2Sem-correct
 
   module MACGames (M T : Set) where
     MacAdv : Set₁
