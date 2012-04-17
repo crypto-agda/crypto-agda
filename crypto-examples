@@ -34,6 +34,9 @@ E' k m = E k m ++ E k m
 E' k m = reverse (E k m)
 E' k m = E (reverse k) m
 E' k m = E k (reverse m)
+E' k m = 1ⁿ ⊕ (E k m)
+E' k m = E (1ⁿ ⊕ k) m
+E' k m = E k (1ⁿ ⊕ m)
 
 broken Block Cipher
 E' k m = E 0ⁿ m
