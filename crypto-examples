@@ -1,0 +1,73 @@
+ok PRGs
+G' (k₁ , k₂) = G k₁ ++ G k₂
+G' k = reverse (G k)
+G' k = G (reverse k)
+G' k = G (1ⁿ ⊕ k)
+G' k = 1ⁿ ⊕ G k
+
+broken PRGs
+G' k = G k ++ 0ⁿ {1}
+G' k = G k ++ G k
+G' k = G 0
+
+ok PRFs
+F' k x = F k (1ⁿ ⊕ x)
+F' k x = F (1ⁿ ⊕ k) x
+F' k x = 1ⁿ ⊕ F k x
+F' k x = F k (reverse x)
+F' k x = F (reverse k) x
+F' k x = reverse (F k x)
+F' (k₀ , k₁) x = F k₀ x ++ F k₁ x
+F' k x = MSB n (F k x)
+F' k x = LSB n (F k x)
+
+broken PRFs
+F' k x = k ⊕ x
+F' k x = if x ≠ 0ⁿ then F k x else 0ⁿ
+F' k x = F k x ⊕ F k (1ⁿ ⊕ x)
+F' k x = F k x ++ 0ⁿ {1}
+
+ok Block Cipher
+E' k m = 0b ∷ E k m
+E' (k₀ , k₁) m = E k₀ m ++ E k₁ m
+E' k m = E k m ++ E k m
+E' k m = reverse (E k m)
+E' k m = E (reverse k) m
+E' k m = E k (reverse m)
+
+broken Block Cipher
+E' k m = E 0ⁿ m
+E' k m = E k m ++ LSB m
+E' k m = E k m ++ k
+
+ok MACs
+S' k m = S k (m ++ m)
+V' k m t = V k (m ++ m) t
+
+S' k m = S k (1ⁿ ⊕ m)
+V' k m = V k (1ⁿ ⊕ m) t
+
+S' k m = S k m >>= λ t → return (t , t)
+V' k m (t₁ , t₂) = t₁ == t₂ ∧ V k m t₁
+
+broken MACs
+S' k m = S k (MSB n m ++ 0ⁿ)
+V' k m t = V k (MSB n m ++ 0ⁿ) t
+
+S' k m = S k m
+V' k m = m == 0ⁿ ∨ V k m t
+
+S' k m = S k m ++ S k 0ⁿ
+V' k m (t₁ ++ t₂) = V k m t₁ ∧ V k 0ⁿ t₂
+
+ok H
+H' m = H (H m)
+H' m = H (H (H m))
+H' m = H₀ (H₁ m)
+H' m = H m ++ H 0
+
+broken H
+H' m = H |m|
+H' m = H m ⊕ H (1ⁿ ⊕ m)
+H' m = H (MSB (n - 1) m)
+H' m = H 0
