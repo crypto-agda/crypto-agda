@@ -105,7 +105,7 @@ x ⟨ f ⟩ y = map f x ⊛ y
 ⟪ f · x · y · z ⟫ = map f x ⊛ y ⊛ z
 
 choose : ∀ {n a} {A : Set a} → M n A → M n A → M (suc n) A
-choose x y = ⟪ if_then_else_ · toss · x · y ⟫
+choose x y = toss′ >>= λ b → if b then x else y
 
 _⟨,⟩_ : ∀ {a b} {A : Set a} {B : Set b} {m n} → M m A → M n B → M (m + n) (A × B)
 x ⟨,⟩ y = ⟪ _,_ · x · y ⟫
