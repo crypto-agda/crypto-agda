@@ -10,11 +10,11 @@ open import Data.Bool
 open import Relation.Binary.PropositionalEquality.NP
 open import Function
 
-record PaddingScheme n (M : Set) : Set where
+record PaddingScheme (M : Set) (B : Set) : Set where
   constructor mk
   field
     padlen : M → ℕ
-    pad : (m : M) → Vec (Bits n) (padlen m)
+    pad : (m : M) → Vec B (padlen m)
 
 module Merkle-Damgård₁
   {T : Set}             -- Tag space
@@ -34,7 +34,7 @@ module Merkle-Damgård₂
   (IV : T)              -- Initialization vector
 
   {M : Set}
-  (paddingSch : PaddingScheme n M)
+  (paddingSch : PaddingScheme M (Bits n))
   where
 
   open Merkle-Damgård₁ h
@@ -44,7 +44,7 @@ module Merkle-Damgård₂
   H₂ m = H₁ IV (pad m)
 
 {-
-lengthPadding₁ : ∀ {ℓ n} → PaddingScheme n (Bits ℓ)
+lengthPadding₁ : ∀ {ℓ n} → PaddingScheme (Bits ℓ) (Bits n)
 lengthPadding₁ = mk padlen pad where
   padlen : ∀ {ℓ} → Bits ℓ → ℕ
   padlen xs = {!!}
@@ -57,7 +57,7 @@ lengthPadding₁ = mk padlen pad where
 -- Fin (2 ^ n) → Bits n
 
 lengthPadding₀ : ∀ {n s} → ℕ → Bits (1 + n + s)
-lengthPadding₀ {n} {s} x = 1b ∷ 0… {n} ++ fromℕ {s} x
+lengthPadding₀ {n} {s} x = 1b ∷ 0ⁿ {n} ++ fromℕ {s} x
 
 infixl 6 _ℕ-ℕ'_
 
@@ -82,36 +82,42 @@ module LengthPadding₁
   (sizemsg : Bits (Fin.toℕ s))      -- Usually the size of the message
   {ℓ : Fin n}
   where
-  lengthPadding₁ : PaddingScheme n (Bits (Fin.toℕ ℓ))
+  lengthPadding₁ : PaddingScheme (Bits (Fin.toℕ ℓ)) (Bits n)
   lengthPadding₁ = mk padlen pad where
     padlen : ∀ {ℓ} → Bits (Fin.toℕ ℓ) → ℕ
-    padlen xs = if suc n <= (Fin.toℕ ℓ + Fin.toℕ s) then 2 else 1
+    padlen xs = if (Fin.toℕ ℓ + Fin.toℕ s) <= suc n then 1 else 2
 
     pad : (m : Bits (Fin.toℕ ℓ)) → Vec (Bits n) (padlen m)
-    pad bs with suc n <= (Fin.toℕ ℓ + Fin.toℕ s)
-    ... | true = helper (bounded _) bs ∷ block₂ ∷ []
+    pad bs with (Fin.toℕ ℓ + Fin.toℕ s) <= suc n | <=.sound (Fin.toℕ ℓ + Fin.toℕ s) (suc n)
+    ... | false | _ = helper (bounded _) bs ∷ block₂ ∷ []
          where
            helper : ∀ {n' n} → n' < n → Bits n' → Bits n
-           helper (s≤s p) [] = 1b ∷ 0…
+           helper (s≤s p) [] = 1b ∷ 0ⁿ
            helper (s≤s p) (b ∷ bs) = b ∷ helper p bs
            block₂ : Bits n
-           block₂ = subst Bits (n-m+m≡n n s) (0… {n ℕ-ℕ' s} ++ sizemsg)
-    ... | false = helper' ∷ [] where
+           block₂ = subst Bits (n-m+m≡n n s) (0ⁿ {n ℕ-ℕ' s} ++ sizemsg)
+    ... | true | p = helper' ∷ [] where
            helper : ∀ {#0s #m} → Bits #m → Bits (#m + 1 + #0s + Fin.toℕ s)
-           helper {p} [] = 1b ∷ 0… {p} ++ sizemsg
-           helper (b ∷ bs) = b ∷ helper bs
+           helper {p} []       = 1b ∷ 0ⁿ {p} ++ sizemsg
+           helper     (b ∷ bs) = b ∷ helper bs
 
-{-
-           pf = Fin.toℕ ℓ + 1 + (n ∸ (Fin.toℕ ℓ + 1 + Fin.toℕ s)) + Fin.toℕ s ≡⟨ ? ⟩
-                (n ∸ (Fin.toℕ ℓ + 1 + Fin.toℕ s)) + Fin.toℕ ℓ + 1 + Fin.toℕ s ≡⟨ ? ⟩
-                (n ∸ Fin.toℕ (ℓ +f suc s)) + Fin.toℕ ℓ + 1 + Fin.toℕ s ≡⟨ ? ⟩
-                (n ∸ Fin.toℕ (ℓ +f suc s)) + Fin.toℕ (ℓ +f suc s) ≡⟨ ? ⟩
-                (n ℕ-ℕ' (ℓ +f suc s)) + Fin.toℕ (ℓ +f suc s) ≡⟨ ? ⟩
+   ℓ + s <= suc n
+   suc n ≥ ℓ + s
+   suc n ∸ (ℓ + s) ≥ 0
+
+           helper' : ∀ {#0s #m} → #m + 1 + #0s + Fin.toℕ s ≡ n → Bits #m → Bits n
+           helper' : ∀ {#0s #m} → #m < n → ℓ + s < n → #m + 1 + #0s + Fin.toℕ s ≡ n → Bits #m → Bits n
+           helper' : ∀ {#0s #m} → #m + 1 + #0s + Fin.toℕ s ≡ n → Bits (toN b) → Bits n
+
+           pf = Fin.toℕ ℓ + 1 + (n ∸ (Fin.toℕ ℓ + 1 + Fin.toℕ s)) + Fin.toℕ s ≡⟨ {!!} ⟩
+                (n ∸ (Fin.toℕ ℓ + 1 + Fin.toℕ s)) + Fin.toℕ ℓ + 1 + Fin.toℕ s ≡⟨ {!!} ⟩
+                (n ∸ Fin.toℕ (ℓ +f suc s)) + Fin.toℕ ℓ + 1 + Fin.toℕ s ≡⟨ {!!} ⟩
+                (n ∸ Fin.toℕ (ℓ +f suc s)) + Fin.toℕ (ℓ +f suc s) ≡⟨ {!!} ⟩
+                {- (n ℕ-ℕ' (ℓ +f suc s)) + Fin.toℕ (ℓ +f suc s) ≡⟨ ? ⟩ -}
                 n ∎ where open ≡-Reasoning
--}
 
-           postulate helper' : Bits n
-           -- helper' = subst Bits pf (helper {n ∸ (Fin.toℕ ℓ + 1 + Fin.toℕ s)} bs)
+           helper' : Bits n
+           helper' = subst Bits pf (helper {n ∸ (Fin.toℕ ℓ + 1 + Fin.toℕ s)} bs)
 
 record WithLast ℓ n : Set where
   constructor mk
@@ -120,7 +126,7 @@ record WithLast ℓ n : Set where
     {m}  : Fin n
     last : Bits (Fin.toℕ m)
 
-lengthPadding₂ : ∀ {ℓ n} → (∀ m → PaddingScheme n (Bits (Fin.toℕ m))) → PaddingScheme n (WithLast ℓ n)
+lengthPadding₂ : ∀ {ℓ n} → (∀ m → PaddingScheme (Bits (Fin.toℕ m)) (Bits n)) → PaddingScheme (WithLast ℓ n) (Bits n)
 lengthPadding₂ {ℓ} {n} ps = mk padlen pad where
   padlen : WithLast ℓ n → ℕ
   padlen (mk _ last) = ℓ + PaddingScheme.padlen (ps _) last
@@ -128,5 +134,5 @@ lengthPadding₂ {ℓ} {n} ps = mk padlen pad where
   pad : (m : WithLast ℓ n) → Vec (Bits n) (padlen m)
   pad (mk xs last) = xs ++ PaddingScheme.pad (ps _) last
 
--- lengthPadding₃ : ∀ {ℓ n} → PaddingScheme n (WithLast ℓ n)
+-- lengthPadding₃ : ∀ {ℓ n} → PaddingScheme (WithLast ℓ n) (Bits n)
 -- lengthPadding₃ = lengthPadding₂ (λ _ → LengthPadding₁.lengthPadding₁)
