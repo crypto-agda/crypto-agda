@@ -1,5 +1,3 @@
-module flipbased where
-
 open import Algebra
 import Level as L
 open L using () renaming (_⊔_ to _L⊔_)
@@ -15,61 +13,31 @@ open import Relation.Binary
 import Relation.Binary.PropositionalEquality as ≡
 open ≡ using (_≡_)
 
--- “↺ n A” reads like: “toss n coins and then return a value of type A”
-record ↺ {a} n (A : Set a) : Set a where
-  constructor mk
-  field
-    run : Bits n → A
+module flipbased
+   (↺ : ∀ {a} → ℕ → Set a → Set a)
+   (toss : ↺ 1 Bit)
+   (weaken≤ : ∀ {m n a} {A : Set a} → m ≤ n → ↺ m A → ↺ n A)
+   (return↺ : ∀ {n a} {A : Set a} → A → ↺ n A)
+   (map↺ : ∀ {n a b} {A : Set a} {B : Set b} → (A → B) → ↺ n A → ↺ n B)
+   (join↺ : ∀ {n₁ n₂ a} {A : Set a} → ↺ n₁ (↺ n₂ A) → ↺ (n₁ + n₂) A)
+ where
 
 -- If you are not allowed to toss any coin, then you are deterministic.
 Det : ∀ {a} → Set a → Set a
 Det = ↺ 0
 
-runDet : ∀ {a} {A : Set a} → Det A → A
-runDet (mk f) = f []
-
-toss : ↺ 1 Bit
-toss = mk head
-
 returnᴰ : ∀ {a} {A : Set a} → A → Det A
-returnᴰ = mk ∘ const
+returnᴰ = return↺
 
 pureᴰ : ∀ {a} {A : Set a} → A → Det A
 pureᴰ = returnᴰ
 
-comap : ∀ {m n a} {A : Set a} → (Bits n → Bits m) → ↺ m A → ↺ n A
-comap f (mk g) = mk (g ∘ f)
-
-weaken : ∀ {m n a} {A : Set a} → ↺ n A → ↺ (m + n) A
-weaken {m} = comap (drop m)
-
-weaken′ : ∀ {m n a} {A : Set a} → ↺ n A → ↺ (n + m) A
-weaken′ = comap (take _)
-
-private
-  take≤ : ∀ {a} {A : Set a} {m n} → n ≤ m → Vec A m → Vec A n
-  take≤ z≤n _ = []
-  take≤ (s≤s p) (x ∷ xs) = x ∷ take≤ p xs
-
-weaken≤ : ∀ {m n a} {A : Set a} → m ≤ n → ↺ m A → ↺ n A
-weaken≤ p = comap (take≤ p)
-
 coerce : ∀ {m n a} {A : Set a} → m ≡ n → ↺ m A → ↺ n A
 coerce ≡.refl = id
 
--- Weakened version of toss
-tossᵂ : ∀ {n} → ↺ (1 + n) Bit
-tossᵂ = weaken′ toss
-
-return : ∀ {n a} {A : Set a} → A → ↺ n A
-return = weaken′ ∘ returnᴰ
-
-pure : ∀ {n a} {A : Set a} → A → ↺ n A
-pure = return
-
 _>>=_ : ∀ {n₁ n₂ a b} {A : Set a} {B : Set b} →
        ↺ n₁ A → (A → ↺ n₂ B) → ↺ (n₁ + n₂) B
-_>>=_ {n₁} x f = mk (λ bs → ↺.run (f (↺.run x (take _ bs))) (drop n₁ bs))
+_>>=_ x f = join↺ (map↺ f x)
 
 _>>=′_ : ∀ {n₁ n₂ a b} {A : Set a} {B : Set b} →
        ↺ n₁ A → (A → ↺ n₂ B) → ↺ (n₂ + n₁) B
@@ -79,39 +47,40 @@ _>>_ : ∀ {n₁ n₂ a b} {A : Set a} {B : Set b} →
        ↺ n₁ A → ↺ n₂ B → ↺ (n₁ + n₂) B
 _>>_ {n₁} x y = x >>= const y
 
-map : ∀ {n a b} {A : Set a} {B : Set b} → (A → B) → ↺ n A → ↺ n B
-map f x = mk (f ∘ ↺.run x)
--- map f x ≗ x >>=′ (return {0} ∘ f)
+weaken : ∀ {m n a} {A : Set a} → ↺ n A → ↺ (m + n) A
+weaken {m} x = return↺ {m} 0 >> x
 
-join : ∀ {n₁ n₂ a} {A : Set a} →
-       ↺ n₁ (↺ n₂ A) → ↺ (n₁ + n₂) A
-join x = x >>= id
+weaken′ : ∀ {m n a} {A : Set a} → ↺ n A → ↺ (n + m) A
+weaken′ x = x >>= return↺
 
-infixl 4 _⊛_
-_⊛_ : ∀ {n₁ n₂ a b} {A : Set a} {B : Set b} →
-       ↺ n₁ (A → B) → ↺ n₂ A → ↺ (n₁ + n₂) B
-_⊛_ {n₁} mf mx = mf >>= λ f → map (_$_ f) mx 
+pure↺ : ∀ {n a} {A : Set a} → A → ↺ n A
+pure↺ = return↺
 
-_⟨_⟩_ : ∀ {a b c} {A : Set a} {B : Set b} {C : Set c} {m n} →
-        ↺ m A → (A → B → C) → ↺ n B → ↺ (m + n) C
-x ⟨ f ⟩ y = map f x ⊛ y
+-- Weakened version of toss
+tossᵂ : ∀ {n} → ↺ (1 + n) Bit
+tossᵂ = toss >>= return↺
 
 ⟪_⟫ : ∀ {n} {a} {A : Set a} → A → ↺ n A
-⟪_⟫ = pure
+⟪_⟫ = pure↺
 
 ⟪_⟫ᴰ : ∀ {a} {A : Set a} → A → Det A
 ⟪_⟫ᴰ = pureᴰ
 
 ⟪_·_⟫ : ∀ {a b} {A : Set a} {B : Set b} {n} → (A → B) → ↺ n A → ↺ n B
-⟪ f · x ⟫ = map f x
+⟪ f · x ⟫ = map↺ f x
+
+infixl 4 _⊛_
+_⊛_ : ∀ {n₁ n₂ a b} {A : Set a} {B : Set b} →
+       ↺ n₁ (A → B) → ↺ n₂ A → ↺ (n₁ + n₂) B
+_⊛_ {n₁} mf mx = mf >>= λ f → ⟪ f · mx ⟫ 
 
 ⟪_·_·_⟫ : ∀ {a b c} {A : Set a} {B : Set b} {C : Set c} {m n} →
             (A → B → C) → ↺ m A → ↺ n B → ↺ (m + n) C
-⟪ f · x · y ⟫ = map f x ⊛ y
+⟪ f · x · y ⟫ = map↺ f x ⊛ y
 
 ⟪_·_·_·_⟫ : ∀ {a b c d} {A : Set a} {B : Set b} {C : Set c} {D : Set d} {m n o} →
               (A → B → C → D) → ↺ m A → ↺ n B → ↺ o C → ↺ (m + n + o) D
-⟪ f · x · y · z ⟫ = map f x ⊛ y ⊛ z
+⟪ f · x · y · z ⟫ = map↺ f x ⊛ y ⊛ z
 
 choose : ∀ {n a} {A : Set a} → ↺ n A → ↺ n A → ↺ (suc n) A
 choose x y = toss >>= λ b → if b then x else y
@@ -128,8 +97,8 @@ x ⟨⊕⟩ y = ⟪ _⊕_ · x · y ⟫
 _⟨==⟩_ : ∀ {n₁ n₂ m} → ↺ n₁ (Bits m) → ↺ n₂ (Bits m) → ↺ (n₁ + n₂) Bit
 x ⟨==⟩ y = ⟪ _==_ · x · y ⟫
 
-↺T : ∀ {k} → ↺ k Bit → ↺ k Set
-↺T p = ⟪ T · p ⟫
+T↺ : ∀ {k} → ↺ k Bit → ↺ k Set
+T↺ p = ⟪ T · p ⟫
 
 replicate↺ : ∀ {n m} {a} {A : Set a} → ↺ m A → ↺ (n * m) (Vec A n)
 replicate↺ {zero}  _ = ⟪ [] ⟫
@@ -160,9 +129,9 @@ costRndFun : ℕ → ℕ → ℕ
 costRndFun zero n = n
 costRndFun (suc m) n = 2* (costRndFun m n)
 
-lem : ∀ m n → costRndFun m n ≡ 2 ^ m * n
-lem zero n rewrite ℕ°.+-comm n 0 = ≡.refl
-lem (suc m) n rewrite lem m n | ℕ°.*-assoc 2 (2 ^ m) n | ℕ°.+-comm (2 ^ m * n) 0 = ≡.refl
+costRndFun-lem : ∀ m n → costRndFun m n ≡ 2 ^ m * n
+costRndFun-lem zero n rewrite ℕ°.+-comm n 0 = ≡.refl
+costRndFun-lem (suc m) n rewrite costRndFun-lem m n | ℕ°.*-assoc 2 (2 ^ m) n | ℕ°.+-comm (2 ^ m * n) 0 = ≡.refl
 
 randomFun′ : ∀ {m n} → ↺ (costRndFun m n) (Bits m → Bits n)
 randomFun′ {zero}  = ⟪ const · random ⟫
@@ -234,7 +203,7 @@ module Examples (progEq : ProgEquiv L.zero L.zero) where
 
   ex₁ = ∀ {x} → toss ⟨xor⟩ ⟪ x ⟫ᴰ ≈ ⟪ x ⟫
 
-  ex₂ = p ≈ map swap p where p = toss ⟨,⟩ toss
+  ex₂ = p ≈ map↺ swap p where p = toss ⟨,⟩ toss
 
   ex₃ = ∀ {n} → OneTimeSecPRF {n} OTP
 
