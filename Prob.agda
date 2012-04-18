@@ -22,6 +22,7 @@ record ]0,1[-ops (]0,1[ : Set) (_<E_ : ]0,1[ → ]0,1[ → Set) : Set where
     _·E_ : ]0,1[ → ]0,1[ → ]0,1[
     _/E_<_> : (x y : ]0,1[) → x <E y → ]0,1[
     1-E_ : ]0,1[ → ]0,1[
+    distE : ]0,1[ → ]0,1[ → ]0,1[
 
    -- proofs <E
   field
@@ -46,10 +47,8 @@ module ]0,1[-ℚ where
   -- toℚ : ]0,1] → ℚ
   -- toℚ (1+ x /1+x+ y) = (1 + x) /ℚ (1 + x + y)
 
-  postulate
-    _<E_ : ]0,1[ → ]0,1[ → Set
-  -- (1+ x /1+x+ y) ≤E (1+ x' /1+x+ y') = ?
-  -- (1 + x' + y') * (1 + x) ≤E (1 + x + y) * (1 + x') = ?
+  _<E_ : ]0,1[ → ]0,1[ → Set
+  (1+ x /2+x+ y) <E (1+ x' /2+x+ y') = (1 + x) * (2 + x' + y') < (1 + x') * (2 + x + y)
 
   -- 1 - ((1 + x) / (2 + x + y))
   --  ≡ (2 + x + y - (1 + x)) / (2 + x + y)
@@ -81,6 +80,11 @@ module ]0,1[-ℚ where
     where x'' = 1 + x' + y' + 2 * x + x * x' + x * y'
           y'' = y + x' + x' * y ∸ 1 ∸ y' ∸ x ∸ x * y'
 
+  -- |(a/b)-(c/d)| = |(ad-bc)/bd| = |ad-bc|/bd
+  postulate
+    distE : ]0,1[ → ]0,1[ → ]0,1[
+  -- distE (1+ x /2+x+ y) (1+ x' /2+x+ y') = {!!}
+
   postulate
     _+E_ : ]0,1[ → ]0,1[ → ]0,1[
 
@@ -100,7 +104,7 @@ module ]0,1[-ℚ where
     ·/E-identity : (x : ]0,1[) {y : ]0,1[} → x ≡ (x ·E y) /E y < ·E-anti₁ x >
 
   ops : ]0,1[-ops ]0,1[ _<E_
-  ops = mk 1+_/2+x+_ _+E_ _·E_ _/E_<_> 1-E_ <E-trans +E-mono₁ +E-mono₂ ·E-anti₁ ·E-anti₂ ·/E-assoc +E-sym +E-assoc ·/E-identity
+  ops = mk 1+_/2+x+_ _+E_ _·E_ _/E_<_> 1-E_ distE (λ {x} → <E-trans {x}) +E-mono₁ +E-mono₂ ·E-anti₁ ·E-anti₂ ·/E-assoc +E-sym +E-assoc ·/E-identity
 
 module [0,1] {]0,1[ _<E_} (]0,1[R : ]0,1[-ops ]0,1[ _<E_) where
 
