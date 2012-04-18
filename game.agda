@@ -24,7 +24,7 @@ data ⅁ ...
 -}
 
 open import Data.Bits
-open import flipbased
+open import flipbased-implem
 
 Bits⟨_⟩→_ : ∀ {a} → ℕ → Set a → Set a
 Bits⟨ n ⟩→ A = Bits n → A
@@ -90,7 +90,7 @@ module CryptoGames where
       runDetSemSec enc (mk refl gen-m₀m₁ f) b = gen-m₀m₁ >>= λ m₀m₁ → f (EXP b enc m₀m₁)
 
       DetSemSecWinner : ∀ (enc : M → C) b {k} (Adv : SemSecAdv k) → ↺ k Set
-      DetSemSecWinner enc b Adv = ↺T (runDetSemSec enc Adv b)
+      DetSemSecWinner enc b Adv = T↺ (runDetSemSec enc Adv b)
 
       DetSemSec : ∀ k (enc : M → C) → Set
       DetSemSec k enc = ∀ (Adv : SemSecAdv k) → negligible-advantage (runDetSemSec enc Adv)
