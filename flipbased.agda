@@ -85,8 +85,11 @@ _⊛_ {n₁} mf mx = mf >>= λ f → ⟪ f · mx ⟫
 choose : ∀ {n a} {A : Set a} → ↺ n A → ↺ n A → ↺ (suc n) A
 choose x y = toss >>= λ b → if b then x else y
 
+zip↺ : ∀ {c₀ c₁ a b} {A : Set a} {B : Set b} → ↺ c₀ A → ↺ c₁ B → ↺ (c₀ + c₁) (A × B)
+zip↺ x y = ⟪ _,_ · x · y ⟫
+
 _⟨,⟩_ : ∀ {a b} {A : Set a} {B : Set b} {m n} → ↺ m A → ↺ n B → ↺ (m + n) (A × B)
-x ⟨,⟩ y = ⟪ _,_ · x · y ⟫
+_⟨,⟩_ = zip↺
 
 _⟨xor⟩_ : ∀ {n₁ n₂} → ↺ n₁ Bit → ↺ n₂ Bit → ↺ (n₁ + n₂) Bit
 x ⟨xor⟩ y = ⟪ _xor_ · x · y ⟫
