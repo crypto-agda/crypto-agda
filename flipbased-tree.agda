@@ -56,6 +56,7 @@ postulate
   _/2 : [0,1] → [0,1]
   _/2+_/2 : [0,1] → [0,1] → [0,1]
   _*/_ : [0,1] → [0,1] → [0,1]
+  1-_ : [0,1] → [0,1]
 -- sym _/2+_/2
 -- 1 /2+ 1 /2 = 1/1
 -- p /2+ p /2 = p
@@ -71,6 +72,7 @@ postulate
   distr-*-/2+/2 : ∀ x y z → (x */ z) /2+ (y */ z) /2 ≡ (x /2+ y /2) */ z
   distr-/2-* : ∀ p q → (p /2) */ (q /2) ≡ ((p */ q) /2) /2
   0/2≡0 : 0/1 /2 ≡ 0/1
+  1-_/2+1-_/2 : ∀ p q → (1- p) /2+ (1- q) /2 ≡ 1- (p /2+ q /2)
 
 1/2^_ : ℕ → [0,1]
 1/2^ zero = 1/1
@@ -187,6 +189,62 @@ Pr-zip (Pr-fork refl pf₁ pf₂) pf₃ = Pr-fork (distr-*-/2+/2 _ _ _) (Pr-zip 
 ex₂ : ∀ x y → Pr[ toss ⟨,⟩ toss ≡ (x , y) ]≡ 1/4
 ex₂ x y = Pr-same (trans (distr-/2-* _ _) (cong (_/2 ∘ _/2) (1*q≡q _)))
                   (Pr-zip {Alg₀ = toss} {Alg₁ = toss} (ex₁ x) (ex₁ y))
+
+pr-choose : ∀ {c a} {A : Set a} {p₀ p₁ : ↺ c A} {pr₀ pr₁ x}
+             → Pr[ p₀ ≡ x ]≡ pr₀
+             → Pr[ p₁ ≡ x ]≡ pr₁
+             → Pr[ choose p₀ p₁ ≡ x ]≡ pr₀ /2+ pr₁ /2
+pr-choose {c} {pr₀ = pr₀} {pr₁} pf₀ pf₁ =
+  Pr-fork (pr₁ /2+ pr₀ /2-comm) (Pr-weaken+ 0 pf₁) (Pr-weaken+ 0 pf₀)
+
+postulate
+  pr-ret-xor : ∀ {x y pr} b
+         → Pr[return↺ x ≡ y ]≡ pr
+         → Pr[return↺ x ≡ b xor y ]≡ pr
+-- pr-ret-xor b pf = {!!}
+
+pr-xor'' : ∀ {c} {Alg : ↺ c Bit} {x pr} b
+         → Pr[ Alg ≡ x ]≡ pr
+         → Pr[ Alg ≡ b xor x ]≡ pr
+pr-xor'' b (Pr-return pf) = Pr-return (pr-ret-xor b pf)
+pr-xor'' b (Pr-fork refl pf₀ pf₁) = Pr-fork refl (pr-xor'' b pf₀) (pr-xor'' b pf₁)
+
+pr-xor' : ∀ {c} {Alg : ↺ c Bit} {x pr b}
+         → Pr[ Alg ≡ x ]≡ pr
+         → Pr[ ⟪ _xor_ b · Alg ⟫ ≡ b xor x ]≡ pr
+pr-xor' {b = b} = Pr-map (xor-inj {b})
+  where
+    -- move it!
+    not-inj : ∀ {x y} → not x ≡ not y → x ≡ y
+    not-inj {true} {true} = λ _ → refl
+    not-inj {true} {false} = λ ()
+    not-inj {false} {true} = λ ()
+    not-inj {false} {false} = λ _ → refl
+    xor-inj : ∀ {b x y} → b xor x ≡ b xor y → x ≡ y
+    xor-inj {true} = not-inj
+    xor-inj {false} = id
+
+postulate
+  pr-ret-not : ∀ {x y pr}
+         → Pr[return↺ x ≡ y ]≡ pr
+         → Pr[return↺ x ≡ not y ]≡ 1- pr
+-- pr-ret-not = {!!}
+
+pr-not : ∀ {c} {Alg : ↺ c Bit} {x pr}
+         → Pr[ Alg ≡ x ]≡ pr
+         → Pr[ Alg ≡ not x ]≡ 1- pr
+pr-not (Pr-return pf) = Pr-return (pr-ret-not pf)
+pr-not (Pr-fork refl pf pf₁) = Pr-fork (1- _ /2+1- _ /2) (pr-not pf) (pr-not pf₁)
+
+postulate
+  pr-xor : ∀ {c} {Alg : ↺ c Bit} {x pr b}
+         → Pr[ Alg ≡ x ]≡ pr
+         → Pr[ ⟪ _xor_ b · Alg ⟫ ≡ x ]≡ pr
+-- pr-xor {b = b} = {!pr-not!}
+
+postulate
+  pr-toss-xor-toss : ∀ x → Pr[ toss ⟨xor⟩ toss ≡ x ]≡ 1/2
+-- pr-toss-xor-toss x = {!!}
 
 postulate
   ex₃ : ∀ {n} (x : Bits n) → Pr[ random ≡ x ]≡ 1/2^ n
