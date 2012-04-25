@@ -37,6 +37,10 @@ open import Relation.Binary
 open import Data.Star
 
 data Swp {a} {A : Set a} : ∀ {n} (left right : Tree A n) → Set a where
+  fork : ∀ {n} {left₀ left₁ right₀ right₁ : Tree A n} →
+         Swp left₀ left₁ →
+         Swp right₀ right₁ →
+         Swp (fork left₀ right₀) (fork left₁ right₁)
   swp₁ : ∀ {n} {left right : Tree A n} →
          Swp (fork left right) (fork right left)
   swp₂ : ∀ {n} {t₀₀ t₀₁ t₁₀ t₁₁ : Tree A n} →
@@ -46,8 +50,9 @@ Swp★ : ∀ {a} {A : Set a} {n} (left right : Tree A n) → Set a
 Swp★ = Star Swp
 
 Swp-sym : ∀ {n a} {A : Set a} → Symmetric (Swp {A = A} {n})
-Swp-sym swp₁ = swp₁
-Swp-sym swp₂ = swp₂
+Swp-sym (fork s₀ s₁) = fork (Swp-sym s₀) (Swp-sym s₁)
+Swp-sym swp₁         = swp₁
+Swp-sym swp₂         = swp₂
 
 data Rot {a} {A : Set a} : ∀ {n} (left right : Tree A n) → Set a where
   leaf : ∀ x → Rot (leaf x) (leaf x)
