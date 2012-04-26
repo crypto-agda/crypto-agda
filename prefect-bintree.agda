@@ -38,6 +38,12 @@ open import Relation.Binary
 open import Data.Star
 
 data Swp {a} {A : Set a} : ∀ {n} (left right : Tree A n) → Set a where
+  left : ∀ {n} {left₀ left₁ right : Tree A n} →
+         Swp left₀ left₁ →
+         Swp (fork left₀ right) (fork left₁ right)
+  right : ∀ {n} {left right₀ right₁ : Tree A n} →
+         Swp right₀ right₁ →
+         Swp (fork left right₀) (fork left right₁)
   swp₁ : ∀ {n} {left right : Tree A n} →
          Swp (fork left right) (fork right left)
   swp₂ : ∀ {n} {t₀₀ t₀₁ t₁₀ t₁₁ : Tree A n} →
@@ -47,8 +53,10 @@ Swp★ : ∀ {a} {A : Set a} {n} (left right : Tree A n) → Set a
 Swp★ = Star Swp
 
 Swp-sym : ∀ {n a} {A : Set a} → Symmetric (Swp {A = A} {n})
-Swp-sym swp₁ = swp₁
-Swp-sym swp₂ = swp₂
+Swp-sym (left s)  = left (Swp-sym s)
+Swp-sym (right s) = right (Swp-sym s)
+Swp-sym swp₁      = swp₁
+Swp-sym swp₂      = swp₂
 
 data Rot {a} {A : Set a} : ∀ {n} (left right : Tree A n) → Set a where
   leaf : ∀ x → Rot (leaf x) (leaf x)
@@ -63,7 +71,7 @@ data Rot {a} {A : Set a} : ∀ {n} (left right : Tree A n) → Set a where
 
 Rot-refl : ∀ {n a} {A : Set a} → Reflexive (Rot {A = A} {n})
 Rot-refl {x = leaf x} = leaf x
-Rot-refl {x = fork left right} = fork Rot-refl Rot-refl
+Rot-refl {x = fork _ _} = fork Rot-refl Rot-refl
 
 Rot-sym : ∀ {n a} {A : Set a} → Symmetric (Rot {A = A} {n})
 Rot-sym (leaf x) = leaf x
