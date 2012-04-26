@@ -1,9 +1,10 @@
 module prefect-bintree where
 
 open import Function
-open import Data.Nat
+open import Data.Nat.NP
 open import Data.Bool
 open import Data.Bits
+open import Data.Vec using (Vec; _++_)
 
 data Tree {a} (A : Set a) : ℕ → Set a where
   leaf : (x : A) → Tree A zero
@@ -19,6 +20,11 @@ toFun (fork left right) (b ∷ bs) = toFun (if b then right else left) bs
 
 lookup : ∀ {n a} {A : Set a} → Bits n → Tree A n → A
 lookup = flip toFun
+
+-- Returns the flat vector of leaves underlying the perfect binary tree.
+toVec : ∀ {n a} {A : Set a} → Tree A n → Vec A (2^ n)
+toVec (leaf x)     = x ∷ []
+toVec (fork t₀ t₁) = toVec t₀ ++ toVec t₁
 
 lookup' : ∀ {m n a} {A : Set a} → Bits m → Tree A (m + n) → Tree A n
 lookup' [] t = t
@@ -87,12 +93,14 @@ Rot-trans (krof p₀ p₁) (krof q₀ q₁) = fork (Rot-trans p₀ q₁) (Rot-tr
 
 open import Relation.Binary.PropositionalEquality
 open import Relation.Nullary using (Dec ; yes ; no)
+open import Relation.Nullary.Negation
 
 module new-approach where
 
   open import Data.Empty
 
-  open import Function.Inverse
+  import Function.Inverse as FI
+  open FI using (_↔_; module Inverse; _InverseOf_)
   open import Function.Related
   import Function.Equality
   import Relation.Binary.PropositionalEquality as P
@@ -121,7 +129,7 @@ module new-approach where
   t₁ ≈ t₂ = ∀ x → (x ∈ t₁) ↔ (x ∈ t₂) 
 
   ≈-refl : {a : _}{A : Set a}{n : ℕ}{t : Tree A n} → t ≈ t
-  ≈-refl _ = Function.Inverse.id
+  ≈-refl _ = FI.id
 
   move : ∀ {a}{A : Set a}{n : ℕ}{t s : Tree A n}{x : A} → t ≈ s → x ∈ t → x ∈ s
   move t≈s x∈t = Inverse.to (t≈s _) Function.Equality.⟨$⟩ x∈t
@@ -154,7 +162,7 @@ module new-approach where
         frk t1≈s1 t2≈s2 (right x∈t2) = right (move t2≈s2 x∈t2)
         
         to = →-to-⟶ (frk t1≈s1 t2≈s2)
-        from = →-to-⟶ (frk (λ x → Function.Inverse.sym (t1≈s1 x)) (λ x → Function.Inverse.sym (t2≈s2 x)))
+        from = →-to-⟶ (frk (λ x → FI.sym (t1≈s1 x)) (λ x → FI.sym (t2≈s2 x)))
 
        
         open Function.Equality using (_⟨$⟩_)
@@ -169,7 +177,7 @@ module new-approach where
         frk-rinv (right x) = cong right (_InverseOf_.right-inverse-of (Inverse.inverse-of (t2≈s2 y)) x)
 
   Rot⟶≈ : ∀ {a}{A : Set a}{n : ℕ}{t₁ t₂ : Tree A n} → Rot t₁ t₂ → t₁ ≈ t₂
-  Rot⟶≈ (leaf x)        y = Function.Inverse.id
+  Rot⟶≈ (leaf x)        y = FI.id
   Rot⟶≈ (fork rot rot₁) y = (Rot⟶≈ rot ⟨fork⟩ Rot⟶≈ rot₁) y
   Rot⟶≈ (krof {_} {l} {l'} {r} {r'} rot rot₁) y = 
         y ∈ fork l r ↔⟨ (Rot⟶≈ rot ⟨fork⟩ Rot⟶≈ rot₁) y ⟩
@@ -184,8 +192,7 @@ module new-approach where
 
   -- move-me
   _∷≢_ : {n : ℕ}{xs ys : Bits n}(x : Bit) → x ∷ xs ≢ x ∷ ys → xs ≢ ys
-  (x ∷≢ neg) eq = neg (cong (_∷_ x) eq)
-
+  _∷≢_ x = contraposition $ cong $ _∷_ x
 
   ∈-put : {a : _}{A : Set a}{n : ℕ}(p : Bits n){x : A}(t : Tree A n) → x ∈ put p x t
   ∈-put [] t = here
