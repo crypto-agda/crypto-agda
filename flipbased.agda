@@ -121,13 +121,6 @@ randomFun m n = ⟪ funFromTbl · randomTbl m n ⟫
 randomFunExt : ∀ {n k a} {A : Set a} → ↺ k (Bits n → A) → ↺ (k + k) (Bits (suc n) → A)
 randomFunExt f = ⟪ comb · f · f ⟫ where comb = λ g₁ g₂ xs → (if head xs then g₁ else g₂) (tail xs)
 
-2*_ : ℕ → ℕ
-2* x = x + x
-
-2^_ : ℕ → ℕ
-2^ 0       = 1
-2^ (suc n) = 2* (2^ n)
-
 costRndFun : ℕ → ℕ → ℕ
 costRndFun zero n = n
 costRndFun (suc m) n = 2* (costRndFun m n)

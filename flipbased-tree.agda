@@ -5,8 +5,11 @@ open import Function
 open import Data.Bits
 open import Data.Nat.NP using (ℕ; zero; suc; _≤_; s≤s; _+_; module ℕ≤; module ℕ°)
 open import Data.Nat.Properties
-open import bintree
+import bintree
 open import Data.Product
+
+open bintree
+open bintree public using (Tree)
 
 import flipbased
 
