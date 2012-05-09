@@ -3,12 +3,13 @@ module circuit where
 open import Function
 open import Data.Nat.NP hiding (_≟_; compare)
 open import Data.Bits
+open import Data.Bits.Bits2
 open import Data.Bool hiding (_≟_)
 open import Data.Product hiding (swap; map)
 import Data.Fin.NP as Fin
 open Fin using (Fin; zero; suc; inject+; raise; #_)
 open import Data.List using (List; []; _∷_)
-open import Data.Vec using (Vec; []; _∷_; foldr; _[_]≔_; lookup; _++_; splitAt; tabulate; allFin) renaming (map to vmap)
+open import Data.Vec using (Vec; []; _∷_; foldr; _[_]≔_; lookup; _++_; splitAt; tabulate; allFin; concat) renaming (map to vmap)
 open import Data.Vec.Properties
 open import Relation.Nullary.Decidable hiding (map)
 open import Relation.Binary.PropositionalEquality
@@ -65,7 +66,7 @@ record RewiringBuilder (C : CircuitType) : Set₁ where
   field
     _=[_]=_ : ∀ {i o} → Bits i → C i o → Bits o → Set
 
-    rewire-spec : ∀ {i o} (r : RewireFun i o) bs → bs =[ rewire r ]= Rewire.rewire r bs
+    rewire-spec : ∀ {i o} (r : RewireFun i o) is → is =[ rewire r ]= Rewire.rewire r is
 
     idC-spec : ∀ {i} (bs : Bits i) → bs =[ idC ]= bs
 
@@ -77,23 +78,64 @@ record RewiringBuilder (C : CircuitType) : Set₁ where
   sink _ = rewire (λ())
 -- sink-spec : bs =[ sink i ]= []
 
-  dup : ∀ o → C 1 o
-  dup _ = rewire (const zero)
--- dup-spec : (b ∷ []) =[ dup o ]= replicate o
+  dup₁ : ∀ o → C 1 o
+  dup₁ _ = rewire (const zero)
+-- dup₁-spec : (b ∷ []) =[ dup o ]= replicate o
 
-  dup₂ : C 1 2
-  dup₂ = dup 2
--- dup₂-spec : (b ∷ []) =[ dup₂ ]= (b ∷ b ∷ [])
+  dup₁² : C 1 2
+  dup₁² = dup₁ 2
+-- dup₁²-spec : (b ∷ []) =[ dup₁² ]= (b ∷ b ∷ [])
 
   vcat : ∀ {i o n} → Vec (C i o) n → C (n * i) (n * o)
   vcat []       = idC
   vcat (x ∷ xs) = x *** vcat xs
 
-  coerce : ∀ {i₀ i₁ o₀ o₁} → i₀ ≡ i₁ → o₀ ≡ o₁ → C i₀ o₀ → C i₁ o₁
-  coerce refl refl = id
+  coerce : ∀ {i o} → i ≡ o → C i o
+  coerce refl = idC
 
-  dupⁿ : ∀ {n} k → C n (k * n)
-  dupⁿ {n} k = coerce (proj₂ ℕ°.*-identity n) (ℕ°.*-comm n k) (vcat {n = n} (replicate (dup _)))
+{-
+  coerce-spec : ∀ {i o} {i≡o : i ≡ o} {is} →
+                  is =[ coerce i≡o ]= subst Bits i≡o is
+  coerce-spec = {!!}
+-}
+
+  {-
+    Sends inputs 0,1,2,...,n to outputs 0,1,2,...,n,0,1,2,...,n,0,1,2,...,n,...
+  -}
+  dupⁿ : ∀ {i} k → C i (k * i)
+  dupⁿ {i} k = rewireWithTbl (concat (replicate {n = k} (allFin i)))
+
+{-
+  dupⁿ-spec : ∀ {i} {is : Bits i} k → is =[ dupⁿ k ]= concat (replicate {n = k} is)
+  dupⁿ-spec {i} {is} k = {!rewireWithTbl-spec (concat (replicate {n = k} (allFin _))) ?!}
+-}
+
+  {-
+    Sends inputs 0,1,2,...,n to outputs 0,0,0,...,1,1,1,...,2,2,2,...,n,n,n,...
+  -}
+  dupⁿ′ : ∀ {i} k → C i (i * k)
+  dupⁿ′ {i} k = rewireWithTbl (concat (vmap replicate (allFin i)))
+{-
+  dupⁿ′ {i} k = coerce (proj₂ ℕ°.*-identity i) >>>
+                      (vcat {n = i} (replicate (dup₁ _)))
+-}
+
+  dup² : ∀ {i} → C i (i + i)
+  dup² {i} = dupⁿ 2 >>> coerce (cong (_+_ i) (sym (ℕ°.+-comm 0 i)))
+
+{-
+  dup²-spec : ∀ {n} {is : Bits n} → is =[ dup² ]= (is ++ is)
+  dup²-spec = coerce-spec (rewireWithTbl-spec {!!} {!!})
+-}
+
+  _&&&_ : ∀ {i o₀ o₁} → C i o₀ → C i o₁ → C i (o₀ + o₁)
+  c₀ &&& c₁ = dup² >>> c₀ *** c₁
+
+{-
+  _&&&-spec_ : ∀ {i o₀ o₁} {c₀ : C i o₀} {c₁ : C i o₁} {is os₀ os₁}
+               → is =[ c₀ ]= os₀ → is =[ c₁ ]= os₁ → is =[ c₀ &&& c₁ ]= (os₀ ++ os₁)
+  pf₀ &&&-spec pf₁ = dup²-spec >>>-spec (pf₀ ***-spec pf₁)
+-}
 
   ext-before : ∀ {k i o} → C i o → C (k + i) (k + o)
   ext-before {k} c = idC {k} *** c
@@ -101,17 +143,14 @@ record RewiringBuilder (C : CircuitType) : Set₁ where
   ext-after : ∀ {k i o} → C i o → C (i + k) (o + k)
   ext-after c = c *** idC
 
-  takeC : ∀ {k i o} → C i o → C (i + k) o
-  takeC {k} {_} {o} c = coerce refl (ℕ°.+-comm o 0) (c *** sink k)
+  commC : ∀ m n → C (m + n) (n + m)
+  commC m n = rewireWithTbl (vmap (raise m) (allFin n) ++ vmap (inject+ n) (allFin m))
 
-  takeC' : ∀ {i} k → C (i + k) i
-  takeC' k = takeC {k} idC
+  dropC : ∀ {i} k → C (k + i) i
+  dropC k = sink k *** idC
 
-  dropC : ∀ {k i o} → C i o → C (k + i) o
-  dropC {k} c = sink k *** c
-
-  dropC' : ∀ {i} k → C (k + i) i
-  dropC' k = dropC {k} idC
+  takeC : ∀ {i} k → C (k + i) k
+  takeC {i} k = commC k _ >>> dropC i
 
   swap : ∀ {i} (x y : Fin i) → C i i
   -- swap x y = arr (λ xs → (xs [ x ]≔ (lookup y xs)) [ y ]≔ (lookup x xs))
@@ -132,10 +171,10 @@ record RewiringBuilder (C : CircuitType) : Set₁ where
   perm ((x , y) ∷ π) = swap x y >>> perm π
 
   headC : ∀ {i} → C (1 + i) 1
-  headC = idC {1} *** sink _
+  headC = takeC 1
 
   tailC : ∀ {i} → C (1 + i) i
-  tailC = dropC' 1
+  tailC = dropC 1
 
 record CircuitBuilder (C : CircuitType) : Set₁ where
   constructor mk
@@ -145,16 +184,28 @@ record CircuitBuilder (C : CircuitType) : Set₁ where
     leafC : ∀ {o} → Bits o → C 0 o
     forkC : ∀ {i o} (c₀ c₁ : C i o) → C (1 + i) o
 
-  open RewiringBuilder isRewiringBuilder public
+  open RewiringBuilder isRewiringBuilder
 
   bit : Bit → C 0 1
-  bit b = arr (const (b ∷ []))
+  bit b = leafC (b ∷ [])
 
   0ʷ : C 0 1
   0ʷ = bit 0b
 
+  0ʷⁿ : ∀ {o} → C 0 o
+  0ʷⁿ = leafC 0ⁿ
+
   1ʷ : C 0 1
   1ʷ = bit 1b
+
+  1ʷⁿ : ∀ {o} → C 0 o
+  1ʷⁿ = leafC 1ⁿ
+
+  padL : ∀ {i} k → C i (k + i)
+  padL k = 0ʷⁿ {k} *** idC
+
+  padR : ∀ {i} k → C i (i + k)
+  padR k = padL k >>> commC k _
 
   arr' : ∀ {i o} → (Bits i → Bits o) → C i o
   arr' {zero}  f = leafC (f [])
@@ -168,6 +219,9 @@ record CircuitBuilder (C : CircuitType) : Set₁ where
 
   binOp : (Bit → Bit → Bit) → C 2 1
   binOp op = arr (λ { (x ∷ y ∷ []) → (op x y) ∷ [] })
+
+  terOp : (Bit → Bit → Bit → Bit) → C 3 1
+  terOp op = arr (λ { (x ∷ y ∷ z ∷ []) → (op x y z) ∷ [] })
 
   xorC : C 2 1
   xorC = binOp _xor_
@@ -189,6 +243,26 @@ record CircuitBuilder (C : CircuitType) : Set₁ where
 
   if⟨head=0⟩then_else_ : ∀ {i o} (c₀ c₁ : C i o) → C (1 + i) o
   if⟨head=0⟩then_else_ = forkC
+
+  -- Base addition with carry:
+  --   * Any input can be used as the carry
+  --   * First output is the carry
+  --
+  -- This can also be seen as the addition of
+  -- three bits which result is between 0 and 3
+  -- and thus fits in two bit word in binary
+  -- representation.
+  --
+  -- Alternatively you can see it as counting the
+  -- number of 1s in a three bits vector.
+  add₂ : C 3 2
+  add₂ = carry &&& result
+    where carry  : C 3 1
+          carry  = terOp (λ x y z → x xor (y ∧ z))
+          result : C 3 1
+          result = terOp (λ x y z → x xor (y xor z))
+
+  open RewiringBuilder isRewiringBuilder public
 
 _→ᵇ_ : CircuitType
 i →ᵇ o = Bits i → Bits o
@@ -335,7 +409,7 @@ module Test where
 -- reverse ∘ reverse ≈ id
 
   abs : ∀ {C} → RewiringBuilder C → C 4 4
-  abs builder = swap₂ *** dup₂ *** sink 1
+  abs builder = swap₂ *** dup₁² *** sink 1
     where open RewiringBuilder builder
 
   tinytree : Tree (Fin 4) 2
