@@ -68,7 +68,20 @@ record RewiringBuilder (C : CircuitType) : Set₁ where
 
     rewire-spec : ∀ {i o} (r : RewireFun i o) is → is =[ rewire r ]= Rewire.rewire r is
 
+{-
+    _>>>-spec_ : ∀ {i m o} {c₀ : C i m} {c₁ : C m o} {is ms os} →
+                 is =[ c₀ ]= ms → ms =[ c₁ ]= os → is =[ c₀ >>> c₁ ]= os
+
+    _***-spec_ : ∀ {i₀ i₁ o₀ o₁} {c₀ : C i₀ o₀} {c₁ : C i₁ o₁} {is₀ is₁ os₀ os₁} →
+                 is₀ =[ c₀ ]= os₀ → is₁ =[ c₁ ]= os₁ → (is₀ ++ is₁) =[ c₀ *** c₁ ]= (os₀ ++ os₁)
+
     idC-spec : ∀ {i} (bs : Bits i) → bs =[ idC ]= bs
+-}
+{-
+  rewireWithTbl-spec : ∀ {i o} (t : RewireTbl i o) is
+                       → is =[ rewireWithTbl t ]= Rewire.rewireTbl t is
+  rewireWithTbl-spec t is = {!rewire-spec ? ?!}
+-}
 
   idCDefault-spec : ∀ {i} (bs : Bits i) → bs =[ idCDefault ]= bs
   idCDefault-spec bs
@@ -186,8 +199,21 @@ record CircuitBuilder (C : CircuitType) : Set₁ where
 
   open RewiringBuilder isRewiringBuilder
 
+{-
+  field
+    leafC-spec : ∀ {o} (os : Bits o) → [] =[ leafC os ]= os
+    forkC-left-spec : ∀ {i o} {c₀ c₁ : C i o} {is os}
+                      → is =[ c₀ ]= os → (0∷ is) =[ forkC c₀ c₁ ]= os
+    forkC-right-spec : ∀ {i o} {c₀ c₁ : C i o} {is os}
+                       → is =[ c₁ ]= os → (1∷ is) =[ forkC c₀ c₁ ]= os
+-}
   bit : Bit → C 0 1
   bit b = leafC (b ∷ [])
+
+{-
+  bit-spec : ∀ b → [] =[ bit b ]= (b ∷ [])
+  bit-spec b = leafC-spec (b ∷ [])
+-}
 
   0ʷ : C 0 1
   0ʷ = bit 0b
@@ -195,11 +221,21 @@ record CircuitBuilder (C : CircuitType) : Set₁ where
   0ʷⁿ : ∀ {o} → C 0 o
   0ʷⁿ = leafC 0ⁿ
 
+{-
+  0ʷ-spec : [] =[ 0ʷ ]= 0∷ []
+  0ʷ-spec = bit-spec 0b
+-}
+
   1ʷ : C 0 1
   1ʷ = bit 1b
 
   1ʷⁿ : ∀ {o} → C 0 o
   1ʷⁿ = leafC 1ⁿ
+
+{-
+  1ʷ-spec : [] =[ 1ʷ ]= 1∷ []
+  1ʷ-spec = bit-spec 1b
+-}
 
   padL : ∀ {i} k → C i (k + i)
   padL k = 0ʷⁿ {k} *** idC
