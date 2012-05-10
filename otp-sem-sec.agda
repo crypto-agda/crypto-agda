@@ -105,11 +105,20 @@ module F
   SemSecTr tr = ∀ {E p} → SemSec E p → SemSec (tr E) p
 
   neg-pres-sem-sec : SemSecTr (_∘_ vnot)
-  neg-pres-sem-sec {E} {p} E-sec A-breaks-E' = pf
+  neg-pres-sem-sec {E} {p} E-sec A' = A'-breaks-E'
      where E' : Enc
            E' = vnot ∘ E
-           pf : negligible-advantage (runSemSec E' A-breaks-E')
-           pf = {!!}
+           open SemSecAdv A' using (c≡c₀+c₁ ; c₀ ; c₁)
+           A'-beh : ↺ c₀ ((M × M) × (C → ↺ c₁ Bit))
+           A'-beh = {!Sec!}
+           A-beh : ↺ c₀ ((M × M) × (C → ↺ c₁ Bit))
+           A-beh = {!!}
+           A : SemSecAdv p
+           A = {!!}
+           A-breaks-E : negligible-advantage (runSemSec E A)
+           A-breaks-E = E-sec A
+           A'-breaks-E' : negligible-advantage (runSemSec E' A')
+           A'-breaks-E' = {!!}
 
 {-
   ⊕-pres-sem-sec : ∀ mask → SemSecTr (_∘_ (_⊕_ mask))
