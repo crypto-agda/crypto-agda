@@ -25,12 +25,12 @@ module F
   (toC : ∀ {c s t i o} → FCp c s t i o → Cp (c + i) o)
   (runC : ∀ {i o} → Cp i o → Bits i → Bits o)
 
-  (|M| |C| : Ports)
+  (|M| |C| : ℕ)
 
   (Proba : Set)
-  -- (Pr[_≡1] : ∀ {c} (EXP : ↺ c Bit) → Proba)
   (Pr[_≡1] : ∀ {c} (EXP : Bits c → Bit) → Proba)
-  (negligible-advantage-proba : Proba → Proba → Set)
+  (dist : Proba → Proba → Proba)
+  (negligible : Proba → Set)
 
   where
 
@@ -83,8 +83,10 @@ module F
     where R₀ = take (SemSecAdv.c₀ A) (subst Bits (SemSecAdv.c≡c₀+c₁ A) R)
           R₁ = drop (SemSecAdv.c₀ A) (subst Bits (SemSecAdv.c≡c₀+c₁ A) R)
 
+  -- runSemSec : ∀ (E : M → C) {p} (A : SemSecAdv p) (b : Bit) → ↺ (coins p) Bit
+
   negligible-advantage : ∀ {c} (EXP : Bit → ↺ c Bit) → Set
-  negligible-advantage EXP = negligible-advantage-proba Pr[ EXP 0b ≡1] Pr[ EXP 1b ≡1]
+  negligible-advantage EXP = negligible (dist Pr[ EXP 0b ≡1] Pr[ EXP 1b ≡1])
 
   SemSec : ∀ (E : M → C) → Power → Set
   SemSec E power = ∀ (A : SemSecAdv power) → negligible-advantage (runSemSec E A)
@@ -102,23 +104,21 @@ module F
 
   -- In general the power might change
   SemSecTr : Tr → Set
-  SemSecTr tr = ∀ {E p} → SemSec E p → SemSec (tr E) p
+  SemSecTr tr = ∀ {E p} → SemSec (tr E) p → SemSec E p
 
   neg-pres-sem-sec : SemSecTr (_∘_ vnot)
-  neg-pres-sem-sec {E} {p} E-sec A' = A'-breaks-E'
+  neg-pres-sem-sec {E} {p} E'-sec A = A-breaks-E
      where E' : Enc
            E' = vnot ∘ E
-           open SemSecAdv A' using (c≡c₀+c₁ ; c₀ ; c₁)
+           open SemSecAdv A using (c≡c₀+c₁ ; c₀ ; c₁) renaming (beh to A-beh)
            A'-beh : ↺ c₀ ((M × M) × (C → ↺ c₁ Bit))
-           A'-beh = {!Sec!}
-           A-beh : ↺ c₀ ((M × M) × (C → ↺ c₁ Bit))
-           A-beh = {!!}
-           A : SemSecAdv p
-           A = {!!}
-           A-breaks-E : negligible-advantage (runSemSec E A)
-           A-breaks-E = E-sec A
+           A'-beh = {!!}
+           A' : SemSecAdv p
+           A' = {!!}
            A'-breaks-E' : negligible-advantage (runSemSec E' A')
-           A'-breaks-E' = {!!}
+           A'-breaks-E' = E'-sec A'
+           A-breaks-E : negligible-advantage (runSemSec E A)
+           A-breaks-E = ?
 
 {-
   ⊕-pres-sem-sec : ∀ mask → SemSecTr (_∘_ (_⊕_ mask))
