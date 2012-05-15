@@ -48,4 +48,9 @@ private
 weaken≤ : ∀ {m n a} {A : Set a} → m ≤ n → ↺ m A → ↺ n A
 weaken≤ p = comap (take≤ p)
 
+open import Relation.Binary.PropositionalEquality
+
+_≗↺_ : ∀ {c a} {A : Set a} (f g : ↺ c A) → Set a
+f ≗↺ g = run↺ f ≗ run↺ g
+
 open flipbased ↺ toss weaken≤ return↺ map↺ join↺ public
