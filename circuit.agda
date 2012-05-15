@@ -75,8 +75,8 @@ record RewiringBuilder (C : CircuitType) : Set₁ where
     _***-spec_ : ∀ {i₀ i₁ o₀ o₁} {c₀ : C i₀ o₀} {c₁ : C i₁ o₁} {is₀ is₁ os₀ os₁} →
                  is₀ =[ c₀ ]= os₀ → is₁ =[ c₁ ]= os₁ → (is₀ ++ is₁) =[ c₀ *** c₁ ]= (os₀ ++ os₁)
 
-    idC-spec : ∀ {i} (bs : Bits i) → bs =[ idC ]= bs
 -}
+    idC-spec : ∀ {i} (bs : Bits i) → bs =[ idC ]= bs
 {-
   rewireWithTbl-spec : ∀ {i o} (t : RewireTbl i o) is
                        → is =[ rewireWithTbl t ]= Rewire.rewireTbl t is
@@ -469,6 +469,6 @@ module Test where
   test₄ : bigtree ≡ abs treeBitsRewiringBuilder
   test₄ = refl
 
-  open RewiringWith2^Outputs
-  test₅ : tabulate (lookupFin tinytree) ≡ tbl
-  test₅ = refl
+  -- open RewiringWith2^Outputs
+  -- test₅ : tabulate (lookupFin tinytree) ≡ tbl
+  -- test₅ = refl
