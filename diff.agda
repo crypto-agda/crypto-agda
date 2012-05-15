@@ -8,6 +8,7 @@ diff zero y = y
 diff x zero = x
 diff (suc x) (suc y) = diff x y
 
+{-
 postulate
   diff-refl  : ∀ x → diff x x ≡ 0
   diff-sym   : ∀ x y → diff x y ≡ diff y x
@@ -16,6 +17,7 @@ postulate
   diff-x+    : ∀ x y z → diff (x + y) (x + z) ≡ diff y z
   diff-mono₁ : ∀ x y z t → x ≤ y → diff z t ≤ diff (x + z) (y + t)
   diff-x*  : ∀ x y z → diff (x * y) (x * z) ≡ x * diff y z
+-}
 
 -- Haskell
 -- let diff x y = abs (x - y)
