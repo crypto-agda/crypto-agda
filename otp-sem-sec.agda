@@ -10,8 +10,9 @@ open import Data.Product.NP
 open import circuit
 open import Relation.Nullary
 open import Relation.Binary
-open import Relation.Binary.PropositionalEquality
+open import Relation.Binary.PropositionalEquality.NP
 open import flipbased-implem
+open ≡-Reasoning
 
 proj : ∀ {a} {A : Set a} → A × A → Bit → A
 proj (x₀ , x₁) 0b = x₀
@@ -20,6 +21,8 @@ proj (x₀ , x₁) 1b = x₁
 module FunctionExtra where
   _***_ : ∀ {A B C D : Set} → (A → B) → (C → D) → A × C → B × D
   (f *** g) (x , y) = (f x , g y)
+  _&&&_ : ∀ {A B C : Set} → (A → B) → (A → C) → A → B × C
+  (f &&& g) x = (f x , g x)
   _>>>_ : ∀ {a b c} {A : Set a} {B : Set b} {C : Set c} →
             (A → B) → (B → C) → (A → C)
   f >>> g = g ∘ f
@@ -69,27 +72,16 @@ module Guess (prgDist : PrgDist) where
   breaks : ∀ {c} (EXP : Bit → ↺ c Bit) → Set
   breaks ⅁ = ⅁ 0b ]-[ ⅁ 1b
 
+  -- An oracle: an adversary who can break the guessing game.
+  Oracle : Power → Set
+  Oracle power = ∃ (λ (A : GuessAdv (coins power)) → breaks (runGuess⅁ A))
+
   -- Any adversary cannot do better than a random guess.
   GuessSec : Power → Set
   GuessSec power = ∀ (A : GuessAdv (coins power)) → ¬(breaks (runGuess⅁ A))
 
-module F' (prgDist : PrgDist) (|M| |C| : ℕ) where
+module FunAdv (prgDist : PrgDist) (|M| |C| : ℕ) where
   open PrgDist prgDist
-
-{-
-  record Power : Set where
-    constructor mk
-    field
-      coins : Coins
-  open Power public
--}
-{-
-  Power = Coins
-  module Power (p : Power) where
-    coins : Coins
-    coins = p
-  open Power
--}
 
   M = Bits |M|
   C = Bits |C|
@@ -135,10 +127,43 @@ module F' (prgDist : PrgDist) (|M| |C| : ℕ) where
   ≗⅁-trans p q b R = trans (p b R) (q b R)
 
   _≗A_ : ∀ {ca} (A₁ A₂ : SemSecAdv ca) → Set
-  _≗A_ A₁ A₂ = ∀ R → proj₁ (run↺ A₁ R) ≡ proj₁ (run↺ A₂ R) × proj₂ (run↺ A₁ R) ≗ proj₂ (run↺ A₂ R) 
+  _≗A_ A₁ A₂ = (proj₁ ∘ run↺ A₁ ≗ proj₁ ∘ run↺ A₂)
+             × (∀ R → proj₂ (run↺ A₁ R) ≗ proj₂ (run↺ A₂ R))
 
   change-adv : ∀ {cc ca} {E : Enc cc} {A₁ A₂ : SemSecAdv ca} → A₁ ≗A A₂ → (E ⇄ A₁) ≗⅁ (E ⇄ A₂)
-  change-adv A₁≗A₂ = {!!}
+  change-adv {cc} {ca} {E} {A₁} {A₂} (pf1 , pf2) b R with splitAt ca R
+  change-adv {cc} {ca} {E} {A₁} {A₂} (pf1 , pf2) b ._ | pre , post , refl =
+      proj₂ (run↺ A₁ pre) (run↺ (E (proj₁ (run↺ A₁ pre) b)) post) ≡⟨ cong (λ A → proj₂ (run↺ A₁ pre) (run↺ (E (A b)) post)) (pf1 pre) ⟩
+      proj₂ (run↺ A₁ pre) (run↺ (E (proj₁ (run↺ A₂ pre) b)) post) ≡⟨ pf2 pre (run↺ (E (proj₁ (run↺ A₂ pre) b)) post) ⟩
+      proj₂ (run↺ A₂ pre) (run↺ (E (proj₁ (run↺ A₂ pre) b)) post) ∎
+
+  module SplitSemSecAdv {c} (A : SemSecAdv c) where
+    R = Bits c
+    |S| = c
+    S = R
+
+    beh₁ : R → M×M -- × S
+    beh₁ R = proj₁ (run↺ A R) -- , R
+
+    beh₂ : S → C → Bit
+    beh₂ R = proj₂ (run↺ A R)
+
+    open FunctionExtra
+
+    beh : R → M×M × (C → Bit)
+    beh = beh₁ &&& beh₂
+
+    beh↺ : SemSecAdv c
+    beh↺ = mk beh
+
+    coh₁ : proj₁ ∘ run↺ A ≗ proj₁ ∘ beh
+    coh₁ _ = refl
+
+    coh₂ : ∀ R → proj₂ (run↺ A R) ≗ proj₂ (beh R)
+    coh₂ _ _ = refl
+
+    coh : A ≗A beh↺
+    coh = coh₁ , coh₂
 
   ext-as-broken : ∀ {c} {⅁₀ ⅁₁ : Bit → ↺ c Bit}
                   → ⅁₀ ≗⅁ ⅁₁ → breaks ⅁₀ → breaks ⅁₁
@@ -159,6 +184,9 @@ module F' (prgDist : PrgDist) (|M| |C| : ℕ) where
   SemSecTr : ∀ {cc₀ cc₁} (f : Power → Power) (tr : Tr cc₀ cc₁) → Set
   SemSecTr {cc₀} {cc₁} f tr = ∀ {p} {E : Enc cc₀} → SemSecReduction (f p) p E (tr E)
 
+  -- SemSecReductionToOracle : ∀ (p₀ p₁ : Power) {cc} (E : Enc cc) → Set
+  -- SemSecReductionToOracle = SemBroken E p₀ → Oracle p₁
+
   open FunctionExtra
 
   -- post-comp : ∀ {cc k} (post-E : C → ↺ k C) → Tr cc (cc + k)
@@ -167,10 +195,10 @@ module F' (prgDist : PrgDist) (|M| |C| : ℕ) where
   post-comp : ∀ {cc} (post-E : C → C) → Tr cc cc
   post-comp post-E E = E >>> map↺ post-E
 
-  post-comp-pres-sem-sec : ∀ {cc {-k-}} (post-E : C → {-↺ k-} C)
+  post-comp-pres-sem-sec : ∀ {cc} (post-E : C → C)
                            → SemSecTr same-power (post-comp {cc} post-E)
-  post-comp-pres-sem-sec {cc} {-k-} post-E {p} {E} (A' , A'-breaks-E') = A , A-breaks-E
-     where E' : Enc cc {-(cc + k)-}
+  post-comp-pres-sem-sec {cc} post-E {p} {E} (A' , A'-breaks-E') = A , A-breaks-E
+     where E' : Enc cc
            E' = post-comp post-E E
            pre-post-E : (C → Bit) → (C → Bit)
            pre-post-E kont = post-E >>> kont
@@ -230,16 +258,6 @@ ext-# f≗g = ext-count f≗g (allBits _)
 ]-[-cong : ∀ {k c} {f f' g g' : ↺ c Bit} → f ≗↺ g → f' ≗↺ g' → f ]- k -[ f' → g ]- k -[ g'
 ]-[-cong f≗g f'≗g' f]-[f' rewrite ext-# f≗g | ext-# f'≗g' = f]-[f'
 
-module Concrete k where
-  _]-[_ : ∀ {c} (f g : ↺ c Bit) → Set
-  _]-[_ f g = f ]- k -[ g
-  cong' : ∀ {c} {f f' g g' : ↺ c Bit} → f ≗↺ g → f' ≗↺ g' → f ]-[ f' → g ]-[ g'
-  cong' = ]-[-cong {k}
-  prgDist : PrgDist
-  prgDist = mk _]-[_ cong'
-  module Guess' = Guess prgDist
-  module F'' = F' prgDist
-
 {-
 module F''
   (|M| |C| : ℕ)
@@ -267,21 +285,38 @@ module F''
   ⊕-pres-sem-sec = ?
 -}
 
-module F
+record Cp-kit : Set₁ where
+  constructor mk
+  field
+    Cp : Ports → Ports → Set
+    builder : CircuitBuilder Cp
+    runC : ∀ {i o} → Cp i o → Bits i → Bits o
+  open CircuitBuilder builder hiding (idC-spec)
+  field
+    idC-spec : ∀ {i} (bs : Bits i) → runC idC bs ≡ bs
+    >>>-spec : ∀ {i m o} (c₀ : Cp i m) (c₁ : Cp m o) xs → runC (c₀ >>> c₁) xs ≡ runC c₁ (runC c₀ xs)
+    ***-spec : ∀ {i₀ i₁ o₀ o₁} (c₀ : Cp i₀ o₀) (c₁ : Cp i₁ o₁) xs {ys}
+               → runC (c₀ *** c₁) (xs ++ ys) ≡ runC c₀ xs ++ runC c₁ ys
+
+funBits-kit : Cp-kit
+funBits-kit = mk _→ᵇ_ bitsFunCircuitBuilder id idC-spec >>>-spec ***-spec where
+  open CircuitBuilder bitsFunCircuitBuilder
+  open BitsFunExtras
+
+module CpAdv
+  (cp-kit : Cp-kit)
   -- (FCp : Coins → Size → Time → Ports → Ports → Set)
-  (Cp : Ports → Ports → Set)
-  (builder : CircuitBuilder Cp)
   -- (toC : ∀ {c s t i o} → FCp c s t i o → Cp (c + i) o)
-  (runC : ∀ {i o} → Cp i o → Bits i → Bits o)
 
   (prgDist : PrgDist)
   (|M| |C| : ℕ)
 
   where
+  open Cp-kit cp-kit
 
   open PrgDist prgDist
-  module FF' = F' prgDist |M| |C|
-  open FF' public using (M; C; M×M; Enc; Tr; breaks; ext-as-broken; _≗⅁_) renaming (_⇄_ to _⇄↺_; SemSecAdv to SemSecAdv↺)
+  module FunAdv' = FunAdv prgDist |M| |C|
+  open FunAdv' public using (module SplitSemSecAdv; M; C; M×M; Enc; Tr; breaks; ext-as-broken; change-adv; _≗A_; _≗⅁_; ≗⅁-trans) renaming (_⇄_ to _⇄↺_; SemSecAdv to SemSecAdv↺)
 
 {-
   record SemSecAdv' power : Set where
@@ -322,28 +357,58 @@ module F
 
     open FunctionExtra
 
-    field
-      |S| : ℕ
+    |S| : ℕ
+    |S| = c
 
-      cp₁ : Cp c (|M| + |M| + |S|)
+    field
+      -- |S| : ℕ
+
+      cp₁ : Cp c (|M| + |M| {- + |S| -})
 
       cp₂ : Cp (|S| + |C|) 1
 
     S = Bits |S|
 
-    beh₁ : R → M×M × S
+    beh₁ : R → M×M -- × S
     beh₁ = runC cp₁ >>>
-           splitAt′ (|M| + |M|) >>>
-           (splitAt′ |M| >>> proj) *** id
+           -- splitAt′ (|M| + |M|) >>>
+           (splitAt′ |M| >>> proj) -- *** id
 
     beh₂ : S → C → Bit
     beh₂ S C = head (runC cp₂ (S ++ C))
 
     beh : R → M×M × (C → Bit)
-    beh = beh₁ >>> id *** beh₂
+    -- beh = beh₁ >>> id *** beh₂
+    beh = beh₁ &&& beh₂
 
     beh↺ : ↺ c (M×M × (C → Bit))
     beh↺ = mk beh
+
+    adv↺ : SemSecAdv↺ c
+    adv↺ = beh↺
+
+  record SemSecAdv+FunBeh power : Set where
+    constructor mk
+
+    open Power power renaming (coins to c; size to s; time to t)
+
+    field
+      Acp : SemSecAdv power
+      A↺ : SemSecAdv↺ c
+
+    open SemSecAdv Acp renaming (beh↺ to Acp-beh↺; beh to Acp-beh; beh₂ to Acp-beh₂; beh₁ to Acp-beh₁)
+    A↺-beh : R → M×M × (C → Bit)
+    A↺-beh = run↺ A↺
+
+    module SplitA↺ = SplitSemSecAdv A↺
+    open SplitA↺ using () renaming (beh₁ to As-beh₁; beh₂ to As-beh₂)
+
+    field
+      coh₁ : Acp-beh₁ ≗ As-beh₁
+      coh₂ : ∀ R → Acp-beh₂ R ≗ As-beh₂ R
+
+    coh : SemSecAdv.adv↺ Acp ≗A A↺
+    coh = coh₁ , coh₂
 
   -- Returing 0 means Chal wins, Adv looses
   --          1 means Adv  wins, Chal looses
@@ -373,7 +438,7 @@ module F
      where E' : Enc cc
            E' = post-comp-cp post-E E
            open Power p renaming (coins to c)
-           open SemSecAdv A' using (|S|; cp₁) renaming (beh to A'-beh; beh↺ to A'-beh↺; cp₂ to A'-cp₂)
+           open SemSecAdv A' using (R; S; |S|; cp₁) renaming (beh to A'-beh; beh↺ to A'-beh↺; cp₂ to A'-cp₂)
            pre-post-E-spec : (C → Bit) → (C → Bit)
            pre-post-E-spec kont = runC post-E >>> kont
              where open FunctionExtra
@@ -381,31 +446,62 @@ module F
              where open FunctionExtra
            A-beh↺-spec : SemSecAdv↺ (coins p)
            A-beh↺-spec = mk A-beh-spec
-           A : SemSecAdv p
-           A = mk |S| cp₁ (idC {|S|} *** post-E >>> A'-cp₂)
+           A-cp₂ = idC {|S|} *** post-E >>> A'-cp₂
              where open CircuitBuilder builder
-           open SemSecAdv A using () renaming (beh↺ to A-beh↺; beh to A-beh; cp₂ to A-cp₂)
-           pf1 : (E ⇄ A) ≗⅁ (E ⇄↺ A-beh↺)
-           pf1 b R = refl
-           pf2 : (E' ⇄ A') ≗⅁ (E' ⇄↺ A'-beh↺)
-           pf2 b R = refl
-           pf8 : ∀ R → proj₂ (A-beh-spec R) ≗ pre-post-E-spec (proj₂ (A'-beh R))
-           pf8 R C = refl
-           open FunctionExtra
-           pf9 : ∀ S → SemSecAdv.beh₂ A S ≗ pre-post-E-spec (SemSecAdv.beh₂ A' S)
-           pf9 S C = {!refl!}
-           pf7 : ∀ R → proj₂ (A-beh-spec R) ≗ proj₂ (A-beh R)
-           pf7 R C = {!refl!}
-           pf5 : A-beh↺-spec FF'.≗A A-beh↺
-           pf5 R = refl , pf7 R
-           pf4 : (E ⇄↺ A-beh↺-spec) ≗⅁ (E ⇄ A)
-           pf4 = FF'.change-adv {E = E} pf5
-           same-games' : (E' ⇄ A') ≗⅁ (E ⇄↺ A-beh↺-spec)
-           same-games' b R = refl
+           A : SemSecAdv p
+           A = mk {-|S|-} cp₁ A-cp₂
+           open SemSecAdv A using () renaming (beh↺ to A-beh↺; beh to A-beh)
+
+           open CircuitBuilder builder hiding (idC-spec)
+           pf1 : ∀ R → SemSecAdv.beh₂ A R ≗ pre-post-E-spec (SemSecAdv.beh₂ A' R)
+           pf1 R C rewrite >>>-spec (idC {c} *** post-E) A'-cp₂ (R ++ C)
+                         | ***-spec (idC {c}) post-E R {C}
+                         | idC-spec R = refl
+           pf2 : ∀ R → proj₂ (A-beh-spec R) ≗ proj₂ (A-beh R)
+           pf2 R C rewrite pf1 R C = refl
+           pf3 : A-beh↺-spec ≗A A-beh↺
+           pf3 = (λ _ → refl) , pf2
            same-games : (E' ⇄ A') ≗⅁ (E ⇄ A)
-           same-games = FF'.≗⅁-trans same-games' pf4
+           same-games = change-adv {E = E} pf3
            A-breaks-E : breaks (E ⇄ A)
            A-breaks-E = ext-as-broken same-games A'-breaks-E'
+
 {-
   ⊕-pres-sem-sec : ∀ mask → SemSecReduction (_∘_ (_⊕_ mask))
 -}
+
+module Concrete k where
+  _]-[_ : ∀ {c} (f g : ↺ c Bit) → Set
+  _]-[_ f g = f ]- k -[ g
+  cong' : ∀ {c} {f f' g g' : ↺ c Bit} → f ≗↺ g → f' ≗↺ g' → f ]-[ f' → g ]-[ g'
+  cong' = ]-[-cong {k}
+  prgDist : PrgDist
+  prgDist = mk _]-[_ cong'
+  module Guess' = Guess prgDist
+  module FunAdv' = FunAdv prgDist
+  module CpAdv' = CpAdv funBits-kit prgDist
+
+
+module OTP (prgDist : PrgDist) where
+  open FunAdv prgDist 1 1
+  open Guess prgDist renaming (breaks to reads-your-mind)
+
+  -- OTP₁ : ∀ {c} (k : Bit) → Enc c
+  -- OTP₁ k m = return↺ ((k xor (head m)) ∷ [])
+
+  OTP₁ : Enc 1
+  OTP₁ m = map↺ (λ k → (k xor (head m)) ∷ []) toss
+
+  open FunctionExtra
+
+  -- ∀ k → SemSecReductionToOracle no-power no-power (OTP₁ k)
+  foo : ∀ p → SemBroken OTP₁ p → Oracle p
+  foo p (A , A-breaks-OTP) = O , {!!}
+     where b : Bit
+           b = {!!}
+           k : Bit
+           k = {!!}
+           O : ↺ (coins p) Bit
+           O = mk (run↺ A >>> λ { (m , kont) → (head (m b)) xor (kont (run↺ (OTP₁ (m b)) (k ∷ []))) })
+           O-reads-your-mind : reads-your-mind (runGuess⅁ O)
+           O-reads-your-mind = ?
