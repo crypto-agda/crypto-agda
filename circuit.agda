@@ -9,7 +9,7 @@ open import Data.Product hiding (swap; map)
 import Data.Fin.NP as Fin
 open Fin using (Fin; zero; suc; inject+; raise; #_)
 open import Data.List using (List; []; _∷_)
-open import Data.Vec using (Vec; []; _∷_; foldr; _[_]≔_; lookup; _++_; splitAt; tabulate; allFin; concat) renaming (map to vmap)
+open import Data.Vec.NP as Vec using (Vec; []; _∷_; foldr; _[_]≔_; lookup; _++_; splitAt; tabulate; allFin; concat; ++-decomp) renaming (map to vmap)
 open import Data.Vec.Properties
 open import Relation.Nullary.Decidable hiding (map)
 open import Relation.Binary.PropositionalEquality
@@ -373,6 +373,17 @@ bitsFunRewiringBuilder = mk Rewire.rewire _>>>_ _***_ id _=[_]=_ rewire-spec idC
 bitsFunCircuitBuilder : CircuitBuilder _→ᵇ_
 bitsFunCircuitBuilder = mk bitsFunRewiringBuilder id (λ { bs [] → bs }) (λ { f g (b ∷ bs) → (if b then f else g) bs })
 
+module BitsFunExtras where
+  open CircuitBuilder bitsFunCircuitBuilder
+  C = _→ᵇ_
+  >>>-spec : ∀ {i m o} (c₀ : C i m) (c₁ : C m o) xs → (c₀ >>> c₁) xs ≡ c₁ (c₀ xs)
+  >>>-spec _ _ _ = refl
+  ***-spec : ∀ {i₀ i₁ o₀ o₁} (c₀ : C i₀ o₀) (c₁ : C i₁ o₁) xs {ys}
+             → (c₀ *** c₁) (xs ++ ys) ≡ c₀ xs ++ c₁ ys
+  ***-spec {i₀} c₀ c₁ xs {ys} with splitAt i₀ (xs ++ ys)
+  ... | pre , post , eq with ++-decomp {xs = xs} {pre} {ys} {post} eq
+  ... | eq1 , eq2 rewrite eq1 | eq2 = refl
+
 open import bintree
 open import flipbased-tree
 
@@ -395,10 +406,10 @@ treeBitsRewiringBuilder = mk rewire moretree._>>>_ _***_ (rewire id) _=[_]=_ rew
     input =[ tree ]= output = toFun tree input ≡ output
 
     rewire-spec : ∀ {i o} (r : RewireFun i o) bs → bs =[ rewire r ]= Rewire.rewire r bs
-    rewire-spec r = toFun∘fromFun (tabulate ∘ flip (Data.Vec.lookup ∘ r))
+    rewire-spec r = toFun∘fromFun (tabulate ∘ flip (Vec.lookup ∘ r))
 
     idC-spec : ∀ {i} (bs : Bits i) → bs =[ rewire id ]= bs
-    idC-spec bs rewrite toFun∘fromFun (tabulate ∘ flip Data.Vec.lookup) bs | tabulate∘lookup bs = refl
+    idC-spec bs rewrite toFun∘fromFun (tabulate ∘ flip Vec.lookup) bs | tabulate∘lookup bs = refl
 
     _***_ : ∀ {i₀ i₁ o₀ o₁} → C i₀ o₀ → C i₁ o₁ → C (i₀ + i₁) (o₀ + o₁)
     (f *** g) = f >>= λ xs → map (_++_ xs) g
