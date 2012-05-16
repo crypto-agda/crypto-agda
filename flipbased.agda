@@ -39,13 +39,17 @@ _>>=_ : ∀ {n₁ n₂ a b} {A : Set a} {B : Set b} →
        ↺ n₁ A → (A → ↺ n₂ B) → ↺ (n₁ + n₂) B
 _>>=_ x f = join↺ (map↺ f x)
 
-_>>=′_ : ∀ {n₁ n₂ a b} {A : Set a} {B : Set b} →
-       ↺ n₁ A → (A → ↺ n₂ B) → ↺ (n₂ + n₁) B
-_>>=′_ {n₁} {n₂} rewrite ℕ°.+-comm n₂ n₁ = _>>=_
+_=<<_ : ∀ {n₁ n₂ a b} {A : Set a} {B : Set b} →
+       (A → ↺ n₁ B) → ↺ n₂ A → ↺ (n₁ + n₂) B
+_=<<_ {n₁} {n₂} rewrite ℕ°.+-comm n₁ n₂ = flip _>>=_
 
 _>>_ : ∀ {n₁ n₂ a b} {A : Set a} {B : Set b} →
        ↺ n₁ A → ↺ n₂ B → ↺ (n₁ + n₂) B
 _>>_ {n₁} x y = x >>= const y
+
+_>=>_ : ∀ {n₁ n₂ a b c} {A : Set a} {B : Set b} {C : Set c}
+        → (A → ↺ n₁ B) → (B → ↺ n₂ C) → A → ↺ (n₁ + n₂) C
+(f >=> g) x = f x >>= g
 
 weaken : ∀ {m n a} {A : Set a} → ↺ n A → ↺ (m + n) A
 weaken {m} x = return↺ {m} 0 >> x
@@ -189,7 +193,7 @@ module Examples (progEq : ProgEquiv L.zero L.zero) where
 
   left-unit-law = ∀ {A B : Set} {n} {x : A} {f : A → ↺ n B} → returnᴰ x >>= f ≈ f x
 
-  right-unit-law = ∀ {A : Set} {n} {x : ↺ n A} → x >>=′ returnᴰ ≈ x
+  right-unit-law = ∀ {A : Set} {n} {x : ↺ n A} → returnᴰ =<< x ≈ x
 
   assoc-law = ∀ {A B C : Set} {n₁ n₂ n₃} {x : ↺ n₁ A} {f : A → ↺ n₂ B} {g : B → ↺ n₃ C}
               → (x >>= f) >>= g ≋ x >>= (λ x → f x >>= g)

@@ -48,8 +48,8 @@ record Power : Set where
     time  : Time
 open Power public
 
-same-power : ∀ {a} {A : Set a} → A → Power → Power
-same-power _ p = p
+same-power : Power → Power
+same-power = id
 
 record PrgDist : Set₁ where
   constructor mk
@@ -137,8 +137,8 @@ module F' (prgDist : PrgDist) (|M| |C| : ℕ) where
   _≗A_ : ∀ {ca} (A₁ A₂ : SemSecAdv ca) → Set
   _≗A_ A₁ A₂ = ∀ R → proj₁ (run↺ A₁ R) ≡ proj₁ (run↺ A₂ R) × proj₂ (run↺ A₁ R) ≗ proj₂ (run↺ A₂ R) 
 
-  -- change-adv : ∀ {cc ca} {E : Enc cc} {A₁ A₂ : SemSecAdv ca} → A₁ ≗A A₂ → (E ⇄ A₁) ≗⅁ (E ⇄ A₂)
-  -- change-adv A₁≗A₂ = {!!}
+  change-adv : ∀ {cc ca} {E : Enc cc} {A₁ A₂ : SemSecAdv ca} → A₁ ≗A A₂ → (E ⇄ A₁) ≗⅁ (E ⇄ A₂)
+  change-adv A₁≗A₂ = {!!}
 
   ext-as-broken : ∀ {c} {⅁₀ ⅁₁ : Bit → ↺ c Bit}
                   → ⅁₀ ≗⅁ ⅁₁ → breaks ⅁₀ → breaks ⅁₁
@@ -147,25 +147,30 @@ module F' (prgDist : PrgDist) (|M| |C| : ℕ) where
   SemBroken : ∀ {cc} (E : Enc cc) → Power → Set
   SemBroken E power = ∃ (λ (A : SemSecAdv (coins power)) → breaks (E ⇄ A))
 
-  Tr = ∀ {cc} → Enc cc → Enc cc
+  Tr : (cc₀ cc₁ : Coins) → Set
+  Tr cc₀ cc₁ = Enc cc₀ → Enc cc₁
 
-  -- SemSecReduction f E₀ E₁:
+  -- SemSecReduction p₀ p₁ E₀ E₁:
   --   security of E₀ reduces to security of E₁
   --   breaking E₁ reduces to breaking E₀
-  SemSecReduction : ∀ (p₀ p₁ : Power) {cc} (E₀ E₁ : Enc cc) → Set
+  SemSecReduction : ∀ (p₀ p₁ : Power) {cc₀ cc₁} (E₀ : Enc cc₀) (E₁ : Enc cc₁) → Set
   SemSecReduction p₀ p₁ E₀ E₁ = SemBroken E₁ p₁ → SemBroken E₀ p₀
 
-  SemSecTr : (f : Coins → Power → Power) (tr : Tr) → Set
-  SemSecTr f tr = ∀ {cc p} {E : Enc cc} → SemSecReduction (f cc p) p E (tr E)
+  SemSecTr : ∀ {cc₀ cc₁} (f : Power → Power) (tr : Tr cc₀ cc₁) → Set
+  SemSecTr {cc₀} {cc₁} f tr = ∀ {p} {E : Enc cc₀} → SemSecReduction (f p) p E (tr E)
 
   open FunctionExtra
 
-  post-comp : ∀ post-E → Tr
+  -- post-comp : ∀ {cc k} (post-E : C → ↺ k C) → Tr cc (cc + k)
+  -- post-comp post-E E = E >=> post-E
+
+  post-comp : ∀ {cc} (post-E : C → C) → Tr cc cc
   post-comp post-E E = E >>> map↺ post-E
 
-  post-comp-pres-sem-sec : ∀ post-E → SemSecTr same-power (post-comp post-E)
-  post-comp-pres-sem-sec post-E {cc} {p} {E} (A' , A'-breaks-E') = A , A-breaks-E
-     where E' : Enc cc
+  post-comp-pres-sem-sec : ∀ {cc {-k-}} (post-E : C → {-↺ k-} C)
+                           → SemSecTr same-power (post-comp {cc} post-E)
+  post-comp-pres-sem-sec {cc} {-k-} post-E {p} {E} (A' , A'-breaks-E') = A , A-breaks-E
+     where E' : Enc cc {-(cc + k)-}
            E' = post-comp post-E E
            pre-post-E : (C → Bit) → (C → Bit)
            pre-post-E kont = post-E >>> kont
@@ -193,11 +198,11 @@ module F' (prgDist : PrgDist) (|M| |C| : ℕ) where
            A'-breaks-E' : breaks (E' ⇄ A')
            A'-breaks-E' = ext-as-broken same-games A-breaks-E
 
-  post-neg : Tr
+  post-neg : ∀ {cc} → Tr cc cc
   post-neg E = E >>> map↺ vnot
 
-  post-neg-pres-sem-sec : SemSecTr same-power post-neg
-  post-neg-pres-sem-sec {cc} {p} {E} = post-comp-pres-sem-sec vnot {cc} {p} {E}
+  post-neg-pres-sem-sec : ∀ {cc} → SemSecTr same-power (post-neg {cc})
+  post-neg-pres-sem-sec {cc} {p} {E} = post-comp-pres-sem-sec vnot {p} {E}
 
   post-neg-pres-sem-sec' : ∀ {cc p} {E : Enc cc}
                             → SemSecReduction p p (post-neg E) E
@@ -348,24 +353,23 @@ module F
   SemBroken : ∀ {cc} (E : Enc cc) → Power → Set
   SemBroken E power = ∃ (λ (A : SemSecAdv power) → breaks (E ⇄ A))
 
-  -- SemSecReduction f E₀ E₁:
+  -- SemSecReduction p₀ p₁ E₀ E₁:
   --   security of E₀ reduces to security of E₁
   --   breaking E₁ reduces to breaking E₀
-  SemSecReduction : ∀ (p₀ p₁ : Power) {cc} (E₀ E₁ : Enc cc) → Set
+  SemSecReduction : ∀ (p₀ p₁ : Power) {cc₀ cc₁} (E₀ : Enc cc₀) (E₁ : Enc cc₁) → Set
   SemSecReduction p₀ p₁ E₀ E₁ = SemBroken E₁ p₁ → SemBroken E₀ p₀
 
-  SemSecTr : (f : Coins → Power → Power) (tr : Tr) → Set
-  SemSecTr f tr = ∀ {cc p} {E : Enc cc} → SemSecReduction (f cc p) p E (tr E)
+  SemSecTr : ∀ {cc₀ cc₁} (f : Power → Power) (tr : Tr cc₀ cc₁) → Set
+  SemSecTr {cc₀} {cc₁} f tr = ∀ {p} {E : Enc cc₀} → SemSecReduction (f p) p E (tr E)
 
   module FE = FunctionExtra
 
-  post-comp-cp : ∀ post-E → Tr
+  post-comp-cp : ∀ {cc} post-E → Tr cc cc
   post-comp-cp post-E E = E >>> map↺ (runC post-E)
     where open FunctionExtra
 
-{-
-  post-comp-pres-sem-sec : ∀ (post-E : Cp |C| |C|) → SemSecTr same-power (post-comp-cp post-E)
-  post-comp-pres-sem-sec post-E {cc} {p} {E} (A' , A'-breaks-E') = A , A-breaks-E
+  post-comp-pres-sem-sec : ∀ {cc} (post-E : Cp |C| |C|) → SemSecTr same-power (post-comp-cp {cc} post-E)
+  post-comp-pres-sem-sec {cc} post-E {p} {E} (A' , A'-breaks-E') = A , A-breaks-E
      where E' : Enc cc
            E' = post-comp-cp post-E E
            open Power p renaming (coins to c)
@@ -385,17 +389,15 @@ module F
            pf1 b R = refl
            pf2 : (E' ⇄ A') ≗⅁ (E' ⇄↺ A'-beh↺)
            pf2 b R = refl
-           pf6 : proj₁ ∘ run↺ A-beh↺-spec ≗ proj₁ ∘ A-beh
-           pf6 R = refl
            pf8 : ∀ R → proj₂ (A-beh-spec R) ≗ pre-post-E-spec (proj₂ (A'-beh R))
            pf8 R C = refl
            open FunctionExtra
-           pf9 : ∀ S C → SemSecAdv.beh₂ A S C ≡ pre-post-E-spec (SemSecAdv.beh₂ A' S) C
+           pf9 : ∀ S → SemSecAdv.beh₂ A S ≗ pre-post-E-spec (SemSecAdv.beh₂ A' S)
            pf9 S C = {!refl!}
-           pf7 : ∀ R → proj₂ (A-beh-spec R) ≗ proj₂ (A-beh R) 
+           pf7 : ∀ R → proj₂ (A-beh-spec R) ≗ proj₂ (A-beh R)
            pf7 R C = {!refl!}
            pf5 : A-beh↺-spec FF'.≗A A-beh↺
-           pf5 R = pf6 R , pf7 R
+           pf5 R = refl , pf7 R
            pf4 : (E ⇄↺ A-beh↺-spec) ≗⅁ (E ⇄ A)
            pf4 = FF'.change-adv {E = E} pf5
            same-games' : (E' ⇄ A') ≗⅁ (E ⇄↺ A-beh↺-spec)
@@ -404,7 +406,6 @@ module F
            same-games = FF'.≗⅁-trans same-games' pf4
            A-breaks-E : breaks (E ⇄ A)
            A-breaks-E = ext-as-broken same-games A'-breaks-E'
--}
 {-
   ⊕-pres-sem-sec : ∀ mask → SemSecReduction (_∘_ (_⊕_ mask))
 -}
