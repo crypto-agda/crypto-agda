@@ -7,13 +7,14 @@ open import Data.Bits
 open import Data.Bool
 open import Data.Bool.Properties
 open import Data.Vec hiding (_>>=_)
-open import Data.Product.NP
-open import circuit
+open import Data.Product.NP hiding (_⟦×⟧_)
+-- open import circuit
 open import Relation.Nullary
 open import Relation.Binary
 open import Relation.Binary.PropositionalEquality.NP
 open import flipbased-implem
 open ≡-Reasoning
+open import Data.Unit using (⊤)
 open import composable
 open import vcomp
 open import forkable
@@ -74,6 +75,15 @@ record PrgDist : Set₁ where
     _]-[_ : ∀ {c} (f g : ↺ c Bit) → Set
     ]-[-cong : ∀ {c} {f f' g g' : ↺ c Bit} → f ≗↺ g → f' ≗↺ g' → f ]-[ f' → g ]-[ g'
 
+  breaks : ∀ {c} (EXP : Bit → ↺ c Bit) → Set
+  breaks ⅁ = ⅁ 0b ]-[ ⅁ 1b
+
+  _≗⅁_ : ∀ {c} (⅁₀ ⅁₁ : Bit → ↺ c Bit) → Set
+  ⅁₀ ≗⅁ ⅁₁ = ∀ b → ⅁₀ b ≗↺ ⅁₁ b
+
+  ≗⅁-trans : ∀ {c} → Transitive (_≗⅁_ {c})
+  ≗⅁-trans p q b R = trans (p b R) (q b R)
+
 module Guess (prgDist : PrgDist) where
   open PrgDist prgDist
 
@@ -82,9 +92,6 @@ module Guess (prgDist : PrgDist) where
 
   runGuess⅁ : ∀ {ca} (A : GuessAdv ca) (b : Bit) → ↺ ca Bit
   runGuess⅁ A _ = A
-
-  breaks : ∀ {c} (EXP : Bit → ↺ c Bit) → Set
-  breaks ⅁ = ⅁ 0b ]-[ ⅁ 1b
 
   -- An oracle: an adversary who can break the guessing game.
   Oracle : Power → Set
@@ -100,14 +107,31 @@ record FlatFuns (Power : Set) {t} (T : Set t) : Set (L.suc t) where
     `Bits   : ℕ → T
     `Bit    : T
     _`×_    : T → T → T
-    _⟨_⟩→_  : T → Power → T → Set
+    ⟨_⟩_↝_  : Power → T → T → Set
   infixr 2 _`×_
-  infix 0 _⟨_⟩→_
+  infix 0 ⟨_⟩_↝_
 
-open import Data.Unit using (⊤)
+record PowerOps (Power : Set) : Set where
+  constructor mk
+  field
+    _>>>ᵖ_ _***ᵖ_ : Power → Power → Power
+
+constPowerOps : PowerOps ⊤
+constPowerOps = _
+
+record FlatFunsOps {P t} {T : Set t} (powerOps : PowerOps P) (♭Funs : FlatFuns P T) : Set t where
+  constructor mk
+  open FlatFuns ♭Funs
+  open PowerOps powerOps
+  field
+    idO : ∀ {A p} → ⟨ p ⟩ A ↝ A
+    isIComposable  : IComposable  {I = ⊤} _>>>ᵖ_ ⟨_⟩_↝_
+    isVIComposable : VIComposable {I = ⊤} _***ᵖ_ _`×_ ⟨_⟩_↝_
+  open IComposable isIComposable public
+  open VIComposable isVIComposable public
 
 fun♭Funs : FlatFuns ⊤ Set
-fun♭Funs = mk Bits Bit _×_ (λ A _ B → A → B)
+fun♭Funs = mk Bits Bit _×_ (λ _ A B → A → B)
 
 record AbsSemSecAdv |M| |C|
                  {Power : Set} {t} {T : Set t} (♭Funs : FlatFuns Power T)
@@ -125,8 +149,8 @@ record AbsSemSecAdv |M| |C|
   C = `Bits |C|
 
   field
-    step₀ : R ⟨ p₀ ⟩→ (M `× M) `× S
-    step₁ : C `× S ⟨ p₁ ⟩→ `Bit
+    step₀ : ⟨ p₀ ⟩ R ↝ (M `× M) `× S
+    step₁ : ⟨ p₁ ⟩ C `× S ↝ `Bit
 
 module FunAdv (prgDist : PrgDist) (|M| |C| : ℕ) where
   open PrgDist prgDist
@@ -170,15 +194,6 @@ module FunAdv (prgDist : PrgDist) (|M| |C| : ℕ) where
   _⇄_ : ∀ {cc ca} (E : Enc cc) (A : FunSemSecAdv ca) b → ↺ (ca + cc) Bit
   _⇄_ = runSemSec
 
-  breaks : ∀ {c} (EXP : Bit → ↺ c Bit) → Set
-  breaks ⅁ = ⅁ 0b ]-[ ⅁ 1b
-
-  _≗⅁_ : ∀ {c} (⅁₀ ⅁₁ : Bit → ↺ c Bit) → Set
-  ⅁₀ ≗⅁ ⅁₁ = ∀ b → ⅁₀ b ≗↺ ⅁₁ b
-
-  ≗⅁-trans : ∀ {c} → Transitive (_≗⅁_ {c})
-  ≗⅁-trans p q b R = trans (p b R) (q b R)
-
   runAdv : ∀ {|R|} → FunSemSecAdv |R| → C → Bits |R| → (M × M) × Bit
   runAdv (mk (A-step₀ , A-step₁)) C = A-step₀ >>> id *** (const C &&& id >>> A-step₁)
     where open FunctionExtra
@@ -193,36 +208,6 @@ module FunAdv (prgDist : PrgDist) (|M| |C| : ℕ) where
            helper₀ = λ A → pf (run↺ (E (proj (proj₁ (step₀ A pre)) b)) post) pre
            helper₂ = cong (λ m → step₁ A₂ (run↺ (E (proj (proj₁ m) b)) post , proj₂ (step₀ A₂ pre)))
                           (helper₀ A₂)
-
-{-
-  module SplitSemSecAdv {c} (A : SemSecAdv c) where
-    R = Bits c
-    |S| = c
-    S = R
-
-    beh₁ : R → M² -- × S
-    beh₁ R = proj₁ (run↺ A R) -- , R
-
-    beh₂ : S → C → Bit
-    beh₂ R = proj₂ (run↺ A R)
-
-    open FunctionExtra
-
-    beh : R → M² × (C → Bit)
-    beh = beh₁ &&& beh₂
-
-    beh↺ : SemSecAdv c
-    beh↺ = mk beh
-
-    coh₁ : proj₁ ∘ run↺ A ≗ proj₁ ∘ beh
-    coh₁ _ = refl
-
-    coh₂ : ∀ R → proj₂ (run↺ A R) ≗ proj₂ (beh R)
-    coh₂ _ _ = refl
-
-    coh : A ≗A beh↺
-    coh = coh₁ , coh₂
--}
 
   ext-as-broken : ∀ {c} {⅁₀ ⅁₁ : Bit → ↺ c Bit}
                   → ⅁₀ ≗⅁ ⅁₁ → breaks ⅁₀ → breaks ⅁₁
@@ -334,26 +319,44 @@ module F''
   ⊕-pres-sem-sec = ?
 -}
 
-record Cp-kit : Set₁ where
+-- Actually Ops + Spec
+record FlatFunsSpec {t} {T : Set t} (♭Funs : FlatFuns ⊤ T) : Set (L.suc L.zero L.⊔ t) where
   constructor mk
-  field
-    Cp : Ports → Ports → Set
-    builder : CircuitBuilder Cp
-    runC : ∀ {i o} → Cp i o → Bits i → Bits o
-  open CircuitBuilder builder hiding (idC-spec)
-  field
-    idC-spec : ∀ {i} (bs : Bits i) → runC idC bs ≡ bs
-    >>>-spec : ∀ {i m o} (c₀ : Cp i m) (c₁ : Cp m o) xs → runC (c₀ >>> c₁) xs ≡ runC c₁ (runC c₀ xs)
-    ***-spec : ∀ {i₀ i₁ o₀ o₁} (c₀ : Cp i₀ o₀) (c₁ : Cp i₁ o₁) xs {ys}
-               → runC (c₀ *** c₁) (xs ++ ys) ≡ runC c₀ xs ++ runC c₁ ys
 
-funBits-kit : Cp-kit
-funBits-kit = mk _→ᵇ_ bitsFunCircuitBuilder id idC-spec >>>-spec ***-spec where
-  open CircuitBuilder bitsFunCircuitBuilder
-  open BitsFunExtras
+  open FlatFuns ♭Funs
+  Cp : T → T → Set
+  Cp = ⟨_⟩_↝_ _
 
+  field
+    ⟦_⟧ : T → Set
+    _⟦×⟧_ : ∀ {i₀ i₁} → ⟦ i₀ ⟧ → ⟦ i₁ ⟧ → ⟦ i₀ `× i₁ ⟧
+    ♭ops : FlatFunsOps constPowerOps ♭Funs
+    =[]= : ∀ {i o} → Cp i o → ⟦ i ⟧ → ⟦ o ⟧ → Set
+
+  _=[_]=_ : ∀ {i o} → ⟦ i ⟧ → Cp i o → ⟦ o ⟧ → Set
+  _=[_]=_ = λ is c os → =[]= c is os
+
+  open FlatFunsOps ♭ops
+  field
+    idC-spec : ∀ {i} (bs : ⟦ i ⟧) → bs =[ idO ]= bs
+    >>>-spec : IComposable  {_↝ᵢ_ = Cp} _>>>_ =[]=
+    ***-spec : VIComposable {_↝ᵢ_ = Cp} _***_ _⟦×⟧_ =[]=
+
+    runC : ∀ {i o} → Cp i o → ⟦ i ⟧ → ⟦ o ⟧
+    runC-spec : ∀ {i o} (c : Cp i o) is → is =[ c ]= runC c is
+{-
+    splitAtC : ∀ k {n} → ⟦ `Bits (k + n) ⟧ → (⟦ `Bits k ⟧ × ⟦ `Bits n ⟧)
+    splitAtC2 : ∀ k {n} → ⟦ `Bits (k + n) ⟧ → (⟦ `Bits k `× `Bits n ⟧)
+    splitAtC3 : ∀ k {n} → Cp (`Bits (k + n)) (`Bits k `× `Bits n)
+    splitAtC4 : ∀ k {n} → (⟦ `Bits k `× `Bits n ⟧) → (⟦ `Bits k ⟧ × ⟦ `Bits n ⟧)
+-}
+
+{-
 module CpAdv
-  (cp-kit : Cp-kit)
+  {t}
+  {T : Set t}
+  (♭Funs : FlatFuns ⊤ T)
+  (♭FunsSpec : FlatFunsSpec ♭Funs)
   -- (FCp : Coins → Size → Time → Ports → Ports → Set)
   -- (toC : ∀ {c s t i o} → FCp c s t i o → Cp (c + i) o)
 
@@ -361,32 +364,44 @@ module CpAdv
   (|M| |C| : ℕ)
 
   where
-  open Cp-kit cp-kit
+  open FlatFuns ♭Funs
+  open FlatFunsSpec ♭FunsSpec
+  open FlatFunsOps  ♭ops
 
   open PrgDist prgDist
-  module FunAdv' = FunAdv prgDist |M| |C|
-  open FunAdv' public using (mk; {-module SplitSemSecAdv;-} FunSemSecAdv; M; C; M²; Enc; Tr; breaks; ext-as-broken; change-adv; _≗A_; _≗⅁_; ≗⅁-trans) renaming (_⇄_ to _⇄F_)
+  `M = `Bits |M|
+  `C = `Bits |C|
+  M = ⟦ `M ⟧
+  C = ⟦ `C ⟧
+  M² = Bit → M
 
-  cp♭Funs : FlatFuns ⊤ ℕ
-  cp♭Funs = mk id 1 _+_ (λ i _ o → Cp i o)
+  -- module FunAdv' = FunAdv prgDist |M| |C|
+  -- open FunAdv' public using (mk; {-module SplitSemSecAdv;-} FunSemSecAdv; M; C; M²; Enc; Tr; ext-as-broken; change-adv; _≗A_) renaming (_⇄_ to _⇄F_)
+
+  module FE = FunctionExtra
 
   record CpSemSecAdv power : Set where
     constructor mk
 
     open Power power renaming (coins to |R|; size to s; time to t)
 
-    open FunctionExtra
+    -- open FunctionExtra
 
     field
-      semSecAdv : AbsSemSecAdv |M| |C| cp♭Funs _ _ |R|
+      semSecAdv : AbsSemSecAdv |M| |C| ♭Funs _ _ |R|
 
     open AbsSemSecAdv semSecAdv public hiding (M; C; R; S)
 
-    R = Bits |R|
-    S = Bits |S|
+    `R = `Bits |R|
+    `S = `Bits |S|
+    R = ⟦ `R ⟧
+    S = ⟦ `S ⟧
 
     step₀f : R → ((M × M) × S)
-    step₀f = runC step₀ >>> splitAt′ (|M| + |M|) >>> splitAt′ |M| *** id
+    step₀f = runC step₀ FE.>>> {!splitAtC4 (|M| + |M|) FE.>>> {!splitAtC |M| FE.*** id!}!}
+
+    -- step₀f : R → ((M × M) × S)
+    -- step₀f = runC step₀ FE.>>> {!splitAtC3 (|M| + |M|) FE.>>> {!splitAtC |M| FE.*** id!}!}
 
     step₀F : R → (M² × S)
     step₀F = step₀f >>> proj *** id
@@ -400,8 +415,8 @@ module CpAdv
     step₁F : S → C → Bit
     step₁F s c = step₁f (c , s)
 
-    funAdv : FunSemSecAdv |R|
-    funAdv = mk (step₀f , step₁f) 
+--    funAdv : FunSemSecAdv |R|
+--    funAdv = mk (step₀f , step₁f) 
 
 {-
   record SemSecAdv+FunBeh power : Set where
@@ -444,8 +459,6 @@ module CpAdv
   SemSecTr : ∀ {cc₀ cc₁} (f : Power → Power) (tr : Tr cc₀ cc₁) → Set
   SemSecTr {cc₀} {cc₁} f tr = ∀ {p} {E : Enc cc₀} → SemSecReduction (f p) p E (tr E)
 
-  module FE = FunctionExtra
-
   post-comp-cp : ∀ {cc} post-E → Tr cc cc
   post-comp-cp post-E E = E >>> map↺ (runC post-E)
     where open FunctionExtra
@@ -460,16 +473,15 @@ module CpAdv
              where open FunctionExtra
            A-spec : FunSemSecAdv (coins p)
            A-spec = mk (A'-step₀f , A-step₁-spec)
-           A-step₁ = post-E *** idC {|S|} >>> A'-step₁
-             where open CircuitBuilder builder
+           open FlatFunsOps ♭ops
+           A-step₁ = post-E *** idO {|S|} >>> A'-step₁
            A : CpSemSecAdv p
            A = mk (step₀ , A-step₁)
            open CpSemSecAdv A using () renaming (funAdv to funA; step₀f to A-step₀f; step₁f to A-step₁f)
 
-           open CircuitBuilder builder hiding (idC-spec)
            coh₁ : A-step₁-spec ≗ A-step₁f
-           coh₁ (C , S) rewrite >>>-spec (post-E *** idC {|S|}) A'-step₁ (C ++ S)
-                         | ***-spec post-E (idC {|S|}) C {S}
+           coh₁ (C , S) rewrite >>>-spec (post-E *** idO {|S|}) A'-step₁ (C ++ S)
+                         | ***-spec post-E (idO {|S|}) C {S}
                          | idC-spec S = refl
            pf3 : A-spec ≗A funA
            pf3 C R rewrite coh₁ (C , proj₂ (A-step₀f R)) = refl
@@ -482,6 +494,12 @@ module CpAdv
   ⊕-pres-sem-sec : ∀ mask → SemSecReduction (_∘_ (_⊕_ mask))
 -}
 
+{-
+funBits-kit : FlatFunsSpec
+funBits-kit = mk _→ᵇ_ bitsFunCircuitBuilder id idC-spec >>>-spec ***-spec where
+  open CircuitBuilder bitsFunCircuitBuilder
+  open BitsFunExtras
+
 module Concrete k where
   _]-[_ : ∀ {c} (f g : ↺ c Bit) → Set
   _]-[_ f g = f ]- k -[ g
@@ -492,7 +510,7 @@ module Concrete k where
   module Guess' = Guess prgDist
   module FunAdv' = FunAdv prgDist
   module CpAdv' = CpAdv funBits-kit prgDist
-
+-}
 
 {-
 module OTP (prgDist : PrgDist) where
@@ -549,5 +567,6 @@ kont = const b
     A >>= λ { (m , kont) → choose ((head (m b)) xor (kont ((0b xor (head (m b))) ∷ [])))
                                    ((head (m b)) xor (kont ((1b xor (head (m b))) ∷ [])))
             }
+-}
 -}
 -}
