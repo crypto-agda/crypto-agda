@@ -13,6 +13,9 @@ open import Relation.Binary
 open import Relation.Binary.PropositionalEquality.NP
 open import flipbased-implem
 open ≡-Reasoning
+open import composable
+open import vcomp
+open import forkable
 
 proj : ∀ {a} {A : Set a} → A × A → Bit → A
 proj (x₀ , x₁) 0b = x₀
@@ -21,6 +24,7 @@ proj (x₀ , x₁) 1b = x₁
 module FunctionExtra where
   _***_ : ∀ {A B C D : Set} → (A → B) → (C → D) → A × C → B × D
   (f *** g) (x , y) = (f x , g y)
+  -- Fanout
   _&&&_ : ∀ {A B C : Set} → (A → B) → (A → C) → A → B × C
   (f &&& g) x = (f x , g x)
   _>>>_ : ∀ {a b c} {A : Set a} {B : Set b} {C : Set c} →
@@ -54,6 +58,15 @@ open Power public
 same-power : Power → Power
 same-power = id
 
+_+ᵖ_ : Power → Power → Power
+(mk c₀ s₀ t₀) +ᵖ (mk c₁ s₁ t₁) = mk (c₀ + c₁) (s₀ + s₁) (t₀ + t₁)
+
+powerComp : Composable (ConstArr Power)
+powerComp = constComp _+ᵖ_
+
+powerVComp : VComposable _ (ConstArr Power)
+powerVComp = constVComp (λ { (Power.mk c₀ s₀ t₀) (mk c₁ s₁ t₁) → mk (c₀ + c₁) (s₀ + s₁) (t₀ ⊔ t₁) })
+
 record PrgDist : Set₁ where
   constructor mk
   field
@@ -86,33 +99,26 @@ module FunAdv (prgDist : PrgDist) (|M| |C| : ℕ) where
   M = Bits |M|
   C = Bits |C|
 
-  M×M = Bit → M
+  M² = Bit → M
 
   Enc : ∀ cc → Set
   Enc cc = M → ↺ cc C
 
-{-
-  record SemSecAdv' power : Set where
-    constructor mk
+  record SemSecAdv c : Set where
+    constructor _,_
 
-    open Power power renaming (coins to c)
     field
-      {c₀ c₁}   : Coins
-      c≡c₀+c₁  : c ≡ c₀ + c₁
-      beh : ↺ c₀ (M×M × (C → ↺ c₁ Bit))
-    R' = subst Bits c≡c₀+c₁
-    R₀ = take c₀ ∘ R'
-    R₁ = drop c₀ ∘ R'
--}
-
-  SemSecAdv : Coins → Set
-  SemSecAdv c = ↺ c (M×M × (C → Bit))
+      {|S|} : ℕ
+    S = Bits |S|
+    field
+      step₀ : ↺ c (M² × S)
+      step₁ : S → C → Bit
 
   -- Returing 0 means Chal wins, Adv looses
   --          1 means Adv  wins, Chal looses
   runSemSec : ∀ {cc ca} (E : Enc cc) (A : SemSecAdv ca) b → ↺ (ca + cc) Bit
-  runSemSec E A b
-    = A >>= λ { (m , kont) → map↺ kont (E (m b)) }
+  runSemSec E (A-step₀ , A-step₁) b
+    = A-step₀ >>= λ { (m , s) → map↺ (A-step₁ s) (E (m b)) }
 
   _⇄_ : ∀ {cc ca} (E : Enc cc) (A : SemSecAdv ca) b → ↺ (ca + cc) Bit
   _⇄_ = runSemSec
@@ -126,23 +132,27 @@ module FunAdv (prgDist : PrgDist) (|M| |C| : ℕ) where
   ≗⅁-trans : ∀ {c} → Transitive (_≗⅁_ {c})
   ≗⅁-trans p q b R = trans (p b R) (q b R)
 
-  _≗A_ : ∀ {ca} (A₁ A₂ : SemSecAdv ca) → Set
-  _≗A_ A₁ A₂ = (proj₁ ∘ run↺ A₁ ≗ proj₁ ∘ run↺ A₂)
-             × (∀ R → proj₂ (run↺ A₁ R) ≗ proj₂ (run↺ A₂ R))
+  _≗A_ : ∀ {p} (A₁ A₂ : SemSecAdv p) → Set
+  A₀ ≗A A₁ = ∀ {cc} C → let E = λ _ → return↺ {cc} C in
+                         (E ⇄ A₀) ≗⅁ (E ⇄ A₁)
 
-  change-adv : ∀ {cc ca} {E : Enc cc} {A₁ A₂ : SemSecAdv ca} → A₁ ≗A A₂ → (E ⇄ A₁) ≗⅁ (E ⇄ A₂)
+  change-adv : ∀ {cc p} {E : Enc cc} {A₁ A₂ : SemSecAdv p} → A₁ ≗A A₂ → (E ⇄ A₁) ≗⅁ (E ⇄ A₂)
+  change-adv = {!!}
+{-
   change-adv {cc} {ca} {E} {A₁} {A₂} (pf1 , pf2) b R with splitAt ca R
   change-adv {cc} {ca} {E} {A₁} {A₂} (pf1 , pf2) b ._ | pre , post , refl =
       proj₂ (run↺ A₁ pre) (run↺ (E (proj₁ (run↺ A₁ pre) b)) post) ≡⟨ cong (λ A → proj₂ (run↺ A₁ pre) (run↺ (E (A b)) post)) (pf1 pre) ⟩
       proj₂ (run↺ A₁ pre) (run↺ (E (proj₁ (run↺ A₂ pre) b)) post) ≡⟨ pf2 pre (run↺ (E (proj₁ (run↺ A₂ pre) b)) post) ⟩
       proj₂ (run↺ A₂ pre) (run↺ (E (proj₁ (run↺ A₂ pre) b)) post) ∎
+-}
 
+{-
   module SplitSemSecAdv {c} (A : SemSecAdv c) where
     R = Bits c
     |S| = c
     S = R
 
-    beh₁ : R → M×M -- × S
+    beh₁ : R → M² -- × S
     beh₁ R = proj₁ (run↺ A R) -- , R
 
     beh₂ : S → C → Bit
@@ -150,7 +160,7 @@ module FunAdv (prgDist : PrgDist) (|M| |C| : ℕ) where
 
     open FunctionExtra
 
-    beh : R → M×M × (C → Bit)
+    beh : R → M² × (C → Bit)
     beh = beh₁ &&& beh₂
 
     beh↺ : SemSecAdv c
@@ -164,7 +174,7 @@ module FunAdv (prgDist : PrgDist) (|M| |C| : ℕ) where
 
     coh : A ≗A beh↺
     coh = coh₁ , coh₂
-
+-}
   ext-as-broken : ∀ {c} {⅁₀ ⅁₁ : Bit → ↺ c Bit}
                   → ⅁₀ ≗⅁ ⅁₁ → breaks ⅁₀ → breaks ⅁₁
   ext-as-broken same-games = ]-[-cong (same-games 0b) (same-games 1b)
@@ -197,13 +207,11 @@ module FunAdv (prgDist : PrgDist) (|M| |C| : ℕ) where
 
   post-comp-pres-sem-sec : ∀ {cc} (post-E : C → C)
                            → SemSecTr same-power (post-comp {cc} post-E)
-  post-comp-pres-sem-sec {cc} post-E {p} {E} (A' , A'-breaks-E') = A , A-breaks-E
+  post-comp-pres-sem-sec {cc} post-E {p} {E} ((A'₀ , A'₁) , A'-breaks-E') = A , A-breaks-E
      where E' : Enc cc
            E' = post-comp post-E E
-           pre-post-E : (C → Bit) → (C → Bit)
-           pre-post-E kont = post-E >>> kont
            A : SemSecAdv (coins p)
-           A = mk (run↺ A' >>> id *** pre-post-E)
+           A = A'₀ , (λ s → post-E >>> A'₁ s)
            A-breaks-E : breaks (E ⇄ A)
            A-breaks-E = A'-breaks-E'
 
@@ -218,11 +226,12 @@ module FunAdv (prgDist : PrgDist) (|M| |C| : ℕ) where
            open Power p renaming (coins to ca)
            pre-post-E⁻¹ : (C → Bit) → (C → Bit)
            pre-post-E⁻¹ kont = post-E⁻¹ >>> kont
+           open SemSecAdv A renaming (step₀ to A₀; step₁ to A₁)
            A' : SemSecAdv ca 
-           A' = mk (run↺ A >>> id *** pre-post-E⁻¹)
+           A' = A₀ , (λ s → post-E⁻¹ >>> A₁ s)
            same-games : (E ⇄ A) ≗⅁ (E' ⇄ A')
            same-games b R
-             rewrite post-E-inv (run↺ (E (proj₁ (run↺ A (take ca R)) b)) (drop ca R)) = refl
+             rewrite post-E-inv (run↺ (E (proj₁ (run↺ A₀ (take ca R)) b)) (drop ca R)) = refl
            A'-breaks-E' : breaks (E' ⇄ A')
            A'-breaks-E' = ext-as-broken same-games A-breaks-E
 
@@ -316,7 +325,7 @@ module CpAdv
 
   open PrgDist prgDist
   module FunAdv' = FunAdv prgDist |M| |C|
-  open FunAdv' public using (module SplitSemSecAdv; M; C; M×M; Enc; Tr; breaks; ext-as-broken; change-adv; _≗A_; _≗⅁_; ≗⅁-trans) renaming (_⇄_ to _⇄↺_; SemSecAdv to SemSecAdv↺)
+  open FunAdv' public using ({-module SplitSemSecAdv;-} M; C; M²; Enc; Tr; breaks; ext-as-broken; change-adv; _≗A_; _≗⅁_; ≗⅁-trans) renaming (_⇄_ to _⇄↺_; SemSecAdv to SemSecAdv↺)
 
 {-
   record SemSecAdv' power : Set where
@@ -369,7 +378,7 @@ module CpAdv
 
     S = Bits |S|
 
-    beh₁ : R → M×M -- × S
+    beh₁ : R → M² -- × S
     beh₁ = runC cp₁ >>>
            -- splitAt′ (|M| + |M|) >>>
            (splitAt′ |M| >>> proj) -- *** id
@@ -377,15 +386,15 @@ module CpAdv
     beh₂ : S → C → Bit
     beh₂ S C = head (runC cp₂ (S ++ C))
 
-    beh : R → M×M × (C → Bit)
+    beh : R → M² × (C → Bit)
     -- beh = beh₁ >>> id *** beh₂
     beh = beh₁ &&& beh₂
 
-    beh↺ : ↺ c (M×M × (C → Bit))
+    beh↺ : ↺ c (M² × (C → Bit))
     beh↺ = mk beh
 
-    adv↺ : SemSecAdv↺ c
-    adv↺ = beh↺
+    -- adv↺ : SemSecAdv↺ c
+    -- adv↺ = beh↺
 
   record SemSecAdv+FunBeh power : Set where
     constructor mk
@@ -396,8 +405,9 @@ module CpAdv
       Acp : SemSecAdv power
       A↺ : SemSecAdv↺ c
 
+{-
     open SemSecAdv Acp renaming (beh↺ to Acp-beh↺; beh to Acp-beh; beh₂ to Acp-beh₂; beh₁ to Acp-beh₁)
-    A↺-beh : R → M×M × (C → Bit)
+    A↺-beh : R → M² × (C → Bit)
     A↺-beh = run↺ A↺
 
     module SplitA↺ = SplitSemSecAdv A↺
@@ -495,13 +505,46 @@ module OTP (prgDist : PrgDist) where
   open FunctionExtra
 
   -- ∀ k → SemSecReductionToOracle no-power no-power (OTP₁ k)
-  foo : ∀ p → SemBroken OTP₁ p → Oracle p
-  foo p (A , A-breaks-OTP) = O , {!!}
-     where b : Bit
-           b = {!!}
-           k : Bit
-           k = {!!}
-           O : ↺ (coins p) Bit
-           O = mk (run↺ A >>> λ { (m , kont) → (head (m b)) xor (kont (run↺ (OTP₁ (m b)) (k ∷ []))) })
+  foo : ∀ p → SemBroken OTP₁ p → Oracle {!(mk 1 0 0 +ᵖ p)!}
+  foo p (A , A-breaks-OTP) = O , O-reads-your-mind
+     where postulate
+             b : Bit
+           -- b = {!!}
+             k : Bit
+           -- k = {!!}
+           O : ↺ (coins p + 1) Bit
+           O = A >>= λ { (m , kont) → map↺ (_xor_ (head (m b)) ∘ kont) (OTP₁ (m b)) } --  (k ∷ []))) }
            O-reads-your-mind : reads-your-mind (runGuess⅁ O)
-           O-reads-your-mind = ?
+           O-reads-your-mind = {!!}
+{-
+    A >>= λ { (m , kont) → map↺ kont (OTP₁ (m b)) }
+    A >>= λ { (m , kont) → map↺ kont (map↺ (λ k → (k xor (head (m b))) ∷ []) toss) }
+    A >>= λ { (m , kont) → map↺ (kont ∘ λ k → (k xor (head (m b))) ∷ []) toss) }
+    A >>= λ { (m , kont) → map↺ (λ k → kont ((k xor (head (m b))) ∷ []) toss) }
+    A >>= λ { (m , kont) → map↺ (λ k → kont ((k xor (head (m b))) ∷ []) (choose (return↺ 0b) (return↺ 1b))) }
+    A >>= λ { (m , kont) → choose (kont ((0b xor (head (m b))) ∷ []))
+                                   (kont ((1b xor (head (m b))) ∷ [])) }
+    A >>= λ { (m , kont) → choose (kont (head (m b) ∷ []))
+                                   (kont (not (head (m b)) ∷ [])) }
+
+kont = const b
+    A >>= λ { (m , kont) → map↺ kont (OTP₁ (m b)) }
+    A >>= λ { (m , kont) → map↺ (const b) (OTP₁ (m b)) }
+    A >>= λ { (m , kont) → toss >> return b }
+
+kont = const b
+    A >>= λ { (m , kont) → map↺ (λ c → c xor head (m (kont c))) (OTP₁ (m b)) }
+    A >>= λ { (m , kont) → map↺ (_xor_ (head (m b)) ∘ const b) (OTP₁ (m b)) }
+    A >>= λ { (m , kont) → map↺ (const (head (m b) xor b)) (OTP₁ (m b)) }
+    A >>= λ { (m , kont) → return↺ (head (m b) xor b) }
+
+---
+    A >>= λ { (m , kont) → map↺ (_xor_ (head (m b)) ∘ kont) (OTP₁ (m b)) }
+    A >>= λ { (m , kont) → map↺ (_xor_ (head (m b)) ∘ kont) (map↺ (λ k → (k xor (head (m b))) ∷ []) toss) }
+    A >>= λ { (m , kont) → map↺ (_xor_ (head (m b)) ∘ kont ∘ λ k → (k xor (head (m b))) ∷ []) toss) }
+    A >>= λ { (m , kont) → map↺ (λ k → (head (m b)) xor (kont ((k xor (head (m b))) ∷ [])) toss) }
+    A >>= λ { (m , kont) → choose ((head (m b)) xor (kont ((0b xor (head (m b))) ∷ [])))
+                                   ((head (m b)) xor (kont ((1b xor (head (m b))) ∷ [])))
+            }
+-}
+-}
