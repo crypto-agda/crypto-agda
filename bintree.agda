@@ -1,18 +1,23 @@
 module bintree where
 
 open import Function
-open import Data.Nat
+open import Data.Nat.NP using (ℕ; zero; suc; _≤_; s≤s; _+_; module ℕ≤; module ℕ°)
+open import Data.Nat.Properties
 open import Data.Bool
+open import Data.Vec using (_++_)
 open import Data.Bits
 open import Relation.Binary
 open import Relation.Binary.PropositionalEquality
+open import composable
+open import vcomp
+open import forkable
 
 data Tree {a} (A : Set a) : ℕ → Set a where
   leaf : ∀ {n} → A → Tree A n
   fork : ∀ {n} (left right : Tree A n) → Tree A (suc n)
 
 fromFun : ∀ {n a} {A : Set a} → (Bits n → A) → Tree A n
-fromFun {zero} f = leaf (f [])
+fromFun {zero}  f = leaf (f [])
 fromFun {suc n} f = fork (fromFun (f ∘ 0∷_)) (fromFun (f ∘ 1∷_))
 
 toFun : ∀ {n a} {A : Set a} → Tree A n → Bits n → A
@@ -46,6 +51,38 @@ lookup = flip toFun
 map : ∀ {n a b} {A : Set a} {B : Set b} → (A → B) → Tree A n → Tree B n
 map f (leaf x) = leaf (f x)
 map f (fork t₀ t₁) = fork (map f t₀) (map f t₁)
+
+weaken≤ : ∀ {m n a} {A : Set a} → m ≤ n → Tree A m → Tree A n
+weaken≤ _       (leaf x)          = leaf x
+weaken≤ (s≤s p) (fork left right) = fork (weaken≤ p left) (weaken≤ p right)
+
+m≤n+m : ∀ m n → m ≤ n + m
+m≤n+m m n = ℕ≤.trans (m≤m+n m n) (ℕ≤.reflexive (ℕ°.+-comm m n))
+
+weaken+ : ∀ n {m a} {A : Set a} → Tree A m → Tree A (n + m)
+weaken+ n = weaken≤ (m≤n+m _ n)
+
+join : ∀ {c₁ c₂ a} {A : Set a} → Tree (Tree A c₂) c₁ → Tree A (c₁ + c₂)
+join {c} (leaf x)          = weaken+ c x
+join     (fork left right) = fork (join left) (join right)
+
+_>>>_ : ∀ {m n a} {A : Set a} → Tree (Bits m) n → Tree A m → Tree A n
+f >>> g = map (flip lookup g) f
+
+_→ᵗ_ : (i o : ℕ) → Set
+i →ᵗ o = Tree (Bits o) i
+
+composable : Composable _→ᵗ_
+composable = mk _>>>_
+
+_***_ : ∀ {i₀ i₁ o₀ o₁} → i₀ →ᵗ o₀ → i₁ →ᵗ o₁ → (i₀ + i₁) →ᵗ (o₀ + o₁)
+(f *** g) = join (map (λ xs → map (_++_ xs) g) f)
+
+vcomposable : VComposable _+_ _→ᵗ_
+vcomposable = mk _***_
+
+forkable : Forkable suc _→ᵗ_
+forkable = mk fork
 
 data Rot {a} {A : Set a} : ∀ {n} (left right : Tree A n) → Set a where
   leaf : ∀ {n} x → Rot {n = n} (leaf x) (leaf x)
