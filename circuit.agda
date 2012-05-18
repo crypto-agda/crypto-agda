@@ -13,6 +13,9 @@ open import Data.Vec.NP as Vec using (Vec; []; _∷_; foldr; _[_]≔_; lookup; _
 open import Data.Vec.Properties
 open import Relation.Nullary.Decidable hiding (map)
 open import Relation.Binary.PropositionalEquality
+open import composable
+open import vcomp
+open import forkable
 
 CircuitType : Set₁
 CircuitType = (i o : ℕ) → Set
@@ -20,13 +23,13 @@ CircuitType = (i o : ℕ) → Set
 RunCircuit : CircuitType → Set
 RunCircuit C = ∀ {i o} → C i o → Bits i → Bits o
 
+RewireFun : CircuitType
+RewireFun i o = Fin o → Fin i
+
+RewireTbl : CircuitType
+RewireTbl i o = Vec (Fin i) o
+
 module Rewire where
-  RewireFun : CircuitType
-  RewireFun i o = Fin o → Fin i
-
-  RewireTbl : CircuitType
-  RewireTbl i o = Vec (Fin i) o
-
   rewire : ∀ {a i o} {A : Set a} → (Fin o → Fin i) → Vec A i → Vec A o
   rewire f v = tabulate (flip lookup v ∘ f)
 
@@ -39,20 +42,17 @@ module Rewire where
   runRewireTbl : RunCircuit RewireTbl
   runRewireTbl = rewireTbl
 
-open Rewire using (RewireTbl; RewireFun)
-
 record RewiringBuilder (C : CircuitType) : Set₁ where
   constructor mk
 
-  infixr 1 _>>>_
-  infixr 3 _***_
+  field
+    isComposable  : Composable C
+    isVComposable : VComposable _+_ C
+  open Composable isComposable
+  open VComposable isVComposable
 
   field
     rewire : ∀ {i o} → RewireFun i o → C i o
-
-    _>>>_  : ∀ {i m o} → C i m → C m o → C i o
-
-    _***_  : ∀ {i₀ i₁ o₀ o₁} → C i₀ o₀ → C i₁ o₁ → C (i₀ + i₁) (o₀ + o₁)
 
   rewireWithTbl : ∀ {i o} → RewireTbl i o → C i o
   rewireWithTbl = rewire ∘ flip lookup
@@ -189,15 +189,19 @@ record RewiringBuilder (C : CircuitType) : Set₁ where
   tailC : ∀ {i} → C (1 + i) i
   tailC = dropC 1
 
+  open Composable isComposable public
+  open VComposable isVComposable public
+
 record CircuitBuilder (C : CircuitType) : Set₁ where
   constructor mk
   field
     isRewiringBuilder : RewiringBuilder C
     arr : ∀ {i o} → (Bits i → Bits o) → C i o
     leafC : ∀ {o} → Bits o → C 0 o
-    forkC : ∀ {i o} (c₀ c₁ : C i o) → C (1 + i) o
+    isForkable : Forkable suc C
 
   open RewiringBuilder isRewiringBuilder
+  open Forkable isForkable renaming (fork to forkC)
 
 {-
   field
@@ -307,7 +311,7 @@ _→ᶠ_ : CircuitType
 i →ᶠ o = Fin o → Fin i
 
 finFunRewiringBuilder : RewiringBuilder _→ᶠ_
-finFunRewiringBuilder = mk id _∘′_ _***_ id _=[_]=_ rewire-spec idC-spec
+finFunRewiringBuilder = mk (opComp (ixFunComp Fin)) finFunOpVComp id id _=[_]=_ rewire-spec idC-spec
   where
     C = _→ᶠ_
 
@@ -320,13 +324,8 @@ finFunRewiringBuilder = mk id _∘′_ _***_ id _=[_]=_ rewire-spec idC-spec
     idC-spec : ∀ {i} (bs : Bits i) → bs =[ id ]= bs
     idC-spec = tabulate∘lookup
 
-    _***_ : ∀ {i₀ i₁ o₀ o₁} → C i₀ o₀ → C i₁ o₁ → C (i₀ + i₁) (o₀ + o₁)
-    _***_ {o₀ = o₀} f g x with Fin.cmp o₀ _ x
-    _***_      f _ ._ | Fin.bound x = inject+ _ (f x)
-    _***_ {i₀} _ g ._ | Fin.free  x = raise i₀ (g x)
-
 tblRewiringBuilder : RewiringBuilder RewireTbl
-tblRewiringBuilder = mk tabulate _>>>_ _***_ (allFin _) _=[_]=_ rewire-spec idC-spec
+tblRewiringBuilder = mk (mk _>>>_) (mk _***_) tabulate (allFin _) _=[_]=_ rewire-spec idC-spec
   where
     open Rewire
     C = RewireTbl
@@ -349,8 +348,15 @@ tblRewiringBuilder = mk tabulate _>>>_ _***_ (allFin _) _=[_]=_ rewire-spec idC-
     _***_ : ∀ {i₀ i₁ o₀ o₁} → C i₀ o₀ → C i₁ o₁ → C (i₀ + i₁) (o₀ + o₁)
     _***_ {i₀} c₀ c₁ = vmap (inject+ _) c₀ ++ vmap (raise i₀) c₁
 
+bitsFunVComp : VComposable _+_ (λ i o → Bits i → Bits o)
+bitsFunVComp = mk _***_ where
+  C = _→ᵇ_
+  _***_ : ∀ {i₀ i₁ o₀ o₁} → C i₀ o₀ → C i₁ o₁ → C (i₀ + i₁) (o₀ + o₁)
+  (f *** g) xs with splitAt _ xs
+  ... | ys , zs , _ = f ys ++ g zs
+
 bitsFunRewiringBuilder : RewiringBuilder _→ᵇ_
-bitsFunRewiringBuilder = mk Rewire.rewire _>>>_ _***_ id _=[_]=_ rewire-spec idC-spec
+bitsFunRewiringBuilder = mk bitsFunComp bitsFunVComp Rewire.rewire id _=[_]=_ rewire-spec idC-spec
   where
     C = _→ᵇ_
 
@@ -363,15 +369,8 @@ bitsFunRewiringBuilder = mk Rewire.rewire _>>>_ _***_ id _=[_]=_ rewire-spec idC
     idC-spec : ∀ {i} (bs : Bits i) → bs =[ id ]= bs
     idC-spec bs = refl
 
-    _>>>_ : ∀ {i m o} → C i m → C m o → C i o
-    f >>> g = g ∘ f
-
-    _***_ : ∀ {i₀ i₁ o₀ o₁} → C i₀ o₀ → C i₁ o₁ → C (i₀ + i₁) (o₀ + o₁)
-    (f *** g) xs with splitAt _ xs
-    ... | ys , zs , _ = f ys ++ g zs
-
 bitsFunCircuitBuilder : CircuitBuilder _→ᵇ_
-bitsFunCircuitBuilder = mk bitsFunRewiringBuilder id (λ { bs [] → bs }) (λ { f g (b ∷ bs) → (if b then f else g) bs })
+bitsFunCircuitBuilder = mk bitsFunRewiringBuilder id (λ { bs [] → bs }) bitsFunFork
 
 module BitsFunExtras where
   open CircuitBuilder bitsFunCircuitBuilder
@@ -384,18 +383,14 @@ module BitsFunExtras where
   ... | pre , post , eq with ++-decomp {xs = xs} {pre} {ys} {post} eq
   ... | eq1 , eq2 rewrite eq1 | eq2 = refl
 
-open import bintree
-open import flipbased-tree
+open import bintree hiding (_>>>_; _***_)
+open import flipbased-tree -- hiding (_***_)
 
 TreeBits : CircuitType
 TreeBits i o = Tree (Bits o) i
 
-module moretree where
-  _>>>_ : ∀ {m n a} {A : Set a} → Tree (Bits m) n → Tree A m → Tree A n
-  f >>> g = map (flip bintree.lookup g) f
-
 treeBitsRewiringBuilder : RewiringBuilder TreeBits
-treeBitsRewiringBuilder = mk rewire moretree._>>>_ _***_ (rewire id) _=[_]=_ rewire-spec idC-spec
+treeBitsRewiringBuilder = mk bintree.composable bintree.vcomposable rewire (rewire id) _=[_]=_ rewire-spec idC-spec
   where
     C = TreeBits
 
@@ -411,16 +406,8 @@ treeBitsRewiringBuilder = mk rewire moretree._>>>_ _***_ (rewire id) _=[_]=_ rew
     idC-spec : ∀ {i} (bs : Bits i) → bs =[ rewire id ]= bs
     idC-spec bs rewrite toFun∘fromFun (tabulate ∘ flip Vec.lookup) bs | tabulate∘lookup bs = refl
 
-    _***_ : ∀ {i₀ i₁ o₀ o₁} → C i₀ o₀ → C i₁ o₁ → C (i₀ + i₁) (o₀ + o₁)
-    (f *** g) = f >>= λ xs → map (_++_ xs) g
-
 treeBitsCircuitBuilder : CircuitBuilder TreeBits
-treeBitsCircuitBuilder = mk treeBitsRewiringBuilder arr leaf fork
-  where
-    C = TreeBits
-
-    arr : ∀ {i o} → (Bits i → Bits o) → C i o
-    arr = fromFun
+treeBitsCircuitBuilder = mk treeBitsRewiringBuilder fromFun leaf bintree.forkable
 
 RewiringTree : CircuitType
 RewiringTree i o = Tree (Fin i) o
