@@ -3,13 +3,13 @@ module flipbased-tree where
 open import Level using () renaming (_⊔_ to _L⊔_)
 open import Function
 open import Data.Bits
-open import Data.Nat.NP using (ℕ; zero; suc; _≤_; s≤s; _+_; module ℕ≤; module ℕ°)
+open import Data.Nat.NP using (ℕ; zero; suc; _≤_; s≤s; _+_)
 open import Data.Nat.Properties
 import bintree
 open import Data.Product
 
 open bintree
-open bintree public using (Tree)
+open bintree public using (Tree) renaming (map to map↺; join to join↺)
 
 import flipbased
 
@@ -25,24 +25,6 @@ runDet (leaf x) = x
 
 toss : ↺ 1 Bit
 toss = fork (leaf 0b) (leaf 1b)
-
-weaken≤ : ∀ {m c a} {A : Set a} → m ≤ c → ↺ m A → ↺ c A
-weaken≤ p (leaf x) = leaf x
-weaken≤ (s≤s p) (fork left right) = fork (weaken≤ p left) (weaken≤ p right)
-
-m≤n+m : ∀ m n → m ≤ n + m
-m≤n+m m n = ℕ≤.trans (m≤m+n m n) (ℕ≤.reflexive (ℕ°.+-comm m n))
-
-weaken+ : ∀ c {m a} {A : Set a} → ↺ m A → ↺ (c + m) A
-weaken+ c = weaken≤ (m≤n+m _ c)
-
-map↺ : ∀ {c a b} {A : Set a} {B : Set b} → (A → B) → ↺ c A → ↺ c B
-map↺ f (leaf x) = leaf (f x)
-map↺ f (fork left right) = fork (map↺ f left) (map↺ f right)
-
-join↺ : ∀ {c₁ c₂ a} {A : Set a} → ↺ c₁ (↺ c₂ A) → ↺ (c₁ + c₂) A
-join↺ {c} (leaf x)      = weaken+ c x
-join↺     (fork left right) = fork (join↺ left) (join↺ right)
 
 open flipbased ↺ toss weaken≤ leaf map↺ join↺ public
 
