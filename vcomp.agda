@@ -52,5 +52,5 @@ vecFunVComp A = mk _***_ where
 open import Data.Unit using (⊤)
 open import composable using (ConstArr)
 
-constVComp : ∀ {a} {A : Set a} (_·_ : A → A → A) → VComposable _ (ConstArr A)
-constVComp _·_ = mk _·_
+constVComp : ∀ {a} {A : Set a} (_***_ : A → A → A) → VComposable _ (ConstArr A)
+constVComp _***_ = mk _***_

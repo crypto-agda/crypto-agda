@@ -1,5 +1,6 @@
 module otp-sem-sec where
 
+import Level as L
 open import Function
 open import Data.Nat.NP
 open import Data.Bits
@@ -93,34 +94,80 @@ module Guess (prgDist : PrgDist) where
   GuessSec : Power → Set
   GuessSec power = ∀ (A : GuessAdv (coins power)) → ¬(breaks (runGuess⅁ A))
 
+record FlatFuns (Power : Set) {t} (T : Set t) : Set (L.suc t) where
+  constructor mk
+  field
+    `Bits   : ℕ → T
+    `Bit    : T
+    _`×_    : T → T → T
+    _⟨_⟩→_  : T → Power → T → Set
+  infixr 2 _`×_
+  infix 0 _⟨_⟩→_
+
+open import Data.Unit using (⊤)
+
+fun♭Funs : FlatFuns ⊤ Set
+fun♭Funs = mk Bits Bit _×_ (λ A _ B → A → B)
+
+record AbsSemSecAdv |M| |C|
+                 {Power : Set} {t} {T : Set t} (♭Funs : FlatFuns Power T)
+                 (p₀ p₁ : Power) (|R| : Coins) : Set where
+  constructor _,_
+
+  open FlatFuns ♭Funs
+
+  field
+    {|S|} : ℕ
+
+  S = `Bits |S|
+  R = `Bits |R|
+  M = `Bits |M|
+  C = `Bits |C|
+
+  field
+    step₀ : R ⟨ p₀ ⟩→ (M `× M) `× S
+    step₁ : C `× S ⟨ p₁ ⟩→ `Bit
+
 module FunAdv (prgDist : PrgDist) (|M| |C| : ℕ) where
   open PrgDist prgDist
 
   M = Bits |M|
   C = Bits |C|
+  -- module AbsSemSecAdv' |R| = AbsSemSecAdv {|M|} {|C|} {fun♭Funs} |R|
+
+  -- open AbsSemSecAdv' using (M; C)
 
   M² = Bit → M
 
   Enc : ∀ cc → Set
   Enc cc = M → ↺ cc C
 
-  record SemSecAdv c : Set where
-    constructor _,_
+  record FunSemSecAdv |R| : Set where
+    constructor mk
 
     field
-      {|S|} : ℕ
-    S = Bits |S|
-    field
-      step₀ : ↺ c (M² × S)
-      step₁ : S → C → Bit
+      semSecAdv : AbsSemSecAdv |M| |C| fun♭Funs _ _ |R|
+
+    open AbsSemSecAdv semSecAdv public hiding (M; C)
+
+    step₀F : R → (M² × S)
+    step₀F = step₀ >>> proj *** id
+      where open FunctionExtra
+
+    step₀↺ : ↺ |R| (M² × S)
+    step₀↺ = mk step₀F
+
+    step₁F : S → C → Bit
+    step₁F s c = step₁ (c , s)
 
   -- Returing 0 means Chal wins, Adv looses
   --          1 means Adv  wins, Chal looses
-  runSemSec : ∀ {cc ca} (E : Enc cc) (A : SemSecAdv ca) b → ↺ (ca + cc) Bit
-  runSemSec E (A-step₀ , A-step₁) b
+  runSemSec : ∀ {cc ca} (E : Enc cc) (A : FunSemSecAdv ca) b → ↺ (ca + cc) Bit
+  runSemSec E A b
     = A-step₀ >>= λ { (m , s) → map↺ (A-step₁ s) (E (m b)) }
+    where open FunSemSecAdv A renaming (step₀↺ to A-step₀; step₁F to A-step₁)
 
-  _⇄_ : ∀ {cc ca} (E : Enc cc) (A : SemSecAdv ca) b → ↺ (ca + cc) Bit
+  _⇄_ : ∀ {cc ca} (E : Enc cc) (A : FunSemSecAdv ca) b → ↺ (ca + cc) Bit
   _⇄_ = runSemSec
 
   breaks : ∀ {c} (EXP : Bit → ↺ c Bit) → Set
@@ -132,19 +179,20 @@ module FunAdv (prgDist : PrgDist) (|M| |C| : ℕ) where
   ≗⅁-trans : ∀ {c} → Transitive (_≗⅁_ {c})
   ≗⅁-trans p q b R = trans (p b R) (q b R)
 
-  _≗A_ : ∀ {p} (A₁ A₂ : SemSecAdv p) → Set
-  A₀ ≗A A₁ = ∀ {cc} C → let E = λ _ → return↺ {cc} C in
-                         (E ⇄ A₀) ≗⅁ (E ⇄ A₁)
+  runAdv : ∀ {|R|} → FunSemSecAdv |R| → C → Bits |R| → (M × M) × Bit
+  runAdv (mk (A-step₀ , A-step₁)) C = A-step₀ >>> id *** (const C &&& id >>> A-step₁)
+    where open FunctionExtra
 
-  change-adv : ∀ {cc p} {E : Enc cc} {A₁ A₂ : SemSecAdv p} → A₁ ≗A A₂ → (E ⇄ A₁) ≗⅁ (E ⇄ A₂)
-  change-adv = {!!}
-{-
-  change-adv {cc} {ca} {E} {A₁} {A₂} (pf1 , pf2) b R with splitAt ca R
-  change-adv {cc} {ca} {E} {A₁} {A₂} (pf1 , pf2) b ._ | pre , post , refl =
-      proj₂ (run↺ A₁ pre) (run↺ (E (proj₁ (run↺ A₁ pre) b)) post) ≡⟨ cong (λ A → proj₂ (run↺ A₁ pre) (run↺ (E (A b)) post)) (pf1 pre) ⟩
-      proj₂ (run↺ A₁ pre) (run↺ (E (proj₁ (run↺ A₂ pre) b)) post) ≡⟨ pf2 pre (run↺ (E (proj₁ (run↺ A₂ pre) b)) post) ⟩
-      proj₂ (run↺ A₂ pre) (run↺ (E (proj₁ (run↺ A₂ pre) b)) post) ∎
--}
+  _≗A_ : ∀ {p} (A₁ A₂ : FunSemSecAdv p) → Set
+  A₀ ≗A A₁ = ∀ C R → runAdv A₀ C R ≡ runAdv A₁ C R
+
+  change-adv : ∀ {cc p} {E : Enc cc} {A₁ A₂ : FunSemSecAdv p} → A₁ ≗A A₂ → (E ⇄ A₁) ≗⅁ (E ⇄ A₂)
+  change-adv {cc} {ca} {E} {A₁} {A₂} pf b R with splitAt ca R
+  change-adv {cc} {ca} {E} {A₁} {A₂} pf b ._ | pre , post , refl = trans (cong proj₂ (helper₀ A₁)) helper₂
+     where open FunSemSecAdv
+           helper₀ = λ A → pf (run↺ (E (proj (proj₁ (step₀ A pre)) b)) post) pre
+           helper₂ = cong (λ m → step₁ A₂ (run↺ (E (proj (proj₁ m) b)) post , proj₂ (step₀ A₂ pre)))
+                          (helper₀ A₂)
 
 {-
   module SplitSemSecAdv {c} (A : SemSecAdv c) where
@@ -175,12 +223,13 @@ module FunAdv (prgDist : PrgDist) (|M| |C| : ℕ) where
     coh : A ≗A beh↺
     coh = coh₁ , coh₂
 -}
+
   ext-as-broken : ∀ {c} {⅁₀ ⅁₁ : Bit → ↺ c Bit}
                   → ⅁₀ ≗⅁ ⅁₁ → breaks ⅁₀ → breaks ⅁₁
   ext-as-broken same-games = ]-[-cong (same-games 0b) (same-games 1b)
 
   SemBroken : ∀ {cc} (E : Enc cc) → Power → Set
-  SemBroken E power = ∃ (λ (A : SemSecAdv (coins power)) → breaks (E ⇄ A))
+  SemBroken E power = ∃ (λ (A : FunSemSecAdv (coins power)) → breaks (E ⇄ A))
 
   Tr : (cc₀ cc₁ : Coins) → Set
   Tr cc₀ cc₁ = Enc cc₀ → Enc cc₁
@@ -207,13 +256,8 @@ module FunAdv (prgDist : PrgDist) (|M| |C| : ℕ) where
 
   post-comp-pres-sem-sec : ∀ {cc} (post-E : C → C)
                            → SemSecTr same-power (post-comp {cc} post-E)
-  post-comp-pres-sem-sec {cc} post-E {p} {E} ((A'₀ , A'₁) , A'-breaks-E') = A , A-breaks-E
-     where E' : Enc cc
-           E' = post-comp post-E E
-           A : SemSecAdv (coins p)
-           A = A'₀ , (λ s → post-E >>> A'₁ s)
-           A-breaks-E : breaks (E ⇄ A)
-           A-breaks-E = A'-breaks-E'
+  post-comp-pres-sem-sec post-E (mk (A'₀ , A'₁) , A'-breaks-E') = A , A'-breaks-E'
+     where A = mk (A'₀ , (post-E *** id >>> A'₁))
 
   post-comp-pres-sem-sec' : ∀ (post-E post-E⁻¹ : C → C)
                               (post-E-inv : post-E⁻¹ ∘ post-E ≗ id)
@@ -221,17 +265,13 @@ module FunAdv (prgDist : PrgDist) (|M| |C| : ℕ) where
                             → SemSecReduction p p (post-comp post-E E) E
   post-comp-pres-sem-sec' post-E post-E⁻¹ post-E-inv {cc} {p} {E} (A , A-breaks-E)
        = A' , A'-breaks-E'
-     where E' : Enc cc
-           E' = post-comp post-E E
-           open Power p renaming (coins to ca)
-           pre-post-E⁻¹ : (C → Bit) → (C → Bit)
-           pre-post-E⁻¹ kont = post-E⁻¹ >>> kont
-           open SemSecAdv A renaming (step₀ to A₀; step₁ to A₁)
-           A' : SemSecAdv ca 
-           A' = A₀ , (λ s → post-E⁻¹ >>> A₁ s)
+     where E' = post-comp post-E E
+           open FunSemSecAdv A renaming (step₀ to A₀; step₀F to A₀F; step₁ to A₁)
+           A' = mk (A₀ , (post-E⁻¹ *** id >>> A₁))
            same-games : (E ⇄ A) ≗⅁ (E' ⇄ A')
            same-games b R
-             rewrite post-E-inv (run↺ (E (proj₁ (run↺ A₀ (take ca R)) b)) (drop ca R)) = refl
+             rewrite post-E-inv (run↺ (E (proj₁ (A₀F (take (coins p) R)) b))
+                                       (drop (coins p) R)) = refl
            A'-breaks-E' : breaks (E' ⇄ A')
            A'-breaks-E' = ext-as-broken same-games A-breaks-E
 
@@ -325,88 +365,55 @@ module CpAdv
 
   open PrgDist prgDist
   module FunAdv' = FunAdv prgDist |M| |C|
-  open FunAdv' public using ({-module SplitSemSecAdv;-} M; C; M²; Enc; Tr; breaks; ext-as-broken; change-adv; _≗A_; _≗⅁_; ≗⅁-trans) renaming (_⇄_ to _⇄↺_; SemSecAdv to SemSecAdv↺)
+  open FunAdv' public using (mk; {-module SplitSemSecAdv;-} FunSemSecAdv; M; C; M²; Enc; Tr; breaks; ext-as-broken; change-adv; _≗A_; _≗⅁_; ≗⅁-trans) renaming (_⇄_ to _⇄F_)
 
-{-
-  record SemSecAdv' power : Set where
+  cp♭Funs : FlatFuns ⊤ ℕ
+  cp♭Funs = mk id 1 _+_ (λ i _ o → Cp i o)
+
+  record CpSemSecAdv power : Set where
     constructor mk
 
-    open Power power renaming (coins to c; size to s; time to t)
-    field
-      fcp : FCp c s t |C| (1 + (|M| + |M|))
-
-      {c₀ c₁}   : Coins
-      c≡c₀+c₁  : c ≡ c₀ + c₁
-
-    R₀ = Bits c₀
-    R₁ = Bits c₁
-
-    open CircuitBuilder builder
-
-    cp : Cp ((c₀ + c₁) + |C|) (1 + (|M| + |M|))
-    cp rewrite sym c≡c₀+c₁ = toC fcp
-
-    cp₁ : Cp c₀ (|M| + |M|)
-    cp₁ = padR c₁ >>> padR |C| >>> cp >>> tailC
-
-    cp₂ : Cp ((c₀ + c₁) + |C|) 1
-    cp₂ = cp >>> headC
-
-    beh : ↺ c₀ ((M × M) × (C → ↺ c₁ Bit))
-    beh R₀ = (case splitAt |M| (runC cp₁ R₀) of λ { (x , y , _) → (x , y) })
-           , (λ C R₁ → head (runC cp₂ ((R₀ ++ R₁) ++ C)))
--}
-
-  record SemSecAdv power : Set where
-    constructor mk
-
-    open Power power renaming (coins to c; size to s; time to t)
-
-    R = Bits c
+    open Power power renaming (coins to |R|; size to s; time to t)
 
     open FunctionExtra
 
-    |S| : ℕ
-    |S| = c
-
     field
-      -- |S| : ℕ
+      semSecAdv : AbsSemSecAdv |M| |C| cp♭Funs _ _ |R|
 
-      cp₁ : Cp c (|M| + |M| {- + |S| -})
+    open AbsSemSecAdv semSecAdv public hiding (M; C; R; S)
 
-      cp₂ : Cp (|S| + |C|) 1
-
+    R = Bits |R|
     S = Bits |S|
 
-    beh₁ : R → M² -- × S
-    beh₁ = runC cp₁ >>>
-           -- splitAt′ (|M| + |M|) >>>
-           (splitAt′ |M| >>> proj) -- *** id
+    step₀f : R → ((M × M) × S)
+    step₀f = runC step₀ >>> splitAt′ (|M| + |M|) >>> splitAt′ |M| *** id
 
-    beh₂ : S → C → Bit
-    beh₂ S C = head (runC cp₂ (S ++ C))
+    step₀F : R → (M² × S)
+    step₀F = step₀f >>> proj *** id
 
-    beh : R → M² × (C → Bit)
-    -- beh = beh₁ >>> id *** beh₂
-    beh = beh₁ &&& beh₂
+    step₀↺ : ↺ |R| (M² × S)
+    step₀↺ = mk step₀F
 
-    beh↺ : ↺ c (M² × (C → Bit))
-    beh↺ = mk beh
+    step₁f : C × S → Bit
+    step₁f (c , s) = head (runC step₁ (c ++ s))
 
-    -- adv↺ : SemSecAdv↺ c
-    -- adv↺ = beh↺
+    step₁F : S → C → Bit
+    step₁F s c = step₁f (c , s)
 
+    funAdv : FunSemSecAdv |R|
+    funAdv = mk (step₀f , step₁f) 
+
+{-
   record SemSecAdv+FunBeh power : Set where
     constructor mk
 
     open Power power renaming (coins to c; size to s; time to t)
 
     field
-      Acp : SemSecAdv power
-      A↺ : SemSecAdv↺ c
+      Acp : CpSemSecAdv power
+      A↺ : FunSemSecAdv c
 
-{-
-    open SemSecAdv Acp renaming (beh↺ to Acp-beh↺; beh to Acp-beh; beh₂ to Acp-beh₂; beh₁ to Acp-beh₁)
+    open CpSemSecAdv Acp renaming (beh↺ to Acp-beh↺; beh to Acp-beh; beh₂ to Acp-beh₂; beh₁ to Acp-beh₁)
     A↺-beh : R → M² × (C → Bit)
     A↺-beh = run↺ A↺
 
@@ -417,16 +424,16 @@ module CpAdv
       coh₁ : Acp-beh₁ ≗ As-beh₁
       coh₂ : ∀ R → Acp-beh₂ R ≗ As-beh₂ R
 
-    coh : SemSecAdv.adv↺ Acp ≗A A↺
+    coh : CpSemSecAdv.adv↺ Acp ≗A A↺
     coh = coh₁ , coh₂
-
+-}
   -- Returing 0 means Chal wins, Adv looses
   --          1 means Adv  wins, Chal looses
-  _⇄_ : ∀ {cc p} (E : Enc cc) (A : SemSecAdv p) b → ↺ (coins p + cc) Bit
-  E ⇄ A = E ⇄↺ SemSecAdv.beh↺ A
+  _⇄_ : ∀ {cc p} (E : Enc cc) (A : CpSemSecAdv p) b → ↺ (coins p + cc) Bit
+  E ⇄ A = E ⇄F CpSemSecAdv.funAdv A
 
   SemBroken : ∀ {cc} (E : Enc cc) → Power → Set
-  SemBroken E power = ∃ (λ (A : SemSecAdv power) → breaks (E ⇄ A))
+  SemBroken E power = ∃ (λ (A : CpSemSecAdv power) → breaks (E ⇄ A))
 
   -- SemSecReduction p₀ p₁ E₀ E₁:
   --   security of E₀ reduces to security of E₁
@@ -448,31 +455,26 @@ module CpAdv
      where E' : Enc cc
            E' = post-comp-cp post-E E
            open Power p renaming (coins to c)
-           open SemSecAdv A' using (R; S; |S|; cp₁) renaming (beh to A'-beh; beh↺ to A'-beh↺; cp₂ to A'-cp₂)
-           pre-post-E-spec : (C → Bit) → (C → Bit)
-           pre-post-E-spec kont = runC post-E >>> kont
+           open CpSemSecAdv A' using (R; S; |S|; step₀) renaming (step₀f to A'-step₀f; step₁f to A'-step₁f; step₁ to A'-step₁)
+           A-step₁-spec = runC post-E *** id >>> A'-step₁f
              where open FunctionExtra
-           A-beh-spec = A'-beh >>> id *** pre-post-E-spec
-             where open FunctionExtra
-           A-beh↺-spec : SemSecAdv↺ (coins p)
-           A-beh↺-spec = mk A-beh-spec
-           A-cp₂ = idC {|S|} *** post-E >>> A'-cp₂
+           A-spec : FunSemSecAdv (coins p)
+           A-spec = mk (A'-step₀f , A-step₁-spec)
+           A-step₁ = post-E *** idC {|S|} >>> A'-step₁
              where open CircuitBuilder builder
-           A : SemSecAdv p
-           A = mk {-|S|-} cp₁ A-cp₂
-           open SemSecAdv A using () renaming (beh↺ to A-beh↺; beh to A-beh)
+           A : CpSemSecAdv p
+           A = mk (step₀ , A-step₁)
+           open CpSemSecAdv A using () renaming (funAdv to funA; step₀f to A-step₀f; step₁f to A-step₁f)
 
            open CircuitBuilder builder hiding (idC-spec)
-           pf1 : ∀ R → SemSecAdv.beh₂ A R ≗ pre-post-E-spec (SemSecAdv.beh₂ A' R)
-           pf1 R C rewrite >>>-spec (idC {c} *** post-E) A'-cp₂ (R ++ C)
-                         | ***-spec (idC {c}) post-E R {C}
-                         | idC-spec R = refl
-           pf2 : ∀ R → proj₂ (A-beh-spec R) ≗ proj₂ (A-beh R)
-           pf2 R C rewrite pf1 R C = refl
-           pf3 : A-beh↺-spec ≗A A-beh↺
-           pf3 = (λ _ → refl) , pf2
+           coh₁ : A-step₁-spec ≗ A-step₁f
+           coh₁ (C , S) rewrite >>>-spec (post-E *** idC {|S|}) A'-step₁ (C ++ S)
+                         | ***-spec post-E (idC {|S|}) C {S}
+                         | idC-spec S = refl
+           pf3 : A-spec ≗A funA
+           pf3 C R rewrite coh₁ (C , proj₂ (A-step₀f R)) = refl
            same-games : (E' ⇄ A') ≗⅁ (E ⇄ A)
-           same-games = change-adv {E = E} pf3
+           same-games = change-adv {E = E} {A-spec} {funA} pf3
            A-breaks-E : breaks (E ⇄ A)
            A-breaks-E = ext-as-broken same-games A'-breaks-E'
 
@@ -492,6 +494,7 @@ module Concrete k where
   module CpAdv' = CpAdv funBits-kit prgDist
 
 
+{-
 module OTP (prgDist : PrgDist) where
   open FunAdv prgDist 1 1
   open Guess prgDist renaming (breaks to reads-your-mind)
