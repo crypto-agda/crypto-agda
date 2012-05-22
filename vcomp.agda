@@ -60,8 +60,8 @@ opVComp (mk _***_) = mk (flip _***_)
 
 open import Data.Product
 
-funComp : ∀ {t} → VComposable _×_ (λ (A B : Set t) → A → B)
-funComp {t} = mk _***_ where
+funVComp : ∀ {t} → VComposable _×_ (λ (A B : Set t) → A → B)
+funVComp {t} = mk _***_ where
   _***_ : ∀ {A B C D : Set t} → (A → B) → (C → D) → A × C → B × D
   (f *** g) (x , y) = (f x , g y)
 
