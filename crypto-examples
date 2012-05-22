@@ -10,6 +10,11 @@ G' k = G k ++ 0ⁿ {1}
 G' k = G k ++ G k
 G' k = G 0
 
+ok SS
+E' k x = E k (1ⁿ ⊕ x)
+E' k x = 1ⁿ ⊕ E k x
+...
+
 ok PRFs
 F' k x = F k (1ⁿ ⊕ x)
 F' k x = F (1ⁿ ⊕ k) x
