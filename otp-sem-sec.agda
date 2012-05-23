@@ -58,7 +58,7 @@ record PrgDist : Set₁ where
                           → ⅁₀ ≗⅁ ⅁₁ → ⅁₀ ⇓ ⅁₁
   extensional-reduction same-games = ]-[-cong (same-games 0b) (same-games 1b)
 
-module Guess (Power : Set) (coins : Power → Coins) (prgDist : PrgDist) where
+module Guess (prgDist : PrgDist) where
   open PrgDist prgDist
 
   GuessAdv : Coins → Set
@@ -68,12 +68,12 @@ module Guess (Power : Set) (coins : Power → Coins) (prgDist : PrgDist) where
   runGuess⅁ A _ = A
 
   -- An oracle: an adversary who can break the guessing game.
-  Oracle : Power → Set
-  Oracle power = ∃ (λ (A : GuessAdv (coins power)) → breaks (runGuess⅁ A))
+  Oracle : Coins → Set
+  Oracle ca = ∃ (λ (A : GuessAdv ca) → breaks (runGuess⅁ A))
 
   -- Any adversary cannot do better than a random guess.
-  GuessSec : Power → Set
-  GuessSec power = ∀ (A : GuessAdv (coins power)) → ¬(breaks (runGuess⅁ A))
+  GuessSec : Coins → Set
+  GuessSec ca = ∀ (A : GuessAdv ca) → ¬(breaks (runGuess⅁ A))
 
 module AbsSemSec (|M| |C| : ℕ) {t} {T : Set t}
                  (♭Funs : FlatFuns T) where
@@ -243,6 +243,6 @@ module Concrete k where
   cong' = ]-[-cong {k}
   prgDist : PrgDist
   prgDist = mk _]-[_ cong'
-  module Guess' = Guess Coins id prgDist
+  module Guess' = Guess prgDist
   module FunSemSec' = FunSemSec prgDist
   module PostCompSec' = PostCompSec prgDist
