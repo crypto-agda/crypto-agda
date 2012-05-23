@@ -17,21 +17,11 @@ open import Data.Unit using (⊤)
 open import composable
 open import vcomp
 open import forkable
+open import flat-funs
 
 proj : ∀ {a} {A : Set a} → A × A → Bit → A
 proj (x₀ , x₁) 0b = x₀
 proj (x₀ , x₁) 1b = x₁
-
-module FunctionExtra where
-  _***_ : ∀ {A B C D : Set} → (A → B) → (C → D) → A × C → B × D
-  (f *** g) (x , y) = (f x , g y)
-  -- Fanout
-  _&&&_ : ∀ {A B C : Set} → (A → B) → (A → C) → A → B × C
-  (f &&& g) x = (f x , g x)
-  _>>>_ : ∀ {a b c} {A : Set a} {B : Set b} {C : Set c} →
-            (A → B) → (B → C) → (A → C)
-  f >>> g = g ∘ f
-  infixr 1 _>>>_
 
 module BitsExtra where
   splitAt′ : ∀ k {n} → Bits (k + n) → Bits k × Bits n
@@ -85,65 +75,16 @@ module Guess (Power : Set) (coins : Power → Coins) (prgDist : PrgDist) where
   GuessSec : Power → Set
   GuessSec power = ∀ (A : GuessAdv (coins power)) → ¬(breaks (runGuess⅁ A))
 
-record FlatFuns (Power : Set) {t} (T : Set t) : Set (L.suc t) where
-  constructor mk
-  field
-    `Bits   : ℕ → T
-    `Bit    : T
-    _`×_    : T → T → T
-    ⟨_⟩_↝_  : Power → T → T → Set
-  infixr 2 _`×_
-  infix 0 ⟨_⟩_↝_
-
-record PowerOps (Power : Set) : Set where
-  constructor mk
-  infixr 1 _>>>ᵖ_
-  infixr 3 _***ᵖ_
-  field
-    idᵖ : Power
-    _>>>ᵖ_ _***ᵖ_ : Power → Power → Power
-
-constPowerOps : PowerOps ⊤
-constPowerOps = _
-
-record FlatFunsOps {P t} {T : Set t} (powerOps : PowerOps P) (♭Funs : FlatFuns P T) : Set t where
-  constructor mk
-  open FlatFuns ♭Funs
-  open PowerOps powerOps
-  field
-    idO : ∀ {A p} → ⟨ p ⟩ A ↝ A
-    isIComposable  : IComposable  {I = ⊤} _>>>ᵖ_ ⟨_⟩_↝_
-    isVIComposable : VIComposable {I = ⊤} _***ᵖ_ _`×_ ⟨_⟩_↝_
-  open FlatFuns ♭Funs public
-  open PowerOps powerOps public
-  open IComposable isIComposable public
-  open VIComposable isVIComposable public
-
-fun♭Funs : FlatFuns ⊤ Set
-fun♭Funs = mk Bits Bit _×_ (λ _ A B → A → B)
-
-fun♭Ops : FlatFunsOps _ fun♭Funs
-fun♭Ops = mk id funComp funVComp
-
-module AbsSemSec (|M| |C| : ℕ) {FunPower : Set} {t} {T : Set t}
-                 (♭Funs : FlatFuns FunPower T) where
-
-  record Power : Set where
-    constructor mk
-    field
-      p₀ p₁ : FunPower
-      |R| : Coins
-  coins = Power.|R|
+module AbsSemSec (|M| |C| : ℕ) {t} {T : Set t}
+                 (♭Funs : FlatFuns T) where
 
   open FlatFuns ♭Funs
 
   M = `Bits |M|
   C = `Bits |C|
 
-  record AbsSemSecAdv (p : Power) : Set where
+  record AbsSemSecAdv (|R| : Coins) : Set where
     constructor mk
-
-    open Power p
 
     field
       {|S|} : ℕ
@@ -152,17 +93,18 @@ module AbsSemSec (|M| |C| : ℕ) {FunPower : Set} {t} {T : Set t}
     R = `Bits |R|
 
     field
-      step₀ : ⟨ p₀ ⟩ R ↝ (M `× M) `× S
-      step₁ : ⟨ p₁ ⟩ C `× S ↝ `Bit
+      step₀ : R `→ (M `× M) `× S
+      step₁ : C `× S `→ `Bit
+      -- step₀ : ⟨ p₀ ⟩ R ↝ (M `× M) `× S
+      -- step₁ : ⟨ p₁ ⟩ C `× S ↝ `Bit
 
-  SemSecReduction : ∀ (f : Power → Power) → Set
-  SemSecReduction f = ∀ {p} → AbsSemSecAdv p → AbsSemSecAdv (f p)
+  SemSecReduction : ∀ (f : Coins → Coins) → Set
+  SemSecReduction f = ∀ {c} → AbsSemSecAdv c → AbsSemSecAdv (f c)
 
--- Here we use Agda functions for FlatFuns and ⊤ for power.
+-- Here we use Agda functions for FlatFuns.
 module FunSemSec (prgDist : PrgDist) (|M| |C| : ℕ) where
   open PrgDist prgDist
   open AbsSemSec |M| |C| fun♭Funs
-  open PowerOps constPowerOps
   open FlatFunsOps fun♭Ops
 
   M² = Bit → M
@@ -174,7 +116,7 @@ module FunSemSec (prgDist : PrgDist) (|M| |C| : ℕ) where
   Tr cc₀ cc₁ = Enc cc₀ → Enc cc₁
 
   FunSemSecAdv : Coins → Set
-  FunSemSecAdv |R| = AbsSemSecAdv (mk _ _ |R|)
+  FunSemSecAdv = AbsSemSecAdv
 
   module FunSemSecAdv {|R|} (A : FunSemSecAdv |R|) where
     open AbsSemSecAdv A public
@@ -200,7 +142,6 @@ module FunSemSec (prgDist : PrgDist) (|M| |C| : ℕ) where
 
   runAdv : ∀ {|R|} → FunSemSecAdv |R| → C → Bits |R| → (M × M) × Bit
   runAdv (mk A-step₀ A-step₁) C = A-step₀ >>> id *** (const C &&& id >>> A-step₁)
-    where open FunctionExtra using (_&&&_)
 
   _≗A_ : ∀ {p} (A₁ A₂ : FunSemSecAdv p) → Set
   A₀ ≗A A₁ = ∀ C R → runAdv A₀ C R ≡ runAdv A₁ C R
@@ -213,26 +154,22 @@ module FunSemSec (prgDist : PrgDist) (|M| |C| : ℕ) where
            helper₂ = cong (λ m → step₁ A₂ (run↺ (E (proj (proj₁ m) b)) post , proj₂ (step₀ A₂ pre)))
                           (helper₀ A₂)
 
-  SafeSemSecReduction : ∀ (f : Power → Power) {cc₀ cc₁} (E₀ : Enc cc₀) (E₁ : Enc cc₁) → Set
+  SafeSemSecReduction : ∀ (f : Coins → Coins) {cc₀ cc₁} (E₀ : Enc cc₀) (E₁ : Enc cc₁) → Set
   SafeSemSecReduction f E₀ E₁ =
      ∃ λ (red : SemSecReduction f) →
-       ∀ {p} A → (E₀ ⇄ A) ⇓ (E₁ ⇄ red {p} A)
+       ∀ {c} A → (E₀ ⇄ A) ⇓ (E₁ ⇄ red {c} A)
 
-  SemSecTr : ∀ {cc₀ cc₁} (f : Power → Power) (tr : Tr cc₀ cc₁) → Set
+  SemSecTr : ∀ {cc₀ cc₁} (f : Coins → Coins) (tr : Tr cc₀ cc₁) → Set
   SemSecTr {cc₀} f tr = ∀ {E : Enc cc₀} → SafeSemSecReduction f (tr E) E
 
 module PostCompSec (prgDist : PrgDist) (|M| |C| : ℕ) where
-  module PostCompRed {FunPower : Set} {t} {T : Set t}
-             {♭Funs : FlatFuns FunPower T}
-             {funPowerOps : PowerOps FunPower}
-             (♭ops : FlatFunsOps funPowerOps ♭Funs) where
+  module PostCompRed {t} {T : Set t}
+             {♭Funs : FlatFuns T}
+             (♭ops : FlatFunsOps ♭Funs) where
     open FlatFunsOps ♭ops
     open AbsSemSec |M| |C| ♭Funs
 
-    post-comp-red-power : FunPower → Power → Power
-    post-comp-red-power p (mk p₀ p₁ |R|) = mk p₀ (p ***ᵖ idᵖ >>>ᵖ p₁) |R|
-
-    post-comp-red : ∀ {p} (post-E : ⟨ p ⟩ C ↝ C) → SemSecReduction (post-comp-red-power p)
+    post-comp-red : (post-E : C `→ C) → SemSecReduction _
     post-comp-red post-E (mk A₀ A₁) = mk A₀ (post-E *** idO >>> A₁)
 
   open PrgDist prgDist
@@ -257,13 +194,13 @@ module PostCompSec (prgDist : PrgDist) (|M| |C| : ℕ) where
     red : SemSecReduction id
     red = post-comp-red post-E⁻¹
     helper : ∀ {p} A → (E ⇄ A) ⇓ (E' ⇄ red {p} A)
-    helper {p} A A-breaks-E = A'-breaks-E'
+    helper {c} A A-breaks-E = A'-breaks-E'
      where open FunSemSecAdv A renaming (step₀F to A₀F)
-           A' = red {p} A
+           A' = red {c} A
            same-games : (E ⇄ A) ≗⅁ (E' ⇄ A')
            same-games b R
-             rewrite post-E-inv (run↺ (E (proj₁ (A₀F (take (coins p) R)) b))
-                                       (drop (coins p) R)) = refl
+             rewrite post-E-inv (run↺ (E (proj₁ (A₀F (take c R)) b))
+                                       (drop c R)) = refl
            A'-breaks-E' : breaks (E' ⇄ A')
            A'-breaks-E' = extensional-reduction same-games A-breaks-E
 
