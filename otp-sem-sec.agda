@@ -35,29 +35,6 @@ open BitsExtra
 
 Coins = ℕ
 
-record PrgDist : Set₁ where
-  constructor mk
-  field
-    _]-[_ : ∀ {c} (f g : ↺ c Bit) → Set
-    ]-[-cong : ∀ {c} {f f' g g' : ↺ c Bit} → f ≗↺ g → f' ≗↺ g' → f ]-[ f' → g ]-[ g'
-
-  breaks : ∀ {c} (EXP : Bit → ↺ c Bit) → Set
-  breaks ⅁ = ⅁ 0b ]-[ ⅁ 1b
-
-  _≗⅁_ : ∀ {c} (⅁₀ ⅁₁ : Bit → ↺ c Bit) → Set
-  ⅁₀ ≗⅁ ⅁₁ = ∀ b → ⅁₀ b ≗↺ ⅁₁ b
-
-  ≗⅁-trans : ∀ {c} → Transitive (_≗⅁_ {c})
-  ≗⅁-trans p q b R = trans (p b R) (q b R)
-
-  -- An wining adversary for game ⅁₀ reduces to a wining adversary for game ⅁₁
-  _⇓_ : ∀ {c₀ c₁} (⅁₀ : Bit → ↺ c₀ Bit) (⅁₁ : Bit → ↺ c₁ Bit) → Set
-  ⅁₀ ⇓ ⅁₁ = breaks ⅁₀ → breaks ⅁₁
-
-  extensional-reduction : ∀ {c} {⅁₀ ⅁₁ : Bit → ↺ c Bit}
-                          → ⅁₀ ≗⅁ ⅁₁ → ⅁₀ ⇓ ⅁₁
-  extensional-reduction same-games = ]-[-cong (same-games 0b) (same-games 1b)
-
 module Guess (prgDist : PrgDist) where
   open PrgDist prgDist
 
@@ -214,35 +191,8 @@ module PostCompSec (prgDist : PrgDist) (|M| |C| : ℕ) where
                             → SafeSemSecReduction id E (post-neg E)
   post-neg-pres-sem-sec' {cc} {E} = post-comp-pres-sem-sec' vnot vnot vnot∘vnot {cc} {E}
 
-open import diff
-import Data.Fin as Fin
-_]-_-[_ : ∀ {c} (f : ↺ c Bit) k (g : ↺ c Bit) → Set
-_]-_-[_ {c} f k g = diff (Fin.toℕ #⟨ run↺ f ⟩) (Fin.toℕ #⟨ run↺ g ⟩) ≥ 2^(c ∸ k)
-  --  diff (#1 f) (#1 g) ≥ 2^(-k) * 2^ c
-  --  diff (#1 f) (#1 g) ≥ ε * 2^ c
-  --  dist (#1 f) (#1 g) ≥ ε * 2^ c
-  --    where ε = 2^ -k
-  -- {!dist (#1 f / 2^ c) (#1 g / 2^ c) > ε !}
-
-open import Data.Vec.NP using (count)
-
-ext-count : ∀ {n a} {A : Set a} {f g : A → Bool} → f ≗ g → (xs : Vec A n) → count f xs ≡ count g xs
-ext-count f≗g [] = refl
-ext-count f≗g (x ∷ xs) rewrite ext-count f≗g xs | f≗g x = refl
-
-ext-# : ∀ {c} {f g : Bits c → Bit} → f ≗ g → #⟨ f ⟩ ≡ #⟨ g ⟩
-ext-# f≗g = ext-count f≗g (allBits _)
-
-]-[-cong : ∀ {k c} {f f' g g' : ↺ c Bit} → f ≗↺ g → f' ≗↺ g' → f ]- k -[ f' → g ]- k -[ g'
-]-[-cong f≗g f'≗g' f]-[f' rewrite ext-# f≗g | ext-# f'≗g' = f]-[f'
-
 module Concrete k where
-  _]-[_ : ∀ {c} (f g : ↺ c Bit) → Set
-  _]-[_ f g = f ]- k -[ g
-  cong' : ∀ {c} {f f' g g' : ↺ c Bit} → f ≗↺ g → f' ≗↺ g' → f ]-[ f' → g ]-[ g'
-  cong' = ]-[-cong {k}
-  prgDist : PrgDist
-  prgDist = mk _]-[_ cong'
+  open program-distance.Implem k
   module Guess' = Guess prgDist
   module FunSemSec' = FunSemSec prgDist
   module PostCompSec' = PostCompSec prgDist
