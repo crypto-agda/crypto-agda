@@ -10,10 +10,6 @@ open import flipbased-implem
 open import Data.Product
 open import Relation.Binary.PropositionalEquality
 
-Coins = ℕ
-
--- module AbsSemSec (|M| |C| : ℕ) {FunPower : Set} {t} {T : Set t}
---                  (♭Funs : PoweredFlatFuns FunPower T) where
 module AbsSemSec (|M| |C| : ℕ) {t} {T : Set t}
                  (♭Funs : FlatFuns T) where
 
@@ -34,27 +30,9 @@ module AbsSemSec (|M| |C| : ℕ) {t} {T : Set t}
     field
       step₀ : R `→ (M `× M) `× S
       step₁ : C `× S `→ `Bit
-      -- step₀ : ⟨ p₀ ⟩ R ↝ (M `× M) `× S
-      -- step₁ : ⟨ p₁ ⟩ C `× S ↝ `Bit
 
   SemSecReduction : ∀ (f : Coins → Coins) → Set
   SemSecReduction f = ∀ {c} → AbsSemSecAdv c → AbsSemSecAdv (f c)
-
-  -- runAdv is not the good name
-  -- runAdv : ∀ {p} (A : AbsSemSecAdv p) → ⟨ ? ⟩ (C `× AbsSemSecAdv.R A) ↝ (M `× M) `× Bit
-  -- runAdv (mk A-step₀ A-step₁) C = A-step₀ >>> id *** (const C &&& id >>> A-step₁)
-
-{-
-module FFF |M| |C| {♭Funs : FlatFuns ⊤ Set}
-               (♭ops : FlatFunsOps _ ♭Funs)
-               (run : ∀ {i o} → FlatFuns.⟨_⟩_↝_ ♭Funs _ i o → i → o) where
-  open AbsSemSec |M| |C| ♭Funs
-  module FunSemSecAdv {|R|} (A : AbsSemSecAdv |R|) where
-    open AbsSemSecAdv A public
-    open FlatFunsOps ♭ops
-    step₀O : ⟨ _ ⟩ R ↝ ((⟨ _ ⟩ Bit ↝ M) × S)
-    step₀O = {!run step₀!} >>> {!proj!} *** idO
--}
 
 -- Here we use Agda functions for FlatFuns.
 module FunSemSec (prgDist : PrgDist) (|M| |C| : ℕ) where
@@ -71,7 +49,6 @@ module FunSemSec (prgDist : PrgDist) (|M| |C| : ℕ) where
   Tr cc₀ cc₁ = Enc cc₀ → Enc cc₁
 
   FunSemSecAdv : Coins → Set
-  -- FunSemSecAdv |R| = AbsSemSecAdv (mk _ _ |R|)
   FunSemSecAdv = AbsSemSecAdv
 
   module FunSemSecAdv {|R|} (A : FunSemSecAdv |R|) where
@@ -110,19 +87,6 @@ module FunSemSec (prgDist : PrgDist) (|M| |C| : ℕ) where
            helper₂ = cong (λ m → step₁ A₂ (run↺ (E (proj (proj₁ m) b)) post , proj₂ (step₀ A₂ pre)))
                           (helper₀ A₂)
 
-  module Unused (Power : Set) (coins : Power → Coins) where
-  -- NP: not sure about these two. such a function has acess to the two encryption
-
-    SemBroken : ∀ {cc} (E : Enc cc) → Power → Set
-    SemBroken E power = ∃ (λ (A : FunSemSecAdv (coins power)) → breaks (E ⇄ A))
-
-    -- functions.
-    -- SemSecReduction p₀ p₁ E₀ E₁:
-    --   security of E₀ reduces to security of E₁
-    --   breaking E₁ reduces to breaking E₀
-    SemSecReduction' : ∀ (p₀ p₁ : Power) {cc₀ cc₁} (E₀ : Enc cc₀) (E₁ : Enc cc₁) → Set
-    SemSecReduction' p₀ p₁ E₀ E₁ = SemBroken E₁ p₁ → SemBroken E₀ p₀
-
   SafeSemSecReduction : ∀ (f : Coins → Coins) {cc₀ cc₁} (E₀ : Enc cc₀) (E₁ : Enc cc₁) → Set
   SafeSemSecReduction f E₀ E₁ =
      ∃ λ (red : SemSecReduction f) →
@@ -130,6 +94,3 @@ module FunSemSec (prgDist : PrgDist) (|M| |C| : ℕ) where
 
   SemSecTr : ∀ {cc₀ cc₁} (f : Coins → Coins) (tr : Tr cc₀ cc₁) → Set
   SemSecTr {cc₀} f tr = ∀ {E : Enc cc₀} → SafeSemSecReduction f (tr E) E
-
-  -- SemSecReductionToOracle : ∀ (p₀ p₁ : Power) {cc} (E : Enc cc) → Set
-  -- SemSecReductionToOracle = SemBroken E p₀ → Oracle p₁
