@@ -20,6 +20,7 @@ open import forkable
 open import flat-funs
 open import program-distance
 open import one-time-semantic-security
+import bit-guessing-game
 
 module BitsExtra where
   splitAt′ : ∀ k {n} → Bits (k + n) → Bits k × Bits n
@@ -31,79 +32,102 @@ module BitsExtra where
 
 open BitsExtra
 
-Coins = ℕ
 
-module Guess (prgDist : PrgDist) where
-  open PrgDist prgDist
 
-  GuessAdv : Coins → Set
-  GuessAdv c = ↺ c Bit
 
-  runGuess⅁ : ∀ {ca} (A : GuessAdv ca) (b : Bit) → ↺ ca Bit
-  runGuess⅁ A _ = A
 
-  -- An oracle: an adversary who can break the guessing game.
-  Oracle : Coins → Set
-  Oracle ca = ∃ (λ (A : GuessAdv ca) → breaks (runGuess⅁ A))
 
-  -- Any adversary cannot do better than a random guess.
-  GuessSec : Coins → Set
-  GuessSec ca = ∀ (A : GuessAdv ca) → ¬(breaks (runGuess⅁ A))
 
-module PostCompSec (prgDist : PrgDist) (|M| |C| : ℕ) where
-  module PostCompRed {t} {T : Set t}
-             {♭Funs : FlatFuns T}
-             (♭ops : FlatFunsOps ♭Funs) where
+module CompRed {t} {T : Set t}
+               {♭Funs : FlatFuns T}
+               (♭ops : FlatFunsOps ♭Funs)
+               (ep ep' : EncParams) where
     open FlatFunsOps ♭ops
-    open AbsSemSec |M| |C| ♭Funs
+    open AbsSemSec ♭Funs
 
-    post-comp-red : (post-E : C `→ C) → SemSecReduction _
-    post-comp-red post-E (mk A₀ A₁) = mk A₀ (post-E *** idO >>> A₁)
+    open EncParams ep using (|M|; |C|)
+    open EncParams ep' using () renaming (|M| to |M|'; |C| to |C|')
 
-  open PrgDist prgDist
-  open PostCompRed fun♭Ops
+    M = `Bits |M|
+    C = `Bits |C|
+    M' = `Bits |M|'
+    C' = `Bits |C|'
+
+    comp-red : (pre-E : M' `→ M)
+               (post-E : C `→ C') → SemSecReduction ep' ep _
+    comp-red pre-E post-E (mk A₀ A₁) = mk (A₀ >>> (pre-E *** pre-E) *** idO) (post-E *** idO >>> A₁)
+
+module Comp (ep : EncParams) (|M|' |C|' : ℕ) where
+  open EncParams ep
+
+  ep' : EncParams
+  ep' = EncParams.mk |M|' |C|' |R|e
+
+  open EncParams ep' using () renaming (Enc to Enc'; M to M'; C to C')
+
+  Tr = Enc → Enc'
+
   open FlatFunsOps fun♭Ops
-  open FunSemSec prgDist |M| |C|
-  open AbsSemSec |M| |C| fun♭Funs
 
-  post-comp : ∀ {cc} (post-E : C → C) → Tr cc cc
-  post-comp post-E E = E >>> map↺ post-E
+  comp : (pre-E : M' → M) (post-E : C → C') → Tr
+  comp pre-E post-E E = pre-E >>> E >>> {-weaken≤ |R|e≤|R|e' ∘-} map↺ post-E
 
-  post-comp-pres-sem-sec : ∀ {cc} (post-E : C → C)
-                           → SemSecTr id (post-comp {cc} post-E)
-  post-comp-pres-sem-sec post-E = post-comp-red post-E , (λ _ → id)
+module CompSec (prgDist : PrgDist) (ep : EncParams) (|M|' |C|' : ℕ) where
+  open PrgDist prgDist
+  open FlatFunsOps fun♭Ops
+  open FunSemSec prgDist
+  open AbsSemSec fun♭Funs
 
-  post-comp-pres-sem-sec' : ∀ (post-E post-E⁻¹ : C → C)
-                              (post-E-inv : post-E⁻¹ ∘ post-E ≗ id)
-                              {cc} {E : Enc cc}
-                            → SafeSemSecReduction id E (post-comp post-E E)
-  post-comp-pres-sem-sec' post-E post-E⁻¹ post-E-inv {cc} {E} = red , helper where
-    E' = post-comp post-E E
-    red : SemSecReduction id
-    red = post-comp-red post-E⁻¹
-    helper : ∀ {p} A → (E ⇄ A) ⇓ (E' ⇄ red {p} A)
-    helper {c} A A-breaks-E = A'-breaks-E'
-     where open FunSemSecAdv A renaming (step₀F to A₀F)
-           A' = red {c} A
-           same-games : (E ⇄ A) ≗⅁ (E' ⇄ A')
-           same-games b R
-             rewrite post-E-inv (run↺ (E (proj₁ (A₀F (take c R)) b))
-                                       (drop c R)) = refl
-           A'-breaks-E' : breaks (E' ⇄ A')
-           A'-breaks-E' = extensional-reduction same-games A-breaks-E
+  open EncParams ep
 
-  post-neg : ∀ {cc} → Tr cc cc
-  post-neg = post-comp vnot
+  ep' : EncParams
+  ep' = EncParams.mk |M|' |C|' |R|e
 
-  post-neg-pres-sem-sec : ∀ {cc} → SemSecTr id (post-neg {cc})
-  post-neg-pres-sem-sec {cc} {E} = post-comp-pres-sem-sec vnot {E}
+  open EncParams ep' using () renaming (Enc to Enc'; M to M'; C to C')
 
-  post-neg-pres-sem-sec' : ∀ {cc} {E : Enc cc}
-                            → SafeSemSecReduction id E (post-neg E)
-  post-neg-pres-sem-sec' {cc} {E} = post-comp-pres-sem-sec' vnot vnot vnot∘vnot {cc} {E}
+  module CompSec' (pre-E : M' → M) (post-E : C → C') where
+    open SemSecReductions ep ep'
+    open CompRed fun♭Ops ep ep' hiding (M; C)
+    open Comp ep |M|' |C|'
+
+    comp-pres-sem-sec : SemSecTr id (comp pre-E post-E)
+    comp-pres-sem-sec = comp-red pre-E post-E , λ E A → id
+
+  open SemSecReductions ep ep'
+  open CompRed fun♭Ops ep ep' hiding (M; C)
+  open CompSec' public
+  module Comp' {x y z} = Comp x y z
+  open Comp' hiding (Tr)
+  comp-pres-sem-sec⁻¹ : ∀ pre-E pre-E⁻¹
+                          (pre-E-right-inv : pre-E ∘ pre-E⁻¹ ≗ id)
+                          post-E post-E⁻¹
+                          (post-E-left-inv : post-E⁻¹ ∘ post-E ≗ id)
+                        → SemSecTr⁻¹ id (comp pre-E post-E)
+  comp-pres-sem-sec⁻¹ pre-E pre-E⁻¹ pre-E-inv post-E post-E⁻¹ post-E-inv =
+    SemSecTr→SemSecTr⁻¹
+      (comp pre-E⁻¹ post-E⁻¹)
+      (comp pre-E post-E)
+      (λ E m R → trans (post-E-inv _) (cong (λ x → run↺ (E x) R) (pre-E-inv _)))
+      (comp-pres-sem-sec pre-E⁻¹ post-E⁻¹)
+
+module PostNegSec (prgDist : PrgDist) ep where
+  open EncParams ep
+  open Comp ep |M| |C| hiding (Tr)
+  open CompSec prgDist ep |M| |C|
+  open FunSemSec prgDist
+  open SemSecReductions ep ep
+
+  post-neg : Tr
+  post-neg = comp id vnot
+
+  post-neg-pres-sem-sec : SemSecTr id post-neg
+  post-neg-pres-sem-sec = comp-pres-sem-sec id vnot
+
+  post-neg-pres-sem-sec⁻¹ : SemSecTr⁻¹ id post-neg
+  post-neg-pres-sem-sec⁻¹ = comp-pres-sem-sec⁻¹ id id (λ _ → refl) vnot vnot vnot∘vnot
 
 module Concrete k where
   open program-distance.Implem k
-  module Guess' = Guess prgDist
+  module Guess' = bit-guessing-game prgDist
   module FunSemSec' = FunSemSec prgDist
-  module PostCompSec' = PostCompSec prgDist
+  module CompSec' = CompSec prgDist

@@ -22,6 +22,8 @@ module flipbased
    (join↺ : ∀ {n₁ n₂ a} {A : Set a} → ↺ n₁ (↺ n₂ A) → ↺ (n₁ + n₂) A)
  where
 
+Coins = ℕ
+
 -- If you are not allowed to toss any coin, then you are deterministic.
 Det : ∀ {a} → Set a → Set a
 Det = ↺ 0

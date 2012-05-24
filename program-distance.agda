@@ -40,15 +40,19 @@ ext-count f≗g (x ∷ xs) rewrite ext-count f≗g xs | f≗g x = refl
 ext-# : ∀ {c} {f g : Bits c → Bit} → f ≗ g → #⟨ f ⟩ ≡ #⟨ g ⟩
 ext-# f≗g = ext-count f≗g (allBits _)
 
-module Implem k where
+count↺ : ∀ {c} → ↺ c Bit → ℕ
+count↺ f = Fin.toℕ #⟨ run↺ f ⟩
 
-  --  diff (#1 f) (#1 g) ≥ 2^(-k) * 2^ c
-  --  diff (#1 f) (#1 g) ≥ ε * 2^ c
-  --  dist (#1 f) (#1 g) ≥ ε * 2^ c
-  --    where ε = 2^ -k
-  -- {!dist (#1 f / 2^ c) (#1 g / 2^ c) > ε !}
+module Implem k where
+  --  | Pr[ f ≡ 1 ] - Pr[ g ≡ 1 ] | ≥ ε            [ on reals ]
+  --  dist Pr[ f ≡ 1 ] Pr[ g ≡ 1 ] ≥ ε             [ on reals ]
+  --  dist (#1 f / 2^ c) (#1 g / 2^ c) ≥ ε          [ on reals ]
+  --  dist (#1 f) (#1 g) ≥ ε * 2^ c where ε = 2^ -k [ on rationals ]
+  --  diff (#1 f) (#1 g) ≥ 2^(-k) * 2^ c            [ on rationals ]
+  --  diff (#1 f) (#1 g) ≥ 2^(c - k)                [ on rationals ]
+  --  diff (#1 f) (#1 g) ≥ 2^(c ∸ k)               [ on natural ]
   _]-[_ : ∀ {c} (f g : ↺ c Bit) → Set
-  _]-[_ {c} f g = diff (Fin.toℕ #⟨ run↺ f ⟩) (Fin.toℕ #⟨ run↺ g ⟩) ≥ 2^(c ∸ k)
+  _]-[_ {c} f g = diff (count↺ f) (count↺ g) ≥ 2^(c ∸ k)
 
   ]-[-cong : ∀ {c} {f f' g g' : ↺ c Bit} → f ≗↺ g → f' ≗↺ g' → f ]-[ f' → g ]-[ g'
   ]-[-cong f≗g f'≗g' f]-[f' rewrite ext-# f≗g | ext-# f'≗g' = f]-[f'

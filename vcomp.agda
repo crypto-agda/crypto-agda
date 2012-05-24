@@ -42,11 +42,11 @@ VComposable : ∀ {t a} {T : Set t} (_×_ : T → T → T) (_↝_ : T → T → 
 VComposable _×_ _↝_ = VIComposable {i = zero} {_↝ᵢ_ = ConstArr ⊤} _ _×_ (const _↝_)
 
 {- VComposable unfolds to:
-record VComposable {t a} {T : Set t} (_·_ : T → T → T) (_↝_ : T → T → Set a) : Set (t ⊔ a) where
+record VComposable {t a} {T : Set t} (_`×_ : T → T → T) (_↝_ : T → T → Set a) : Set (t ⊔ a) where
   constructor mk
   infixr 3 _***_
   field
-    _***_ : ∀ {i₀ i₁ o₀ o₁} → i₀ ↝ o₀ → i₁ ↝ o₁ → (i₀ · i₁) ↝ (o₀ · o₁)
+    _***_ : ∀ {i₀ i₁ o₀ o₁} → i₀ ↝ o₀ → i₁ ↝ o₁ → (i₀ `× i₁) ↝ (o₀ `× o₁)
 -}
 
 module VComposable = VIComposable
