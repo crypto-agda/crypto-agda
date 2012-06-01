@@ -37,6 +37,9 @@ open import Function
 fun♭Funs : FlatFuns Set
 fun♭Funs = mk Bits Bit _×_ (λ A B → A → B)
 
+bitsfun♭Funs : FlatFuns ℕ
+bitsfun♭Funs = mk id 1 _+_ (λ i o → Bits i → Bits o)
+
 fun♭Ops : FlatFunsOps fun♭Funs
 fun♭Ops = mk id funComp funVComp _&&&_
   where
