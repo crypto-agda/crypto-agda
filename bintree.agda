@@ -26,8 +26,8 @@ toFun (fork left right) (b ∷ bs) = toFun (if b then right else left) bs
 
 toFun∘fromFun : ∀ {n a} {A : Set a} (f : Bits n → A) → toFun (fromFun f) ≗ f
 toFun∘fromFun {zero}  f []        = refl
-toFun∘fromFun {suc n} f (0b ∷ bs) = toFun∘fromFun {n} (f ∘ 0∷_) bs
-toFun∘fromFun {suc n} f (1b ∷ bs) = toFun∘fromFun {n} (f ∘ 1∷_) bs
+toFun∘fromFun {suc n} f (false {-0b-} ∷ bs) = toFun∘fromFun {n} (f ∘ 0∷_) bs
+toFun∘fromFun {suc n} f (true  {-1b-} ∷ bs) = toFun∘fromFun {n} (f ∘ 1∷_) bs
 
 leafⁿ : ∀ {n a} {A : Set a} → A → Tree A n
 leafⁿ {zero}  x = leaf x

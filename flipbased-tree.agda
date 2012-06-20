@@ -2,6 +2,7 @@ module flipbased-tree where
 
 open import Level using () renaming (_⊔_ to _L⊔_)
 open import Function
+open import Data.Bool using (true; false)
 open import Data.Bits
 open import Data.Nat.NP using (ℕ; zero; suc; _≤_; s≤s; _+_)
 open import Data.Nat.Properties
@@ -161,8 +162,8 @@ Pr-not⇐ : ∀ {c} {Alg : ↺ c Bit} {x pr}
 Pr-not⇐ {Alg = Alg} {x} {pr} pf = subst (λ z → Pr[ Alg ≡ z ]≡ 1- pr) (not-involutive x) (Pr-not⇒ pf)
 
 Pr-toss : ∀ x → Pr[ toss ≡ x ]≡ 1/2
-Pr-toss 1b = Pr-fork-0 (Pr-return-≢ (λ ())) Pr-return-≡
-Pr-toss 0b = F≈.Equivalence.to fork-sym F≡.⟨$⟩ (Pr-fork-0 (Pr-return-≢ (λ ())) Pr-return-≡)
+Pr-toss true  {-1b-} = Pr-fork-0 (Pr-return-≢ (λ ())) Pr-return-≡
+Pr-toss false {-0b-} = F≈.Equivalence.to fork-sym F≡.⟨$⟩ (Pr-fork-0 (Pr-return-≢ (λ ())) Pr-return-≡)
 
 Pr-map : ∀ {c a b} {A : Set a} {B : Set b} {Alg : ↺ c A} {P Q pr} {F : [0,1] → [0,1]} {f : A → B} →
   (R : ∀ {pr x} → P x pr → Q (f x) (F pr)) →
