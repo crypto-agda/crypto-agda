@@ -38,7 +38,12 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
     fst : ∀ {A B} → A `× B `→ A
     snd : ∀ {A B} → A `× B `→ B
 
-  open FlatFuns ♭Funs public
+  <_,_> : ∀ {A B C} → (A `→ B) → (A `→ C) → A `→ B `× C
+  < f , g > = f &&& g
+
+  <_×_> : ∀ {A B C D} → (A `→ C) → (B `→ D) → (A `× B) `→ (C `× D)
+  < f × g > = f *** g
+
   open Composable isComposable public
   open VComposable isVComposable public
 
