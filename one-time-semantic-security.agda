@@ -2,7 +2,7 @@ module one-time-semantic-security where
 
 open import Function
 open import Data.Nat
-open import Data.Product
+open import Data.Product using (∃; module Σ; _×_; _,_; proj₁; proj₂)
 open import Data.Vec using (splitAt; take; drop)
 import Relation.Binary.PropositionalEquality as ≡
 open ≡ using (_≗_)
@@ -55,6 +55,13 @@ module ♭EncParams {t} {T : Set t}
   `M  = `Bits |M|
   `C  = `Bits |C|
   `Rᵉ = `Bits |R|ᵉ
+
+module ♭EncParams² {t} {T : Set t}
+                   (♭Funs : FlatFuns T)
+                   (ep₀ ep₁ : EncParams) where
+  open EncParams² ep₀ ep₁ public
+  open ♭EncParams ♭Funs ep₀ public using () renaming (`M to `M₀; `C to `C₀; `Rᵉ to `Rᵉ₀)
+  open ♭EncParams ♭Funs ep₁ public using () renaming (`M to `M₁; `C to `C₁; `Rᵉ to `Rᵉ₁)
 
 module AbsSemSec {t} {T : Set t}
                  (♭Funs : FlatFuns T) where
