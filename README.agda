@@ -14,6 +14,7 @@ open import diff
 
 open import flipbased
 open import flipbased-implem
+open import flipbased-tree
 
 open import bit-guessing-game
 
