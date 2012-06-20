@@ -8,11 +8,20 @@ open import vcomp
 record FlatFuns {t} (T : Set t) : Set (L.suc t) where
   constructor mk
   field
-    `Bits : ℕ → T
+    `⊤    : T
     `Bit  : T
     _`×_  : T → T → T
+    _`^_  : T → ℕ → T
     _`→_  : T → T → Set
+
+  `Vec : T → ℕ → T
+  `Vec A n = A `^ n
+
+  `Bits : ℕ → T
+  `Bits n = `Bit `^ n
+
   infixr 2 _`×_
+  infixl 2 _`^_
   infix 0 _`→_
 
 record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
@@ -26,22 +35,34 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
     -- Fanout
     _&&&_ : ∀ {A B C} → (A `→ B) → (A `→ C) → A `→ B `× C
 
+    fst : ∀ {A B} → A `× B `→ A
+    snd : ∀ {A B} → A `× B `→ B
+
   open FlatFuns ♭Funs public
   open Composable isComposable public
   open VComposable isVComposable public
 
+open import Data.Unit using (⊤)
+open import Data.Vec
 open import Data.Bits
 open import Data.Product
 open import Function
 
 fun♭Funs : FlatFuns Set
-fun♭Funs = mk Bits Bit _×_ (λ A B → A → B)
+fun♭Funs = mk ⊤ Bit _×_ Vec (λ A B → A → B)
 
-bitsfun♭Funs : FlatFuns ℕ
-bitsfun♭Funs = mk id 1 _+_ (λ i o → Bits i → Bits o)
+bitsFun♭Funs : FlatFuns ℕ
+bitsFun♭Funs = mk 0 1 _+_ _*_ (λ i o → Bits i → Bits o)
 
 fun♭Ops : FlatFunsOps fun♭Funs
-fun♭Ops = mk id funComp funVComp _&&&_
+fun♭Ops = mk id funComp funVComp _&&&_ proj₁ proj₂
   where
   _&&&_ : ∀ {A B C : Set} → (A → B) → (A → C) → A → B × C
   (f &&& g) x = (f x , g x)
+
+bitsFun♭Ops : FlatFunsOps bitsFun♭Funs
+bitsFun♭Ops = mk id bitsFunComp bitsFunVComp _&&&_ (λ {A} → take A) (λ {A} → drop A)
+  where
+  open FlatFuns bitsFun♭Funs
+  _&&&_ : ∀ {A B C} → (A `→ B) → (A `→ C) → A `→ B `× C
+  (f &&& g) x = (f x ++ g x)
