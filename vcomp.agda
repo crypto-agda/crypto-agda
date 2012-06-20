@@ -91,6 +91,11 @@ vecFunVComp A = mk _***_ where
   (f *** g) xs with splitAt _ xs
   ... | ys , zs , _ = f ys ++ g zs
 
+open import Data.Bits
+
+bitsFunVComp : VComposable _+_ (λ i o → Bits i → Bits o)
+bitsFunVComp = vecFunVComp Bit
+
 open import Data.Unit using (⊤)
 
 constVComp : ∀ {a} {A : Set a} (_***_ : A → A → A) → VComposable _ (ConstArr A)

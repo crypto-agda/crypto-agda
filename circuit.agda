@@ -348,13 +348,6 @@ tblRewiringBuilder = mk (mk _>>>_) (mk _***_) tabulate (allFin _) _=[_]=_ rewire
     _***_ : ∀ {i₀ i₁ o₀ o₁} → C i₀ o₀ → C i₁ o₁ → C (i₀ + i₁) (o₀ + o₁)
     _***_ {i₀} c₀ c₁ = vmap (inject+ _) c₀ ++ vmap (raise i₀) c₁
 
-bitsFunVComp : VComposable _+_ (λ i o → Bits i → Bits o)
-bitsFunVComp = mk _***_ where
-  C = _→ᵇ_
-  _***_ : ∀ {i₀ i₁ o₀ o₁} → C i₀ o₀ → C i₁ o₁ → C (i₀ + i₁) (o₀ + o₁)
-  (f *** g) xs with splitAt _ xs
-  ... | ys , zs , _ = f ys ++ g zs
-
 bitsFunRewiringBuilder : RewiringBuilder _→ᵇ_
 bitsFunRewiringBuilder = mk bitsFunComp bitsFunVComp Rewire.rewire id _=[_]=_ rewire-spec idC-spec
   where
