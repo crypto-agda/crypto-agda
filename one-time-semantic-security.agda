@@ -137,13 +137,13 @@ module FunSemSec (prgDist : PrgDist) where
     A₀ ≗A A₁ = observe A₀ ≗ observe A₁
       where open FunSemSecAdv
 
-    change-adv : ∀ {ca E} {A₁ A₂ : SemSecAdv ep ca} → A₁ ≗A A₂ → (E ⇄ A₁) ≗⅁ (E ⇄ A₂)
-    change-adv {ca = ca} {A₁ = _} {_} pf b R with splitAt ca R
-    change-adv {E = E} {A₁} {A₂} pf b ._ | pre Σ., post , ≡.refl = ≡.trans (≡.cong proj₂ (helper₀ A₁)) helper₂
+    change-adv : ∀ {ca} (A₀ A₁ : SemSecAdv ep ca) E → A₀ ≗A A₁ → (E ⇄ A₀) ≗⅁ (E ⇄ A₁)
+    change-adv {ca} _ _ _ pf b R with splitAt ca R
+    change-adv A₀ A₁ E pf b ._ | pre Σ., post , ≡.refl = ≡.trans (≡.cong proj₂ (helper₀ A₀)) helper₂
        where open FunSemSecAdv
              helper₀ = λ A → pf (run↺ (E (proj (proj₁ (step₀ A pre)) b)) post , pre)
-             helper₂ = ≡.cong (λ m → step₁ A₂ (run↺ (E (proj (proj₁ m) b)) post , proj₂ (step₀ A₂ pre)))
-                              (helper₀ A₂)
+             helper₂ = ≡.cong (λ m → step₁ A₁ (run↺ (E (proj (proj₁ m) b)) post , proj₂ (step₀ A₁ pre)))
+                              (helper₀ A₁)
 
     _≗E_ : ∀ (E₀ E₁ : Enc) → Set
     E₀ ≗E E₁ = ∀ m → E₀ m ≗↺ E₁ m
@@ -152,6 +152,9 @@ module FunSemSec (prgDist : PrgDist) where
                → (E₀ ⇄ A) ≗⅁ (E₁ ⇄ A)
     ≗E→≗⅁ E₀≗E₁ {c} A b R
       rewrite E₀≗E₁ (proj (proj₁ (SemSecAdv.step₀ A (take c R))) b) (drop c R) = ≡.refl
+
+    ≗A→⇓ : ∀ {c} (A₀ A₁ : SemSecAdv ep c) → A₀ ≗A A₁ → ∀ E → (E ⇄ A₀) ⇓ (E ⇄ A₁)
+    ≗A→⇓ A₀ A₁ A₀≗A₁ E = extensional-reduction (change-adv A₀ A₁ E A₀≗A₁)
 
     ≗E→⇓ : ∀ {E₀ E₁} → E₀ ≗E E₁ → ∀ {c} (A : SemSecAdv ep c) → (E₀ ⇄ A) ⇓ (E₁ ⇄ A)
     ≗E→⇓ E₀≗E₁ A = extensional-reduction (≗E→≗⅁ E₀≗E₁ A)
