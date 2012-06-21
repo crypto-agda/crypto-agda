@@ -74,3 +74,15 @@ bitsFun♭Ops = mk id bitsFunComp bitsFunVComp _&&&_ (λ {A} → take A) (λ {A}
   open FlatFuns bitsFun♭Funs
   _&&&_ : ∀ {A B C} → (A `→ B) → (A `→ C) → A `→ B `× C
   (f &&& g) x = (f x ++ g x)
+
+×-♭Funs : ∀ {s t} {S : Set s} {T : Set t} → FlatFuns S → FlatFuns T → FlatFuns (S × T)
+×-♭Funs funs-S funs-T = ?
+  where module S = FlatFuns funs-S
+        module T = FlatFuns funs-T
+
+×-♭Ops : ∀ {s t} {S : Set s} {T : Set t} {funs-S : FlatFuns S} {funs-T : FlatFuns T}
+         → FlatFunsOps funs-S → FlatFunsOps funs-T
+         → FlatFunsOps (×-♭Funs funs-S funs-T)
+×-♭Ops ops-S ops-T = ?
+  where module S = FlatFunsOps ops-S
+        module T = FlatFunsOps ops-T
