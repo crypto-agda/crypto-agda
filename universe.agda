@@ -73,8 +73,8 @@ Ty-U = mk ⊤′ Bit′ _×′_ _^′_
 -- Alternatively:
 --   * a syntactic type is turned into a type of any $given universe.
 --   * the catamorphism for syntactic types.
-fold-U : ∀ {t} → Ty → Sym-U
-fold-U {_} {T} u₀ uni = go u₀
+fold-U : ∀ {t} → Ty → Sym-U t
+fold-U u₀ {T} uni = go u₀
   where open Universe uni
         go : Ty → T
         go ⊤′         = `⊤
