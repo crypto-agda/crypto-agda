@@ -19,6 +19,9 @@ record FlatFuns {t} (T : Set t) : Set (L.suc t) where
 record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
   constructor mk
   open FlatFuns ♭Funs
+  infixr 1 _>>>_
+  infixr 3 _***_
+  infixr 3 _&&&_
   field
     idO : ∀ {A} → A `→ A
 
@@ -26,7 +29,6 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
 
     _***_ : ∀ {A B C D} → (A `→ C) → (B `→ D) → (A `× B) `→ (C `× D)
 
-    -- Fanout
     _&&&_ : ∀ {A B C} → (A `→ B) → (A `→ C) → A `→ B `× C
 
     fst : ∀ {A B} → A `× B `→ A
