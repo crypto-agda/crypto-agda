@@ -1,10 +1,11 @@
 module universe where
 
 import Level as L
+open import Function
 open import Data.Nat.NP using (ℕ; _+_; _*_; _^_)
 open import Data.Bits using (Bit)
 open import Data.Unit using (⊤)
-open import Data.Product using (_×_; _,_) renaming (zip to ×-zip)
+open import Data.Product using (Σ; _×_; _,_) renaming (zip to ×-zip)
 open import Data.Vec using (Vec)
 
 -- An interface for small, finite & discrete universes of types.
@@ -33,7 +34,7 @@ Set-U = mk ⊤ Bit _×_ Vec
 -- representing the width of the type in a binary representation.
 -- A natural embedding in Set is the Bits type (aka Vec Bool).
 Bits-U : Universe ℕ
-Bits-U = mk 0 1 _+_ _*_
+Bits-U = mk 0 1 _+_ (flip _*_)
 
 -- In Fin-U, a type is represented by a natural number
 -- representing the cardinality of the type.
@@ -84,7 +85,7 @@ fold-U u₀ {T} uni = go u₀
 
 {-
 Σ-U : ∀ {t} {T : Set t} → Universe T → (P : T → Set) → Universe (Σ T P)
-Σ-U T-U = ?
+Σ-U T-U P = mk (`⊤ , {!!}) {!!} {!!} {!!}
   where open Universe T-U
 -}
 
