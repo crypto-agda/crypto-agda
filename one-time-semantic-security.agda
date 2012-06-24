@@ -1,13 +1,12 @@
 module one-time-semantic-security where
 
-open import Function
-open import Data.Nat
+open import Data.Nat using (ℕ; _+_)
 open import Data.Product using (∃; module Σ; _×_; _,_; proj₁; proj₂)
 import Data.Vec as V
 import Relation.Binary.PropositionalEquality as ≡
 open ≡ using (_≗_)
 
-open import Data.Bits
+open import Data.Bits using (Bit; Bits; proj)
 
 open import flat-funs
 open import program-distance

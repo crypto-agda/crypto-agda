@@ -1,23 +1,15 @@
 module composition-sem-sec-reduction where
 
-import Level as L
-open import Function
-open import Data.Nat.NP
-open import Data.Bits
-open import Data.Bool
-open import Data.Vec hiding (_>>=_)
-open import Data.Product.NP using (_,_)
-open import Relation.Nullary
-open import Relation.Binary
-open import Relation.Binary.PropositionalEquality.NP
-open import flipbased-implem
-open ≡-Reasoning
-open import Data.Unit using (⊤)
-open import composable
-open import vcomp
-open import forkable
+open import Function using (id; _∘_)
+open import Data.Nat.NP using (ℕ)
+open import Data.Bits using (vnot; vnot∘vnot≗id)
+open import Data.Product using (_,_)
+import Relation.Binary.PropositionalEquality as ≡
+open ≡ using (_≗_)
+
+open import flipbased-implem using (run↺; map↺)
+open import program-distance using (module PrgDist; PrgDist)
 open import flat-funs
-open import program-distance
 open import one-time-semantic-security
 import bit-guessing-game
 
@@ -27,8 +19,8 @@ import bit-guessing-game
 -- This transformation can change the size of input/output
 -- of the given cipher.
 module Comp (ep₀ : EncParams) (|M|₁ |C|₁ : ℕ) where
-  open EncParams²-same-|R|ᵉ ep₀ |M|₁ |C|₁
-  open FlatFunsOps fun♭Ops
+  open EncParams²-same-|R|ᵉ ep₀ |M|₁ |C|₁ using (M₀; M₁; C₀; C₁; Tr)
+  open FlatFunsOps fun♭Ops using (_>>>_)
 
   comp : (pre-E : M₁ → M₀) (post-E : C₀ → C₁) → Tr
   comp pre-E post-E E = pre-E >>> E >>> map↺ post-E
@@ -90,9 +82,12 @@ module CompSec (prgDist : PrgDist) (ep₀ : EncParams) (|M|₁ |C|₁ : ℕ) whe
     SemSecTr→SemSecTr⁻¹
       (comp pre-E⁻¹ post-E⁻¹)
       (comp pre-E post-E)
-      (λ E m R → trans (post-E-inv _) (cong (λ x → run↺ (E x) R) (pre-E-inv _)))
+      (λ E m R → ≡.trans (post-E-inv _)
+      (≡.cong (λ x → run↺ (E x) R) (pre-E-inv _)))
       (comp-pres-sem-sec pre-E⁻¹ post-E⁻¹)
 
+-- As a concrete example this module post-compose a negation of all the
+-- bits.
 module PostNegSec (prgDist : PrgDist) ep where
   open EncParams ep
   open EncParams² ep ep using (Tr)
@@ -107,9 +102,12 @@ module PostNegSec (prgDist : PrgDist) ep where
   post-neg-pres-sem-sec = comp-pres-sem-sec id vnot
 
   post-neg-pres-sem-sec⁻¹ : SemSecTr⁻¹ post-neg
-  post-neg-pres-sem-sec⁻¹ = comp-pres-sem-sec⁻¹ id id (λ _ → refl) vnot vnot vnot∘vnot≗id
+  post-neg-pres-sem-sec⁻¹ = comp-pres-sem-sec⁻¹ id id (λ _ → ≡.refl)
+                                               vnot vnot vnot∘vnot≗id
 
-module Concrete k where
+-- Here we apply a concrete prgDist but still with an abstract precision
+-- bound.
+module ConcretePrgDist (k : ℕ) where
   open program-distance.Implem k
   module Guess-prgDist     = bit-guessing-game prgDist
   module FunSemSec-prgDist = FunSemSec prgDist
