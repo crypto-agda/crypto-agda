@@ -3,7 +3,7 @@ module one-time-semantic-security where
 open import Function
 open import Data.Nat
 open import Data.Product using (∃; module Σ; _×_; _,_; proj₁; proj₂)
-open import Data.Vec using (splitAt; take; drop)
+import Data.Vec as V
 import Relation.Binary.PropositionalEquality as ≡
 open ≡ using (_≗_)
 
@@ -138,7 +138,7 @@ module FunSemSec (prgDist : PrgDist) where
       where open FunSemSecAdv
 
     change-adv : ∀ {ca} (A₀ A₁ : SemSecAdv ep ca) E → A₀ ≗A A₁ → (E ⇄ A₀) ≗⅁ (E ⇄ A₁)
-    change-adv {ca} _ _ _ pf b R with splitAt ca R
+    change-adv {ca} _ _ _ pf b R with V.splitAt ca R
     change-adv A₀ A₁ E pf b ._ | pre Σ., post , ≡.refl = ≡.trans (≡.cong proj₂ (helper₀ A₀)) helper₂
        where open FunSemSecAdv
              helper₀ = λ A → pf (run↺ (E (proj (proj₁ (step₀ A pre)) b)) post , pre)
@@ -151,7 +151,7 @@ module FunSemSec (prgDist : PrgDist) where
     ≗E→≗⅁ : ∀ {E₀ E₁} → E₀ ≗E E₁ → ∀ {c} (A : SemSecAdv ep c)
                → (E₀ ⇄ A) ≗⅁ (E₁ ⇄ A)
     ≗E→≗⅁ E₀≗E₁ {c} A b R
-      rewrite E₀≗E₁ (proj (proj₁ (SemSecAdv.step₀ A (take c R))) b) (drop c R) = ≡.refl
+      rewrite E₀≗E₁ (proj (proj₁ (SemSecAdv.step₀ A (V.take c R))) b) (V.drop c R) = ≡.refl
 
     ≗A→⇓ : ∀ {c} (A₀ A₁ : SemSecAdv ep c) → A₀ ≗A A₁ → ∀ E → (E ⇄ A₀) ⇓ (E ⇄ A₁)
     ≗A→⇓ A₀ A₁ A₀≗A₁ E = extensional-reduction (change-adv A₀ A₁ E A₀≗A₁)
