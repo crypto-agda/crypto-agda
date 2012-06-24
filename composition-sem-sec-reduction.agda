@@ -1,6 +1,7 @@
 module composition-sem-sec-reduction where
 
-open import Function using (id; _∘_)
+import Function as Fun
+open Fun using (_∘_)
 open import Data.Nat.NP using (ℕ)
 open import Data.Bits using (vnot; vnot∘vnot≗id)
 open import Data.Product using (_,_)
@@ -55,7 +56,7 @@ module CompRed {t} {T : Set t}
              (post-E : `C₀ `→ `C₁)
            → SemSecReduction ep₁ ep₀ _
   comp-red pre-E post-E (mk A₀ A₁) =
-    mk (A₀ >>> (pre-E *** pre-E) *** idO) (post-E *** idO >>> A₁)
+    mk (A₀ >>> first < pre-E × pre-E >) (first post-E >>> A₁)
 
 module CompSec (prgDist : PrgDist) (ep₀ : EncParams) (|M|₁ |C|₁ : ℕ) where
   open PrgDist prgDist
@@ -93,6 +94,7 @@ module PostNegSec (prgDist : PrgDist) ep where
   open EncParams² ep ep using (Tr)
   open CompSec prgDist ep |M| |C|
   open FunSemSec prgDist
+  open Fun using (id)
   open SemSecReductions ep ep id
 
   post-neg : Tr
