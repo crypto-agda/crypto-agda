@@ -304,9 +304,6 @@ record CircuitBuilder (C : CircuitType) : Set₁ where
 
   open RewiringBuilder isRewiringBuilder public
 
-_→ᵇ_ : CircuitType
-i →ᵇ o = Bits i → Bits o
-
 _→ᶠ_ : CircuitType
 i →ᶠ o = Fin o → Fin i
 
