@@ -8,7 +8,6 @@ open import flat-funs
 open import forkable
 
 open import program-distance
-open import diff
 
 open import flipbased
 open import flipbased-implem

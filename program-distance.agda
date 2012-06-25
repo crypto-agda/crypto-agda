@@ -7,7 +7,6 @@ open import Data.Vec.NP using (Vec; count)
 open import Data.Nat.NP
 open import Relation.Binary
 open import Relation.Binary.PropositionalEquality
-open import diff
 import Data.Fin as Fin
 
 record PrgDist : Set₁ where
@@ -48,11 +47,11 @@ module Implem k where
   --  dist Pr[ f ≡ 1 ] Pr[ g ≡ 1 ] ≥ ε             [ on reals ]
   --  dist (#1 f / 2^ c) (#1 g / 2^ c) ≥ ε          [ on reals ]
   --  dist (#1 f) (#1 g) ≥ ε * 2^ c where ε = 2^ -k [ on rationals ]
-  --  diff (#1 f) (#1 g) ≥ 2^(-k) * 2^ c            [ on rationals ]
-  --  diff (#1 f) (#1 g) ≥ 2^(c - k)                [ on rationals ]
-  --  diff (#1 f) (#1 g) ≥ 2^(c ∸ k)               [ on natural ]
+  --  dist (#1 f) (#1 g) ≥ 2^(-k) * 2^ c            [ on rationals ]
+  --  dist (#1 f) (#1 g) ≥ 2^(c - k)                [ on rationals ]
+  --  dist (#1 f) (#1 g) ≥ 2^(c ∸ k)               [ on natural ]
   _]-[_ : ∀ {c} (f g : ↺ c Bit) → Set
-  _]-[_ {c} f g = diff (count↺ f) (count↺ g) ≥ 2^(c ∸ k)
+  _]-[_ {c} f g = dist (count↺ f) (count↺ g) ≥ 2^(c ∸ k)
 
   ]-[-cong : ∀ {c} {f f' g g' : ↺ c Bit} → f ≗↺ g → f' ≗↺ g' → f ]-[ f' → g ]-[ g'
   ]-[-cong f≗g f'≗g' f]-[f' rewrite ext-# f≗g | ext-# f'≗g' = f]-[f'
