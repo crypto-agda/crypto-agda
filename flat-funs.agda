@@ -3,6 +3,7 @@ module flat-funs where
 open import Data.Unit using (⊤)
 open import Data.Nat.NP using (ℕ; zero; suc; _+_; _*_; 2^_; _⊔_)
 open import Data.Fin using (Fin) renaming (_+_ to _+ᶠ_)
+open import Data.Bool using (if_then_else_)
 import Data.Vec.NP as V
 import Level as L
 import Function as F
@@ -34,6 +35,9 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
     id    : ∀ {A} → A `→ A
     _>>>_ : ∀ {A B C} → (A `→ B) → (B `→ C) → (A `→ C)
     const : ∀ {_A B} → El B → _A `→ B
+
+    -- Bit (TODO check TODO use const to get 0 and 1: const 0b and const 1b)
+    cond : ∀ {A} → `Bit `× A `× A `→ A
 
     -- Products
     <_,_> : ∀ {A B C} → (A `→ B) → (A `→ C) → A `→ B `× C
@@ -68,6 +72,13 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
 
   second : ∀ {A B C} → (B `→ C) → (A `× B) `→ (A `× C)
   second f = id *** f
+
+  fork : ∀ {A B} (f g : A `→ B) → `Bit `× A `→ B
+  fork f g = second < f , g > >>> cond
+
+  -- In case you wonder... one can also derive cond with fork
+  cond-on-top-of-fork : ∀ {A} → `Bit `× A `× A `→ A
+  cond-on-top-of-fork = fork fst snd
 
   assoc : ∀ {A B C} → ((A `× B) `× C) `→ (A `× (B `× C))
   assoc = < fst >>> fst , first snd >
@@ -237,19 +248,23 @@ finFun♭Funs = mk Fin-U Fin _→ᶠ_
 module FinFunTypes = FlatFuns finFun♭Funs
 
 fun♭Ops : FlatFunsOps fun♭Funs
-fun♭Ops = mk F.id (λ f g x → g (f x)) F.const ×.<_,_> proj₁ proj₂
+fun♭Ops = mk F.id (λ f g x → g (f x)) F.const
+             (λ { (b , x , y) → if b then x else y })
+             ×.<_,_> proj₁ proj₂
              _ (F.const []) (uncurry _∷_) V.uncons
 
 module FunOps = FlatFunsOps fun♭Ops
 
 bitsFun♭Ops : FlatFunsOps bitsFun♭Funs
-bitsFun♭Ops = mk id _>>>_ const <_,_> (λ {A} → V.take A)
+bitsFun♭Ops = mk id _>>>_ const condᵇ <_,_>ᵇ (λ {A} → V.take A)
                     (λ {A} → V.drop A) (const []) (const []) id id
   where
-  open FlatFuns bitsFun♭Funs
-  open FlatFunsOps fun♭Ops using (id; _>>>_; const)
-  <_,_> : ∀ {A B C} → (A `→ B) → (A `→ C) → A `→ B `× C
-  < f , g > x = f x ++ g x
+  open BitsFunTypes
+  open FunOps
+  <_,_>ᵇ : ∀ {A B C} → (A `→ B) → (A `→ C) → A `→ B `× C
+  < f , g >ᵇ x = f x ++ g x
+  condᵇ : ∀ {A} → `Bit `× A `× A `→ A
+  condᵇ {A} (b ∷ xs) = if b then take A xs else drop A xs
 
 module BitsFunOps = FlatFunsOps bitsFun♭Ops
 
@@ -270,23 +285,23 @@ module BitsFunOps = FlatFunsOps bitsFun♭Ops
          → FlatFunsOps funs-S → FlatFunsOps funs-T
          → FlatFunsOps (×-♭Funs funs-S funs-T)
 ×-♭Ops ops-S ops-T
-  = mk (S.id , T.id) (×.zip S._>>>_ T._>>>_) < S.const × T.const >
+  = mk (S.id , T.id) (×.zip S._>>>_ T._>>>_) < S.const × T.const > (S.cond , T.cond)
        (×.zip S.<_,_> T.<_,_>) (S.fst , T.fst) (S.snd , T.snd)
        (S.tt , T.tt) (S.nil , T.nil) (S.cons , T.cons) (S.uncons , T.uncons)
   where module S = FlatFunsOps ops-S
         module T = FlatFunsOps ops-T
-        open FlatFunsOps fun♭Ops
+        open FunOps
 
 ×⊤-♭Ops : ∀ {s} {S : Set s} {funs-S : FlatFuns S} {funs-⊤ : FlatFuns ⊤}
          → FlatFunsOps funs-S → FlatFunsOps funs-⊤
          → FlatFunsOps (×⊤-♭Funs funs-S funs-⊤)
 ×⊤-♭Ops ops-S ops-⊤
-  = mk (S.id , T.id) (×.zip S._>>>_ T._>>>_) < S.const × T.const >
+  = mk (S.id , T.id) (×.zip S._>>>_ T._>>>_) < S.const × T.const > (S.cond , T.cond)
        (×.zip S.<_,_> T.<_,_>) (S.fst , T.fst) (S.snd , T.snd)
        (S.tt , T.tt) (S.nil , T.nil) (S.cons , T.id) (S.uncons , T.id)
   where module S = FlatFunsOps ops-S
         module T = FlatFunsOps ops-⊤
-        open FlatFunsOps fun♭Ops
+        open FunOps
 
 constFuns : Set → FlatFuns ⊤
 constFuns A = mk ⊤-U (λ _ → A) (λ _ _ → A)
@@ -294,13 +309,13 @@ constFuns A = mk ⊤-U (λ _ → A) (λ _ _ → A)
 module ConstFunTypes A = FlatFuns (constFuns A)
 
 timeOps : FlatFunsOps (constFuns ℕ)
-timeOps = mk 0 _+_ (F.const 0) _⊔_ 0 0 0 0 0 0
+timeOps = mk 0 _+_ (F.const 0) 1 _⊔_ 0 0 0 0 0 0
 
 module TimeOps = FlatFunsOps timeOps
 
 spaceOps : FlatFunsOps (constFuns ℕ)
-spaceOps = mk 0 _+_ const _+_ 0 0 0 0 0 0
-  where open FlatFuns (constFuns ℕ)
+spaceOps = mk 0 _+_ const 1 _+_ 0 0 0 0 0 0
+  where open ConstFunTypes ℕ
         const : ∀ {_A B} → El B → _A `→ B
         const {_} {_} x = x
 

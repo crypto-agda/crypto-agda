@@ -5,7 +5,6 @@ open import composition-sem-sec-reduction
 open import one-time-semantic-security
 
 open import flat-funs
-open import forkable
 
 open import program-distance
 
