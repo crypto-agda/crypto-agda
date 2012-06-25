@@ -1,8 +1,10 @@
-open import program-distance
-open import flipbased-implem
-open import Data.Bits
-open import Data.Product
-open import Relation.Nullary
+open import Data.Product using (∃)
+open import Relation.Nullary using (¬_)
+
+open import Data.Bits using (Bit)
+
+open import flipbased-implem using (Coins; ↺)
+open import program-distance using (PrgDist; module PrgDist)
 
 module bit-guessing-game (prgDist : PrgDist) where
   open PrgDist prgDist
