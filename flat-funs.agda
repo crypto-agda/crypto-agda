@@ -2,12 +2,12 @@ module flat-funs where
 
 open import Data.Unit using (⊤)
 open import Data.Nat.NP using (ℕ; zero; suc; _+_; _*_; 2^_; _⊔_)
-import Data.Vec as V
-open V using (Vec; []; _∷_; _++_)
+open import Data.Fin using (Fin) renaming (_+_ to _+ᶠ_)
+import Data.Vec.NP as V
 import Level as L
 import Function as F
-open import Data.Fin using (Fin) renaming (_+_ to _+ᶠ_)
 import Data.Product as ×
+open V using (Vec; []; _∷_; _++_)
 open × using (_×_; _,_; proj₁; proj₂; uncurry)
 
 open import Data.Bits using (Bits; _→ᵇ_)
@@ -18,7 +18,7 @@ record FlatFuns {t} (T : Set t) : Set (L.suc t) where
   constructor mk
   field
     universe : Universe T
-    El      : T → Set
+    El       : T → Set
     _`→_    : T → T → Set
   infix 0 _`→_
   open Universe universe public
@@ -31,22 +31,25 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
   infixr 3 _&&&_
   field
     -- Functions
-    id : ∀ {A} → A `→ A
+    id    : ∀ {A} → A `→ A
     _>>>_ : ∀ {A B C} → (A `→ B) → (B `→ C) → (A `→ C)
     const : ∀ {_A B} → El B → _A `→ B
 
     -- Products
     <_,_> : ∀ {A B C} → (A `→ B) → (A `→ C) → A `→ B `× C
-    fst : ∀ {A B} → A `× B `→ A
-    snd : ∀ {A B} → A `× B `→ B
+    fst   : ∀ {A B} → A `× B `→ A
+    snd   : ∀ {A B} → A `× B `→ B
 
     -- Unit
     tt : ∀ {_A} → _A `→ `⊤
 
     -- Vectors
-    nil : ∀ {_A B} → _A `→ `Vec B 0
-    cons : ∀ {n A} → (A `× `Vec A n) `→ `Vec A (1 + n)
+    nil    : ∀ {_A B} → _A `→ `Vec B 0
+    cons   : ∀ {n A} → (A `× `Vec A n) `→ `Vec A (1 + n)
     uncons : ∀ {n A} → `Vec A (1 + n) `→ (A `× `Vec A n)
+
+  _∘_ : ∀ {A B C} → (B `→ C) → (A `→ B) → (A `→ C)
+  f ∘ g = g >>> f
 
   _&&&_ : ∀ {A B C} → (A `→ B) → (A `→ C) → A `→ B `× C
   f &&& g = < f , g >
@@ -72,11 +75,11 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
   assoc′ : ∀ {A B C} → (A `× (B `× C)) `→ ((A `× B) `× C)
   assoc′ = < second fst , snd >>> snd >
 
-  `×-zip : ∀ {A B C D E F} → ((A `× B) `→ C)
+  <_`zip`_> : ∀ {A B C D E F} → ((A `× B) `→ C)
                            → ((D `× E) `→ F)
                            → ((A `× D) `× (B `× E)) `→ (C `× F)
-  `×-zip f g = < < fst >>> fst , snd >>> fst > >>> f ,
-                 < fst >>> snd , snd >>> snd > >>> g >
+  < f `zip` g > = < < fst × fst > >>> f ,
+                    < snd × snd > >>> g >
 
   head : ∀ {n A} → `Vec A (1 + n) `→ A
   head = uncons >>> fst
@@ -120,7 +123,7 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
                         → (`Vec A n `× `Vec B n) `→ `Vec C n
   zipWith {zero}  f = nil
   zipWith {suc n} f = < uncons × uncons >
-                  >>> `×-zip f (zipWith f)
+                  >>> < f `zip` (zipWith f) >
                   >>> cons
 
   zip : ∀ {n A B} → (`Vec A n `× `Vec B n) `→ `Vec (A `× B) n
@@ -221,18 +224,23 @@ mapArr F G _`→_ A B = F A `→ G B
 fun♭Funs : FlatFuns Set
 fun♭Funs = mk Set-U F.id -→-
 
+module FunTypes = FlatFuns fun♭Funs
+
 bitsFun♭Funs : FlatFuns ℕ
 bitsFun♭Funs = mk Bits-U Bits _→ᵇ_
+
+module BitsFunTypes = FlatFuns bitsFun♭Funs
 
 finFun♭Funs : FlatFuns ℕ
 finFun♭Funs = mk Fin-U Fin _→ᶠ_
 
+module FinFunTypes = FlatFuns finFun♭Funs
+
 fun♭Ops : FlatFunsOps fun♭Funs
 fun♭Ops = mk F.id (λ f g x → g (f x)) F.const ×.<_,_> proj₁ proj₂
-             _ (F.const []) (uncurry _∷_) uncons
-  where
-  uncons : ∀ {n A} → Vec A (1 + n) → (A × Vec A n)
-  uncons (x ∷ xs) = x , xs
+             _ (F.const []) (uncurry _∷_) V.uncons
+
+module FunOps = FlatFunsOps fun♭Ops
 
 bitsFun♭Ops : FlatFunsOps bitsFun♭Funs
 bitsFun♭Ops = mk id _>>>_ const <_,_> (λ {A} → V.take A)
@@ -242,6 +250,8 @@ bitsFun♭Ops = mk id _>>>_ const <_,_> (λ {A} → V.take A)
   open FlatFunsOps fun♭Ops using (id; _>>>_; const)
   <_,_> : ∀ {A B C} → (A `→ B) → (A `→ C) → A `→ B `× C
   < f , g > x = f x ++ g x
+
+module BitsFunOps = FlatFunsOps bitsFun♭Ops
 
 ×-♭Funs : ∀ {s t} {S : Set s} {T : Set t} → FlatFuns S → FlatFuns T → FlatFuns (S × T)
 ×-♭Funs funs-S funs-T = mk (×-U S.universe T.universe)
@@ -281,8 +291,12 @@ bitsFun♭Ops = mk id _>>>_ const <_,_> (λ {A} → V.take A)
 constFuns : Set → FlatFuns ⊤
 constFuns A = mk ⊤-U (λ _ → A) (λ _ _ → A)
 
+module ConstFunTypes A = FlatFuns (constFuns A)
+
 timeOps : FlatFunsOps (constFuns ℕ)
 timeOps = mk 0 _+_ (F.const 0) _⊔_ 0 0 0 0 0 0
+
+module TimeOps = FlatFunsOps timeOps
 
 spaceOps : FlatFunsOps (constFuns ℕ)
 spaceOps = mk 0 _+_ const _+_ 0 0 0 0 0 0
@@ -290,5 +304,9 @@ spaceOps = mk 0 _+_ const _+_ 0 0 0 0 0 0
         const : ∀ {_A B} → El B → _A `→ B
         const {_} {_} x = x
 
+module SpaceOps = FlatFunsOps spaceOps
+
 time×spaceOps : FlatFunsOps (constFuns (ℕ × ℕ))
 time×spaceOps = ×⊤-♭Ops timeOps spaceOps
+
+module Time×SpaceOps = FlatFunsOps time×spaceOps
