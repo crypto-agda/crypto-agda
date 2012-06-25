@@ -1,7 +1,5 @@
 module composition-sem-sec-reduction where
 
-import Function as Fun
-open Fun using (_∘_)
 open import Data.Nat.NP using (ℕ)
 open import Data.Bits using (vnot; vnot∘vnot≗id)
 open import Data.Product using (_,_)
@@ -21,7 +19,7 @@ import bit-guessing-game
 -- of the given cipher.
 module Comp (ep₀ : EncParams) (|M|₁ |C|₁ : ℕ) where
   open EncParams²-same-|R|ᵉ ep₀ |M|₁ |C|₁ using (M₀; M₁; C₀; C₁; Tr)
-  open FlatFunsOps fun♭Ops using (_>>>_)
+  open FunOps
 
   comp : (pre-E : M₁ → M₀) (post-E : C₀ → C₁) → Tr
   comp pre-E post-E E = pre-E >>> E >>> map↺ post-E
@@ -60,8 +58,8 @@ module CompRed {t} {T : Set t}
 
 module CompSec (prgDist : PrgDist) (ep₀ : EncParams) (|M|₁ |C|₁ : ℕ) where
   open PrgDist prgDist
-  open FlatFunsOps fun♭Ops
   open FunSemSec prgDist
+  open FunOps
   open AbsSemSec fun♭Funs
   open EncParams²-same-|R|ᵉ ep₀ |M|₁ |C|₁
   open SemSecReductions ep₀ ep₁ id
@@ -94,7 +92,7 @@ module PostNegSec (prgDist : PrgDist) ep where
   open EncParams² ep ep using (Tr)
   open CompSec prgDist ep |M| |C|
   open FunSemSec prgDist
-  open Fun using (id)
+  open FunOps
   open SemSecReductions ep ep id
 
   post-neg : Tr
