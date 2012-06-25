@@ -22,7 +22,7 @@ module Comp (ep₀ : EncParams) (|M|₁ |C|₁ : ℕ) where
   open FunOps
 
   comp : (pre-E : M₁ → M₀) (post-E : C₀ → C₁) → Tr
-  comp pre-E post-E E = pre-E >>> E >>> map↺ post-E
+  comp pre-E post-E E = pre-E ⁏ E ⁏ map↺ post-E
 
 -- This module shows how to adapt an adversary that is supposed to break
 -- one time semantic security of some cipher E enhanced by pre and post
@@ -54,7 +54,7 @@ module CompRed {t} {T : Set t}
              (post-E : `C₀ `→ `C₁)
            → SemSecReduction ep₁ ep₀ _
   comp-red pre-E post-E (mk A₀ A₁) =
-    mk (A₀ >>> first < pre-E × pre-E >) (first post-E >>> A₁)
+    mk (A₀ ⁏ first < pre-E × pre-E >) (first post-E ⁏ A₁)
 
 module CompSec (prgDist : PrgDist) (ep₀ : EncParams) (|M|₁ |C|₁ : ℕ) where
   open PrgDist prgDist

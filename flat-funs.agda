@@ -27,6 +27,8 @@ record FlatFuns {t} (T : Set t) : Set (L.suc t) where
 record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
   constructor mk
   open FlatFuns ♭Funs
+  infixr 1 _∘_
+  infixr 1 _⁏_
   infixr 1 _>>>_
   infixr 3 _***_
   infixr 3 _&&&_
@@ -60,13 +62,13 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
   f >>> g = f ⁏ g
 
   <_,_> : ∀ {A B C} → (A `→ B) → (A `→ C) → A `→ B `× C
-  < f , g > = dup >>> < f × g >
+  < f , g > = dup ⁏ < f × g >
 
   _&&&_ : ∀ {A B C} → (A `→ B) → (A `→ C) → A `→ B `× C
   f &&& g = < f , g >
 
   <_×_>-on-top-of-<,> : ∀ {A B C D} → (A `→ C) → (B `→ D) → (A `× B) `→ (C `× D)
-  < f × g >-on-top-of-<,> = < fst >>> f , snd >>> g >
+  < f × g >-on-top-of-<,> = < fst ⁏ f , snd ⁏ g >
 
   _***_ : ∀ {A B C D} → (A `→ C) → (B `→ D) → (A `× B) `→ (C `× D)
   f *** g = < f × g >
@@ -81,7 +83,7 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
   second f = id *** f
 
   fork : ∀ {A B} (f g : A `→ B) → `Bit `× A `→ B
-  fork f g = second < f , g > >>> cond
+  fork f g = second < f , g > ⁏ cond
 
   -- In case you wonder... one can also derive cond with fork
   cond-on-top-of-fork : ∀ {A} → `Bit `× A `× A `→ A
@@ -91,30 +93,30 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
   constBit b = if b then <1b> else <0b>
 
   assoc : ∀ {A B C} → ((A `× B) `× C) `→ (A `× (B `× C))
-  assoc = < fst >>> fst , first snd >
+  assoc = < fst ⁏ fst , first snd >
 
   assoc′ : ∀ {A B C} → (A `× (B `× C)) `→ ((A `× B) `× C)
-  assoc′ = < second fst , snd >>> snd >
+  assoc′ = < second fst , snd ⁏ snd >
 
   <_`zip`_> : ∀ {A B C D E F} → ((A `× B) `→ C)
                            → ((D `× E) `→ F)
                            → ((A `× D) `× (B `× E)) `→ (C `× F)
-  < f `zip` g > = < < fst × fst > >>> f ,
-                    < snd × snd > >>> g >
+  < f `zip` g > = < < fst × fst > ⁏ f ,
+                    < snd × snd > ⁏ g >
 
   head : ∀ {n A} → `Vec A (1 + n) `→ A
-  head = uncons >>> fst
+  head = uncons ⁏ fst
 
   tail : ∀ {n A} → `Vec A (1 + n) `→ `Vec A n
-  tail = uncons >>> snd
+  tail = uncons ⁏ snd
 
   <_∷_> : ∀ {m n A B} → (A `→ B) → (`Vec A m `→ `Vec B n)
                   → `Vec A (1 + m) `→ `Vec B (1 + n)
-  < f ∷ g > = uncons >>> < f × g > >>> cons
+  < f ∷ g > = uncons ⁏ < f × g > ⁏ cons
 
   <_∷′_> : ∀ {n A B} → (A `→ B) → (A `→ `Vec B n)
                      → A `→ `Vec B (1 + n)
-  < f ∷′ g > = < f , g > >>> cons
+  < f ∷′ g > = < f , g > ⁏ cons
 
   ⊛ : ∀ {n A B} → Vec (A `→ B) n → `Vec A n `→ `Vec B n
   ⊛ []       = nil
@@ -133,22 +135,22 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
   foldl : ∀ {n A B} → (B `× A `→ B) → (B `× `Vec A n) `→ B
   foldl {zero}  f = fst
   foldl {suc n} f = second uncons
-                >>> assoc′
-                >>> first f
-                >>> foldl f
+                  ⁏ assoc′
+                  ⁏ first f
+                  ⁏ foldl f
 
   foldl₁ : ∀ {n A} → (A `× A `→ A) → `Vec A (1 + n) `→ A
-  foldl₁ f = uncons >>> foldl f
+  foldl₁ f = uncons ⁏ foldl f
 
   foldr : ∀ {n A B} → (A `× B `→ B) → (`Vec A n `× B) `→ B
   foldr {zero}  f = snd
   foldr {suc n} f = first uncons
-                >>> assoc
-                >>> second (foldr f)
-                >>> f
+                  ⁏ assoc
+                  ⁏ second (foldr f)
+                  ⁏ f
 
   foldr₁ : ∀ {n A} → (A `× A `→ A) → `Vec A (1 + n) `→ A
-  foldr₁ f = uncons >>> swap >>> foldr f
+  foldr₁ f = uncons ⁏ swap ⁏ foldr f
 
   map : ∀ {n A B} → (A `→ B) → (`Vec A n `→ `Vec B n)
   map {zero}  f = nil
@@ -158,36 +160,36 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
                         → (`Vec A n `× `Vec B n) `→ `Vec C n
   zipWith {zero}  f = nil
   zipWith {suc n} f = < uncons × uncons >
-                  >>> < f `zip` (zipWith f) >
-                  >>> cons
+                    ⁏ < f `zip` (zipWith f) >
+                    ⁏ cons
 
   zip : ∀ {n A B} → (`Vec A n `× `Vec B n) `→ `Vec (A `× B) n
   zip = zipWith id
 
   singleton : ∀ {A} → A `→ `Vec A 1
-  singleton = < id , nil > >>> cons
+  singleton = < id , nil > ⁏ cons
 
   snoc : ∀ {n A} → (`Vec A n `× A) `→ `Vec A (1 + n)
-  snoc {zero}  = snd >>> singleton
-  snoc {suc n} = first uncons >>> assoc >>> second snoc >>> cons
+  snoc {zero}  = snd ⁏ singleton
+  snoc {suc n} = first uncons ⁏ assoc ⁏ second snoc ⁏ cons
 
   reverse : ∀ {n A} → `Vec A n `→ `Vec A n
   reverse {zero}  = nil
-  reverse {suc n} = uncons >>> swap >>> first reverse >>> snoc
+  reverse {suc n} = uncons ⁏ swap ⁏ first reverse ⁏ snoc
 
   append : ∀ {m n A} → (`Vec A m `× `Vec A n) `→ `Vec A (m + n)
   append {zero}  = snd
   append {suc m} = first uncons
-               >>> assoc
-               >>> second append
-               >>> cons
+                 ⁏ assoc
+                 ⁏ second append
+                 ⁏ cons
 
   splitAt : ∀ m {n A} → `Vec A (m + n) `→ (`Vec A m `× `Vec A n)
   splitAt zero    = < nil , id >
   splitAt (suc m) = uncons
-                >>> second (splitAt m)
-                >>> assoc′
-                >>> first cons
+                  ⁏ second (splitAt m)
+                  ⁏ assoc′
+                  ⁏ first cons
 
   take : ∀ m {n A} → `Vec A (m + n) `→ `Vec A m
   take zero    = nil
@@ -195,11 +197,11 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
 
   drop : ∀ m {n A} → `Vec A (m + n) `→ `Vec A n
   drop zero    = id
-  drop (suc m) = tail >>> drop m
+  drop (suc m) = tail ⁏ drop m
 
   folda : ∀ n {A} → (A `× A `→ A) → `Vec A (2^ n) `→ A
   folda zero    f = head
-  folda (suc n) f = splitAt (2^ n) >>> < folda n f × folda n f > >>> f
+  folda (suc n) f = splitAt (2^ n) ⁏ < folda n f × folda n f > ⁏ f
 
   init : ∀ {n A} → `Vec A (1 + n) `→ `Vec A n
   init {zero}  = nil
@@ -207,22 +209,22 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
 
   last : ∀ {n A} → `Vec A (1 + n) `→ A
   last {zero}  = head
-  last {suc n} = tail >>> last
+  last {suc n} = tail ⁏ last
 
   concat : ∀ {m n A} → `Vec (`Vec A m) n `→ `Vec A (n * m)
   concat {n = zero}  = nil
-  concat {n = suc n} = uncons >>> second concat >>> append
+  concat {n = suc n} = uncons ⁏ second concat ⁏ append
 
   group : ∀ {A} n k → `Vec A (n * k) `→ `Vec (`Vec A k) n
   group zero    k = nil
-  group (suc n) k = splitAt k >>> second (group n k) >>> cons
+  group (suc n) k = splitAt k ⁏ second (group n k) ⁏ cons
 
   bind : ∀ {m n A B} → (A `→ `Vec B m) → `Vec A n `→ `Vec B (n * m)
-  bind f = map f >>> concat
+  bind f = map f ⁏ concat
 
   replicate : ∀ {n A} → A `→ `Vec A n
   replicate {zero}  = nil
-  replicate {suc n} = < id , replicate > >>> cons
+  replicate {suc n} = < id , replicate > ⁏ cons
 
   module WithFin
     (`Fin : ℕ → T)
@@ -233,11 +235,11 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
 
     tabulate : ∀ {n A _B} → (`Fin n `→ A) → _B `→ `Vec A n
     tabulate {zero}  f = nil
-    tabulate {suc n} f = < fz >>> f , tabulate (fs >>> f) > >>> cons
+    tabulate {suc n} f = < fz ⁏ f , tabulate (fs ⁏ f) > ⁏ cons
 
     lookup : ∀ {n A} → `Fin n `× `Vec A n `→ A
-    lookup {zero}  = fst >>> elim-Fin0
-    lookup {suc n} = elim-Fin1+ head (second tail >>> lookup)
+    lookup {zero}  = fst ⁏ elim-Fin0
+    lookup {suc n} = elim-Fin1+ head (second tail ⁏ lookup)
 
     allFin : ∀ {n _A} → _A `→ `Vec (`Fin n) n
     allFin = tabulate id
