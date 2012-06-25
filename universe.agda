@@ -1,6 +1,8 @@
 module universe where
 
 import Level as L
+import Relation.Binary.PropositionalEquality as ≡
+open ≡ using (_≡_)
 open import Function
 open import Data.Nat.NP using (ℕ; _+_; _*_; _^_)
 open import Data.Bits using (Bit)
@@ -44,7 +46,10 @@ Fin-U = mk 1 2 _*_ _^_
 
 -- In ⊤-U, there is only one possible type.
 ⊤-U : Universe ⊤
-⊤-U = mk _ _ _ _
+⊤-U = _ -- Agda figures out that there is only one such universe
+
+⊤-U-uniq : {U₀ U₁ : Universe ⊤} → U₀ ≡ U₁
+⊤-U-uniq = ≡.refl
 
 -- Take the product of two universes. All types have two components, one from
 -- each of the forming universes.
