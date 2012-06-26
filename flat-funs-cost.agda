@@ -12,6 +12,8 @@ open V using (Vec; []; _∷_; _++_; [_])
 open × using (_×_)
 open ≡ using (_≡_; _≗_)
 
+open import Data.Bits using (Bits; 0∷_; 1∷_)
+
 open import flat-funs
 
 module D where
@@ -82,6 +84,15 @@ module SeqTimeOpsD where
   foldr≡* : ∀ m n → foldr {m} n ≗ m *#′ n
   foldr≡* zero    n x = ≡.refl
   foldr≡* (suc m) n x rewrite foldr≡* m n x = ≡.refl
+
+  #nodes : ∀ i → Diffℕ
+  #nodes zero    = 0#
+  #nodes (suc i) = 1# +# #nodes i +# #nodes i
+
+  fromBitsFun≡ : ∀ {i o} (f : Bits i → Bits o) → fromBitsFun f ≗ #nodes i
+  fromBitsFun≡ {zero} f x = constBits≡0 (f []) x
+  fromBitsFun≡ {suc i} f x rewrite fromBitsFun≡ {i} (f ∘′ 1∷_) x
+                                 | fromBitsFun≡ {i} (f ∘′ 0∷_) (#nodes i x) = ≡.refl
 
 seqTimeOps : FlatFunsOps (constFuns ℕ)
 seqTimeOps = record {

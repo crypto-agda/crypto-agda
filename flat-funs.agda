@@ -14,6 +14,8 @@ open × using (_×_; _,_; proj₁; proj₂; uncurry)
 
 open import Data.Bits using (Bit; Bits; _→ᵇ_; 0b; 1b)
 
+import bintree as Tree
+open Tree using (Tree)
 open import universe
 
 record FlatFuns {t} (T : Set t) : Set (L.suc t) where
@@ -362,6 +364,16 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
   replicate : ∀ {n A} → A `→ `Vec A n
   replicate {zero}  = nil
   replicate {suc n} = < id , replicate > ⁏ cons
+
+  fromTree : ∀ {n A} → Tree (`⊤ `→ A) n → `Bits n `→ A
+  fromTree (Tree.leaf x) = tt ⁏ x
+  fromTree (Tree.fork t₀ t₁) = uncons ⁏ fork (fromTree t₀) (fromTree t₁)
+
+  fromFun : ∀ {n A} → (Bits n → `⊤ `→ A) → `Bits n `→ A
+  fromFun = fromTree ∘′ Tree.fromFun
+
+  fromBitsFun : ∀ {i o} → (Bits i → Bits o) → `Bits i `→ `Bits o
+  fromBitsFun f = fromFun (constBits ∘′ f)
 
   module WithFin
     (`Fin : ℕ → T)
