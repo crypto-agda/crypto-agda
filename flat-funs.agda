@@ -1,19 +1,21 @@
 module flat-funs where
 
 open import Data.Unit using (⊤)
-open import Data.Nat.NP using (ℕ; zero; suc; _+_; _*_; 2^_; _⊔_)
-open import Data.Fin using (Fin) renaming (_+_ to _+ᶠ_)
+open import Data.Nat.NP using (ℕ; zero; suc; _+_; _*_; 2^_)
+open import Data.Fin using (Fin; zero; suc)
 open import Data.Bool using (if_then_else_)
 import Data.Vec.NP as V
 import Level as L
 import Function as F
 import Data.Product as ×
-open F using (const)
+open F using (const; _∘′_)
 open V using (Vec; []; _∷_; _++_; [_])
 open × using (_×_; _,_; proj₁; proj₂; uncurry)
 
 open import Data.Bits using (Bit; Bits; _→ᵇ_; 0b; 1b)
 
+import bintree as Tree
+open Tree using (Tree)
 open import universe
 
 record FlatFuns {t} (T : Set t) : Set (L.suc t) where
@@ -24,12 +26,135 @@ record FlatFuns {t} (T : Set t) : Set (L.suc t) where
   infix 0 _`→_
   open Universe universe public
 
+module Defaults {t} {T : Set t} (♭Funs : FlatFuns T) where
+  open FlatFuns ♭Funs
+
+  module CompositionNotations
+    (_∘_ : ∀ {A B C} → (B `→ C) → (A `→ B) → (A `→ C)) where
+
+    infixr 1 _⁏_
+    infixr 1 _>>>_
+
+    _⁏_ : ∀ {a b c} → (a `→ b) → (b `→ c) → (a `→ c)
+    f ⁏ g = g ∘ f
+
+    _>>>_ : ∀ {a b c} → (a `→ b) → (b `→ c) → (a `→ c)
+    f >>> g = f ⁏ g
+
+  module DefaultsFirstSecond
+    (id : ∀ {A} → A `→ A)
+    (<_×_> : ∀ {A B C D} → (A `→ C) → (B `→ D) → (A `× B) `→ (C `× D)) where
+
+    first : ∀ {A B C} → (A `→ C) → (A `× B) `→ (C `× B)
+    first f = < f × id >
+
+    second : ∀ {A B C} → (B `→ C) → (A `× B) `→ (A `× C)
+    second f = < id × f >
+
+  module DefaultsGroup2
+    (id : ∀ {A} → A `→ A)
+    (_∘_ : ∀ {A B C} → (B `→ C) → (A `→ B) → (A `→ C))
+    (tt : ∀ {_A} → _A `→ `⊤)
+    (<_,_> : ∀ {A B C} → (A `→ B) → (A `→ C) → A `→ B `× C)
+    (fst   : ∀ {A B} → A `× B `→ A)
+    (snd   : ∀ {A B} → A `× B `→ B) where
+
+    <_×_> : ∀ {A B C D} → (A `→ C) → (B `→ D) → (A `× B) `→ (C `× D)
+    < f × g > = < f ∘ fst , g ∘ snd >
+
+    open DefaultsFirstSecond id <_×_> public
+
+    dup : ∀ {A} → A `→ A `× A
+    dup = < id , id >
+
+    swap : ∀ {A B} → (A `× B) `→ (B `× A)
+    swap = < snd , fst >
+
+    assoc : ∀ {A B C} → ((A `× B) `× C) `→ (A `× (B `× C))
+    assoc = < fst ∘ fst , first snd >
+
+    <tt,id> : ∀ {A} → A `→ `⊤ `× A
+    <tt,id> = < tt , id >
+
+    snd<tt,> : ∀ {A} → `⊤ `× A `→ A
+    snd<tt,> = snd
+
+  module DefaultsGroup1
+    (id : ∀ {A} → A `→ A)
+    (_∘_ : ∀ {A B C} → (B `→ C) → (A `→ B) → (A `→ C))
+    (tt : ∀ {_A} → _A `→ `⊤)
+    (snd<tt,> : ∀ {A} → `⊤ `× A `→ A)
+    (dup   : ∀ {A} → A `→ A `× A)
+    (swap  : ∀ {A B} → (A `× B) `→ (B `× A))
+    (first : ∀ {A B C} → (A `→ C) → (A `× B) `→ (C `× B)) where
+
+    open CompositionNotations _∘_
+
+    second : ∀ {A B C} → (B `→ C) → (A `× B) `→ (A `× C)
+    second f = swap ⁏ first f ⁏ swap
+
+    <_×_> : ∀ {A B C D} → (A `→ C) → (B `→ D) → (A `× B) `→ (C `× D)
+    < f × g > = first f ⁏ second g
+
+    <_,_> : ∀ {A B C} → (A `→ B) → (A `→ C) → A `→ B `× C
+    < f , g > = dup ⁏ < f × g >
+
+    snd : ∀ {A B} → A `× B `→ B
+    snd = first tt ⁏ snd<tt,>
+
+    fst : ∀ {A B} → A `× B `→ A
+    fst = swap ⁏ snd
+
+  module <×>Default
+    (_∘_ : ∀ {A B C} → (B `→ C) → (A `→ B) → (A `→ C))
+    (first : ∀ {A B C} → (A `→ C) → (A `× B) `→ (C `× B))
+    (swap  : ∀ {A B} → (A `× B) `→ (B `× A))
+    where
+    open CompositionNotations _∘_
+
+    <_×_> : ∀ {A B C D} → (A `→ C) → (B `→ D) → (A `× B) `→ (C `× D)
+    < f × g > = first f ⁏ swap ⁏ first g ⁏ swap
+
+  module DefaultAssoc′
+    (_∘_ : ∀ {A B C} → (B `→ C) → (A `→ B) → (A `→ C))
+    (assoc : ∀ {A B C} → ((A `× B) `× C) `→ (A `× (B `× C)))
+    (swap  : ∀ {A B} → (A `× B) `→ (B `× A))
+    (first : ∀ {A B C} → (A `→ C) → (A `× B) `→ (C `× B))
+    where
+    open CompositionNotations _∘_
+
+    -- This definition would cost 1 unit of space instead of 0.
+    -- assoc′ : ∀ {A B C} → (A `× (B `× C)) `→ ((A `× B) `× C)
+    -- assoc′ = < second fst , snd ⁏ snd >
+
+    assoc′ : ∀ {A B C} → (A `× (B `× C)) `→ ((A `× B) `× C)
+    assoc′ = swap ⁏ first swap ⁏ assoc ⁏ swap ⁏ first swap
+
+  module DefaultCond
+    (fork : ∀ {A B} (f g : A `→ B) → `Bit `× A `→ B)
+    (fst   : ∀ {A B} → A `× B `→ A)
+    (snd   : ∀ {A B} → A `× B `→ B) where
+
+    cond : ∀ {A} → `Bit `× A `× A `→ A
+    cond = fork fst snd
+
+   -- This definition cost 2 units of space instead of 1.
+  module DefaultFork
+    (_∘_ : ∀ {A B C} → (B `→ C) → (A `→ B) → (A `→ C))
+    (second : ∀ {A B C} → (B `→ C) → (A `× B) `→ (A `× C))
+    (<_,_> : ∀ {A B C} → (A `→ B) → (A `→ C) → A `→ B `× C)
+    (cond : ∀ {A} → `Bit `× A `× A `→ A) where
+
+    open CompositionNotations _∘_
+
+    fork : ∀ {A B} (f g : A `→ B) → `Bit `× A `→ B
+    fork f g = second < f , g > ⁏ cond
+
 record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
   constructor mk
   open FlatFuns ♭Funs
-  infixr 1 _∘_
-  infixr 1 _⁏_
-  infixr 1 _>>>_
+
+  infixr 9 _∘_
   infixr 3 _***_
   infixr 3 _&&&_
   field
@@ -40,69 +165,68 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
     -- Bit
     <0b> <1b> : ∀ {_A} → _A `→ `Bit
     cond      : ∀ {A} → `Bit `× A `× A `→ A
-
-    -- Products
-    dup   : ∀ {A} → A `→ A `× A
-    fst   : ∀ {A B} → A `× B `→ A
-    snd   : ∀ {A B} → A `× B `→ B
-    <_×_> : ∀ {A B C D} → (A `→ C) → (B `→ D) → (A `× B) `→ (C `× D)
+    fork      : ∀ {A B} (f g : A `→ B) → `Bit `× A `→ B
 
     -- Unit
     tt : ∀ {_A} → _A `→ `⊤
+
+    -- Products (group 1 primitive functions or derived from group 2)
+    <_,_> : ∀ {A B C} → (A `→ B) → (A `→ C) → A `→ B `× C
+    fst   : ∀ {A B} → A `× B `→ A
+    snd   : ∀ {A B} → A `× B `→ B
+
+    -- Products (group 2 primitive functions or derived from group 1)
+    dup      : ∀ {A} → A `→ A `× A
+    first    : ∀ {A B C} → (A `→ C) → (A `× B) `→ (C `× B)
+    swap     : ∀ {A B} → (A `× B) `→ (B `× A)
+    assoc    : ∀ {A B C} → ((A `× B) `× C) `→ (A `× (B `× C))
+    <tt,id>  : ∀ {A} → A `→ `⊤ `× A
+    snd<tt,> : ∀ {A} → `⊤ `× A `→ A
+
+    -- Products (derived from group 1 or 2)
+    <_×_>  : ∀ {A B C D} → (A `→ C) → (B `→ D) → (A `× B) `→ (C `× D)
+    second : ∀ {A B C} → (B `→ C) → (A `× B) `→ (A `× C)
 
     -- Vectors
     nil    : ∀ {_A B} → _A `→ `Vec B 0
     cons   : ∀ {n A} → (A `× `Vec A n) `→ `Vec A (1 + n)
     uncons : ∀ {n A} → `Vec A (1 + n) `→ (A `× `Vec A n)
 
-  _⁏_ : ∀ {A B C} → (A `→ B) → (B `→ C) → (A `→ C)
-  f ⁏ g = g ∘ f
-
-  _>>>_ : ∀ {A B C} → (A `→ B) → (B `→ C) → (A `→ C)
-  f >>> g = f ⁏ g
-
-  <_,_> : ∀ {A B C} → (A `→ B) → (A `→ C) → A `→ B `× C
-  < f , g > = dup ⁏ < f × g >
+  open Defaults ♭Funs
+  open CompositionNotations _∘_ public
 
   _&&&_ : ∀ {A B C} → (A `→ B) → (A `→ C) → A `→ B `× C
   f &&& g = < f , g >
 
-  <_×_>-on-top-of-<,> : ∀ {A B C D} → (A `→ C) → (B `→ D) → (A `× B) `→ (C `× D)
-  < f × g >-on-top-of-<,> = < fst ⁏ f , snd ⁏ g >
-
   _***_ : ∀ {A B C D} → (A `→ C) → (B `→ D) → (A `× B) `→ (C `× D)
   f *** g = < f × g >
-
-  swap : ∀ {A B} → (A `× B) `→ (B `× A)
-  swap = < snd , fst >
-
-  first : ∀ {A B C} → (A `→ C) → (A `× B) `→ (C `× B)
-  first f = f *** id
-
-  second : ∀ {A B C} → (B `→ C) → (A `× B) `→ (A `× C)
-  second f = id *** f
-
-  fork : ∀ {A B} (f g : A `→ B) → `Bit `× A `→ B
-  fork f g = second < f , g > ⁏ cond
-
-  -- In case you wonder... one can also derive cond with fork
-  cond-on-top-of-fork : ∀ {A} → `Bit `× A `× A `→ A
-  cond-on-top-of-fork = fork fst snd
 
   constBit : ∀ {_A} → Bit → _A `→ `Bit
   constBit b = if b then <1b> else <0b>
 
-  assoc : ∀ {A B C} → ((A `× B) `× C) `→ (A `× (B `× C))
-  assoc = < fst ⁏ fst , first snd >
+  <tt⁏_,_> : ∀ {A B C} → (`⊤ `→ B) → (A `→ C) → A `→ B `× C
+  <tt⁏ f , g > = <tt,id> ⁏ < f × g >
 
-  assoc′ : ∀ {A B C} → (A `× (B `× C)) `→ ((A `× B) `× C)
-  assoc′ = < second fst , snd ⁏ snd >
+  <_,tt⁏_> : ∀ {A B C} → (A `→ B) → (`⊤ `→ C) → A `→ B `× C
+  < f ,tt⁏ g > = <tt⁏ g , f > ⁏ swap
+
+  open DefaultAssoc′ _∘_ assoc swap first public
+
+  assoc-first : ∀ {A B C D E} → (A `× B `→ D `× E) → A `× B `× C `→ D `× E `× C
+  assoc-first f = assoc′ ⁏ first f ⁏ assoc
+
+  assoc-second : ∀ {A B C D E} → (B `× C `→ E `× D) → (A `× B) `× C `→ (A `× E) `× D
+  assoc-second f = assoc ⁏ second f ⁏ assoc′
 
   <_`zip`_> : ∀ {A B C D E F} → ((A `× B) `→ C)
                            → ((D `× E) `→ F)
                            → ((A `× D) `× (B `× E)) `→ (C `× F)
+  < f `zip` g > = assoc-first (assoc-second swap) ⁏ < f × g >
+
+{- This one use one unit of space
   < f `zip` g > = < < fst × fst > ⁏ f ,
                     < snd × snd > ⁏ g >
+-}
 
   head : ∀ {n A} → `Vec A (1 + n) `→ A
   head = uncons ⁏ fst
@@ -114,20 +238,26 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
                   → `Vec A (1 + m) `→ `Vec B (1 + n)
   < f ∷ g > = uncons ⁏ < f × g > ⁏ cons
 
-  <_∷′_> : ∀ {n A B} → (A `→ B) → (A `→ `Vec B n)
-                     → A `→ `Vec B (1 + n)
-  < f ∷′ g > = < f , g > ⁏ cons
+  <_∷′_> : ∀ {n A B C} → (A `→ C) → (B `→ `Vec C n)
+                       → A `× B `→ `Vec C (1 + n)
+  < f ∷′ g > = < f × g > ⁏ cons
 
-  ⊛ : ∀ {n A B} → Vec (A `→ B) n → `Vec A n `→ `Vec B n
-  ⊛ []       = nil
-  ⊛ (f ∷ fs) = < f ∷ ⊛ fs >
+  -- Notice that this one costs 1 unit of space.
+  dup⁏<_∷′_> : ∀ {n A B} → (A `→ B) → (A `→ `Vec B n)
+                         → A `→ `Vec B (1 + n)
+  dup⁏< f ∷′ g > = dup ⁏ < f ∷′ g >
 
-  ⊛′ : ∀ {n A B} → Vec (A `→ B) n → A `→ `Vec B n
-  ⊛′ []       = nil
-  ⊛′ (f ∷ fs) = < f ∷′ ⊛′ fs >
+  <tt⁏_∷′_> : ∀ {n A B} → (`⊤ `→ B) → (A `→ `Vec B n)
+                       → A `→ `Vec B (1 + n)
+  <tt⁏ f ∷′ g > = <tt⁏ f , g > ⁏ cons
 
-  constVec : ∀ {n b _A} {B : Set b} {C} → (B → _A `→ C) → Vec B n → _A `→ `Vec C n
-  constVec f xs = ⊛′ (V.map f xs)
+  <_∷′tt⁏_> : ∀ {n A B} → (A `→ B) → (`⊤ `→ `Vec B n)
+                        → A `→ `Vec B (1 + n)
+  < f ∷′tt⁏ g > = < f ,tt⁏ g > ⁏ cons
+
+  constVec : ∀ {n b _A} {B : Set b} {C} → (B → `⊤ `→ C) → Vec B n → _A `→ `Vec C n
+  constVec f [] = nil
+  constVec f (x ∷ xs) = <tt⁏ f x ∷′ constVec f xs >
 
   constBits : ∀ {n _A} → Bits n → _A `→ `Bits n
   constBits = constVec constBit
@@ -152,9 +282,12 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
   foldr₁ : ∀ {n A} → (A `× A `→ A) → `Vec A (1 + n) `→ A
   foldr₁ f = uncons ⁏ swap ⁏ foldr f
 
+  <_⊛> : ∀ {n A B} → Vec (A `→ B) n → `Vec A n `→ `Vec B n
+  <_⊛> []       = nil
+  <_⊛> (f ∷ fs) = < f ∷ < fs ⊛> >
+
   map : ∀ {n A B} → (A `→ B) → (`Vec A n `→ `Vec B n)
-  map {zero}  f = nil
-  map {suc n} f = < f ∷ map f >
+  map f = < V.replicate f ⊛>
 
   zipWith : ∀ {n A B C} → ((A `× B) `→ C)
                         → (`Vec A n `× `Vec B n) `→ `Vec C n
@@ -166,8 +299,14 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
   zip : ∀ {n A B} → (`Vec A n `× `Vec B n) `→ `Vec (A `× B) n
   zip = zipWith id
 
+  <nil,_> : ∀ {A B C} → (A `→ B) → A `→ `Vec C 0 `× B
+  <nil, f > = <tt⁏ nil , f >
+
+  <_,nil> : ∀ {A B C} → (A `→ B) → A `→ B `× `Vec C 0
+  < f ,nil> = < f ,tt⁏ nil >
+
   singleton : ∀ {A} → A `→ `Vec A 1
-  singleton = < id , nil > ⁏ cons
+  singleton = < id ,nil> ⁏ cons
 
   snoc : ∀ {n A} → (`Vec A n `× A) `→ `Vec A (1 + n)
   snoc {zero}  = snd ⁏ singleton
@@ -185,7 +324,7 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
                  ⁏ cons
 
   splitAt : ∀ m {n A} → `Vec A (m + n) `→ (`Vec A m `× `Vec A n)
-  splitAt zero    = < nil , id >
+  splitAt zero    = <nil, id >
   splitAt (suc m) = uncons
                   ⁏ second (splitAt m)
                   ⁏ assoc′
@@ -226,6 +365,16 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
   replicate {zero}  = nil
   replicate {suc n} = < id , replicate > ⁏ cons
 
+  fromTree : ∀ {n A} → Tree (`⊤ `→ A) n → `Bits n `→ A
+  fromTree (Tree.leaf x) = tt ⁏ x
+  fromTree (Tree.fork t₀ t₁) = uncons ⁏ fork (fromTree t₀) (fromTree t₁)
+
+  fromFun : ∀ {n A} → (Bits n → `⊤ `→ A) → `Bits n `→ A
+  fromFun = fromTree ∘′ Tree.fromFun
+
+  fromBitsFun : ∀ {i o} → (Bits i → Bits o) → `Bits i `→ `Bits o
+  fromBitsFun f = fromFun (constBits ∘′ f)
+
   module WithFin
     (`Fin : ℕ → T)
     (fz : ∀ {n _A} → _A `→ `Fin (suc n))
@@ -235,7 +384,7 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
 
     tabulate : ∀ {n A _B} → (`Fin n `→ A) → _B `→ `Vec A n
     tabulate {zero}  f = nil
-    tabulate {suc n} f = < fz ⁏ f , tabulate (fs ⁏ f) > ⁏ cons
+    tabulate {suc n} f = <tt⁏ fz ⁏ f , tabulate (fs ⁏ f) > ⁏ cons
 
     lookup : ∀ {n A} → `Fin n `× `Vec A n `→ A
     lookup {zero}  = fst ⁏ elim-Fin0
@@ -249,10 +398,6 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
 
 _→ᶠ_ : ℕ → ℕ → Set
 _→ᶠ_ i o = Fin i → Fin o
-
-mapArr : ∀ {s t} {S : Set s} {T : Set t} (F G : T → S)
-          → (S → S → Set) → (T → T → Set)
-mapArr F G _`→_ A B = F A `→ G B
 
 fun♭Funs : FlatFuns Set
 fun♭Funs = mk Set-U -→-
@@ -270,27 +415,36 @@ finFun♭Funs = mk Fin-U _→ᶠ_
 module FinFunTypes = FlatFuns finFun♭Funs
 
 fun♭Ops : FlatFunsOps fun♭Funs
-fun♭Ops = mk F.id F._∘′_
+fun♭Ops = mk F.id _∘′_
              (F.const 0b) (F.const 1b) (λ { (b , x , y) → if b then x else y })
-             (λ x → x , x) proj₁ proj₂ (λ f g → ×.map f g)
-             _ (F.const []) (uncurry _∷_) V.uncons
+             (λ { f g (b , x) → (if b then f else g) x }) _
+             ×.<_,_> proj₁ proj₂ (λ x → x , x) (λ f → ×.map f F.id)
+             ×.swap (λ {((x , y) , z) → x , (y , z) }) (λ x → _ , x) proj₂
+             (λ f g → ×.map f g) (λ f → ×.map F.id f)
+             (F.const []) (uncurry _∷_) V.uncons
 
 module FunOps = FlatFunsOps fun♭Ops
 
 bitsFun♭Ops : FlatFunsOps bitsFun♭Funs
 bitsFun♭Ops = mk id _∘_
-                 (const [ 0b ]) (const [ 1b ]) condᵇ
-                 dupᵇ (λ {A} → V.take A) (λ {A} → V.drop A) <_×_>ᵇ
-                 (const []) (const []) id id
+                 (const [ 0b ]) (const [ 1b ]) cond forkᵇ (const [])
+                 <_,_>ᵇ fstᵇ (λ {x} → sndᵇ x) dup first
+                 (λ {x} → swap {x}) (λ {x} → assoc {x}) id id
+                 <_×_> (λ {x} → second {x}) (const []) id id
   where
   open BitsFunTypes
-  open FunOps
-  dupᵇ : ∀ {A} → A `→ A `× A
-  dupᵇ xs = xs ++ xs
-  <_×_>ᵇ : ∀ {A B C D} → (A `→ C) → (B `→ D) → (A `× B) `→ (C `× D)
-  <_×_>ᵇ {A} f g x = f (take A x) ++ g (drop A x)
-  condᵇ : ∀ {A} → `Bit `× A `× A `→ A
-  condᵇ {A} (b ∷ xs) = if b then take A xs else drop A xs
+  open FunOps using (id; _∘_)
+  fstᵇ : ∀ {A B} → A `× B `→ A
+  fstᵇ {A} = V.take A
+  sndᵇ : ∀ {B} A → A `× B `→ B
+  sndᵇ A = V.drop A
+  <_,_>ᵇ : ∀ {A B C} → (A `→ B) → (A `→ C) → A `→ B `× C
+  <_,_>ᵇ f g x = f x ++ g x
+  forkᵇ : ∀ {A B} (f g : A `→ B) → `Bit `× A `→ B
+  forkᵇ f g (b ∷ xs) = (if b then f else g) xs
+  open Defaults bitsFun♭Funs
+  open DefaultsGroup2 id _∘_ (const []) <_,_>ᵇ fstᵇ (λ {x} → sndᵇ x)
+  open DefaultCond forkᵇ fstᵇ (λ {x} → sndᵇ x)
 
 module BitsFunOps = FlatFunsOps bitsFun♭Ops
 
@@ -310,9 +464,13 @@ module BitsFunOps = FlatFunsOps bitsFun♭Ops
          → FlatFunsOps (×-♭Funs funs-S funs-T)
 ×-♭Ops ops-S ops-T
   = mk (S.id , T.id) (×.zip S._∘_ T._∘_)
-       (S.<0b> , T.<0b>) (S.<1b> , T.<1b>) (S.cond , T.cond)
-       (S.dup , T.dup) (S.fst , T.fst) (S.snd , T.snd) (×.zip S.<_×_> T.<_×_>)
-       (S.tt , T.tt) (S.nil , T.nil) (S.cons , T.cons) (S.uncons , T.uncons)
+       (S.<0b> , T.<0b>) (S.<1b> , T.<1b>) (S.cond , T.cond) (×.zip S.fork T.fork) (S.tt , T.tt)
+       (×.zip S.<_,_> T.<_,_>) (S.fst , T.fst) (S.snd , T.snd)
+       (S.dup , T.dup) (×.map S.first T.first)
+       (S.swap , T.swap) (S.assoc , T.assoc)
+       (S.<tt,id> , T.<tt,id>) (S.snd<tt,> , T.snd<tt,>)
+       (×.zip S.<_×_> T.<_×_>) (×.map S.second T.second)
+       (S.nil , T.nil) (S.cons , T.cons) (S.uncons , T.uncons)
   where module S = FlatFunsOps ops-S
         module T = FlatFunsOps ops-T
         open FunOps
@@ -322,9 +480,13 @@ module BitsFunOps = FlatFunsOps bitsFun♭Ops
          → FlatFunsOps (×⊤-♭Funs funs-S funs-⊤)
 ×⊤-♭Ops ops-S ops-⊤
   = mk (S.id , T.id) (×.zip S._∘_ T._∘_)
-       (S.<0b> , T.<0b>) (S.<1b> , T.<1b>) (S.cond , T.cond)
-       (S.dup , T.dup) (S.fst , T.fst) (S.snd , T.snd) (×.zip S.<_×_> T.<_×_>)
-       (S.tt , T.tt) (S.nil , T.nil) (S.cons , T.id) (S.uncons , T.id)
+       (S.<0b> , T.<0b>) (S.<1b> , T.<1b>) (S.cond , T.cond) (×.zip S.fork T.fork) (S.tt , T.tt)
+       (×.zip S.<_,_> T.<_,_>) (S.fst , T.fst) (S.snd , T.snd)
+       (S.dup , T.dup) (×.map S.first T.first)
+       (S.swap , T.swap) (S.assoc , T.assoc)
+       (S.<tt,id> , T.<tt,id>) (S.snd<tt,> , T.snd<tt,>)
+       (×.zip S.<_×_> T.<_×_>) (×.map S.second T.second)
+       (S.nil , T.nil) (S.cons , T.id) (S.uncons , T.id)
   where module S = FlatFunsOps ops-S
         module T = FlatFunsOps ops-⊤
         open FunOps
@@ -333,28 +495,3 @@ constFuns : Set → FlatFuns ⊤
 constFuns A = mk ⊤-U (λ _ _ → A)
 
 module ConstFunTypes A = FlatFuns (constFuns A)
-
-timeOps : FlatFunsOps (constFuns ℕ)
-timeOps = record {
-            id = 0; _∘_ = _+_;
-            <0b> = 0; <1b> = 0; cond = 1;
-            dup = 0; fst = 0; snd = 0; <_×_> = _⊔_;
-            tt = 0;
-            nil = 0; cons = 0; uncons = 0 }
-
-module TimeOps = FlatFunsOps timeOps
-
-spaceOps : FlatFunsOps (constFuns ℕ)
-spaceOps = record {
-             id = 0; _∘_ = _+_;
-             <0b> = 0; <1b> = 0; cond = 1;
-             dup = 1; fst = 0; snd = 0; <_×_> = _+_;
-             tt = 0;
-             nil = 0; cons = 0; uncons = 0 }
-
-module SpaceOps = FlatFunsOps spaceOps
-
-time×spaceOps : FlatFunsOps (constFuns (ℕ × ℕ))
-time×spaceOps = ×⊤-♭Ops timeOps spaceOps
-
-module Time×SpaceOps = FlatFunsOps time×spaceOps
