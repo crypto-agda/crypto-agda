@@ -6,8 +6,11 @@ open import Data.Bool using (Bool ; true ; false)
 open import Data.Nat.NP
 import Data.Nat.Properties as Props
 open import Data.Fin using (Fin ; Ordering ; less ; equal ; greater)
+import Data.Fin.Props as FP
 open import Data.List 
 open import Data.Vec hiding ([_] ; _++_)
+
+open import Data.Maybe using (Maybe ; just ; nothing)
 
 
 open import Relation.Binary.PropositionalEquality hiding ([_])
@@ -26,6 +29,16 @@ module ℕ⊔ = Algebra.CommutativeSemiringWithoutOne Props.⊔-⊓-0-commutativ
 +-distr-⊔' : ∀ m n a → (m ⊔ n) + a ≡ (m + a) ⊔ (n + a)
 +-distr-⊔' m n a = trans (ℕP.+-comm (m ⊔ n) a) (trans (+-distr-⊔ a m n) 
                (cong₂ _⊔_ (ℕP.+-comm a m) (ℕP.+-comm a n)))
+
+⊔-idem : ∀ m → m ⊔ m ≡ m
+⊔-idem zero = refl
+⊔-idem (suc m) = cong suc (⊔-idem m)
+
+congL : ∀ {A B C : Set} {x x' y} → (f : A → B → C) → x ≡ x' → f x y ≡ f x' y 
+congL f refl = refl
+
+congR : ∀ {A B C : Set} {x : A}{y y' : B} → (f : A → B → C) → y ≡ y' → f x y ≡ f x y' 
+congR f refl = refl
 
 module NatSyntax (nrVars : ℕ)(G : Vec ℕ nrVars) where
 
@@ -76,7 +89,7 @@ module NatSyntax (nrVars : ℕ)(G : Vec ℕ nrVars) where
   incr S con x ::[] = con eval S + x ::[] ⊢ refl
   incr {var .i :+ S'} S (var i :: s1) with incr S s1
   ... | s1' ⊢ p = (var i :: s1') ⊢ trans (sym (ℕP.+-assoc (eval S) (lookup i G) (eval S'))) 
-                                   (trans(cong₂ _+_ (ℕP.+-comm (eval S) (lookup i G)) (refl {x = eval S'}))
+                                   (trans(congL _+_ (ℕP.+-comm (eval S) (lookup i G)))
                                    (trans (ℕP.+-assoc (lookup i G) (eval S) (eval S')) 
                                    (cong (_+_ (lookup i G)) p)))
 
@@ -92,8 +105,8 @@ module NatSyntax (nrVars : ℕ)(G : Vec ℕ nrVars) where
   ... | no  _ with insert i s1
   ... | t ⊢ proof = var j :: t ⊢ trans (sym (ℕP.+-assoc (lookup i G) (lookup j G) (eval S))) 
                                        (trans
-                                          (cong₂ _+_ (ℕP.+-comm (lookup i G) (lookup j G))
-                                           (refl {x = eval S}))
+                                          (congL _+_ (ℕP.+-comm (lookup i G) (lookup j G))
+                                           )
                                        (trans (ℕP.+-assoc (lookup j G) _ _) (cong (_+_ (lookup j G)) proof)))
 
   merge : ∀ {S S'} → N1 S → N1 S' → N1Proof (S :+ S')
@@ -132,6 +145,18 @@ module NatSyntax (nrVars : ℕ)(G : Vec ℕ nrVars) where
   (var .j :: xs) ≤1 (var j :: ys) | equal .j = xs ≤1 ys
   (var i :: xs) ≤1 (var .(Data.Fin.inject least) :: ys) | greater .i least = false
 
+  _≡1_ : ∀ {S S'} → N1 S → N1 S' → Maybe (eval S ≡ eval S')
+  con x ::[] ≡1 con x₁ ::[] with x ≟ x₁
+  ... | yes p = just p
+  ... | no _  = nothing
+  con x ::[] ≡1 (var i :: s2) = nothing
+  (var i :: s1) ≡1 con x ::[] = nothing
+  (var i :: s1) ≡1 (var i₁ :: s2) with i FP.≟ i₁ | s1 ≡1 s2
+  ... | yes p | just p2 = just (cong₂ _+_ (cong₂ lookup p (refl {x = G})) p2)
+  ... | yes p | nothing = nothing
+  ... | no  _ | m = nothing
+    where open import Data.Fin.Props
+
   N2-insert : ∀ {S S'} → N1 S → N2 S' → N2Proof (S :u S')
   N2-insert {S} x (lift x₁) with x ≤1 x₁
   ... | true = max x (lift x₁) ⊢ refl
@@ -140,14 +165,25 @@ module NatSyntax (nrVars : ℕ)(G : Vec ℕ nrVars) where
   ... | true  = (max x (max x₁ s)) ⊢ refl
   ... | false with N2-insert x s
   ... | t ⊢ p = (max x₁ t) ⊢ trans (trans (sym (ℕ⊔.+-assoc (eval S) (eval S') (eval S'')))
-                                      (trans (cong₂ _⊔_ (ℕ⊔.+-comm (eval S) _) (refl {x = eval S''}))
+                                      (trans (congL _⊔_ (ℕ⊔.+-comm (eval S) _))
                                        (ℕ⊔.+-assoc (eval S') _ _))) (cong (_⊔_ (eval S')) p) 
+  Tran = ∀ {S} → N2 S → N2Proof S
 
-  sort : ∀ {S} → N2 S → N2Proof S
+  sort : Tran
   sort (lift x) = lift x ⊢ refl
   sort {S :u S'} (max x s1) with sort s1
   ... | s2 ⊢ p2 with N2-insert x s2
   ... | s3 ⊢ p3 = s3 ⊢ (trans (cong (_⊔_ (eval S)) p2) p3)  
+
+  nub : Tran
+  nub (lift x) = lift x ⊢ refl
+  nub {S :u S'} (max x (lift x₁)) with x ≡1 x₁
+  ... | just p  = (lift x) ⊢ trans (cong (_⊔_ (eval S)) (sym p)) (⊔-idem (eval S))
+  ... | nothing = max x (lift x₁) ⊢ refl
+  nub {S :u (S' :u S'')} (max x (max x₁ x₂)) with nub (max x₁ x₂) | x ≡1 x₁
+  ... | t2 ⊢ p2 | just p  = t2 ⊢ trans (trans (sym (ℕ⊔.+-assoc (eval S) (eval S') (eval S''))) 
+                                   (congL _⊔_ (trans (congL _⊔_ p) (⊔-idem (eval S'))))) p2
+  ... | t2 ⊢ p2 | nothing = max x t2 ⊢ cong (_⊔_ (eval S)) p2
 
   norm2 : (x : Syn) → N2Proof x
   norm2 (con x) = (lift con x ::[]) ⊢ refl
@@ -159,9 +195,13 @@ module NatSyntax (nrVars : ℕ)(G : Vec ℕ nrVars) where
   ... | s1 ⊢ p1 | s2 ⊢ p2 with u-merge s1 s2
   ... | s3 ⊢ p3 = s3 ⊢ trans (cong₂ _⊔_ p1 p2) p3
 
+
+  _∘S_ : Tran → Tran → Tran
+  (f ∘S g) x =  (N2Proof.term (f (N2Proof.term (g x)))) ⊢ trans (N2Proof.proof (g x)) (N2Proof.proof (f (N2Proof.term (g x))))
+
   norm : (x : Syn) → N2Proof x
   norm x with norm2 x
-  ... | t1 ⊢ p1 with sort t1
+  ... | t1 ⊢ p1 with (nub ∘S sort) t1
   ... | t2 ⊢ p2 = t2 ⊢ trans p1 p2
 
   proof : (x y : Syn) → eval (N2Proof.S' (norm x)) ≡ eval (N2Proof.S' (norm y))
@@ -183,3 +223,10 @@ test' x y = proof LHS RHS refl where
   LHS = ((x' :+ # 3) :u (# 2 :+ y')) :+ # 7 
   RHS = (# 2 :+ y' :+ # 7) :u (# 5 :+ x' :+ # 5) 
 
+test3 : ∀ x → 1 + (x ⊔ x + 0) ≡ 1 + x
+test3 x = proof LHS RHS refl where
+  open NatSyntax 1 (x ∷ [])
+  #_ = con
+  x' = var Data.Fin.zero
+  LHS = # 1 :+ (x' :u x' :+ # 0)
+  RHS = # 1 :+ x'
