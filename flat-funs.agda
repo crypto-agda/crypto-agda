@@ -11,7 +11,7 @@ open import Data.Bits using (Bit; Bits)
 
 import bintree as Tree
 open Tree using (Tree)
-open import universe
+open import data-universe
 
 record FlatFuns {t} (T : Set t) : Set (L.suc t) where
   constructor mk

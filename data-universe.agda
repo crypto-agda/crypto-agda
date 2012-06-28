@@ -1,4 +1,4 @@
-module universe where
+module data-universe where
 
 import Level as L
 import Relation.Binary.PropositionalEquality as ≡

@@ -13,7 +13,7 @@ open × using (_×_; _,_; proj₁; proj₂; uncurry)
 
 open import Data.Bits using (_→ᵇ_; 0b; 1b)
 
-open import universe
+open import data-universe
 open import flat-funs
 
 -→- : Set → Set → Set
