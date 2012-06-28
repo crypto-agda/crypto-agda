@@ -24,6 +24,13 @@ module D where
   _*#′_ : ℕ → Diffℕ → Diffℕ
   zero  *#′ d = 0#
   suc n *#′ d = d +# (n *#′ d)
+  2*#_ : Diffℕ → Diffℕ
+  2*# n = n +# n
+  2^#_ : ℕ → Diffℕ
+  2^# zero = 1#
+  2^# suc n = 2*# (2^# n)
+  1+_+_D : Diffℕ → Diffℕ → Diffℕ
+  1+ x + y D = 1# ∘′ (x ∘′ y)
 open D using (Diffℕ)
 
 private
@@ -44,9 +51,7 @@ seqTimeOpsD = record {
             <tt,id> = 0#; snd<tt,> = 0#;
             <_×_> = _∘′_; second = F.id;
             nil = 0#; cons = 0#; uncons = 0# }
-   where open D
-         1+_+_D : Diffℕ → Diffℕ → Diffℕ
-         1+ x + y D = 1# ∘′ (x ∘′ y)
+            where open D
 
 module SeqTimeOpsD where
   Time = Diffℕ
@@ -110,8 +115,21 @@ seqTimeOps = record {
             nil = 0; cons = 0; uncons = 0 }
 
 timeOps : FlatFunsOps (constFuns ℕ)
-timeOps = record seqTimeOps {<_,_> = _⊔_; <_×_> = _⊔_; fork = 1+_⊔_; cons = 0; uncons = 0 }
--- Without cons = 0... this definition makes the FlatFunsOps record def yellow
+timeOps = record {
+            id = 0; _∘_ = _+_;
+            <0b> = 0; <1b> = 0; cond = 1; fork = 1+_⊔_; tt = 0;
+            <_,_> = _⊔_; fst = 0; snd = 0;
+            dup = 0; first = F.id; swap = 0; assoc = 0;
+            <tt,id> = 0; snd<tt,> = 0;
+            <_×_> = _⊔_; second = F.id;
+            nil = 0; cons = 0; uncons = 0 }
+
+
+timeOps≡seqTimeOps : timeOps ≡ record seqTimeOps {
+                                <_,_> = _⊔_; <_×_> = _⊔_; fork = 1+_⊔_
+                              ; cons = 0; uncons = 0 } -- Without cons = 0... this definition makes
+                                                       -- the FlatFunsOps record def yellow
+timeOps≡seqTimeOps = ≡.refl
 
 {-
 open import maxsemiring
