@@ -1,6 +1,6 @@
 module flat-funs-cost where
 
-open import Data.Nat.NP using (ℕ; zero; suc; _+_; _*_; 2^_; _⊔_; module ℕ°; module ⊔°; 2*′_)
+open import Data.Nat.NP using (ℕ; zero; suc; _+_; _*_; 2*_; 2^_; _^_; _⊔_; module ℕ°; module ⊔°; 2*′_)
 open import Data.Bool using (true; false)
 import Data.DifferenceNat
 import Data.Vec.NP as V
@@ -24,11 +24,23 @@ module D where
   _*#′_ : ℕ → Diffℕ → Diffℕ
   zero  *#′ d = 0#
   suc n *#′ d = d +# (n *#′ d)
+  2*#_ : Diffℕ → Diffℕ
+  2*# n = n +# n
+  2^#_ : ℕ → Diffℕ
+  2^# zero = 1#
+  2^# suc n = 2*# (2^# n)
+  1+_+_D : Diffℕ → Diffℕ → Diffℕ
+  1+ x + y D = 1# ∘′ (x ∘′ y)
 open D using (Diffℕ)
 
 private
   1+_+_ : ℕ → ℕ → ℕ
   1+ x + y = 1 + (x + y)
+  1+_⊔_ : ℕ → ℕ → ℕ
+  1+ x ⊔ y = 1 + (x ⊔ y)
+  i⊔i≡i : ∀ i → i ⊔ i ≡ i
+  i⊔i≡i zero = ≡.refl
+  i⊔i≡i (suc i) = ≡.cong suc (i⊔i≡i i)
 
 seqTimeOpsD : FlatFunsOps (constFuns Diffℕ)
 seqTimeOpsD = record {
@@ -39,9 +51,7 @@ seqTimeOpsD = record {
             <tt,id> = 0#; snd<tt,> = 0#;
             <_×_> = _∘′_; second = F.id;
             nil = 0#; cons = 0#; uncons = 0# }
-   where open D
-         1+_+_D : Diffℕ → Diffℕ → Diffℕ
-         1+ x + y D = 1# ∘′ (x ∘′ y)
+            where open D
 
 module SeqTimeOpsD where
   Time = Diffℕ
@@ -105,8 +115,21 @@ seqTimeOps = record {
             nil = 0; cons = 0; uncons = 0 }
 
 timeOps : FlatFunsOps (constFuns ℕ)
-timeOps = record seqTimeOps {<_×_> = _⊔_; cons = 0; uncons = 0 }
--- Without cons = 0... this definition makes the FlatFunsOps record def yellow
+timeOps = record {
+            id = 0; _∘_ = _+_;
+            <0b> = 0; <1b> = 0; cond = 1; fork = 1+_⊔_; tt = 0;
+            <_,_> = _⊔_; fst = 0; snd = 0;
+            dup = 0; first = F.id; swap = 0; assoc = 0;
+            <tt,id> = 0; snd<tt,> = 0;
+            <_×_> = _⊔_; second = F.id;
+            nil = 0; cons = 0; uncons = 0 }
+
+
+timeOps≡seqTimeOps : timeOps ≡ record seqTimeOps {
+                                <_,_> = _⊔_; <_×_> = _⊔_; fork = 1+_⊔_
+                              ; cons = 0; uncons = 0 } -- Without cons = 0... this definition makes
+                                                       -- the FlatFunsOps record def yellow
+timeOps≡seqTimeOps = ≡.refl
 
 {-
 open import maxsemiring
@@ -173,6 +196,13 @@ module TimeOps where
   constBits≡0 {suc n} (b ∷ bs) rewrite constBit≡0 b
                                      | constBits≡0 bs = ≡.refl
 
+  fromBitsFun≡i : ∀ {i o} (f : Bits i → Bits o) → fromBitsFun f ≡ i
+  fromBitsFun≡i {zero}  f rewrite constBits≡0 (f []) = ≡.refl
+  fromBitsFun≡i {suc i} f rewrite fromBitsFun≡i {i} (f ∘′ 1∷_)
+                                | fromBitsFun≡i {i} (f ∘′ 0∷_)
+                                | ℕ°.+-comm (i ⊔ i) 0
+                                = ≡.cong suc (i⊔i≡i i)
+
 spaceOps : FlatFunsOps (constFuns ℕ)
 spaceOps = record {
              id = 0; _∘_ = _+_;
@@ -228,6 +258,17 @@ module SpaceOps where
   constBits≡n {suc n} (b ∷ bs) rewrite constBit≡1 b
                                      | constBits≡n bs
                                      | ℕ°.+-comm n 0 = ≡.refl
+
+  fromBitsFun-cost : ∀ (i o : ℕ) → ℕ
+  fromBitsFun-cost zero    o = o
+  fromBitsFun-cost (suc i) o = 1 + 2*(fromBitsFun-cost i o)
+
+  fromBitsFun≡ : ∀ {i o} (f : Bits i → Bits o) → fromBitsFun f ≡ fromBitsFun-cost i o
+  fromBitsFun≡ {zero}  {o} f rewrite constBits≡n (f []) | ℕ°.+-comm o 0 = ≡.refl
+  fromBitsFun≡ {suc i} {o} f rewrite fromBitsFun≡ {i} (f ∘′ 1∷_)
+                                   | fromBitsFun≡ {i} (f ∘′ 0∷_)
+                                   | ℕ°.+-comm (2* (fromBitsFun-cost i o)) 0
+                                   = ≡.refl
 
 time×spaceOps : FlatFunsOps (constFuns (ℕ × ℕ))
 time×spaceOps = ×⊤-♭Ops timeOps spaceOps
