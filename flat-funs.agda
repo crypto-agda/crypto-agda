@@ -207,6 +207,9 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
 
   open DefaultAssoc′ _∘_ assoc swap first public
 
+  <if_then_else_> : ∀ {A B} (b : A `→ `Bit) (f g : A `→ B) → A `→ B
+  <if b then if-1 else if-0 > = < b , id > ⁏ fork if-0 if-1
+
   assoc-first : ∀ {A B C D E} → (A `× B `→ D `× E) → A `× B `× C `→ D `× E `× C
   assoc-first f = assoc′ ⁏ first f ⁏ assoc
 
@@ -249,6 +252,30 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
   <_∷′tt⁏_> : ∀ {n A B} → (A `→ B) → (`⊤ `→ `Vec B n)
                         → A `→ `Vec B (1 + n)
   < f ∷′tt⁏ g > = < f ,tt⁏ g > ⁏ cons
+
+  <0,_> : ∀ {A B} → (A `→ B) → A `→ `Bit `× B
+  <0, f > = <tt⁏ <0b> , f >
+
+  <1,_> : ∀ {A B} → (A `→ B) → A `→ `Bit `× B
+  <1, f > = <tt⁏ <1b> , f >
+
+  <0,> : ∀ {A} → A `→ `Bit `× A
+  <0,> = <0, id >
+
+  <1,> : ∀ {A} → A `→ `Bit `× A
+  <1,> = <1, id >
+
+  <0∷_> : ∀ {n A} → (A `→ `Bits n) → A `→ `Bits (1 + n)
+  <0∷ f > = <tt⁏ <0b> ∷′ f >
+
+  <1∷_> : ∀ {n A} → (A `→ `Bits n) → A `→ `Bits (1 + n)
+  <1∷ f > = <tt⁏ <1b> ∷′ f >
+
+  <0∷> : ∀ {n} → `Bits n `→ `Bits (1 + n)
+  <0∷> = <0∷ id >
+
+  <1∷> : ∀ {n} → `Bits n `→ `Bits (1 + n)
+  <1∷> = <1∷ id >
 
   constVec : ∀ {n b _A} {B : Set b} {C} → (B → `⊤ `→ C) → Vec B n → _A `→ `Vec C n
   constVec f [] = nil
@@ -359,6 +386,34 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
   replicate : ∀ {n A} → A `→ `Vec A n
   replicate {zero}  = nil
   replicate {suc n} = < id , replicate > ⁏ cons
+
+  `Maybe : T → T
+  `Maybe A = `Bit `× A
+
+  <nothing> : ∀ {A} → A `→ `Maybe A
+  <nothing> = <0,>
+
+  <just> : ∀ {A} → A `→ `Maybe A
+  <just> = <1,>
+
+  <is-just?_∶_> : ∀ {A B C} → (f : A `× B `→ C) (g : B `→ C) → `Maybe A `× B `→ C
+  <is-just? f ∶ g > = <if fst ⁏ fst then first snd ⁏ f else snd ⁏ g >
+
+  _∣?_ : ∀ {A} → `Maybe A `× `Maybe A `→ `Maybe A
+  _∣?_ = <is-just? fst ⁏ <just> ∶ id >
+
+  _`→?_ : T → T → Set
+  A `→? B = A `→ `Maybe B
+
+  search : ∀ {n A} → (A `× A `→ A) → (`Bits n `→ A) → `⊤ `→ A
+  search {zero}  _  f = nil ⁏ f
+  search {suc n} op f = <tt⁏ search op (f ∘ <0∷>) , search op (f ∘ <1∷>) > ⁏ op
+
+  find? : ∀ {n A} → (`Bits n `→? A) → `⊤ `→? A
+  find? = search _∣?_
+
+  findB : ∀ {n} → (`Bits n `→ `Bit) → `⊤ `→? `Bits n
+  findB pred = find? <if pred then <just> else <nothing> >
 
   fromTree : ∀ {n A} → Tree (`⊤ `→ A) n → `Bits n `→ A
   fromTree (Tree.leaf x) = tt ⁏ x
