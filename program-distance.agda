@@ -39,9 +39,6 @@ ext-count f≗g (x ∷ xs) rewrite ext-count f≗g xs | f≗g x = refl
 ext-# : ∀ {c} {f g : Bits c → Bit} → f ≗ g → #⟨ f ⟩ ≡ #⟨ g ⟩
 ext-# f≗g = ext-count f≗g (allBits _)
 
-count↺ : ∀ {c} → ↺ c Bit → ℕ
-count↺ f = Fin.toℕ #⟨ run↺ f ⟩
-
 module Implem k where
   --  | Pr[ f ≡ 1 ] - Pr[ g ≡ 1 ] | ≥ ε            [ on reals ]
   --  dist Pr[ f ≡ 1 ] Pr[ g ≡ 1 ] ≥ ε             [ on reals ]

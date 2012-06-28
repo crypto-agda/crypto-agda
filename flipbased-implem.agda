@@ -2,8 +2,12 @@ module flipbased-implem where
 
 open import Function
 open import Data.Bits
-open import Data.Nat
+open import Data.Nat.NP
 open import Data.Vec
+import Relation.Binary.PropositionalEquality as ≡
+import Data.Fin as Fin
+open ≡ using (_≗_)
+open Fin using (Fin; suc)
 
 import flipbased
 
@@ -48,9 +52,13 @@ private
 weaken≤ : ∀ {m n a} {A : Set a} → m ≤ n → ↺ m A → ↺ n A
 weaken≤ p = comap (take≤ p)
 
-open import Relation.Binary.PropositionalEquality
+open flipbased ↺ toss weaken≤ return↺ map↺ join↺ public
 
 _≗↺_ : ∀ {c a} {A : Set a} (f g : ↺ c A) → Set a
 f ≗↺ g = run↺ f ≗ run↺ g
 
-open flipbased ↺ toss weaken≤ return↺ map↺ join↺ public
+count↺ᶠ : ∀ {c} → ↺ c Bit → Fin (suc (2^ c))
+count↺ᶠ f = #⟨ run↺ f ⟩ᶠ
+
+count↺ : ∀ {c} → ↺ c Bit → ℕ
+count↺ f = #⟨ run↺ f ⟩
