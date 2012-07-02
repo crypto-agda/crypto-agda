@@ -9,6 +9,7 @@ open ≡ using (_≗_)
 open import Data.Bits using (Bit; Bits; proj)
 
 open import flat-funs
+open import flat-funs-implem
 open import program-distance
 open import flipbased-implem
 

@@ -9,6 +9,7 @@ open ≡ using (_≗_)
 open import flipbased-implem using (run↺; map↺)
 open import program-distance using (module PrgDist; PrgDist)
 open import flat-funs
+open import flat-funs-implem
 open import one-time-semantic-security
 import bit-guessing-game
 
