@@ -61,4 +61,4 @@ count↺ᶠ : ∀ {c} → ↺ c Bit → Fin (suc (2^ c))
 count↺ᶠ f = #⟨ run↺ f ⟩ᶠ
 
 count↺ : ∀ {c} → ↺ c Bit → ℕ
-count↺ f = #⟨ run↺ f ⟩
+count↺ = Fin.toℕ ∘ count↺ᶠ

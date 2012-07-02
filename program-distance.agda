@@ -3,7 +3,7 @@ module program-distance where
 open import flipbased-implem
 open import Data.Bits
 open import Data.Bool
-open import Data.Vec.NP using (Vec; count)
+open import Data.Vec.NP using (Vec; count; countᶠ)
 open import Data.Nat.NP
 open import Relation.Binary
 open import Relation.Binary.PropositionalEquality
@@ -32,12 +32,12 @@ record PrgDist : Set₁ where
                           → ⅁₀ ≗⅁ ⅁₁ → ⅁₀ ⇓ ⅁₁
   extensional-reduction same-games = ]-[-cong (same-games 0b) (same-games 1b)
 
-ext-count : ∀ {n a} {A : Set a} {f g : A → Bool} → f ≗ g → (xs : Vec A n) → count f xs ≡ count g xs
-ext-count f≗g [] = refl
-ext-count f≗g (x ∷ xs) rewrite ext-count f≗g xs | f≗g x = refl
+ext-countᶠ : ∀ {n a} {A : Set a} {f g : A → Bool} → f ≗ g → (xs : Vec A n) → countᶠ f xs ≡ countᶠ g xs
+ext-countᶠ f≗g [] = refl
+ext-countᶠ f≗g (x ∷ xs) rewrite ext-countᶠ f≗g xs | f≗g x = refl
 
-ext-# : ∀ {c} {f g : Bits c → Bit} → f ≗ g → #⟨ f ⟩ ≡ #⟨ g ⟩
-ext-# f≗g = ext-count f≗g (allBits _)
+ext-# : ∀ {c} {f g : Bits c → Bit} → f ≗ g → #⟨ f ⟩ᶠ ≡ #⟨ g ⟩ᶠ
+ext-# f≗g = ext-countᶠ f≗g (allBits _)
 
 module Implem k where
   --  | Pr[ f ≡ 1 ] - Pr[ g ≡ 1 ] | ≥ ε            [ on reals ]
