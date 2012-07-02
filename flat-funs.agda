@@ -210,9 +210,11 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
   <if_then_else_> : ∀ {A B} (b : A `→ `Bit) (f g : A `→ B) → A `→ B
   <if b then if-1 else if-0 > = < b , id > ⁏ fork if-0 if-1
 
+  -- Like first, but applies on a triple associated the other way
   assoc-first : ∀ {A B C D E} → (A `× B `→ D `× E) → A `× B `× C `→ D `× E `× C
   assoc-first f = assoc′ ⁏ first f ⁏ assoc
 
+  -- Like assoc-first but for second
   assoc-second : ∀ {A B C D E} → (B `× C `→ E `× D) → (A `× B) `× C `→ (A `× E) `× D
   assoc-second f = assoc ⁏ second f ⁏ assoc′
 
@@ -252,6 +254,9 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
   <_∷′tt⁏_> : ∀ {n A B} → (A `→ B) → (`⊤ `→ `Vec B n)
                         → A `→ `Vec B (1 + n)
   < f ∷′tt⁏ g > = < f ,tt⁏ g > ⁏ cons
+
+  <_∷nil> : ∀ {A B} → (A `→ B) → A `→ `Vec B 1
+  < f ∷nil> = < f ∷′tt⁏ nil >
 
   <0,_> : ∀ {A B} → (A `→ B) → A `→ `Bit `× B
   <0, f > = <tt⁏ <0b> , f >
@@ -327,11 +332,8 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
   <_,nil> : ∀ {A B C} → (A `→ B) → A `→ B `× `Vec C 0
   < f ,nil> = < f ,tt⁏ nil >
 
-  singleton : ∀ {A} → A `→ `Vec A 1
-  singleton = < id ,nil> ⁏ cons
-
   snoc : ∀ {n A} → (`Vec A n `× A) `→ `Vec A (1 + n)
-  snoc {zero}  = snd ⁏ singleton
+  snoc {zero}  = < snd ∷nil>
   snoc {suc n} = first uncons ⁏ assoc ⁏ second snoc ⁏ cons
 
   reverse : ∀ {n A} → `Vec A n `→ `Vec A n
@@ -387,6 +389,13 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
   replicate {zero}  = nil
   replicate {suc n} = < id , replicate > ⁏ cons
 
+  replicate⊤ : ∀ {n _A} → _A `→ `Vec `⊤ n
+  replicate⊤ {zero}  = nil
+  replicate⊤ {suc n} = <tt⁏ id ∷′ replicate⊤ >
+
+  loop : ∀ {A} n → (A `→ A) → (A `→ A)
+  loop n f = < id ,tt⁏ replicate⊤ {n} > ⁏ foldl (fst ⁏ f)
+
   `Maybe : T → T
   `Maybe A = `Bit `× A
 
@@ -434,7 +443,7 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
 
     tabulate : ∀ {n A _B} → (`Fin n `→ A) → _B `→ `Vec A n
     tabulate {zero}  f = nil
-    tabulate {suc n} f = <tt⁏ fz ⁏ f , tabulate (fs ⁏ f) > ⁏ cons
+    tabulate {suc n} f = <tt⁏ fz ⁏ f ∷′ tabulate (fs ⁏ f) >
 
     lookup : ∀ {n A} → `Fin n `× `Vec A n `→ A
     lookup {zero}  = fst ⁏ elim-Fin0
