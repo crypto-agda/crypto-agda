@@ -138,7 +138,9 @@ seqTimeRewiring =
     nil = 0;
     <_,_> = _+_;
     fst = 0;
-    snd = 0 }
+    snd = 0;
+    rewire = const 0;
+    rewireTbl = const 0 }
 
 seqTimeOps : FunOps TimeCost
 seqTimeOps = record { rewiring = seqTimeRewiring;
@@ -170,7 +172,9 @@ timeRewiring =
     nil = 0;
     <_,_> = _⊔_;
     fst = 0;
-    snd = 0 }
+    snd = 0;
+    rewire = const 0;
+    rewireTbl = const 0 }
 
 timeOps : FunOps TimeCost
 timeOps = record { rewiring = timeRewiring;
@@ -289,7 +293,9 @@ spaceRewiring =
     nil = 0;
     <_,_> = 1+_+_;
     fst = 0;
-    snd = 0 }
+    snd = 0;
+    rewire = λ {_} {o} _ → o;
+    rewireTbl = λ {_} {o} _ → o }
 
 spaceOps : FunOps SpaceCost
 spaceOps = record { rewiring = spaceRewiring;

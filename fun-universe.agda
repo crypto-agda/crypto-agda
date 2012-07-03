@@ -3,12 +3,13 @@ module fun-universe where
 open import Data.Nat.NP using (ℕ; zero; suc; _+_; _*_; 2^_)
 open import Data.Bool using (if_then_else_; true; false)
 open import Data.Unit using (⊤)
-open import Function using (_∘′_)
+open import Data.Fin using (Fin)
+open import Function using (_∘′_; flip)
 import Data.Vec.NP as V
 import Level as L
 open V using (Vec; []; _∷_)
 
-open import Data.Bits using (Bit; Bits)
+open import Data.Bits using (Bit; Bits; _→ᵇ_; RewireTbl)
 
 import bintree as Tree
 open Tree using (Tree)
@@ -19,8 +20,12 @@ record FunUniverse {t} (T : Set t) : Set (L.suc t) where
   field
     universe : Universe T
     _`→_    : T → T → Set
+
   infix 0 _`→_
   open Universe universe public
+
+  _`→ᵇ_ : ℕ → ℕ → Set
+  i `→ᵇ o = `Bits i `→ `Bits o
 
 module Defaults {t} {T : Set t} (funU : FunUniverse T) where
   open FunUniverse funU
@@ -169,6 +174,18 @@ module Defaults {t} {T : Set t} (funU : FunUniverse T) where
 
     fork : ∀ {A B} (f g : A `→ B) → `Bit `× A `→ B
     fork f g = second < f , g > ⁏ cond
+
+  module DefaultRewire
+    (rewireTbl : ∀ {i o} → RewireTbl i o → i `→ᵇ o) where
+
+    rewire : ∀ {i o} → (Fin o → Fin i) → i `→ᵇ o
+    rewire fun = rewireTbl (V.tabulate fun)
+
+  module DefaultRewireTbl
+    (rewire : ∀ {i o} → (Fin o → Fin i) → i `→ᵇ o) where
+
+    rewireTbl : ∀ {i o} → RewireTbl i o → i `→ᵇ o
+    rewireTbl tbl = rewire (flip V.lookup tbl)
 
 record LinRewiring {t} {T : Set t} (funU : FunUniverse T) : Set t where
   constructor mk
@@ -387,6 +404,9 @@ record Rewiring {t} {T : Set t} (funU : FunUniverse T) : Set t where
     fst   : ∀ {A B} → A `× B `→ A
     snd   : ∀ {A B} → A `× B `→ B
 
+    rewire    : ∀ {i o} → (Fin o → Fin i) → i `→ᵇ o
+    rewireTbl : ∀ {i o} → RewireTbl i o    → i `→ᵇ o
+
   open LinRewiring linRewiring public
 
   proj : ∀ {A} → Bit → (A `× A) `→ A
@@ -485,10 +505,10 @@ record FunOps {t} {T : Set t} (funU : FunUniverse T) : Set t where
   <1∷_> : ∀ {n A} → (A `→ `Bits n) → A `→ `Bits (1 + n)
   <1∷ f > = <tt⁏ <1b> ∷′ f >
 
-  <0∷> : ∀ {n} → `Bits n `→ `Bits (1 + n)
+  <0∷> : ∀ {n} → n `→ᵇ (1 + n)
   <0∷> = <0∷ id >
 
-  <1∷> : ∀ {n} → `Bits n `→ `Bits (1 + n)
+  <1∷> : ∀ {n} → n `→ᵇ (1 + n)
   <1∷> = <1∷ id >
 
   constBits : ∀ {n _⊤} → Bits n → _⊤ `→ `Bits n
@@ -533,7 +553,7 @@ record FunOps {t} {T : Set t} (funU : FunUniverse T) : Set t where
   fromFun : ∀ {n A} → (Bits n → `⊤ `→ A) → `Bits n `→ A
   fromFun = fromTree ∘′ Tree.fromFun
 
-  fromBitsFun : ∀ {i o} → (Bits i → Bits o) → `Bits i `→ `Bits o
+  fromBitsFun : ∀ {i o} → (i →ᵇ o) → i `→ᵇ o
   fromBitsFun f = fromFun (constBits ∘′ f)
 
   module WithFin
