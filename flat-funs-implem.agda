@@ -22,42 +22,42 @@ open import flat-funs
 _→ᶠ_ : ℕ → ℕ → Set
 _→ᶠ_ i o = Fin i → Fin o
 
-fun♭Funs : FlatFuns Set
-fun♭Funs = mk Set-U -→-
+agdaFunU : FunUniverse Set
+agdaFunU = mk Set-U -→-
 
-module FunTypes = FlatFuns fun♭Funs
+module AgdaFunUniverse = FunUniverse agdaFunU
 
-bitsFun♭Funs : FlatFuns ℕ
-bitsFun♭Funs = mk Bits-U _→ᵇ_
+bitsFunU : FunUniverse ℕ
+bitsFunU = mk Bits-U _→ᵇ_
 
-module BitsFunTypes = FlatFuns bitsFun♭Funs
+module BitsFunUniverse = FunUniverse bitsFunU
 
-finFun♭Funs : FlatFuns ℕ
-finFun♭Funs = mk Fin-U _→ᶠ_
+finFunU : FunUniverse ℕ
+finFunU = mk Fin-U _→ᶠ_
 
-module FinFunTypes = FlatFuns finFun♭Funs
+module FinFunUniverse = FunUniverse finFunU
 
-funLin : LinRewiring fun♭Funs
+funLin : LinRewiring agdaFunU
 funLin = mk F.id _∘′_
             (λ f → ×.map f F.id)
             ×.swap (λ {((x , y) , z) → x , (y , z) }) (λ x → _ , x) proj₂
             (λ f g → ×.map f g) (λ f → ×.map F.id f)
             (F.const []) _ (uncurry _∷_) V.uncons
 
-funRewiring : Rewiring fun♭Funs
+funRewiring : Rewiring agdaFunU
 funRewiring = mk funLin _ (λ x → x , x) (F.const []) ×.<_,_> proj₁ proj₂
 
-fun♭Ops : FlatFunsOps fun♭Funs
-fun♭Ops = mk funRewiring (F.const 0b) (F.const 1b) (λ { (b , x , y) → if b then x else y })
+agdaFunOps : FunOps agdaFunU
+agdaFunOps = mk funRewiring (F.const 0b) (F.const 1b) (λ { (b , x , y) → if b then x else y })
              (λ { f g (b , x) → (if b then f else g) x })
 
-module FunOps = FlatFunsOps fun♭Ops
+module AgdaFunOps = FunOps agdaFunOps
 
-bitsFun♭Ops : FlatFunsOps bitsFun♭Funs
-bitsFun♭Ops = mk rewiring (const [ 0b ]) (const [ 1b ]) cond forkᵇ
+bitsFunOps : FunOps bitsFunU
+bitsFunOps = mk rewiring (const [ 0b ]) (const [ 1b ]) cond forkᵇ
   where
-  open BitsFunTypes
-  open FunOps using (id; _∘_)
+  open BitsFunUniverse
+  open AgdaFunOps using (id; _∘_)
   fstᵇ : ∀ {A B} → A `× B `→ A
   fstᵇ {A} = V.take A
   sndᵇ : ∀ {B} A → A `× B `→ B
@@ -66,29 +66,29 @@ bitsFun♭Ops = mk rewiring (const [ 0b ]) (const [ 1b ]) cond forkᵇ
   <_,_>ᵇ f g x = f x ++ g x
   forkᵇ : ∀ {A B} (f g : A `→ B) → `Bit `× A `→ B
   forkᵇ f g (b ∷ xs) = (if b then f else g) xs
-  open Defaults bitsFun♭Funs
+  open Defaults bitsFunU
   open DefaultsGroup2 id _∘_ (const []) <_,_>ᵇ fstᵇ (λ {x} → sndᵇ x)
   open DefaultCond forkᵇ fstᵇ (λ {x} → sndᵇ x)
 
-  lin : LinRewiring bitsFun♭Funs
+  lin : LinRewiring bitsFunU
   lin = mk id _∘_ first (λ {x} → swap {x}) (λ {x} → assoc {x}) id id
            <_×_> (λ {x} → second {x}) id id id id
 
-  rewiring : Rewiring bitsFun♭Funs
+  rewiring : Rewiring bitsFunU
   rewiring = mk lin (const []) dup (const []) <_,_>ᵇ fstᵇ (λ {x} → sndᵇ x)
 
-bitsFunRewiring : Rewiring bitsFun♭Funs
-bitsFunRewiring = FlatFunsOps.rewiring bitsFun♭Ops
+bitsFunRewiring : Rewiring bitsFunU
+bitsFunRewiring = FunOps.rewiring bitsFunOps
 
-bitsFunLin : LinRewiring bitsFun♭Funs
+bitsFunLin : LinRewiring bitsFunU
 bitsFunLin = Rewiring.linRewiring bitsFunRewiring
 
-module BitsFunOps = FlatFunsOps bitsFun♭Ops
+module BitsFunOps = FunOps bitsFunOps
 
-constFuns : Set → FlatFuns ⊤
+constFuns : Set → FunUniverse ⊤
 constFuns A = mk ⊤-U (λ _ _ → A)
 
-module ConstFunTypes A = FlatFuns (constFuns A)
+module ConstFunTypes A = FunUniverse (constFuns A)
 
-⊤-FunOps : FlatFunsOps (constFuns ⊤)
+⊤-FunOps : FunOps (constFuns ⊤)
 ⊤-FunOps = _
