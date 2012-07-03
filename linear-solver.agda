@@ -207,7 +207,21 @@ module Syntax {a} (A : Set a)(_x_ : A → A → A)(T : A)
   rewire _ _ () | no _
     -- proof₂ (NFP.proof (normal s₁)) ∻' (eq ∻' proof₁ (NFP.proof (normal s₂)))
 
+  infix 4 _⇛_
 
+  record Eq : Set where
+    constructor _⇛_
+    field
+      LHS RHS : Syn
+
+  open import Data.Vec.N-ary using (N-ary ; _$ⁿ_)
+  open import Data.Vec using (allFin) renaming (map to vmap)
+
+  rewire' : (f : N-ary nrVars Syn Eq) → let (S₁ ⇛ S₂) = f $ⁿ (vmap Syn.var (allFin nrVars))
+          in CHECK (NFP.S' (normal S₁)) (NFP.S' (normal S₂)) → R' (eval S₁) (eval S₂)
+  rewire' f eq = let S ⇛ S' = f $ⁿ vmap Syn.var (allFin  nrVars)
+         in rewire S S' eq
+ 
 module example where
 
   open import Data.Vec
@@ -232,6 +246,10 @@ module example where
 
     LHS = (# 0 , # 1) , # 2
     RHS = (# 1 , # 0) , # 2
+
+  test2 : (A B C : Set) → (A × B) × C → (B × A) × C
+  test2 A B C = rewire' (λ a b c → (a , b) , c ⇛ (b , a) , c) _ where
+    open STest 3 (λ i → lookup i (A ∷ B ∷ C ∷ []))
 
 
 module example₂ where
