@@ -74,26 +74,37 @@ module AbsSemSec {t} {T : Set t}
     open ♭EncParams ♭Funs ep
 
     field
-      {|S|} : ℕ
+      {|S|₀} {|S|₁} {|S|₂} : ℕ
 
-    `S  = `Bits |S|
-    S   =  Bits |S|
+    `S₀  = `Bits |S|₀
+    S₀   =  Bits |S|₀
+    `S₁  = `Bits |S|₁
+    S₁   =  Bits |S|₁
+    `S₂  = `Bits |S|₂
+    S₂   =  Bits |S|₂
 
-    -- Randomness adversary
+    -- Adversary randomness
     `Rᵃ = `Bits |R|ᵃ
     Rᵃ  =  Bits |R|ᵃ
 
     field
-      step₀ : `Rᵃ `→ (`M `× `M) `× `S
-      step₁ : `C `× `S `→ `Bit
+      step₀ : `Rᵃ `→ `S₀
+      step₁ : `S₀ `→ (`M `× `M) `× `S₁
+      step₂ : `C `× `S₁ `→ `S₂
+      step₃ : `S₂ `→ `Bit
 
     M²  = Bit → M
     `M² = `Bit `→ `M
 
-    module Ops (♭ops : FlatFunsOps ♭Funs) where
+    module AdvOps (♭ops : FlatFunsOps ♭Funs) where
       open FlatFunsOps ♭ops
+      step₀₁ : `Rᵃ `→ (`M `× `M) `× `S₁
+      step₀₁ = step₀ ⁏ step₁
+      step₂₃ : `C `× `S₁ `→ `Bit
+      step₂₃ = step₂ ⁏ step₃
+
       observe : `C `× `Rᵃ `→ (`M `× `M) `× `Bit
-      observe = second step₀ ⁏ ⟨C,⟨M,S⟩⟩→⟨M,⟨C,S⟩⟩ ⁏ second step₁
+      observe = second step₀₁ ⁏ ⟨C,⟨M,S⟩⟩→⟨M,⟨C,S⟩⟩ ⁏ second step₂₃
         where ⟨C,⟨M,S⟩⟩→⟨M,⟨C,S⟩⟩ = < snd ⁏ fst , < fst , snd ⁏ snd > >
 
     open ♭EncParams ♭Funs ep public
@@ -105,20 +116,20 @@ module AbsSemSec {t} {T : Set t}
 module FunSemSec (prgDist : PrgDist) where
   open PrgDist prgDist
   open AbsSemSec fun♭Funs
-  open FunOps
+  open FunOps hiding (proj)
 
   module FunSemSecAdv {ep : EncParams} {|R|ᵃ} (A : SemSecAdv ep |R|ᵃ) where
     open SemSecAdv A public
-    open Ops fun♭Ops public
+    open AdvOps fun♭Ops public
 
-    step₀F : Rᵃ → (M² × S)
-    step₀F = step₀ ⁏ first proj
+    step₀₁F : Rᵃ → (M² × S₁)
+    step₀₁F = step₀ ⁏ step₁ ⁏ first proj
 
-    step₀↺ : ↺ |R|ᵃ (M² × S)
-    step₀↺ = mk step₀F
+    step₀₁↺ : ↺ |R|ᵃ (M² × S₁)
+    step₀₁↺ = mk step₀₁F
 
-    step₁F : S → C → Bit
-    step₁F s c = step₁ (c , s)
+    step₂₃F : S₁ → C → Bit
+    step₂₃F s c = step₃ (step₂ (c , s))
 
   module RunSemSec (ep : EncParams) where
     open EncParams ep using (M; C; |R|ᵉ; Enc)
@@ -127,8 +138,8 @@ module FunSemSec (prgDist : PrgDist) where
     --          1 means Adv  wins, Chal looses
     runSemSec : ∀ {|R|ᵃ} (E : Enc) (A : SemSecAdv ep |R|ᵃ) b → ↺ (|R|ᵃ + |R|ᵉ) Bit
     runSemSec E A b
-      = A-step₀ >>= λ { (m , s) → map↺ (A-step₁ s) (E (m b)) }
-      where open FunSemSecAdv A renaming (step₀↺ to A-step₀; step₁F to A-step₁)
+      = A-step₀₁ >>= λ { (m , s) → map↺ (A-step₂₃ s) (E (m b)) }
+      where open FunSemSecAdv A renaming (step₀₁↺ to A-step₀₁; step₂₃F to A-step₂₃)
 
     _⇄_ : ∀ {|R|ᵃ} (E : Enc) (A : SemSecAdv ep |R|ᵃ) b → ↺ (|R|ᵃ + |R|ᵉ) Bit
     _⇄_ = runSemSec
@@ -141,8 +152,8 @@ module FunSemSec (prgDist : PrgDist) where
     change-adv {ca} _ _ _ pf b R with V.splitAt ca R
     change-adv A₀ A₁ E pf b ._ | pre Σ., post , ≡.refl = ≡.trans (≡.cong proj₂ (helper₀ A₀)) helper₂
        where open FunSemSecAdv
-             helper₀ = λ A → pf (run↺ (E (proj (proj₁ (step₀ A pre)) b)) post , pre)
-             helper₂ = ≡.cong (λ m → step₁ A₁ (run↺ (E (proj (proj₁ m) b)) post , proj₂ (step₀ A₁ pre)))
+             helper₀ = λ A → pf (run↺ (E (proj (proj₁ (step₀₁ A pre)) b)) post , pre)
+             helper₂ = ≡.cong (λ m → step₂₃ A₁ (run↺ (E (proj (proj₁ m) b)) post , proj₂ (step₀₁ A₁ pre)))
                               (helper₀ A₁)
 
     _≗E_ : ∀ (E₀ E₁ : Enc) → Set
@@ -151,7 +162,7 @@ module FunSemSec (prgDist : PrgDist) where
     ≗E→≗⅁ : ∀ {E₀ E₁} → E₀ ≗E E₁ → ∀ {c} (A : SemSecAdv ep c)
                → (E₀ ⇄ A) ≗⅁ (E₁ ⇄ A)
     ≗E→≗⅁ E₀≗E₁ {c} A b R
-      rewrite E₀≗E₁ (proj (proj₁ (SemSecAdv.step₀ A (V.take c R))) b) (V.drop c R) = ≡.refl
+      rewrite E₀≗E₁ (proj (proj₁ (FunSemSecAdv.step₀₁ A (V.take c R))) b) (V.drop c R) = ≡.refl
 
     ≗A→⇓ : ∀ {c} (A₀ A₁ : SemSecAdv ep c) → A₀ ≗A A₁ → ∀ E → (E ⇄ A₀) ⇓ (E ⇄ A₁)
     ≗A→⇓ A₀ A₁ A₀≗A₁ E = extensional-reduction (change-adv A₀ A₁ E A₀≗A₁)

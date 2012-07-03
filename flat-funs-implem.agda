@@ -37,23 +37,24 @@ finFun♭Funs = mk Fin-U _→ᶠ_
 
 module FinFunTypes = FlatFuns finFun♭Funs
 
+funLin : LinRewiring fun♭Funs
+funLin = mk F.id _∘′_
+            (λ f → ×.map f F.id)
+            ×.swap (λ {((x , y) , z) → x , (y , z) }) (λ x → _ , x) proj₂
+            (λ f g → ×.map f g) (λ f → ×.map F.id f)
+            (F.const []) _ (uncurry _∷_) V.uncons
+
+funRewiring : Rewiring fun♭Funs
+funRewiring = mk funLin _ (λ x → x , x) (F.const []) ×.<_,_> proj₁ proj₂
+
 fun♭Ops : FlatFunsOps fun♭Funs
-fun♭Ops = mk F.id _∘′_
-             (F.const 0b) (F.const 1b) (λ { (b , x , y) → if b then x else y })
-             (λ { f g (b , x) → (if b then f else g) x }) _
-             ×.<_,_> proj₁ proj₂ (λ x → x , x) (λ f → ×.map f F.id)
-             ×.swap (λ {((x , y) , z) → x , (y , z) }) (λ x → _ , x) proj₂
-             (λ f g → ×.map f g) (λ f → ×.map F.id f)
-             (F.const []) (uncurry _∷_) V.uncons
+fun♭Ops = mk funRewiring (F.const 0b) (F.const 1b) (λ { (b , x , y) → if b then x else y })
+             (λ { f g (b , x) → (if b then f else g) x })
 
 module FunOps = FlatFunsOps fun♭Ops
 
 bitsFun♭Ops : FlatFunsOps bitsFun♭Funs
-bitsFun♭Ops = mk id _∘_
-                 (const [ 0b ]) (const [ 1b ]) cond forkᵇ (const [])
-                 <_,_>ᵇ fstᵇ (λ {x} → sndᵇ x) dup first
-                 (λ {x} → swap {x}) (λ {x} → assoc {x}) id id
-                 <_×_> (λ {x} → second {x}) (const []) id id
+bitsFun♭Ops = mk rewiring (const [ 0b ]) (const [ 1b ]) cond forkᵇ
   where
   open BitsFunTypes
   open FunOps using (id; _∘_)
@@ -69,9 +70,25 @@ bitsFun♭Ops = mk id _∘_
   open DefaultsGroup2 id _∘_ (const []) <_,_>ᵇ fstᵇ (λ {x} → sndᵇ x)
   open DefaultCond forkᵇ fstᵇ (λ {x} → sndᵇ x)
 
+  lin : LinRewiring bitsFun♭Funs
+  lin = mk id _∘_ first (λ {x} → swap {x}) (λ {x} → assoc {x}) id id
+           <_×_> (λ {x} → second {x}) id id id id
+
+  rewiring : Rewiring bitsFun♭Funs
+  rewiring = mk lin (const []) dup (const []) <_,_>ᵇ fstᵇ (λ {x} → sndᵇ x)
+
+bitsFunRewiring : Rewiring bitsFun♭Funs
+bitsFunRewiring = FlatFunsOps.rewiring bitsFun♭Ops
+
+bitsFunLin : LinRewiring bitsFun♭Funs
+bitsFunLin = Rewiring.linRewiring bitsFunRewiring
+
 module BitsFunOps = FlatFunsOps bitsFun♭Ops
 
 constFuns : Set → FlatFuns ⊤
 constFuns A = mk ⊤-U (λ _ _ → A)
 
 module ConstFunTypes A = FlatFuns (constFuns A)
+
+⊤-FunOps : FlatFunsOps (constFuns ⊤)
+⊤-FunOps = _
