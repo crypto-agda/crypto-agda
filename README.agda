@@ -4,6 +4,9 @@ open import composition-sem-sec-reduction
 
 open import one-time-semantic-security
 
+open import Data.Bits
+
+open import data-universe
 open import fun-universe
 open import agda-fun-universe
 open import bits-fun-universe
