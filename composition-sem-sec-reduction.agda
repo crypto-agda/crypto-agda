@@ -55,7 +55,10 @@ module CompRed {t} {T : Set t}
              (post-E : `C₀ `→ `C₁)
            → SemSecReduction ep₁ ep₀ _
   comp-red pre-E post-E (mk A₀ A₁ A₂ A₃) =
-    mk A₀ (A₁ ⁏ first < pre-E × pre-E >) (first post-E ⁏ A₂) A₃
+    mk A₀
+      (A₁ ⁏ first < pre-E × pre-E >)
+      (first post-E ⁏ A₂)
+       A₃
 
 module CompSec (prgDist : PrgDist) (ep₀ : EncParams) (|M|₁ |C|₁ : ℕ) where
   open PrgDist prgDist
