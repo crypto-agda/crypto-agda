@@ -105,7 +105,7 @@ module AbsSemSec {t} {T : Set t}
 module FunSemSec (prgDist : PrgDist) where
   open PrgDist prgDist
   open AbsSemSec fun♭Funs
-  open FunOps
+  open FunOps hiding (proj)
 
   module FunSemSecAdv {ep : EncParams} {|R|ᵃ} (A : SemSecAdv ep |R|ᵃ) where
     open SemSecAdv A public
