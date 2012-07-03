@@ -1,4 +1,4 @@
-module flat-funs-cost where
+module cost-fun-universe where
 
 open import Data.Nat.NP using (ℕ; zero; suc; _+_; _*_; 2*_; 2^_; _^_; _⊔_; module ℕ°; module ⊔°; 2*′_)
 open import Data.Bool using (true; false)
@@ -14,8 +14,8 @@ open ≡ using (_≡_; _≗_)
 
 open import Data.Bits using (Bits; 0∷_; 1∷_)
 
-open import flat-funs
-open import flat-funs-implem
+open import fun-universe
+open import const-fun-universe
 
 module D where
   open Data.DifferenceNat public renaming (suc to suc#; _+_ to _+#_)

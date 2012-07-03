@@ -1,4 +1,4 @@
-module flat-funs where
+module fun-universe where
 
 open import Data.Nat.NP using (ℕ; zero; suc; _+_; _*_; 2^_)
 open import Data.Bool using (if_then_else_; true; false)
