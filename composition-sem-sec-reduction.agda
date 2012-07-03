@@ -8,8 +8,8 @@ open ≡ using (_≗_)
 
 open import flipbased-implem using (run↺; map↺)
 open import program-distance using (module PrgDist; PrgDist)
-open import flat-funs
-open import flat-funs-implem
+open import fun-universe
+open import agda-fun-universe
 open import one-time-semantic-security
 import bit-guessing-game
 
@@ -20,7 +20,7 @@ import bit-guessing-game
 -- of the given cipher.
 module Comp (ep₀ : EncParams) (|M|₁ |C|₁ : ℕ) where
   open EncParams²-same-|R|ᵉ ep₀ |M|₁ |C|₁ using (M₀; M₁; C₀; C₁; Tr)
-  open FunOps
+  open AgdaFunOps
 
   comp : (pre-E : M₁ → M₀) (post-E : C₀ → C₁) → Tr
   comp pre-E post-E E = pre-E ⁏ E ⁏ map↺ post-E
@@ -31,7 +31,7 @@ module Comp (ep₀ : EncParams) (|M|₁ |C|₁ : ℕ) where
 -- original cipher E.
 --
 -- The adversary transformation works for any notion of function space
--- (FlatFuns) and the corresponding operations (FlatFunsOps).
+-- (FunUniverse) and the corresponding operations (FunOps).
 -- Because of this abstraction the following construction can be safely
 -- instantiated for at least three uses:
 --   * When provided with a concrete notion of function like circuits
@@ -43,13 +43,13 @@ module Comp (ep₀ : EncParams) (|M|₁ |C|₁ : ℕ) where
 --     one get a the cost of the resulting adversary given the cost of
 --     the inputs (adversary...).
 module CompRed {t} {T : Set t}
-               {♭Funs   : FlatFuns T}
-               (♭ops    : FlatFunsOps ♭Funs)
+               {funU   : FunUniverse T}
+               (funOps : FunOps funU)
                (ep₀ ep₁ : EncParams) where
-  open FlatFuns ♭Funs
-  open FlatFunsOps ♭ops
-  open AbsSemSec ♭Funs
-  open ♭EncParams² ♭Funs ep₀ ep₁ using (`M₀; `C₀; `M₁; `C₁)
+  open FunUniverse funU
+  open FunOps funOps
+  open AbsSemSec funU
+  open FunEncParams² funU ep₀ ep₁ using (`M₀; `C₀; `M₁; `C₁)
 
   comp-red : (pre-E  : `M₁ `→ `M₀)
              (post-E : `C₀ `→ `C₁)
@@ -63,11 +63,11 @@ module CompRed {t} {T : Set t}
 module CompSec (prgDist : PrgDist) (ep₀ : EncParams) (|M|₁ |C|₁ : ℕ) where
   open PrgDist prgDist
   open FunSemSec prgDist
-  open FunOps
-  open AbsSemSec fun♭Funs
+  open AgdaFunOps
+  open AbsSemSec agdaFunU
   open EncParams²-same-|R|ᵉ ep₀ |M|₁ |C|₁
   open SemSecReductions ep₀ ep₁ id
-  open CompRed fun♭Ops ep₀ ep₁
+  open CompRed agdaFunOps ep₀ ep₁
 
   private
     module Comp-implicit {x y z} = Comp x y z
@@ -96,7 +96,7 @@ module PostNegSec (prgDist : PrgDist) ep where
   open EncParams² ep ep using (Tr)
   open CompSec prgDist ep |M| |C|
   open FunSemSec prgDist
-  open FunOps
+  open AgdaFunOps
   open SemSecReductions ep ep id
 
   post-neg : Tr

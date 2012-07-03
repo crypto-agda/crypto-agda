@@ -1,4 +1,4 @@
-module flat-funs where
+module fun-universe where
 
 open import Data.Nat.NP using (ℕ; zero; suc; _+_; _*_; 2^_)
 open import Data.Bool using (if_then_else_; true; false)
@@ -14,7 +14,7 @@ import bintree as Tree
 open Tree using (Tree)
 open import data-universe
 
-record FlatFuns {t} (T : Set t) : Set (L.suc t) where
+record FunUniverse {t} (T : Set t) : Set (L.suc t) where
   constructor mk
   field
     universe : Universe T
@@ -22,8 +22,8 @@ record FlatFuns {t} (T : Set t) : Set (L.suc t) where
   infix 0 _`→_
   open Universe universe public
 
-module Defaults {t} {T : Set t} (♭Funs : FlatFuns T) where
-  open FlatFuns ♭Funs
+module Defaults {t} {T : Set t} (funU : FunUniverse T) where
+  open FunUniverse funU
 
   module CompositionNotations
     (_∘_ : ∀ {A B C} → (B `→ C) → (A `→ B) → (A `→ C)) where
@@ -170,9 +170,9 @@ module Defaults {t} {T : Set t} (♭Funs : FlatFuns T) where
     fork : ∀ {A B} (f g : A `→ B) → `Bit `× A `→ B
     fork f g = second < f , g > ⁏ cond
 
-record LinRewiring {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
+record LinRewiring {t} {T : Set t} (funU : FunUniverse T) : Set t where
   constructor mk
-  open FlatFuns ♭Funs
+  open FunUniverse funU
 
   infixr 9 _∘_
   field
@@ -197,7 +197,7 @@ record LinRewiring {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
     cons    : ∀ {n A} → (A `× `Vec A n) `→ `Vec A (1 + n)
     uncons  : ∀ {n A} → `Vec A (1 + n) `→ (A `× `Vec A n)
 
-  open Defaults ♭Funs
+  open Defaults funU
   open CompositionNotations _∘_ public
   open DefaultAssoc′ _∘_ assoc swap first public
 
@@ -365,12 +365,12 @@ record LinRewiring {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
   -- or based on fold:
   -- loop n f = < id ,tt⁏ replicate⊤ n > ⁏ foldl (fst<,tt> ⁏ f)
 
-record Rewiring {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
+record Rewiring {t} {T : Set t} (funU : FunUniverse T) : Set t where
   constructor mk
-  open FlatFuns ♭Funs
+  open FunUniverse funU
 
   field
-    linRewiring : LinRewiring ♭Funs
+    linRewiring : LinRewiring funU
 
     -- Unit
     tt : ∀ {_⊤} → _⊤ `→ `⊤
@@ -427,12 +427,12 @@ record Rewiring {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
   constBits′ [] = nil
   constBits′ (b ∷ xs) = dup ⁏ < proj b ∷′ constBits′ xs >
 
-record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
+record FunOps {t} {T : Set t} (funU : FunUniverse T) : Set t where
   constructor mk
-  open FlatFuns ♭Funs
+  open FunUniverse funU
 
   field
-    rewiring : Rewiring ♭Funs
+    rewiring : Rewiring funU
 
     -- Bit
     <0b> <1b> : ∀ {_⊤} → _⊤ `→ `Bit
@@ -446,7 +446,7 @@ record FlatFunsOps {t} {T : Set t} (♭Funs : FlatFuns T) : Set t where
     -- Vectors
     -- nil; cons; uncons come from Rewiring
 
-  open Defaults ♭Funs
+  open Defaults funU
   open Rewiring rewiring public
 
   infixr 3 _&&&_

@@ -8,8 +8,8 @@ open ≡ using (_≗_)
 
 open import Data.Bits using (Bit; Bits; proj)
 
-open import flat-funs
-open import flat-funs-implem
+open import fun-universe
+open import agda-fun-universe
 open import program-distance
 open import flipbased-implem
 
@@ -46,32 +46,32 @@ module EncParams²-same-|R|ᵉ (ep₀ : EncParams) (|M|₁ |C|₁ : ℕ) where
   ep₁ = EncParams.mk |M|₁ |C|₁ (EncParams.|R|ᵉ ep₀)
   open EncParams² ep₀ ep₁ public
 
-module ♭EncParams {t} {T : Set t}
-                  (♭Funs : FlatFuns T)
-                  (ep : EncParams) where
-  open FlatFuns ♭Funs
+module FunEncParams {t} {T : Set t}
+                    (funU : FunUniverse T)
+                    (ep : EncParams) where
+  open FunUniverse funU
   open EncParams ep public
 
   `M  = `Bits |M|
   `C  = `Bits |C|
   `Rᵉ = `Bits |R|ᵉ
 
-module ♭EncParams² {t} {T : Set t}
-                   (♭Funs : FlatFuns T)
-                   (ep₀ ep₁ : EncParams) where
+module FunEncParams² {t} {T : Set t}
+                     (funU : FunUniverse T)
+                     (ep₀ ep₁ : EncParams) where
   open EncParams² ep₀ ep₁ public
-  open ♭EncParams ♭Funs ep₀ public using () renaming (`M to `M₀; `C to `C₀; `Rᵉ to `Rᵉ₀)
-  open ♭EncParams ♭Funs ep₁ public using () renaming (`M to `M₁; `C to `C₁; `Rᵉ to `Rᵉ₁)
+  open FunEncParams funU ep₀ public using () renaming (`M to `M₀; `C to `C₀; `Rᵉ to `Rᵉ₀)
+  open FunEncParams funU ep₁ public using () renaming (`M to `M₁; `C to `C₁; `Rᵉ to `Rᵉ₁)
 
 module AbsSemSec {t} {T : Set t}
-                 (♭Funs : FlatFuns T) where
+                 (funU : FunUniverse T) where
 
-  open FlatFuns ♭Funs
+  open FunUniverse funU
 
   record SemSecAdv (ep : EncParams) |R|ᵃ : Set where
     constructor mk
 
-    open ♭EncParams ♭Funs ep
+    open FunEncParams funU ep
 
     field
       {|S|₀} {|S|₁} {|S|₂} : ℕ
@@ -96,8 +96,8 @@ module AbsSemSec {t} {T : Set t}
     M²  = Bit → M
     `M² = `Bit `→ `M
 
-    module AdvOps (♭ops : FlatFunsOps ♭Funs) where
-      open FlatFunsOps ♭ops
+    module AdvOps (funOps : FunOps funU) where
+      open FunOps funOps
       step₀₁ : `Rᵃ `→ (`M `× `M) `× `S₁
       step₀₁ = step₀ ⁏ step₁
       step₂₃ : `C `× `S₁ `→ `Bit
@@ -107,20 +107,20 @@ module AbsSemSec {t} {T : Set t}
       observe = second step₀₁ ⁏ ⟨C,⟨M,S⟩⟩→⟨M,⟨C,S⟩⟩ ⁏ second step₂₃
         where ⟨C,⟨M,S⟩⟩→⟨M,⟨C,S⟩⟩ = < snd ⁏ fst , < fst , snd ⁏ snd > >
 
-    open ♭EncParams ♭Funs ep public
+    open FunEncParams funU ep public
 
   SemSecReduction : ∀ ep₀ ep₁ (f : Coins → Coins) → Set
   SemSecReduction ep₀ ep₁ f = ∀ {c} → SemSecAdv ep₀ c → SemSecAdv ep₁ (f c)
 
--- Here we use Agda functions for FlatFuns.
+-- Here we use Agda functions for FunUniverse.
 module FunSemSec (prgDist : PrgDist) where
   open PrgDist prgDist
-  open AbsSemSec fun♭Funs
-  open FunOps hiding (proj)
+  open AbsSemSec agdaFunU
+  open AgdaFunOps hiding (proj)
 
   module FunSemSecAdv {ep : EncParams} {|R|ᵃ} (A : SemSecAdv ep |R|ᵃ) where
     open SemSecAdv A public
-    open AdvOps fun♭Ops public
+    open AdvOps agdaFunOps public
 
     step₀₁F : Rᵃ → (M² × S₁)
     step₀₁F = step₀ ⁏ step₁ ⁏ first proj

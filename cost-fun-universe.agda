@@ -1,4 +1,4 @@
-module flat-funs-cost where
+module cost-fun-universe where
 
 open import Data.Nat.NP using (ℕ; zero; suc; _+_; _*_; 2*_; 2^_; _^_; _⊔_; module ℕ°; module ⊔°; 2*′_)
 open import Data.Bool using (true; false)
@@ -14,8 +14,8 @@ open ≡ using (_≡_; _≗_)
 
 open import Data.Bits using (Bits; 0∷_; 1∷_)
 
-open import flat-funs
-open import flat-funs-implem
+open import fun-universe
+open import const-fun-universe
 
 module D where
   open Data.DifferenceNat public renaming (suc to suc#; _+_ to _+#_)
@@ -44,7 +44,7 @@ private
   i⊔i≡i (suc i) = ≡.cong suc (i⊔i≡i i)
 
 {-
-seqTimeOpsD : FlatFunsOps (constFuns Diffℕ)
+seqTimeOpsD : FunOps (constFuns Diffℕ)
 seqTimeOpsD = record {
             id = 0#; _∘_ = _∘′_;
             <0b> = 0#; <1b> = 0#; cond = 1#; fork = 1+_+_D; tt = 0#;
@@ -58,7 +58,7 @@ seqTimeOpsD = record {
 module SeqTimeOpsD where
   Time = Diffℕ
   open D
-  open FlatFunsOps seqTimeOpsD public
+  open FunOps seqTimeOpsD public
 
   snoc≡0 : ∀ n → snoc {n} ≗ 0#
   snoc≡0 zero x = ≡.refl
@@ -140,7 +140,7 @@ seqTimeRewiring =
     fst = 0;
     snd = 0 }
 
-seqTimeOps : FlatFunsOps TimeCost
+seqTimeOps : FunOps TimeCost
 seqTimeOps = record { rewiring = seqTimeRewiring;
                       <0b> = 0; <1b> = 0; cond = 1; fork = 1+_+_ }
 
@@ -172,7 +172,7 @@ timeRewiring =
     fst = 0;
     snd = 0 }
 
-timeOps : FlatFunsOps TimeCost
+timeOps : FunOps TimeCost
 timeOps = record { rewiring = timeRewiring;
                    <0b> = 0; <1b> = 0; cond = 1; fork = 1+_⊔_ }
 
@@ -184,7 +184,7 @@ timeOps≡seqTimeOps : timeOps ≡ record seqTimeOps {
                                 fork = 1+_⊔_ }
                                 {-;
                                 cons = 0; uncons = 0 } -- Without cons = 0... this definition makes
-                                                       -- the FlatFunsOps record def yellow
+                                                       -- the FunOps record def yellow
                                                        -}
 timeOps≡seqTimeOps = ≡.refl
 -}
@@ -192,7 +192,7 @@ timeOps≡seqTimeOps = ≡.refl
 {-
 open import maxsemiring
 open ⊔-+-SemiringSolver
-timeOps' : ∀ n → FlatFunsOps (constFuns (Polynomial n))
+timeOps' : ∀ n → FunOps (constFuns (Polynomial n))
 timeOps' n = record {
             id = con 0; _∘_ = _:*_;
             <0b> = con 0; <1b> = con 0; cond = con 1; fork = 1+_+_; tt = con 0;
@@ -205,7 +205,7 @@ timeOps' n = record {
 
 Module TimeOps' where
   Time = ℕ
-  open FlatFunsOps (timeOps' 1) public
+  open FunOps (timeOps' 1) public
 
   snoc≡0 : ∀ n → snoc {n} := con 0
   snoc≡0 zero = ?
@@ -213,7 +213,7 @@ Module TimeOps' where
 -}
 
 module TimeOps where
-  open FlatFunsOps timeOps public
+  open FunOps timeOps public
 
   snoc≡0 : ∀ n → snoc {n} ≡ 0
   snoc≡0 zero = ≡.refl
@@ -291,7 +291,7 @@ spaceRewiring =
     fst = 0;
     snd = 0 }
 
-spaceOps : FlatFunsOps SpaceCost
+spaceOps : FunOps SpaceCost
 spaceOps = record { rewiring = spaceRewiring;
                     <0b> = 1; <1b> = 1; cond = 1; fork = 1+_+_ }
 
@@ -304,7 +304,7 @@ spaceOps≡seqTimeOps = ≡.refl
 -}
 
 module SpaceOps where
-  open FlatFunsOps spaceOps public
+  open FunOps spaceOps public
 
   snoc≡0 : ∀ n → snoc {n} ≡ 0
   snoc≡0 zero = ≡.refl
@@ -357,8 +357,8 @@ module SpaceOps where
                                    = ≡.refl
 
 {-
-time×spaceOps : FlatFunsOps (constFuns (ℕ × ℕ))
-time×spaceOps = ×⊤-♭Ops timeOps spaceOps
+time×spaceOps : FunOps (constFuns (ℕ × ℕ))
+time×spaceOps = ×⊤-Ops timeOps spaceOps
 
-module Time×SpaceOps = FlatFunsOps time×spaceOps
+module Time×SpaceOps = FunOps time×spaceOps
 -}
