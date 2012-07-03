@@ -15,6 +15,7 @@ open ≡ using (_≡_; _≗_)
 open import Data.Bits using (Bits; 0∷_; 1∷_)
 
 open import flat-funs
+open import flat-funs-implem
 
 module D where
   open Data.DifferenceNat public renaming (suc to suc#; _+_ to _+#_)
@@ -42,6 +43,7 @@ private
   i⊔i≡i zero = ≡.refl
   i⊔i≡i (suc i) = ≡.cong suc (i⊔i≡i i)
 
+{-
 seqTimeOpsD : FlatFunsOps (constFuns Diffℕ)
 seqTimeOpsD = record {
             id = 0#; _∘_ = _∘′_;
@@ -103,33 +105,89 @@ module SeqTimeOpsD where
   fromBitsFun≡ {zero} f x = constBits≡0 (f []) x
   fromBitsFun≡ {suc i} f x rewrite fromBitsFun≡ {i} (f ∘′ 1∷_) x
                                  | fromBitsFun≡ {i} (f ∘′ 0∷_) (#nodes i x) = ≡.refl
+-}
 
-seqTimeOps : FlatFunsOps (constFuns ℕ)
-seqTimeOps = record {
-            id = 0; _∘_ = _+_;
-            <0b> = 0; <1b> = 0; cond = 1; fork = 1+_+_; tt = 0;
-            <_,_> = _+_; fst = 0; snd = 0;
-            dup = 0; first = F.id; swap = 0; assoc = 0;
-            <tt,id> = 0; snd<tt,> = 0;
-            <_×_> = _+_; second = F.id;
-            nil = 0; cons = 0; uncons = 0 }
+Time = ℕ
+TimeCost = constFuns Time
+Space = ℕ
+SpaceCost = constFuns Space
 
-timeOps : FlatFunsOps (constFuns ℕ)
-timeOps = record {
-            id = 0; _∘_ = _+_;
-            <0b> = 0; <1b> = 0; cond = 1; fork = 1+_⊔_; tt = 0;
-            <_,_> = _⊔_; fst = 0; snd = 0;
-            dup = 0; first = F.id; swap = 0; assoc = 0;
-            <tt,id> = 0; snd<tt,> = 0;
-            <_×_> = _⊔_; second = F.id;
-            nil = 0; cons = 0; uncons = 0 }
+seqTimeLin : LinRewiring TimeCost
+seqTimeLin =
+  record {
+    id = 0;
+    _∘_ = _+_;
+    first = F.id;
+    swap = 0;
+    assoc = 0;
+    <tt,id> = 0;
+    snd<tt,> = 0;
+    <_×_> = _+_;
+    second = F.id;
+    tt→nil = 0;
+    nil→tt = 0;
+    cons = 0;
+    uncons = 0 }
 
+seqTimeRewiring : Rewiring TimeCost
+seqTimeRewiring =
+  record {
+    linRewiring = seqTimeLin;
+    tt = 0;
+    dup = 0;
+    nil = 0;
+    <_,_> = _+_;
+    fst = 0;
+    snd = 0 }
 
+seqTimeOps : FlatFunsOps TimeCost
+seqTimeOps = record { rewiring = seqTimeRewiring;
+                      <0b> = 0; <1b> = 0; cond = 1; fork = 1+_+_ }
+
+timeLin : LinRewiring TimeCost
+timeLin =
+  record {
+    id = 0;
+    _∘_ = _+_;
+    first = F.id;
+    swap = 0;
+    assoc = 0;
+    <tt,id> = 0;
+    snd<tt,> = 0;
+    <_×_> = _⊔_;
+    second = F.id;
+    tt→nil = 0;
+    nil→tt = 0;
+    cons = 0;
+    uncons = 0 }
+
+timeRewiring : Rewiring TimeCost
+timeRewiring =
+  record {
+    linRewiring = timeLin;
+    tt = 0;
+    dup = 0;
+    nil = 0;
+    <_,_> = _⊔_;
+    fst = 0;
+    snd = 0 }
+
+timeOps : FlatFunsOps TimeCost
+timeOps = record { rewiring = timeRewiring;
+                   <0b> = 0; <1b> = 0; cond = 1; fork = 1+_⊔_ }
+
+{-
 timeOps≡seqTimeOps : timeOps ≡ record seqTimeOps {
-                                <_,_> = _⊔_; <_×_> = _⊔_; fork = 1+_⊔_
-                              ; cons = 0; uncons = 0 } -- Without cons = 0... this definition makes
+                                rewiring = record seqTimeRewiring {
+                                             linRewiring = record seqTimeLin { <_×_> = _⊔_ };
+                                             <_,_> = _⊔_};
+                                fork = 1+_⊔_ }
+                                {-;
+                                cons = 0; uncons = 0 } -- Without cons = 0... this definition makes
                                                        -- the FlatFunsOps record def yellow
+                                                       -}
 timeOps≡seqTimeOps = ≡.refl
+-}
 
 {-
 open import maxsemiring
@@ -155,7 +213,6 @@ Module TimeOps' where
 -}
 
 module TimeOps where
-  Time = ℕ
   open FlatFunsOps timeOps public
 
   snoc≡0 : ∀ n → snoc {n} ≡ 0
@@ -186,10 +243,10 @@ module TimeOps where
   maximum : ∀ {n} → Vec ℕ n → ℕ
   maximum = V.foldr (const ℕ) (λ {_} x y → x ⊔ y) 0
 
-  constVec≡maximum : ∀ {n b} {B : Set b} (f : B → Time) xs → constVec {n} f xs ≡ maximum (V.map f xs)
-  constVec≡maximum f [] = ≡.refl
-  constVec≡maximum {suc n} f (b ∷ bs) rewrite ℕ°.+-comm (f b ⊔ constVec f bs) 0
-                                            | constVec≡maximum f bs = ≡.refl
+  constVec⊤≡maximum : ∀ {n b} {B : Set b} (f : B → Time) xs → constVec⊤ {n} f xs ≡ maximum (V.map f xs)
+  constVec⊤≡maximum f [] = ≡.refl
+  constVec⊤≡maximum {suc n} f (b ∷ bs) rewrite ℕ°.+-comm (f b ⊔ constVec⊤ f bs) 0
+                                              | constVec⊤≡maximum f bs = ≡.refl
 
   constBits≡0 : ∀ {n} xs → constBits {n} xs ≡ 0
   constBits≡0 [] = ≡.refl
@@ -203,24 +260,50 @@ module TimeOps where
                                 | ℕ°.+-comm (i ⊔ i) 0
                                 = ≡.cong suc (i⊔i≡i i)
 
-spaceOps : FlatFunsOps (constFuns ℕ)
-spaceOps = record {
-             id = 0; _∘_ = _+_;
-             <0b> = 1; <1b> = 1; cond = 1; fork = 1+_+_; tt = 0;
-             <_,_> = 1+_+_; fst = 0; snd = 0;
-             dup = 1; first = F.id; swap = 0; assoc = 0;
-             <tt,id> = 0; snd<tt,> = 0;
-             <_×_> = _+_; second = F.id;
-             nil = 0; cons = 0; uncons = 0 }
+spaceLin : LinRewiring SpaceCost
+spaceLin =
+  record {
+    id = 0;
+    _∘_ = _+_;
+    first = F.id;
+    swap = 0;
+    assoc = 0;
+    <tt,id> = 0;
+    snd<tt,> = 0;
+    <_×_> = _+_;
+    second = F.id;
+    tt→nil = 0;
+    nil→tt = 0;
+    cons = 0;
+    uncons = 0 }
 
+spaceLin≡seqTimeLin : spaceLin ≡ seqTimeLin
+spaceLin≡seqTimeLin = ≡.refl
+
+spaceRewiring : Rewiring TimeCost
+spaceRewiring =
+  record {
+    linRewiring = spaceLin;
+    tt = 0;
+    dup = 1;
+    nil = 0;
+    <_,_> = 1+_+_;
+    fst = 0;
+    snd = 0 }
+
+spaceOps : FlatFunsOps SpaceCost
+spaceOps = record { rewiring = spaceRewiring;
+                    <0b> = 1; <1b> = 1; cond = 1; fork = 1+_+_ }
+
+             {-
 -- So far the space cost model is like the sequential time cost model but makes <0b>,<1b>,dup
 -- cost one unit of space.
 spaceOps≡seqTimeOps : spaceOps ≡ record seqTimeOps { <0b> = 1; <1b> = 1; dup = 1; <_,_> = 1+_+_
                                                     ; cons = 0; uncons = 0 } -- same bug here
 spaceOps≡seqTimeOps = ≡.refl
+-}
 
 module SpaceOps where
-  Space = ℕ
   open FlatFunsOps spaceOps public
 
   snoc≡0 : ∀ n → snoc {n} ≡ 0
@@ -248,10 +331,13 @@ module SpaceOps where
   constBit≡1 true  = ≡.refl
   constBit≡1 false = ≡.refl
 
+  constVec⊤≡sum : ∀ {n b} {B : Set b} (f : B → Space) xs → constVec⊤ {n} f xs ≡ V.sum (V.map f xs)
+  constVec⊤≡sum f [] = ≡.refl
+  constVec⊤≡sum {suc n} f (b ∷ bs) rewrite ℕ°.+-comm (f b + constVec⊤ f bs) 0
+                                          | constVec⊤≡sum f bs = ≡.refl
+
   constVec≡sum : ∀ {n b} {B : Set b} (f : B → Space) xs → constVec {n} f xs ≡ V.sum (V.map f xs)
-  constVec≡sum f [] = ≡.refl
-  constVec≡sum {suc n} f (b ∷ bs) rewrite ℕ°.+-comm (f b + constVec f bs) 0
-                                        | constVec≡sum f bs = ≡.refl
+  constVec≡sum f xs rewrite constVec⊤≡sum f xs | ℕ°.+-comm (V.sum (V.map f xs)) 0 = ≡.refl
 
   constBits≡n : ∀ {n} xs → constBits {n} xs ≡ n
   constBits≡n [] = ≡.refl
@@ -270,7 +356,9 @@ module SpaceOps where
                                    | ℕ°.+-comm (2* (fromBitsFun-cost i o)) 0
                                    = ≡.refl
 
+{-
 time×spaceOps : FlatFunsOps (constFuns (ℕ × ℕ))
 time×spaceOps = ×⊤-♭Ops timeOps spaceOps
 
 module Time×SpaceOps = FlatFunsOps time×spaceOps
+-}
