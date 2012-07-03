@@ -90,7 +90,7 @@ module AbsSemSec {t} {T : Set t}
     M²  = Bit → M
     `M² = `Bit `→ `M
 
-    module Ops (♭ops : FlatFunsOps ♭Funs) where
+    module AdvOps (♭ops : FlatFunsOps ♭Funs) where
       open FlatFunsOps ♭ops
       observe : `C `× `Rᵃ `→ (`M `× `M) `× `Bit
       observe = second step₀ ⁏ ⟨C,⟨M,S⟩⟩→⟨M,⟨C,S⟩⟩ ⁏ second step₁
@@ -109,7 +109,7 @@ module FunSemSec (prgDist : PrgDist) where
 
   module FunSemSecAdv {ep : EncParams} {|R|ᵃ} (A : SemSecAdv ep |R|ᵃ) where
     open SemSecAdv A public
-    open Ops fun♭Ops public
+    open AdvOps fun♭Ops public
 
     step₀F : Rᵃ → (M² × S)
     step₀F = step₀ ⁏ first proj
