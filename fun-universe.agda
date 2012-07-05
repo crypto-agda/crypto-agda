@@ -9,7 +9,7 @@ import Data.Vec.NP as V
 import Level as L
 open V using (Vec; []; _∷_)
 
-open import Data.Bits using (Bit; Bits; _→ᵇ_; RewireTbl)
+open import Data.Bits using (Bit; Bits; _→ᵇ_; RewireTbl; 0ⁿ; 1ⁿ)
 
 import bintree as Tree
 open Tree using (Tree)
@@ -26,6 +26,9 @@ record FunUniverse {t} (T : Set t) : Set (L.suc t) where
 
   _`→ᵇ_ : ℕ → ℕ → Set
   i `→ᵇ o = `Bits i `→ `Bits o
+
+  `Endo : T → Set
+  `Endo A = A `→ A
 
 module Defaults {t} {T : Set t} (funU : FunUniverse T) where
   open FunUniverse funU
@@ -209,9 +212,9 @@ record LinRewiring {t} {T : Set t} (funU : FunUniverse T) : Set t where
     second : ∀ {A B C} → (B `→ C) → (A `× B) `→ (A `× C)
 
     -- Vectors
-    tt→nil : ∀ {A} → `⊤ `→ `Vec A 0
-    nil→tt : ∀ {A} → `Vec A 0 `→ `⊤
-    cons    : ∀ {n A} → (A `× `Vec A n) `→ `Vec A (1 + n)
+    tt→[] : ∀ {A} → `⊤ `→ `Vec A 0
+    []→tt : ∀ {A} → `Vec A 0 `→ `⊤
+    <∷>    : ∀ {n A} → (A `× `Vec A n) `→ `Vec A (1 + n)
     uncons  : ∀ {n A} → `Vec A (1 + n) `→ (A `× `Vec A n)
 
   open Defaults funU
@@ -231,11 +234,11 @@ record LinRewiring {t} {T : Set t} (funU : FunUniverse T) : Set t where
   fst<,tt> : ∀ {A} → A `× `⊤ `→ A
   fst<,tt> = swap ⁏ snd<tt,>
 
-  fst<,nil> : ∀ {A B} → A `× `Vec B 0 `→ A
-  fst<,nil> = second nil→tt ⁏ fst<,tt>
+  fst<,[]> : ∀ {A B} → A `× `Vec B 0 `→ A
+  fst<,[]> = second []→tt ⁏ fst<,tt>
 
-  snd<nil,> : ∀ {A B} → `Vec A 0 `× B `→ B
-  snd<nil,> = first nil→tt ⁏ snd<tt,>
+  snd<[],> : ∀ {A B} → `Vec A 0 `× B `→ B
+  snd<[],> = first []→tt ⁏ snd<tt,>
 
   -- Like first, but applies on a triple associated the other way
   assoc-first : ∀ {A B C D E} → (A `× B `→ D `× E) → A `× B `× C `→ D `× E `× C
@@ -261,50 +264,50 @@ record LinRewiring {t} {T : Set t} (funU : FunUniverse T) : Set t where
                     < snd × snd > ⁏ g >
 -}
 
-  <_∷_> : ∀ {m n A B} → (A `→ B) → (`Vec A m `→ `Vec B n)
-                  → `Vec A (1 + m) `→ `Vec B (1 + n)
-  < f ∷ g > = uncons ⁏ < f × g > ⁏ cons
-
   <_∷′_> : ∀ {n A B C} → (A `→ C) → (B `→ `Vec C n)
                        → A `× B `→ `Vec C (1 + n)
-  < f ∷′ g > = < f × g > ⁏ cons
+  < f ∷′ g > = < f × g > ⁏ <∷>
+
+  <_∷_> : ∀ {m n A B} → (A `→ B) → (`Vec A m `→ `Vec B n)
+                  → `Vec A (1 + m) `→ `Vec B (1 + n)
+  < f ∷ g > = uncons ⁏ < f ∷′ g >
 
   <tt⁏_∷′_> : ∀ {n A B} → (`⊤ `→ B) → (A `→ `Vec B n)
                        → A `→ `Vec B (1 + n)
-  <tt⁏ f ∷′ g > = <tt⁏ f , g > ⁏ cons
+  <tt⁏ f ∷′ g > = <tt⁏ f , g > ⁏ <∷>
 
   <_∷′tt⁏_> : ∀ {n A B} → (A `→ B) → (`⊤ `→ `Vec B n)
                         → A `→ `Vec B (1 + n)
-  < f ∷′tt⁏ g > = < f ,tt⁏ g > ⁏ cons
+  < f ∷′tt⁏ g > = < f ,tt⁏ g > ⁏ <∷>
 
-  <_∷nil> : ∀ {A B} → (A `→ B) → A `→ `Vec B 1
-  < f ∷nil> = < f ∷′tt⁏ tt→nil >
+  <_∷[]> : ∀ {A B} → (A `→ B) → A `→ `Vec B 1
+  < f ∷[]> = < f ∷′tt⁏ tt→[] >
 
-  <nil,_> : ∀ {A B C} → (A `→ B) → A `→ `Vec C 0 `× B
-  <nil, f > = <tt⁏ tt→nil , f >
+  <[],_> : ∀ {A B C} → (A `→ B) → A `→ `Vec C 0 `× B
+  <[], f > = <tt⁏ tt→[] , f >
 
-  <_,nil> : ∀ {A B C} → (A `→ B) → A `→ B `× `Vec C 0
-  < f ,nil> = < f ,tt⁏ tt→nil >
+  <_,[]> : ∀ {A B C} → (A `→ B) → A `→ B `× `Vec C 0
+  < f ,[]> = < f ,tt⁏ tt→[] >
 
   head<∷> : ∀ {A} → `Vec A 1 `→ A
-  head<∷> = uncons ⁏ fst<,nil>
+  head<∷> = uncons ⁏ fst<,[]>
 
   constVec⊤ : ∀ {n a} {A : Set a} {B} → (A → `⊤ `→ B) → Vec A n → `⊤ `→ `Vec B n
-  constVec⊤ f [] = tt→nil
+  constVec⊤ f [] = tt→[]
   constVec⊤ f (x ∷ xs) = <tt⁏ f x ∷′ constVec⊤ f xs >
 
-  nil→nil : ∀ {A B} → `Vec A 0 `→ `Vec B 0
-  nil→nil = nil→tt ⁏ tt→nil
+  []→[] : ∀ {A B} → `Vec A 0 `→ `Vec B 0
+  []→[] = []→tt ⁏ tt→[]
 
-  <nil,nil>→nil : ∀ {A B C} → (`Vec A 0 `× `Vec B 0) `→ `Vec C 0
-  <nil,nil>→nil = fst<,nil> ⁏ nil→nil
+  <[],[]>→[] : ∀ {A B C} → (`Vec A 0 `× `Vec B 0) `→ `Vec C 0
+  <[],[]>→[] = fst<,[]> ⁏ []→[]
 
   <_⊛> : ∀ {n A B} → Vec (A `→ B) n → `Vec A n `→ `Vec B n
-  <_⊛> []       = nil→nil
+  <_⊛> []       = []→[]
   <_⊛> (f ∷ fs) = < f ∷ < fs ⊛> >
 
   foldl : ∀ {n A B} → (B `× A `→ B) → (B `× `Vec A n) `→ B
-  foldl {zero}  f = fst<,nil>
+  foldl {zero}  f = fst<,[]>
   foldl {suc n} f = second uncons
                   ⁏ assoc′
                   ⁏ first f
@@ -314,7 +317,7 @@ record LinRewiring {t} {T : Set t} (funU : FunUniverse T) : Set t where
   foldl₁ f = uncons ⁏ foldl f
 
   foldr : ∀ {n A B} → (A `× B `→ B) → (`Vec A n `× B) `→ B
-  foldr {zero}  f = snd<nil,>
+  foldr {zero}  f = snd<[],>
   foldr {suc n} f = first uncons
                   ⁏ assoc
                   ⁏ second (foldr f)
@@ -328,47 +331,51 @@ record LinRewiring {t} {T : Set t} (funU : FunUniverse T) : Set t where
 
   zipWith : ∀ {n A B C} → ((A `× B) `→ C)
                         → (`Vec A n `× `Vec B n) `→ `Vec C n
-  zipWith {zero}  f = <nil,nil>→nil
+  zipWith {zero}  f = <[],[]>→[]
   zipWith {suc n} f = < uncons × uncons >
                     ⁏ < f `zip` (zipWith f) >
-                    ⁏ cons
+                    ⁏ <∷>
 
   zip : ∀ {n A B} → (`Vec A n `× `Vec B n) `→ `Vec (A `× B) n
   zip = zipWith id
 
   snoc : ∀ {n A} → (`Vec A n `× A) `→ `Vec A (1 + n)
-  snoc {zero}  = < snd<nil,> ∷nil>
-  snoc {suc n} = first uncons ⁏ assoc ⁏ second snoc ⁏ cons
+  snoc {zero}  = < snd<[],> ∷[]>
+  snoc {suc n} = first uncons ⁏ assoc ⁏ second snoc ⁏ <∷>
 
   reverse : ∀ {n A} → `Vec A n `→ `Vec A n
   reverse {zero}  = id
   reverse {suc n} = uncons ⁏ swap ⁏ first reverse ⁏ snoc
 
   append : ∀ {m n A} → (`Vec A m `× `Vec A n) `→ `Vec A (m + n)
-  append {zero}  = snd<nil,>
+  append {zero}  = snd<[],>
   append {suc m} = first uncons
                  ⁏ assoc
                  ⁏ second append
-                 ⁏ cons
+                 ⁏ <∷>
+
+  <_++_> : ∀ {m n A} → (`⊤ `→ `Vec A m) → (`⊤ `→ `Vec A n) →
+                         `⊤ `→ `Vec A (m + n)
+  < f ++ g > = <tt⁏ f , g > ⁏ append
 
   splitAt : ∀ m {n A} → `Vec A (m + n) `→ (`Vec A m `× `Vec A n)
-  splitAt zero    = <nil, id >
+  splitAt zero    = <[], id >
   splitAt (suc m) = uncons
                   ⁏ second (splitAt m)
                   ⁏ assoc′
-                  ⁏ first cons
+                  ⁏ first <∷>
 
   folda : ∀ n {A} → (A `× A `→ A) → `Vec A (2^ n) `→ A
   folda zero    f = head<∷>
   folda (suc n) f = splitAt (2^ n) ⁏ < folda n f × folda n f > ⁏ f
 
   concat : ∀ {m n A} → `Vec (`Vec A m) n `→ `Vec A (n * m)
-  concat {n = zero}  = nil→nil
+  concat {n = zero}  = []→[]
   concat {n = suc n} = uncons ⁏ second concat ⁏ append
 
   group : ∀ {A} n k → `Vec A (n * k) `→ `Vec (`Vec A k) n
-  group zero    k = nil→nil
-  group (suc n) k = splitAt k ⁏ second (group n k) ⁏ cons
+  group zero    k = []→[]
+  group (suc n) k = splitAt k ⁏ second (group n k) ⁏ <∷>
 
   bind : ∀ {m n A B} → (A `→ `Vec B m) → `Vec A n `→ `Vec B (n * m)
   bind f = map f ⁏ concat
@@ -396,8 +403,8 @@ record Rewiring {t} {T : Set t} (funU : FunUniverse T) : Set t where
     dup : ∀ {A} → A `→ A `× A
 
     -- Vectors
-    nil    : ∀ {_⊤ A} → _⊤ `→ `Vec A 0
-    -- * cons and uncons come from LinRewiring
+    <[]> : ∀ {_⊤ A} → _⊤ `→ `Vec A 0
+    -- * <∷> and uncons come from LinRewiring
 
     -- Products (group 1 primitive functions or derived from group 2)
     <_,_> : ∀ {A B C} → (A `→ B) → (A `→ C) → A `→ B `× C
@@ -423,15 +430,21 @@ record Rewiring {t} {T : Set t} (funU : FunUniverse T) : Set t where
   constVec f vec = tt ⁏ constVec⊤ f vec
 
   take : ∀ m {n A} → `Vec A (m + n) `→ `Vec A m
-  take zero    = nil
+  take zero    = <[]>
   take (suc m) = < id ∷ take m >
 
   drop : ∀ m {n A} → `Vec A (m + n) `→ `Vec A n
   drop zero    = id
   drop (suc m) = tail ⁏ drop m
 
+  msb : ∀ m {n} → (m + n) `→ᵇ m
+  msb m = take m
+
+  lsb : ∀ {n} k → (n + k) `→ᵇ k
+  lsb {n} _ = drop n
+
   init : ∀ {n A} → `Vec A (1 + n) `→ `Vec A n
-  init {zero}  = nil
+  init {zero}  = <[]>
   init {suc n} = < id ∷ init >
 
   last : ∀ {n A} → `Vec A (1 + n) `→ A
@@ -439,12 +452,12 @@ record Rewiring {t} {T : Set t} (funU : FunUniverse T) : Set t where
   last {suc n} = tail ⁏ last
 
   replicate : ∀ {n A} → A `→ `Vec A n
-  replicate {zero}  = nil
-  replicate {suc n} = < id , replicate > ⁏ cons
+  replicate {zero}  = <[]>
+  replicate {suc n} = < id , replicate > ⁏ <∷>
 
   -- this is problematic if the space cost is 1 unit
   constBits′ : ∀ {n A} → Bits n → (A `× A) `→ `Vec A n
-  constBits′ [] = nil
+  constBits′ [] = <[]>
   constBits′ (b ∷ xs) = dup ⁏ < proj b ∷′ constBits′ xs >
 
 record FunOps {t} {T : Set t} (funU : FunUniverse T) : Set t where
@@ -464,7 +477,7 @@ record FunOps {t} {T : Set t} (funU : FunUniverse T) : Set t where
     -- * dup; <_,_>; fst; snd come from Rewiring
 
     -- Vectors
-    -- nil; cons; uncons come from Rewiring
+    -- <[]>; <∷>; uncons come from Rewiring
 
   open Defaults funU
   open Rewiring rewiring public
@@ -514,6 +527,12 @@ record FunOps {t} {T : Set t} (funU : FunUniverse T) : Set t where
   constBits : ∀ {n _⊤} → Bits n → _⊤ `→ `Bits n
   constBits = constVec constBit
 
+  <0ⁿ> : ∀ {n _⊤} → _⊤ `→ `Bits n
+  <0ⁿ> = constBits 0ⁿ
+
+  <1ⁿ> : ∀ {n _⊤} → _⊤ `→ `Bits n
+  <1ⁿ> = constBits 1ⁿ
+
   -- this is problematic if the space cost is 1 unit
   constBits′′ : ∀ {n _⊤} → Bits n → _⊤ `→ `Bits n
   constBits′′ bs = <0,1> ⁏ constBits′ bs
@@ -537,7 +556,7 @@ record FunOps {t} {T : Set t} (funU : FunUniverse T) : Set t where
   A `→? B = A `→ `Maybe B
 
   search : ∀ {n A} → (A `× A `→ A) → (`Bits n `→ A) → `⊤ `→ A
-  search {zero}  _  f = nil ⁏ f
+  search {zero}  _  f = <[]> ⁏ f
   search {suc n} op f = <tt⁏ search op (f ∘ <0∷>) , search op (f ∘ <1∷>) > ⁏ op
 
   find? : ∀ {n A} → (`Bits n `→? A) → `⊤ `→? A
@@ -556,6 +575,64 @@ record FunOps {t} {T : Set t} (funU : FunUniverse T) : Set t where
   fromBitsFun : ∀ {i o} → (i →ᵇ o) → i `→ᵇ o
   fromBitsFun f = fromFun (constBits ∘′ f)
 
+  not : `Bit `→ `Bit
+  not = <if id then <0b> else <1b> >
+
+  <xor> : `Bit `× `Bit `→ `Bit
+  <xor> = fork id not
+
+  <or> : `Bit `× `Bit `→ `Bit
+  <or> = fork id <1b>
+
+  <and> : `Bit `× `Bit `→ `Bit
+  <and> = fork <0b> id
+
+  <==ᵇ> : `Bit `× `Bit `→ `Bit
+  <==ᵇ> = <xor> ⁏ not
+
+  <==> : ∀ {n} → `Bits n `× `Bits n `→ `Bit
+  <==> {zero}  = <1b>
+  <==> {suc n} = < uncons × uncons > ⁏ < <==ᵇ> `zip` <==> {n} > ⁏ <or>
+
+  <⊕> : ∀ {n} → `Bits n `× `Bits n `→ `Bits n
+  <⊕> = zipWith <xor>
+
+  vnot : ∀ {n} → `Endo (`Bits n)
+  vnot = map not
+
+  allBits : ∀ n → `⊤ `→ `Vec (`Bits n) (2^ n)
+  allBits zero    = < <[]> ∷[]>
+  allBits (suc n) = < bs ⁏ map <0∷> ++ bs ⁏ map <1∷> >
+    where bs = allBits n
+
+  sucBCarry : ∀ {n} → `Bits n `→ `Bits (1 + n)
+  sucBCarry {zero}  = < <0b> ∷[]>
+  sucBCarry {suc n} = uncons
+                    ⁏ fork <0∷ sucBCarry >
+                          (sucBCarry ⁏ uncons ⁏ fork <0∷ <1∷> > <1∷ <0∷> >)
+
+  sucB : ∀ {n} → `Bits n `→ `Bits n
+  sucB = sucBCarry ⁏ tail
+
+  lookupTbl : ∀ {n A} → `Bits n `× `Vec A (2^ n) `→ A
+  lookupTbl {zero} = snd ⁏ head
+  lookupTbl {suc n}
+    = first uncons
+    ⁏ assoc
+    ⁏ fork (second (take (2^ n)) ⁏ lookupTbl)
+           (second (drop (2^ n)) ⁏ lookupTbl)
+
+  funFromTbl : ∀ {n A} → Vec (`⊤ `→ A) (2^ n) → (`Bits n `→ A)
+  funFromTbl {zero} (x ∷ []) = tt ⁏ x
+  funFromTbl {suc n} tbl
+    = uncons ⁏ fork (funFromTbl (V.take (2^ n) tbl))
+                    (funFromTbl (V.drop (2^ n) tbl))
+
+  tblFromFun : ∀ {n A} → (`Bits n `→ A) → `⊤ `→ `Vec A (2^ n)
+  tblFromFun {zero}  f = < <[]> ⁏ f ∷[]>
+  tblFromFun {suc n} f = < tblFromFun (<0∷> ⁏ f) ++
+                           tblFromFun (<1∷> ⁏ f) >
+
   module WithFin
     (`Fin : ℕ → T)
     (fz : ∀ {n _⊤} → _⊤ `→ `Fin (suc n))
@@ -564,7 +641,7 @@ record FunOps {t} {T : Set t} (funU : FunUniverse T) : Set t where
     (elim-Fin1+ : ∀ {n A B} → (A `→ B) → (`Fin n `× A `→ B) → `Fin (suc n) `× A `→ B) where
 
     tabulate : ∀ {n A _B} → (`Fin n `→ A) → _B `→ `Vec A n
-    tabulate {zero}  f = nil
+    tabulate {zero}  f = <[]>
     tabulate {suc n} f = <tt⁏ fz ⁏ f ∷′ tabulate (fs ⁏ f) >
 
     lookup : ∀ {n A} → `Fin n `× `Vec A n `→ A

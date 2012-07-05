@@ -52,7 +52,7 @@ seqTimeOpsD = record {
             dup = 0#; first = F.id; swap = 0#; assoc = 0#;
             <tt,id> = 0#; snd<tt,> = 0#;
             <_×_> = _∘′_; second = F.id;
-            nil = 0#; cons = 0#; uncons = 0# }
+            <[]> = 0#; <∷> = 0#; uncons = 0# }
             where open D
 
 module SeqTimeOpsD where
@@ -124,9 +124,9 @@ seqTimeLin =
     snd<tt,> = 0;
     <_×_> = _+_;
     second = F.id;
-    tt→nil = 0;
-    nil→tt = 0;
-    cons = 0;
+    tt→[] = 0;
+    []→tt = 0;
+    <∷> = 0;
     uncons = 0 }
 
 seqTimeRewiring : Rewiring TimeCost
@@ -135,7 +135,7 @@ seqTimeRewiring =
     linRewiring = seqTimeLin;
     tt = 0;
     dup = 0;
-    nil = 0;
+    <[]> = 0;
     <_,_> = _+_;
     fst = 0;
     snd = 0;
@@ -158,9 +158,9 @@ timeLin =
     snd<tt,> = 0;
     <_×_> = _⊔_;
     second = F.id;
-    tt→nil = 0;
-    nil→tt = 0;
-    cons = 0;
+    tt→[] = 0;
+    []→tt = 0;
+    <∷> = 0;
     uncons = 0 }
 
 timeRewiring : Rewiring TimeCost
@@ -169,7 +169,7 @@ timeRewiring =
     linRewiring = timeLin;
     tt = 0;
     dup = 0;
-    nil = 0;
+    <[]> = 0;
     <_,_> = _⊔_;
     fst = 0;
     snd = 0;
@@ -187,7 +187,7 @@ timeOps≡seqTimeOps : timeOps ≡ record seqTimeOps {
                                              <_,_> = _⊔_};
                                 fork = 1+_⊔_ }
                                 {-;
-                                cons = 0; uncons = 0 } -- Without cons = 0... this definition makes
+                                <∷> = 0; uncons = 0 } -- Without <∷> = 0... this definition makes
                                                        -- the FunOps record def yellow
                                                        -}
 timeOps≡seqTimeOps = ≡.refl
@@ -203,7 +203,7 @@ timeOps' n = record {
             <_,_> = _:*_; fst = con 0; snd = con 0;
             dup = con 0; <_×_> = _:+_; swap = con 0; assoc = con 0;
             <tt,id> = con 0; snd<tt,> = con 0;
-            nil = con 0; cons = con 0; uncons = con 0 }
+            <[]> = con 0; <∷> = con 0; uncons = con 0 }
    where 1+_+_ : Polynomial n → Polynomial n → Polynomial n
          1+ x + y = con 1 :* (x :* y)
 
@@ -276,9 +276,9 @@ spaceLin =
     snd<tt,> = 0;
     <_×_> = _+_;
     second = F.id;
-    tt→nil = 0;
-    nil→tt = 0;
-    cons = 0;
+    tt→[] = 0;
+    []→tt = 0;
+    <∷> = 0;
     uncons = 0 }
 
 spaceLin≡seqTimeLin : spaceLin ≡ seqTimeLin
@@ -290,7 +290,7 @@ spaceRewiring =
     linRewiring = spaceLin;
     tt = 0;
     dup = 1;
-    nil = 0;
+    <[]> = 0;
     <_,_> = 1+_+_;
     fst = 0;
     snd = 0;
@@ -305,7 +305,7 @@ spaceOps = record { rewiring = spaceRewiring;
 -- So far the space cost model is like the sequential time cost model but makes <0b>,<1b>,dup
 -- cost one unit of space.
 spaceOps≡seqTimeOps : spaceOps ≡ record seqTimeOps { <0b> = 1; <1b> = 1; dup = 1; <_,_> = 1+_+_
-                                                    ; cons = 0; uncons = 0 } -- same bug here
+                                                    ; <∷> = 0; uncons = 0 } -- same bug here
 spaceOps≡seqTimeOps = ≡.refl
 -}
 

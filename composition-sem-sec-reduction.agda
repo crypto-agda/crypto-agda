@@ -96,7 +96,7 @@ module PostNegSec (prgDist : PrgDist) ep where
   open EncParams² ep ep using (Tr)
   open CompSec prgDist ep |M| |C|
   open FunSemSec prgDist
-  open AgdaFunOps
+  open AgdaFunOps using (id)
   open SemSecReductions ep ep id
 
   post-neg : Tr
