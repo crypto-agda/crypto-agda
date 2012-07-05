@@ -1,10 +1,11 @@
 module prefect-bintree where
 
 open import Function
-open import Data.Nat.NP
+open import Data.Nat.NP using (ℕ; zero; suc; 2^_; _+_)
 open import Data.Bool
 open import Data.Bits
 open import Data.Vec using (Vec; _++_)
+open import Relation.Binary.PropositionalEquality
 
 data Tree {a} (A : Set a) : ℕ → Set a where
   leaf : (x : A) → Tree A zero
@@ -20,6 +21,16 @@ toFun (fork left right) (b ∷ bs) = toFun (if b then right else left) bs
 
 lookup : ∀ {n a} {A : Set a} → Bits n → Tree A n → A
 lookup = flip toFun
+
+fold : ∀ {n a} {A : Set a} (op : A → A → A) → Tree A n → A
+fold _   (leaf x) = x
+fold _·_ (fork t₀ t₁) = fold _·_ t₀ · fold _·_ t₁
+
+search≡fold∘fromFun : ∀ {n a} {A : Set a} op (f : Bits n → A) → search op f ≡ fold op (fromFun f)
+search≡fold∘fromFun {zero}  op f = refl
+search≡fold∘fromFun {suc n} op f
+  rewrite search≡fold∘fromFun op (f ∘ 0∷_)
+        | search≡fold∘fromFun op (f ∘ 1∷_) = refl
 
 -- Returns the flat vector of leaves underlying the perfect binary tree.
 toVec : ∀ {n a} {A : Set a} → Tree A n → Vec A (2^ n)

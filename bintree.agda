@@ -29,6 +29,16 @@ toFun∘fromFun {zero}  f []        = refl
 toFun∘fromFun {suc n} f (false {-0b-} ∷ bs) = toFun∘fromFun {n} (f ∘ 0∷_) bs
 toFun∘fromFun {suc n} f (true  {-1b-} ∷ bs) = toFun∘fromFun {n} (f ∘ 1∷_) bs
 
+fold : ∀ {n a} {A : Set a} (op : A → A → A) → Tree A n → A
+fold _   (leaf x) = x
+fold _·_ (fork t₀ t₁) = fold _·_ t₀ · fold _·_ t₁
+
+search≡fold∘fromFun : ∀ {n a} {A : Set a} op (f : Bits n → A) → search op f ≡ fold op (fromFun f)
+search≡fold∘fromFun {zero}  op f = refl
+search≡fold∘fromFun {suc n} op f
+  rewrite search≡fold∘fromFun op (f ∘ 0∷_)
+        | search≡fold∘fromFun op (f ∘ 1∷_) = refl
+
 leafⁿ : ∀ {n a} {A : Set a} → A → Tree A n
 leafⁿ {zero}  x = leaf x
 leafⁿ {suc n} x = fork t t where t = leafⁿ x
