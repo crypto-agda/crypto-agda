@@ -2,14 +2,16 @@ module circuit where
 
 open import Function
 open import Data.Nat.NP hiding (_≟_; compare)
-open import Data.Bits
+open import Data.Bits hiding (rewire; rewireTbl)
 open import Data.Bits.Bits2
 open import Data.Bool hiding (_≟_)
 open import Data.Product hiding (swap; map)
 import Data.Fin.NP as Fin
 open Fin using (Fin; zero; suc; inject+; raise; #_)
 open import Data.List using (List; []; _∷_)
-open import Data.Vec.NP as Vec using (Vec; []; _∷_; foldr; _[_]≔_; lookup; _++_; splitAt; tabulate; allFin; concat; ++-decomp) renaming (map to vmap)
+import Data.Vec.NP as Vec
+open Vec using (Vec; []; _∷_; foldr; _[_]≔_; lookup; _++_; splitAt; tabulate; allFin; concat; ++-decomp)
+         renaming (map to vmap)
 open import Data.Vec.Properties
 open import Relation.Nullary.Decidable hiding (map)
 open import Relation.Binary.PropositionalEquality
@@ -25,22 +27,6 @@ RunCircuit C = ∀ {i o} → C i o → Bits i → Bits o
 
 RewireFun : CircuitType
 RewireFun i o = Fin o → Fin i
-
-RewireTbl : CircuitType
-RewireTbl i o = Vec (Fin i) o
-
-module Rewire where
-  rewire : ∀ {a i o} {A : Set a} → (Fin o → Fin i) → Vec A i → Vec A o
-  rewire f v = tabulate (flip lookup v ∘ f)
-
-  rewireTbl : ∀ {a i o} {A : Set a} → RewireTbl i o → Vec A i → Vec A o
-  rewireTbl tbl v = vmap (flip lookup v) tbl
-
-  runRewireFun : RunCircuit RewireFun
-  runRewireFun = rewire
-
-  runRewireTbl : RunCircuit RewireTbl
-  runRewireTbl = rewireTbl
 
 record RewiringBuilder (C : CircuitType) : Set₁ where
   constructor mk
@@ -66,7 +52,7 @@ record RewiringBuilder (C : CircuitType) : Set₁ where
   field
     _=[_]=_ : ∀ {i o} → Bits i → C i o → Bits o → Set
 
-    rewire-spec : ∀ {i o} (r : RewireFun i o) is → is =[ rewire r ]= Rewire.rewire r is
+    rewire-spec : ∀ {i o} (r : RewireFun i o) is → is =[ rewire r ]= Vec.rewire r is
 
 {-
     _>>>-spec_ : ∀ {i m o} {c₀ : C i m} {c₁ : C m o} {is ms os} →
@@ -79,7 +65,7 @@ record RewiringBuilder (C : CircuitType) : Set₁ where
     idC-spec : ∀ {i} (bs : Bits i) → bs =[ idC ]= bs
 {-
   rewireWithTbl-spec : ∀ {i o} (t : RewireTbl i o) is
-                       → is =[ rewireWithTbl t ]= Rewire.rewireTbl t is
+                       → is =[ rewireWithTbl t ]= Vec.rewireTbl t is
   rewireWithTbl-spec t is = {!rewire-spec ? ?!}
 -}
 
@@ -313,9 +299,9 @@ finFunRewiringBuilder = mk (opComp (ixFunComp Fin)) finFunOpVComp id id _=[_]=_ 
     C = _→ᶠ_
 
     _=[_]=_ : ∀ {i o} → Bits i → C i o → Bits o → Set
-    input =[ f ]= output = Rewire.rewire f input ≡ output
+    input =[ f ]= output = Vec.rewire f input ≡ output
 
-    rewire-spec : ∀ {i o} (r : RewireFun i o) bs → bs =[ r ]= Rewire.rewire r bs
+    rewire-spec : ∀ {i o} (r : RewireFun i o) bs → bs =[ r ]= Vec.rewire r bs
     rewire-spec r bs = refl
 
     idC-spec : ∀ {i} (bs : Bits i) → bs =[ id ]= bs
@@ -324,13 +310,12 @@ finFunRewiringBuilder = mk (opComp (ixFunComp Fin)) finFunOpVComp id id _=[_]=_ 
 tblRewiringBuilder : RewiringBuilder RewireTbl
 tblRewiringBuilder = mk (mk _>>>_) (mk _***_) tabulate (allFin _) _=[_]=_ rewire-spec idC-spec
   where
-    open Rewire
     C = RewireTbl
 
     _=[_]=_ : ∀ {i o} → Bits i → C i o → Bits o → Set
-    input =[ tbl ]= output = Rewire.rewireTbl tbl input ≡ output
+    input =[ tbl ]= output = Vec.rewireTbl tbl input ≡ output
 
-    rewire-spec : ∀ {i o} (r : RewireFun i o) bs → bs =[ tabulate r ]= Rewire.rewire r bs
+    rewire-spec : ∀ {i o} (r : RewireFun i o) bs → bs =[ tabulate r ]= Vec.rewire r bs
     rewire-spec r bs = sym (tabulate-∘ (flip lookup bs) r)
 
     idC-spec : ∀ {i} (bs : Bits i) → bs =[ allFin _ ]= bs
@@ -338,7 +323,7 @@ tblRewiringBuilder = mk (mk _>>>_) (mk _***_) tabulate (allFin _) _=[_]=_ rewire
     idC-spec bs rewrite rewire-spec id bs = tabulate∘lookup bs
 
     _>>>_ : ∀ {i m o} → C i m → C m o → C i o
-    c₀ >>> c₁ = rewireTbl c₁ c₀
+    c₀ >>> c₁ = Vec.rewireTbl c₁ c₀
     -- c₀ >>> c₁ = tabulate (flip lookup c₀ ∘ flip lookup c₁)
     -- c₀ >>> c₁ = vmap (flip lookup c₀) c₁
 
@@ -346,14 +331,14 @@ tblRewiringBuilder = mk (mk _>>>_) (mk _***_) tabulate (allFin _) _=[_]=_ rewire
     _***_ {i₀} c₀ c₁ = vmap (inject+ _) c₀ ++ vmap (raise i₀) c₁
 
 bitsFunRewiringBuilder : RewiringBuilder _→ᵇ_
-bitsFunRewiringBuilder = mk bitsFunComp bitsFunVComp Rewire.rewire id _=[_]=_ rewire-spec idC-spec
+bitsFunRewiringBuilder = mk bitsFunComp bitsFunVComp Vec.rewire id _=[_]=_ rewire-spec idC-spec
   where
     C = _→ᵇ_
 
     _=[_]=_ : ∀ {i o} → Bits i → C i o → Bits o → Set
     input =[ f ]= output = f input ≡ output
 
-    rewire-spec : ∀ {i o} (r : RewireFun i o) bs → bs =[ Rewire.rewire r ]= Rewire.rewire r bs
+    rewire-spec : ∀ {i o} (r : RewireFun i o) bs → bs =[ Vec.rewire r ]= Vec.rewire r bs
     rewire-spec r bs = refl
 
     idC-spec : ∀ {i} (bs : Bits i) → bs =[ id ]= bs
@@ -385,12 +370,12 @@ treeBitsRewiringBuilder = mk bintree.composable bintree.vcomposable rewire (rewi
     C = TreeBits
 
     rewire : ∀ {i o} → RewireFun i o → C i o
-    rewire f = fromFun (Rewire.rewire f)
+    rewire f = fromFun (Vec.rewire f)
 
     _=[_]=_ : ∀ {i o} → Bits i → C i o → Bits o → Set
     input =[ tree ]= output = toFun tree input ≡ output
 
-    rewire-spec : ∀ {i o} (r : RewireFun i o) bs → bs =[ rewire r ]= Rewire.rewire r bs
+    rewire-spec : ∀ {i o} (r : RewireFun i o) bs → bs =[ rewire r ]= Vec.rewire r bs
     rewire-spec r = toFun∘fromFun (tabulate ∘ flip (Vec.lookup ∘ r))
 
     idC-spec : ∀ {i} (bs : Bits i) → bs =[ rewire id ]= bs

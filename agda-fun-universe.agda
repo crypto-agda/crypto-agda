@@ -30,6 +30,7 @@ funLin = mk F.id _∘′_
 
 funRewiring : Rewiring agdaFunU
 funRewiring = mk funLin _ (λ x → x , x) (F.const []) ×.<_,_> proj₁ proj₂
+                 V.rewire V.rewireTbl
 
 agdaFunOps : FunOps agdaFunU
 agdaFunOps = mk funRewiring (F.const 0b) (F.const 1b) (λ { (b , x , y) → if b then x else y })

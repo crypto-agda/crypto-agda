@@ -1,7 +1,8 @@
 module bits-fun-universe where
 
-open import Data.Nat using (ℕ)
+open import Data.Nat.NP using (ℕ; _*_; module ℕ°)
 open import Data.Bool using (if_then_else_)
+open import Data.Fin using (Fin)
 import Data.Vec.NP as V
 import Function as F
 import Data.Product as ×
@@ -9,7 +10,7 @@ open F using (const; _∘′_)
 open V using (Vec; []; _∷_; _++_; [_])
 open × using (_×_; _,_; proj₁; proj₂; uncurry)
 
-open import Data.Bits using (_→ᵇ_; 0b; 1b)
+open import Data.Bits using (_→ᵇ_; 0b; 1b; RewireTbl)
 
 open import data-universe
 open import fun-universe
@@ -32,6 +33,11 @@ bitsFunOps = mk rewiring (const [ 0b ]) (const [ 1b ]) cond forkᵇ
   <_,_>ᵇ f g x = f x ++ g x
   forkᵇ : ∀ {A B} (f g : A `→ B) → `Bit `× A `→ B
   forkᵇ f g (b ∷ xs) = (if b then f else g) xs
+
+  cong-*1 : ∀ {i o} → i `→ o → (i * 1) `→ (o * 1)
+  cong-*1 {i} {o} rewrite proj₂ ℕ°.*-identity i
+                        | proj₂ ℕ°.*-identity o = id
+
   open Defaults bitsFunU
   open DefaultsGroup2 id _∘′_ (const []) <_,_>ᵇ fstᵇ (λ {x} → sndᵇ x)
   open DefaultCond forkᵇ fstᵇ (λ {x} → sndᵇ x)
@@ -42,6 +48,7 @@ bitsFunOps = mk rewiring (const [ 0b ]) (const [ 1b ]) cond forkᵇ
 
   rewiring : Rewiring bitsFunU
   rewiring = mk lin (const []) dup (const []) <_,_>ᵇ fstᵇ (λ {x} → sndᵇ x)
+                (cong-*1 ∘′ V.rewire) (cong-*1 ∘′ V.rewireTbl)
 
 bitsFunRewiring : Rewiring bitsFunU
 bitsFunRewiring = FunOps.rewiring bitsFunOps
