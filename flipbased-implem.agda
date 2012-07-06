@@ -4,9 +4,10 @@ open import Function
 open import Data.Bits
 open import Data.Nat.NP
 open import Data.Vec
+open import Relation.Binary
 import Relation.Binary.PropositionalEquality as ≡
 import Data.Fin as Fin
-open ≡ using (_≗_)
+open ≡ using (_≗_; _≡_)
 open Fin using (Fin; suc)
 
 import flipbased
@@ -57,8 +58,38 @@ open flipbased ↺ toss weaken≤ return↺ map↺ join↺ public
 _≗↺_ : ∀ {c a} {A : Set a} (f g : ↺ c A) → Set a
 f ≗↺ g = run↺ f ≗ run↺ g
 
-count↺ᶠ : ∀ {c} → ↺ c Bit → Fin (suc (2^ c))
+⅁ : ℕ → Set
+⅁ n = ↺ n Bit
+
+_≗⅁_ : ∀ {c} (⅁₀ ⅁₁ : Bit → ⅁ c) → Set
+⅁₀ ≗⅁ ⅁₁ = ∀ b → ⅁₀ b ≗↺ ⅁₁ b
+
+≗⅁-trans : ∀ {c} → Transitive (_≗⅁_ {c})
+≗⅁-trans p q b R = ≡.trans (p b R) (q b R)
+
+count↺ᶠ : ∀ {c} → ⅁ c → Fin (suc (2^ c))
 count↺ᶠ f = #⟨ run↺ f ⟩ᶠ
 
-count↺ : ∀ {c} → ↺ c Bit → ℕ
+count↺ : ∀ {c} → ⅁ c → ℕ
 count↺ = Fin.toℕ ∘ count↺ᶠ
+
+_∼[_]⅁_ : ∀ {m n} → ⅁ m → (ℕ → ℕ → Set) → ⅁ n → Set
+_∼[_]⅁_ {m} {n} f _∼_ g = ⟨2^ n ⟩*( count↺ f ) ∼ ⟨2^ m ⟩*( count↺ g )
+
+_≈⅁_ : ∀ {m n} → ⅁ m → ⅁ n → Set
+f ≈⅁ g = f ∼[ _≡_ ]⅁ g
+
+≈⅁-refl : ∀ {n} {f : ⅁ n} → f ≈⅁ f
+≈⅁-refl = ≡.refl
+
+≈⅁-sym : ∀ {n} → Symmetric {A = ⅁ n} _≈⅁_
+≈⅁-sym = ≡.sym
+
+≈⅁-trans : ∀ {n} → Transitive {A = ⅁ n} _≈⅁_
+≈⅁-trans = ≡.trans
+
+≗⇒≈⅁ : ∀ {c} {f g : ⅁ c} → f ≗↺ g → f ≈⅁ g
+≗⇒≈⅁ {c} {f} {g} pf rewrite ext-# pf = ≡.refl
+
+≈⅁-cong : ∀ {c c'} {f g : ⅁ c} {f' g' : ⅁ c'} → f ≗↺ g → f' ≗↺ g' → f ≈⅁ f' → g ≈⅁ g'
+≈⅁-cong f≗g f'≗g' f≈f' rewrite ext-# f≗g | ext-# f'≗g' = f≈f'
