@@ -5,7 +5,9 @@ open import Data.Nat.NP using (ℕ; zero; suc; 2^_; _+_)
 open import Data.Bool
 open import Data.Bits
 open import Data.Vec using (Vec; _++_)
-open import Relation.Binary.PropositionalEquality
+open import Relation.Binary
+open import Relation.Binary.PropositionalEquality.NP
+open import Algebra.FunctionProperties
 
 data Tree {a} (A : Set a) : ℕ → Set a where
   leaf : (x : A) → Tree A zero
@@ -52,7 +54,7 @@ map f (leaf x) = leaf (f x)
 map f (fork t₀ t₁) = fork (map f t₀) (map f t₁)
 
 open import Relation.Binary
-open import Data.Star
+open import Data.Star using (Star; ε; _◅_)
 
 data Swp {a} {A : Set a} : ∀ {n} (left right : Tree A n) → Set a where
   left : ∀ {n} {left₀ left₁ right : Tree A n} →
@@ -66,7 +68,7 @@ data Swp {a} {A : Set a} : ∀ {n} (left right : Tree A n) → Set a where
   swp₂ : ∀ {n} {t₀₀ t₀₁ t₁₀ t₁₁ : Tree A n} →
          Swp (fork (fork t₀₀ t₀₁) (fork t₁₀ t₁₁)) (fork (fork t₁₁ t₀₁) (fork t₁₀ t₀₀))
 
-Swp★ : ∀ {a} {A : Set a} {n} (left right : Tree A n) → Set a
+Swp★ : ∀ {n a} {A : Set a} (left right : Tree A n) → Set a
 Swp★ = Star Swp
 
 Swp-sym : ∀ {n a} {A : Set a} → Symmetric (Swp {A = A} {n})
@@ -102,7 +104,54 @@ Rot-trans (fork p₀ p₁) (krof q₀ q₁) = krof (Rot-trans p₀ q₀) (Rot-tr
 Rot-trans (krof p₀ p₁) (fork q₀ q₁) = krof (Rot-trans p₀ q₁) (Rot-trans p₁ q₀)
 Rot-trans (krof p₀ p₁) (krof q₀ q₁) = fork (Rot-trans p₀ q₁) (Rot-trans p₁ q₀)
 
-open import Relation.Binary.PropositionalEquality
+data AC {a} {A : Set a} : ∀ {m n} (left : Tree A m) (right : Tree A n) → Set a where
+  ε : ∀ {n} {t : Tree A n} → AC t t
+
+  _⁏_ : ∀ {m n o} {t : Tree A m} {u : Tree A n} {v : Tree A o} → AC t u → AC u v → AC t v
+
+  first : ∀ {n} {left₀ left₁ right : Tree A n} →
+         AC left₀ left₁ →
+         AC (fork left₀ right) (fork left₁ right)
+
+  swp : ∀ {n} {left right : Tree A n} →
+         AC (fork left right) (fork right left)
+
+  swp₂ : ∀ {n} {t₀₀ t₀₁ t₁₀ t₁₁ : Tree A n} →
+         AC (fork (fork t₀₀ t₀₁) (fork t₁₀ t₁₁)) (fork (fork t₁₁ t₀₁) (fork t₁₀ t₀₀))
+         {-
+  zip : ∀ {m n} {t₀₀ t₀₁ t₁₀ t₁₁ : Tree A m} {u₀ u₁ : Tree A n} →
+            AC (fork t₀₀ t₁₁) u₀ →
+            AC (fork t₀₁ t₁₀) u₁ →
+            AC (fork (fork t₀₀ t₀₁) (fork t₁₀ t₁₁)) (fork u₀ u₁)
+            -}
+
+infixr 1 _⁏_
+
+second-AC : ∀ {a} {A : Set a} {n} {left right₀ right₁ : Tree A n} →
+           AC right₀ right₁ →
+           AC (fork left right₀) (fork left right₁)
+second-AC f = swp ⁏ first f ⁏ swp
+
+<_×_>-AC : ∀ {a} {A : Set a} {n} {left₀ right₀ left₁ right₁ : Tree A n} →
+           AC left₀ left₁ →
+           AC right₀ right₁ →
+           AC (fork left₀ right₀) (fork left₁ right₁)
+< f × g >-AC = first f ⁏ second-AC g
+
+swp₃-AC : ∀ {a n} {A : Set a} {t₀₀ t₀₁ t₁₀ t₁₁ : Tree A n} →
+         AC (fork (fork t₀₀ t₀₁) (fork t₁₀ t₁₁)) (fork (fork t₀₀ t₁₀) (fork t₀₁ t₁₁))
+swp₃-AC = < swp × swp >-AC ⁏ swp₂ ⁏ < swp × swp >-AC
+
+Swp⇒AC : ∀ {n a} {A : Set a} → Swp {a} {A} {n} ⇒ AC {n = n}
+Swp⇒AC (left pf) = first (Swp⇒AC pf)
+Swp⇒AC (right pf) = second-AC (Swp⇒AC pf)
+Swp⇒AC swp₁ = swp
+Swp⇒AC (swp₂ {t₀₀ = A} {B} {C} {D}) = swp₂ -- zip {!!} {!!} {-first swp ⁏ zip swp ε ⁏ {!!}-}
+
+Swp★⇒AC : ∀ {n a} {A : Set a} → Swp★ {n} {a} {A} ⇒ AC {n = n}
+Swp★⇒AC ε         = ε
+Swp★⇒AC (x ◅ xs) = Swp⇒AC x ⁏ Swp★⇒AC xs
+
 open import Relation.Nullary using (Dec ; yes ; no)
 open import Relation.Nullary.Negation
 
@@ -257,3 +306,51 @@ module new-approach where
   swap-perm₃ (true ∷ p₁) (false ∷ p₂) (right path) neg₁ neg₂  = right (∈-put-≢ _ path (true ∷≢ neg₁))
   swap-perm₃ (false ∷ p₁) (true ∷ p₂) (right path) neg₁ neg₂  = right (∈-put-≢ _ path (true ∷≢ neg₂))
   swap-perm₃ (false ∷ p₁) (false ∷ p₂) (right path) neg₁ neg₂ = right path
+
+module FoldProp {a} {A : Set a} (_·_ : Op₂ A) (op-comm : Commutative _≡_ _·_) (op-assoc : Associative _≡_ _·_) where
+
+  ⟪_⟫ : ∀ {n} → Tree A n → A
+  ⟪_⟫ = fold _·_
+
+  _=[fold]⇒′_ : ∀ {ℓ₁ ℓ₂} → (∀ {m n} → REL (Tree A m) (Tree A n) ℓ₁) → Rel A ℓ₂ → Set _
+  -- _∼₀_ =[fold]⇒ _∼₁_ = ∀ {m n} → _∼₀_ {m} {n} =[ fold {n} _·_ ]⇒ _∼₁_
+  _∼₀_ =[fold]⇒′ _∼₁_ = ∀ {m n} {t : Tree A m} {u : Tree A n} → t ∼₀ u → ⟪ t ⟫ ∼₁ ⟪ u ⟫
+
+  _=[fold]⇒_ : ∀ {ℓ₁ ℓ₂} → (∀ {n} → Rel (Tree A n) ℓ₁) → Rel A ℓ₂ → Set _
+  _∼₀_ =[fold]⇒ _∼₁_ = ∀ {n} → _∼₀_ =[ fold {n} _·_ ]⇒ _∼₁_
+
+  fold-rot : Rot =[fold]⇒ _≡_
+  fold-rot (leaf x) = refl
+  fold-rot (fork rot rot₁) = cong₂ _·_ (fold-rot rot) (fold-rot rot₁)
+  fold-rot (krof rot rot₁) rewrite fold-rot rot | fold-rot rot₁ = op-comm _ _
+
+  -- t ∼ u → fork v t ∼ fork u w
+
+  lem : ∀ x y z t → (x · y) · (z · t) ≡ (t · y) · (z · x)
+  lem x y z t = (x · y) · (z · t)
+              ≡⟨ op-assoc x y _ ⟩
+                x · (y · (z · t))
+              ≡⟨ op-comm x _ ⟩
+                (y · (z · t)) · x
+              ≡⟨ op-assoc y (z · t) _ ⟩
+                y · ((z · t) · x)
+              ≡⟨ cong (λ u → y · (u · x)) (op-comm z t) ⟩
+                y · ((t · z) · x)
+              ≡⟨ cong (_·_ y) (op-assoc t z x) ⟩
+                y · (t · (z · x))
+              ≡⟨ sym (op-assoc y t _) ⟩
+                (y · t) · (z · x)
+              ≡⟨ cong (λ u → u · (z · x)) (op-comm y t) ⟩
+                (t · y) · (z · x)
+              ∎
+    where open ≡-Reasoning
+
+  fold-swp : Swp =[fold]⇒ _≡_
+  fold-swp (left pf) rewrite fold-swp pf = refl
+  fold-swp (right pf) rewrite fold-swp pf = refl
+  fold-swp swp₁ = op-comm _ _
+  fold-swp (swp₂ {_} {t₀₀} {t₀₁} {t₁₀} {t₁₁}) = lem ⟪ t₀₀ ⟫ ⟪ t₀₁ ⟫ ⟪ t₁₀ ⟫ ⟪ t₁₁ ⟫
+
+  fold-swp★ : Swp★ =[fold]⇒ _≡_
+  fold-swp★ ε = refl
+  fold-swp★ (x ◅ xs) rewrite fold-swp x | fold-swp★ xs = refl
