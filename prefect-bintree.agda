@@ -149,7 +149,7 @@ data Perm0↔ {a} {A : Set a} : ∀ {n} (left right : Tree A n) → Set a where
   extremes : ∀ {n} {tA tB tC tD tE tF : Tree A n} →
                  Perm0↔ (fork tA tD) (fork tE tF) →
                  Perm0↔ (fork (fork tA tB) (fork tC tD))
-                          (fork (fork tA tB) (fork tC tF))
+                          (fork (fork tE tB) (fork tC tF))
 
 -- Star Perm0↔ can then model any permutation
 
@@ -334,11 +334,14 @@ module new-approach where
   ≈-refl : {a : _}{A : Set a}{n : ℕ}{t : Tree A n} → t ≈ t
   ≈-refl _ = FI.id
 
+  ≈-trans : {a : _}{A : Set a}{n : ℕ}{t u v : Tree A n} → t ≈ u → u ≈ v → t ≈ v
+  ≈-trans f g x = g x FI.∘ f x
+
   move : ∀ {a}{A : Set a}{n : ℕ}{t s : Tree A n}{x : A} → t ≈ s → x ∈ t → x ∈ s
   move t≈s x∈t = Inverse.to (t≈s _) Function.Equality.⟨$⟩ x∈t
 
-  swap₀ : ∀ {a}{A : Set a}{n : ℕ}(t₁ t₂ : Tree A n) → fork t₁ t₂ ≈ fork t₂ t₁
-  swap₀ t₁ t₂ = λ x → record 
+  swap₀ : ∀ {a}{A : Set a}{n : ℕ}{t₁ t₂ : Tree A n} → fork t₁ t₂ ≈ fork t₂ t₁
+  swap₀ _ = record
     { to         = →-to-⟶ swap
     ; from       = →-to-⟶ swap
     ; inverse-of = record { left-inverse-of  = swap-inv 
@@ -351,6 +354,28 @@ module new-approach where
        swap-inv : ∀ {a}{A : Set a}{x : A}{n : ℕ}{t₁ t₂ : Tree A n}(p : x ∈ fork t₁ t₂) → swap (swap p) ≡ p
        swap-inv (left p)  = refl
        swap-inv (right p) = refl
+
+  swap₂ : ∀ {a}{A : Set a}{n : ℕ}{tA tB tC tD : Tree A n}
+          → fork (fork tA tB) (fork tC tD) ≈ fork (fork tA tD) (fork tC tB)
+  swap₂ _ = record
+    { to         = →-to-⟶ fun
+    ; from       = →-to-⟶ fun
+    ; inverse-of = record { left-inverse-of  = inv
+                          ; right-inverse-of = inv }
+    } where
+       fun : ∀ {a}{A : Set a}{x n}{tA tB tC tD : Tree A n}
+             → x ∈ fork (fork tA tB) (fork tC tD) → x ∈ fork (fork tA tD) (fork tC tB)
+       fun (left (left path))  = left (left path)
+       fun (left (right path)) = right (right path)
+       fun (right (left path)) = right (left path)
+       fun (right (right path)) = left (right path)
+
+       inv : ∀ {a}{A : Set a}{x n}{tA tB tC tD : Tree A n}
+             → (p : x ∈ fork (fork tA tB) (fork tC tD)) → fun (fun p) ≡ p
+       inv (left (left p)) = refl
+       inv (left (right p)) = refl
+       inv (right (left p)) = refl
+       inv (right (right p)) = refl
 
   _⟨fork⟩_ : ∀ {a}{A : Set a}{n : ℕ}{t₁ t₂ s₁ s₂ : Tree A n} → t₁ ≈ s₁ → t₂ ≈ s₂ → fork t₁ t₂ ≈ fork s₁ s₂
   (t1≈s1 ⟨fork⟩ t2≈s2) y = record 
@@ -379,14 +404,38 @@ module new-approach where
         frk-rinv (left x) = cong left (_InverseOf_.right-inverse-of (Inverse.inverse-of (t1≈s1 y)) x)
         frk-rinv (right x) = cong right (_InverseOf_.right-inverse-of (Inverse.inverse-of (t2≈s2 y)) x)
 
+  ≈-first : ∀ {a}{A : Set a}{n : ℕ}{t u v : Tree A n} → t ≈ u → fork t v ≈ fork u v
+  ≈-first f = f ⟨fork⟩ ≈-refl
+
+  ≈-second : ∀ {a}{A : Set a}{n : ℕ}{t u v : Tree A n} → t ≈ u → fork v t ≈ fork v u
+  ≈-second f = ≈-refl ⟨fork⟩ f
+
+  swap-inner : ∀ {a}{A : Set a}{n : ℕ}{tA tB tC tD : Tree A n}
+          → fork (fork tA tB) (fork tC tD) ≈ fork (fork tA tC) (fork tB tD)
+  swap-inner = ≈-trans (≈-second swap₀) (≈-trans swap₂ (≈-second swap₀))
+
   Rot⟶≈ : ∀ {a}{A : Set a}{n : ℕ}{t₁ t₂ : Tree A n} → Rot t₁ t₂ → t₁ ≈ t₂
-  Rot⟶≈ (leaf x)        y = FI.id
-  Rot⟶≈ (fork rot rot₁) y = (Rot⟶≈ rot ⟨fork⟩ Rot⟶≈ rot₁) y
-  Rot⟶≈ (krof {_} {l} {l'} {r} {r'} rot rot₁) y = 
+  Rot⟶≈ (leaf x)        = ≈-refl
+  Rot⟶≈ (fork rot rot₁) = Rot⟶≈ rot ⟨fork⟩ Rot⟶≈ rot₁
+  Rot⟶≈ (krof {_} {l} {l'} {r} {r'} rot rot₁) = λ y →
         y ∈ fork l r ↔⟨ (Rot⟶≈ rot ⟨fork⟩ Rot⟶≈ rot₁) y ⟩
-        y ∈ fork r' l' ↔⟨ swap₀ r' l' y ⟩ 
+        y ∈ fork r' l' ↔⟨ swap₀ y ⟩
         y ∈ fork l' r' ∎
     where open EquationalReasoning
+
+  Perm⟶≈ : ∀ {a}{A : Set a}{n : ℕ}{t₁ t₂ : Tree A n} → Perm t₁ t₂ → t₁ ≈ t₂
+  Perm⟶≈ ε = ≈-refl
+  Perm⟶≈ (f ⁏ g) = ≈-trans (Perm⟶≈ f) (Perm⟶≈ g)
+  Perm⟶≈ (first f) = ≈-first (Perm⟶≈ f)
+  Perm⟶≈ swp = swap₀
+  Perm⟶≈ swp-seconds = swap₂
+
+  Perm0↔⟶≈ : ∀ {a}{A : Set a}{n : ℕ}{t₁ t₂ : Tree A n} → Perm0↔ t₁ t₂ → t₁ ≈ t₂
+  Perm0↔⟶≈ ε = ≈-refl
+  Perm0↔⟶≈ swp = swap₀
+  Perm0↔⟶≈ (first t) = ≈-first (Perm0↔⟶≈ t)
+  Perm0↔⟶≈ (firsts t) = ≈-trans swap-inner (≈-trans (≈-first (Perm0↔⟶≈ t)) swap-inner)
+  Perm0↔⟶≈ (extremes t) = ≈-trans swap₂ (≈-trans (≈-first (Perm0↔⟶≈ t)) swap₂)
 
   put : {a : _}{A : Set a}{n : ℕ} → Bits n → A → Tree A n → Tree A n
   put [] val tree = leaf val
@@ -418,8 +467,8 @@ module new-approach where
 
   swap-perm₁ : {a : _}{A : Set a}{n : ℕ}{t : Tree A n}{x : A}(p : x ∈ t) → t ≈ swap (toBits p) (toBits p) t
   swap-perm₁ here         = ≈-refl 
-  swap-perm₁ (left path)  = swap-perm₁ path ⟨fork⟩ ≈-refl
-  swap-perm₁ (right path) = ≈-refl ⟨fork⟩ swap-perm₁ path
+  swap-perm₁ (left path)  = ≈-first (swap-perm₁ path)
+  swap-perm₁ (right path) = ≈-second (swap-perm₁ path)
 
   swap-comm : {a : _}{A : Set a}{n : ℕ} (p₁ p₂ : Bits n)(t : Tree A n) → swap p₂ p₁ t ≡ swap p₁ p₂ t
   swap-comm [] [] (leaf x) = refl
