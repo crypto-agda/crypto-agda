@@ -208,14 +208,14 @@ on-firsts f = swp-inners ⁏ first f ⁏ swp-inners
 0↔ (true{-1-}  ∷ true {-1-} ∷ p) = on-extremes (0↔ (1b ∷ p))
 0↔ (true{-1-}  ∷ false{-0-} ∷ p) = on-firsts   (0↔ (1b ∷ p))
 
-0↔′_ : ∀ {n} → Bits n → SwpOp n
-0↔′_ {n} rewrite cong SwpOp (sym (ℕ°.+-comm n 0)) = 0↔_ {n} {0}
+commSwpOp : ∀ m n → SwpOp (m + n) → SwpOp (n + m)
+commSwpOp m n x rewrite ℕ°.+-comm m n = x
 
 [_↔_] : ∀ {m n} (p q : Bits m) → SwpOp (m + n)
-[ p ↔ q ] = 0↔ p ⁏ 0↔ q
+[ p ↔ q ] = 0↔ p ⁏ 0↔ q ⁏ 0↔ p
 
 [_↔′_] : ∀ {n} (p q : Bits n) → SwpOp n
-[ p ↔′ q ] = 0↔′ p ⁏ 0↔′ q
+[ p ↔′ q ] = commSwpOp _ 0 [ p ↔ q ]
 
 _$swp_ : ∀ {n a} {A : Set a} → SwpOp n → Tree A n → Tree A n
 ε           $swp t = t
