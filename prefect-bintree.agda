@@ -46,7 +46,7 @@ lookup' (b ∷ bs) (fork t t₁) = lookup' bs (if b then t₁ else t)
 
 update' : ∀ {m n a} {A : Set a} → Bits m → Tree A n → Tree A (m + n) → Tree A (m + n)
 update' [] val tree = val
-update' (b ∷ key) val (fork tree tree₁) = if b then fork tree (update' key val tree₁) 
+update' (b ∷ key) val (fork tree tree₁) = if b then fork tree (update' key val tree₁)
                                                else fork (update' key val tree) tree₁
 
 map : ∀ {n a b} {A : Set a} {B : Set b} → (A → B) → Tree A n → Tree B n
@@ -329,7 +329,7 @@ module new-approach where
   lookup-∈ (false ∷ key) (fork tree tree₁) = left (lookup-∈ key tree)
 
   _≈_ : ∀ {a}{A : Set a}{n : ℕ} → Tree A n → Tree A n → Set _
-  t₁ ≈ t₂ = ∀ x → (x ∈ t₁) ↔ (x ∈ t₂) 
+  t₁ ≈ t₂ = ∀ x → (x ∈ t₁) ↔ (x ∈ t₂)
 
   ≈-refl : {a : _}{A : Set a}{n : ℕ}{t : Tree A n} → t ≈ t
   ≈-refl _ = FI.id
@@ -344,8 +344,8 @@ module new-approach where
   swap₀ _ = record
     { to         = →-to-⟶ swap
     ; from       = →-to-⟶ swap
-    ; inverse-of = record { left-inverse-of  = swap-inv 
-                          ; right-inverse-of = swap-inv } 
+    ; inverse-of = record { left-inverse-of  = swap-inv
+                          ; right-inverse-of = swap-inv }
     } where
        swap : ∀ {a}{A : Set a}{x : A}{n : ℕ}{t₁ t₂ : Tree A n} → x ∈ fork t₁ t₂ → x ∈ fork t₂ t₁
        swap (left path)  = right path
@@ -378,21 +378,21 @@ module new-approach where
        inv (right (right p)) = refl
 
   _⟨fork⟩_ : ∀ {a}{A : Set a}{n : ℕ}{t₁ t₂ s₁ s₂ : Tree A n} → t₁ ≈ s₁ → t₂ ≈ s₂ → fork t₁ t₂ ≈ fork s₁ s₂
-  (t1≈s1 ⟨fork⟩ t2≈s2) y = record 
+  (t1≈s1 ⟨fork⟩ t2≈s2) y = record
     { to         = to
     ; from       = from
     ; inverse-of = record { left-inverse-of  = frk-linv
-                          ; right-inverse-of = frk-rinv  } 
+                          ; right-inverse-of = frk-rinv  }
     } where
-        
+
         frk : ∀ {a}{A : Set a}{n : ℕ}{t₁ t₂ s₁ s₂ : Tree A n}{x : A} → t₁ ≈ s₁ → t₂ ≈ s₂ → x ∈ fork t₁ t₂ → x ∈ fork s₁ s₂
         frk t1≈s1 t2≈s2 (left x∈t1) = left (move t1≈s1 x∈t1)
         frk t1≈s1 t2≈s2 (right x∈t2) = right (move t2≈s2 x∈t2)
-        
+
         to = →-to-⟶ (frk t1≈s1 t2≈s2)
         from = →-to-⟶ (frk (λ x → FI.sym (t1≈s1 x)) (λ x → FI.sym (t2≈s2 x)))
 
-       
+
         open Function.Equality using (_⟨$⟩_)
         open import Function.LeftInverse
 
@@ -439,7 +439,7 @@ module new-approach where
 
   put : {a : _}{A : Set a}{n : ℕ} → Bits n → A → Tree A n → Tree A n
   put [] val tree = leaf val
-  put (x ∷ key) val (fork tree tree₁) = if x then fork tree (put key val tree₁) 
+  put (x ∷ key) val (fork tree tree₁) = if x then fork tree (put key val tree₁)
                                              else fork (put key val tree) tree₁
 
   -- move-me
@@ -466,7 +466,7 @@ module new-approach where
       a₂ = lookup p₂ t
 
   swap-perm₁ : {a : _}{A : Set a}{n : ℕ}{t : Tree A n}{x : A}(p : x ∈ t) → t ≈ swap (toBits p) (toBits p) t
-  swap-perm₁ here         = ≈-refl 
+  swap-perm₁ here         = ≈-refl
   swap-perm₁ (left path)  = ≈-first (swap-perm₁ path)
   swap-perm₁ (right path) = ≈-second (swap-perm₁ path)
 
@@ -477,7 +477,7 @@ module new-approach where
   swap-comm (false ∷ p₁) (true ∷ p₂) (fork t t₁) = refl
   swap-comm (false ∷ p₁) (false ∷ p₂) (fork t t₁) = cong (flip fork t₁) (swap-comm p₁ p₂ t)
 
-  swap-perm₂ : {a : _}{A : Set a}{n : ℕ}{t : Tree A n}{x : A}(p' : Bits n)(p : x ∈ t) 
+  swap-perm₂ : {a : _}{A : Set a}{n : ℕ}{t : Tree A n}{x : A}(p' : Bits n)(p : x ∈ t)
              → x ∈ swap (toBits p) p' t
   swap-perm₂ _ here = here
   swap-perm₂ (true ∷ p) (left path) rewrite ∈-lookup path = right (∈-put p _)
@@ -491,7 +491,7 @@ module new-approach where
   swap-perm₃ (true ∷ p₁) (true ∷ p₂) (left path) neg₁ neg₂   = left path
   swap-perm₃ (true ∷ p₁) (false ∷ p₂) (left path) neg₁ neg₂  = left (∈-put-≢ _ path (false ∷≢ neg₂))
   swap-perm₃ (false ∷ p₁) (true ∷ p₂) (left path) neg₁ neg₂  = left (∈-put-≢ _ path (false ∷≢ neg₁))
-  swap-perm₃ (false ∷ p₁) (false ∷ p₂) (left path) neg₁ neg₂ = left 
+  swap-perm₃ (false ∷ p₁) (false ∷ p₂) (left path) neg₁ neg₂ = left
              (swap-perm₃ p₁ p₂ path (false ∷≢ neg₁) (false ∷≢ neg₂))
   swap-perm₃ (true ∷ p₁) (true ∷ p₂) (right path) neg₁ neg₂   = right
              (swap-perm₃ p₁ p₂ path (true ∷≢ neg₁) (true ∷≢ neg₂))
