@@ -450,6 +450,18 @@ module new-approach where
   swap-perm₃ (false ∷ p₁) (true ∷ p₂) (right path) neg₁ neg₂  = right (∈-put-≢ _ path (true ∷≢ neg₂))
   swap-perm₃ (false ∷ p₁) (false ∷ p₂) (right path) neg₁ neg₂ = right path
 
+  ∈-swp : ∀ {n a} {A : Set a} (f : SwpOp n) {x : A} {t : Tree A n} → x ∈ t → x ∈ (f $swp t)
+  ∈-swp ε pf = pf
+  ∈-swp (f ⁏ g) pf = ∈-swp g (∈-swp f pf)
+  ∈-swp (first f) {t = fork _ _} (left pf) = left (∈-swp f pf)
+  ∈-swp (first f) {t = fork _ _} (right pf) = right pf
+  ∈-swp swp {t = fork t u} (left pf) = right pf
+  ∈-swp swp {t = fork t u} (right pf) = left pf
+  ∈-swp swp-seconds {t = fork (fork _ _) (fork _ _)} (left (left pf)) = left (left pf)
+  ∈-swp swp-seconds {t = fork (fork _ _) (fork _ _)} (left (right pf)) = right (right pf)
+  ∈-swp swp-seconds {t = fork (fork _ _) (fork _ _)} (right (left pf)) = right (left pf)
+  ∈-swp swp-seconds {t = fork (fork _ _) (fork _ _)} (right (right pf)) = left (right pf)
+
 module FoldProp {a} {A : Set a} (_·_ : Op₂ A) (op-comm : Commutative _≡_ _·_) (op-assoc : Associative _≡_ _·_) where
 
   ⟪_⟫ : ∀ {n} → Tree A n → A
