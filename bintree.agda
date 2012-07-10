@@ -120,18 +120,3 @@ Rot-trans (fork p₀ p₁) (fork q₀ q₁) = fork (Rot-trans p₀ q₀) (Rot-tr
 Rot-trans (fork p₀ p₁) (krof q₀ q₁) = krof (Rot-trans p₀ q₀) (Rot-trans p₁ q₁)
 Rot-trans (krof p₀ p₁) (fork q₀ q₁) = krof (Rot-trans p₀ q₁) (Rot-trans p₁ q₀)
 Rot-trans (krof p₀ p₁) (krof q₀ q₁) = fork (Rot-trans p₀ q₁) (Rot-trans p₁ q₀)
-
-data AC {a} {A : Set a} : ∀ {m n} (left : Tree A m) (right : Tree A n) → Set a where
-  ε : ∀ {n} {t : Tree A n} → AC t t
-
-  _⁏_ : ∀ {m n o} {t : Tree A m} {u : Tree A n} {v : Tree A o} → AC t u → AC u v → AC t v
-
-  first : ∀ {n} {left₀ left₁ right : Tree A n} →
-         AC left₀ left₁ →
-         AC (fork left₀ right) (fork left₁ right)
-
-  swp : ∀ {m n} {left : Tree A m} {right : Tree A n} →
-         AC (fork left right) (fork right left)
-
-  assoc : ∀ {n} {t₀ t₁ : Tree A n} {t₂ : Tree A (suc n)} →
-          AC (fork (fork t₀ t₁) t₂) (fork t₀ (fork t₁ t₂))
