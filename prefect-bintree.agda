@@ -1,7 +1,7 @@
 module prefect-bintree where
 
 open import Function
-open import Data.Nat.NP using (ℕ; zero; suc; 2^_; _+_)
+open import Data.Nat.NP using (ℕ; zero; suc; 2^_; _+_; module ℕ°)
 open import Data.Bool
 open import Data.Bits
 open import Data.Vec using (Vec; _++_)
@@ -46,7 +46,7 @@ lookup' (b ∷ bs) (fork t t₁) = lookup' bs (if b then t₁ else t)
 
 update' : ∀ {m n a} {A : Set a} → Bits m → Tree A n → Tree A (m + n) → Tree A (m + n)
 update' [] val tree = val
-update' (b ∷ key) val (fork tree tree₁) = if b then fork tree (update' key val tree₁) 
+update' (b ∷ key) val (fork tree tree₁) = if b then fork tree (update' key val tree₁)
                                                else fork (update' key val tree) tree₁
 
 map : ∀ {n a b} {A : Set a} {B : Set b} → (A → B) → Tree A n → Tree B n
@@ -104,53 +104,196 @@ Rot-trans (fork p₀ p₁) (krof q₀ q₁) = krof (Rot-trans p₀ q₀) (Rot-tr
 Rot-trans (krof p₀ p₁) (fork q₀ q₁) = krof (Rot-trans p₀ q₁) (Rot-trans p₁ q₀)
 Rot-trans (krof p₀ p₁) (krof q₀ q₁) = fork (Rot-trans p₀ q₁) (Rot-trans p₁ q₀)
 
-data AC {a} {A : Set a} : ∀ {m n} (left : Tree A m) (right : Tree A n) → Set a where
-  ε : ∀ {n} {t : Tree A n} → AC t t
+data SwpOp : ℕ → Set where
+  ε : ∀ {n} → SwpOp n
 
-  _⁏_ : ∀ {m n o} {t : Tree A m} {u : Tree A n} {v : Tree A o} → AC t u → AC u v → AC t v
+  _⁏_ : ∀ {n} → SwpOp n → SwpOp n → SwpOp n
 
-  first : ∀ {n} {left₀ left₁ right : Tree A n} →
-         AC left₀ left₁ →
-         AC (fork left₀ right) (fork left₁ right)
+  first : ∀ {n} → SwpOp n → SwpOp (suc n)
 
-  swp : ∀ {n} {left right : Tree A n} →
-         AC (fork left right) (fork right left)
+  swp : ∀ {n} → SwpOp (suc n)
 
-  swp₂ : ∀ {n} {t₀₀ t₀₁ t₁₀ t₁₁ : Tree A n} →
-         AC (fork (fork t₀₀ t₀₁) (fork t₁₀ t₁₁)) (fork (fork t₁₁ t₀₁) (fork t₁₀ t₀₀))
-         {-
-  zip : ∀ {m n} {t₀₀ t₀₁ t₁₀ t₁₁ : Tree A m} {u₀ u₁ : Tree A n} →
-            AC (fork t₀₀ t₁₁) u₀ →
-            AC (fork t₀₁ t₁₀) u₁ →
-            AC (fork (fork t₀₀ t₀₁) (fork t₁₀ t₁₁)) (fork u₀ u₁)
-            -}
+  swp-seconds : ∀ {n} → SwpOp (2 + n)
+
+data Perm {a} {A : Set a} : ∀ {n} (left right : Tree A n) → Set a where
+  ε : ∀ {n} {t : Tree A n} → Perm t t
+
+  _⁏_ : ∀ {n} {t u v : Tree A n} → Perm t u → Perm u v → Perm t v
+
+  first : ∀ {n} {tA tB tC : Tree A n} →
+         Perm tA tB →
+         Perm (fork tA tC) (fork tB tC)
+
+  swp : ∀ {n} {tA tB : Tree A n} →
+         Perm (fork tA tB) (fork tB tA)
+
+  swp-seconds : ∀ {n} {tA tB tC tD : Tree A n} →
+                 Perm (fork (fork tA tB) (fork tC tD))
+                          (fork (fork tA tD) (fork tC tB))
+
+data Perm0↔ {a} {A : Set a} : ∀ {n} (left right : Tree A n) → Set a where
+  ε : ∀ {n} {t : Tree A n} → Perm0↔ t t
+
+  swp : ∀ {n} {tA tB : Tree A n} →
+         Perm0↔ (fork tA tB) (fork tB tA)
+
+  first : ∀ {n} {tA tB tC : Tree A n} →
+         Perm0↔ tA tB →
+         Perm0↔ (fork tA tC) (fork tB tC)
+
+  firsts : ∀ {n} {tA tB tC tD tE tF : Tree A n} →
+                 Perm0↔ (fork tA tC) (fork tE tF) →
+                 Perm0↔ (fork (fork tA tB) (fork tC tD))
+                          (fork (fork tE tB) (fork tF tD))
+
+  extremes : ∀ {n} {tA tB tC tD tE tF : Tree A n} →
+                 Perm0↔ (fork tA tD) (fork tE tF) →
+                 Perm0↔ (fork (fork tA tB) (fork tC tD))
+                          (fork (fork tE tB) (fork tC tF))
+
+-- Star Perm0↔ can then model any permutation
 
 infixr 1 _⁏_
 
-second-AC : ∀ {a} {A : Set a} {n} {left right₀ right₁ : Tree A n} →
-           AC right₀ right₁ →
-           AC (fork left right₀) (fork left right₁)
-second-AC f = swp ⁏ first f ⁏ swp
+second-perm : ∀ {a} {A : Set a} {n} {left right₀ right₁ : Tree A n} →
+           Perm right₀ right₁ →
+           Perm (fork left right₀) (fork left right₁)
+second-perm f = swp ⁏ first f ⁏ swp
 
-<_×_>-AC : ∀ {a} {A : Set a} {n} {left₀ right₀ left₁ right₁ : Tree A n} →
-           AC left₀ left₁ →
-           AC right₀ right₁ →
-           AC (fork left₀ right₀) (fork left₁ right₁)
-< f × g >-AC = first f ⁏ second-AC g
+second-swpop : ∀ {n} → SwpOp n → SwpOp (suc n)
+second-swpop f = swp ⁏ first f ⁏ swp
 
-swp₃-AC : ∀ {a n} {A : Set a} {t₀₀ t₀₁ t₁₀ t₁₁ : Tree A n} →
-         AC (fork (fork t₀₀ t₀₁) (fork t₁₀ t₁₁)) (fork (fork t₀₀ t₁₀) (fork t₀₁ t₁₁))
-swp₃-AC = < swp × swp >-AC ⁏ swp₂ ⁏ < swp × swp >-AC
+<_×_>-perm : ∀ {a} {A : Set a} {n} {left₀ right₀ left₁ right₁ : Tree A n} →
+           Perm left₀ left₁ →
+           Perm right₀ right₁ →
+           Perm (fork left₀ right₀) (fork left₁ right₁)
+< f × g >-perm = first f ⁏ second-perm g
 
-Swp⇒AC : ∀ {n a} {A : Set a} → Swp {a} {A} {n} ⇒ AC {n = n}
-Swp⇒AC (left pf) = first (Swp⇒AC pf)
-Swp⇒AC (right pf) = second-AC (Swp⇒AC pf)
-Swp⇒AC swp₁ = swp
-Swp⇒AC (swp₂ {t₀₀ = A} {B} {C} {D}) = swp₂ -- zip {!!} {!!} {-first swp ⁏ zip swp ε ⁏ {!!}-}
+swp₂-perm : ∀ {a n} {A : Set a} {t₀₀ t₀₁ t₁₀ t₁₁ : Tree A n} →
+          Perm (fork (fork t₀₀ t₀₁) (fork t₁₀ t₁₁)) (fork (fork t₁₁ t₀₁) (fork t₁₀ t₀₀))
+swp₂-perm = first swp ⁏ swp-seconds ⁏ first swp
 
-Swp★⇒AC : ∀ {n a} {A : Set a} → Swp★ {n} {a} {A} ⇒ AC {n = n}
-Swp★⇒AC ε         = ε
-Swp★⇒AC (x ◅ xs) = Swp⇒AC x ⁏ Swp★⇒AC xs
+swp₃-perm : ∀ {a n} {A : Set a} {t₀₀ t₀₁ t₁₀ t₁₁ : Tree A n} →
+         Perm (fork (fork t₀₀ t₀₁) (fork t₁₀ t₁₁)) (fork (fork t₀₀ t₁₀) (fork t₀₁ t₁₁))
+swp₃-perm = second-perm swp ⁏ swp-seconds ⁏ second-perm swp
+
+swp-firsts-perm : ∀ {n a} {A : Set a} {tA tB tC tD : Tree A n} →
+                 Perm (fork (fork tA tB) (fork tC tD))
+                          (fork (fork tC tB) (fork tA tD))
+swp-firsts-perm = < swp × swp >-perm ⁏ swp-seconds ⁏ < swp × swp >-perm
+
+Swp⇒Perm : ∀ {n a} {A : Set a} → Swp {a} {A} {n} ⇒ Perm {n = n}
+Swp⇒Perm (left pf) = first (Swp⇒Perm pf)
+Swp⇒Perm (right pf) = second-perm (Swp⇒Perm pf)
+Swp⇒Perm swp₁ = swp
+Swp⇒Perm swp₂ = swp₂-perm
+
+Swp★⇒Perm : ∀ {n a} {A : Set a} → Swp★ {n} {a} {A} ⇒ Perm {n = n}
+Swp★⇒Perm ε         = ε
+Swp★⇒Perm (x ◅ xs) = Swp⇒Perm x ⁏ Swp★⇒Perm xs
+
+swp-inners : ∀ {n} → SwpOp (2 + n)
+swp-inners = second-swpop swp ⁏ swp-seconds ⁏ second-swpop swp
+
+on-extremes : ∀ {n} → SwpOp (1 + n) → SwpOp (2 + n)
+on-extremes f = swp-seconds ⁏ first f ⁏ swp-seconds
+
+on-firsts : ∀ {n} → SwpOp (1 + n) → SwpOp (2 + n)
+on-firsts f = swp-inners ⁏ first f ⁏ swp-inners
+
+0↔_ : ∀ {m n} → Bits m → SwpOp (m + n)
+0↔ [] = ε
+0↔ (false{-0-} ∷ p) = first (0↔ p)
+0↔ (true{-1-}  ∷ []) = swp
+0↔ (true{-1-}  ∷ true {-1-} ∷ p) = on-extremes (0↔ (1b ∷ p))
+0↔ (true{-1-}  ∷ false{-0-} ∷ p) = on-firsts   (0↔ (1b ∷ p))
+
+commSwpOp : ∀ m n → SwpOp (m + n) → SwpOp (n + m)
+commSwpOp m n x rewrite ℕ°.+-comm m n = x
+
+[_↔_] : ∀ {m n} (p q : Bits m) → SwpOp (m + n)
+[ p ↔ q ] = 0↔ p ⁏ 0↔ q ⁏ 0↔ p
+
+[_↔′_] : ∀ {n} (p q : Bits n) → SwpOp n
+[ p ↔′ q ] = commSwpOp _ 0 [ p ↔ q ]
+
+_$swp_ : ∀ {n a} {A : Set a} → SwpOp n → Tree A n → Tree A n
+ε           $swp t = t
+(f ⁏ g)     $swp t = g $swp (f $swp t)
+(first f)   $swp (fork t₀ t₁) = fork (f $swp t₀) t₁
+swp         $swp (fork t₀ t₁) = fork t₁ t₀
+swp-seconds $swp (fork (fork t₀ t₁) (fork t₂ t₃)) = fork (fork t₀ t₃) (fork t₂ t₁)
+
+swpRel : ∀ {n a} {A : Set a} (f : SwpOp n) (t : Tree A n) → Perm t (f $swp t)
+swpRel ε           _          = ε
+swpRel (f ⁏ g)     _          = swpRel f _ ⁏ swpRel g _
+swpRel (first f)   (fork _ _) = first (swpRel f _)
+swpRel swp         (fork _ _) = swp
+swpRel swp-seconds
+ (fork (fork _ _) (fork _ _)) = swp-seconds
+
+[0↔_]-Rel : ∀ {m n a} {A : Set a} (p : Bits m) (t : Tree A (m + n)) → Perm t ((0↔ p) $swp t)
+[0↔ p ]-Rel = swpRel (0↔ p)
+
+swpOp' : ∀ {n a} {A : Set a} {t u : Tree A n} → Perm0↔ t u → SwpOp n
+swpOp' ε = ε
+swpOp' (first f) = first (swpOp' f)
+swpOp' swp = swp
+swpOp' (firsts f) = on-firsts (swpOp' f)
+swpOp' (extremes f) = on-extremes (swpOp' f)
+
+swpOp : ∀ {n a} {A : Set a} {t u : Tree A n} → Perm t u → SwpOp n
+swpOp ε = ε
+swpOp (f ⁏ g) = swpOp f ⁏  swpOp g
+swpOp (first f) = first (swpOp f)
+swpOp swp = swp
+swpOp swp-seconds = swp-seconds
+
+swpOp-sym : ∀ {n} → SwpOp n → SwpOp n
+swpOp-sym ε = ε
+swpOp-sym (f ⁏ g) = swpOp-sym g ⁏ swpOp-sym f
+swpOp-sym (first f) = first (swpOp-sym f)
+swpOp-sym swp = swp
+swpOp-sym swp-seconds = swp-seconds
+
+swpOp-sym-involutive : ∀ {n} (f : SwpOp n) → swpOp-sym (swpOp-sym f) ≡ f
+swpOp-sym-involutive ε = refl
+swpOp-sym-involutive (f ⁏ g) rewrite swpOp-sym-involutive f | swpOp-sym-involutive g = refl
+swpOp-sym-involutive (first f) rewrite swpOp-sym-involutive f = refl
+swpOp-sym-involutive swp = refl
+swpOp-sym-involutive swp-seconds = refl
+
+swpOp-sym-sound : ∀ {n a} {A : Set a} (f : SwpOp n) (t : Tree A n) → swpOp-sym f $swp (f $swp t) ≡ t
+swpOp-sym-sound ε t = refl
+swpOp-sym-sound (f ⁏ g) t rewrite swpOp-sym-sound g (f $swp t) | swpOp-sym-sound f t = refl
+swpOp-sym-sound (first f) (fork t _) rewrite swpOp-sym-sound f t = refl
+swpOp-sym-sound swp (fork _ _) = refl
+swpOp-sym-sound swp-seconds (fork (fork _ _) (fork _ _)) = refl
+
+module ¬swp-comm where
+  data X : Set where
+    A B C D E F G H : X
+  n : ℕ
+  n = 3
+  t : Tree X n
+  t = fork (fork (fork (leaf A) (leaf B))(fork (leaf C) (leaf D))) (fork (fork (leaf E) (leaf F))(fork (leaf G) (leaf H)))
+  f : SwpOp n
+  f = swp
+  g : SwpOp n
+  g = first swp
+  pf : f $swp (g $swp t) ≢ g $swp (f $swp t)
+  pf ()
+
+swp-leaf : ∀ {a} {A : Set a} (f : SwpOp 0) (x : A) → f $swp (leaf x) ≡ leaf x
+swp-leaf ε x = refl
+swp-leaf (f ⁏ g) x rewrite swp-leaf f x | swp-leaf g x = refl
+
+swpOp-sound : ∀ {n a} {A : Set a} {t u : Tree A n} (perm : Perm t u) → (swpOp perm $swp t ≡ u)
+swpOp-sound ε = refl
+swpOp-sound (f ⁏ f₁) rewrite swpOp-sound f | swpOp-sound f₁ = refl
+swpOp-sound (first f) rewrite swpOp-sound f = refl
+swpOp-sound swp = refl
+swpOp-sound swp-seconds = refl
 
 open import Relation.Nullary using (Dec ; yes ; no)
 open import Relation.Nullary.Negation
@@ -186,20 +329,23 @@ module new-approach where
   lookup-∈ (false ∷ key) (fork tree tree₁) = left (lookup-∈ key tree)
 
   _≈_ : ∀ {a}{A : Set a}{n : ℕ} → Tree A n → Tree A n → Set _
-  t₁ ≈ t₂ = ∀ x → (x ∈ t₁) ↔ (x ∈ t₂) 
+  t₁ ≈ t₂ = ∀ x → (x ∈ t₁) ↔ (x ∈ t₂)
 
   ≈-refl : {a : _}{A : Set a}{n : ℕ}{t : Tree A n} → t ≈ t
   ≈-refl _ = FI.id
 
+  ≈-trans : {a : _}{A : Set a}{n : ℕ}{t u v : Tree A n} → t ≈ u → u ≈ v → t ≈ v
+  ≈-trans f g x = g x FI.∘ f x
+
   move : ∀ {a}{A : Set a}{n : ℕ}{t s : Tree A n}{x : A} → t ≈ s → x ∈ t → x ∈ s
   move t≈s x∈t = Inverse.to (t≈s _) Function.Equality.⟨$⟩ x∈t
 
-  swap₀ : ∀ {a}{A : Set a}{n : ℕ}(t₁ t₂ : Tree A n) → fork t₁ t₂ ≈ fork t₂ t₁
-  swap₀ t₁ t₂ = λ x → record 
+  swap₀ : ∀ {a}{A : Set a}{n : ℕ}{t₁ t₂ : Tree A n} → fork t₁ t₂ ≈ fork t₂ t₁
+  swap₀ _ = record
     { to         = →-to-⟶ swap
     ; from       = →-to-⟶ swap
-    ; inverse-of = record { left-inverse-of  = swap-inv 
-                          ; right-inverse-of = swap-inv } 
+    ; inverse-of = record { left-inverse-of  = swap-inv
+                          ; right-inverse-of = swap-inv }
     } where
        swap : ∀ {a}{A : Set a}{x : A}{n : ℕ}{t₁ t₂ : Tree A n} → x ∈ fork t₁ t₂ → x ∈ fork t₂ t₁
        swap (left path)  = right path
@@ -209,22 +355,44 @@ module new-approach where
        swap-inv (left p)  = refl
        swap-inv (right p) = refl
 
+  swap₂ : ∀ {a}{A : Set a}{n : ℕ}{tA tB tC tD : Tree A n}
+          → fork (fork tA tB) (fork tC tD) ≈ fork (fork tA tD) (fork tC tB)
+  swap₂ _ = record
+    { to         = →-to-⟶ fun
+    ; from       = →-to-⟶ fun
+    ; inverse-of = record { left-inverse-of  = inv
+                          ; right-inverse-of = inv }
+    } where
+       fun : ∀ {a}{A : Set a}{x n}{tA tB tC tD : Tree A n}
+             → x ∈ fork (fork tA tB) (fork tC tD) → x ∈ fork (fork tA tD) (fork tC tB)
+       fun (left (left path))  = left (left path)
+       fun (left (right path)) = right (right path)
+       fun (right (left path)) = right (left path)
+       fun (right (right path)) = left (right path)
+
+       inv : ∀ {a}{A : Set a}{x n}{tA tB tC tD : Tree A n}
+             → (p : x ∈ fork (fork tA tB) (fork tC tD)) → fun (fun p) ≡ p
+       inv (left (left p)) = refl
+       inv (left (right p)) = refl
+       inv (right (left p)) = refl
+       inv (right (right p)) = refl
+
   _⟨fork⟩_ : ∀ {a}{A : Set a}{n : ℕ}{t₁ t₂ s₁ s₂ : Tree A n} → t₁ ≈ s₁ → t₂ ≈ s₂ → fork t₁ t₂ ≈ fork s₁ s₂
-  (t1≈s1 ⟨fork⟩ t2≈s2) y = record 
+  (t1≈s1 ⟨fork⟩ t2≈s2) y = record
     { to         = to
     ; from       = from
     ; inverse-of = record { left-inverse-of  = frk-linv
-                          ; right-inverse-of = frk-rinv  } 
+                          ; right-inverse-of = frk-rinv  }
     } where
-        
+
         frk : ∀ {a}{A : Set a}{n : ℕ}{t₁ t₂ s₁ s₂ : Tree A n}{x : A} → t₁ ≈ s₁ → t₂ ≈ s₂ → x ∈ fork t₁ t₂ → x ∈ fork s₁ s₂
         frk t1≈s1 t2≈s2 (left x∈t1) = left (move t1≈s1 x∈t1)
         frk t1≈s1 t2≈s2 (right x∈t2) = right (move t2≈s2 x∈t2)
-        
+
         to = →-to-⟶ (frk t1≈s1 t2≈s2)
         from = →-to-⟶ (frk (λ x → FI.sym (t1≈s1 x)) (λ x → FI.sym (t2≈s2 x)))
 
-       
+
         open Function.Equality using (_⟨$⟩_)
         open import Function.LeftInverse
 
@@ -236,18 +404,42 @@ module new-approach where
         frk-rinv (left x) = cong left (_InverseOf_.right-inverse-of (Inverse.inverse-of (t1≈s1 y)) x)
         frk-rinv (right x) = cong right (_InverseOf_.right-inverse-of (Inverse.inverse-of (t2≈s2 y)) x)
 
+  ≈-first : ∀ {a}{A : Set a}{n : ℕ}{t u v : Tree A n} → t ≈ u → fork t v ≈ fork u v
+  ≈-first f = f ⟨fork⟩ ≈-refl
+
+  ≈-second : ∀ {a}{A : Set a}{n : ℕ}{t u v : Tree A n} → t ≈ u → fork v t ≈ fork v u
+  ≈-second f = ≈-refl ⟨fork⟩ f
+
+  swap-inner : ∀ {a}{A : Set a}{n : ℕ}{tA tB tC tD : Tree A n}
+          → fork (fork tA tB) (fork tC tD) ≈ fork (fork tA tC) (fork tB tD)
+  swap-inner = ≈-trans (≈-second swap₀) (≈-trans swap₂ (≈-second swap₀))
+
   Rot⟶≈ : ∀ {a}{A : Set a}{n : ℕ}{t₁ t₂ : Tree A n} → Rot t₁ t₂ → t₁ ≈ t₂
-  Rot⟶≈ (leaf x)        y = FI.id
-  Rot⟶≈ (fork rot rot₁) y = (Rot⟶≈ rot ⟨fork⟩ Rot⟶≈ rot₁) y
-  Rot⟶≈ (krof {_} {l} {l'} {r} {r'} rot rot₁) y = 
+  Rot⟶≈ (leaf x)        = ≈-refl
+  Rot⟶≈ (fork rot rot₁) = Rot⟶≈ rot ⟨fork⟩ Rot⟶≈ rot₁
+  Rot⟶≈ (krof {_} {l} {l'} {r} {r'} rot rot₁) = λ y →
         y ∈ fork l r ↔⟨ (Rot⟶≈ rot ⟨fork⟩ Rot⟶≈ rot₁) y ⟩
-        y ∈ fork r' l' ↔⟨ swap₀ r' l' y ⟩ 
+        y ∈ fork r' l' ↔⟨ swap₀ y ⟩
         y ∈ fork l' r' ∎
     where open EquationalReasoning
 
+  Perm⟶≈ : ∀ {a}{A : Set a}{n : ℕ}{t₁ t₂ : Tree A n} → Perm t₁ t₂ → t₁ ≈ t₂
+  Perm⟶≈ ε = ≈-refl
+  Perm⟶≈ (f ⁏ g) = ≈-trans (Perm⟶≈ f) (Perm⟶≈ g)
+  Perm⟶≈ (first f) = ≈-first (Perm⟶≈ f)
+  Perm⟶≈ swp = swap₀
+  Perm⟶≈ swp-seconds = swap₂
+
+  Perm0↔⟶≈ : ∀ {a}{A : Set a}{n : ℕ}{t₁ t₂ : Tree A n} → Perm0↔ t₁ t₂ → t₁ ≈ t₂
+  Perm0↔⟶≈ ε = ≈-refl
+  Perm0↔⟶≈ swp = swap₀
+  Perm0↔⟶≈ (first t) = ≈-first (Perm0↔⟶≈ t)
+  Perm0↔⟶≈ (firsts t) = ≈-trans swap-inner (≈-trans (≈-first (Perm0↔⟶≈ t)) swap-inner)
+  Perm0↔⟶≈ (extremes t) = ≈-trans swap₂ (≈-trans (≈-first (Perm0↔⟶≈ t)) swap₂)
+
   put : {a : _}{A : Set a}{n : ℕ} → Bits n → A → Tree A n → Tree A n
   put [] val tree = leaf val
-  put (x ∷ key) val (fork tree tree₁) = if x then fork tree (put key val tree₁) 
+  put (x ∷ key) val (fork tree tree₁) = if x then fork tree (put key val tree₁)
                                              else fork (put key val tree) tree₁
 
   -- move-me
@@ -274,9 +466,9 @@ module new-approach where
       a₂ = lookup p₂ t
 
   swap-perm₁ : {a : _}{A : Set a}{n : ℕ}{t : Tree A n}{x : A}(p : x ∈ t) → t ≈ swap (toBits p) (toBits p) t
-  swap-perm₁ here         = ≈-refl 
-  swap-perm₁ (left path)  = swap-perm₁ path ⟨fork⟩ ≈-refl
-  swap-perm₁ (right path) = ≈-refl ⟨fork⟩ swap-perm₁ path
+  swap-perm₁ here         = ≈-refl
+  swap-perm₁ (left path)  = ≈-first (swap-perm₁ path)
+  swap-perm₁ (right path) = ≈-second (swap-perm₁ path)
 
   swap-comm : {a : _}{A : Set a}{n : ℕ} (p₁ p₂ : Bits n)(t : Tree A n) → swap p₂ p₁ t ≡ swap p₁ p₂ t
   swap-comm [] [] (leaf x) = refl
@@ -285,7 +477,7 @@ module new-approach where
   swap-comm (false ∷ p₁) (true ∷ p₂) (fork t t₁) = refl
   swap-comm (false ∷ p₁) (false ∷ p₂) (fork t t₁) = cong (flip fork t₁) (swap-comm p₁ p₂ t)
 
-  swap-perm₂ : {a : _}{A : Set a}{n : ℕ}{t : Tree A n}{x : A}(p' : Bits n)(p : x ∈ t) 
+  swap-perm₂ : {a : _}{A : Set a}{n : ℕ}{t : Tree A n}{x : A}(p' : Bits n)(p : x ∈ t)
              → x ∈ swap (toBits p) p' t
   swap-perm₂ _ here = here
   swap-perm₂ (true ∷ p) (left path) rewrite ∈-lookup path = right (∈-put p _)
@@ -299,13 +491,25 @@ module new-approach where
   swap-perm₃ (true ∷ p₁) (true ∷ p₂) (left path) neg₁ neg₂   = left path
   swap-perm₃ (true ∷ p₁) (false ∷ p₂) (left path) neg₁ neg₂  = left (∈-put-≢ _ path (false ∷≢ neg₂))
   swap-perm₃ (false ∷ p₁) (true ∷ p₂) (left path) neg₁ neg₂  = left (∈-put-≢ _ path (false ∷≢ neg₁))
-  swap-perm₃ (false ∷ p₁) (false ∷ p₂) (left path) neg₁ neg₂ = left 
+  swap-perm₃ (false ∷ p₁) (false ∷ p₂) (left path) neg₁ neg₂ = left
              (swap-perm₃ p₁ p₂ path (false ∷≢ neg₁) (false ∷≢ neg₂))
   swap-perm₃ (true ∷ p₁) (true ∷ p₂) (right path) neg₁ neg₂   = right
              (swap-perm₃ p₁ p₂ path (true ∷≢ neg₁) (true ∷≢ neg₂))
   swap-perm₃ (true ∷ p₁) (false ∷ p₂) (right path) neg₁ neg₂  = right (∈-put-≢ _ path (true ∷≢ neg₁))
   swap-perm₃ (false ∷ p₁) (true ∷ p₂) (right path) neg₁ neg₂  = right (∈-put-≢ _ path (true ∷≢ neg₂))
   swap-perm₃ (false ∷ p₁) (false ∷ p₂) (right path) neg₁ neg₂ = right path
+
+  ∈-swp : ∀ {n a} {A : Set a} (f : SwpOp n) {x : A} {t : Tree A n} → x ∈ t → x ∈ (f $swp t)
+  ∈-swp ε pf = pf
+  ∈-swp (f ⁏ g) pf = ∈-swp g (∈-swp f pf)
+  ∈-swp (first f) {t = fork _ _} (left pf) = left (∈-swp f pf)
+  ∈-swp (first f) {t = fork _ _} (right pf) = right pf
+  ∈-swp swp {t = fork t u} (left pf) = right pf
+  ∈-swp swp {t = fork t u} (right pf) = left pf
+  ∈-swp swp-seconds {t = fork (fork _ _) (fork _ _)} (left (left pf)) = left (left pf)
+  ∈-swp swp-seconds {t = fork (fork _ _) (fork _ _)} (left (right pf)) = right (right pf)
+  ∈-swp swp-seconds {t = fork (fork _ _) (fork _ _)} (right (left pf)) = right (left pf)
+  ∈-swp swp-seconds {t = fork (fork _ _) (fork _ _)} (right (right pf)) = left (right pf)
 
 module FoldProp {a} {A : Set a} (_·_ : Op₂ A) (op-comm : Commutative _≡_ _·_) (op-assoc : Associative _≡_ _·_) where
 
