@@ -30,7 +30,7 @@ record FunUniverse {t} (T : Set t) : Set (L.suc t) where
   `Endo : T → Set
   `Endo A = A `→ A
 
-module Defaults {t} {T : Set t} (funU : FunUniverse T) where
+module Defaults⟨first-part⟩ {t} {T : Set t} (funU : FunUniverse T) where
   open FunUniverse funU
 
   module CompositionNotations
@@ -143,6 +143,17 @@ module Defaults {t} {T : Set t} (funU : FunUniverse T) where
     <_×_> : ∀ {A B C D} → (A `→ C) → (B `→ D) → (A `× B) `→ (C `× D)
     < f × g > = first f ⁏ swap ⁏ first g ⁏ swap
 
+  module DefaultAssoc
+    (_∘_   : ∀ {A B C} → (B `→ C) → (A `→ B) → (A `→ C))
+    (<_,_> : ∀ {A B C} → (A `→ B) → (A `→ C) → A `→ B `× C)
+    (fst   : ∀ {A B} → A `× B `→ A)
+    (snd   : ∀ {A B} → A `× B `→ B) where
+
+    open CompositionNotations _∘_
+
+    assoc : ∀ {A B C} → ((A `× B) `× C) `→ (A `× (B `× C))
+    assoc = < fst ⁏ fst , < fst ⁏ snd , snd > >
+
   module DefaultAssoc′
     (_∘_ : ∀ {A B C} → (B `→ C) → (A `→ B) → (A `→ C))
     (assoc : ∀ {A B C} → ((A `× B) `× C) `→ (A `× (B `× C)))
@@ -190,6 +201,17 @@ module Defaults {t} {T : Set t} (funU : FunUniverse T) where
     rewireTbl : ∀ {i o} → RewireTbl i o → i `→ᵇ o
     rewireTbl tbl = rewire (flip V.lookup tbl)
 
+  module LinDefaults
+    (_∘_   : ∀ {A B C} → (B `→ C) → (A `→ B) → (A `→ C))
+    (first : ∀ {A B C} → (A `→ C) → (A `× B) `→ (C `× B))
+    (swap  : ∀ {A B} → (A `× B) `→ (B `× A))
+    (assoc : ∀ {A B C} → ((A `× B) `× C) `→ (A `× (B `× C))) where
+
+    open CompositionNotations _∘_ public
+    open <×>Default _∘_ first swap public
+    open DefaultSecondFromFirstSwap _∘_ first swap public
+    open DefaultAssoc′ _∘_ assoc swap first public
+
 record LinRewiring {t} {T : Set t} (funU : FunUniverse T) : Set t where
   constructor mk
   open FunUniverse funU
@@ -217,7 +239,7 @@ record LinRewiring {t} {T : Set t} (funU : FunUniverse T) : Set t where
     <∷>    : ∀ {n A} → (A `× `Vec A n) `→ `Vec A (1 + n)
     uncons  : ∀ {n A} → `Vec A (1 + n) `→ (A `× `Vec A n)
 
-  open Defaults funU
+  open Defaults⟨first-part⟩ funU
   open CompositionNotations _∘_ public
   open DefaultAssoc′ _∘_ assoc swap first public
 
@@ -243,6 +265,9 @@ record LinRewiring {t} {T : Set t} (funU : FunUniverse T) : Set t where
   -- Like first, but applies on a triple associated the other way
   assoc-first : ∀ {A B C D E} → (A `× B `→ D `× E) → A `× B `× C `→ D `× E `× C
   assoc-first f = assoc′ ⁏ first f ⁏ assoc
+
+  swap-top : ∀ {A B C} → A `× B `× C `→ B `× A `× C
+  swap-top = assoc-first swap
 
   -- Like assoc-first but for second
   assoc-second : ∀ {A B C D E} → (B `× C `→ E `× D) → (A `× B) `× C `→ (A `× E) `× D
@@ -282,6 +307,9 @@ record LinRewiring {t} {T : Set t} (funU : FunUniverse T) : Set t where
 
   <_∷[]> : ∀ {A B} → (A `→ B) → A `→ `Vec B 1
   < f ∷[]> = < f ∷′tt⁏ tt→[] >
+
+  <∷[]> : ∀ {A} → A `→ `Vec A 1
+  <∷[]> = < id ∷[]>
 
   <[],_> : ∀ {A B C} → (A `→ B) → A `→ `Vec C 0 `× B
   <[], f > = <tt⁏ tt→[] , f >
@@ -479,7 +507,7 @@ record FunOps {t} {T : Set t} (funU : FunUniverse T) : Set t where
     -- Vectors
     -- <[]>; <∷>; uncons come from Rewiring
 
-  open Defaults funU
+  open Defaults⟨first-part⟩ funU
   open Rewiring rewiring public
 
   infixr 3 _&&&_
@@ -650,3 +678,19 @@ record FunOps {t} {T : Set t} (funU : FunUniverse T) : Set t where
 
     allFin : ∀ {n _⊤} → _⊤ `→ `Vec (`Fin n) n
     allFin = tabulate id
+
+module Defaults {t} {T : Set t} (funU : FunUniverse T) where
+  open FunUniverse funU
+  open Defaults⟨first-part⟩ funU public
+
+  module RewiringDefaults
+    (linRewiring : LinRewiring funU)
+    (tt       : ∀ {_⊤} → _⊤ `→ `⊤)
+    (dup      : ∀ {A} → A `→ A `× A)
+    (rewire   : ∀ {i o} → (Fin o → Fin i) → i `→ᵇ o) where
+
+    open LinRewiring linRewiring
+    open DefaultsGroup1 _∘_ tt snd<tt,> dup swap first public
+    <[]> : ∀ {_⊤ A} → _⊤ `→ `Vec A 0
+    <[]> = tt ⁏ tt→[]
+    open DefaultRewireTbl rewire public
