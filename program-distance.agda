@@ -36,7 +36,7 @@ record PrgDist : Set₁ where
                           → ⅁₀ ≗⅁ ⅁₁ → ⅁₀ ⇓ ⅁₁
   extensional-reduction same-games = ]-[-cong-≗↺ (same-games 0b) (same-games 1b)
 
-module Implem k where
+module HomImplem k where
   --  | Pr[ f ≡ 1 ] - Pr[ g ≡ 1 ] | ≥ ε            [ on reals ]
   --  dist Pr[ f ≡ 1 ] Pr[ g ≡ 1 ] ≥ ε             [ on reals ]
   --  dist (#1 f / 2^ c) (#1 g / 2^ c) ≥ ε          [ on reals ]
@@ -44,6 +44,18 @@ module Implem k where
   --  dist (#1 f) (#1 g) ≥ 2^(-k) * 2^ c            [ on rationals ]
   --  dist (#1 f) (#1 g) ≥ 2^(c - k)                [ on rationals ]
   --  dist (#1 f) (#1 g) ≥ 2^(c ∸ k)               [ on natural ]
+  _]-[_ : ∀ {n} (f g : ⅁ n) → Set
+  _]-[_ {n} f g = dist (count↺ f) (count↺ g) ≥ 2^(n ∸ k)
+
+  ]-[-sym : ∀ {n} {f g : ⅁ n} → f ]-[ g → g ]-[ f
+  ]-[-sym {n} {f} {g} f]-[g rewrite dist-sym (count↺ f) (count↺ g) = f]-[g
+
+  ]-[-cong-left-≈↺ : ∀ {n} {f g h : ⅁ n} → f ≈⅁ g → g ]-[ h → f ]-[ h
+  ]-[-cong-left-≈↺ {n} {f} {g} f≈g g]-[h rewrite ≈⅁⇒≈⅁′ {n} {f} {g} f≈g = g]-[h
+  -- dist #g #h ≥ 2^(n ∸ k)
+  -- dist #f #h ≥ 2^(n ∸ k)
+
+module Implem k where
   _]-[_ : ∀ {m n} → ⅁ m → ⅁ n → Set
   _]-[_ {m} {n} f g = dist (⟨2^ n ⟩* (count↺ f)) (⟨2^ m ⟩* (count↺ g)) ≥ 2^((m + n) ∸ k)
 
