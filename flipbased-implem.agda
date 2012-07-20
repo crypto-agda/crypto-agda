@@ -76,8 +76,14 @@ count↺ = Fin.toℕ ∘ count↺ᶠ
 _∼[_]⅁_ : ∀ {m n} → ⅁ m → (ℕ → ℕ → Set) → ⅁ n → Set
 _∼[_]⅁_ {m} {n} f _∼_ g = ⟨2^ n ⟩*( count↺ f ) ∼ ⟨2^ m ⟩*( count↺ g )
 
+_∼[_]⅁′_ : ∀ {n} → ⅁ n → (ℕ → ℕ → Set) → ⅁ n → Set
+_∼[_]⅁′_ {n} f _∼_ g = count↺ f ∼ count↺ g
+
 _≈⅁_ : ∀ {m n} → ⅁ m → ⅁ n → Set
 f ≈⅁ g = f ∼[ _≡_ ]⅁ g
+
+_≈⅁′_ : ∀ {n} (f g : ⅁ n) → Set
+f ≈⅁′ g = f ∼[ _≡_ ]⅁′ g
 
 ≈⅁-refl : ∀ {n} {f : ⅁ n} → f ≈⅁ f
 ≈⅁-refl = ≡.refl
@@ -91,5 +97,14 @@ f ≈⅁ g = f ∼[ _≡_ ]⅁ g
 ≗⇒≈⅁ : ∀ {c} {f g : ⅁ c} → f ≗↺ g → f ≈⅁ g
 ≗⇒≈⅁ {c} {f} {g} pf rewrite ext-# pf = ≡.refl
 
+≈⅁′⇒≈⅁ : ∀ {n} {f g : ⅁ n} → f ≈⅁′ g → f ≈⅁ g
+≈⅁′⇒≈⅁ {n} eq rewrite eq = ≡.refl
+
+≈⅁⇒≈⅁′ : ∀ {n} {f g : ⅁ n} → f ≈⅁ g → f ≈⅁′ g
+≈⅁⇒≈⅁′ {n} = 2^-inj n
+
 ≈⅁-cong : ∀ {c c'} {f g : ⅁ c} {f' g' : ⅁ c'} → f ≗↺ g → f' ≗↺ g' → f ≈⅁ f' → g ≈⅁ g'
 ≈⅁-cong f≗g f'≗g' f≈f' rewrite ext-# f≗g | ext-# f'≗g' = f≈f'
+
+≈⅁′-cong : ∀ {c} {f g f' g' : ⅁ c} → f ≗↺ g → f' ≗↺ g' → f ≈⅁′ f' → g ≈⅁′ g'
+≈⅁′-cong f≗g f'≗g' f≈f' rewrite ext-# f≗g | ext-# f'≗g' = f≈f'
