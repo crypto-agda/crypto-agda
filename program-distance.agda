@@ -68,16 +68,27 @@ module Implem k where
   ]-[-cong-left-≈↺ : ∀ {m n o} {f : ⅁ m} {g : ⅁ n} {h : ⅁ o} → f ≈⅁ g → g ]-[ h → f ]-[ h
   ]-[-cong-left-≈↺ {m} {n} {o} {f} {g} {h} f≈g g]-[h
       with 2^*-mono m g]-[h
+           -- 2ᵐ(dist 2ᵒ#g 2ⁿ#h) ≤ 2ᵐ2ⁿ⁺ᵒ⁻ᵏ
   ... | q rewrite sym (dist-2^* m (⟨2^ o ⟩* (count↺ g)) (⟨2^ n ⟩* (count↺ h)))
+           -- dist 2ᵐ2ᵒ#g 2ᵐ2ⁿ#h ≤ 2ᵐ2ⁿ⁺ᵒ⁻ᵏ
                 | 2^-comm m o (count↺ g)
+           -- dist 2ᵒ2ᵐ#g 2ᵐ2ⁿ#h ≤ 2ᵐ2ⁿ⁺ᵒ⁻ᵏ
                 | sym f≈g
+           -- dist 2ᵒ2ⁿ#f 2ᵐ2ⁿ#h ≤ 2ᵐ2ⁿ⁺ᵒ⁻ᵏ
                 | 2^-comm o n (count↺ f)
+           -- dist 2ⁿ2ᵒ#f 2ᵐ2ⁿ#h ≤ 2ᵐ2ⁿ⁺ᵒ⁻ᵏ
                 | 2^-comm m n (count↺ h)
+           -- dist 2ⁿ2ᵒ#f 2ⁿ2ᵐ#h ≤ 2ᵐ2ⁿ⁺ᵒ⁻ᵏ
                 | dist-2^* n (⟨2^ o ⟩* (count↺ f)) (⟨2^ m ⟩* (count↺ h))
+           -- 2ⁿ(dist 2ᵒ#f 2ᵐ#h) ≤ 2ᵐ2ⁿ⁺ᵒ⁻ᵏ
                 | 2^-+ m (n + o ∸ k) 1
+           -- 2ⁿ(dist 2ᵒ#f 2ᵐ#h) ≤ 2ᵐ⁺ⁿ⁺ᵒ⁻ᵏ
                 | helper m n o k
+           -- 2ⁿ(dist 2ᵒ#f 2ᵐ#h) ≤ 2ⁿ⁺ᵐ⁺ᵒ⁻ᵏ
                 | sym (2^-+ n (m + o ∸ k) 1)
+           -- 2ⁿ(dist 2ᵒ#f 2ᵐ#h) ≤ 2ⁿ2ᵐ⁺ᵒ⁻ᵏ
                 = 2^*-mono′ n q
+           -- dist 2ᵒ#f 2ᵐ#h ≤ 2ᵐ⁺ᵒ⁻ᵏ
 
   prgDist : PrgDist
   prgDist = mk _]-[_ (λ {m n f g} x → ]-[-sym {m} {n} {f} {g} x) (λ {m n o f g h} x y → ]-[-cong-left-≈↺ {m} {n} {o} {f} {g} {h} x y)
