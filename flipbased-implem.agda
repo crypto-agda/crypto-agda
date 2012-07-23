@@ -71,7 +71,10 @@ count↺ᶠ : ∀ {c} → ⅁ c → Fin (suc (2^ c))
 count↺ᶠ f = #⟨ run↺ f ⟩ᶠ
 
 count↺ : ∀ {c} → ⅁ c → ℕ
-count↺ = Fin.toℕ ∘ count↺ᶠ
+count↺ f = #⟨ run↺ f ⟩
+
+≗↺-cong-# : ∀ {n} {f g : ⅁ n} → f ≗↺ g → count↺ f ≡ count↺ g
+≗↺-cong-# {f = f} {g} = ≗-cong-# (run↺ f) (run↺ g)
 
 _∼[_]⅁_ : ∀ {m n} → ⅁ m → (ℕ → ℕ → Set) → ⅁ n → Set
 _∼[_]⅁_ {m} {n} f _∼_ g = ⟨2^ n * count↺ f ⟩ ∼ ⟨2^ m * count↺ g ⟩
@@ -95,7 +98,7 @@ f ≈⅁′ g = f ∼[ _≡_ ]⅁′ g
 ≈⅁-trans = ≡.trans
 
 ≗⇒≈⅁ : ∀ {c} {f g : ⅁ c} → f ≗↺ g → f ≈⅁ g
-≗⇒≈⅁ pf rewrite ext-# pf = ≡.refl
+≗⇒≈⅁ pf rewrite ≗↺-cong-# pf = ≡.refl
 
 ≈⅁′⇒≈⅁ : ∀ {n} {f g : ⅁ n} → f ≈⅁′ g → f ≈⅁ g
 ≈⅁′⇒≈⅁ eq rewrite eq = ≡.refl
@@ -104,7 +107,12 @@ f ≈⅁′ g = f ∼[ _≡_ ]⅁′ g
 ≈⅁⇒≈⅁′ {n} = 2^-inj n
 
 ≈⅁-cong : ∀ {c c'} {f g : ⅁ c} {f' g' : ⅁ c'} → f ≗↺ g → f' ≗↺ g' → f ≈⅁ f' → g ≈⅁ g'
-≈⅁-cong f≗g f'≗g' f≈f' rewrite ext-# f≗g | ext-# f'≗g' = f≈f'
+≈⅁-cong f≗g f'≗g' f≈f' rewrite ≗↺-cong-# f≗g | ≗↺-cong-# f'≗g' = f≈f'
 
 ≈⅁′-cong : ∀ {c} {f g f' g' : ⅁ c} → f ≗↺ g → f' ≗↺ g' → f ≈⅁′ f' → g ≈⅁′ g'
-≈⅁′-cong f≗g f'≗g' f≈f' rewrite ext-# f≗g | ext-# f'≗g' = f≈f'
+≈⅁′-cong f≗g f'≗g' f≈f' rewrite ≗↺-cong-# f≗g | ≗↺-cong-# f'≗g' = f≈f'
+
+data Rat : Set where _/_ : (num denom : ℕ) → Rat
+
+Pr[_≡1] : ∀ {n} (f : ⅁ n) → Rat
+Pr[_≡1] {n} f = count↺ f / 2^ n
