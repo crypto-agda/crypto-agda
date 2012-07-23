@@ -74,7 +74,7 @@ count↺ : ∀ {c} → ⅁ c → ℕ
 count↺ = Fin.toℕ ∘ count↺ᶠ
 
 _∼[_]⅁_ : ∀ {m n} → ⅁ m → (ℕ → ℕ → Set) → ⅁ n → Set
-_∼[_]⅁_ {m} {n} f _∼_ g = ⟨2^ n ⟩*( count↺ f ) ∼ ⟨2^ m ⟩*( count↺ g )
+_∼[_]⅁_ {m} {n} f _∼_ g = ⟨2^ n * count↺ f ⟩ ∼ ⟨2^ m * count↺ g ⟩
 
 _∼[_]⅁′_ : ∀ {n} → ⅁ n → (ℕ → ℕ → Set) → ⅁ n → Set
 _∼[_]⅁′_ {n} f _∼_ g = count↺ f ∼ count↺ g
@@ -95,10 +95,10 @@ f ≈⅁′ g = f ∼[ _≡_ ]⅁′ g
 ≈⅁-trans = ≡.trans
 
 ≗⇒≈⅁ : ∀ {c} {f g : ⅁ c} → f ≗↺ g → f ≈⅁ g
-≗⇒≈⅁ {c} {f} {g} pf rewrite ext-# pf = ≡.refl
+≗⇒≈⅁ pf rewrite ext-# pf = ≡.refl
 
 ≈⅁′⇒≈⅁ : ∀ {n} {f g : ⅁ n} → f ≈⅁′ g → f ≈⅁ g
-≈⅁′⇒≈⅁ {n} eq rewrite eq = ≡.refl
+≈⅁′⇒≈⅁ eq rewrite eq = ≡.refl
 
 ≈⅁⇒≈⅁′ : ∀ {n} {f g : ⅁ n} → f ≈⅁ g → f ≈⅁′ g
 ≈⅁⇒≈⅁′ {n} = 2^-inj n
