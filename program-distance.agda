@@ -38,11 +38,6 @@ record PrgDist : Set₁ where
                           → ⅁₀ ≗⅁ ⅁₁ → ⅁₀ ⇓ ⅁₁
   extensional-reduction same-games = ]-[-cong-≗↺ (same-games 0b) (same-games 1b)
 
-private
-  2^_≥1 : ∀ n → 2^ n ≥ 1
-  2^ zero ≥1  = s≤s z≤n
-  2^ suc n ≥1 = z≤n {2^ n} +-mono 2^ n ≥1
-
 module HomImplem k where
   --  | Pr[ f ≡ 1 ] - Pr[ g ≡ 1 ] | ≥ ε            [ on reals ]
   --  dist Pr[ f ≡ 1 ] Pr[ g ≡ 1 ] ≥ ε             [ on reals ]
@@ -55,7 +50,7 @@ module HomImplem k where
   _]-[_ {n} f g = dist (count↺ f) (count↺ g) ≥ 2^(n ∸ k)
 
   ]-[-antisym : ∀ {n} (f : ⅁ n) → ¬ (f ]-[ f)
-  ]-[-antisym {n} f f]-[g rewrite dist-refl (count↺ f) with ℕ≤.trans (2^ (n ∸ k) ≥1) f]-[g
+  ]-[-antisym {n} f f]-[g rewrite dist-refl (count↺ f) with ℕ≤.trans (1≤2^ (n ∸ k)) f]-[g
   ... | ()
 
   ]-[-sym : ∀ {n} {f g : ⅁ n} → f ]-[ g → g ]-[ f
@@ -71,7 +66,7 @@ module Implem k where
   _]-[_ {m} {n} f g = dist ⟨2^ n * count↺ f ⟩ ⟨2^ m * count↺ g ⟩ ≥ 2^((m + n) ∸ k)
 
   ]-[-antisym : ∀ {n} (f : ⅁ n) → ¬ (f ]-[ f)
-  ]-[-antisym {n} f f]-[g rewrite dist-refl ⟨2^ n * count↺ f ⟩ with ℕ≤.trans (2^ (n + n ∸ k) ≥1) f]-[g
+  ]-[-antisym {n} f f]-[g rewrite dist-refl ⟨2^ n * count↺ f ⟩ with ℕ≤.trans (1≤2^ (n + n ∸ k)) f]-[g
   ... | ()
 
   ]-[-sym : ∀ {m n} {f : ⅁ m} {g : ⅁ n} → f ]-[ g → g ]-[ f
