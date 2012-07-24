@@ -55,17 +55,11 @@ weaken≤ p = comap (take≤ p)
 
 open flipbased ↺ toss weaken≤ return↺ map↺ join↺ public
 
-_≗↺_ : ∀ {c a} {A : Set a} (f g : ↺ c A) → Set a
-f ≗↺ g = run↺ f ≗ run↺ g
-
 ⅁ : ℕ → Set
 ⅁ n = ↺ n Bit
 
-_≗⅁_ : ∀ {c} (⅁₀ ⅁₁ : Bit → ⅁ c) → Set
-⅁₀ ≗⅁ ⅁₁ = ∀ b → ⅁₀ b ≗↺ ⅁₁ b
-
-≗⅁-trans : ∀ {c} → Transitive (_≗⅁_ {c})
-≗⅁-trans p q b R = ≡.trans (p b R) (q b R)
+⅁? : ∀ c → Set
+⅁? c = Bit → ⅁ c
 
 count↺ᶠ : ∀ {c} → ⅁ c → Fin (suc (2^ c))
 count↺ᶠ f = #⟨ run↺ f ⟩ᶠ
@@ -73,44 +67,81 @@ count↺ᶠ f = #⟨ run↺ f ⟩ᶠ
 count↺ : ∀ {c} → ⅁ c → ℕ
 count↺ f = #⟨ run↺ f ⟩
 
-≗↺-cong-# : ∀ {n} {f g : ⅁ n} → f ≗↺ g → count↺ f ≡ count↺ g
-≗↺-cong-# {f = f} {g} = ≗-cong-# (run↺ f) (run↺ g)
+infix 4 _≗↺_ _≗⅁?_ _≋⅁_
+
+_≗↺_ : ∀ {c a} {A : Set a} (f g : ↺ c A) → Set a
+f ≗↺ g = run↺ f ≗ run↺ g
+
+_≗⅁?_ : ∀ {c} (g₀ g₁ : ⅁? c) → Set
+g₀ ≗⅁? g₁ = ∀ b → g₀ b ≗↺ g₁ b
+
+-- f ≈⅁ g when f and g return the same number of 1 (and 0).
+_≈⅁_ : ∀ {n} (f g : ⅁ n) → Set
+_≈⅁_ = _≡_ on count↺
 
 _∼[_]⅁_ : ∀ {m n} → ⅁ m → (ℕ → ℕ → Set) → ⅁ n → Set
 _∼[_]⅁_ {m} {n} f _∼_ g = ⟨2^ n * count↺ f ⟩ ∼ ⟨2^ m * count↺ g ⟩
 
-_∼[_]⅁′_ : ∀ {n} → ⅁ n → (ℕ → ℕ → Set) → ⅁ n → Set
-_∼[_]⅁′_ {n} f _∼_ g = count↺ f ∼ count↺ g
+_≋⅁_ : ∀ {m n} → ⅁ m → ⅁ n → Set
+f ≋⅁ g = f ∼[ _≡_ ]⅁ g
 
-_≈⅁_ : ∀ {m n} → ⅁ m → ⅁ n → Set
-f ≈⅁ g = f ∼[ _≡_ ]⅁ g
+Safe⅁? : ∀ {c} (f : ⅁? c) → Set
+Safe⅁? f = f 0b ≈⅁ f 1b
 
-_≈⅁′_ : ∀ {n} (f g : ⅁ n) → Set
-f ≈⅁′ g = f ∼[ _≡_ ]⅁′ g
-
-≈⅁-refl : ∀ {n} {f : ⅁ n} → f ≈⅁ f
-≈⅁-refl = ≡.refl
-
-≈⅁-sym : ∀ {n} → Symmetric {A = ⅁ n} _≈⅁_
-≈⅁-sym = ≡.sym
-
-≈⅁-trans : ∀ {n} → Transitive {A = ⅁ n} _≈⅁_
-≈⅁-trans = ≡.trans
+≈⅁⇒≋⅁ : ∀ {n} {f g : ⅁ n} → f ≈⅁ g → f ≋⅁ g
+≈⅁⇒≋⅁ eq rewrite eq = ≡.refl
 
 ≗⇒≈⅁ : ∀ {c} {f g : ⅁ c} → f ≗↺ g → f ≈⅁ g
-≗⇒≈⅁ pf rewrite ≗↺-cong-# pf = ≡.refl
+≗⇒≈⅁ {f = f} {g} = ≗-cong-# (run↺ f) (run↺ g)
 
-≈⅁′⇒≈⅁ : ∀ {n} {f g : ⅁ n} → f ≈⅁′ g → f ≈⅁ g
-≈⅁′⇒≈⅁ eq rewrite eq = ≡.refl
+≗⇒≋⅁ : ∀ {c} {f g : ⅁ c} → f ≗↺ g → f ≋⅁ g
+≗⇒≋⅁ eq rewrite ≗⇒≈⅁ eq = ≡.refl
 
-≈⅁⇒≈⅁′ : ∀ {n} {f g : ⅁ n} → f ≈⅁ g → f ≈⅁′ g
-≈⅁⇒≈⅁′ {n} = 2^-inj n
+≋⅁⇒≈⅁ : ∀ {n} {f g : ⅁ n} → f ≋⅁ g → f ≈⅁ g
+≋⅁⇒≈⅁ {n} = 2^-inj n
 
-≈⅁-cong : ∀ {c c'} {f g : ⅁ c} {f' g' : ⅁ c'} → f ≗↺ g → f' ≗↺ g' → f ≈⅁ f' → g ≈⅁ g'
-≈⅁-cong f≗g f'≗g' f≈f' rewrite ≗↺-cong-# f≗g | ≗↺-cong-# f'≗g' = f≈f'
+module ≗⅁? where
+  refl : ∀ {n} {f : ⅁? n} → f ≗⅁? f
+  refl _ _ = ≡.refl
 
-≈⅁′-cong : ∀ {c} {f g f' g' : ⅁ c} → f ≗↺ g → f' ≗↺ g' → f ≈⅁′ f' → g ≈⅁′ g'
-≈⅁′-cong f≗g f'≗g' f≈f' rewrite ≗↺-cong-# f≗g | ≗↺-cong-# f'≗g' = f≈f'
+  sym : ∀ {n} → Symmetric {A = ⅁? n} _≗⅁?_
+  sym p b R = ≡.sym (p b R)
+
+  trans : ∀ {c} → Transitive (_≗⅁?_ {c})
+  trans p q b R = ≡.trans (p b R) (q b R)
+
+module ≋⅁ where
+  refl : ∀ {n} {f : ⅁ n} → f ≋⅁ f
+  refl = ≡.refl
+
+  sym : ∀ {n} → Symmetric {A = ⅁ n} _≋⅁_
+  sym = ≡.sym
+
+  trans : ∀ {n} → Transitive {A = ⅁ n} _≋⅁_
+  trans = ≡.trans
+
+  cong-≗↺ : ∀ {c c'} {f g : ⅁ c} {f' g' : ⅁ c'} → f ≗↺ g → f' ≗↺ g' → f ≋⅁ f' → g ≋⅁ g'
+  cong-≗↺ f≗g f'≗g' f≈f' rewrite ≗⇒≈⅁ f≗g | ≗⇒≈⅁ f'≗g' = f≈f'
+
+module ≈⅁ {n} where
+  refl : ∀ {f : ⅁ n} → f ≈⅁ f
+  refl = ≡.refl
+
+  sym : Symmetric {A = ⅁ n} _≈⅁_
+  sym = ≡.sym
+
+  trans :  Transitive {A = ⅁ n} _≈⅁_
+  trans = ≡.trans
+
+  cong-≗↺ : ∀ {f g f' g' : ⅁ n} → f ≗↺ g → f' ≗↺ g' → f ≈⅁ f' → g ≈⅁ g'
+  cong-≗↺ f≗g f'≗g' f≈f' rewrite ≗⇒≈⅁ f≗g | ≗⇒≈⅁ f'≗g' = f≈f'
+
+module ⅁? {n} where
+  join : ⅁ n → ⅁ n → ⅁? n
+  join f g b = if b then f else g
+
+  safe-sym : ∀ {g : ⅁? n} → Safe⅁? g → Safe⅁? (g ∘ not)
+  safe-sym {g} g-safe = ≈⅁.sym {n} {g 0b} {g 1b} g-safe
 
 data Rat : Set where _/_ : (num denom : ℕ) → Rat
 
