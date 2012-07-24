@@ -11,31 +11,30 @@ open import Relation.Binary
 open import Relation.Binary.PropositionalEquality.NP
 import Data.Fin as Fin
 
-record PrgDist : Set₁ where
+record HomPrgDist : Set₁ where
   constructor mk
   field
-    _]-[_ : ∀ {m n} → ⅁ m → ⅁ n → Set
+    _]-[_ : ∀ {n} (f g : ⅁ n) → Set
     ]-[-antisym : ∀ {n} (f : ⅁ n) → ¬ (f ]-[ f)
-    ]-[-sym : ∀ {m n} {f : ⅁ m} {g : ⅁ n} → f ]-[ g → g ]-[ f
-    ]-[-cong-left-≈↺ : ∀ {m n o} {f : ⅁ m} {g : ⅁ n} {h : ⅁ o} → f ≈⅁ g → g ]-[ h → f ]-[ h
+    ]-[-sym : ∀ {n} {f g : ⅁ n} → f ]-[ g → g ]-[ f
+    ]-[-cong-left-≈↺ : ∀ {n} {f g h : ⅁ n} → f ≋⅁ g → g ]-[ h → f ]-[ h
 
-  ]-[-cong-right-≈↺ : ∀ {m n o} {f : ⅁ m} {g : ⅁ n} {h : ⅁ o} → f ]-[ g → g ≈⅁ h → f ]-[ h
+  ]-[-cong-right-≈↺ : ∀ {n} {f g h : ⅁ n} → f ]-[ g → g ≋⅁ h → f ]-[ h
   ]-[-cong-right-≈↺ pf pf' = ]-[-sym (]-[-cong-left-≈↺ (sym pf') (]-[-sym pf))
 
-  ]-[-cong-≗↺ : ∀ {c c'} {f g : ⅁ c} {f' g' : ⅁ c'} → f ≗↺ g → f' ≗↺ g' → f ]-[ f' → g ]-[ g'
-  ]-[-cong-≗↺ {c} {c'} {f} {g} {f'} {g'} f≗g f'≗g' pf
+  ]-[-cong-≗↺ : ∀ {n} {f g f' g' : ⅁ n} → f ≗↺ g → f' ≗↺ g' → f ]-[ f' → g ]-[ g'
+  ]-[-cong-≗↺ {n} {f} {g} {f'} {g'} f≗g f'≗g' pf
      = ]-[-cong-left-≈↺ {f = g} {g = f} {h = g'}
-         ((≗⇒≈⅁ (λ x → sym (f≗g x)))) (]-[-cong-right-≈↺ pf (≗⇒≈⅁ f'≗g'))
+         ((≗⇒≋⅁ (λ x → sym (f≗g x)))) (]-[-cong-right-≈↺ pf (≗⇒≋⅁ f'≗g'))
 
-  breaks : ∀ {c} (EXP : Bit → ⅁ c) → Set
-  breaks ⅁ = ⅁ 0b ]-[ ⅁ 1b
+  breaks : ∀ {n} → ⅁? n → Set
+  breaks g = g 0b ]-[ g 1b
 
-  -- An wining adversary for game ⅁₀ reduces to a wining adversary for game ⅁₁
-  _⇓_ : ∀ {c₀ c₁} (⅁₀ : Bit → ⅁ c₀) (⅁₁ : Bit → ⅁ c₁) → Set
-  ⅁₀ ⇓ ⅁₁ = breaks ⅁₀ → breaks ⅁₁
+  -- An wining adversary for game g₀ reduces to a wining adversary for game g₁
+  _⇓_ : ∀ {c₀ c₁} (g₀ : ⅁? c₀) (g₁ : ⅁? c₁) → Set
+  g₀ ⇓ g₁ = breaks g₀ → breaks g₁
 
-  extensional-reduction : ∀ {c} {⅁₀ ⅁₁ : Bit → ⅁ c}
-                          → ⅁₀ ≗⅁ ⅁₁ → ⅁₀ ⇓ ⅁₁
+  extensional-reduction : ∀ {c} {g₀ g₁ : ⅁? c} → g₀ ≗⅁? g₁ → g₀ ⇓ g₁
   extensional-reduction same-games = ]-[-cong-≗↺ (same-games 0b) (same-games 1b)
 
 module HomImplem k where
@@ -56,10 +55,42 @@ module HomImplem k where
   ]-[-sym : ∀ {n} {f g : ⅁ n} → f ]-[ g → g ]-[ f
   ]-[-sym {n} {f} {g} f]-[g rewrite dist-sym (count↺ f) (count↺ g) = f]-[g
 
-  ]-[-cong-left-≈↺ : ∀ {n} {f g h : ⅁ n} → f ≈⅁ g → g ]-[ h → f ]-[ h
-  ]-[-cong-left-≈↺ {n} {f} {g} f≈g g]-[h rewrite ≈⅁⇒≈⅁′ {n} {f} {g} f≈g = g]-[h
+  ]-[-cong-left-≈↺ : ∀ {n} {f g h : ⅁ n} → f ≋⅁ g → g ]-[ h → f ]-[ h
+  ]-[-cong-left-≈↺ {n} {f} {g} f≈g g]-[h rewrite ≋⅁⇒≈⅁ {n} {f} {g} f≈g = g]-[h
   -- dist #g #h ≥ 2^(n ∸ k)
   -- dist #f #h ≥ 2^(n ∸ k)
+
+  homPrgDist : HomPrgDist
+  homPrgDist = mk _]-[_
+               ]-[-antisym
+               (λ {_ f g} → ]-[-sym {f = f} {g})
+               (λ {_ f g h} → ]-[-cong-left-≈↺ {f = f} {g} {h})
+
+record PrgDist : Set₁ where
+  constructor mk
+  field
+    _]-[_ : ∀ {m n} → ⅁ m → ⅁ n → Set
+    ]-[-antisym : ∀ {n} (f : ⅁ n) → ¬ (f ]-[ f)
+    ]-[-sym : ∀ {m n} {f : ⅁ m} {g : ⅁ n} → f ]-[ g → g ]-[ f
+    ]-[-cong-left-≈↺ : ∀ {m n o} {f : ⅁ m} {g : ⅁ n} {h : ⅁ o} → f ≋⅁ g → g ]-[ h → f ]-[ h
+
+  ]-[-cong-right-≈↺ : ∀ {m n o} {f : ⅁ m} {g : ⅁ n} {h : ⅁ o} → f ]-[ g → g ≋⅁ h → f ]-[ h
+  ]-[-cong-right-≈↺ pf pf' = ]-[-sym (]-[-cong-left-≈↺ (sym pf') (]-[-sym pf))
+
+  ]-[-cong-≗↺ : ∀ {c c'} {f g : ⅁ c} {f' g' : ⅁ c'} → f ≗↺ g → f' ≗↺ g' → f ]-[ f' → g ]-[ g'
+  ]-[-cong-≗↺ {c} {c'} {f} {g} {f'} {g'} f≗g f'≗g' pf
+     = ]-[-cong-left-≈↺ {f = g} {g = f} {h = g'}
+         ((≗⇒≋⅁ (λ x → sym (f≗g x)))) (]-[-cong-right-≈↺ pf (≗⇒≋⅁ f'≗g'))
+
+  breaks : ∀ {c} (EXP : Bit → ⅁ c) → Set
+  breaks ⅁ = ⅁ 0b ]-[ ⅁ 1b
+
+  -- An wining adversary for game g₀ reduces to a wining adversary for game g₁
+  _⇓_ : ∀ {c₀ c₁} (g₀ : Bit → ⅁ c₀) (g₁ : Bit → ⅁ c₁) → Set
+  g₀ ⇓ g₁ = breaks g₀ → breaks g₁
+
+  extensional-reduction : ∀ {c} {g₀ g₁ : Bit → ⅁ c} → g₀ ≗⅁? g₁ → g₀ ⇓ g₁
+  extensional-reduction same-games = ]-[-cong-≗↺ (same-games 0b) (same-games 1b)
 
 module Implem k where
   _]-[_ : ∀ {m n} → ⅁ m → ⅁ n → Set
@@ -72,11 +103,13 @@ module Implem k where
   ]-[-sym : ∀ {m n} {f : ⅁ m} {g : ⅁ n} → f ]-[ g → g ]-[ f
   ]-[-sym {m} {n} {f} {g} f]-[g rewrite dist-sym ⟨2^ n * count↺ f ⟩ ⟨2^ m * count↺ g ⟩ | ℕ°.+-comm m n = f]-[g
 
+{- this is currently broken
+
   postulate
       helper : ∀ m n o k → m + ((n + o) ∸ k) ≡ n + ((m + o) ∸ k)
       helper′ : ∀ m n o k → ⟨2^ m * (2^((n + o) ∸ k))⟩ ≡ ⟨2^ n * (2^((m + o) ∸ k))⟩
 
-  ]-[-cong-left-≈↺ : ∀ {m n o} {f : ⅁ m} {g : ⅁ n} {h : ⅁ o} → f ≈⅁ g → g ]-[ h → f ]-[ h
+  ]-[-cong-left-≈↺ : ∀ {m n o} {f : ⅁ m} {g : ⅁ n} {h : ⅁ o} → f ≋⅁ g → g ]-[ h → f ]-[ h
   ]-[-cong-left-≈↺ {m} {n} {o} {f} {g} {h} f≈g g]-[h
       with 2^*-mono m g]-[h
            -- 2ᵐ(dist 2ᵒ#g 2ⁿ#h) ≤ 2ᵐ2ⁿ⁺ᵒ⁻ᵏ
@@ -106,3 +139,4 @@ module Implem k where
                ]-[-antisym
                (λ {m n f g} → ]-[-sym {f = f} {g})
                (λ {m n o f g h} → ]-[-cong-left-≈↺ {f = f} {g} {h})
+-}
