@@ -66,6 +66,9 @@ pure↺ = return↺
 tossᵂ : ∀ {n} → ↺ (1 + n) Bit
 tossᵂ = toss >>= return↺
 
+_▹↺_ : ∀ {n a b} {A : Set a} {B : Set b} → ↺ n A → (A → B) → ↺ n B
+x ▹↺ f = map↺ f x
+
 ⟪_⟫ : ∀ {n} {a} {A : Set a} → A → ↺ n A
 ⟪_⟫ = pure↺
 
