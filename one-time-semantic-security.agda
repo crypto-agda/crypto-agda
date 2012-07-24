@@ -113,8 +113,8 @@ module AbsSemSec {t} {T : Set t}
   SemSecReduction ep₀ ep₁ f = ∀ {c} → SemSecAdv ep₀ c → SemSecAdv ep₁ (f c)
 
 -- Here we use Agda functions for FunUniverse.
-module FunSemSec (prgDist : PrgDist) where
-  open PrgDist prgDist
+module FunSemSec (homPrgDist : HomPrgDist) where
+  open HomPrgDist homPrgDist
   open AbsSemSec agdaFunU
   open AgdaFunOps hiding (proj)
 
@@ -148,7 +148,7 @@ module FunSemSec (prgDist : PrgDist) where
     A₀ ≗A A₁ = observe A₀ ≗ observe A₁
       where open FunSemSecAdv
 
-    change-adv : ∀ {ca} (A₀ A₁ : SemSecAdv ep ca) E → A₀ ≗A A₁ → (E ⇄ A₀) ≗⅁ (E ⇄ A₁)
+    change-adv : ∀ {ca} (A₀ A₁ : SemSecAdv ep ca) E → A₀ ≗A A₁ → (E ⇄ A₀) ≗⅁? (E ⇄ A₁)
     change-adv {ca} _ _ _ pf b R with V.splitAt ca R
     change-adv A₀ A₁ E pf b ._ | pre Σ., post , ≡.refl = ≡.trans (≡.cong proj₂ (helper₀ A₀)) helper₂
        where open FunSemSecAdv
@@ -160,7 +160,7 @@ module FunSemSec (prgDist : PrgDist) where
     E₀ ≗E E₁ = ∀ m → E₀ m ≗↺ E₁ m
 
     ≗E→≗⅁ : ∀ {E₀ E₁} → E₀ ≗E E₁ → ∀ {c} (A : SemSecAdv ep c)
-               → (E₀ ⇄ A) ≗⅁ (E₁ ⇄ A)
+               → (E₀ ⇄ A) ≗⅁? (E₁ ⇄ A)
     ≗E→≗⅁ E₀≗E₁ {c} A b R
       rewrite E₀≗E₁ (proj (proj₁ (FunSemSecAdv.step₀₁ A (V.take c R))) b) (V.drop c R) = ≡.refl
 

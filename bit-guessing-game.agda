@@ -8,13 +8,13 @@ open import Data.Bool.NP
 open import Data.Bits hiding (#⟨_⟩)
 
 open import flipbased-implem using (Coins; ↺; ⅁; return↺; toss; Rat; _/_; Pr[_≡1]) renaming (count↺ to #⟨_⟩)
-open import program-distance using (PrgDist; module PrgDist)
+open import program-distance using (HomPrgDist; module HomPrgDist)
 import Relation.Binary.PropositionalEquality as ≡
 open ≡ using (_≡_)
 
-module bit-guessing-game (prgDist : PrgDist) where
+module bit-guessing-game (homPrgDist : HomPrgDist) where
 
-open PrgDist prgDist
+open HomPrgDist homPrgDist
 
 GuessAdv : Coins → Set
 GuessAdv = ⅁
@@ -67,5 +67,5 @@ count↺-return↺-0b = ≡.refl
 count↺-toss : Pr[ toss ≡1] ≡ 1 / 2
 count↺-toss = ≡.refl
 
--- In the end, at the pure guessing game it is as hard to be
+-- In the end, at the pure guessing game, it is as hard to be
 -- consitently good than to be consitently bad.

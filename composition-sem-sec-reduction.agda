@@ -7,7 +7,7 @@ import Relation.Binary.PropositionalEquality as ≡
 open ≡ using (_≗_)
 
 open import flipbased-implem using (run↺; map↺)
-open import program-distance using (module PrgDist; PrgDist)
+open import program-distance using (module HomPrgDist; HomPrgDist)
 open import fun-universe
 open import agda-fun-universe
 open import one-time-semantic-security
@@ -60,9 +60,9 @@ module CompRed {t} {T : Set t}
       (first post-E ⁏ A₂)
        A₃
 
-module CompSec (prgDist : PrgDist) (ep₀ : EncParams) (|M|₁ |C|₁ : ℕ) where
-  open PrgDist prgDist
-  open FunSemSec prgDist
+module CompSec (homPrgDist : HomPrgDist) (ep₀ : EncParams) (|M|₁ |C|₁ : ℕ) where
+  open HomPrgDist homPrgDist
+  open FunSemSec homPrgDist
   open AgdaFunOps
   open AbsSemSec agdaFunU
   open EncParams²-same-|R|ᵉ ep₀ |M|₁ |C|₁
@@ -91,11 +91,11 @@ module CompSec (prgDist : PrgDist) (ep₀ : EncParams) (|M|₁ |C|₁ : ℕ) whe
 
 -- As a concrete example this module post-compose a negation of all the
 -- bits.
-module PostNegSec (prgDist : PrgDist) ep where
+module PostNegSec (homPrgDist : HomPrgDist) ep where
   open EncParams ep
   open EncParams² ep ep using (Tr)
-  open CompSec prgDist ep |M| |C|
-  open FunSemSec prgDist
+  open CompSec homPrgDist ep |M| |C|
+  open FunSemSec homPrgDist
   open AgdaFunOps using (id)
   open SemSecReductions ep ep id
 
@@ -112,7 +112,7 @@ module PostNegSec (prgDist : PrgDist) ep where
 -- Here we apply a concrete prgDist but still with an abstract precision
 -- bound.
 module ConcretePrgDist (k : ℕ) where
-  open program-distance.Implem k
-  module Guess-prgDist     = bit-guessing-game prgDist
-  module FunSemSec-prgDist = FunSemSec prgDist
-  module CompSec-prgDist   = CompSec prgDist
+  open program-distance.HomImplem k
+  module Guess-prgDist     = bit-guessing-game homPrgDist
+  module FunSemSec-prgDist = FunSemSec homPrgDist
+  module CompSec-prgDist   = CompSec homPrgDist
