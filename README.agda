@@ -48,3 +48,5 @@ open import cost-fun-universe
 -- There is still some code to rescue.
 open import circuit
 open import flipbased-tree-probas
+open import flipbased-no-split
+open import flipbased-product-implem
