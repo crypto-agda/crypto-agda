@@ -13,7 +13,7 @@ open import program-distance
 K = Bit
 M = Bit
 C = Bit
- 
+
 record Adv (S₀ S₁ S₂ : Set) ca : Set where
   constructor mk
   field
@@ -21,7 +21,7 @@ record Adv (S₀ S₁ S₂ : Set) ca : Set where
     step₁ : S₀ → (Bit → M) × S₁
     step₂ : C × S₁ → S₂
     step₃ : S₂ → Bit
- 
+
 record Adv₁ (S₀ S₁ : Set) ca : Set where
   constructor mk
   field
@@ -29,7 +29,7 @@ record Adv₁ (S₀ S₁ : Set) ca : Set where
     -- step₁ s₀ = id , s₀
     step₂ : C × S₀ → S₁
     step₃ : S₁ → Bit
- 
+
 Adv₂ : ∀ ca → Set
 Adv₂ ca = ↺ ca (C → Bit)
 
@@ -59,7 +59,7 @@ module Run⅁ {S₀ S₁ S₂ ca} (E : K → M → C) (A : Adv S₀ S₁ S₂ ca
   {- looks wrong
 module Run⅁-Properties {S₀ S₁ S₂ ca} (A : Adv S₀ S₁ S₂ ca) (b k : Bit) where
   open Run⅁ A
-  kont₀-not : kont₀ b k ≡ kont₀ (not b) (not k) 
+  kont₀-not : kont₀ b k ≡ kont₀ (not b) (not k)
   kont₀-not rewrite xor-not-not b k = {!refl!}
   -}
 
@@ -112,7 +112,7 @@ module Run⅁₂ {ca} (A : Adv₂ ca) (b : Bit) where
 
 module Run⅁₂-Properties {ca} (A : Adv₂ ca) (b k : Bit) where
   open Run⅁₂ A
-  kont₀-not : kont₀ b k ≡ kont₀ (not b) (not k) 
+  kont₀-not : kont₀ b k ≡ kont₀ (not b) (not k)
   kont₀-not rewrite xor-not-not b k = refl
 
 conv-Adv : ∀ {ca S₀ S₁ S₂} → Adv S₀ S₁ S₂ ca → Adv₂ ca
