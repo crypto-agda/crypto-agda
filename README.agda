@@ -21,6 +21,11 @@ open import bit-guessing-game
 -- Cryptographic pseudo-random generator game.
 open import prg
 
+-- “One time Semantic Security” of the “One time pad” cipher
+-- on one bit messages. In other words, “xor”ing any bit with
+-- a random bit will look random as well.
+open import single-bit-one-time-pad
+
 -- Ciphers, the “one time Semantic Security” game.
 open import one-time-semantic-security
 
