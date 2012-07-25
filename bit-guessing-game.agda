@@ -7,7 +7,7 @@ open import Data.Bool.NP
 
 open import Data.Bits hiding (#⟨_⟩)
 
-open import flipbased-implem using (Coins; ↺; ⅁; return↺; toss; Rat; _/_; Pr[_≡1]) renaming (count↺ to #⟨_⟩)
+open import flipbased-implem using (Coins; ↺; EXP; return↺; toss; Rat; _/_; Pr[_≡1]) renaming (count↺ to #⟨_⟩)
 open import program-distance using (HomPrgDist; module HomPrgDist)
 import Relation.Binary.PropositionalEquality as ≡
 open ≡ using (_≡_)
@@ -17,9 +17,9 @@ module bit-guessing-game (homPrgDist : HomPrgDist) where
 open HomPrgDist homPrgDist
 
 GuessAdv : Coins → Set
-GuessAdv = ⅁
+GuessAdv = EXP
 
-runGuess⅁ : ∀ {ca} (A : GuessAdv ca) (b : Bit) → ⅁ ca
+runGuess⅁ : ∀ {ca} (A : GuessAdv ca) (b : Bit) → EXP ca
 runGuess⅁ A _ = A
 
 -- An oracle: an adversary who can break the guessing game.
@@ -68,4 +68,4 @@ count↺-toss : Pr[ toss ≡1] ≡ 1 / 2
 count↺-toss = ≡.refl
 
 -- In the end, at the pure guessing game, it is as hard to be
--- consitently good than to be consitently bad.
+-- consistently good than to be consistently bad.

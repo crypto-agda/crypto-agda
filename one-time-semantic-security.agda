@@ -159,16 +159,16 @@ module FunSemSec (homPrgDist : HomPrgDist) where
     _≗E_ : ∀ (E₀ E₁ : Enc) → Set
     E₀ ≗E E₁ = ∀ m → E₀ m ≗↺ E₁ m
 
-    ≗E→≗⅁ : ∀ {E₀ E₁} → E₀ ≗E E₁ → ∀ {c} (A : SemSecAdv ep c)
+    ≗E→≗⅁? : ∀ {E₀ E₁} → E₀ ≗E E₁ → ∀ {c} (A : SemSecAdv ep c)
                → (E₀ ⇄ A) ≗⅁? (E₁ ⇄ A)
-    ≗E→≗⅁ E₀≗E₁ {c} A b R
+    ≗E→≗⅁? E₀≗E₁ {c} A b R
       rewrite E₀≗E₁ (proj (proj₁ (FunSemSecAdv.step₀₁ A (V.take c R))) b) (V.drop c R) = ≡.refl
 
     ≗A→⇓ : ∀ {c} (A₀ A₁ : SemSecAdv ep c) → A₀ ≗A A₁ → ∀ E → (E ⇄ A₀) ⇓ (E ⇄ A₁)
     ≗A→⇓ A₀ A₁ A₀≗A₁ E = extensional-reduction (change-adv A₀ A₁ E A₀≗A₁)
 
     ≗E→⇓ : ∀ {E₀ E₁} → E₀ ≗E E₁ → ∀ {c} (A : SemSecAdv ep c) → (E₀ ⇄ A) ⇓ (E₁ ⇄ A)
-    ≗E→⇓ E₀≗E₁ A = extensional-reduction (≗E→≗⅁ E₀≗E₁ A)
+    ≗E→⇓ E₀≗E₁ A = extensional-reduction (≗E→≗⅁? E₀≗E₁ A)
 
   module SemSecReductions (ep₀ ep₁ : EncParams) (f : Coins → Coins) where
     open EncParams² ep₀ ep₁

@@ -4,13 +4,16 @@ open import Function
 open import Data.Bits
 open import Data.Nat.NP
 open import Data.Vec
-open import Relation.Binary
+open import Relation.Binary.NP
+open import Relation.Nullary
 import Relation.Binary.PropositionalEquality as ≡
 import Data.Fin as Fin
 open ≡ using (_≗_; _≡_)
 open Fin using (Fin; suc)
 
 import flipbased
+import flipbased-counting
+import flipbased-running
 
 -- “↺ n A” reads like: “toss n coins and then return a value of type A”
 record ↺ {a} n (A : Set a) : Set a where
@@ -54,96 +57,5 @@ weaken≤ : ∀ {m n a} {A : Set a} → m ≤ n → ↺ m A → ↺ n A
 weaken≤ p = comap (take≤ p)
 
 open flipbased ↺ toss weaken≤ return↺ map↺ join↺ public
-
-⅁ : ℕ → Set
-⅁ n = ↺ n Bit
-
-⅁? : ∀ c → Set
-⅁? c = Bit → ⅁ c
-
-count↺ᶠ : ∀ {c} → ⅁ c → Fin (suc (2^ c))
-count↺ᶠ f = #⟨ run↺ f ⟩ᶠ
-
-count↺ : ∀ {c} → ⅁ c → ℕ
-count↺ f = #⟨ run↺ f ⟩
-
-infix 4 _≗↺_ _≗⅁?_ _≋⅁_
-
-_≗↺_ : ∀ {c a} {A : Set a} (f g : ↺ c A) → Set a
-f ≗↺ g = run↺ f ≗ run↺ g
-
-_≗⅁?_ : ∀ {c} (g₀ g₁ : ⅁? c) → Set
-g₀ ≗⅁? g₁ = ∀ b → g₀ b ≗↺ g₁ b
-
--- f ≈⅁ g when f and g return the same number of 1 (and 0).
-_≈⅁_ : ∀ {n} (f g : ⅁ n) → Set
-_≈⅁_ = _≡_ on count↺
-
-_∼[_]⅁_ : ∀ {m n} → ⅁ m → (ℕ → ℕ → Set) → ⅁ n → Set
-_∼[_]⅁_ {m} {n} f _∼_ g = ⟨2^ n * count↺ f ⟩ ∼ ⟨2^ m * count↺ g ⟩
-
-_≋⅁_ : ∀ {m n} → ⅁ m → ⅁ n → Set
-f ≋⅁ g = f ∼[ _≡_ ]⅁ g
-
-Safe⅁? : ∀ {c} (f : ⅁? c) → Set
-Safe⅁? f = f 0b ≈⅁ f 1b
-
-≈⅁⇒≋⅁ : ∀ {n} {f g : ⅁ n} → f ≈⅁ g → f ≋⅁ g
-≈⅁⇒≋⅁ eq rewrite eq = ≡.refl
-
-≗⇒≈⅁ : ∀ {c} {f g : ⅁ c} → f ≗↺ g → f ≈⅁ g
-≗⇒≈⅁ {f = f} {g} = ≗-cong-# (run↺ f) (run↺ g)
-
-≗⇒≋⅁ : ∀ {c} {f g : ⅁ c} → f ≗↺ g → f ≋⅁ g
-≗⇒≋⅁ eq rewrite ≗⇒≈⅁ eq = ≡.refl
-
-≋⅁⇒≈⅁ : ∀ {n} {f g : ⅁ n} → f ≋⅁ g → f ≈⅁ g
-≋⅁⇒≈⅁ {n} = 2^-inj n
-
-module ≗⅁? where
-  refl : ∀ {n} {f : ⅁? n} → f ≗⅁? f
-  refl _ _ = ≡.refl
-
-  sym : ∀ {n} → Symmetric {A = ⅁? n} _≗⅁?_
-  sym p b R = ≡.sym (p b R)
-
-  trans : ∀ {c} → Transitive (_≗⅁?_ {c})
-  trans p q b R = ≡.trans (p b R) (q b R)
-
-module ≋⅁ where
-  refl : ∀ {n} {f : ⅁ n} → f ≋⅁ f
-  refl = ≡.refl
-
-  sym : ∀ {n} → Symmetric {A = ⅁ n} _≋⅁_
-  sym = ≡.sym
-
-  trans : ∀ {n} → Transitive {A = ⅁ n} _≋⅁_
-  trans = ≡.trans
-
-  cong-≗↺ : ∀ {c c'} {f g : ⅁ c} {f' g' : ⅁ c'} → f ≗↺ g → f' ≗↺ g' → f ≋⅁ f' → g ≋⅁ g'
-  cong-≗↺ f≗g f'≗g' f≈f' rewrite ≗⇒≈⅁ f≗g | ≗⇒≈⅁ f'≗g' = f≈f'
-
-module ≈⅁ {n} where
-  refl : ∀ {f : ⅁ n} → f ≈⅁ f
-  refl = ≡.refl
-
-  sym : Symmetric {A = ⅁ n} _≈⅁_
-  sym = ≡.sym
-
-  trans :  Transitive {A = ⅁ n} _≈⅁_
-  trans = ≡.trans
-
-  cong-≗↺ : ∀ {f g f' g' : ⅁ n} → f ≗↺ g → f' ≗↺ g' → f ≈⅁ f' → g ≈⅁ g'
-  cong-≗↺ f≗g f'≗g' f≈f' rewrite ≗⇒≈⅁ f≗g | ≗⇒≈⅁ f'≗g' = f≈f'
-
-module ⅁? {n} where
-  join : ⅁ n → ⅁ n → ⅁? n
-  join f g b = if b then f else g
-
-  safe-sym : ∀ {g : ⅁? n} → Safe⅁? g → Safe⅁? (g ∘ not)
-  safe-sym {g} g-safe = ≈⅁.sym {n} {g 0b} {g 1b} g-safe
-
-data Rat : Set where _/_ : (num denom : ℕ) → Rat
-
-Pr[_≡1] : ∀ {n} (f : ⅁ n) → Rat
-Pr[_≡1] {n} f = count↺ f / 2^ n
+open flipbased-running ↺ toss weaken≤ return↺ map↺ join↺ run↺ public
+open flipbased-counting ↺ toss weaken≤ return↺ map↺ join↺ count↺ public

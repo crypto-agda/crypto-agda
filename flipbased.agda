@@ -28,6 +28,14 @@ Coins = ℕ
 Det : ∀ {a} → Set a → Set a
 Det = ↺ 0
 
+-- An experiment
+EXP : ℕ → Set
+EXP n = ↺ n Bit
+
+-- A guessing game
+⅁? : ∀ c → Set
+⅁? c = Bit → EXP c
+
 returnᴰ : ∀ {a} {A : Set a} → A → Det A
 returnᴰ = return↺
 
