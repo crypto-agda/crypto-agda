@@ -117,6 +117,9 @@ x ⟨xor⟩ y = ⟪ _xor_ · x · y ⟫
 _⟨⊕⟩_ : ∀ {n₁ n₂ m} → ↺ n₁ (Bits m) → ↺ n₂ (Bits m) → ↺ (n₁ + n₂) (Bits m)
 x ⟨⊕⟩ y = ⟪ _⊕_ · x · y ⟫
 
+_⟨∷⟩_ : ∀ {n₁ n₂ m a} {A : Set a} → ↺ n₁ A → ↺ n₂ (Vec A m) → ↺ (n₁ + n₂) (Vec A (suc m))
+x ⟨∷⟩ xs = ⟪ _∷_ · x · xs ⟫
+
 _⟨==⟩_ : ∀ {n₁ n₂ m} → ↺ n₁ (Bits m) → ↺ n₂ (Bits m) → ↺ (n₁ + n₂) Bit
 x ⟨==⟩ y = ⟪ _==_ · x · y ⟫
 
@@ -125,7 +128,10 @@ T↺ p = ⟪ T · p ⟫
 
 replicate↺ : ∀ {n m} {a} {A : Set a} → ↺ m A → ↺ (n * m) (Vec A n)
 replicate↺ {zero}  _ = ⟪ [] ⟫
-replicate↺ {suc _} x = ⟪ _∷_ · x · replicate↺ x ⟫
+replicate↺ {suc _} x = x ⟨∷⟩ replicate↺ x
+
+not↺ : ∀ {n} → EXP n → EXP n
+not↺ = map↺ not
 
 random : ∀ {n} → ↺ n (Bits n)
 -- random = coerce ? (replicate↺ toss) -- specialized version for now to avoid coerce
