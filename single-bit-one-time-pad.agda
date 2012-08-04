@@ -2,9 +2,12 @@ module single-bit-one-time-pad where
 
 open import Function
 open import Data.Bool.NP
-open import Data.Product
+open import Data.Product renaming (map to <_×_>)
 open import Data.Nat.NP
-open import Relation.Binary.PropositionalEquality.NP
+import Data.Vec.NP as V
+open V using (Vec; take; drop; drop′; take′; _++_)
+import Relation.Binary.PropositionalEquality.NP as ≡
+open ≡ using (_≡_; _≗_; module ≡-Reasoning)
 
 open import Data.Bits
 open import flipbased-implem
@@ -77,8 +80,6 @@ module SymAdv (homPrgDist : HomPrgDist) {S₀ S₁ S₂ ca} (A : Adv S₀ S₁ S
   open Run⅁ _xor_ A renaming (run⅁ to runA)
   open Run⅁ _xor_ symA renaming (run⅁ to runSymA)
   open Run⅁ _xor_ symA′ renaming (run⅁ to runSymA′)
-  not↺ : ∀ {n} → EXP n → EXP n
-  not↺ = map↺ not
   {-
   helper : ∀ {n} (g₀ g₁ : EXP n) → g₀ ]-[ g₁ → not↺ g₀ ]-[ not↺ g₁
   helper = {!!}
@@ -110,18 +111,44 @@ module Run⅁₂ {ca} (A : Adv₂ ca) (b : Bit) where
   run⅁₂ : EXP (1 + ca)
   run⅁₂ = toss >>= kont₀
 
-module Run⅁₂-Properties {ca} (A : Adv₂ ca) (b k : Bit) where
-  open Run⅁₂ A
-  kont₀-not : kont₀ b k ≡ kont₀ (not b) (not k)
-  kont₀-not rewrite xor-not-not b k = refl
+module Run⅁₂-Properties {ca} (A : Adv₂ ca) where
+    open Run⅁₂ A renaming (run⅁₂ to runA)
+    kont₀-not : ∀ b k → kont₀ b k ≡ kont₀ (not b) (not k)
+    kont₀-not b k rewrite xor-not-not b k = ≡.refl
+
+    open ≡-Reasoning
+
+    lem₂ : ∀ b → count↺ (runA b) ≡ count↺ (runA (not b))
+    lem₂ b = count↺ (runA b)
+          ≡⟨ ≡.refl ⟩
+            count↺ (kont₀ b 0b) + count↺ (kont₀ b 1b)
+          ≡⟨ ≡.cong₂ (_+_ on count↺) (kont₀-not b 0b) (kont₀-not b 1b) ⟩
+            count↺ (kont₀ (not b) 1b) + count↺ (kont₀ (not b) 0b)
+          ≡⟨ ℕ°.+-comm (count↺ (kont₀ (not b) 1b)) _ ⟩
+            count↺ (kont₀ (not b) 0b) + count↺ (kont₀ (not b) 1b)
+          ≡⟨ ≡.refl ⟩
+            count↺ (runA (not b)) ∎
+
+    lem₃ : Safe⅁? runA
+    lem₃ = lem₂ 0b
+
+    -- A specialized version of lem₂ (≈lem₃)
+    lem₄ : Safe⅁? (Run⅁₂.run⅁₂ A)
+    lem₄    = count↺ (runA 0b)
+            ≡⟨ ≡.refl ⟩
+              count↺ (kont₀ 0b 0b) + count↺ (kont₀ 0b 1b)
+            ≡⟨ ≡.cong₂ (_+_ on count↺) (kont₀-not 0b 0b) (kont₀-not 0b 1b) ⟩
+              count↺ (kont₀ 1b 1b) + count↺ (kont₀ 1b 0b)
+            ≡⟨ ℕ°.+-comm (count↺ (kont₀ 1b 1b)) _ ⟩
+              count↺ (kont₀ 1b 0b) + count↺ (kont₀ 1b 1b)
+            ≡⟨ ≡.refl ⟩
+              count↺ (runA 1b) ∎
 
 conv-Adv : ∀ {ca S₀ S₁ S₂} → Adv S₀ S₁ S₂ ca → Adv₂ ca
 conv-Adv A = step₀ ▹↺ λ s₀ →
              case step₁ s₀ of λ {(m , s₁) →
              λ c → m (step₃ (step₂ (c , s₁)))}
   where open Adv A
-
-open ≡-Reasoning
 
 module Conv-Adv-Props (homPrgDist : HomPrgDist) {ca S₀ S₁ S₂} (A : Adv S₀ S₁ S₂ ca) where
   open HomPrgDist homPrgDist
@@ -170,7 +197,7 @@ module Conv-Adv-Props (homPrgDist : HomPrgDist) {ca S₀ S₁ S₂} (A : Adv S�
   -}
 -- Cute fact: this is true by computation!
 count↺-toss->>= : ∀ {c} (f : ⅁? c) → count↺ (toss >>= f) ≡ count↺ (f 0b) + count↺ (f 1b)
-count↺-toss->>= f = refl
+count↺-toss->>= f = ≡.refl
 
 {-
 module Run⅁-Properties' {S₀ S₁ S₂ ca} (A : Adv S₀ S₁ S₂ ca) (b : Bit) where
@@ -189,32 +216,56 @@ module Run⅁-Properties' {S₀ S₁ S₂ ca} (A : Adv S₀ S₁ S₂ ca) (b : B
 open import program-distance
 open import Relation.Nullary
 
-lem₂ : ∀ {ca} (A : Adv₂ ca) b → count↺ (Run⅁₂.run⅁₂ A b) ≡ count↺ (Run⅁₂.run⅁₂ A (not b))
-lem₂ A b = count↺ (runA b)
-        ≡⟨ refl ⟩
-          count↺ (kont₀ b 0b) + count↺ (kont₀ b 1b)
-        ≡⟨ cong₂ (_+_ on count↺) (kont₀-not 0b) (kont₀-not 1b) ⟩
-          count↺ (kont₀ (not b) 1b) + count↺ (kont₀ (not b) 0b)
-        ≡⟨ ℕ°.+-comm (count↺ (kont₀ (not b) 1b)) _ ⟩
-          count↺ (kont₀ (not b) 0b) + count↺ (kont₀ (not b) 1b)
-        ≡⟨ refl ⟩
-          count↺ (runA (not b)) ∎
-  where open Run⅁₂ A renaming (run⅁₂ to runA)
-        open Run⅁₂-Properties A b
+⁇ : ∀ {n} → ↺ n (Bits n)
+⁇ = random
 
-lem₃ : ∀ {ca} (A : Adv₂ ca) → Safe⅁? (Run⅁₂.run⅁₂ A)
-lem₃ A = lem₂ A 0b
 
--- A specialized version of lem₂
-lem₄ : ∀ {ca} (A : Adv₂ ca) → Safe⅁? (Run⅁₂.run⅁₂ A)
-lem₄ A  = count↺ (runA 0b)
-        ≡⟨ refl ⟩
-          count↺ (kont₀ 0b 0b) + count↺ (kont₀ 0b 1b)
-        ≡⟨ cong₂ (_+_ on count↺) (kont₀-not 0b) (kont₀-not 1b) ⟩
-          count↺ (kont₀ 1b 1b) + count↺ (kont₀ 1b 0b)
-        ≡⟨ ℕ°.+-comm (count↺ (kont₀ 1b 1b)) _ ⟩
-          count↺ (kont₀ 1b 0b) + count↺ (kont₀ 1b 1b)
-        ≡⟨ refl ⟩
-          count↺ (runA 1b) ∎
-  where open Run⅁₂ A renaming (run⅁₂ to runA)
-        open Run⅁₂-Properties A 0b
+lem'' : ∀ {k} (f : Bits k → Bit) → #⟨ f ∘ tail ⟩ ≡ 2* #⟨ f ⟩
+lem'' f = ≡.refl
+
+lem' : ∀ {k} (f g : Bits k → Bit) → #⟨ f ∘ tail ⟩ ≡ #⟨ g ∘ tail ⟩ → #⟨ f ⟩ ≡ #⟨ g ⟩
+lem' f g pf = 2*-inj (≡.trans (lem'' f) (≡.trans pf (≡.sym (lem'' g))))
+
+drop-tail : ∀ k {n a} {A : Set a} → drop (suc k) {n} ≗ drop k ∘ tail {A = A}
+drop-tail k (x ∷ xs) = V.drop-∷ k x xs
+
+lemdrop′ : ∀ {k n} (f : Bits n → Bit) → #⟨ f ∘ drop′ k ⟩ ≡ ⟨2^ k * #⟨ f ⟩ ⟩
+lemdrop′ {zero} f = ≡.refl
+lemdrop′ {suc k} f = #⟨ f ∘ drop′ k ∘ tail ⟩
+                   ≡⟨ lem'' (f ∘ drop′ k) ⟩
+                     2* #⟨ f ∘ drop′ k ⟩
+                   ≡⟨ ≡.cong 2*_ (lemdrop′ {k} f) ⟩
+                     2* ⟨2^ k * #⟨ f ⟩ ⟩ ∎
+                    where open ≡-Reasoning
+
+vswap : ∀ m {n} {a} {A : Set a} → Vec A (m + n) → Vec A (n + m)
+vswap m xs = drop′ m xs ++ take′ m xs
+
+
+
+
+
+
+≈ᴬ′-toss : ∀ b → ⟪ b ⟫ᴰ ⟨xor⟩ toss ≈ᴬ′ toss
+≈ᴬ′-toss true Adv = ℕ°.+-comm (count↺ (Adv true)) _
+≈ᴬ′-toss false Adv = ≡.refl
+
+≈ᴬ-toss : ∀ b → ⟪ b ⟫ᴰ ⟨xor⟩ toss ≈ᴬ toss
+≈ᴬ-toss b Adv = ≈ᴬ′-toss b (returnᴰ ∘ Adv)
+
+-- should be equivalent to #-comm if ⟪ m ⟫ᴰ ⟨⊕⟩ x were convertible to ⟪ _⊕_ m · x ⟫
+≈ᴬ-⁇ : ∀ {k} (m : Bits k) → ⟪ m ⟫ᴰ ⟨⊕⟩ ⁇ ≈ᴬ ⁇
+≈ᴬ-⁇ {zero}  _       _ = ≡.refl
+≈ᴬ-⁇ {suc k} (h ∷ m) Adv
+  rewrite ≈ᴬ-⁇ m (Adv ∘ _∷_ (h xor 0b))
+        | ≈ᴬ-⁇ m (Adv ∘ _∷_ (h xor 1b))
+        = ≈ᴬ′-toss h (λ x → ⟪ Adv ∘ _∷_ x · ⁇ ⟫)
+
+≈ᴬ-⁇₂ : ∀ {k} (m₀ m₁ : Bits k) → ⟪ m₀ ⟫ᴰ ⟨⊕⟩ ⁇ ≈ᴬ ⟪ m₁ ⟫ᴰ ⟨⊕⟩ ⁇
+≈ᴬ-⁇₂ {k} m₀ m₁ = ≈ᴬ.trans {k} (≈ᴬ-⁇ m₀) (≈ᴬ.sym {k} (≈ᴬ-⁇ m₁))
+
+≈ᴬ-⁇₃ : ∀ {k} (m : Bit → Bits k) (b : Bit) → ⟪ m b ⟫ᴰ ⟨⊕⟩ ⁇ ≈ᴬ ⟪ m (not b) ⟫ᴰ ⟨⊕⟩ ⁇
+≈ᴬ-⁇₃ m b = ≈ᴬ-⁇₂ (m b) (m (not b))
+
+≈ᴬ-⁇₄ : ∀ {k} (m : Bits k × Bits k) (b : Bit) → ⟪ proj m b ⟫ᴰ ⟨⊕⟩ ⁇ ≈ᴬ ⟪ proj m (not b) ⟫ᴰ ⟨⊕⟩ ⁇
+≈ᴬ-⁇₄ = ≈ᴬ-⁇₃ ∘ proj
