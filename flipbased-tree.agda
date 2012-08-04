@@ -4,7 +4,7 @@ open import Function using (flip)
 open import Data.Bits using (Bit; 0b; 1b; Bits)
 
 open import bintree using (leaf; fork; toFun)
-open bintree public using (Tree; weaken≤) renaming (map to map↺; join to join↺)
+open bintree public using (Tree) renaming (map to map↺; join to join↺)
 import flipbased
 import flipbased-running
 import flipbased-counting
@@ -25,6 +25,6 @@ toss = fork (leaf 0b) (leaf 1b)
 run↺ : ∀ {n a} {A : Set a} → ↺ n A → Bits n → A
 run↺ = toFun
 
-open flipbased ↺ toss weaken≤ leaf map↺ join↺ public
-open flipbased-running ↺ toss weaken≤ return↺ map↺ join↺ run↺ public
-open flipbased-counting ↺ toss weaken≤ return↺ map↺ join↺ count↺ public
+open flipbased ↺ toss leaf map↺ join↺ public
+open flipbased-running ↺ toss return↺ map↺ join↺ run↺ public
+open flipbased-counting ↺ toss return↺ map↺ join↺ count↺ public

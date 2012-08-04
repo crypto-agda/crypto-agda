@@ -16,7 +16,6 @@ open ≡ using (_≡_)
 module flipbased
    (↺ : ∀ {a} → ℕ → Set a → Set a)
    (toss : ↺ 1 Bit)
-   (weaken≤ : ∀ {m n a} {A : Set a} → m ≤ n → ↺ m A → ↺ n A)
    (return↺ : ∀ {n a} {A : Set a} → A → ↺ n A)
    (map↺ : ∀ {n a b} {A : Set a} {B : Set b} → (A → B) → ↺ n A → ↺ n B)
    (join↺ : ∀ {n₁ n₂ a} {A : Set a} → ↺ n₁ (↺ n₂ A) → ↺ (n₁ + n₂) A)
@@ -61,11 +60,15 @@ _>=>_ : ∀ {n₁ n₂ a b c} {A : Set a} {B : Set b} {C : Set c}
         → (A → ↺ n₁ B) → (B → ↺ n₂ C) → A → ↺ (n₁ + n₂) C
 (f >=> g) x = f x >>= g
 
-weaken : ∀ {m n a} {A : Set a} → ↺ n A → ↺ (m + n) A
-weaken {m} x = return↺ {m} 0 >> x
+weaken : ∀ m {n a} {A : Set a} → ↺ n A → ↺ (m + n) A
+weaken m x = return↺ {m} 0 >> x
 
 weaken′ : ∀ {m n a} {A : Set a} → ↺ n A → ↺ (n + m) A
 weaken′ x = x >>= return↺
+
+weaken≤ : ∀ {m n a} {A : Set a} → m ≤ n → ↺ m A → ↺ n A
+weaken≤ pf x with ≤⇒∃ pf
+... | k , ≡.refl = weaken′ x
 
 pure↺ : ∀ {n a} {A : Set a} → A → ↺ n A
 pure↺ = return↺

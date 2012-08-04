@@ -72,13 +72,13 @@ module Redundant where
       where pf : ∀ m′ n′ → ∃ λ pre → ∃ λ post → m′ + ((m + n) + n′) ≡ pre + (m + post)
             pf m′ n′ rewrite ℕ°.+-assoc m n n′ = m′ , n + n′ , ≡.refl
 
-weaken≤ : ∀ {m n a} {A : Set a} → m ≤ n → ↺ m A → ↺ n A
-weaken≤ {m} {n} m≤n = coe pf
-  where pf : ∀ m′ n′ → ∃ λ pre → ∃ λ post → m′ + (n + n′) ≡ pre + (m + post)
-        pf m′ n′  = m′ , n ∸ m + n′ , pf′
-           where pf′ : m′ + (n + n′) ≡ m′ + (m + (n ∸ m + n′))
-                 pf′ rewrite ≡.sym (ℕ°.+-assoc m (n ∸ m) n′) | m+n∸m≡n m≤n = ≡.refl
+    weaken≤ : ∀ {m n a} {A : Set a} → m ≤ n → ↺ m A → ↺ n A
+    weaken≤ {m} {n} m≤n = coe pf
+      where pf : ∀ m′ n′ → ∃ λ pre → ∃ λ post → m′ + (n + n′) ≡ pre + (m + post)
+            pf m′ n′  = m′ , n ∸ m + n′ , pf′
+               where pf′ : m′ + (n + n′) ≡ m′ + (m + (n ∸ m + n′))
+                     pf′ rewrite ≡.sym (ℕ°.+-assoc m (n ∸ m) n′) | m+n∸m≡n m≤n = ≡.refl
 
-open flipbased ↺ toss weaken≤ return↺ map↺ join↺ public
-open flipbased-running ↺ toss weaken≤ return↺ map↺ join↺ run↺ public
-open flipbased-counting ↺ toss weaken≤ return↺ map↺ join↺ count↺ public
+open flipbased ↺ toss return↺ map↺ join↺ public
+open flipbased-running ↺ toss return↺ map↺ join↺ run↺ public
+open flipbased-counting ↺ toss return↺ map↺ join↺ count↺ public

@@ -10,14 +10,13 @@ import flipbased
 module flipbased-counting
    (↺ : ∀ {a} → ℕ → Set a → Set a)
    (toss : ↺ 1 Bit)
-   (weaken≤ : ∀ {m n a} {A : Set a} → m ≤ n → ↺ m A → ↺ n A)
    (return↺ : ∀ {n a} {A : Set a} → A → ↺ n A)
    (map↺ : ∀ {n a b} {A : Set a} {B : Set b} → (A → B) → ↺ n A → ↺ n B)
    (join↺ : ∀ {n₁ n₂ a} {A : Set a} → ↺ n₁ (↺ n₂ A) → ↺ (n₁ + n₂) A)
    (count↺ : ∀ {n} → ↺ n Bit → ℕ)
  where
 
-open flipbased ↺ toss weaken≤ return↺ map↺ join↺
+open flipbased ↺ toss return↺ map↺ join↺
 
 infix 4 _≈↺_ _≋↺_ _≈⅁?_
 

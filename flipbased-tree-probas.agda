@@ -13,7 +13,7 @@ open import Data.Product
 
 open import Data.Bits
 open import bintree
-open import flipbased-tree
+open import flipbased-tree hiding (weaken≤)
 
 module flipbased-tree-probas where
 

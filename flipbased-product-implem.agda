@@ -73,6 +73,7 @@ join↺ {n₁} {n₂} (mk g) = mk λ xs → run↺′ (g (takeπ n₁ xs)) (drop
 comap : ∀ {m n a} {A : Set a} → (πBits n → πBits m) → ↺ m A → ↺ n A
 comap f (mk g) = mk (g ∘ f)
 
+{-
 private
   take≤ : ∀ {m n} → n ≤ m → πBits m → πBits n
   take≤ z≤n _ = _
@@ -80,7 +81,8 @@ private
 
 weaken≤ : ∀ {m n a} {A : Set a} → m ≤ n → ↺ m A → ↺ n A
 weaken≤ p = comap (take≤ p)
+-}
 
-open flipbased ↺ toss weaken≤ return↺ map↺ join↺ public
-open flipbased-running ↺ toss weaken≤ return↺ map↺ join↺ run↺ public
-open flipbased-counting ↺ toss weaken≤ return↺ map↺ join↺ count↺ public
+open flipbased ↺ toss return↺ map↺ join↺ public
+open flipbased-running ↺ toss return↺ map↺ join↺ run↺ public
+open flipbased-counting ↺ toss return↺ map↺ join↺ count↺ public
