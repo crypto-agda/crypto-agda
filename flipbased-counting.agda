@@ -18,7 +18,7 @@ module flipbased-counting
 
 open flipbased ↺ toss return↺ map↺ join↺
 
-infix 4 _≈↺_ _≋↺_ _≈⅁?_
+infix 4 _≈↺_ _≋↺_ _≈⅁?_ _≈ᴬ_ _≈ᴬ′_
 
 -- f ≈↺ g when f and g return the same number of 1 (and 0).
 _≈↺_ : ∀ {n} (f g : EXP n) → Set
@@ -27,11 +27,23 @@ _≈↺_ = _≡_ on count↺
 _≈⅁?_ : ∀ {c} (g₀ g₁ : ⅁? c) → Set
 g₀ ≈⅁? g₁ = ∀ b → g₀ b ≈↺ g₁ b
 
-_∼[_]EXP_ : ∀ {m n} → EXP m → (ℕ → ℕ → Set) → EXP n → Set
-_∼[_]EXP_ {m} {n} f _∼_ g = ⟨2^ n * count↺ f ⟩ ∼ ⟨2^ m * count↺ g ⟩
+_≈ᴬ_ : ∀ {n a} {A : Set a} (f g : ↺ n A) → Set _
+_≈ᴬ_ {n} {A = A} f g = ∀ (Adv : A → Bit) → ⟪ Adv · f ⟫ ≈↺ ⟪ Adv · g ⟫
+
+_≈ᴬ′_ : ∀ {n a} {A : Set a} (f g : ↺ n A) → Set _
+_≈ᴬ′_ {n} {A = A} f g = ∀ {ca} (Adv : A → ↺ ca Bit) → f >>= Adv ≈↺ g >>= Adv
+
+{- Restore if we find more use of it
+RelatedEXP : (ℕ → ℕ → Set) → ∀ {m n} → EXP m → EXP n → Set
+RelatedEXP _∼_ {m} {n} f g = ⟨2^ n * count↺ f ⟩ ∼ ⟨2^ m * count↺ g ⟩
+
+module ... z where
+  x ∼ y = dist x y > ... z ...
+-}
 
 _≋↺_ : ∀ {m n} → EXP m → EXP n → Set
-f ≋↺ g = f ∼[ _≡_ ]EXP g
+-- _≋↺_ = RelatedEXP _≡_
+_≋↺_ {m} {n} f g = ⟨2^ n * count↺ f ⟩ ≡ ⟨2^ m * count↺ g ⟩
 
 Safe⅁? : ∀ {c} (f : ⅁? c) → Set
 Safe⅁? f = f 0b ≈↺ f 1b
@@ -124,6 +136,60 @@ module ≈↺ {n} where
                                ; trans = λ {x y z} → trans {x} {y} {z} }
 
   module Reasoning = Setoid-Reasoning setoid 
+  open Setoid setoid public
+
+module ≈ᴬ {n} {a} {A : Set a} where
+  setoid : Setoid _ _
+  setoid = record { Carrier = C; _≈_ = ℛ; isEquivalence = isEquivalence }
+      where
+        C : Set _
+        C = ↺ n A
+
+        ℛ : C → C → Set _
+        ℛ = _≈ᴬ_
+
+        refl : Reflexive ℛ
+        refl A = ≡.refl
+
+        sym : Symmetric ℛ
+        sym p A = ≡.sym (p A)
+
+        trans : Transitive ℛ
+        trans p q A = ≡.trans (p A) (q A)
+
+        isEquivalence : IsEquivalence ℛ
+        isEquivalence = record { refl = λ {x} → refl {x}
+                               ; sym = λ {x y} → sym {x} {y}
+                               ; trans = λ {x y z} → trans {x} {y} {z} }
+
+  module Reasoning = Setoid-Reasoning setoid
+  open Setoid setoid public
+
+module ≈ᴬ′ {n} {a} {A : Set a} where
+  setoid : Setoid _ _
+  setoid = record { Carrier = C; _≈_ = ℛ; isEquivalence = isEquivalence }
+      where
+        C : Set _
+        C = ↺ n A
+
+        ℛ : C → C → Set _
+        ℛ = _≈ᴬ′_
+
+        refl : Reflexive ℛ
+        refl A = ≡.refl
+
+        sym : Symmetric ℛ
+        sym p A = ≡.sym (p A)
+
+        trans : Transitive ℛ
+        trans p q A = ≡.trans (p A) (q A)
+
+        isEquivalence : IsEquivalence ℛ
+        isEquivalence = record { refl = λ {x} → refl {x}
+                               ; sym = λ {x y} → sym {x} {y}
+                               ; trans = λ {x y z} → trans {x} {y} {z} }
+
+  module Reasoning = Setoid-Reasoning setoid
   open Setoid setoid public
 
 module ⅁? {n} where
