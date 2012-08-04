@@ -19,7 +19,7 @@ record HomPrgDist : Set₁ where
 
   field
     _]-[_ : ∀ {n} (f g : EXP n) → Set
-    ]-[-antisym : ∀ {n} (f : EXP n) → ¬ (f ]-[ f)
+    ]-[-irrefl : ∀ {n} (f : EXP n) → ¬ (f ]-[ f)
     ]-[-sym : ∀ {n} {f g : EXP n} → f ]-[ g → g ]-[ f
     ]-[-cong-left-≈↺ : ∀ {n} {f g h : EXP n} → f ≈↺ g → g ]-[ h → f ]-[ h
 
@@ -58,7 +58,7 @@ record HomPrgDist : Set₁ where
   extensional-reduction same-games = ]-[-cong-≗↺ (same-games 0b) (same-games 1b)
 
   reversible-don't-break : ∀ {c} (g : ⅁? c) → Reversible⅁? g → ¬(breaks g)
-  reversible-don't-break g g≈g∘not g0]-[g1 = ]-[-antisym (g 1b) (]-[-cong-left-≈↺ (g≈g∘not 1b) g0]-[g1)
+  reversible-don't-break g g≈g∘not g0]-[g1 = ]-[-irrefl (g 1b) (]-[-cong-left-≈↺ (g≈g∘not 1b) g0]-[g1)
 
 module HomImplem k where
   --  | Pr[ f ≡ 1 ] - Pr[ g ≡ 1 ] | ≥ ε            [ on reals ]
@@ -71,8 +71,8 @@ module HomImplem k where
   _]-[_ : ∀ {n} (f g : EXP n) → Set
   _]-[_ {n} f g = dist (count↺ f) (count↺ g) ≥ 2^(n ∸ k)
 
-  ]-[-antisym : ∀ {n} (f : EXP n) → ¬ (f ]-[ f)
-  ]-[-antisym {n} f f]-[g rewrite dist-refl (count↺ f) with ℕ≤.trans (1≤2^ (n ∸ k)) f]-[g
+  ]-[-irrefl : ∀ {n} (f : EXP n) → ¬ (f ]-[ f)
+  ]-[-irrefl {n} f f]-[g rewrite dist-refl (count↺ f) with ℕ≤.trans (1≤2^ (n ∸ k)) f]-[g
   ... | ()
 
   ]-[-sym : ∀ {n} {f g : EXP n} → f ]-[ g → g ]-[ f
@@ -85,7 +85,7 @@ module HomImplem k where
 
   homPrgDist : HomPrgDist
   homPrgDist = mk _]-[_
-                  ]-[-antisym
+                  ]-[-irrefl
                   (λ {_ f g} → ]-[-sym {f = f} {g})
                   (λ {_ f g h} → ]-[-cong-left-≈↺ {f = f} {g} {h})
 
@@ -93,7 +93,7 @@ record PrgDist : Set₁ where
   constructor mk
   field
     _]-[_ : ∀ {m n} → EXP m → EXP n → Set
-    ]-[-antisym : ∀ {n} (f : EXP n) → ¬ (f ]-[ f)
+    ]-[-irrefl : ∀ {n} (f : EXP n) → ¬ (f ]-[ f)
     ]-[-sym : ∀ {m n} {f : EXP m} {g : EXP n} → f ]-[ g → g ]-[ f
     ]-[-cong-left-≋↺ : ∀ {m n o} {f : EXP m} {g : EXP n} {h : EXP o} → f ≋↺ g → g ]-[ h → f ]-[ h
 
@@ -135,8 +135,8 @@ module Implem k where
   _]-[_ : ∀ {m n} → EXP m → EXP n → Set
   _]-[_ {m} {n} f g = dist ⟨2^ n * count↺ f ⟩ ⟨2^ m * count↺ g ⟩ ≥ 2^((m + n) ∸ k)
 
-  ]-[-antisym : ∀ {n} (f : EXP n) → ¬ (f ]-[ f)
-  ]-[-antisym {n} f f]-[g rewrite dist-refl ⟨2^ n * count↺ f ⟩ with ℕ≤.trans (1≤2^ (n + n ∸ k)) f]-[g
+  ]-[-irrefl : ∀ {n} (f : EXP n) → ¬ (f ]-[ f)
+  ]-[-irrefl {n} f f]-[g rewrite dist-refl ⟨2^ n * count↺ f ⟩ with ℕ≤.trans (1≤2^ (n + n ∸ k)) f]-[g
   ... | ()
 
   ]-[-sym : ∀ {m n} {f : EXP m} {g : EXP n} → f ]-[ g → g ]-[ f
@@ -175,7 +175,7 @@ module Implem k where
 
   prgDist : PrgDist
   prgDist = mk _]-[_
-               ]-[-antisym
+               ]-[-irrefl
                (λ {m n f g} → ]-[-sym {f = f} {g})
                (λ {m n o f g h} → ]-[-cong-left-≋↺ {f = f} {g} {h})
 -}

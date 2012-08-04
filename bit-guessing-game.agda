@@ -42,11 +42,11 @@ same-behavior A = ≡.refl
 -- The guessing game is actually secure since any adversary
 -- has an advantage of zero.
 -- This a direct application of the fact that the "far-apart" _]-[_
--- relation is antisymetric, meaning that any point cannot be "far-apart"
+-- relation is irreflexive, meaning that any point cannot be "far-apart"
 -- from itself. The definiton of "breaks ⅁" being that ⅁ 0b is "far-apart"
 -- from ⅁ 1b.
 guessSec : ∀ {ca} → GuessSec ca
-guessSec = ]-[-antisym
+guessSec = ]-[-irrefl
 
 -- Let's look at three possible strategies:
 
