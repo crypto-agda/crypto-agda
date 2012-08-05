@@ -12,24 +12,28 @@ open import Data.Vec using (Vec; []; _∷_; take; drop; head; tail) renaming (ma
 open import Relation.Binary
 import Relation.Binary.PropositionalEquality as ≡
 open ≡ using (_≡_)
+open import data-universe
 
 module flipbased
-   (↺ : ∀ {a} → ℕ → Set a → Set a)
-   (toss : ↺ 1 Bit)
+   {T : Set}
+   (T-U : Universe T)
+   (↺ : ∀ {a} → T → Set a → Set a)
+   (toss : let open Universe T-U in ↺ `Bit Bit)
    (return↺ : ∀ {n a} {A : Set a} → A → ↺ n A)
    (map↺ : ∀ {n a b} {A : Set a} {B : Set b} → (A → B) → ↺ n A → ↺ n B)
-   (join↺ : ∀ {n₁ n₂ a} {A : Set a} → ↺ n₁ (↺ n₂ A) → ↺ (n₁ + n₂) A)
+   (join↺ : let open Universe T-U in ∀ {n₁ n₂ a} {A : Set a} → ↺ n₁ (↺ n₂ A) → ↺ (n₁ `× n₂) A)
  where
 
 Coins = ℕ
+open Universe T-U
 
 -- If you are not allowed to toss any coin, then you are deterministic.
 Det : ∀ {a} → Set a → Set a
-Det = ↺ 0
+Det = ↺ `⊤
 
 -- An experiment
-EXP : ℕ → Set
-EXP n = ↺ n Bit
+EXP : T → Set
+EXP R = ↺ R Bit
 
 -- A guessing game
 ⅁? : ∀ c → Set
@@ -45,36 +49,36 @@ coerce : ∀ {m n a} {A : Set a} → m ≡ n → ↺ m A → ↺ n A
 coerce ≡.refl = id
 
 _>>=_ : ∀ {n₁ n₂ a b} {A : Set a} {B : Set b} →
-       ↺ n₁ A → (A → ↺ n₂ B) → ↺ (n₁ + n₂) B
+       ↺ n₁ A → (A → ↺ n₂ B) → ↺ (n₁ `× n₂) B
 _>>=_ x f = join↺ (map↺ f x)
 
 _=<<_ : ∀ {n₁ n₂ a b} {A : Set a} {B : Set b} →
-       (A → ↺ n₁ B) → ↺ n₂ A → ↺ (n₁ + n₂) B
-_=<<_ {n₁} {n₂} rewrite ℕ°.+-comm n₁ n₂ = flip _>>=_
+       (A → ↺ n₁ B) → ↺ n₂ A → ↺ (n₁ `× n₂) B
+_=<<_ {n₁} {n₂} = ? -- rewrite ℕ°.+-comm n₁ n₂ = flip _>>=_
 
 _>>_ : ∀ {n₁ n₂ a b} {A : Set a} {B : Set b} →
-       ↺ n₁ A → ↺ n₂ B → ↺ (n₁ + n₂) B
+       ↺ n₁ A → ↺ n₂ B → ↺ (n₁ `× n₂) B
 _>>_ {n₁} x y = x >>= const y
 
 _>=>_ : ∀ {n₁ n₂ a b c} {A : Set a} {B : Set b} {C : Set c}
-        → (A → ↺ n₁ B) → (B → ↺ n₂ C) → A → ↺ (n₁ + n₂) C
+        → (A → ↺ n₁ B) → (B → ↺ n₂ C) → A → ↺ (n₁ `× n₂) C
 (f >=> g) x = f x >>= g
 
-weaken : ∀ m {n a} {A : Set a} → ↺ n A → ↺ (m + n) A
+weaken : ∀ m {n a} {A : Set a} → ↺ n A → ↺ (m `× n) A
 weaken m x = return↺ {m} 0 >> x
 
-weaken′ : ∀ {m n a} {A : Set a} → ↺ n A → ↺ (n + m) A
+weaken′ : ∀ {m n a} {A : Set a} → ↺ n A → ↺ (n `× m) A
 weaken′ x = x >>= return↺
 
-weaken≤ : ∀ {m n a} {A : Set a} → m ≤ n → ↺ m A → ↺ n A
+weaken≤ : ∀ {m n a} {A : Set a} → m ≤ n → ↺ (`Bits m) A → ↺ (`Bits n) A
 weaken≤ pf x with ≤⇒∃ pf
-... | k , ≡.refl = weaken′ x
+... | k , ≡.refl = {!weaken′ x!}
 
 pure↺ : ∀ {n a} {A : Set a} → A → ↺ n A
 pure↺ = return↺
 
 -- Weakened version of toss
-tossᵂ : ∀ {n} → ↺ (1 + n) Bit
+tossᵂ : ∀ {R} → ↺ (`Bit `× R) Bit
 tossᵂ = toss >>= return↺
 
 _▹↺_ : ∀ {n a b} {A : Set a} {B : Set b} → ↺ n A → (A → B) → ↺ n B
@@ -91,36 +95,36 @@ x ▹↺ f = map↺ f x
 
 infixl 4 _⊛_
 _⊛_ : ∀ {n₁ n₂ a b} {A : Set a} {B : Set b} →
-       ↺ n₁ (A → B) → ↺ n₂ A → ↺ (n₁ + n₂) B
+       ↺ n₁ (A → B) → ↺ n₂ A → ↺ (n₁ `× n₂) B
 _⊛_ {n₁} mf mx = mf >>= λ f → ⟪ f · mx ⟫ 
 
 ⟪_·_·_⟫ : ∀ {a b c} {A : Set a} {B : Set b} {C : Set c} {m n} →
-            (A → B → C) → ↺ m A → ↺ n B → ↺ (m + n) C
+            (A → B → C) → ↺ m A → ↺ n B → ↺ (m `× n) C
 ⟪ f · x · y ⟫ = map↺ f x ⊛ y
 
 ⟪_·_·_·_⟫ : ∀ {a b c d} {A : Set a} {B : Set b} {C : Set c} {D : Set d} {m n o} →
-              (A → B → C → D) → ↺ m A → ↺ n B → ↺ o C → ↺ (m + n + o) D
+              (A → B → C → D) → ↺ m A → ↺ n B → ↺ o C → ↺ ((m `× n) `× o) D
 ⟪ f · x · y · z ⟫ = map↺ f x ⊛ y ⊛ z
 
-choose : ∀ {n a} {A : Set a} → ↺ n A → ↺ n A → ↺ (suc n) A
+choose : ∀ {n a} {A : Set a} → ↺ n A → ↺ n A → ↺ (`Bit `× n) A
 choose x y = toss >>= λ b → if b then x else y
 
-zip↺ : ∀ {c₀ c₁ a b} {A : Set a} {B : Set b} → ↺ c₀ A → ↺ c₁ B → ↺ (c₀ + c₁) (A × B)
+zip↺ : ∀ {c₀ c₁ a b} {A : Set a} {B : Set b} → ↺ c₀ A → ↺ c₁ B → ↺ (c₀ `× c₁) (A × B)
 zip↺ x y = ⟪ _,_ · x · y ⟫
 
-_⟨,⟩_ : ∀ {a b} {A : Set a} {B : Set b} {m n} → ↺ m A → ↺ n B → ↺ (m + n) (A × B)
+_⟨,⟩_ : ∀ {a b} {A : Set a} {B : Set b} {m n} → ↺ m A → ↺ n B → ↺ (m `× n) (A × B)
 _⟨,⟩_ = zip↺
 
-_⟨xor⟩_ : ∀ {n₁ n₂} → ↺ n₁ Bit → ↺ n₂ Bit → ↺ (n₁ + n₂) Bit
+_⟨xor⟩_ : ∀ {n₁ n₂} → ↺ n₁ Bit → ↺ n₂ Bit → ↺ (n₁ `× n₂) Bit
 x ⟨xor⟩ y = ⟪ _xor_ · x · y ⟫
 
-_⟨⊕⟩_ : ∀ {n₁ n₂ m} → ↺ n₁ (Bits m) → ↺ n₂ (Bits m) → ↺ (n₁ + n₂) (Bits m)
+_⟨⊕⟩_ : ∀ {n₁ n₂ m} → ↺ n₁ (Bits m) → ↺ n₂ (Bits m) → ↺ (n₁ `× n₂) (Bits m)
 x ⟨⊕⟩ y = ⟪ _⊕_ · x · y ⟫
 
-_⟨∷⟩_ : ∀ {n₁ n₂ m a} {A : Set a} → ↺ n₁ A → ↺ n₂ (Vec A m) → ↺ (n₁ + n₂) (Vec A (suc m))
+_⟨∷⟩_ : ∀ {n₁ n₂ m a} {A : Set a} → ↺ n₁ A → ↺ n₂ (Vec A m) → ↺ (n₁ `× n₂) (Vec A (suc m))
 x ⟨∷⟩ xs = ⟪ _∷_ · x · xs ⟫
 
-_⟨==⟩_ : ∀ {n₁ n₂ m} → ↺ n₁ (Bits m) → ↺ n₂ (Bits m) → ↺ (n₁ + n₂) Bit
+_⟨==⟩_ : ∀ {n₁ n₂ m} → ↺ n₁ (Bits m) → ↺ n₂ (Bits m) → ↺ (n₁ `× n₂) Bit
 x ⟨==⟩ y = ⟪ _==_ · x · y ⟫
 
 T↺ : ∀ {k} → ↺ k Bit → ↺ k Set
