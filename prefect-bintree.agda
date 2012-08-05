@@ -1,7 +1,8 @@
 module prefect-bintree where
 
 open import Function
-open import Data.Nat.NP using (ℕ; zero; suc; 2^_; _+_; module ℕ°)
+import Data.Nat.NP as Nat
+open Nat using (ℕ; zero; suc; 2^_; _+_; module ℕ°)
 open import Data.Bool
 open import Data.Bits
 open import Data.Vec using (Vec; _++_)
@@ -24,9 +25,19 @@ toFun (fork left right) (b ∷ bs) = toFun (if b then right else left) bs
 lookup : ∀ {n a} {A : Set a} → Bits n → Tree A n → A
 lookup = flip toFun
 
+module Fold {a b i} {I : Set i} (ze : I) (su : I → I)
+            {A : Set a} {B : I → Set b}
+            (f : A → B ze) (_·_ : ∀ {n} → B n → B n → B (su n)) where
+
+  `_ : ℕ → I
+  `_ = Nat.fold ze su
+
+  fold : ∀ {n} → Tree A n → B(` n)
+  fold (leaf x)    = f x
+  fold (fork t₀ t₁) = fold t₀ · fold t₁
+
 fold : ∀ {n a} {A : Set a} (op : A → A → A) → Tree A n → A
-fold _   (leaf x) = x
-fold _·_ (fork t₀ t₁) = fold _·_ t₀ · fold _·_ t₁
+fold {A = A} op = Fold.fold 0 suc {B = const A} id op
 
 search≡fold∘fromFun : ∀ {n a} {A : Set a} op (f : Bits n → A) → search op f ≡ fold op (fromFun f)
 search≡fold∘fromFun {zero}  op f = refl
