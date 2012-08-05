@@ -124,7 +124,9 @@ data SwpOp : ℕ → Set where
 
   swp : ∀ {n} → SwpOp (suc n)
 
+  -- firsts seconds : ∀ {n} → SwpOp (1 + n) → SwpOp (2 + n)
   swp-seconds : ∀ {n} → SwpOp (2 + n)
+  -- swp-firsts : ∀ {n} → SwpOp (2 + n)
 
 data Perm {a} {A : Set a} : ∀ {n} (left right : Tree A n) → Set a where
   ε : ∀ {n} {t : Tree A n} → Perm t t
@@ -180,6 +182,21 @@ second-swpop f = swp ⁏ first f ⁏ swp
            Perm (fork left₀ right₀) (fork left₁ right₁)
 < f × g >-perm = first f ⁏ second-perm g
 
+{-
+swp-seconds-perm' : ∀ {n a} {A : Set a} {tA tB tC tD : Tree A n} →
+                 Perm0↔ (fork (fork tA tB) (fork tC tD))
+                          (fork (fork tA tD) (fork tC tB))
+swp-seconds-perm' = firsts swp ⁏ swp
+
+swp₂-perm' : ∀ {a n} {A : Set a} {t₀₀ t₀₁ t₁₀ t₁₁ : Tree A n} →
+          Perm0↔ (fork (fork t₀₀ t₀₁) (fork t₁₀ t₁₁)) (fork (fork t₁₁ t₀₁) (fork t₁₀ t₀₀))
+swp₂-perm' = first swp ⁏ swp-seconds-perm' ⁏ first swp
+
+swp₃-perm' : ∀ {a n} {A : Set a} {t₀₀ t₀₁ t₁₀ t₁₁ : Tree A n} →
+         Perm0↔ (fork (fork t₀₀ t₀₁) (fork t₁₀ t₁₁)) (fork (fork t₀₀ t₁₀) (fork t₀₁ t₁₁))
+swp₃-perm' = second swp ⁏ swp-seconds-perm' ⁏ second swp
+-}
+
 swp₂-perm : ∀ {a n} {A : Set a} {t₀₀ t₀₁ t₁₀ t₁₁ : Tree A n} →
           Perm (fork (fork t₀₀ t₀₁) (fork t₁₀ t₁₁)) (fork (fork t₁₁ t₀₁) (fork t₁₀ t₀₀))
 swp₂-perm = first swp ⁏ swp-seconds ⁏ first swp
@@ -208,6 +225,13 @@ swp-inners = second-swpop swp ⁏ swp-seconds ⁏ second-swpop swp
 
 on-extremes : ∀ {n} → SwpOp (1 + n) → SwpOp (2 + n)
 on-extremes f = swp-seconds ⁏ first f ⁏ swp-seconds
+  -- (A × B) × (C × D)
+  --   {- by swp-seconds -}
+  -- (A × D) × (C × B)
+  --   {- first f -}
+  -- (A' × D') × (C × B)
+  --   {- by swp-seconds -}
+  -- (A' × B) × (C × D')
 
 on-firsts : ∀ {n} → SwpOp (1 + n) → SwpOp (2 + n)
 on-firsts f = swp-inners ⁏ first f ⁏ swp-inners
@@ -299,6 +323,24 @@ swp-leaf : ∀ {a} {A : Set a} (f : SwpOp 0) (x : A) → f $swp (leaf x) ≡ lea
 swp-leaf ε x = refl
 swp-leaf (f ⁏ g) x rewrite swp-leaf f x | swp-leaf g x = refl
 
+-- swp-involutive : ∀ {n a} {A : Set a} (f : SwpOp n) (t : Tree A n) → f $swp (f $swp t) ≡ t
+
+-- swp-sym : ∀ {n a} {A : Set a} {t u : Tree A n} (f : SwpOp n) → f $swp t ≡ u → f $swp u ≡ t
+-- swp-sym f refl = swp-involutive f _
+
+{-
+module M {X : Set} (A B C D E F G H : Tree X 0) where
+  t : Tree X 3
+  t = fork (fork (fork A B)(fork C D)) (fork (fork E F)(fork G H))
+  o : SwpOp 3
+  o = 0↔′ 1ⁿ
+  u : Tree X 3
+  u = o $swp t
+  v : Tree X 3
+  v = o $swp u
+  t≡v : t ≡ v
+  t≡v = refl
+-}
 swpOp-sound : ∀ {n a} {A : Set a} {t u : Tree A n} (perm : Perm t u) → (swpOp perm $swp t ≡ u)
 swpOp-sound ε = refl
 swpOp-sound (f ⁏ f₁) rewrite swpOp-sound f | swpOp-sound f₁ = refl
