@@ -10,9 +10,11 @@ import Data.Fin.NP as Fin
 open Fin using (Fin; zero; suc; inject+; raise; #_)
 open import Data.List using (List; []; _∷_)
 import Data.Vec.NP as Vec
-open Vec using (Vec; []; _∷_; foldr; _[_]≔_; lookup; _++_; splitAt; tabulate; allFin; concat; ++-decomp)
+open Vec using (Vec; []; _∷_; foldr; _[_]≔_; lookup; _++_; splitAt; tabulate; allFin; concat; ++-decomp;
+                tabulate-∘)
          renaming (map to vmap)
-open import Data.Vec.Properties
+import Data.Vec.Properties as VecProps
+open VecProps using (tabulate∘lookup)
 open import Relation.Nullary.Decidable hiding (map)
 open import Relation.Binary.PropositionalEquality
 open import composable
