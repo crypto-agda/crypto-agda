@@ -1,11 +1,11 @@
 module single-bit-one-time-pad where
 
 open import Function
-open import Data.Bool.NP
+open import Data.Bool.NP as Bool
 open import Data.Product renaming (map to <_×_>)
 open import Data.Nat.NP
 import Data.Vec.NP as V
-open V using (Vec; take; drop; drop′; take′; _++_)
+open V using (Vec; take; drop; drop′; take′; _++_) renaming (swap to vswap)
 import Relation.Binary.PropositionalEquality.NP as ≡
 open ≡ using (_≡_; _≗_; module ≡-Reasoning)
 
@@ -238,13 +238,34 @@ lemdrop′ {suc k} f = #⟨ f ∘ drop′ k ∘ tail ⟩
                      2* ⟨2^ k * #⟨ f ⟩ ⟩ ∎
                     where open ≡-Reasoning
 
-vswap : ∀ m {n} {a} {A : Set a} → Vec A (m + n) → Vec A (n + m)
-vswap m xs = drop′ m xs ++ take′ m xs
 
 
 
 
 
+
+-- exchange to independant statements
+lem-flip$-⊕ : ∀ {m n a} {A : Set a} (f : ↺ m (A → Bit)) (x : ↺ n A) →
+               count↺ ⟪ flip _$_ · x · f ⟫ ≡ count↺ (f ⊛ x)
+lem-flip$-⊕ {m} {n} f x = ≡.sym (
+               count↺ fx
+              ≡⟨ #-+ {m} {n} (run↺ fx) ⟩
+               sum {m} (λ xs → #⟨_⟩ {n} (λ ys → run↺ fx (xs ++ ys)))
+              ≡⟨ sum-sum {m} {n} (Bool.toℕ ∘ run↺ fx) ⟩
+               sum {n} (λ ys → #⟨_⟩ {m} (λ xs → run↺ fx (xs ++ ys)))
+              ≡⟨ sum-≗₂ (λ ys xs → Bool.toℕ (run↺ fx (xs ++ ys)))
+                        (λ ys xs → Bool.toℕ (run↺ ⟪ flip _$_ · x · f ⟫ (ys ++ xs)))
+                        (λ ys xs → ≡.cong Bool.toℕ (lem₁ xs ys)) ⟩
+               sum {n} (λ ys → #⟨_⟩ {m} (λ xs → run↺ ⟪ flip _$_ · x · f ⟫ (ys ++ xs)))
+              ≡⟨ ≡.sym (#-+ {n} {m} (run↺ ⟪ flip _$_ · x · f ⟫)) ⟩
+               count↺ ⟪ flip _$_ · x · f ⟫
+              ∎ )
+    where open ≡-Reasoning
+          fx = f ⊛ x
+          lem₁ : ∀ xs ys → run↺ f (take m (xs ++ ys)) (run↺ x (drop m (xs ++ ys)))
+                         ≡ run↺ f (drop n (ys ++ xs)) (run↺ x (take n (ys ++ xs)))
+          lem₁ xs ys rewrite V.take-++ m xs ys | V.drop-++ m xs ys
+                           | V.take-++ n ys xs | V.drop-++ n ys xs = ≡.refl
 
 ≈ᴬ′-toss : ∀ b → ⟪ b ⟫ᴰ ⟨xor⟩ toss ≈ᴬ′ toss
 ≈ᴬ′-toss true Adv = ℕ°.+-comm (count↺ (Adv true)) _
