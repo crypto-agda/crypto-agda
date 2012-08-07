@@ -30,11 +30,11 @@ module PRG⅁₁ {k n} (PRG : PRGFun k n) where
 
   -- ``Looks pseudo-random if the message is the output of the PRG some key''
   brute′ : Adv
-  brute′ m = search {k} _∨_ ((_==_ m) ∘ PRG)
+  brute′ m = search _∨_ {k} ((_==_ m) ∘ PRG)
 
   -- ``Looks random if the message is not a possible output of the PRG''
   brute : Adv
-  brute m = search {k} _∧_ (not ∘ (_==_ m) ∘ PRG)
+  brute m = search _∧_ {k} (not ∘ (_==_ m) ∘ PRG)
 
 private
   brute-PRG-K≡0b-aux : ∀ {k n} (PRG : Bits k → Bits n) K
@@ -67,7 +67,7 @@ module PRG⅁ {k n} (PRG : PRGFun k n) where
   brute′-bound = brute′-bound-aux PRG
 
   not∘brute′≗brute : not ∘ brute′ ≗ brute
-  not∘brute′≗brute x = search-comm _∨_ _∧_ not (_==_ x ∘ PRG) de-morgan
+  not∘brute′≗brute x = search-hom _∨_ _∧_ not (_==_ x ∘ PRG) de-morgan
 
   brute≗not∘brute′ : brute′ ≗ not ∘ brute
   brute≗not∘brute′ x = trans (sym (not-involutive _)) (cong not (not∘brute′≗brute x))
