@@ -1,6 +1,6 @@
 module single-bit-one-time-pad where
 
-open import Function
+open import Function.NP
 open import Data.Bool.NP as Bool
 open import Data.Product renaming (map to <_×_>)
 open import Data.Nat.NP
@@ -217,7 +217,8 @@ open import program-distance
 open import Relation.Nullary
 
 ⁇ : ∀ {n} → ↺ n (Bits n)
-⁇ = random
+-- ⁇ = random
+⁇ = mk id
 
 
 lem'' : ∀ {k} (f : Bits k → Bit) → #⟨ f ∘ tail ⟩ ≡ 2* #⟨ f ⟩
@@ -281,6 +282,14 @@ lem-flip$-⊕ {m} {n} f x = ≡.sym (
   rewrite ≈ᴬ-⁇ m (Adv ∘ _∷_ (h xor 0b))
         | ≈ᴬ-⁇ m (Adv ∘ _∷_ (h xor 1b))
         = ≈ᴬ′-toss h (λ x → ⟪ Adv ∘ _∷_ x · ⁇ ⟫)
+
+open OperationSyntax
+
+_⟨∙⟩_ : Op → ∀ {m n} → Endo (↺ m (Bits n))
+f ⟨∙⟩ g = ⟪ _∙_ f · g ⟫
+
+≈ᴬ-op-⁇ : ∀ {k} f → f ⟨∙⟩ ⁇ ≈ᴬ ⁇ {k}
+≈ᴬ-op-⁇ = flip #-op
 
 ≈ᴬ-⁇₂ : ∀ {k} (m₀ m₁ : Bits k) → ⟪ m₀ ⟫ᴰ ⟨⊕⟩ ⁇ ≈ᴬ ⟪ m₁ ⟫ᴰ ⟨⊕⟩ ⁇
 ≈ᴬ-⁇₂ {k} m₀ m₁ = ≈ᴬ.trans {k} (≈ᴬ-⁇ m₀) (≈ᴬ.sym {k} (≈ᴬ-⁇ m₁))
