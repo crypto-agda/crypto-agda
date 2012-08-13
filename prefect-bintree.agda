@@ -5,6 +5,7 @@ import Data.Nat.NP as Nat
 open Nat using (ℕ; zero; suc; 2^_; _+_; module ℕ°)
 open import Data.Bool
 open import Data.Bits
+open import Data.Product using (_×_; _,_)
 open import Data.Vec using (Vec; _++_)
 open import Relation.Binary
 open import Relation.Binary.PropositionalEquality.NP
@@ -569,3 +570,51 @@ module FoldProp {a} {A : Set a} (_·_ : Op₂ A) (op-comm : Commutative _≡_ _�
   fold-swp★ : Swp★ =[fold]⇒ _≡_
   fold-swp★ ε = refl
   fold-swp★ (x ◅ xs) rewrite fold-swp x | fold-swp★ xs = refl
+
+{-
+module Sorting {a} {A : Set a} (sortᴬ : A × A → A × A) where
+    merge : ∀ {n} → (t u : Tree A n) → Tree A (1 + n)
+    merge (leaf x₀)    (leaf x₁)    = case sortᴬ (x₀ , x₁) of (λ { (y₀ , y₁) → fork (leaf y₀) (leaf y₁) })
+    merge (fork t₀ t₁) (fork u₀ u₁)
+      with merge t₀ u₀ | merge t₁ u₁
+    ...  | fork l m₀   | fork m₁ h   with merge m₀ m₁
+    ...                                 | fork m₀′ m₁′ = fork (fork l m₀′) (fork m₁′ h)
+
+    sort : ∀ {n} → Tree A n → Tree A n
+    sort (leaf x)     = leaf x
+    sort (fork t₀ t₁) = merge (sort t₀) (sort t₁)
+
+    open new-approach
+    InjTree : ∀ {n} → Tree A n → Set _
+    InjTree t = ∀ x → (p q : x ∈ t) → p ≡ q
+
+    InjTree-× : ∀ {n} (t u : Tree A n) → InjTree (fork t u) → InjTree t × InjTree u
+    InjTree-× t u pf = pf₀ , pf₁
+      where pf₀ : InjTree t
+            pf₀ x p q with pf x (left p) (left q)
+            pf₀ x p .p | refl = refl
+            pf₁ : InjTree u
+            pf₁ x p q with pf x (right p) (right q)
+            pf₁ x p .p | refl = refl
+
+    _≗T_ : ∀ {n} (t u : Tree A n) → Set _
+    t ≗T u = toFun t ≗ toFun u
+
+swap-× : ∀ {n} → Bits n × Bits n → Bits n × Bits n
+swap-× (x , y) = ?
+
+module BitsSorting m where
+
+    module S = Sorting (swap-× {m})
+
+    merge : ∀ {n} → (t u : Tree (Bits m) n) → Tree (Bits m) (1 + n)
+    merge = S.merge
+
+    sort : ∀ {n} → Tree (Bits m) n → Tree (Bits m) n
+    sort = S.sort
+
+module BitsSorting′ where
+    open BitsSorting
+    lem : ∀ {n} (t : Tree (Bits n) n) → toFun (sort n t) ≗ id
+    lem = ?
+-}
