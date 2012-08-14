@@ -9,6 +9,7 @@ open import Data.Sum
 open import Data.Bits
 open import Data.Product using (_×_; _,_; proj₁; proj₂; ∃)
 open import Data.Vec.NP using (Vec; _++_; module Alternative-Reverse)
+open import Relation.Nullary
 open import Relation.Binary
 open import Relation.Binary.PropositionalEquality.NP
 open import Algebra.FunctionProperties
@@ -50,6 +51,7 @@ fromFun→toFun ._ _ refl = toFun∘fromFun _
 lookup : ∀ {n a} {A : Set a} → Bits n → Tree A n → A
 lookup = flip toFun
 
+{-
 module Fold {a b i} {I : Set i} (ze : I) (su : I → I)
             {A : Set a} {B : I → Set b}
             (f : A → B ze) (_·_ : ∀ {n} → B n → B n → B (su n)) where
@@ -333,6 +335,7 @@ swpOp-sound swp-seconds = refl
 
 open import Relation.Nullary using (Dec ; yes ; no)
 open import Relation.Nullary.Negation
+-}
 
 module new-approach where
 
@@ -364,6 +367,7 @@ module new-approach where
   lookup-∈ (true ∷ key) (fork tree tree₁) = right (lookup-∈ key tree₁)
   lookup-∈ (false ∷ key) (fork tree tree₁) = left (lookup-∈ key tree)
 
+  {-
   _≈_ : ∀ {a}{A : Set a}{n : ℕ} → Tree A n → Tree A n → Set _
   t₁ ≈ t₂ = ∀ x → (x ∈ t₁) ↔ (x ∈ t₂)
 
@@ -594,6 +598,7 @@ module FoldProp {a} {A : Set a} (_·_ : Op₂ A) (op-comm : Commutative _≡_ _�
   fold-swp★ : Swp★ =[fold]⇒ _≡_
   fold-swp★ ε = refl
   fold-swp★ (x ◅ xs) rewrite fold-swp x | fold-swp★ xs = refl
+  -}
 
 module All {a} (A : Set a) where
 
@@ -681,6 +686,38 @@ module Sorted {a ℓ} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ) (isPreorder :
     bounded→sorted {t = fork t₀ t₁} b = fork (bounded→sorted {t = t₀} {!!}) (bounded→sorted {t = t₁} {!!}) {!!}
     -}
 
+module Sorted' {a ℓ} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ) (isPreorder : IsPreorder _≡_ _≤ᴬ_) where
+{-
+    data _≤ᴾ_ : ∀ {x y t} → x ∈ t → y ∈ t → Set where
+      here-here   : here ≤ᴾ here
+      left-left   : ∀ {x y t} {p : x ∈ t} {q : y ∈ t} → p ≤ᴾ q → left p ≤ᴾ left q
+      right-right : ∀ {x y t} {p : x ∈ t} {q : y ∈ t} → p ≤ᴾ q → right p ≤ᴾ right q
+      left-right  : ∀ {x y t} {p : x ∈ t} {q : y ∈ t} → left p ≤ᴾ right q
+      -}
+    data _≤ᴮ_ : ∀ {n} (p q : Bits n) → Set where
+      []    : [] ≤ᴮ []
+      there : ∀ {n} {p q : Bits n} b → p ≤ᴮ q → (b ∷ p) ≤ᴮ (b ∷ q)
+      0-1   : ∀ {n} (p q : Bits n) → 0∷ p ≤ᴮ 1∷ q
+
+    _≤ᴾ_ : ∀ {n x y} {t : Tree A n} → x ∈ t → y ∈ t → Set
+    p ≤ᴾ q = toBits p ≤ᴮ toBits q
+
+    Sorted : ∀ {n} → Tree A n → Set _
+    Sorted t = ∀ {x} (p : x ∈ t) {y} (q : y ∈ t) → p ≤ᴾ q → x ≤ᴬ y
+
+    private
+        module ≤ᴬ = IsPreorder isPreorder
+
+    module S = Sorted _≤ᴬ_ isPreorder
+    open S using (leaf; fork)
+    Sorted→Sorted' : ∀ {n l h} {t : Tree A n} → S.Sorted t l h → Sorted t
+    Sorted→Sorted' (leaf ._)       here     here       p≤q = ≤ᴬ.refl
+    Sorted→Sorted' (fork s _ _)    (left p) (left q)   (there ._ p≤q) = Sorted→Sorted' s p q p≤q
+    Sorted→Sorted' (fork s₀ s₁ l≤h) (left p) (right q)  p≤q = ≤ᴬ.trans (S.Sorted→ub s₀ p) (≤ᴬ.trans l≤h (S.Sorted→lb s₁ q))
+    Sorted→Sorted' (fork _ _ _)    (right _) (left _)  ()
+    Sorted→Sorted' (fork _ s _)    (right p) (right q) (there ._ p≤q) = Sorted→Sorted' s p q p≤q
+
+
 module Sorting {a} {A : Set a} (_⊓ᴬ_ _⊔ᴬ_ : A → A → A) where
 
     merge : ∀ {n} → (t u : Tree A n) → Tree A (1 + n)
@@ -711,6 +748,40 @@ module Sorting {a} {A : Set a} (_⊓ᴬ_ _⊔ᴬ_ : A → A → A) where
     _≗T_ : ∀ {n} (t u : Tree A n) → Set _
     t ≗T u = toFun t ≗ toFun u
 
+module SortingProperties {ℓ a} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ)
+                               (_⊓ᴬ_ _⊔ᴬ_ : A → A → A)
+                               (isPreorder : IsPreorder _≡_ _≤ᴬ_)
+                               (≤-⊔ : ∀ x y → x ≤ᴬ (y ⊔ᴬ x))
+                               (⊓-≤ : ∀ x y → (x ⊓ᴬ y) ≤ᴬ y)
+                               (≤-⊓ : ∀ {x y z} → x ≤ᴬ y → x ≤ᴬ z → x ≤ᴬ (y ⊓ᴬ z))
+                               (⊔-≤ : ∀ {x y z} → x ≤ᴬ z → y ≤ᴬ z → (x ⊔ᴬ y) ≤ᴬ z)
+                               where
+    module ≤ᴬ = IsPreorder isPreorder
+    open Sorted' _≤ᴬ_ isPreorder
+    open Sorting _⊓ᴬ_ _⊔ᴬ_
+
+    postulate dec-≤ : ∀ x y → Dec (x ≤ᴬ y)
+    postulate dec-⊔ : ∀ x y → x ⊔ᴬ y ≡ x ⊎ x ⊔ᴬ y ≡ y
+    postulate dec-⊓ : ∀ x y → x ⊓ᴬ y ≡ x ⊎ x ⊓ᴬ y ≡ y
+
+    merge-spec : ∀ {n} (t u : Tree A n) →
+                 Sorted t → Sorted u → Sorted (merge t u)
+    merge-spec (leaf x) (leaf y) sx sy (left here) (left here) pf = ≤ᴬ.refl
+    merge-spec (leaf x) (leaf y) sx sy (left here) (right here) (0-1 ._ ._) = ≤ᴬ.trans (⊓-≤ x y) (≤-⊔ y x)
+    merge-spec (leaf x) (leaf y) sx sy (right p) (left q) ()
+    merge-spec (leaf x) (leaf y) sx sy (right here) (right here) pf = ≤ᴬ.refl
+    merge-spec (fork t₀ t₁) (fork u₀ u₁) st su p q p≤q
+      with merge t₀ u₀ | merge t₁ u₁ -- | merge-spec t₀ u₀ ? ? | merge-spec t₁ u₁ ? ?
+    ... | fork l m₀    | fork m₁ h
+      with merge m₀ m₁ -- | merge-spec sm₀ sm₁
+    ... | fork m₀′ m₁′ -- | fork {highₜ = hm₀} {lm₁} sm₀′ sm₁′ pf3
+      with p | q | p≤q
+    ... | left  pp | left  qq | there ._ pp≤qq = {!merge-spec t₀ u₀ !}
+    ... | left  pp | right qq | 0-1 ._ ._ = {!!}
+    ... | right pp | left qq  | ()
+    ... | right pp | right qq | there ._ pp≤qq = {!!}
+
+    {-
 module SortingProperties {ℓ a} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ)
                                (_⊓ᴬ_ _⊔ᴬ_ : A → A → A)
                                (isPreorder : IsPreorder _≡_ _≤ᴬ_)
@@ -776,3 +847,8 @@ module BitsSorting {m} where
 module BitsSorting′ where
     open BitsSorting
     open AllBits
+    -}
+-- -}
+-- -}
+-- -}
+-- -}
