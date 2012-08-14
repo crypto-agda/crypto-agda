@@ -1,12 +1,14 @@
 module prefect-bintree where
 
+import Level as L
 open import Function
 import Data.Nat.NP as Nat
 open Nat using (ℕ; zero; suc; 2^_; _+_; module ℕ°)
 open import Data.Bool
+open import Data.Sum
 open import Data.Bits
-open import Data.Product using (_×_; _,_)
-open import Data.Vec using (Vec; _++_)
+open import Data.Product using (_×_; _,_; proj₁; proj₂; ∃)
+open import Data.Vec.NP using (Vec; _++_; module Alternative-Reverse)
 open import Relation.Binary
 open import Relation.Binary.PropositionalEquality.NP
 open import Algebra.FunctionProperties
@@ -22,6 +24,28 @@ fromFun {suc n} f = fork (fromFun (f ∘ 0∷_)) (fromFun (f ∘ 1∷_))
 toFun : ∀ {n a} {A : Set a} → Tree A n → Bits n → A
 toFun (leaf x) _ = x
 toFun (fork left right) (b ∷ bs) = toFun (if b then right else left) bs
+
+toFun∘fromFun : ∀ {n a} {A : Set a} (f : Bits n → A) → toFun (fromFun f) ≗ f
+toFun∘fromFun {zero}  f [] = refl
+toFun∘fromFun {suc n} f (false ∷ xs)
+  rewrite toFun∘fromFun (f ∘ 0∷_) xs = refl
+toFun∘fromFun {suc n} f (true ∷ xs)
+  rewrite toFun∘fromFun (f ∘ 1∷_) xs = refl
+
+fromFun∘toFun : ∀ {n a} {A : Set a} (t : Tree A n) → fromFun (toFun t) ≡ t
+fromFun∘toFun (leaf x) = refl
+fromFun∘toFun (fork t₀ t₁)
+  rewrite fromFun∘toFun t₀
+        | fromFun∘toFun t₁ = refl
+
+toFun→fromFun : ∀ {n a} {A : Set a} (t : Tree A n) (f : Bits n → A) → toFun t ≗ f → t ≡ fromFun f
+toFun→fromFun (leaf x) f t≗f = cong leaf (t≗f [])
+toFun→fromFun (fork t₀ t₁) f t≗f
+  rewrite toFun→fromFun t₀ (f ∘ 0∷_) (t≗f ∘ 0∷_)
+        | toFun→fromFun t₁ (f ∘ 1∷_) (t≗f ∘ 1∷_) = refl
+
+fromFun→toFun : ∀ {n a} {A : Set a} (t : Tree A n) (f : Bits n → A) → t ≡ fromFun f → toFun t ≗ f
+fromFun→toFun ._ _ refl = toFun∘fromFun _
 
 lookup : ∀ {n a} {A : Set a} → Bits n → Tree A n → A
 lookup = flip toFun
@@ -571,10 +595,97 @@ module FoldProp {a} {A : Set a} (_·_ : Op₂ A) (op-comm : Commutative _≡_ _�
   fold-swp★ ε = refl
   fold-swp★ (x ◅ xs) rewrite fold-swp x | fold-swp★ xs = refl
 
+module All {a} (A : Set a) where
+
+  All : ∀ {n} → (Bits n → A → Set) → Tree A n → Set
+  All f (leaf x)     = f [] x
+  All f (fork t₀ t₁) = All (f ∘ 0∷_) t₀ × All (f ∘ 1∷_) t₁
+
+  Any : ∀ {n} → (Bits n → A → Set) → Tree A n → Set
+  Any f (leaf x)     = f [] x
+  Any f (fork t₀ t₁) = Any (f ∘ 0∷_) t₀ ⊎ Any (f ∘ 1∷_) t₁
+
+open Alternative-Reverse
+
+module AllBits where
+  module M {m} = All (Bits m)
+  open M
+
+  _IsRevPrefixOf_ : ∀ {m n} → Bits m → Bits (rev-+ m n) → Set
+  _IsRevPrefixOf_ {m} {n} p xs = ∃ λ (ys : Bits n) → rev-app p ys ≡ xs
+
+  RevPrefix : ∀ {m n o} (p : Bits m) → Tree (Bits (rev-+ m n)) o → Set
+  RevPrefix p = All (λ _ → _IsRevPrefixOf_ p)
+
+  RevPrefix-[]-⊤ : ∀ {m n} (t : Tree (Bits m) n) → RevPrefix [] t
+  RevPrefix-[]-⊤ (leaf x) = x , refl
+  RevPrefix-[]-⊤ (fork t u) = RevPrefix-[]-⊤ t , RevPrefix-[]-⊤ u
+
+  All-fromFun : ∀ {m} n (p : Bits m) → All (_≡_ ∘ rev-app p) (fromFun {n} (rev-app p))
+  All-fromFun zero    p = refl
+  All-fromFun (suc n) p = All-fromFun n (0∷ p) , All-fromFun n (1∷ p)
+
+  All-id : ∀ n → All {n} _≡_ (fromFun id)
+  All-id n = All-fromFun n []
+
+open new-approach
+
 {-
-module Sorting {a} {A : Set a} (sortᴬ : A × A → A × A) where
+    rev-app : ∀ {a} {A : Set a} {m n} →
+              Vec A n → Vec A m → Vec A (rev-+ n m)
+              -}
+
+bar : ∀ {m n x} (f : Bits m → Bits n) (p : x ∈ fromFun f) → f (toBits p) ≡ x
+bar f here      = refl
+bar f (left p)  = bar (f ∘ 0∷_) p
+bar f (right p) = bar (f ∘ 1∷_) p
+
+foo : ∀ {m} n {x : Bits (rev-+ m n)} (q : Bits m) (p : x ∈ fromFun (rev-app q)) → rev-app q (toBits p) ≡ x
+foo _ = bar ∘ rev-app
+
+module Sorted {a ℓ} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ) (isPreorder : IsPreorder _≡_ _≤ᴬ_) where
+    data Sorted : ∀ {n} → Tree A n → A → A → Set (a L.⊔ ℓ) where
+      leaf : (x : A) → Sorted (leaf x) x x
+      fork : ∀ {n} {t u : Tree A n} {lowₜ highₜ lowᵤ highᵤ} →
+             Sorted t lowₜ highₜ →
+             Sorted u lowᵤ highᵤ →
+             highₜ ≤ᴬ lowᵤ →
+             Sorted (fork t u) lowₜ highᵤ
+
+    private
+        module ≤ᴬ = IsPreorder isPreorder
+
+    ≤ᴬ-bounds : ∀ {n} {t : Tree A n} {l h} → Sorted t l h → l ≤ᴬ h
+    ≤ᴬ-bounds (leaf ._)       = ≤ᴬ.refl
+    ≤ᴬ-bounds (fork s₀ s₁ pf) = ≤ᴬ.trans (≤ᴬ-bounds s₀) (≤ᴬ.trans pf (≤ᴬ-bounds s₁))
+
+    Sorted→lb : ∀ {n} {t : Tree A n} {l h} → Sorted t l h → ∀ {x} → x ∈ t → l ≤ᴬ x
+    Sorted→lb (leaf ._)       here      = ≤ᴬ.refl
+    Sorted→lb (fork s _ _)    (left  p) = Sorted→lb s p
+    Sorted→lb (fork s₀ s₁ pf) (right p) = ≤ᴬ.trans (≤ᴬ.trans (≤ᴬ-bounds s₀) pf) (Sorted→lb s₁ p)
+
+    Sorted→ub : ∀ {n} {t : Tree A n} {l h} → Sorted t l h → ∀ {x} → x ∈ t → x ≤ᴬ h
+    Sorted→ub (leaf ._)       here      = ≤ᴬ.refl
+    Sorted→ub (fork _ s _)    (right p) = Sorted→ub s p
+    Sorted→ub (fork s₀ s₁ pf) (left  p) = ≤ᴬ.trans (≤ᴬ.trans (Sorted→ub s₀ p) pf) (≤ᴬ-bounds s₁)
+
+    Bounded : ∀ {n} → Tree A n → A → A → Set (a L.⊔ ℓ)
+    Bounded t l h = ∀ {x} → x ∈ t → (l ≤ᴬ x) × (x ≤ᴬ h)
+
+    Sorted→Bounded : ∀ {n} {t : Tree A n} {l h} → Sorted t l h → Bounded t l h
+    Sorted→Bounded s x = Sorted→lb s x , Sorted→ub s x
+
+    {-
+    bounded→sorted : ∀ {n} {t : Tree A n} {l h} → Bounded t l h → Sorted t l h
+    bounded→sorted {t = leaf x} b = {!b here!}
+    bounded→sorted {t = fork t₀ t₁} b = fork (bounded→sorted {t = t₀} {!!}) (bounded→sorted {t = t₁} {!!}) {!!}
+    -}
+
+module Sorting {a} {A : Set a} (_⊓ᴬ_ _⊔ᴬ_ : A → A → A) where
+
     merge : ∀ {n} → (t u : Tree A n) → Tree A (1 + n)
-    merge (leaf x₀)    (leaf x₁)    = case sortᴬ (x₀ , x₁) of (λ { (y₀ , y₁) → fork (leaf y₀) (leaf y₁) })
+    merge (leaf x₀)    (leaf x₁)    =
+      fork (leaf (x₀ ⊓ᴬ x₁)) (leaf (x₀ ⊔ᴬ x₁))
     merge (fork t₀ t₁) (fork u₀ u₁)
       with merge t₀ u₀ | merge t₁ u₁
     ...  | fork l m₀   | fork m₁ h   with merge m₀ m₁
@@ -600,12 +711,61 @@ module Sorting {a} {A : Set a} (sortᴬ : A × A → A × A) where
     _≗T_ : ∀ {n} (t u : Tree A n) → Set _
     t ≗T u = toFun t ≗ toFun u
 
-swap-× : ∀ {n} → Bits n × Bits n → Bits n × Bits n
-swap-× (x , y) = ?
+module SortingProperties {ℓ a} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ)
+                               (_⊓ᴬ_ _⊔ᴬ_ : A → A → A)
+                               (isPreorder : IsPreorder _≡_ _≤ᴬ_)
+                               (≤-⊔ : ∀ x y → x ≤ᴬ (y ⊔ᴬ x))
+                               (⊓-≤ : ∀ x y → (x ⊓ᴬ y) ≤ᴬ y)
+                               (≤-⊓ : ∀ {x y z} → x ≤ᴬ y → x ≤ᴬ z → x ≤ᴬ (y ⊓ᴬ z))
+                               (⊔-≤ : ∀ {x y z} → x ≤ᴬ z → y ≤ᴬ z → (x ⊔ᴬ y) ≤ᴬ z)
+                               where
+    module ≤ᴬ = IsPreorder isPreorder
+    open Sorted _≤ᴬ_ isPreorder
+    open Sorting _⊓ᴬ_ _⊔ᴬ_
+    merge-spec : ∀ {n lt ht lu hu} {t u : Tree A n} →
+                 Sorted t lt ht → Sorted u lu hu → Sorted (merge t u) (lt ⊓ᴬ lu) (ht ⊔ᴬ hu)
+    merge-spec (leaf x) (leaf y) = fork (leaf _) (leaf _) (≤ᴬ.trans (⊓-≤ x y) (≤-⊔ y x))
+    merge-spec {t = fork t₀ t₁} {u = fork u₀ u₁} (fork {lowₜ = lt₀} {ht₀} {lt₁} {ht₁} st₀ st₁ ht₀≤lt₁)
+                                                 (fork {lowₜ = lu₀} {hu₀} {lu₁} {hu₁} su₀ su₁ hu₀≤hu₁)
+      with merge t₀ u₀ | merge t₁ u₁ | merge-spec st₀ su₀ | merge-spec st₁ su₁
+    ... | fork l m₀    | fork m₁ h   | fork {highₜ = hl} {lm₀} sl sm₀ pf1
+                                     | fork {highₜ = hm₁} {lh} sm₁ sh pf2
+      with merge m₀ m₁ | merge-spec sm₀ sm₁
+    ... | fork m₀′ m₁′ | fork {highₜ = hm₀} {lm₁} sm₀′ sm₁′ pf3
+      with ≤ᴬ-bounds st₀  | ≤ᴬ-bounds st₁
+         | ≤ᴬ-bounds su₀  | ≤ᴬ-bounds su₁
+         | ≤ᴬ-bounds sm₀  | ≤ᴬ-bounds sm₁
+         | ≤ᴬ-bounds sm₀′ | ≤ᴬ-bounds sm₁′
+         | ≤ᴬ-bounds sh   | ≤ᴬ-bounds sl
+    ...  | lt₀≤ht₀        | lt₁≤ht₁
+         | lu₀≤hu₁        | lu₁≤hu₁
+         | lm₀≤★          | ★≤hm₁
+         | ★≤hm₀          | lm₁≤★
+         | lh≤★           | ★≤hl =
+        fork
+          (fork sl sm₀′ (proj₁ pf))
+          (fork sm₁′ sh (proj₂ pf)) pf3
+          module M where
+                hl≤lt₁ : hl  ≤ᴬ lt₁
+                hl≤lt₁ = {!!}
+                hl≤lu₁ : hl  ≤ᴬ lu₁
+                hl≤lu₁ = {!!}
+                ht₀≤lh : ht₀ ≤ᴬ lh
+                ht₀≤lh = {!!}
+                hu₀≤lh : hu₀ ≤ᴬ lh
+                hu₀≤lh = {!!}
 
-module BitsSorting m where
+                pf : (hl ≤ᴬ (lm₀ ⊓ᴬ (lt₁ ⊓ᴬ lu₁))) × (((ht₀ ⊔ᴬ hu₀) ⊔ᴬ hm₁) ≤ᴬ lh)
+                pf = ≤-⊓ pf1 (≤-⊓ hl≤lt₁ hl≤lu₁) , ⊔-≤ (⊔-≤ ht₀≤lh hu₀≤lh) pf2
 
-    module S = Sorting (swap-× {m})
+postulate
+    _⊔_ : ∀ {n} → Bits n → Bits n → Bits n
+    _⊓_ : ∀ {n} → Bits n → Bits n → Bits n
+
+module BitsSorting {m} where
+
+    module S = Sorting (_⊓_ {m}) (_⊔_ {m})
+    open S public using (InjTree; InjTree-×)
 
     merge : ∀ {n} → (t u : Tree (Bits m) n) → Tree (Bits m) (1 + n)
     merge = S.merge
@@ -615,6 +775,4 @@ module BitsSorting m where
 
 module BitsSorting′ where
     open BitsSorting
-    lem : ∀ {n} (t : Tree (Bits n) n) → toFun (sort n t) ≗ id
-    lem = ?
--}
+    open AllBits
