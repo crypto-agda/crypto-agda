@@ -7,11 +7,13 @@ open Nat using (ℕ; zero; suc; 2^_; _+_; module ℕ°)
 open import Data.Bool
 open import Data.Sum
 open import Data.Bits
+open import Data.Unit using (⊤)
 open import Data.Product using (_×_; _,_; proj₁; proj₂; ∃)
 open import Data.Vec.NP using (Vec; _++_; module Alternative-Reverse)
 open import Relation.Nullary
 open import Relation.Binary
-open import Relation.Binary.PropositionalEquality.NP
+import Relation.Binary.PropositionalEquality.NP as ≡
+open ≡ using (_≡_; _≗_)
 open import Algebra.FunctionProperties
 
 data Tree {a} (A : Set a) : ℕ → Set a where
@@ -27,26 +29,26 @@ toFun (leaf x) _ = x
 toFun (fork left right) (b ∷ bs) = toFun (if b then right else left) bs
 
 toFun∘fromFun : ∀ {n a} {A : Set a} (f : Bits n → A) → toFun (fromFun f) ≗ f
-toFun∘fromFun {zero}  f [] = refl
+toFun∘fromFun {zero}  f [] = ≡.refl
 toFun∘fromFun {suc n} f (false ∷ xs)
-  rewrite toFun∘fromFun (f ∘ 0∷_) xs = refl
+  rewrite toFun∘fromFun (f ∘ 0∷_) xs = ≡.refl
 toFun∘fromFun {suc n} f (true ∷ xs)
-  rewrite toFun∘fromFun (f ∘ 1∷_) xs = refl
+  rewrite toFun∘fromFun (f ∘ 1∷_) xs = ≡.refl
 
 fromFun∘toFun : ∀ {n a} {A : Set a} (t : Tree A n) → fromFun (toFun t) ≡ t
-fromFun∘toFun (leaf x) = refl
+fromFun∘toFun (leaf x) = ≡.refl
 fromFun∘toFun (fork t₀ t₁)
   rewrite fromFun∘toFun t₀
-        | fromFun∘toFun t₁ = refl
+        | fromFun∘toFun t₁ = ≡.refl
 
 toFun→fromFun : ∀ {n a} {A : Set a} (t : Tree A n) (f : Bits n → A) → toFun t ≗ f → t ≡ fromFun f
-toFun→fromFun (leaf x) f t≗f = cong leaf (t≗f [])
+toFun→fromFun (leaf x) f t≗f = ≡.cong leaf (t≗f [])
 toFun→fromFun (fork t₀ t₁) f t≗f
   rewrite toFun→fromFun t₀ (f ∘ 0∷_) (t≗f ∘ 0∷_)
-        | toFun→fromFun t₁ (f ∘ 1∷_) (t≗f ∘ 1∷_) = refl
+        | toFun→fromFun t₁ (f ∘ 1∷_) (t≗f ∘ 1∷_) = ≡.refl
 
 fromFun→toFun : ∀ {n a} {A : Set a} (t : Tree A n) (f : Bits n → A) → t ≡ fromFun f → toFun t ≗ f
-fromFun→toFun ._ _ refl = toFun∘fromFun _
+fromFun→toFun ._ _ ≡.refl = toFun∘fromFun _
 
 lookup : ∀ {n a} {A : Set a} → Bits n → Tree A n → A
 lookup = flip toFun
@@ -67,10 +69,10 @@ fold : ∀ {n a} {A : Set a} (op : A → A → A) → Tree A n → A
 fold {A = A} op = Fold.fold 0 suc {B = const A} id op
 
 search≡fold∘fromFun : ∀ {n a} {A : Set a} op (f : Bits n → A) → search op f ≡ fold op (fromFun f)
-search≡fold∘fromFun {zero}  op f = refl
+search≡fold∘fromFun {zero}  op f = ≡.refl
 search≡fold∘fromFun {suc n} op f
   rewrite search≡fold∘fromFun op (f ∘ 0∷_)
-        | search≡fold∘fromFun op (f ∘ 1∷_) = refl
+        | search≡fold∘fromFun op (f ∘ 1∷_) = ≡.refl
 
 -- Returns the flat vector of leaves underlying the perfect binary tree.
 toVec : ∀ {n a} {A : Set a} → Tree A n → Vec A (2^ n)
@@ -295,18 +297,18 @@ swpOp-sym swp = swp
 swpOp-sym swp-seconds = swp-seconds
 
 swpOp-sym-involutive : ∀ {n} (f : SwpOp n) → swpOp-sym (swpOp-sym f) ≡ f
-swpOp-sym-involutive ε = refl
-swpOp-sym-involutive (f ⁏ g) rewrite swpOp-sym-involutive f | swpOp-sym-involutive g = refl
-swpOp-sym-involutive (first f) rewrite swpOp-sym-involutive f = refl
-swpOp-sym-involutive swp = refl
-swpOp-sym-involutive swp-seconds = refl
+swpOp-sym-involutive ε = ≡.refl
+swpOp-sym-involutive (f ⁏ g) rewrite swpOp-sym-involutive f | swpOp-sym-involutive g = ≡.refl
+swpOp-sym-involutive (first f) rewrite swpOp-sym-involutive f = ≡.refl
+swpOp-sym-involutive swp = ≡.refl
+swpOp-sym-involutive swp-seconds = ≡.refl
 
 swpOp-sym-sound : ∀ {n a} {A : Set a} (f : SwpOp n) (t : Tree A n) → swpOp-sym f $swp (f $swp t) ≡ t
-swpOp-sym-sound ε t = refl
-swpOp-sym-sound (f ⁏ g) t rewrite swpOp-sym-sound g (f $swp t) | swpOp-sym-sound f t = refl
-swpOp-sym-sound (first f) (fork t _) rewrite swpOp-sym-sound f t = refl
-swpOp-sym-sound swp (fork _ _) = refl
-swpOp-sym-sound swp-seconds (fork (fork _ _) (fork _ _)) = refl
+swpOp-sym-sound ε t = ≡.refl
+swpOp-sym-sound (f ⁏ g) t rewrite swpOp-sym-sound g (f $swp t) | swpOp-sym-sound f t = ≡.refl
+swpOp-sym-sound (first f) (fork t _) rewrite swpOp-sym-sound f t = ≡.refl
+swpOp-sym-sound swp (fork _ _) = ≡.refl
+swpOp-sym-sound swp-seconds (fork (fork _ _) (fork _ _)) = ≡.refl
 
 module ¬swp-comm where
   data X : Set where
@@ -358,7 +360,7 @@ module new-approach where
   toBits (right key) = 1b ∷ toBits key
 
   ∈-lookup : ∀ {a}{A : Set a}{x : A}{n : ℕ}{t : Tree A n}(path : x ∈ t) → lookup (toBits path) t ≡ x
-  ∈-lookup here = refl
+  ∈-lookup here = ≡.refl
   ∈-lookup (left path) = ∈-lookup path
   ∈-lookup (right path) = ∈-lookup path
 
@@ -437,12 +439,12 @@ module new-approach where
         open import Function.LeftInverse
 
         frk-linv : from LeftInverseOf to
-        frk-linv (left x) = cong left (_InverseOf_.left-inverse-of (Inverse.inverse-of (t1≈s1 y)) x)
-        frk-linv (right x) = cong right (_InverseOf_.left-inverse-of (Inverse.inverse-of (t2≈s2 y)) x)
+        frk-linv (left x) = ≡.cong left (_InverseOf_.left-inverse-of (Inverse.inverse-of (t1≈s1 y)) x)
+        frk-linv (right x) = ≡.cong right (_InverseOf_.left-inverse-of (Inverse.inverse-of (t2≈s2 y)) x)
 
         frk-rinv : from RightInverseOf to -- ∀ x → to ⟨$⟩ (from ⟨$⟩ x) ≡ x
-        frk-rinv (left x) = cong left (_InverseOf_.right-inverse-of (Inverse.inverse-of (t1≈s1 y)) x)
-        frk-rinv (right x) = cong right (_InverseOf_.right-inverse-of (Inverse.inverse-of (t2≈s2 y)) x)
+        frk-rinv (left x) = ≡.cong left (_InverseOf_.right-inverse-of (Inverse.inverse-of (t1≈s1 y)) x)
+        frk-rinv (right x) = ≡.cong right (_InverseOf_.right-inverse-of (Inverse.inverse-of (t2≈s2 y)) x)
 
   ≈-first : ∀ {a}{A : Set a}{n : ℕ}{t u v : Tree A n} → t ≈ u → fork t v ≈ fork u v
   ≈-first f = f ⟨fork⟩ ≈-refl
@@ -484,7 +486,7 @@ module new-approach where
 
   -- move-me
   _∷≢_ : {n : ℕ}{xs ys : Bits n}(x : Bit) → x ∷ xs ≢ x ∷ ys → xs ≢ ys
-  _∷≢_ x = contraposition $ cong $ _∷_ x
+  _∷≢_ x = contraposition $ ≡.cong $ _∷_ x
 
   ∈-put : {a : _}{A : Set a}{n : ℕ}(p : Bits n){x : A}(t : Tree A n) → x ∈ put p x t
   ∈-put [] t = here
@@ -512,10 +514,10 @@ module new-approach where
 
   swap-comm : {a : _}{A : Set a}{n : ℕ} (p₁ p₂ : Bits n)(t : Tree A n) → swap p₂ p₁ t ≡ swap p₁ p₂ t
   swap-comm [] [] (leaf x) = refl
-  swap-comm (true ∷ p₁) (true ∷ p₂) (fork t t₁) = cong (fork t) (swap-comm p₁ p₂ t₁)
+  swap-comm (true ∷ p₁) (true ∷ p₂) (fork t t₁) = ≡.cong (fork t) (swap-comm p₁ p₂ t₁)
   swap-comm (true ∷ p₁) (false ∷ p₂) (fork t t₁) = refl
   swap-comm (false ∷ p₁) (true ∷ p₂) (fork t t₁) = refl
-  swap-comm (false ∷ p₁) (false ∷ p₂) (fork t t₁) = cong (flip fork t₁) (swap-comm p₁ p₂ t)
+  swap-comm (false ∷ p₁) (false ∷ p₂) (fork t t₁) = ≡.cong (flip fork t₁) (swap-comm p₁ p₂ t)
 
   swap-perm₂ : {a : _}{A : Set a}{n : ℕ}{t : Tree A n}{x : A}(p' : Bits n)(p : x ∈ t)
              → x ∈ swap (toBits p) p' t
@@ -578,13 +580,13 @@ module FoldProp {a} {A : Set a} (_·_ : Op₂ A) (op-comm : Commutative _≡_ _�
                 (y · (z · t)) · x
               ≡⟨ op-assoc y (z · t) _ ⟩
                 y · ((z · t) · x)
-              ≡⟨ cong (λ u → y · (u · x)) (op-comm z t) ⟩
+              ≡⟨ ≡.cong (λ u → y · (u · x)) (op-comm z t) ⟩
                 y · ((t · z) · x)
-              ≡⟨ cong (_·_ y) (op-assoc t z x) ⟩
+              ≡⟨ ≡.cong (_·_ y) (op-assoc t z x) ⟩
                 y · (t · (z · x))
-              ≡⟨ sym (op-assoc y t _) ⟩
+              ≡⟨ ≡.sym (op-assoc y t _) ⟩
                 (y · t) · (z · x)
-              ≡⟨ cong (λ u → u · (z · x)) (op-comm y t) ⟩
+              ≡⟨ ≡.cong (λ u → u · (z · x)) (op-comm y t) ⟩
                 (t · y) · (z · x)
               ∎
     where open ≡-Reasoning
@@ -598,24 +600,22 @@ module FoldProp {a} {A : Set a} (_·_ : Op₂ A) (op-comm : Commutative _≡_ _�
   fold-swp★ : Swp★ =[fold]⇒ _≡_
   fold-swp★ ε = refl
   fold-swp★ (x ◅ xs) rewrite fold-swp x | fold-swp★ xs = refl
-  -}
+-}
 
-module All {a} (A : Set a) where
+module FoldProp {a ℓ} {A : Set a} (_Ⓧ_ : Set ℓ → Set ℓ → Set ℓ) where
+    Fold : ∀ {n} → (Bits n → A → Set ℓ) → Tree A n → Set ℓ
+    Fold f (leaf x)     = f [] x
+    Fold f (fork t₀ t₁) = Fold (f ∘ 0∷_) t₀ Ⓧ Fold (f ∘ 1∷_) t₁
 
-  All : ∀ {n} → (Bits n → A → Set) → Tree A n → Set
-  All f (leaf x)     = f [] x
-  All f (fork t₀ t₁) = All (f ∘ 0∷_) t₀ × All (f ∘ 1∷_) t₁
+All : ∀ {n a} {A : Set a} → (Bits n → A → Set) → Tree A n → Set
+All = FoldProp.Fold _×_
 
-  Any : ∀ {n} → (Bits n → A → Set) → Tree A n → Set
-  Any f (leaf x)     = f [] x
-  Any f (fork t₀ t₁) = Any (f ∘ 0∷_) t₀ ⊎ Any (f ∘ 1∷_) t₁
+Any : ∀ {n a} {A : Set a} → (Bits n → A → Set) → Tree A n → Set
+Any = FoldProp.Fold _⊎_
 
 open Alternative-Reverse
 
 module AllBits where
-  module M {m} = All (Bits m)
-  open M
-
   _IsRevPrefixOf_ : ∀ {m n} → Bits m → Bits (rev-+ m n) → Set
   _IsRevPrefixOf_ {m} {n} p xs = ∃ λ (ys : Bits n) → rev-app p ys ≡ xs
 
@@ -623,11 +623,11 @@ module AllBits where
   RevPrefix p = All (λ _ → _IsRevPrefixOf_ p)
 
   RevPrefix-[]-⊤ : ∀ {m n} (t : Tree (Bits m) n) → RevPrefix [] t
-  RevPrefix-[]-⊤ (leaf x) = x , refl
+  RevPrefix-[]-⊤ (leaf x) = x , ≡.refl
   RevPrefix-[]-⊤ (fork t u) = RevPrefix-[]-⊤ t , RevPrefix-[]-⊤ u
 
   All-fromFun : ∀ {m} n (p : Bits m) → All (_≡_ ∘ rev-app p) (fromFun {n} (rev-app p))
-  All-fromFun zero    p = refl
+  All-fromFun zero    p = ≡.refl
   All-fromFun (suc n) p = All-fromFun n (0∷ p) , All-fromFun n (1∷ p)
 
   All-id : ∀ n → All {n} _≡_ (fromFun id)
@@ -635,18 +635,13 @@ module AllBits where
 
 open new-approach
 
-{-
-    rev-app : ∀ {a} {A : Set a} {m n} →
-              Vec A n → Vec A m → Vec A (rev-+ n m)
-              -}
+∈-fromFun : ∀ {m n x} (f : Bits m → Bits n) (p : x ∈ fromFun f) → f (toBits p) ≡ x
+∈-fromFun f here      = ≡.refl
+∈-fromFun f (left p)  = ∈-fromFun (f ∘ 0∷_) p
+∈-fromFun f (right p) = ∈-fromFun (f ∘ 1∷_) p
 
-bar : ∀ {m n x} (f : Bits m → Bits n) (p : x ∈ fromFun f) → f (toBits p) ≡ x
-bar f here      = refl
-bar f (left p)  = bar (f ∘ 0∷_) p
-bar f (right p) = bar (f ∘ 1∷_) p
-
-foo : ∀ {m} n {x : Bits (rev-+ m n)} (q : Bits m) (p : x ∈ fromFun (rev-app q)) → rev-app q (toBits p) ≡ x
-foo _ = bar ∘ rev-app
+∈-rev-app : ∀ {m} n {x : Bits (rev-+ m n)} (q : Bits m) (p : x ∈ fromFun (rev-app q)) → rev-app q (toBits p) ≡ x
+∈-rev-app _ = ∈-fromFun ∘ rev-app
 
 first : ∀ {n a} {A : Set a} → Tree A n → A
 first (leaf x)   = x
@@ -689,21 +684,21 @@ module SortedDataIx {a ℓ} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ) (isPreo
     Sorted→Bounded s x = Sorted→lb s x , Sorted→ub s x
 
     first-lb : ∀ {n} {t : Tree A n} {l h} → Sorted t l h → first t ≡ l
-    first-lb leaf          = refl
+    first-lb leaf          = ≡.refl
     first-lb (fork st _ _) = first-lb st
 
     last-ub : ∀ {n} {t : Tree A n} {l h} → Sorted t l h → last t ≡ h
-    last-ub leaf          = refl
+    last-ub leaf          = ≡.refl
     last-ub (fork _ st _) = last-ub st
 
     uniq-lb : ∀ {n} {t : Tree A n} {l₀ h₀ l₁ h₁}
                   → Sorted t l₀ h₀ → Sorted t l₁ h₁ → l₀ ≡ l₁
-    uniq-lb leaf leaf = refl
+    uniq-lb leaf leaf = ≡.refl
     uniq-lb (fork p p₁ h≤l) (fork q q₁ h≤l₁) = uniq-lb p q
 
     uniq-ub : ∀ {n} {t : Tree A n} {l₀ h₀ l₁ h₁}
                   → Sorted t l₀ h₀ → Sorted t l₁ h₁ → h₀ ≡ h₁
-    uniq-ub leaf leaf = refl
+    uniq-ub leaf leaf = ≡.refl
     uniq-ub (fork p p₁ h≤l) (fork q q₁ h≤l₁) = uniq-ub p₁ q₁
 
     Sorted-trans : ∀ {n} {t u v : Tree A n} {lt hu lu hv}
@@ -713,20 +708,7 @@ module SortedDataIx {a ℓ} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ) (isPreo
              | uniq-ub uv tu₁
          = fork tu uv₁ (≤ᴬ.trans h≤l (≤ᴬ.trans (≤ᴬ-bounds tu₁) h≤l₁))
 
-    {-
-    bounded→sorted : ∀ {n} {t : Tree A n} {l h} → Bounded t l h → Sorted t l h
-    bounded→sorted {t = leaf x} b = {!b here!}
-    bounded→sorted {t = fork t₀ t₁} b = fork (bounded→sorted {t = t₀} {!!}) (bounded→sorted {t = t₁} {!!}) {!!}
-    -}
-
 module Sorted' {a ℓ} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ) (isPreorder : IsPreorder _≡_ _≤ᴬ_) where
-{-
-    data _≤ᴾ_ : ∀ {x y t} → x ∈ t → y ∈ t → Set where
-      here-here   : here ≤ᴾ here
-      left-left   : ∀ {x y t} {p : x ∈ t} {q : y ∈ t} → p ≤ᴾ q → left p ≤ᴾ left q
-      right-right : ∀ {x y t} {p : x ∈ t} {q : y ∈ t} → p ≤ᴾ q → right p ≤ᴾ right q
-      left-right  : ∀ {x y t} {p : x ∈ t} {q : y ∈ t} → left p ≤ᴾ right q
-      -}
     data _≤ᴮ_ : ∀ {n} (p q : Bits n) → Set where
       []    : [] ≤ᴮ []
       there : ∀ {n} {p q : Bits n} b → p ≤ᴮ q → (b ∷ p) ≤ᴮ (b ∷ q)
@@ -750,17 +732,16 @@ module Sorted' {a ℓ} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ) (isPreorder 
     Sorted→Sorted' (fork _ _ _)     (right _) (left _)  ()
     Sorted→Sorted' (fork _ s _)     (right p) (right q) (there ._ p≤q) = Sorted→Sorted' s p q p≤q
 
-module SortedData {a ℓ} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ) (isPreorder : IsPreorder _≡_ _≤ᴬ_) where
-    data Sorted : ∀ {n} → Tree A n → Set (a L.⊔ ℓ) where
-      leaf : {x : A} → Sorted (leaf x)
-      fork : ∀ {n} {t u : Tree A n} →
-             Sorted t →
-             Sorted u →
-             (h≤l : last t ≤ᴬ first u) →
-             Sorted (fork t u)
+private
+  module Dummy {a} {A : Set a} where
+    lft : ∀ {n} → Tree A (1 + n) → Tree A n
+    lft (fork t _) = t
 
-module Sorting {a} {A : Set a} -- (sortᴬ : A × A → A × A)
-                               (_⊓ᴬ_ _⊔ᴬ_ : A → A → A) where
+    rght : ∀ {n} → Tree A (1 + n) → Tree A n
+    rght (fork _ t) = t
+
+    ηfork : ∀ {n} (t : Tree A (1 + n)) → t ≡ fork (lft t) (rght t)
+    ηfork (fork _ _) = ≡.refl
 
     swap : ∀ {n} → Tree A (1 + n) → Tree A (1 + n)
     swap (fork t u) = fork u t
@@ -774,6 +755,9 @@ module Sorting {a} {A : Set a} -- (sortᴬ : A × A → A × A)
 
     interchange : ∀ {n} → Tree A (2 + n) → Tree A (2 + n)
     interchange = map-inner swap
+open Dummy public
+
+module Sorting {a} {A : Set a} (_⊓ᴬ_ _⊔ᴬ_ : A → A → A) where
 
     merge : ∀ {n} → Endo (Tree A (1 + n))
     merge {zero} (fork (leaf x₀) (leaf x₁)) =
@@ -781,147 +765,77 @@ module Sorting {a} {A : Set a} -- (sortᴬ : A × A → A × A)
     merge {suc _} t
       = (map-inner merge ∘ map-outer merge merge ∘ interchange) t
 
-    {-
-    merge : ∀ {n} → (t u : Tree A n) → Tree A (1 + n)
-    merge (leaf x₀)    (leaf x₁)    =
-      fork (leaf (x₀ ⊓ᴬ x₁)) (leaf (x₀ ⊔ᴬ x₁))
-    merge (fork t₀ t₁) (fork u₀ u₁)
-      with merge t₀ u₀ | merge t₁ u₁
-    ...  | fork l m₀   | fork m₁ h   with merge m₀ m₁
-    ...                                 | fork m₀′ m₁′ = fork (fork l m₀′) (fork m₁′ h)
-
     sort : ∀ {n} → Tree A n → Tree A n
-    sort (leaf x)     = leaf x
-    sort (fork t₀ t₁) = merge (sort t₀) (sort t₁)
+    sort {zero}  = id
+    sort {suc n} = merge ∘ map-outer sort sort
 
-    open new-approach
-    InjTree : ∀ {n} → Tree A n → Set _
-    InjTree t = ∀ x → (p q : x ∈ t) → p ≡ q
+module SortedData {a ℓ} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ) where
+    data Sorted : ∀ {n} → Tree A n → Set (a L.⊔ ℓ) where
+      leaf : {x : A} → Sorted (leaf x)
+      fork : ∀ {n} {t u : Tree A n} →
+             Sorted t →
+             Sorted u →
+             (h≤l : last t ≤ᴬ first u) →
+             Sorted (fork t u)
 
-    InjTree-× : ∀ {n} (t u : Tree A n) → InjTree (fork t u) → InjTree t × InjTree u
-    InjTree-× t u pf = pf₀ , pf₁
-      where pf₀ : InjTree t
-            pf₀ x p q with pf x (left p) (left q)
-            pf₀ x p .p | refl = refl
-            pf₁ : InjTree u
-            pf₁ x p q with pf x (right p) (right q)
-            pf₁ x p .p | refl = refl
+    PreSorted : ∀ {n} → Tree A (1 + n) → Set _
+    PreSorted t = Sorted (lft t) × Sorted (rght t)
 
-    _≗T_ : ∀ {n} (t u : Tree A n) → Set _
-    t ≗T u = toFun t ≗ toFun u
-
-    {-
-module SortingProperties {ℓ a} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ)
-                               (_⊓ᴬ_ _⊔ᴬ_ : A → A → A)
-                               (isPreorder : IsPreorder _≡_ _≤ᴬ_)
-                               (≤-⊔ : ∀ x y → x ≤ᴬ (y ⊔ᴬ x))
-                               (⊓-≤ : ∀ x y → (x ⊓ᴬ y) ≤ᴬ y)
-                               (≤-⊓ : ∀ {x y z} → x ≤ᴬ y → x ≤ᴬ z → x ≤ᴬ (y ⊓ᴬ z))
-                               (⊔-≤ : ∀ {x y z} → x ≤ᴬ z → y ≤ᴬ z → (x ⊔ᴬ y) ≤ᴬ z)
-                               where
-    module ≤ᴬ = IsPreorder isPreorder
-    open Sorted' _≤ᴬ_ isPreorder
+module MergeSwap {a} {A : Set a}
+                 (_⊓ᴬ_ _⊔ᴬ_ : A → A → A)
+                 (⊓-comm : Commutative _≡_ _⊓ᴬ_)
+                 (⊔-comm : Commutative _≡_ _⊔ᴬ_) where
     open Sorting _⊓ᴬ_ _⊔ᴬ_
+    merge-swap : ∀ {n} (t : Tree A (1 + n)) → merge t ≡ merge (swap t)
+    merge-swap (fork (leaf x) (leaf y)) rewrite ⊔-comm x y | ⊓-comm y x = ≡.refl
+    merge-swap (fork (fork t₀ t₁) (fork u₀ u₁))
+      rewrite merge-swap (fork t₀ u₀)
+            | merge-swap (fork t₁ u₁) = ≡.refl
 
-    postulate dec-≤ : ∀ x y → Dec (x ≤ᴬ y)
-    postulate dec-⊔ : ∀ x y → x ⊔ᴬ y ≡ x ⊎ x ⊔ᴬ y ≡ y
-    postulate dec-⊓ : ∀ x y → x ⊓ᴬ y ≡ x ⊎ x ⊓ᴬ y ≡ y
-
-    merge-spec : ∀ {n} (t u : Tree A n) →
-                 Sorted t → Sorted u → Sorted (merge t u)
-    merge-spec (leaf x) (leaf y) sx sy (left here) (left here) pf = ≤ᴬ.refl
-    merge-spec (leaf x) (leaf y) sx sy (left here) (right here) (0-1 ._ ._) = ≤ᴬ.trans (⊓-≤ x y) (≤-⊔ y x)
-    merge-spec (leaf x) (leaf y) sx sy (right p) (left q) ()
-    merge-spec (leaf x) (leaf y) sx sy (right here) (right here) pf = ≤ᴬ.refl
-    merge-spec (fork t₀ t₁) (fork u₀ u₁) st su p q p≤q
-      with merge t₀ u₀ | merge t₁ u₁ -- | merge-spec t₀ u₀ ? ? | merge-spec t₁ u₁ ? ?
-    ... | fork l m₀    | fork m₁ h
-      with merge m₀ m₁ -- | merge-spec sm₀ sm₁
-    ... | fork m₀′ m₁′ -- | fork {high_t = hm₀} {lm₁} sm₀′ sm₁′ pf3
-      with p | q | p≤q
-    ... | left  pp | left  qq | there ._ pp≤qq = {!merge-spec t₀ u₀ !}
-    ... | left  pp | right qq | 0-1 ._ ._ = {!!}
-    ... | right pp | left qq  | ()
-    ... | right pp | right qq | there ._ pp≤qq = {!!}
-    -}
-    -}
-
-module SortingProperties {ℓ a} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ)
+module SortingDataIxProperties {ℓ a} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ)
                                (_⊓ᴬ_ _⊔ᴬ_ : A → A → A)
                                (isPreorder : IsPreorder _≡_ _≤ᴬ_)
-                               (≤-⊔ : ∀ x y → x ≤ᴬ (y ⊔ᴬ x))
-                               (⊓-≤ : ∀ x y → (x ⊓ᴬ y) ≤ᴬ y)
                                (⊔-spec : ∀ {x y} → x ≤ᴬ y → x ⊔ᴬ y ≡ y)
                                (⊓-spec : ∀ {x y} → x ≤ᴬ y → x ⊓ᴬ y ≡ x)
                                (⊓-comm : Commutative _≡_ _⊓ᴬ_)
                                (⊔-comm : Commutative _≡_ _⊔ᴬ_)
-                               (≤-<_,_> : ∀ {x y z} → x ≤ᴬ y → x ≤ᴬ z → x ≤ᴬ (y ⊓ᴬ z))
-                               (≤-[_,_] : ∀ {x y z} → x ≤ᴬ z → y ≤ᴬ z → (x ⊔ᴬ y) ≤ᴬ z)
                                where
+    open MergeSwap _⊓ᴬ_ _⊔ᴬ_ ⊓-comm ⊔-comm
     module ≤ᴬ = IsPreorder isPreorder
     open SortedDataIx _≤ᴬ_ isPreorder
     open Sorting _⊓ᴬ_ _⊔ᴬ_
-    module SD = SortedData _≤ᴬ_ isPreorder
-    open SD using (fork; leaf)
-    merge-swap : ∀ {n} (t : Tree A (1 + n)) → merge t ≡ merge (swap t)
-    merge-swap (fork (leaf x) (leaf y)) rewrite ⊔-comm x y | ⊓-comm y x = refl
-    merge-swap (fork (fork t₀ t₁) (fork u₀ u₁))
-      rewrite merge-swap (fork t₀ u₀)
-            | merge-swap (fork t₁ u₁) = refl
 
     merge-pres : ∀ {n} {t : Tree A (1 + n)} {l h} → Sorted t l h → merge t ≡ t
-    merge-pres (fork leaf leaf x) = cong₂ (fork on leaf) (⊓-spec x) (⊔-spec x)
+    merge-pres (fork leaf leaf x) = ≡.cong₂ (fork on leaf) (⊓-spec x) (⊔-spec x)
     merge-pres {t = fork (fork t₀ t₁) (fork u₀ u₁)}
                (fork (fork {low_t = lt₀} {ht₀} {lt₁} {ht₁} st₀ st₁ ht₀≤lt₁)
                      (fork {low_t = lu₀} {hu₀} {lu₁} {hu₁} su₀ su₁ hu₀≤lu₁) ht₁≤lu₀)
        rewrite merge-pres (fork st₀ su₀ (≤ᴬ.trans ht₀≤lt₁ (≤ᴬ.trans (≤ᴬ-bounds st₁) ht₁≤lu₀)))
              | merge-pres (fork st₁ su₁ (≤ᴬ.trans ht₁≤lu₀ (≤ᴬ.trans (≤ᴬ-bounds su₀) hu₀≤lu₁)))
              | merge-swap (fork u₀ t₁)
-             | merge-pres (fork st₁ su₀ ht₁≤lu₀) = refl
+             | merge-pres (fork st₁ su₀ ht₁≤lu₀) = ≡.refl
 
-             {-
-    ∃Sorted : ∀ {n} → Tree A n → Set _
-    ∃Sorted t = ∃ λ l → ∃ λ h → Sorted t l h
-
-    PreSorted : ∀ {n} → Tree A (1 + n) → Set _
-    PreSorted (fork t u) = ∃Sorted t × ∃Sorted u
-    -}
-
-    PreSorted : ∀ {n} → Tree A (1 + n) → Set _
-    PreSorted (fork t u) = SD.Sorted t × SD.Sorted u
-
-    lft : ∀ {n} → Tree A (1 + n) → Tree A n
-    lft (fork t _) = t
-
-    rght : ∀ {n} → Tree A (1 + n) → Tree A n
-    rght (fork _ t) = t
-
-    ηfork : ∀ {n} (t : Tree A (1 + n)) → t ≡ fork (lft t) (rght t)
-    ηfork (fork t t₁) = refl
-
-    {-
-    record MergeInnerHyp {n} (t : Tree A (2 + n)) : Set (a L.⊔ ℓ) where
-      constructor mk
-      field
-        st₀ : SD.Sorted (lft t)
-        st₁ : SD.Sorted (rght t)
-      u = interchange t
-      field
-        su₀ : SD.Sorted (lft u)
-        su₁ : SD.Sorted (rght u)
-
-    merge-inner : ∀ {n} {t : Tree A (2 + n)} →
-                 MergeInnerHyp t → SD.Sorted (map-inner merge t)
-    merge-inner {t = fork (fork t₀ t₁) (fork u₀ u₁)}
-                (mk (fork st₀ st₁ ht₀≤lt₁)
-                    (fork su₀ su₁ lu₀≤hu₁)
-                    (fork sv₀ sv₁ hv₀≤lv₁)
-                    (fork sw₀ sw₁ lw₀≤hw₁)) = {!!}
-                    -}
+module SortingProperties {ℓ a} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ)
+                               (_⊓ᴬ_ _⊔ᴬ_ : A → A → A)
+                               (isPreorder : IsPreorder _≡_ _≤ᴬ_)
+                               (≤-⊔ : ∀ x y → x ≤ᴬ (y ⊔ᴬ x))
+                               (⊓-≤ : ∀ x y → (x ⊓ᴬ y) ≤ᴬ y)
+                               (≤-<_,_> : ∀ {x y z} → x ≤ᴬ y → x ≤ᴬ z → x ≤ᴬ (y ⊓ᴬ z))
+                               (≤-[_,_] : ∀ {x y z} → x ≤ᴬ z → y ≤ᴬ z → (x ⊔ᴬ y) ≤ᴬ z)
+                               (≤-⊓₀ : ∀ {x y z} → x ≤ᴬ (y ⊓ᴬ z) → x ≤ᴬ y)
+                               (≤-⊓₁ : ∀ {x y z} → x ≤ᴬ (y ⊓ᴬ z) → x ≤ᴬ z)
+                               (≤-⊔₀ : ∀ {x y z} → (x ⊔ᴬ y) ≤ᴬ z → x ≤ᴬ z)
+                               (≤-⊔₁ : ∀ {x y z} → (x ⊔ᴬ y) ≤ᴬ z → y ≤ᴬ z)
+                               where
+    module ≤ᴬ = IsPreorder isPreorder
+    -- open SortedDataIx _≤ᴬ_ isPreorder
+    open Sorting _⊓ᴬ_ _⊔ᴬ_
+    module SD = SortedData _≤ᴬ_
+    open SD using (fork; leaf; PreSorted)
 
     first-merge : ∀ {n} (t : Tree A (1 + n)) →
                 first (merge t) ≡ first (lft t) ⊓ᴬ first (rght t)
-    first-merge (fork (leaf x) (leaf y)) = refl
+    first-merge (fork (leaf x) (leaf y)) = ≡.refl
     first-merge (fork (fork t₀ t₁) (fork u₀ u₁))
       with merge (fork t₀ u₀) | first-merge (fork t₀ u₀)
          | merge (fork t₁ u₁)
@@ -933,7 +847,7 @@ module SortingProperties {ℓ a} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ)
 
     last-merge : ∀ {n} (t : Tree A (1 + n)) →
                 last (merge t) ≡ last (lft t) ⊔ᴬ last (rght t)
-    last-merge (fork (leaf x) (leaf y)) = refl
+    last-merge (fork (leaf x) (leaf y)) = ≡.refl
     last-merge (fork (fork t₀ t₁) (fork u₀ u₁))
       with merge (fork t₀ u₀)
          | merge (fork t₁ u₁) | last-merge (fork t₁ u₁)
@@ -943,87 +857,77 @@ module SortingProperties {ℓ a} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ)
     ... | fork a b
       = pf
 
-                -- last  (merge t u) ≡ last  t ⊓ᴬ last  u
-    merge-spec : ∀ {n} {t u : Tree A n} →
-                 SD.Sorted t → SD.Sorted u → SD.Sorted (merge (fork t u))
-    merge-spec (leaf {x}) (leaf {y}) = fork leaf leaf (≤ᴬ.trans (⊓-≤ x y) (≤-⊔ y x))
-    merge-spec {t = fork t₀ t₁} {u = fork u₀ u₁}
+    merge-spec′ : ∀ {n} {t u : Tree A n} →
+                 SD.Sorted t → SD.Sorted u →
+                 let tu' = merge (fork t u) in
+                 SD.Sorted tu'
+                 × last (lft tu') ≤ᴬ (last t ⊓ᴬ last u)
+                 × (first t ⊔ᴬ first u) ≤ᴬ first (rght tu')
+    merge-spec′ (leaf {x}) (leaf {y}) = fork leaf leaf (≤ᴬ.trans (⊓-≤ x y) (≤-⊔ y x)) , ≤ᴬ.refl , ≤ᴬ.refl
+    merge-spec′ {t = fork t₀ t₁} {u = fork u₀ u₁}
                (fork st₀ st₁ ht₀≤lt₁)
                (fork su₀ su₁ lu₀≤hu₁)
-      with merge (fork t₀ u₀) | merge-spec st₀ su₀ | first-merge (fork t₀ u₀)
-         | merge (fork t₁ u₁) | merge-spec st₁ su₁
-    ... | fork v₀ w₀ | fork sv₀ sw₀ p1 | fpf1
-        | fork v₁ w₁ | fork sv₁ sw₁ p2
-      with merge (fork w₀ v₁) | merge-spec sw₀ sv₁
-    ... | fork a b | fork sa sb p3
-      = fork (fork sv₀ sa pf1) (fork sb sw₁ pf2) p3
+      with merge (fork t₀ u₀) | merge-spec′ st₀ su₀ | last-merge (fork t₀ u₀)
+         | merge (fork t₁ u₁) | merge-spec′ st₁ su₁ | first-merge (fork t₁ u₁)
+    ... | fork v₀ w₀ | (fork sv₀ sw₀ p1 , lpf1 , rpf1) | lastw₀
+        | fork v₁ w₁ | (fork sv₁ sw₁ p2 , lpf2 , rpf2) | firstv₁
+      with merge (fork w₀ v₁) | merge-spec′ sw₀ sv₁ | first-merge (fork w₀ v₁) | last-merge (fork w₀ v₁)
+    ... | fork a b | (fork sa sb p3 , lpf3 , rpf3) | firsta | lastb
+      = fork (fork sv₀ sa pf1) (fork sb sw₁ pf2) p3 , lpf4 , rpf4
          where
-             postulate
-                pf3 : last v₀ ≤ᴬ first t₁
-                pf4 : last v₀ ≤ᴬ first u₁
-                -- Sorted (merge t u) →
              pf1 : last v₀ ≤ᴬ first a
-             pf1 = {!first-merge !}
+             pf1 rewrite firsta | firstv₁ = ≤-< p1 , ≤-< ≤ᴬ.trans (≤-⊓₀ lpf1) ht₀≤lt₁ , ≤ᴬ.trans (≤-⊓₁ lpf1) lu₀≤hu₁ > >
              pf2 : last b ≤ᴬ first w₁
-             pf2 = {!!}
+             pf2 rewrite lastb | lastw₀ = ≤-[ ≤-[ ≤ᴬ.trans ht₀≤lt₁ (≤-⊔₀ rpf2) , ≤ᴬ.trans lu₀≤hu₁ (≤-⊔₁ rpf2) ] , p2 ]
+             lpf4 = ≤-< ≤ᴬ.trans (≤-⊓₁ lpf3) (≤-⊓₀ lpf2) , ≤ᴬ.trans (≤-⊓₁ lpf3) (≤-⊓₁ lpf2) >
+             rpf4 = ≤-[ ≤ᴬ.trans (≤-⊔₀ rpf1) (≤-⊔₀ rpf3) , ≤ᴬ.trans (≤-⊔₁ rpf1) (≤-⊔₀ rpf3) ]
+
+    merge-spec : ∀ {n} {t : Tree A (1 + n)} → PreSorted t → SD.Sorted (merge t)
+    merge-spec {t = fork t u} (st , su) = proj₁ (merge-spec′ st su)
+
+    sort-spec : ∀ {n} (t : Tree A n) → SD.Sorted (sort t)
+    sort-spec (leaf _)   = leaf
+    sort-spec (fork t u) = merge-spec (sort-spec t , sort-spec u)
+
     {-
-      -}
-
-
---      map-outer merge id ∘ interchange
-
-      {-
-
-    merge-spec : ∀ {n lt ht lu hu} {t u : Tree A n} →
-                 Sorted t lt ht → Sorted u lu hu → Sorted (merge t u) (lt ⊓ᴬ lu) (ht ⊔ᴬ hu)
-    merge-spec (leaf x) (leaf y) = fork (leaf _) (leaf _) (≤ᴬ.trans (⊓-≤ x y) (≤-⊔ y x))
-    merge-spec {t = fork t₀ t₁} {u = fork u₀ u₁} (fork {low_t = lt₀} {ht₀} {lt₁} {ht₁} st₀ st₁ ht₀≤lt₁)
-                                                 (fork {low_t = lu₀} {hu₀} {lu₁} {hu₁} su₀ su₁ lu₀≤hu₁)
-      with merge t₀ u₀ | merge t₁ u₁ | merge-spec st₀ su₀ | merge-spec st₁ su₁
-    ... | fork l m₀    | fork m₁ h   | fork {high_t = hl} {lm₀} sl sm₀ pf1
-                                     | fork {high_t = hm₁} {lh} sm₁ sh pf2
-      with merge m₀ m₁ | merge-spec sm₀ sm₁
-    ... | fork m₀′ m₁′ | fork {high_t = hm₀} {lm₁} sm₀′ sm₁′ pf3
-      {-with ≤ᴬ-bounds st₀  | ≤ᴬ-bounds st₁
-         | ≤ᴬ-bounds su₀  | ≤ᴬ-bounds su₁
-         | ≤ᴬ-bounds sm₀  | ≤ᴬ-bounds sm₁
-         | ≤ᴬ-bounds sm₀′ | ≤ᴬ-bounds sm₁′
-         | ≤ᴬ-bounds sh   | ≤ᴬ-bounds sl
-    ...  | lt₀≤ht₀        | lt₁≤ht₁
-         | lu₀≤hu₁        | lu₁≤hu₁
-         | lm₀≤★          | ★≤hm₁
-         | ★≤hm₀          | lm₁≤★
-         | lh≤★           | ★≤hl-} =
-        fork
-          (fork sl sm₀′ (proj₁ pf))
-          (fork sm₁′ sh (proj₂ pf)) pf3
-          module M where
-                hl≤lt₁ : hl  ≤ᴬ lt₁
-                hl≤lt₁ = {!!}
-                hl≤lu₁ : hl  ≤ᴬ lu₁
-                hl≤lu₁ = {!!}
-                ht₀≤lh : ht₀ ≤ᴬ lh
-                ht₀≤lh = {!!}
-                hu₀≤lh : hu₀ ≤ᴬ lh
-                hu₀≤lh = {!!}
-
-                pf : (hl ≤ᴬ (lm₀ ⊓ᴬ (lt₁ ⊓ᴬ lu₁))) × (((ht₀ ⊔ᴬ hu₀) ⊔ᴬ hm₁) ≤ᴬ lh)
-                pf = ≤-⊓ pf1 (≤-⊓ hl≤lt₁ hl≤lu₁) , ⊔-≤ (⊔-≤ ht₀≤lh hu₀≤lh) pf2
-
-postulate
-    _⊔_ : ∀ {n} → Bits n → Bits n → Bits n
-    _⊓_ : ∀ {n} → Bits n → Bits n → Bits n
+module M {n} where
+  postulate
+    _≤_ : {-∀ {n} →-} Bits n → Bits n → Set
+    _⊔_ : Bits n → Bits n → Bits n
+    _⊓_ : Bits n → Bits n → Bits n
+    isPreorder : IsPreorder _≡_ _≤_
+    ≤-⊔ : ∀ x y → x ≤ (y ⊔ x)
+    ⊓-≤ : ∀ x y → (x ⊓ y) ≤ y
+    ⊔-spec : ∀ {x y} → x ≤ y → x ⊔ y ≡ y
+    ⊓-spec : ∀ {x y} → x ≤ y → x ⊓ y ≡ x
+    ⊓-comm : Commutative _≡_ _⊓_
+    ⊔-comm : Commutative _≡_ _⊔_
+    ≤-<_,_> : ∀ {x y z} → x ≤ y → x ≤ z → x ≤ (y ⊓ z)
+    ≤-[_,_] : ∀ {x y z} → x ≤ z → y ≤ z → (x ⊔ y) ≤ z
+    ≤-⊓₀ : ∀ {x y z} → x ≤ (y ⊓ z) → x ≤ y
+    ≤-⊓₁ : ∀ {x y z} → x ≤ (y ⊓ z) → x ≤ z
+    ≤-⊔₀ : ∀ {x y z} → (x ⊔ y) ≤ z → x ≤ z
+    ≤-⊔₁ : ∀ {x y z} → (x ⊔ y) ≤ z → y ≤ z
 
 module BitsSorting {m} where
+    open M {m}
 
-    module S = Sorting (_⊓_ {m}) (_⊔_ {m})
-    open S public using (InjTree; InjTree-×)
+    module S = Sorting _⊓_ _⊔_
+    module SDP = SortingDataIxProperties _≤_ _⊓_ _⊔_ isPreorder ⊔-spec ⊓-spec ⊓-comm ⊔-comm
+    module SP = SortingProperties _≤_ _⊓_ _⊔_ isPreorder ≤-⊔ ⊓-≤ ≤-<_,_> ≤-[_,_] ≤-⊓₀ ≤-⊓₁ ≤-⊔₀ ≤-⊔₁
+    open SortedData _≤_
 
-    merge : ∀ {n} → (t u : Tree (Bits m) n) → Tree (Bits m) (1 + n)
+    merge : ∀ {n} → Tree (Bits m) (1 + n) → Tree (Bits m) (1 + n)
     merge = S.merge
 
     sort : ∀ {n} → Tree (Bits m) n → Tree (Bits m) n
     sort = S.sort
+
+    merge-spec : ∀ {n} {t : Tree (Bits m) (1 + n)} → PreSorted t → Sorted (merge t)
+    merge-spec = SP.merge-spec
+
+    sort-spec : ∀ {n} (t : Tree (Bits m) n) → Sorted (sort t)
+    sort-spec = SP.sort-spec
 
 module BitsSorting′ where
     open BitsSorting
