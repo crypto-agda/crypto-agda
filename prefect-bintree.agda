@@ -769,6 +769,58 @@ module Sorting {a} {A : Set a} (_⊓ᴬ_ _⊔ᴬ_ : A → A → A) where
     sort {zero}  = id
     sort {suc n} = merge ∘ map-outer sort sort
 
+module Sorting-Perm-Properties {OT : Set}
+  (_⊓ᴬ_ _⊔ᴬ_ : (xs ys : OT) → OT) where
+    
+    open Sorting _⊓ᴬ_ _⊔ᴬ_
+
+    import Data.Bits as B
+    open B.OperationSyntax renaming (_∙_ to _•_) -- 
+
+
+    infixr 1 _`∘_
+    _`∘_ = λ x y → y `⁏ x
+
+    eval : {A : Set} → Op → ∀ {n} → Tree A n → Tree A n
+    eval `id t        = t
+    eval `0↔1 t       = {!!}
+    eval `not t       = {!!}
+    eval (`tl op) t   = {!!}
+    eval (`if0 op) t  = {!!}
+    eval (op `⁏ op₁) t = eval op₁ (eval op t)
+
+    record Perm {A : Set} n (f : Endo (Tree A n)) : Set where
+      constructor mk
+      field
+        perm  :  Tree A n → Op
+        proof : (t : Tree A n) → t ≡  eval (perm t) (f t)
+
+    id-proof : ∀ {A : Set}{n} → Perm {A} n id
+    id-proof = mk (λ _ → `id) (λ t → ≡.refl)
+
+    _∘-proof_ : ∀{A : Set}{n }{f g : Endo (Tree A n)} → Perm n f → Perm n g → Perm n (f ∘ g)
+    _∘-proof_ {A}{n}{f}{g} (mk πf pf) (mk πg pg) = mk (λ t → πg t `∘ πf (g t)) 
+      (λ t → ≡.trans (pg t) (≡.cong (eval (πg t)) (pf (g t))) )
+
+    swap-proof : ∀ {A : Set}{n} → Perm {A} (suc n) swap
+    swap-proof = {!!}
+
+    map-outer-proof : ∀ {A : Set}{n}{f g : Endo (Tree A n)} → Perm n f → Perm n g → Perm {A} (suc n) (map-outer f g)
+    map-outer-proof = {!!}
+
+    map-inner-proof : ∀ {A : Set}{n}{f : Endo (Tree A (1 + n))} → Perm (1 + n) f → Perm (2 + n) (map-inner f)
+    map-inner-proof = {!!}
+
+    merge-proof : ∀ {n} → Perm {OT} (suc n) merge
+    merge-proof {zero}  = mk {!!} (λ { (fork (leaf x) (leaf y))  → {!!} })
+    merge-proof {suc n} = map-inner-proof merge-proof ∘-proof
+                            (map-outer-proof merge-proof merge-proof ∘-proof
+                             map-inner-proof swap-proof)
+
+    sort-proof : ∀ {n} → Perm {OT} n sort
+    sort-proof {zero}  = id-proof
+    sort-proof {suc n} = merge-proof ∘-proof map-outer-proof sort-proof sort-proof
+
 module SortedData {a ℓ} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ) where
     data Sorted : ∀ {n} → Tree A n → Set (a L.⊔ ℓ) where
       leaf : {x : A} → Sorted (leaf x)
