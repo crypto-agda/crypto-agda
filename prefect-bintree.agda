@@ -659,11 +659,11 @@ last (fork _ t) = last t
 module SortedDataIx {a ℓ} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ) (isPreorder : IsPreorder _≡_ _≤ᴬ_) where
     data Sorted : ∀ {n} → Tree A n → A → A → Set (a L.⊔ ℓ) where
       leaf : {x : A} → Sorted (leaf x) x x
-      fork : ∀ {n} {t u : Tree A n} {lowₜ highₜ lowᵤ highᵤ} →
-             Sorted t lowₜ highₜ →
+      fork : ∀ {n} {t u : Tree A n} {low_t high_t lowᵤ highᵤ} →
+             Sorted t low_t high_t →
              Sorted u lowᵤ highᵤ →
-             (h≤l : highₜ ≤ᴬ lowᵤ) →
-             Sorted (fork t u) lowₜ highᵤ
+             (h≤l : high_t ≤ᴬ lowᵤ) →
+             Sorted (fork t u) low_t highᵤ
 
     private
         module ≤ᴬ = IsPreorder isPreorder
@@ -837,7 +837,7 @@ module SortingProperties {ℓ a} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ)
       with merge t₀ u₀ | merge t₁ u₁ -- | merge-spec t₀ u₀ ? ? | merge-spec t₁ u₁ ? ?
     ... | fork l m₀    | fork m₁ h
       with merge m₀ m₁ -- | merge-spec sm₀ sm₁
-    ... | fork m₀′ m₁′ -- | fork {highₜ = hm₀} {lm₁} sm₀′ sm₁′ pf3
+    ... | fork m₀′ m₁′ -- | fork {high_t = hm₀} {lm₁} sm₀′ sm₁′ pf3
       with p | q | p≤q
     ... | left  pp | left  qq | there ._ pp≤qq = {!merge-spec t₀ u₀ !}
     ... | left  pp | right qq | 0-1 ._ ._ = {!!}
@@ -872,8 +872,8 @@ module SortingProperties {ℓ a} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ)
     merge-pres : ∀ {n} {t : Tree A (1 + n)} {l h} → Sorted t l h → merge t ≡ t
     merge-pres (fork leaf leaf x) = cong₂ (fork on leaf) (⊓-spec x) (⊔-spec x)
     merge-pres {t = fork (fork t₀ t₁) (fork u₀ u₁)}
-               (fork (fork {lowₜ = lt₀} {ht₀} {lt₁} {ht₁} st₀ st₁ ht₀≤lt₁)
-                     (fork {lowₜ = lu₀} {hu₀} {lu₁} {hu₁} su₀ su₁ hu₀≤lu₁) ht₁≤lu₀)
+               (fork (fork {low_t = lt₀} {ht₀} {lt₁} {ht₁} st₀ st₁ ht₀≤lt₁)
+                     (fork {low_t = lu₀} {hu₀} {lu₁} {hu₁} su₀ su₁ hu₀≤lu₁) ht₁≤lu₀)
        rewrite merge-pres (fork st₀ su₀ (≤ᴬ.trans ht₀≤lt₁ (≤ᴬ.trans (≤ᴬ-bounds st₁) ht₁≤lu₀)))
              | merge-pres (fork st₁ su₁ (≤ᴬ.trans ht₁≤lu₀ (≤ᴬ.trans (≤ᴬ-bounds su₀) hu₀≤lu₁)))
              | merge-swap (fork u₀ t₁)
@@ -977,13 +977,13 @@ module SortingProperties {ℓ a} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ)
     merge-spec : ∀ {n lt ht lu hu} {t u : Tree A n} →
                  Sorted t lt ht → Sorted u lu hu → Sorted (merge t u) (lt ⊓ᴬ lu) (ht ⊔ᴬ hu)
     merge-spec (leaf x) (leaf y) = fork (leaf _) (leaf _) (≤ᴬ.trans (⊓-≤ x y) (≤-⊔ y x))
-    merge-spec {t = fork t₀ t₁} {u = fork u₀ u₁} (fork {lowₜ = lt₀} {ht₀} {lt₁} {ht₁} st₀ st₁ ht₀≤lt₁)
-                                                 (fork {lowₜ = lu₀} {hu₀} {lu₁} {hu₁} su₀ su₁ lu₀≤hu₁)
+    merge-spec {t = fork t₀ t₁} {u = fork u₀ u₁} (fork {low_t = lt₀} {ht₀} {lt₁} {ht₁} st₀ st₁ ht₀≤lt₁)
+                                                 (fork {low_t = lu₀} {hu₀} {lu₁} {hu₁} su₀ su₁ lu₀≤hu₁)
       with merge t₀ u₀ | merge t₁ u₁ | merge-spec st₀ su₀ | merge-spec st₁ su₁
-    ... | fork l m₀    | fork m₁ h   | fork {highₜ = hl} {lm₀} sl sm₀ pf1
-                                     | fork {highₜ = hm₁} {lh} sm₁ sh pf2
+    ... | fork l m₀    | fork m₁ h   | fork {high_t = hl} {lm₀} sl sm₀ pf1
+                                     | fork {high_t = hm₁} {lh} sm₁ sh pf2
       with merge m₀ m₁ | merge-spec sm₀ sm₁
-    ... | fork m₀′ m₁′ | fork {highₜ = hm₀} {lm₁} sm₀′ sm₁′ pf3
+    ... | fork m₀′ m₁′ | fork {high_t = hm₀} {lm₁} sm₀′ sm₁′ pf3
       {-with ≤ᴬ-bounds st₀  | ≤ᴬ-bounds st₁
          | ≤ᴬ-bounds su₀  | ≤ᴬ-bounds su₁
          | ≤ᴬ-bounds sm₀  | ≤ᴬ-bounds sm₁
