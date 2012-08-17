@@ -807,6 +807,37 @@ module Sorting-Perm-Properties {OT : Set} (_<=ᴬ_ : OT → OT → Bool)
     evalTree `0↔1 {suc zero} = id
     evalTree `0↔1 {suc (suc n)} = interchange
 
+    {-
+    evalTree-eval : ∀ {a} {A : Set a} (f : Bij) {n} (t : Tree A n) → toFun t ≗ toFun (evalTree f t) ∘ eval (f ⁻¹)
+    evalTree-eval `id t xs = ≡.refl
+    evalTree-eval `0↔1 t [] = ≡.refl
+    evalTree-eval `0↔1 t (x ∷ []) = ≡.refl
+    evalTree-eval `0↔1 (fork (fork a b) (fork c d)) (true ∷ true ∷ xs) = ≡.refl
+    evalTree-eval `0↔1 (fork (fork a b) (fork c d)) (false ∷ true ∷ xs) = ≡.refl
+    evalTree-eval `0↔1 (fork (fork a b) (fork c d)) (true ∷ false ∷ xs) = ≡.refl
+    evalTree-eval `0↔1 (fork (fork a b) (fork c d)) (false ∷ false ∷ xs) = ≡.refl
+    evalTree-eval (f `⁏ f₁) {n} t xs = {!evalTree-eval!}
+    evalTree-eval (_ `∷ x₁) t [] = ≡.refl
+    evalTree-eval (`id `∷ f) (fork t u) (true ∷ xs) = evalTree-eval (f 1b) u xs
+    evalTree-eval (`id `∷ f) (fork t u) (false ∷ xs) = evalTree-eval (f 0b) t xs
+    evalTree-eval (`notᴮ `∷ f) (fork t u) (true ∷ xs) = evalTree-eval (f 0b) u xs
+    evalTree-eval (`notᴮ `∷ f) (fork t u) (false ∷ xs) = evalTree-eval (f 1b) t xs
+
+    evalTree-eval : ∀ {a} {A : Set a} (f : Bij) {n} (t : Tree A n) → toFun t ∘ eval f ≗ toFun (evalTree f t)
+    evalTree-eval `id t xs = ≡.refl
+    evalTree-eval `0↔1 t [] = ≡.refl
+    evalTree-eval `0↔1 t (x ∷ []) = ≡.refl
+    evalTree-eval `0↔1 (fork (fork a b) (fork c d)) (true ∷ true ∷ xs) = ≡.refl
+    evalTree-eval `0↔1 (fork (fork a b) (fork c d)) (false ∷ true ∷ xs) = ≡.refl
+    evalTree-eval `0↔1 (fork (fork a b) (fork c d)) (true ∷ false ∷ xs) = ≡.refl
+    evalTree-eval `0↔1 (fork (fork a b) (fork c d)) (false ∷ false ∷ xs) = ≡.refl
+    evalTree-eval (f `⁏ f₁) {n} t xs = {!evalTree-eval f₁ (evalTree f t) xs!}
+    evalTree-eval (_ `∷ x₁) t [] = ≡.refl
+    evalTree-eval (`id `∷ f) (fork t u) (true ∷ xs) = evalTree-eval (f 1b) u xs
+    evalTree-eval (`id `∷ f) (fork t u) (false ∷ xs) = evalTree-eval (f 0b) t xs
+    evalTree-eval (`notᴮ `∷ f) (fork t u) (true ∷ xs) = evalTree-eval (f 1b) t xs
+    evalTree-eval (`notᴮ `∷ f) (fork t u) (false ∷ xs) = evalTree-eval (f 0b) u xs
+    -}
 
     record Perm {A : Set} n (f : Endo (Tree A n)) : Set where
       constructor mk
