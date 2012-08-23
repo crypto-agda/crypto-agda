@@ -13,7 +13,7 @@ open import Data.Vec.NP using (Vec; _++_; module Alternative-Reverse)
 open import Relation.Nullary
 open import Relation.Binary
 import Relation.Binary.PropositionalEquality.NP as ≡
-open ≡ using (_≡_; _≗_)
+open ≡ using (_≡_; _≗_; module ≡-Reasoning)
 open import Algebra.FunctionProperties
 import Relation.Binary.ToNat as ToNat
 
@@ -45,15 +45,56 @@ fromFun∘toFun (fork t₀ t₁)
 toFun→fromFun : ∀ {n a} {A : Set a} (t : Tree A n) (f : Bits n → A) → toFun t ≗ f → t ≡ fromFun f
 toFun→fromFun (leaf x) f t≗f = ≡.cong leaf (t≗f [])
 toFun→fromFun (fork t₀ t₁) f t≗f
-  rewrite toFun→fromFun t₀ (f ∘ 0∷_) (t≗f ∘ 0∷_)
-        | toFun→fromFun t₁ (f ∘ 1∷_) (t≗f ∘ 1∷_) = ≡.refl
+  rewrite toFun→fromFun t₀ _ (t≗f ∘ 0∷_)
+        | toFun→fromFun t₁ _ (t≗f ∘ 1∷_) = ≡.refl
 
 fromFun→toFun : ∀ {n a} {A : Set a} (t : Tree A n) (f : Bits n → A) → t ≡ fromFun f → toFun t ≗ f
 fromFun→toFun ._ _ ≡.refl = toFun∘fromFun _
 
+fromFun-≗ : ∀ {n a} {A : Set a} {f g : Bits n → A} → f ≗ g → fromFun f ≡ fromFun g
+fromFun-≗ {zero}  f≗g
+  rewrite f≗g [] = ≡.refl
+fromFun-≗ {suc n} f≗g
+  rewrite fromFun-≗ (f≗g ∘ 0∷_)
+        | fromFun-≗ (f≗g ∘ 1∷_)
+        = ≡.refl
+
 lookup : ∀ {n a} {A : Set a} → Bits n → Tree A n → A
 lookup = flip toFun
 
+private
+  module Dummy {a} {A : Set a} where
+    lft : ∀ {n} → Tree A (1 + n) → Tree A n
+    lft (fork t _) = t
+
+    rght : ∀ {n} → Tree A (1 + n) → Tree A n
+    rght (fork _ t) = t
+
+    ηfork : ∀ {n} (t : Tree A (1 + n)) → t ≡ fork (lft t) (rght t)
+    ηfork (fork _ _) = ≡.refl
+
+    from-× : A × A → Tree A 1
+    from-× (x , y) = fork (leaf x) (leaf y)
+
+    to-× : Tree A 1 → A × A
+    to-× (fork (leaf x) (leaf y)) = x , y
+
+    swap : ∀ {n} → Tree A (1 + n) → Tree A (1 + n)
+    swap t = fork (rght t) (lft t)
+
+    map-inner : ∀ {n} → (Tree A (1 + n) → Tree A (1 + n)) → (Tree A (2 + n) → Tree A (2 + n))
+    map-inner f (fork (fork t₀ t₁) (fork t₂ t₃)) =
+      case f (fork t₁ t₂) of λ { (fork t₄ t₅) → fork (fork t₀ t₄) (fork t₅ t₃) }
+
+    map-outer : ∀ {n} → (f g : Tree A n → Tree A n) → (Tree A (1 + n) → Tree A (1 + n))
+    map-outer f g (fork t u) = fork (f t) (g u)
+
+    interchange : ∀ {n} → Tree A (2 + n) → Tree A (2 + n)
+    interchange = map-inner swap
+
+    inner : ∀ {n} → Tree A (2 + n) → Tree A (1 + n)
+    inner t = fork (rght (lft t)) (lft (rght t))
+open Dummy public
 {-
 module Fold {a b i} {I : Set i} (ze : I) (su : I → I)
             {A : Set a} {B : I → Set b}
@@ -709,12 +750,42 @@ module SortedDataIx {a ℓ} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ) (isPreo
              | uniq-ub uv tu₁
          = fork tu uv₁ (≤ᴬ.trans h≤l (≤ᴬ.trans (≤ᴬ-bounds tu₁) h≤l₁))
 
-module Sorted' {a ℓ} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ) (isPreorder : IsPreorder _≡_ _≤ᴬ_) where
-    data _≤ᴮ_ : ∀ {n} (p q : Bits n) → Set where
-      []    : [] ≤ᴮ []
-      there : ∀ {n} {p q : Bits n} b → p ≤ᴮ q → (b ∷ p) ≤ᴮ (b ∷ q)
-      0-1   : ∀ {n} (p q : Bits n) → 0∷ p ≤ᴮ 1∷ q
+module SortedData {a ℓ} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ) (isPreorder : IsPreorder _≡_ _≤ᴬ_) where
+    data Sorted : ∀ {n} → Tree A n → Set (a L.⊔ ℓ) where
+      leaf : {x : A} → Sorted (leaf x)
+      fork : ∀ {n} {t u : Tree A n} →
+             Sorted t →
+             Sorted u →
+             (h≤l : last t ≤ᴬ first u) →
+             Sorted (fork t u)
 
+    PreSorted : ∀ {n} → Tree A (1 + n) → Set _
+    PreSorted t = Sorted (lft t) × Sorted (rght t)
+
+    private
+        module ≤ᴬ = IsPreorder isPreorder
+
+    ≤ᴬ-bounds : ∀ {n} {t : Tree A n} → Sorted t → first t ≤ᴬ last t
+    ≤ᴬ-bounds leaf            = ≤ᴬ.refl
+    ≤ᴬ-bounds (fork s₀ s₁ pf) = ≤ᴬ.trans (≤ᴬ-bounds s₀) (≤ᴬ.trans pf (≤ᴬ-bounds s₁))
+
+    Sorted→lb : ∀ {n} {t : Tree A n} → Sorted t → ∀ (p : Bits n) → first t ≤ᴬ lookup p t
+    Sorted→lb leaf             []          = ≤ᴬ.refl
+    Sorted→lb (fork st su h≤l) (true  ∷ p) = ≤ᴬ.trans (≤ᴬ.trans (≤ᴬ-bounds st) h≤l) (Sorted→lb su p)
+    Sorted→lb (fork st _  _)   (false ∷ p) = Sorted→lb st p
+
+    Sorted→ub : ∀ {n} {t : Tree A n} → Sorted t → ∀ (p : Bits n) → lookup p t ≤ᴬ last t
+    Sorted→ub leaf             []          = ≤ᴬ.refl
+    Sorted→ub (fork _  su _)   (true  ∷ p) = Sorted→ub su p
+    Sorted→ub (fork st su h≤l) (false ∷ p) = ≤ᴬ.trans (≤ᴬ.trans (Sorted→ub st p) h≤l) (≤ᴬ-bounds su)
+
+    Bounded : ∀ {n} → Tree A n → A → A → Set ℓ
+    Bounded {n} t l h = ∀ (p : Bits n) → (l ≤ᴬ lookup p t) × (lookup p t ≤ᴬ h)
+
+    Sorted→Bounded : ∀ {n} {t : Tree A n} → Sorted t → Bounded t (first t) (last t)
+    Sorted→Bounded s x = Sorted→lb s x , Sorted→ub s x
+
+module SortedMembershipProofs {a ℓ} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ) (isPreorder : IsPreorder _≡_ _≤ᴬ_) where
     _≤ᴾ_ : ∀ {n x y} {t : Tree A n} → x ∈ t → y ∈ t → Set
     p ≤ᴾ q = toBits p ≤ᴮ toBits q
 
@@ -733,39 +804,22 @@ module Sorted' {a ℓ} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ) (isPreorder 
     Sorted→Sorted' (fork _ _ _)     (right _) (left _)  ()
     Sorted→Sorted' (fork _ s _)     (right p) (right q) (there ._ p≤q) = Sorted→Sorted' s p q p≤q
 
-private
-  module Dummy {a} {A : Set a} where
-    lft : ∀ {n} → Tree A (1 + n) → Tree A n
-    lft (fork t _) = t
+module SortedMonotonicFunctions {a ℓ} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ) (isPreorder : IsPreorder _≡_ _≤ᴬ_) where
+    Monotone : ∀ {n} → (Bits n → A) → Set _
+    Monotone {n} f = ∀ {p q : Bits n} → p ≤ᴮ q → f p ≤ᴬ f q
 
-    rght : ∀ {n} → Tree A (1 + n) → Tree A n
-    rght (fork _ t) = t
+    Sorted : ∀ {n} → Tree A n → Set _
+    Sorted = Monotone ∘ toFun
 
-    ηfork : ∀ {n} (t : Tree A (1 + n)) → t ≡ fork (lft t) (rght t)
-    ηfork (fork _ _) = ≡.refl
+    private
+        module ≤ᴬ = IsPreorder isPreorder
 
-    from-× : A × A → Tree A 1
-    from-× (x , y) = fork (leaf x) (leaf y)
-
-    to-× : Tree A 1 → A × A
-    to-× (fork (leaf x) (leaf y)) = x , y
-
-    swap : ∀ {n} → Tree A (1 + n) → Tree A (1 + n)
-    swap t = fork (rght t) (lft t)
-
-    map-inner : ∀ {n} → (Tree A (1 + n) → Tree A (1 + n)) → (Tree A (2 + n) → Tree A (2 + n))
-    map-inner f (fork (fork t₀ t₁) (fork t₂ t₃)) =
-      case f (fork t₁ t₂) of λ { (fork t₄ t₅) → fork (fork t₀ t₄) (fork t₅ t₃) }
-
-    map-outer : ∀ {n} → (f g : Tree A n → Tree A n) → (Tree A (1 + n) → Tree A (1 + n))
-    map-outer f g (fork t u) = fork (f t) (g u)
-
-    interchange : ∀ {n} → Tree A (2 + n) → Tree A (2 + n)
-    interchange = map-inner swap
-
-    inner : ∀ {n} → Tree A (2 + n) → Tree A (1 + n)
-    inner t = fork (rght (lft t)) (lft (rght t))
-open Dummy public
+    open SortedData _≤ᴬ_ isPreorder renaming (Sorted to DataSorted)
+    DataSorted→Sorted : ∀ {n} {t : Tree A n} → DataSorted t → Sorted t
+    DataSorted→Sorted leaf             []                = ≤ᴬ.refl
+    DataSorted→Sorted (fork _  su _)   (there true  p≤q) = DataSorted→Sorted su p≤q
+    DataSorted→Sorted (fork st _  _)   (there false p≤q) = DataSorted→Sorted st p≤q
+    DataSorted→Sorted (fork st su h≤l) (0-1 p q)         = ≤ᴬ.trans (≤ᴬ.trans (Sorted→ub st p) h≤l) (Sorted→lb su q)
 
 module Sorting {a} {A : Set a} (_⊓ᴬ_ _⊔ᴬ_ : A → A → A) where
 
@@ -783,32 +837,18 @@ module Sorting {a} {A : Set a} (_⊓ᴬ_ _⊔ᴬ_ : A → A → A) where
     sort {zero}  = id
     sort {suc n} = merge ∘ map-outer sort sort
 
-module Sorting-Perm-Properties {OT : Set} (_<=ᴬ_ : OT → OT → Bool)
-    (isTotalOrder : IsTotalOrder _≡_ (λ x y → T (x <=ᴬ y)))
-    where
-    open IsTotalOrder isTotalOrder
-
-    _⊓ᴬ_ : OT → OT → OT
-    x ⊓ᴬ y = if x <=ᴬ y then x else y
-
-    _⊔ᴬ_ : OT → OT → OT
-    x ⊔ᴬ y = if x <=ᴬ y then y else x
-
-    open Sorting _⊓ᴬ_ _⊔ᴬ_
+module EvalTree where
     open OperationSyntax renaming (map-inner to `map-inner; map-outer to `map-outer)
-    open import Function.Bijection.SyntaxKit
-
     evalTree : ∀ {a} {A : Set a} → Bij → ∀ {n} → Tree A n → Tree A n
     evalTree `id         = id
     evalTree (op₀ `⁏ op₁) = evalTree op₁ ∘ evalTree op₀
     evalTree op {zero} = id
     evalTree (`id   `∷ g) {suc n} = map-outer (evalTree (g 0b)) (evalTree (g 1b))
-    evalTree (`notᴮ `∷ g) {suc n} = map-outer (evalTree (g 0b)) (evalTree (g 1b)) ∘ swap
+    evalTree (`notᴮ `∷ g) {suc n} = map-outer (evalTree (g 1b)) (evalTree (g 0b)) ∘ swap
     evalTree `0↔1 {suc zero} = id
     evalTree `0↔1 {suc (suc n)} = interchange
 
-    {-
-    evalTree-eval : ∀ {a} {A : Set a} (f : Bij) {n} (t : Tree A n) → toFun t ≗ toFun (evalTree f t) ∘ eval (f ⁻¹)
+    evalTree-eval : ∀ {a} {A : Set a} (f : Bij) {n} (t : Tree A n) → toFun t ≗ toFun (evalTree f t) ∘ eval f
     evalTree-eval `id t xs = ≡.refl
     evalTree-eval `0↔1 t [] = ≡.refl
     evalTree-eval `0↔1 t (x ∷ []) = ≡.refl
@@ -816,29 +856,24 @@ module Sorting-Perm-Properties {OT : Set} (_<=ᴬ_ : OT → OT → Bool)
     evalTree-eval `0↔1 (fork (fork a b) (fork c d)) (false ∷ true ∷ xs) = ≡.refl
     evalTree-eval `0↔1 (fork (fork a b) (fork c d)) (true ∷ false ∷ xs) = ≡.refl
     evalTree-eval `0↔1 (fork (fork a b) (fork c d)) (false ∷ false ∷ xs) = ≡.refl
-    evalTree-eval (f `⁏ f₁) {n} t xs = {!evalTree-eval!}
+    evalTree-eval (f `⁏ f₁) {n} t xs = ≡.trans (evalTree-eval f t xs) (evalTree-eval f₁ (evalTree f t) (eval f xs))
     evalTree-eval (_ `∷ x₁) t [] = ≡.refl
     evalTree-eval (`id `∷ f) (fork t u) (true ∷ xs) = evalTree-eval (f 1b) u xs
     evalTree-eval (`id `∷ f) (fork t u) (false ∷ xs) = evalTree-eval (f 0b) t xs
-    evalTree-eval (`notᴮ `∷ f) (fork t u) (true ∷ xs) = evalTree-eval (f 0b) u xs
-    evalTree-eval (`notᴮ `∷ f) (fork t u) (false ∷ xs) = evalTree-eval (f 1b) t xs
+    evalTree-eval (`notᴮ `∷ f) (fork t u) (true ∷ xs) = evalTree-eval (f 1b) u xs
+    evalTree-eval (`notᴮ `∷ f) (fork t u) (false ∷ xs) = evalTree-eval (f 0b) t xs
 
-    evalTree-eval : ∀ {a} {A : Set a} (f : Bij) {n} (t : Tree A n) → toFun t ∘ eval f ≗ toFun (evalTree f t)
-    evalTree-eval `id t xs = ≡.refl
-    evalTree-eval `0↔1 t [] = ≡.refl
-    evalTree-eval `0↔1 t (x ∷ []) = ≡.refl
-    evalTree-eval `0↔1 (fork (fork a b) (fork c d)) (true ∷ true ∷ xs) = ≡.refl
-    evalTree-eval `0↔1 (fork (fork a b) (fork c d)) (false ∷ true ∷ xs) = ≡.refl
-    evalTree-eval `0↔1 (fork (fork a b) (fork c d)) (true ∷ false ∷ xs) = ≡.refl
-    evalTree-eval `0↔1 (fork (fork a b) (fork c d)) (false ∷ false ∷ xs) = ≡.refl
-    evalTree-eval (f `⁏ f₁) {n} t xs = {!evalTree-eval f₁ (evalTree f t) xs!}
-    evalTree-eval (_ `∷ x₁) t [] = ≡.refl
-    evalTree-eval (`id `∷ f) (fork t u) (true ∷ xs) = evalTree-eval (f 1b) u xs
-    evalTree-eval (`id `∷ f) (fork t u) (false ∷ xs) = evalTree-eval (f 0b) t xs
-    evalTree-eval (`notᴮ `∷ f) (fork t u) (true ∷ xs) = evalTree-eval (f 1b) t xs
-    evalTree-eval (`notᴮ `∷ f) (fork t u) (false ∷ xs) = evalTree-eval (f 0b) u xs
-    -}
+    evalTree-eval′ : ∀ {a} {A : Set a} (f : Bij) {n} (t : Tree A n) → toFun (evalTree f t) ≗ toFun t ∘ eval (f ⁻¹)
+    evalTree-eval′ f t x = toFun (evalTree f t) x
+                         ≡⟨ ≡.cong (toFun (evalTree f t)) (≡.sym (VecBijKit._⁻¹-inverse′ _ f x)) ⟩
+                           toFun (evalTree f t) (eval f (eval (f ⁻¹) x))
+                         ≡⟨ ≡.sym (evalTree-eval f t (eval (f ⁻¹) x)) ⟩
+                           toFun t (eval (f ⁻¹) x)
+                         ∎ where open ≡-Reasoning
 
+module PermTreeProof where
+    open EvalTree
+    open OperationSyntax renaming (map-inner to `map-inner; map-outer to `map-outer)
     record Perm {A : Set} n (f : Endo (Tree A n)) : Set where
       constructor mk
       field
@@ -869,6 +904,22 @@ module Sorting-Perm-Properties {OT : Set} (_<=ᴬ_ : OT → OT → Bool)
              helper (fork (fork a b) (fork c d)) with f (fork b c) | ≡.sym (proof `f (fork b c))
              ... | fork B C | p rewrite p = ≡.refl
 
+module Sorting-Perm-Properties {OT : Set} (_<=ᴬ_ : OT → OT → Bool)
+    (isTotalOrder : IsTotalOrder _≡_ (λ x y → T (x <=ᴬ y)))
+    where
+    open IsTotalOrder isTotalOrder
+
+    _⊓ᴬ_ : OT → OT → OT
+    x ⊓ᴬ y = if x <=ᴬ y then x else y
+
+    _⊔ᴬ_ : OT → OT → OT
+    x ⊔ᴬ y = if x <=ᴬ y then y else x
+
+    open Sorting _⊓ᴬ_ _⊔ᴬ_
+    open EvalTree
+    open OperationSyntax renaming (map-inner to `map-inner; map-outer to `map-outer)
+    open PermTreeProof
+
     `sort₁ : Tree OT 1 → Bij
     `sort₁ = `xor ∘ uncurry _<=ᴬ_ ∘ swap-× ∘ to-×
 
@@ -892,18 +943,6 @@ module Sorting-Perm-Properties {OT : Set} (_<=ᴬ_ : OT → OT → Bool)
     sort-proof : ∀ {n} → Perm {OT} n sort
     sort-proof {zero}  = id-proof
     sort-proof {suc n} = merge-proof ∘-proof map-outer-proof sort-proof sort-proof
-
-module SortedData {a ℓ} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ) where
-    data Sorted : ∀ {n} → Tree A n → Set (a L.⊔ ℓ) where
-      leaf : {x : A} → Sorted (leaf x)
-      fork : ∀ {n} {t u : Tree A n} →
-             Sorted t →
-             Sorted u →
-             (h≤l : last t ≤ᴬ first u) →
-             Sorted (fork t u)
-
-    PreSorted : ∀ {n} → Tree A (1 + n) → Set _
-    PreSorted t = Sorted (lft t) × Sorted (rght t)
 
 module MergeSwap {a} {A : Set a}
                  (_⊓ᴬ_ _⊔ᴬ_ : A → A → A)
@@ -953,7 +992,7 @@ module SortingProperties {ℓ a} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ)
                                where
     module ≤ᴬ = IsPreorder isPreorder
     open Sorting _⊓ᴬ_ _⊔ᴬ_
-    module SD = SortedData _≤ᴬ_
+    module SD = SortedData _≤ᴬ_ isPreorder
     open SD using (fork; leaf; PreSorted)
 
     first-merge : ∀ {n} (t : Tree A (1 + n)) →
@@ -1013,7 +1052,7 @@ module SortingProperties {ℓ a} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ)
     sort-spec (fork t u) = merge-spec (sort-spec t , sort-spec u)
 
 module BitsSorting {m} where
-    open ToNat {A = Bits m} toℕ (λ {x} {y} → toℕ-inj x y)
+    open ToNat {A = Bits m} toℕ (λ {x} {y} → toℕ-inj x y) public
 
     module S = Sorting _⊓_ _⊔_
     module SDP = SortingDataIxProperties _≤_ _⊓_ _⊔_ isPreorder (λ {x} {y} z → ⊔-spec {x} {y} z)
@@ -1026,8 +1065,9 @@ module BitsSorting {m} where
                    (λ {x} {y} {z} → ≤-⊓₁ {x} {y} {z})
                    (λ {x} {y} {z} → ≤-⊔₀ {x} {y} {z})
                    (λ {x} {y} {z} → ≤-⊔₁ {x} {y} {z})
-    open SortedData _≤_
+    open SortedData _≤_ isPreorder public
     module SPP = Sorting-Perm-Properties _<=_ isTotalOrder
+    open EvalTree public using (evalTree)
 
     merge : ∀ {n} → Tree (Bits m) (1 + n) → Tree (Bits m) (1 + n)
     merge = S.merge
@@ -1040,18 +1080,6 @@ module BitsSorting {m} where
 
     sort-spec : ∀ {n} (t : Tree (Bits m) n) → Sorted (sort t)
     sort-spec = SP.sort-spec
-
-module BitsSorting′ where
-    open BitsSorting
-    open OperationSyntax
-    mkBij : ∀ {n} → Endo (Bits n) → Bij
-    mkBij f = SPP.Perm.perm SPP.sort-proof (fromFun f)
-
-    {-
-    thm : ∀ {n} (f : Endo (Bits n)) (f-inj : ∀ {x y} → f x ≡ f y → x ≡ y) →
-            eval (mkBij f) ≗ f
-    thm f f-inj = λ xs → {!≡.cong toFun (SPP.Perm.proof SPP.sort-proof (fromFun f))!}
-    -}
 
 -- -}
 -- -}
