@@ -392,13 +392,13 @@ RewiringTree i o = Tree (Fin i) o
 module RewiringWith2^Outputs where
     C_⟨2^_⟩ = RewiringTree
 
-    rewire : ∀ {i o} → RewireFun i (2 ^ o) → C i ⟨2^ o ⟩
+    rewire : ∀ {i o} → RewireFun i (2^ o) → C i ⟨2^ o ⟩
     rewire f = fromFun (f ∘ toFin)
 
-    lookupFin : ∀ {i o} → C i ⟨2^ o ⟩ → Fin (2 ^ o) → Fin i
+    lookupFin : ∀ {i o} → C i ⟨2^ o ⟩ → Fin (2^ o) → Fin i
     lookupFin c x = bintree.lookup (fromFin x) c
 
-    _>>>_ : ∀ {i m o} → C i ⟨2^ m ⟩ → C (2 ^ m) ⟨2^ o ⟩ → C i ⟨2^ o ⟩
+    _>>>_ : ∀ {i m o} → C i ⟨2^ m ⟩ → C (2^ m) ⟨2^ o ⟩ → C i ⟨2^ o ⟩
     f >>> g = rewire (lookupFin f ∘ lookupFin g)
 
     _***_ : ∀ {i₀ i₁ o₀ o₁} → C i₀ ⟨2^ o₀ ⟩ → C i₁ ⟨2^ o₁ ⟩ → C (i₀ + i₁) ⟨2^ (o₀ + o₁) ⟩
