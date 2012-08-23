@@ -71,3 +71,70 @@ module PRG⅁ {k n} (PRG : PRGFun k n) where
 
   brute≗not∘brute′ : brute′ ≗ not ∘ brute
   brute≗not∘brute′ x = trans (sym (not-involutive _)) (cong not (not∘brute′≗brute x))
+
+module PRG⅁₂ {k n |R|ᵃ : ℕ} (PRG : PRGFun k n) where
+
+    module AbsAdv {t} {T : Set t} (funU : FunUniverse T) where
+        open FunUniverse funU
+
+        M   =  Bits n
+        K   =  Bits k
+        `M  = `Bits n
+        `K  = `Bits k
+        Rᵃ  =  Bits |R|ᵃ
+        `Rᵃ = `Bits |R|ᵃ
+
+        Adv : Set
+        Adv = `Rᵃ `× `M `→ `Bit
+
+        {-
+    red : SemSecAdv |R|ᵃ → PRGAdv |R|ᵃ
+    red (mk A₀ A₁ A₂ A₃) = λ (rᵃ , p) → let (m , s₁) = A₁ (A₀ rᵃ) in
+                                       let (b , _) = A₂ (p ⊕ m 0b , s₁) in b
+                                       -- if b ≡ 0b it means the adversary won
+                                       -- so it's probably the case that p was "PRG ⁇"
+
+  -- the semsec game, here adv A is playing against the Encrypt∘fst or Encrypt∘snd
+  E⇄ A : ⅁?
+  E⇄ A b = A(E(m b)) -- m comes from A as well
+
+  -- the PRG game, here adv A is playing against ⁇ or PRG
+  ⁇⇄ A : ⅁?
+  ⁇⇄ A 0b = A PRG⁇
+  ⁇⇄ A 1b = A ⁇
+
+  E' p m = p ⊕ m
+  redA p = ⟨E' p⟩⇄ A 0b
+
+  _≡#_ -- same count
+  f ≡# g = #f ≡ #g
+
+  -- The one time pad cipher
+  OTP m = ⁇ ⊕ m
+
+  -- OTP has the same count than ⁇
+  OTP m ≡# ??
+  OTP⇄ A b ≡# ⁇
+  OTP⇄ A 0b ≡# OTP⇄ A 1b
+
+  -- adv A breaking encryption E implies adv redA breaking PRG
+  E⇄ A ⇓ ⁇⇄ redA
+
+  breaks (E⇄ A) ≡ E⇄ A 0b ]-[ E⇄ A 1b
+  breaks (⁇⇄ redA) ≡ ⁇⇄ redA 0b ]-[ ⁇⇄ redA 1b
+                     ≡ redA PRG⁇   ]-[ redA ⁇
+
+  ⁇⇄ redA 0b ≡  redA PRG⁇
+               ≡  ⟨E' PRG⁇⟩⇄ A 0b
+               ≡  E⇄ A 0b
+              ]-[ E⇄ A 1b
+
+  ⁇⇄ redA 1b ≡  redA ⁇
+               ≡  ⟨E' ⁇⟩⇄ A 0b
+               ≡  OTP⇄ A 0b
+               ≡# OTP⇄ A 1b
+               ≡  ⟨E' ⁇⟩⇄ A 1b
+
+  Goal:
+    breaks (⁇⇄ redA) ⇔ ⁇⇄ redA 0b ]-[ ⁇⇄ redA 1b
+    -}
