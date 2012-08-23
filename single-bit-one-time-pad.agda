@@ -12,6 +12,7 @@ open ≡ using (_≡_; _≗_; module ≡-Reasoning)
 open import Data.Bits
 open import flipbased-implem
 open import program-distance
+open import prefect-bintree-sorting
 
 K = Bit
 M = Bit
@@ -285,11 +286,14 @@ lem-flip$-⊕ {m} {n} f x = ≡.sym (
 
 open OperationSyntax
 
-_⟨∙⟩_ : Op → ∀ {m n} → Endo (↺ m (Bits n))
+_⟨∙⟩_ : ∀ {m n} → Bij n → Endo (↺ m (Bits n))
 f ⟨∙⟩ g = ⟪ _∙_ f · g ⟫
 
-≈ᴬ-op-⁇ : ∀ {k} f → f ⟨∙⟩ ⁇ ≈ᴬ ⁇ {k}
-≈ᴬ-op-⁇ = flip #-op
+≈ᴬ-bij-⁇ : ∀ {k} f → f ⟨∙⟩ ⁇ ≈ᴬ ⁇ {k}
+≈ᴬ-bij-⁇ = #-bij
+
+≈ᴬ-fun-inj-⁇ : ∀ {n} (f : Endo (Bits n)) (f-inj : IsInj f) → ⟪ f · ⁇ ⟫ ≈ᴬ ⁇
+≈ᴬ-fun-inj-⁇ = thm#
 
 ≈ᴬ-⁇₂ : ∀ {k} (m₀ m₁ : Bits k) → ⟪ m₀ ⟫ᴰ ⟨⊕⟩ ⁇ ≈ᴬ ⟪ m₁ ⟫ᴰ ⟨⊕⟩ ⁇
 ≈ᴬ-⁇₂ {k} m₀ m₁ = ≈ᴬ.trans {k} (≈ᴬ-⁇ m₀) (≈ᴬ.sym {k} (≈ᴬ-⁇ m₁))

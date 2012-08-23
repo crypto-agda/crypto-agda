@@ -81,13 +81,13 @@ open PermTreeProof
 open EvalTree
 open Alternative-Reverse
 
-mkBijT : ∀ {n} → Tree (Bits n) n → Bij
+mkBijT : ∀ {n} → Tree (Bits n) n → Bij n
 mkBijT = Perm.perm SPP.sort-proof
 
-mkBijT⁻¹ : ∀ {n} → Tree (Bits n) n → Bij
+mkBijT⁻¹ : ∀ {n} → Tree (Bits n) n → Bij n
 mkBijT⁻¹ f = mkBijT f ⁻¹
 
-mkBij : ∀ {n} → Endo (Bits n) → Bij
+mkBij : ∀ {n} → Endo (Bits n) → Bij n
 mkBij f = mkBijT (fromFun f) ⁻¹
 
 mkBij-p : ∀ {n} (t : Tree (Bits n) n) → t ≡ evalTree (mkBijT t) (sort t)
@@ -166,82 +166,7 @@ Monotone' {i} {o} f = ∀ {p q : Bits i} → p ≤ᴮ q → f p ≤ᴮ f q
 toEndoℕ : ∀ {n} → Endo (Bits n) → Endo ℕ
 toEndoℕ f = toℕ ∘ f ∘ fromℕ
 
-≤-steps′ : ∀ {x} y → x Nat.≤ x + y
-≤-steps′ {x} y rewrite ℕ°.+-comm x y = ≤-steps y ℕ≤.refl
-
-<=-steps′ : ∀ {x} y → T (x ℕ<= (x + y))
-<=-steps′ {x} y = ℕ<=.complete (≤-steps′ {x} y)
-
 open Nat using (_≰_)
-2ⁿ≰toℕ : ∀ {n} (xs : Bits n) → 2^ n ≰ toℕ xs
-2ⁿ≰toℕ xs p = ¬n≤x<n _ p (toℕ-bound xs)
-
-Tnot2ⁿ<=toℕ : ∀ {n} (xs : Bits n) → T (not (2^ n ℕ<= (toℕ xs)))
-Tnot2ⁿ<=toℕ {n} xs with (2^ n) ℕ<= (toℕ xs) | ≡.inspect (_ℕ<=_ (2^ n)) (toℕ xs)
-... | true  | [ p ] = 2ⁿ≰toℕ xs (ℕ<=.sound (2^ n) (toℕ xs) (≡→T p))
-... | false |   _   = _
-
-fromℕ∘toℕ : ∀ {n} (x : Bits n) → fromℕ (toℕ x) ≡ x
-fromℕ∘toℕ [] = ≡.refl
-fromℕ∘toℕ {suc n} (true ∷ xs)
-  rewrite T→≡ (<=-steps′ {2^ n} (toℕ xs))
-        | ℕ°.+-comm (2^ n) (toℕ xs)
-        | m+n∸n≡m (toℕ xs) (2^ n)
-        | fromℕ∘toℕ xs
-        = ≡.refl
-fromℕ∘toℕ (false ∷ xs)
-  rewrite Tnot→≡ (Tnot2ⁿ<=toℕ xs)
-        | fromℕ∘toℕ xs
-        = ≡.refl
-
-sucx∸y≤suc⟨x∸y⟩ : ∀ x y → suc x ∸ y ℕ≤ suc (x ∸ y)
-sucx∸y≤suc⟨x∸y⟩ x zero = ℕ≤.refl
-sucx∸y≤suc⟨x∸y⟩ zero (suc y) rewrite 0∸n≡0 y = z≤n
-sucx∸y≤suc⟨x∸y⟩ (suc x) (suc y) = sucx∸y≤suc⟨x∸y⟩ x y
-
-{-
-x≤2y′→x∸y≤y : ∀ x y → x ℕ≤ 2*′ y → x ∸ y ℕ≤ y
-x≤2y′→x∸y≤y x zero p = p
-x≤2y′→x∸y≤y zero (suc y) p = z≤n
-x≤2y′→x∸y≤y (suc zero) (suc y) (s≤s p) rewrite 0∸n≡0 y = z≤n
-x≤2y′→x∸y≤y (suc (suc x)) (suc y) (s≤s (s≤s p)) = ℕ≤.trans (sucx∸y≤suc⟨x∸y⟩ x y) (s≤s (x≤2y′→x∸y≤y x y p))
--}
-
-x<2y′→x∸y<y : ∀ x y → x ℕ< 2*′ y → x ∸ y ℕ< y
-x<2y′→x∸y<y x zero p = p
-x<2y′→x∸y<y zero (suc y) p = s≤s z≤n
-x<2y′→x∸y<y (suc zero) (suc y) (s≤s (s≤s p)) rewrite 0∸n≡0 y = s≤s z≤n
-x<2y′→x∸y<y (suc (suc x)) (suc y) (s≤s (s≤s p))
-  = ℕ≤.trans (s≤s (sucx∸y≤suc⟨x∸y⟩ x y)) (s≤s (x<2y′→x∸y<y x y p))
-
-x<2y→x∸y<y : ∀ x y → x ℕ< 2* y → x ∸ y ℕ< y
-x<2y→x∸y<y x y p rewrite ≡.sym (2*′-spec y) = x<2y′→x∸y<y x y p
-
-≰→< : ∀ x y → x ≰ y → y ℕ< x
-≰→< x y p with ℕcmp.compare (suc y) x
-≰→< x y p | tri< a ¬b ¬c = ℕ≤.trans (s≤s (≤-step ℕ≤.refl)) a
-≰→< x y p | tri≈ ¬a b ¬c = ℕ≤.reflexive b
-≰→< x y p | tri> ¬a ¬b c = ⊥-elim (p (≤-pred c))
-
-not<=→< : ∀ x y → T (not (x ℕ<= y)) → T (suc y ℕ<= x)
-not<=→< x y p = ℕ<=.complete (≰→< x y (T'not'¬ p ∘ ℕ<=.complete))
-
-toℕ∘fromℕ : ∀ {n} x → x ℕ< 2^ n → toℕ {n} (fromℕ x) ≡ x
-toℕ∘fromℕ {zero} .0 (s≤s z≤n) = ≡.refl
-toℕ∘fromℕ {suc n} x x<2ⁿ with 2^ n ℕ<= x | ≡.inspect (_ℕ<=_ (2^ n)) x
-... | true  | [ p ] rewrite toℕ∘fromℕ {n} (x ∸ 2^ n) (x<2y→x∸y<y x (2^ n) x<2ⁿ) = m+n∸m≡n {2^ n} {x} (ℕ<=.sound (2^ n) x (≡→T p))
-... | false | [ p ] = toℕ∘fromℕ {n} x (ℕ<=.sound (suc x) (2^ n) (not<=→< (2^ n) x (≡→Tnot p)))
-
-fromℕ-inj : ∀ {n} {x y : ℕ} → x ℕ< 2^ n → y ℕ< 2^ n → fromℕ {n} x ≡ fromℕ y → x ≡ y 
-fromℕ-inj {n} {x} {y} x< y< fx≡fy
-  = x
-  ≡⟨ ≡.sym (toℕ∘fromℕ {n} x x<) ⟩
-    toℕ (fromℕ {n} x)
-  ≡⟨ ≡.cong toℕ fx≡fy ⟩
-    toℕ (fromℕ {n} y)
-  ≡⟨ toℕ∘fromℕ {n} y y< ⟩
-    y
-  ∎ where open ≡-Reasoning
 
 module ToEndoℕ {n} (f : Endo (Bits n)) where
     fℕ = toEndoℕ f
@@ -278,7 +203,7 @@ sort-spec′ t rewrite mkBij-p⁻¹ t = sort-spec t
 sort-id′′ : ∀ {n} (t : Tree (Bits n) n) → InjT t → Sorted t → toFun t ≗ id
 sort-id′′ t Pt st x = lem (toFun t) (DataSorted→Sorted st) Pt x
 
-toFun-eval-inj : ∀ {n} f → IsInj (eval f {n})
+toFun-eval-inj : ∀ {n} (f : Bij n) → IsInj (eval f)
 toFun-eval-inj f {x} {y} eq = x
                             ≡⟨ ≡.sym ((f ⁻¹-inverse) x) ⟩
                               eval (f ⁻¹) (eval f x)
@@ -316,13 +241,13 @@ thm f f-inj xs = eval (mkBij f) xs
                  f xs
                ∎ where open ≡-Reasoning
 
-thm# : ∀ {n} (f : Bits n → Bit) (g : Endo (Bits n)) (g-inj : IsInj g) →
-       #⟨ f ∘ g ⟩ ≡ #⟨ f ⟩
-thm# f g g-inj = #⟨ f ∘ g ⟩
-               ≡⟨ #-≗ (f ∘ g) (f ∘ eval (mkBij g)) (λ x → ≡.cong f (≡.sym (thm g g-inj x))) ⟩
-                 #⟨ f ∘ eval (mkBij g) ⟩
-               ≡⟨ #-bij f (mkBij g) ⟩
-                 #⟨ f ⟩
+thm# : ∀ {n} (f : Endo (Bits n)) (f-inj : IsInj f) (g : Bits n → Bit) →
+       #⟨ g ∘ f ⟩ ≡ #⟨ g ⟩
+thm# f f-inj g = #⟨ g ∘ f ⟩
+               ≡⟨ #-≗ (g ∘ f) (g ∘ eval (mkBij f)) (λ x → ≡.cong g (≡.sym (thm f f-inj x))) ⟩
+                 #⟨ g ∘ eval (mkBij f) ⟩
+               ≡⟨ #-bij (mkBij f) g ⟩
+                 #⟨ g ⟩
                ∎ where open ≡-Reasoning
 
 -- -}
