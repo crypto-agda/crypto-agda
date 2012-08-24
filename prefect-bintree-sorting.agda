@@ -77,12 +77,13 @@ module MM where
 
 open BitsSorting
 open OperationSyntax
-open PermTreeProof
+open BijSpec
 open EvalTree
 open Alternative-Reverse
+open SPP
 
 mkBijT : ∀ {n} → Tree (Bits n) n → Bij n
-mkBijT = Perm.perm SPP.sort-proof
+mkBijT = bij ∘ sort-bij
 
 mkBijT⁻¹ : ∀ {n} → Tree (Bits n) n → Bij n
 mkBijT⁻¹ f = mkBijT f ⁻¹
@@ -91,7 +92,7 @@ mkBij : ∀ {n} → Endo (Bits n) → Bij n
 mkBij f = mkBijT (fromFun f) ⁻¹
 
 mkBij-p : ∀ {n} (t : Tree (Bits n) n) → t ≡ evalTree (mkBijT t) (sort t)
-mkBij-p t = Perm.proof SPP.sort-proof t
+mkBij-p = proof ∘ sort-bij
 
 IsInj : ∀ {i o} → (Bits i → Bits o) → Set
 IsInj f = ∀ {x y} → f x ≡ f y → x ≡ y
@@ -122,7 +123,7 @@ mkBij-p⁻¹ t = ≡.trans (≡.cong (evalTree (mkBijT⁻¹ t)) (mkBij-p t)) (((
 
 foo : ∀ {n} (t : Tree (Bits n) n) → toFun t ≗ toFun (sort t) ∘ eval (mkBijT⁻¹ t)
 foo t xs = toFun t xs
-         ≡⟨ ≡.cong (λ t → toFun t xs) (Perm.proof SPP.sort-proof t) ⟩
+         ≡⟨ ≡.cong (λ t → toFun t xs) (mkBij-p t) ⟩
            toFun (evalTree (mkBijT t) (sort t)) xs
          ≡⟨ evalTree-eval (mkBijT⁻¹ t) (evalTree (mkBijT t) (sort t)) xs ⟩
            toFun (evalTree (mkBijT⁻¹ t) (evalTree (mkBijT t) (sort t))) (eval (mkBijT⁻¹ t) xs)
