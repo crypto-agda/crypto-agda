@@ -22,49 +22,49 @@ data Tree {a} (A : Set a) : ℕ → Set a where
   leaf : (x : A) → Tree A zero
   fork : ∀ {n} (left right : Tree A n) → Tree A (suc n)
 
-fromFun : ∀ {n a} {A : Set a} → (Bits n → A) → Tree A n
-fromFun {zero} f = leaf (f [])
-fromFun {suc n} f = fork (fromFun (f ∘ 0∷_)) (fromFun (f ∘ 1∷_))
-
-toFun : ∀ {n a} {A : Set a} → Tree A n → Bits n → A
-toFun (leaf x) _ = x
-toFun (fork left right) (b ∷ bs) = toFun (if b then right else left) bs
-
-toFun∘fromFun : ∀ {n a} {A : Set a} (f : Bits n → A) → toFun (fromFun f) ≗ f
-toFun∘fromFun {zero}  f [] = ≡.refl
-toFun∘fromFun {suc n} f (false ∷ xs)
-  rewrite toFun∘fromFun (f ∘ 0∷_) xs = ≡.refl
-toFun∘fromFun {suc n} f (true ∷ xs)
-  rewrite toFun∘fromFun (f ∘ 1∷_) xs = ≡.refl
-
-fromFun∘toFun : ∀ {n a} {A : Set a} (t : Tree A n) → fromFun (toFun t) ≡ t
-fromFun∘toFun (leaf x) = ≡.refl
-fromFun∘toFun (fork t₀ t₁)
-  rewrite fromFun∘toFun t₀
-        | fromFun∘toFun t₁ = ≡.refl
-
-toFun→fromFun : ∀ {n a} {A : Set a} (t : Tree A n) (f : Bits n → A) → toFun t ≗ f → t ≡ fromFun f
-toFun→fromFun (leaf x) f t≗f = ≡.cong leaf (t≗f [])
-toFun→fromFun (fork t₀ t₁) f t≗f
-  rewrite toFun→fromFun t₀ _ (t≗f ∘ 0∷_)
-        | toFun→fromFun t₁ _ (t≗f ∘ 1∷_) = ≡.refl
-
-fromFun→toFun : ∀ {n a} {A : Set a} (t : Tree A n) (f : Bits n → A) → t ≡ fromFun f → toFun t ≗ f
-fromFun→toFun ._ _ ≡.refl = toFun∘fromFun _
-
-fromFun-≗ : ∀ {n a} {A : Set a} {f g : Bits n → A} → f ≗ g → fromFun f ≡ fromFun g
-fromFun-≗ {zero}  f≗g
-  rewrite f≗g [] = ≡.refl
-fromFun-≗ {suc n} f≗g
-  rewrite fromFun-≗ (f≗g ∘ 0∷_)
-        | fromFun-≗ (f≗g ∘ 1∷_)
-        = ≡.refl
-
-lookup : ∀ {n a} {A : Set a} → Bits n → Tree A n → A
-lookup = flip toFun
-
 private
   module Dummy {a} {A : Set a} where
+    fromFun : ∀ {n} → (Bits n → A) → Tree A n
+    fromFun {zero} f = leaf (f [])
+    fromFun {suc n} f = fork (fromFun (f ∘ 0∷_)) (fromFun (f ∘ 1∷_))
+
+    toFun : ∀ {n} → Tree A n → Bits n → A
+    toFun (leaf x) _ = x
+    toFun (fork left right) (b ∷ bs) = toFun (if b then right else left) bs
+
+    toFun∘fromFun : ∀ {n} (f : Bits n → A) → toFun (fromFun f) ≗ f
+    toFun∘fromFun {zero}  f [] = ≡.refl
+    toFun∘fromFun {suc n} f (false ∷ xs)
+      rewrite toFun∘fromFun (f ∘ 0∷_) xs = ≡.refl
+    toFun∘fromFun {suc n} f (true ∷ xs)
+      rewrite toFun∘fromFun (f ∘ 1∷_) xs = ≡.refl
+
+    fromFun∘toFun : ∀ {n} (t : Tree A n) → fromFun (toFun t) ≡ t
+    fromFun∘toFun (leaf x) = ≡.refl
+    fromFun∘toFun (fork t₀ t₁)
+      rewrite fromFun∘toFun t₀
+            | fromFun∘toFun t₁ = ≡.refl
+
+    toFun→fromFun : ∀ {n} (t : Tree A n) (f : Bits n → A) → toFun t ≗ f → t ≡ fromFun f
+    toFun→fromFun (leaf x) f t≗f = ≡.cong leaf (t≗f [])
+    toFun→fromFun (fork t₀ t₁) f t≗f
+      rewrite toFun→fromFun t₀ _ (t≗f ∘ 0∷_)
+            | toFun→fromFun t₁ _ (t≗f ∘ 1∷_) = ≡.refl
+
+    fromFun→toFun : ∀ {n} (t : Tree A n) (f : Bits n → A) → t ≡ fromFun f → toFun t ≗ f
+    fromFun→toFun ._ _ ≡.refl = toFun∘fromFun _
+
+    fromFun-≗ : ∀ {n} {f g : Bits n → A} → f ≗ g → fromFun f ≡ fromFun g
+    fromFun-≗ {zero}  f≗g
+      rewrite f≗g [] = ≡.refl
+    fromFun-≗ {suc n} f≗g
+      rewrite fromFun-≗ (f≗g ∘ 0∷_)
+            | fromFun-≗ (f≗g ∘ 1∷_)
+            = ≡.refl
+
+    lookup : ∀ {n} → Bits n → Tree A n → A
+    lookup = flip toFun
+
     lft : ∀ {n} → Tree A (1 + n) → Tree A n
     lft (fork t _) = t
 
@@ -95,6 +95,29 @@ private
 
     inner : ∀ {n} → Tree A (2 + n) → Tree A (1 + n)
     inner t = fork (rght (lft t)) (lft (rght t))
+
+    first : ∀ {n} → Tree A n → A
+    first (leaf x)   = x
+    first (fork t _) = first t
+
+    last : ∀ {n} → Tree A n → A
+    last (leaf x)   = x
+    last (fork _ t) = last t
+
+    -- Returns the flat vector of leaves underlying the perfect binary tree.
+    toVec : ∀ {n} → Tree A n → Vec A (2^ n)
+    toVec (leaf x)     = x ∷ []
+    toVec (fork t₀ t₁) = toVec t₀ ++ toVec t₁
+
+    lookup' : ∀ {m n} → Bits m → Tree A (m + n) → Tree A n
+    lookup' [] t = t
+    lookup' (b ∷ bs) (fork t t₁) = lookup' bs (if b then t₁ else t)
+
+    update' : ∀ {m n} → Bits m → Tree A n → Tree A (m + n) → Tree A (m + n)
+    update' []        val t = val
+    update' (b ∷ key) val (fork t u) = if b then fork t (update' key val u)
+                                            else fork (update' key val t) u
+
 open Dummy public
 
 module Fold {a b i} {I : Set i} (ze : I) (su : I → I)
@@ -117,24 +140,38 @@ search≡fold∘fromFun {suc n} op f
   rewrite search≡fold∘fromFun op (f ∘ 0∷_)
         | search≡fold∘fromFun op (f ∘ 1∷_) = ≡.refl
 
--- Returns the flat vector of leaves underlying the perfect binary tree.
-toVec : ∀ {n a} {A : Set a} → Tree A n → Vec A (2^ n)
-toVec (leaf x)     = x ∷ []
-toVec (fork t₀ t₁) = toVec t₀ ++ toVec t₁
-
-lookup' : ∀ {m n a} {A : Set a} → Bits m → Tree A (m + n) → Tree A n
-lookup' [] t = t
-lookup' (b ∷ bs) (fork t t₁) = lookup' bs (if b then t₁ else t)
-
-
-update' : ∀ {m n a} {A : Set a} → Bits m → Tree A n → Tree A (m + n) → Tree A (m + n)
-update' [] val tree = val
-update' (b ∷ key) val (fork tree tree₁) = if b then fork tree (update' key val tree₁)
-                                               else fork (update' key val tree) tree₁
-
 map : ∀ {n a b} {A : Set a} {B : Set b} → (A → B) → Tree A n → Tree B n
 map f (leaf x) = leaf (f x)
 map f (fork t₀ t₁) = fork (map f t₀) (map f t₁)
+
+module FoldProp {a ℓ} {A : Set a} (_Ⓧ_ : Set ℓ → Set ℓ → Set ℓ) where
+    Fold : ∀ {n} → (Bits n → A → Set ℓ) → Tree A n → Set ℓ
+    Fold f (leaf x)     = f [] x
+    Fold f (fork t₀ t₁) = Fold (f ∘ 0∷_) t₀ Ⓧ Fold (f ∘ 1∷_) t₁
+
+All : ∀ {n a} {A : Set a} → (Bits n → A → Set) → Tree A n → Set
+All = FoldProp.Fold _×_
+
+Any : ∀ {n a} {A : Set a} → (Bits n → A → Set) → Tree A n → Set
+Any = FoldProp.Fold _⊎_
+
+module AllBits where
+  _IsRevPrefixOf_ : ∀ {m n} → Bits m → Bits (rev-+ m n) → Set
+  _IsRevPrefixOf_ {m} {n} p xs = ∃ λ (ys : Bits n) → rev-app p ys ≡ xs
+
+  RevPrefix : ∀ {m n o} (p : Bits m) → Tree (Bits (rev-+ m n)) o → Set
+  RevPrefix p = All (λ _ → _IsRevPrefixOf_ p)
+
+  RevPrefix-[]-⊤ : ∀ {m n} (t : Tree (Bits m) n) → RevPrefix [] t
+  RevPrefix-[]-⊤ (leaf x) = x , ≡.refl
+  RevPrefix-[]-⊤ (fork t u) = RevPrefix-[]-⊤ t , RevPrefix-[]-⊤ u
+
+  All-fromFun : ∀ {m} n (p : Bits m) → All (_≡_ ∘ rev-app p) (fromFun {n = n} (rev-app p))
+  All-fromFun zero    p = ≡.refl
+  All-fromFun (suc n) p = All-fromFun n (0∷ p) , All-fromFun n (1∷ p)
+
+  All-id : ∀ n → All {n} _≡_ (fromFun id)
+  All-id n = All-fromFun n []
 
 open import Relation.Binary
 open import Data.Star using (Star; ε; _◅_)
@@ -382,7 +419,6 @@ module SwpOp where
 
 open import Relation.Nullary using (Dec ; yes ; no)
 open import Relation.Nullary.Negation
-
 
 module new-approach where
 
@@ -657,44 +693,6 @@ module fold-Properties {a} {A : Set a} (_·_ : Op₂ A) (op-comm : Commutative _
   fold-swp★ : Swp★ =[fold]⇒ _≡_
   fold-swp★ ε = ≡.refl
   fold-swp★ (x ◅ xs) rewrite fold-swp x | fold-swp★ xs = ≡.refl
-
-module FoldProp {a ℓ} {A : Set a} (_Ⓧ_ : Set ℓ → Set ℓ → Set ℓ) where
-    Fold : ∀ {n} → (Bits n → A → Set ℓ) → Tree A n → Set ℓ
-    Fold f (leaf x)     = f [] x
-    Fold f (fork t₀ t₁) = Fold (f ∘ 0∷_) t₀ Ⓧ Fold (f ∘ 1∷_) t₁
-
-All : ∀ {n a} {A : Set a} → (Bits n → A → Set) → Tree A n → Set
-All = FoldProp.Fold _×_
-
-Any : ∀ {n a} {A : Set a} → (Bits n → A → Set) → Tree A n → Set
-Any = FoldProp.Fold _⊎_
-
-module AllBits where
-  _IsRevPrefixOf_ : ∀ {m n} → Bits m → Bits (rev-+ m n) → Set
-  _IsRevPrefixOf_ {m} {n} p xs = ∃ λ (ys : Bits n) → rev-app p ys ≡ xs
-
-  RevPrefix : ∀ {m n o} (p : Bits m) → Tree (Bits (rev-+ m n)) o → Set
-  RevPrefix p = All (λ _ → _IsRevPrefixOf_ p)
-
-  RevPrefix-[]-⊤ : ∀ {m n} (t : Tree (Bits m) n) → RevPrefix [] t
-  RevPrefix-[]-⊤ (leaf x) = x , ≡.refl
-  RevPrefix-[]-⊤ (fork t u) = RevPrefix-[]-⊤ t , RevPrefix-[]-⊤ u
-
-  All-fromFun : ∀ {m} n (p : Bits m) → All (_≡_ ∘ rev-app p) (fromFun {n} (rev-app p))
-  All-fromFun zero    p = ≡.refl
-  All-fromFun (suc n) p = All-fromFun n (0∷ p) , All-fromFun n (1∷ p)
-
-  All-id : ∀ n → All {n} _≡_ (fromFun id)
-  All-id n = All-fromFun n []
-
-
-first : ∀ {n a} {A : Set a} → Tree A n → A
-first (leaf x)   = x
-first (fork t _) = first t
-
-last : ∀ {n a} {A : Set a} → Tree A n → A
-last (leaf x)   = x
-last (fork _ t) = last t
 
 module SortedDataIx {a ℓ} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ) (isPreorder : IsPreorder _≡_ _≤ᴬ_) where
     open new-approach
