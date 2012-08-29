@@ -4,6 +4,7 @@ open L using () renaming (_⊔_ to _L⊔_)
 open import Function hiding (_⟨_⟩_)
 open import Data.Nat.NP hiding (_==_)
 open import Data.Bool
+open import Data.Unit using (⊤)
 open import Data.Nat.Properties
 open import Data.Product using (proj₁; proj₂; _,_; swap; _×_)
 open import Data.Bits
@@ -60,8 +61,11 @@ _>=>_ : ∀ {n₁ n₂ a b c} {A : Set a} {B : Set b} {C : Set c}
         → (A → ↺ n₁ B) → (B → ↺ n₂ C) → A → ↺ (n₁ + n₂) C
 (f >=> g) x = f x >>= g
 
+waste : ∀ n → ↺ n ⊤
+waste n = return↺ {n} _
+
 weaken : ∀ m {n a} {A : Set a} → ↺ n A → ↺ (m + n) A
-weaken m x = return↺ {m} 0 >> x
+weaken m x = waste m >> x
 
 weaken′ : ∀ {m n a} {A : Set a} → ↺ n A → ↺ (n + m) A
 weaken′ x = x >>= return↺
