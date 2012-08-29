@@ -343,14 +343,14 @@ module Sorting-⊓-⊔ {a} {A : Set a} (_⊓ᴬ_ _⊔ᴬ_ : A → A → A) where
     sort {zero}  = id
     sort {suc _} = merge ∘ map-outer sort sort
 
-module Sorting-<= {a} {A : Set a} (_<=ᴬ_ : A → A → Bool) where
-
+module ⊓-⊔ᴬ {a} {A : Set a} (_<=ᴬ_ : A → A → Bool) where
     _⊓ᴬ_ : A → A → A
     x ⊓ᴬ y = if x <=ᴬ y then x else y
-
     _⊔ᴬ_ : A → A → A
     x ⊔ᴬ y = if x <=ᴬ y then y else x
 
+module Sorting-<= {a} {A : Set a} (_<=ᴬ_ : A → A → Bool) where
+    open ⊓-⊔ᴬ _<=ᴬ_
     open Sorting-⊓-⊔ _⊓ᴬ_ _⊔ᴬ_ public
 
 module EvalTree {a} {A : Set a} where
@@ -393,11 +393,17 @@ module BijSpec {a} {A : Set a} where
       constructor _,_
       field
         bij   : Bij n
-        proof : t ≡ evalTree bij u
+        proof : evalTree bij t ≡ u
     open Bij[_↦_] public
 
     Bij[≗_] : ∀ {n} (f : Endo (Tree A n)) → Set a
     Bij[≗ f ] = ∀ t → Bij[ t ↦ f t ]
+
+    evalB : ∀ {n} {f : Endo (Tree A n)} (b : Bij[≗ f ]) → Endo (Tree A n)
+    evalB b t = evalTree (bij (b t)) t
+
+    bij-evalB-spec : ∀ {n} {f : Endo (Tree A n)} (b : Bij[≗ f ]) → evalB b ≗ f
+    bij-evalB-spec b = proof ∘ b
 
     id-bij : ∀ {n} → Bij[≗ id {A = Tree A n} ]
     id-bij _ = `id , ≡.refl
@@ -405,8 +411,10 @@ module BijSpec {a} {A : Set a} where
     infixr 9 _∘-bij_
     _∘-bij_ : ∀ {n} {f g : Endo (Tree A n)} → Bij[≗ f ] → Bij[≗ g ] → Bij[≗ f ∘ g ]
     _∘-bij_ {f = f} {g} `f `g t
-      = (bij (`f (g t)) `⁏ bij (`g t))
-      , ≡.trans (proof (`g t)) (≡.cong (evalTree (bij (`g t))) (proof (`f (g t))))
+      = `bij , helper
+      where `bij = bij (`g t) `⁏ bij (`f (g t))
+            helper : evalTree `bij t ≡ f (g t)
+            helper rewrite proof (`g t) = proof (`f (g t))
 
     swap-bij : ∀ {n} → Bij[≗ swap {n = n} ]
     swap-bij (fork _ _) = `not , ≡.refl
@@ -420,16 +428,16 @@ module BijSpec {a} {A : Set a} where
     map-inner-bij : ∀ {n} {f : Endo (Tree A (1 + n))} → Bij[≗ f ] → Bij[≗ map-inner f ]
     map-inner-bij {f = f} `f t = map-inner-perm , helper
        where map-inner-perm = `map-inner (bij (`f (inner t)))
-             helper : t ≡ evalTree map-inner-perm (map-inner f t)
+             helper : evalTree map-inner-perm t ≡ map-inner f t
              helper with t
-             ... | fork (fork a b) (fork c d) with f (fork b c) | ≡.sym (proof (`f (fork b c)))
+             ... | fork (fork a b) (fork c d) with f (fork b c) | proof (`f (fork b c))
              ... | fork B C | p rewrite p = ≡.refl
 
     interchange-bij : ∀ {n} → Bij[≗ interchange {n = n} ]
     interchange-bij = map-inner-bij swap-bij
 
-module Sorting-Perm-Properties {a} {A : Set a} (_<=ᴬ_ : A → A → Bool)
-                               (isTotalOrder : IsTotalOrder _≡_ (λ x y → T (x <=ᴬ y)))
+module SortingBijSpec {a} {A : Set a} (_<=ᴬ_ : A → A → Bool)
+                      (isTotalOrder : IsTotalOrder _≡_ (λ x y → T (x <=ᴬ y)))
     where
     open IsTotalOrder isTotalOrder
 
@@ -443,7 +451,7 @@ module Sorting-Perm-Properties {a} {A : Set a} (_<=ᴬ_ : A → A → Bool)
 
     sort₁-bij : Bij[≗ sort₁ ]
     sort₁-bij t = `sort₁ t , helper t
-      where helper : ∀ t → t ≡ evalTree (`sort₁ t) (sort₁ t)
+      where helper : ∀ t → evalTree (`sort₁ t) t ≡ sort₁ t
             helper (fork (leaf x) (leaf y)) with y <=ᴬ x | x <=ᴬ y | antisym {x} {y} | total x y
             ... | true  | true  | p | _ rewrite p _ _ = ≡.refl
             ... | false | true  | _ | _ = ≡.refl
@@ -568,6 +576,36 @@ module SortingProperties {ℓ a} {A : Set a} (_≤ᴬ_ : A → A → Set ℓ)
     sort-spec (leaf _)   = leaf
     sort-spec (fork t u) = merge-spec (sort-spec t , sort-spec u)
 
+module FunctionSorting {a} {A : Set a} (_<=ᴬ_ : A → A → Bool) where
+  _≤ᴬ_ = λ x y → T (x <=ᴬ y)
+  open ⊓-⊔ᴬ _<=ᴬ_
+  module S = Sorting-<= _<=ᴬ_
+  open BijSpec
+
+  sort : ∀ {n} → Endo (Bits n → A)
+  sort = toFun ∘ S.sort ∘ fromFun
+
+  module Properties (isTotalOrder : IsTotalOrder _≡_ (λ x y → T (x <=ᴬ y)))
+                    (≤-⊔ : ∀ x y → x ≤ᴬ (y ⊔ᴬ x))
+                    (⊓-≤ : ∀ x y → (x ⊓ᴬ y) ≤ᴬ y)
+                    (≤-<_,_> : ∀ {x y z} → x ≤ᴬ y → x ≤ᴬ z → x ≤ᴬ (y ⊓ᴬ z))
+                    (≤-[_,_] : ∀ {x y z} → x ≤ᴬ z → y ≤ᴬ z → (x ⊔ᴬ y) ≤ᴬ z)
+                    (≤-⊓₀ : ∀ {x y z} → x ≤ᴬ (y ⊓ᴬ z) → x ≤ᴬ y)
+                    (≤-⊓₁ : ∀ {x y z} → x ≤ᴬ (y ⊓ᴬ z) → x ≤ᴬ z)
+                    (≤-⊔₀ : ∀ {x y z} → (x ⊔ᴬ y) ≤ᴬ z → x ≤ᴬ z)
+                    (≤-⊔₁ : ∀ {x y z} → (x ⊔ᴬ y) ≤ᴬ z → y ≤ᴬ z) where
+
+    module B = SortingBijSpec _<=ᴬ_  isTotalOrder
+    open IsTotalOrder isTotalOrder
+    open SortedMonotonicFunctions _≤ᴬ_ isPreorder
+    module SP = SortingProperties _≤ᴬ_ _⊓ᴬ_ _⊔ᴬ_ isPreorder
+                   ≤-⊔ ⊓-≤ ≤-<_,_> ≤-[_,_] ≤-⊓₀ ≤-⊓₁ ≤-⊔₀ ≤-⊔₁
+    open OperationSyntax using (eval)
+    open EvalTree
+
+    sort-is-sorting : ∀ {n} (f : Bits n → A) → Monotone (sort f)
+    sort-is-sorting = DataSorted→Sorted ∘ SP.sort-spec ∘ fromFun
+
 module BitsSorting {m} where
     open ToNat {A = Bits m} toℕ (λ {x} {y} → toℕ-inj x y) public
 
@@ -583,7 +621,7 @@ module BitsSorting {m} where
                    (λ {x} {y} {z} → ≤-⊔₀ {x} {y} {z})
                    (λ {x} {y} {z} → ≤-⊔₁ {x} {y} {z})
     open SortedData _≤_ isPreorder public
-    module SPP = Sorting-Perm-Properties _<=_ isTotalOrder
+    open SortingBijSpec _<=_ isTotalOrder public
     open EvalTree public using (evalTree)
 
     merge : ∀ {n} → Tree (Bits m) (1 + n) → Tree (Bits m) (1 + n)
