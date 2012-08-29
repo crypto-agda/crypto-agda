@@ -277,11 +277,11 @@ lem-flip$-⊕ {m} {n} f x = ≡.sym (
 ≈ᴬ-toss b Adv = ≈ᴬ′-toss b (returnᴰ ∘ Adv)
 
 -- should be equivalent to #-comm if ⟪ m ⟫ᴰ ⟨⊕⟩ x were convertible to ⟪ _⊕_ m · x ⟫
-≈ᴬ-⁇ : ∀ {k} (m : Bits k) → ⟪ m ⟫ᴰ ⟨⊕⟩ ⁇ ≈ᴬ ⁇
-≈ᴬ-⁇ {zero}  _       _ = ≡.refl
-≈ᴬ-⁇ {suc k} (h ∷ m) Adv
-  rewrite ≈ᴬ-⁇ m (Adv ∘ _∷_ (h xor 0b))
-        | ≈ᴬ-⁇ m (Adv ∘ _∷_ (h xor 1b))
+⊕⁇≈⁇ : ∀ {k} (m : Bits k) → ⟪ m ⟫ᴰ ⟨⊕⟩ ⁇ ≈ᴬ ⁇
+⊕⁇≈⁇ {zero}  _       _ = ≡.refl
+⊕⁇≈⁇ {suc k} (h ∷ m) Adv
+  rewrite ⊕⁇≈⁇ m (Adv ∘ _∷_ (h xor 0b))
+        | ⊕⁇≈⁇ m (Adv ∘ _∷_ (h xor 1b))
         = ≈ᴬ′-toss h (λ x → ⟪ Adv ∘ _∷_ x · ⁇ ⟫)
 
 open OperationSyntax
@@ -295,11 +295,11 @@ f ⟨∙⟩ g = ⟪ _∙_ f · g ⟫
 ≈ᴬ-fun-inj-⁇ : ∀ {n} (f : Endo (Bits n)) (f-inj : IsInj f) → ⟪ f · ⁇ ⟫ ≈ᴬ ⁇
 ≈ᴬ-fun-inj-⁇ = thm#
 
-≈ᴬ-⁇₂ : ∀ {k} (m₀ m₁ : Bits k) → ⟪ m₀ ⟫ᴰ ⟨⊕⟩ ⁇ ≈ᴬ ⟪ m₁ ⟫ᴰ ⟨⊕⟩ ⁇
-≈ᴬ-⁇₂ {k} m₀ m₁ = ≈ᴬ.trans {k} (≈ᴬ-⁇ m₀) (≈ᴬ.sym {k} (≈ᴬ-⁇ m₁))
+⊕⁇≈⊕⁇ : ∀ {k} (m₀ m₁ : Bits k) → ⟪ m₀ ⟫ᴰ ⟨⊕⟩ ⁇ ≈ᴬ ⟪ m₁ ⟫ᴰ ⟨⊕⟩ ⁇
+⊕⁇≈⊕⁇ {k} m₀ m₁ = ≈ᴬ.trans {k} (⊕⁇≈⁇ m₀) (≈ᴬ.sym {k} (⊕⁇≈⁇ m₁))
 
 ≈ᴬ-⁇₃ : ∀ {k} (m : Bit → Bits k) (b : Bit) → ⟪ m b ⟫ᴰ ⟨⊕⟩ ⁇ ≈ᴬ ⟪ m (not b) ⟫ᴰ ⟨⊕⟩ ⁇
-≈ᴬ-⁇₃ m b = ≈ᴬ-⁇₂ (m b) (m (not b))
+≈ᴬ-⁇₃ m b = ⊕⁇≈⊕⁇ (m b) (m (not b))
 
 ≈ᴬ-⁇₄ : ∀ {k} (m : Bits k × Bits k) (b : Bit) → ⟪ proj m b ⟫ᴰ ⟨⊕⟩ ⁇ ≈ᴬ ⟪ proj m (not b) ⟫ᴰ ⟨⊕⟩ ⁇
 ≈ᴬ-⁇₄ = ≈ᴬ-⁇₃ ∘ proj
