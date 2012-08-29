@@ -2,7 +2,7 @@ module prefect-bintree where
 
 import Data.Nat.NP as Nat
 open Nat using (ℕ; zero; suc; 2^_; _+_; module ℕ°; module ℕ≤)
-open import Data.Bits hiding (replicate)
+open import Data.Bits hiding (replicate; _<=_)
 open import Function.NP
 import Relation.Binary.PropositionalEquality.NP as ≡
 open ≡ using (_≡_; _≗_; module ≡-Reasoning)
