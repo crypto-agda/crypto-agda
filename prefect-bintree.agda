@@ -622,9 +622,21 @@ module BitsSorting {m} where
                    (λ {x} {y} {z} → ≤-⊓₁ {x} {y} {z})
                    (λ {x} {y} {z} → ≤-⊔₀ {x} {y} {z})
                    (λ {x} {y} {z} → ≤-⊔₁ {x} {y} {z})
+    module FS = FunctionSorting _<=_
+    module FSP = FS.Properties isTotalOrder
+                   ≤-⊔ ⊓-≤
+                   (λ {x} {y} {z} → ≤-<_,_> {x} {y} {z})
+                   (λ {x} {y} {z} → ≤-[_,_] {x} {y} {z})
+                   (λ {x} {y} {z} → ≤-⊓₀ {x} {y} {z})
+                   (λ {x} {y} {z} → ≤-⊓₁ {x} {y} {z})
+                   (λ {x} {y} {z} → ≤-⊔₀ {x} {y} {z})
+                   (λ {x} {y} {z} → ≤-⊔₁ {x} {y} {z})
     open SortedData _≤_ isPreorder public
     open SortingBijSpec _<=_ isTotalOrder public
     open EvalTree public using (evalTree)
+    open BijSpec public
+    open OperationSyntax public
+    open FS public using () renaming (sort to sortFun)
 
     merge : ∀ {n} → Tree (Bits m) (1 + n) → Tree (Bits m) (1 + n)
     merge = S.merge
