@@ -80,19 +80,15 @@ open OperationSyntax
 open BijSpec
 open EvalTree
 open Alternative-Reverse
-open SPP
 
-mkBijT : ∀ {n} → Tree (Bits n) n → Bij n
-mkBijT = bij ∘ sort-bij
+sortBijT : ∀ {n} → Tree (Bits n) n → Bij n
+sortBijT = bij ∘ sort-bij
 
-mkBijT⁻¹ : ∀ {n} → Tree (Bits n) n → Bij n
-mkBijT⁻¹ f = mkBijT f ⁻¹
+sortBij : ∀ {n} → Endo (Bits n) → Bij n
+sortBij = sortBijT ∘ fromFun
 
-mkBij : ∀ {n} → Endo (Bits n) → Bij n
-mkBij f = mkBijT (fromFun f) ⁻¹
-
-mkBij-p : ∀ {n} (t : Tree (Bits n) n) → t ≡ evalTree (mkBijT t) (sort t)
-mkBij-p = proof ∘ sort-bij
+sortBij-sort : ∀ {n} (t : Tree (Bits n) n) → evalTree (sortBijT t) t ≡ sort t
+sortBij-sort = proof ∘ sort-bij
 
 IsInj : ∀ {i o} → (Bits i → Bits o) → Set
 IsInj f = ∀ {x y} → f x ≡ f y → x ≡ y
@@ -117,22 +113,6 @@ _⁻¹-inverseTree : ∀ {n} f → evalTree (f `⁏ f ⁻¹) ≗ id {A = Tree (B
                      ≡⟨ fromFun∘toFun t ⟩
                        t
                      ∎ where open ≡-Reasoning
-
-mkBij-p⁻¹ : ∀ {n} (t : Tree (Bits n) n) → evalTree (mkBijT⁻¹ t) t ≡ sort t
-mkBij-p⁻¹ t = ≡.trans (≡.cong (evalTree (mkBijT⁻¹ t)) (mkBij-p t)) (((mkBijT t) ⁻¹-inverseTree) (sort t))
-
-foo : ∀ {n} (t : Tree (Bits n) n) → toFun t ≗ toFun (sort t) ∘ eval (mkBijT⁻¹ t)
-foo t xs = toFun t xs
-         ≡⟨ ≡.cong (λ t → toFun t xs) (mkBij-p t) ⟩
-           toFun (evalTree (mkBijT t) (sort t)) xs
-         ≡⟨ evalTree-eval (mkBijT⁻¹ t) (evalTree (mkBijT t) (sort t)) xs ⟩
-           toFun (evalTree (mkBijT⁻¹ t) (evalTree (mkBijT t) (sort t))) (eval (mkBijT⁻¹ t) xs)
-         ≡⟨ ≡.refl ⟩
-           toFun (evalTree (mkBijT t `⁏ mkBijT⁻¹ t) (sort t)) (eval (mkBijT⁻¹ t) xs)
-         ≡⟨ ≡.cong (λ u → toFun u (eval (mkBijT⁻¹ t) xs)) (((mkBijT t) ⁻¹-inverseTree) (sort t)) ⟩
-           toFun (sort t) (eval (mkBijT⁻¹ t) xs)
-         ∎ where open ≡-Reasoning
-
 
 module SortedMonotonicFunctionsBits {n} where
     open SortedMonotonicFunctions (_≤_ {n}) isPreorder public
@@ -181,15 +161,16 @@ module ToEndoℕ {n} (f : Endo (Bits n)) where
             (≤→≤ᴮ (ℕ<=.complete {toℕ (fromℕn x)} {toℕ (fromℕn y)}
                      (ℕ≤.trans (ℕ≤.reflexive (toℕ∘fromℕ {n} x (ℕ≤.trans (s≤s x≤y) y<2ⁿ)))
                         (ℕ≤.trans x≤y (ℕ≤.reflexive (≡.sym (toℕ∘fromℕ {n} y y<2ⁿ))))))))
-    
+
     inj : IsInj f → MM.IsInj (2^ n) fℕ
     inj f-inj {x} {y} x< y< = fromℕ-inj x< y< ∘ f-inj ∘ toℕ-inj _ _
 
     bounded : MM.Bounded (2^ n) fℕ
     bounded x x≤2ⁿ = toℕ-bound (f (fromℕ x))
 
-lem : ∀ {n} (f : Endo (Bits n)) → Monotone f → IsInj f → f ≗ id
-lem {n} f f-mono f-inj x = toℕ-inj _ _ (≡.trans (≡.cong (toℕ ∘ f) (≡.sym (fromℕ∘toℕ x))) (MM.M.is-id (toEndoℕ f) {2^ n} (mono f-mono) (inj f-inj) bounded (toℕ x) (toℕ-bound x)))
+lem : ∀ {n} (f : Endo (Bits n)) → Monotone f → IsInj f → toℕ ∘ f ≗ toℕ
+lem {n} f f-mono f-inj x = ≡.trans (≡.cong (toℕ ∘ f) (≡.sym (fromℕ∘toℕ x)))
+                                   (MM.M.is-id (toEndoℕ f) {2^ n} (mono f-mono) (inj f-inj) bounded (toℕ x) (toℕ-bound x))
   where open ToEndoℕ f
 
 IsInj-toFunFromFun : ∀ {n} (f : Endo (Bits n)) → IsInj f → IsInj (toFun (fromFun f))
@@ -198,11 +179,11 @@ IsInj-toFunFromFun f f-inj {x} {y} eq
         | toFun∘fromFun f y
         = f-inj eq
 
-sort-spec′ : ∀ {n} (t : Tree (Bits n) n) → Sorted (evalTree (mkBijT⁻¹ t) t)
-sort-spec′ t rewrite mkBij-p⁻¹ t = sort-spec t
+sort-spec′ : ∀ {n} (t : Tree (Bits n) n) → Sorted (evalTree (sortBijT t) t)
+sort-spec′ t rewrite sortBij-sort t = sort-spec t
 
 sort-id′′ : ∀ {n} (t : Tree (Bits n) n) → InjT t → Sorted t → toFun t ≗ id
-sort-id′′ t Pt st x = lem (toFun t) (DataSorted→Sorted st) Pt x
+sort-id′′ t Pt st x = toℕ-inj _ _ (lem (toFun t) (DataSorted→Sorted st) Pt x)
 
 toFun-eval-inj : ∀ {n} (f : Bij n) → IsInj (eval f)
 toFun-eval-inj f {x} {y} eq = x
@@ -219,35 +200,35 @@ toFun-evalTree-inj f t Pt {x} {y} eq
   rewrite evalTree-eval′ f t x
         | evalTree-eval′ f t y = toFun-eval-inj (f ⁻¹) (Pt eq)
 
-sort-id′ : ∀ {n} f (t : Tree (Bits n) n) → InjT t → Sorted (evalTree f t) → toFun (evalTree f t) ≗ id
-sort-id′ f t Pt = sort-id′′ (evalTree f t) (λ {x} {y} eq → toFun-evalTree-inj f t Pt eq)
-
 sort-id : ∀ {n} (t : Tree (Bits n) n) → InjT t → toFun (sort t) ≗ id
-sort-id t Pt rewrite ≡.sym (mkBij-p⁻¹ t) = sort-id′ (mkBijT⁻¹ t) t Pt (sort-spec′ t)
+sort-id t t-inj rewrite ≡.sym (sortBij-sort t)
+  = sort-id′′ (evalTree f t) (λ {x} {y} eq → toFun-evalTree-inj f t t-inj eq) (sort-spec′ t)
+  where f = sortBijT t
 
-bar : ∀ {n} (t : Tree (Bits n) n) → InjT t → toFun t ≗ eval (mkBijT⁻¹ t)
-bar t Pt xs = toFun t xs
-         ≡⟨ foo t xs ⟩
-           toFun (sort t) (eval (mkBijT⁻¹ t) xs)
-         ≡⟨ sort-id t Pt (eval (mkBijT⁻¹ t) xs) ⟩
-           eval (mkBijT⁻¹ t) xs
-         ∎ where open ≡-Reasoning
+sort-id-fun : ∀ {n} (f : Endo (Bits n)) → IsInj f → sortFun f ≗ id
+sort-id-fun f f-inj x = sort-id (fromFun f) (IsInj-toFunFromFun f f-inj) x
 
 thm : ∀ {n} (f : Endo (Bits n)) (f-inj : IsInj f) →
-        eval (mkBij f) ≗ f
-thm f f-inj xs = eval (mkBij f) xs
-               ≡⟨ ≡.sym (bar (fromFun f) (IsInj-toFunFromFun f f-inj) xs) ⟩
-                 toFun (fromFun f) xs
-               ≡⟨ toFun∘fromFun f xs ⟩
-                 f xs
-               ∎ where open ≡-Reasoning
+        eval (sortBij f) ≗ f
+thm f f-inj x = eval (sortBij f) x
+              ≡⟨ ≡.sym (sort-id-fun f f-inj (eval (sortBij f) x)) ⟩
+                sortFun f (eval (sortBij f) x)
+              ≡⟨ ≡.cong (λ t → toFun t (eval (sortBij f) x)) (≡.sym (sortBij-sort (fromFun f))) ⟩
+                toFun (evalTree (sortBij f) (fromFun f)) (eval (sortBij f) x)
+              ≡⟨ evalTree-eval′ (sortBij f) (fromFun f) (eval (sortBij f) x) ⟩
+                toFun (fromFun f) (eval (sortBij f ⁻¹) (eval (sortBij f) x))
+              ≡⟨ toFun∘fromFun f _ ⟩
+                f (eval (sortBij f ⁻¹) (eval (sortBij f) x))
+              ≡⟨ ≡.cong f ((sortBij f ⁻¹-inverse) x) ⟩
+                f x
+              ∎ where open ≡-Reasoning
 
 thm# : ∀ {n} (f : Endo (Bits n)) (f-inj : IsInj f) (g : Bits n → Bit) →
        #⟨ g ∘ f ⟩ ≡ #⟨ g ⟩
 thm# f f-inj g = #⟨ g ∘ f ⟩
-               ≡⟨ #-≗ (g ∘ f) (g ∘ eval (mkBij f)) (λ x → ≡.cong g (≡.sym (thm f f-inj x))) ⟩
-                 #⟨ g ∘ eval (mkBij f) ⟩
-               ≡⟨ #-bij (mkBij f) g ⟩
+               ≡⟨ #-≗ (g ∘ f) (g ∘ eval (sortBij f)) (λ x → ≡.cong g (≡.sym (thm f f-inj x))) ⟩
+                 #⟨ g ∘ eval (sortBij f) ⟩
+               ≡⟨ #-bij (sortBij f) g ⟩
                  #⟨ g ⟩
                ∎ where open ≡-Reasoning
 
