@@ -58,12 +58,6 @@ Reversible⅁? g = g ≈⅁? g ∘ not
 ≋⇒≈↺ {n} = 2^-inj n
 
 
-difference-lemma↺ : ∀ {n}(A B F : EXP n)
-  → #⟨ |not| (run↺ F) |∧| run↺ A ⟩ ≡ #⟨ |not| (run↺ F) |∧| run↺ B ⟩
-  → dist #⟨ run↺ A ⟩ #⟨ run↺ B ⟩ ≤ #⟨ run↺ F ⟩
-difference-lemma↺ A B F = difference-lemma (run↺ A) (run↺ B) (run↺ F)
-
-
 module ≈⅁? {n} where
   setoid : Setoid _ _
   setoid = record { Carrier = C; _≈_ = ℛ; isEquivalence = isEquivalence }
