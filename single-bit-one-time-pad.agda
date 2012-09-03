@@ -10,6 +10,8 @@ import Relation.Binary.PropositionalEquality.NP as ≡
 open ≡ using (_≡_; _≗_; module ≡-Reasoning)
 
 open import Data.Bits
+open import Data.Bits.Count
+open import Data.Bits.Sum
 open import flipbased-implem
 open import program-distance
 open import prefect-bintree-sorting
@@ -284,7 +286,7 @@ lem-flip$-⊕ {m} {n} f x = ≡.sym (
         | ⊕⁇≈⁇ m (Adv ∘ _∷_ (h xor 1b))
         = ≈ᴬ′-toss h (λ x → ⟪ Adv ∘ _∷_ x · ⁇ ⟫)
 
-open OperationSyntax
+open import Data.Bits.OperationSyntax
 
 _⟨∙⟩_ : ∀ {m n} → Bij n → Endo (↺ m (Bits n))
 f ⟨∙⟩ g = ⟪ _∙_ f · g ⟫

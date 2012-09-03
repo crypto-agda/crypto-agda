@@ -77,7 +77,7 @@ module MM where
   is-id = ob ub ℕ≤.refl f-bounded
 
 open BitsSorting
-open OperationSyntax
+open import Data.Bits.OperationSyntax
 open BijSpec
 open EvalTree
 open Alternative-Reverse

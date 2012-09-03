@@ -635,7 +635,7 @@ module BitsSorting {m} where
     open SortingBijSpec _<=_ isTotalOrder public
     open EvalTree public using (evalTree)
     open BijSpec public
-    open OperationSyntax public
+    open import Data.Bits.OperationSyntax public
     open FS public using () renaming (sort to sortFun)
 
     merge : ∀ {n} → Tree (Bits m) (1 + n) → Tree (Bits m) (1 + n)
