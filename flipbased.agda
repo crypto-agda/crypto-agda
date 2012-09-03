@@ -4,6 +4,7 @@ open L using () renaming (_⊔_ to _L⊔_)
 open import Function hiding (_⟨_⟩_)
 open import Data.Nat.NP hiding (_==_)
 open import Data.Bool
+open import Data.Unit using (⊤)
 open import Data.Nat.Properties
 open import Data.Product using (proj₁; proj₂; _,_; swap; _×_)
 open import Data.Bits
@@ -60,8 +61,11 @@ _>=>_ : ∀ {n₁ n₂ a b c} {A : Set a} {B : Set b} {C : Set c}
         → (A → ↺ n₁ B) → (B → ↺ n₂ C) → A → ↺ (n₁ + n₂) C
 (f >=> g) x = f x >>= g
 
+waste : ∀ n → ↺ n ⊤
+waste n = return↺ {n} _
+
 weaken : ∀ m {n a} {A : Set a} → ↺ n A → ↺ (m + n) A
-weaken m x = return↺ {m} 0 >> x
+weaken m x = waste m >> x
 
 weaken′ : ∀ {m n a} {A : Set a} → ↺ n A → ↺ (n + m) A
 weaken′ x = x >>= return↺
@@ -138,26 +142,19 @@ random : ∀ {n} → ↺ n (Bits n)
 random {zero}  = ⟪ [] ⟫
 random {suc _} = ⟪ _∷_ · toss · random ⟫
 
-randomTbl : ∀ m n → ↺ (2 ^ m * n) (Vec (Bits n) (2 ^ m))
+randomTbl : ∀ m n → ↺ (2^ m * n) (Vec (Bits n) (2^ m))
 randomTbl m n = replicate↺ random
 
-randomFun : ∀ m n → ↺ (2 ^ m * n) (Bits m → Bits n)
-randomFun m n = ⟪ funFromTbl · randomTbl m n ⟫
+randomFunFromTbl : ∀ m n → ↺ (2^ m * n) (Bits m → Bits n)
+randomFunFromTbl m n = ⟪ funFromTbl · randomTbl m n ⟫
 
 randomFunExt : ∀ {n k a} {A : Set a} → ↺ k (Bits n → A) → ↺ (k + k) (Bits (suc n) → A)
-randomFunExt f = ⟪ comb · f · f ⟫ where comb = λ g₁ g₂ xs → (if head xs then g₁ else g₂) (tail xs)
+randomFunExt f = ⟪ comb · f · f ⟫
+  where comb = λ g₁ g₂ xs → (if head xs then g₁ else g₂) (tail xs)
 
-costRndFun : ℕ → ℕ → ℕ
-costRndFun zero n = n
-costRndFun (suc m) n = 2* (costRndFun m n)
-
-costRndFun-lem : ∀ m n → costRndFun m n ≡ 2 ^ m * n
-costRndFun-lem zero n rewrite ℕ°.+-comm n 0 = ≡.refl
-costRndFun-lem (suc m) n rewrite costRndFun-lem m n | ℕ°.*-assoc 2 (2 ^ m) n | ℕ°.+-comm (2 ^ m * n) 0 = ≡.refl
-
-randomFun′ : ∀ {m n} → ↺ (costRndFun m n) (Bits m → Bits n)
-randomFun′ {zero}  = ⟪ const · random ⟫
-randomFun′ {suc m} = randomFunExt (randomFun′ {m})
+randomFun : ∀ m n → ↺ (2^⟨ m ⟩* n) (Bits m → Bits n)
+randomFun zero    _ = ⟪ const · random ⟫
+randomFun (suc m) _ = randomFunExt (randomFun m _)
 
 record ProgEquiv a ℓ : Set (L.suc ℓ L⊔ L.suc a) where
   infix 2 _≈_ _≋_
