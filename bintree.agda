@@ -6,6 +6,8 @@ open import Data.Nat.Properties
 open import Data.Bool
 open import Data.Vec using (_++_)
 open import Data.Bits
+import Data.Bits.Search as Search
+open Search.SimpleSearch
 open import Relation.Binary
 open import Relation.Binary.PropositionalEquality
 open import composable

@@ -57,6 +57,7 @@ Reversible⅁? g = g ≈⅁? g ∘ not
 ≋⇒≈↺ : ∀ {n} {f g : EXP n} → f ≋↺ g → f ≈↺ g
 ≋⇒≈↺ {n} = 2^-inj n
 
+
 module ≈⅁? {n} where
   setoid : Setoid _ _
   setoid = record { Carrier = C; _≈_ = ℛ; isEquivalence = isEquivalence }

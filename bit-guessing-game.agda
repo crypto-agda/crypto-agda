@@ -5,7 +5,7 @@ open import Relation.Nullary using (¬_)
 open import Function
 open import Data.Bool.NP
 
-open import Data.Bits hiding (#⟨_⟩)
+open import Data.Bits
 
 open import flipbased-implem using (Coins; ↺; EXP; return↺; toss; Rat; _/_; Pr[_≡1]) renaming (count↺ to #⟨_⟩)
 open import program-distance using (HomPrgDist; module HomPrgDist)

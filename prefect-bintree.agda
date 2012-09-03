@@ -3,6 +3,8 @@ module prefect-bintree where
 import Data.Nat.NP as Nat
 open Nat using (ℕ; zero; suc; 2^_; _+_; module ℕ°; module ℕ≤)
 open import Data.Bits hiding (replicate; _<=_)
+import Data.Bits.Search as Search
+open Search.SimpleSearch
 open import Function.NP
 import Relation.Binary.PropositionalEquality.NP as ≡
 open ≡ using (_≡_; _≗_; module ≡-Reasoning)
@@ -354,7 +356,7 @@ module Sorting-<= {a} {A : Set a} (_<=ᴬ_ : A → A → Bool) where
     open Sorting-⊓-⊔ _⊓ᴬ_ _⊔ᴬ_ public
 
 module EvalTree {a} {A : Set a} where
-    open OperationSyntax renaming (map-inner to `map-inner; map-outer to `map-outer)
+    open import Data.Bits.OperationSyntax renaming (map-inner to `map-inner; map-outer to `map-outer)
     evalTree : ∀ {n} → Bij n → Endo (Tree A n)
     evalTree `id          = id
     evalTree (f `⁏ g)      = evalTree g ∘ evalTree f
@@ -387,7 +389,7 @@ module EvalTree {a} {A : Set a} where
 
 module BijSpec {a} {A : Set a} where
     open EvalTree
-    open OperationSyntax renaming (map-inner to `map-inner; map-outer to `map-outer)
+    open import Data.Bits.OperationSyntax renaming (map-inner to `map-inner; map-outer to `map-outer)
 
     record Bij[_↦_] {n} (t u : Tree A n) : Set a where
       constructor _,_
@@ -443,7 +445,7 @@ module SortingBijSpec {a} {A : Set a} (_<=ᴬ_ : A → A → Bool)
 
     open Sorting-<= _<=ᴬ_
     open EvalTree
-    open OperationSyntax renaming (map-inner to `map-inner; map-outer to `map-outer)
+    open import Data.Bits.OperationSyntax renaming (map-inner to `map-inner; map-outer to `map-outer)
     open BijSpec
 
     `sort₁ : Tree A 1 → Bij 1
@@ -600,7 +602,7 @@ module FunctionSorting {a} {A : Set a} (_<=ᴬ_ : A → A → Bool) where
     open SortedMonotonicFunctions _≤ᴬ_ isPreorder
     module SP = SortingProperties _≤ᴬ_ _⊓ᴬ_ _⊔ᴬ_ isPreorder
                    ≤-⊔ ⊓-≤ ≤-<_,_> ≤-[_,_] ≤-⊓₀ ≤-⊓₁ ≤-⊔₀ ≤-⊔₁
-    open OperationSyntax using (eval)
+    open import Data.Bits.OperationSyntax using (eval)
     open EvalTree
 
     sort-is-sorting : ∀ {n} (f : Bits n → A) → Monotone (sort f)

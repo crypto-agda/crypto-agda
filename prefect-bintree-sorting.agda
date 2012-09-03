@@ -6,6 +6,7 @@ open Nat using (ℕ; zero; suc; 2^_; _+_; _∸_; module ℕ°; module ℕ≤; +-
 open import Data.Bool.NP hiding (toℕ)
 open import Data.Sum
 open import Data.Bits
+open import Data.Bits.Count
 open import Data.Unit using (⊤)
 open import Data.Empty using (⊥; ⊥-elim)
 open import Data.Product using (_×_; _,_; proj₁; proj₂; ∃; uncurry) renaming (swap to swap-×)
