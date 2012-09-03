@@ -8,6 +8,10 @@ open import Data.Bool.NP hiding (_==_)
 open import Data.Nat.Properties
 open import Data.Bool.Properties
 open import Data.Bits
+open import Data.Bits.Count
+import Data.Bits.Search as Search
+open Search using (search-hom)
+open Search.SimpleSearch
 open import Data.Fin using (Fin; zero; suc)
 open import Data.Product
 open import Data.Empty

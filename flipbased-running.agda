@@ -6,6 +6,7 @@ import Relation.Binary.PropositionalEquality as ≡
 open ≡ using (_≗_; _≡_)
 
 open import Data.Bits
+open import Data.Bits.Count
 import flipbased
 import flipbased-counting
 
