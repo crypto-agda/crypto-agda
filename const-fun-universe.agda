@@ -6,7 +6,7 @@ open import data-universe
 open import fun-universe
 
 constFuns : Set → FunUniverse ⊤
-constFuns A = mk ⊤-U (λ _ _ → A)
+constFuns A = ⊤-U , λ _ _ → A
 
 module ConstFunTypes A = FunUniverse (constFuns A)
 

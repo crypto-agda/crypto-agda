@@ -16,12 +16,12 @@ open import data-universe
 open import fun-universe
 
 bitsFunU : FunUniverse ℕ
-bitsFunU = mk Bits-U _→ᵇ_
+bitsFunU = Bits-U , _→ᵇ_
 
 module BitsFunUniverse = FunUniverse bitsFunU
 
 bitsFunOps : FunOps bitsFunU
-bitsFunOps = mk rewiring (const [ 0b ]) (const [ 1b ]) cond forkᵇ
+bitsFunOps = mk rewiring (cond , forkᵇ) (const [ 0b ]) (const [ 1b ])
   where
   open BitsFunUniverse
   open F using (id; _∘′_)
@@ -40,7 +40,7 @@ bitsFunOps = mk rewiring (const [ 0b ]) (const [ 1b ]) cond forkᵇ
 
   open Defaults bitsFunU
   open DefaultsGroup2 id _∘′_ (const []) <_,_>ᵇ fstᵇ (λ {x} → sndᵇ x)
-  open DefaultCond forkᵇ fstᵇ (λ {x} → sndᵇ x)
+  open DefaultCondFromFork forkᵇ fstᵇ (λ {x} → sndᵇ x)
 
   lin : LinRewiring bitsFunU
   lin = mk id _∘′_ first (λ {x} → swap {x}) (λ {x} → assoc {x}) id id

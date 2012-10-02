@@ -142,9 +142,15 @@ seqTimeRewiring =
     rewire = const 0;
     rewireTbl = const 0 }
 
+seqTimeFork : HasFork TimeCost
+seqTimeFork = record { cond = 1; fork = 1+_+_ }
+
 seqTimeOps : FunOps TimeCost
-seqTimeOps = record { rewiring = seqTimeRewiring;
-                      <0b> = 0; <1b> = 0; cond = 1; fork = 1+_+_ }
+seqTimeOps = record { rewiring = seqTimeRewiring; hasFork = seqTimeFork;
+                      <0b> = 0; <1b> = 0 }
+
+seqTimeBij : Bijective TimeCost
+seqTimeBij = FunOps.bijective seqTimeOps
 
 timeLin : LinRewiring TimeCost
 timeLin =
@@ -176,9 +182,12 @@ timeRewiring =
     rewire = const 0;
     rewireTbl = const 0 }
 
+timeFork : HasFork TimeCost
+timeFork = record { cond = 1; fork = 1+_⊔_ }
+
 timeOps : FunOps TimeCost
-timeOps = record { rewiring = timeRewiring;
-                   <0b> = 0; <1b> = 0; cond = 1; fork = 1+_⊔_ }
+timeOps = record { rewiring = timeRewiring; hasFork = timeFork;
+                   <0b> = 0; <1b> = 0 }
 
 {-
 timeOps≡seqTimeOps : timeOps ≡ record seqTimeOps {
@@ -297,9 +306,12 @@ spaceRewiring =
     rewire = λ {_} {o} _ → o;
     rewireTbl = λ {_} {o} _ → o }
 
+spaceFork : HasFork SpaceCost
+spaceFork = record { cond = 1; fork = 1+_+_ }
+
 spaceOps : FunOps SpaceCost
-spaceOps = record { rewiring = spaceRewiring;
-                    <0b> = 1; <1b> = 1; cond = 1; fork = 1+_+_ }
+spaceOps = record { rewiring = spaceRewiring; hasFork = spaceFork;
+                    <0b> = 1; <1b> = 1 }
 
              {-
 -- So far the space cost model is like the sequential time cost model but makes <0b>,<1b>,dup

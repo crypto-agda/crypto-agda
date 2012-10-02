@@ -17,6 +17,7 @@ import Level as L
 open import Data.Bool
 open import Algebra.FunctionProperties
 import Relation.Binary.ToNat as ToNat
+import Data.Bits.OperationSyntax as OperationSyntax
 
 data Tree {a} (A : Set a) : ℕ → Set a where
   leaf : (x : A) → Tree A zero
@@ -356,7 +357,7 @@ module Sorting-<= {a} {A : Set a} (_<=ᴬ_ : A → A → Bool) where
     open Sorting-⊓-⊔ _⊓ᴬ_ _⊔ᴬ_ public
 
 module EvalTree {a} {A : Set a} where
-    open import Data.Bits.OperationSyntax renaming (map-inner to `map-inner; map-outer to `map-outer)
+    open OperationSyntax renaming (map-inner to `map-inner; map-outer to `map-outer)
     evalTree : ∀ {n} → Bij n → Endo (Tree A n)
     evalTree `id          = id
     evalTree (f `⁏ g)      = evalTree g ∘ evalTree f
@@ -389,7 +390,7 @@ module EvalTree {a} {A : Set a} where
 
 module BijSpec {a} {A : Set a} where
     open EvalTree
-    open import Data.Bits.OperationSyntax renaming (map-inner to `map-inner; map-outer to `map-outer)
+    open OperationSyntax renaming (map-inner to `map-inner; map-outer to `map-outer)
 
     record Bij[_↦_] {n} (t u : Tree A n) : Set a where
       constructor _,_
@@ -445,7 +446,7 @@ module SortingBijSpec {a} {A : Set a} (_<=ᴬ_ : A → A → Bool)
 
     open Sorting-<= _<=ᴬ_
     open EvalTree
-    open import Data.Bits.OperationSyntax renaming (map-inner to `map-inner; map-outer to `map-outer)
+    open OperationSyntax
     open BijSpec
 
     `sort₁ : Tree A 1 → Bij 1
@@ -602,7 +603,7 @@ module FunctionSorting {a} {A : Set a} (_<=ᴬ_ : A → A → Bool) where
     open SortedMonotonicFunctions _≤ᴬ_ isPreorder
     module SP = SortingProperties _≤ᴬ_ _⊓ᴬ_ _⊔ᴬ_ isPreorder
                    ≤-⊔ ⊓-≤ ≤-<_,_> ≤-[_,_] ≤-⊓₀ ≤-⊓₁ ≤-⊔₀ ≤-⊔₁
-    open import Data.Bits.OperationSyntax using (eval)
+    open OperationSyntax using (eval; Bij)
     open EvalTree
 
     sort-is-sorting : ∀ {n} (f : Bits n → A) → Monotone (sort f)

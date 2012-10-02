@@ -17,7 +17,7 @@ open import fun-universe
 -→- A B = A → B
 
 agdaFunU : FunUniverse Set
-agdaFunU = mk Set-U -→-
+agdaFunU = Set-U , -→-
 
 module AgdaFunUniverse = FunUniverse agdaFunU
 
@@ -32,8 +32,11 @@ funRewiring : Rewiring agdaFunU
 funRewiring = mk funLin _ (λ x → x , x) (F.const []) ×.<_,_> proj₁ proj₂
                  V.rewire V.rewireTbl
 
+funFork : HasFork agdaFunU
+funFork = (λ { (b , x , y) → if b then x else y })
+        , (λ { f g (b , x) → (if b then f else g) x })
+
 agdaFunOps : FunOps agdaFunU
-agdaFunOps = mk funRewiring (F.const 0b) (F.const 1b) (λ { (b , x , y) → if b then x else y })
-             (λ { f g (b , x) → (if b then f else g) x })
+agdaFunOps = mk funRewiring funFork (F.const 0b) (F.const 1b)
 
 module AgdaFunOps = FunOps agdaFunOps

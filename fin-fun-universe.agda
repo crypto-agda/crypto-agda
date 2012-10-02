@@ -10,6 +10,6 @@ _→ᶠ_ : ℕ → ℕ → Set
 _→ᶠ_ i o = Fin i → Fin o
 
 finFunU : FunUniverse ℕ
-finFunU = mk Fin-U _→ᶠ_
+finFunU = Fin-U , _→ᶠ_
 
 module FinFunUniverse = FunUniverse finFunU

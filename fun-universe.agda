@@ -1,7 +1,8 @@
 module fun-universe where
 
 open import Data.Nat.NP using (ℕ; zero; suc; _+_; _*_; 2^_)
-open import Data.Bool using (if_then_else_; true; false)
+import Data.Bool.NP as B
+open B using (if_then_else_; true; false)
 open import Data.Unit using (⊤)
 open import Data.Fin using (Fin)
 open import Function using (_∘′_; flip)
@@ -9,17 +10,17 @@ import Data.Vec.NP as V
 import Level as L
 open V using (Vec; []; _∷_)
 
-open import Data.Bits using (Bit; Bits; _→ᵇ_; RewireTbl; 0ⁿ; 1ⁿ)
+open import Data.Bits using (Bit; Bits; _→ᵇ_; RewireTbl; 0b; 1b; 0ⁿ; 1ⁿ)
 
 import bintree as Tree
 open Tree using (Tree)
 open import data-universe
 
 record FunUniverse {t} (T : Set t) : Set (L.suc t) where
-  constructor mk
+  constructor _,_
   field
     universe : Universe T
-    _`→_    : T → T → Set
+    _`→_     : T → T → Set
 
   infix 0 _`→_
   open Universe universe public
@@ -29,6 +30,11 @@ record FunUniverse {t} (T : Set t) : Set (L.suc t) where
 
   `Endo : T → Set
   `Endo A = A `→ A
+
+module OpFunU {t} {T : Set t} (funU : FunUniverse T) where
+  open FunUniverse funU
+  opFunU : FunUniverse T
+  opFunU = universe , flip _`→_
 
 module Defaults⟨first-part⟩ {t} {T : Set t} (funU : FunUniverse T) where
   open FunUniverse funU
@@ -169,16 +175,16 @@ module Defaults⟨first-part⟩ {t} {T : Set t} (funU : FunUniverse T) where
     assoc′ : ∀ {A B C} → (A `× (B `× C)) `→ ((A `× B) `× C)
     assoc′ = swap ⁏ first swap ⁏ assoc ⁏ swap ⁏ first swap
 
-  module DefaultCond
+  module DefaultCondFromFork
     (fork : ∀ {A B} (f g : A `→ B) → `Bit `× A `→ B)
-    (fst   : ∀ {A B} → A `× B `→ A)
-    (snd   : ∀ {A B} → A `× B `→ B) where
+    (fst  : ∀ {A B} → A `× B `→ A)
+    (snd  : ∀ {A B} → A `× B `→ B) where
 
     cond : ∀ {A} → `Bit `× A `× A `→ A
     cond = fork fst snd
 
    -- This definition cost 2 units of space instead of 1.
-  module DefaultFork
+  module DefaultForkFromCond
     (_∘_ : ∀ {A B C} → (B `→ C) → (A `→ B) → (A `→ C))
     (second : ∀ {A B C} → (B `→ C) → (A `× B) `→ (A `× C))
     (<_,_> : ∀ {A B C} → (A `→ B) → (A `→ C) → A `→ B `× C)
@@ -188,6 +194,44 @@ module Defaults⟨first-part⟩ {t} {T : Set t} (funU : FunUniverse T) where
 
     fork : ∀ {A B} (f g : A `→ B) → `Bit `× A `→ B
     fork f g = second < f , g > ⁏ cond
+
+  module DefaultForkFromBijFork
+    (_∘_ : ∀ {A B C} → (B `→ C) → (A `→ B) → (A `→ C))
+    (bijFork : ∀ {A B} (f g : A `→ B) → `Bit `× A `→ `Bit `× B)
+    (snd  : ∀ {A B} → A `× B `→ B) where
+
+    open CompositionNotations _∘_
+
+    fork : ∀ {A B} (f g : A `→ B) → `Bit `× A `→ B
+    fork f g = bijFork f g ⁏ snd
+
+  module DefaultBijForkFromCond
+    (_∘_ : ∀ {A B C} → (B `→ C) → (A `→ B) → (A `→ C))
+    (second : ∀ {A B C} → (B `→ C) → (A `× B) `→ (A `× C))
+    (<_,_> : ∀ {A B C} → (A `→ B) → (A `→ C) → A `→ B `× C)
+    (fst  : ∀ {A B} → A `× B `→ A)
+    (cond : ∀ {A} → `Bit `× A `× A `→ A) where
+
+    open CompositionNotations _∘_
+
+    bijFork : ∀ {A B} (f g : A `→ B) → `Bit `× A `→ `Bit `× B
+    bijFork f g = second < f , g > ⁏ < fst , cond >
+
+  module DefaultBijForkFromFork
+    (<_,_> : ∀ {A B C} → (A `→ B) → (A `→ C) → A `→ B `× C)
+    (fst  : ∀ {A B} → A `× B `→ A)
+    (fork : ∀ {A B} (f g : A `→ B) → `Bit `× A `→ B) where
+
+    bijFork : ∀ {A B} (f g : A `→ B) → `Bit `× A `→ `Bit `× B
+    bijFork f g = < fst , fork f g >
+
+  module DefaultXor
+     (id  : ∀ {A} → A `→ A)
+     (not : `Bit `→ `Bit)
+     (<_⊛> : ∀ {n A B} → Vec (A `→ B) n → `Vec A n `→ `Vec B n) where
+
+    xor : ∀ {n} → Bits n → `Endo (`Bits n)
+    xor xs = < V.map (B.cond not id) xs ⊛>
 
   module DefaultRewire
     (rewireTbl : ∀ {i o} → RewireTbl i o → i `→ᵇ o) where
@@ -234,10 +278,10 @@ record LinRewiring {t} {T : Set t} (funU : FunUniverse T) : Set t where
     second : ∀ {A B C} → (B `→ C) → (A `× B) `→ (A `× C)
 
     -- Vectors
-    tt→[] : ∀ {A} → `⊤ `→ `Vec A 0
-    []→tt : ∀ {A} → `Vec A 0 `→ `⊤
+    tt→[]  : ∀ {A} → `⊤ `→ `Vec A 0
+    []→tt  : ∀ {A} → `Vec A 0 `→ `⊤
     <∷>    : ∀ {n A} → (A `× `Vec A n) `→ `Vec A (1 + n)
-    uncons  : ∀ {n A} → `Vec A (1 + n) `→ (A `× `Vec A n)
+    uncons : ∀ {n A} → `Vec A (1 + n) `→ (A `× `Vec A n)
 
   open Defaults⟨first-part⟩ funU
   open CompositionNotations _∘_ public
@@ -246,6 +290,9 @@ record LinRewiring {t} {T : Set t} (funU : FunUniverse T) : Set t where
   infixr 3 _***_
   _***_ : ∀ {A B C D} → (A `→ C) → (B `→ D) → (A `× B) `→ (C `× D)
   f *** g = < f × g >
+
+  <id,tt> : ∀ {A} → A `→ A `× `⊤
+  <id,tt> = <tt,id> ⁏ swap
 
   <tt⁏_,_> : ∀ {A B C} → (`⊤ `→ B) → (A `→ C) → A `→ B `× C
   <tt⁏ f , g > = <tt,id> ⁏ < f × g >
@@ -417,6 +464,48 @@ record LinRewiring {t} {T : Set t} (funU : FunUniverse T) : Set t where
   -- or based on fold:
   -- loop n f = < id ,tt⁏ replicate⊤ n > ⁏ foldl (fst<,tt> ⁏ f)
 
+record HasBijFork {t} {T : Set t} (funU : FunUniverse T) : Set t where
+  constructor mk
+  open FunUniverse funU
+  field
+    bijFork : ∀ {A B} (f g : A `→ B) → `Bit `× A `→ `Bit `× B
+
+  bijFork′ : ∀ {A B} → (Bit → A `→ B) → `Bit `× A `→ `Bit `× B
+  bijFork′ f = bijFork (f 0b) (f 1b)
+
+record HasFork {t} {T : Set t} (funU : FunUniverse T) : Set t where
+  constructor _,_
+  open FunUniverse funU
+  field
+    -- See Defaults.DefaultCond
+    cond : ∀ {A} → `Bit `× A `× A `→ A
+
+    -- See Defaults.DefaultFork
+    fork : ∀ {A B} (f g : A `→ B) → `Bit `× A `→ B
+
+  fork′ : ∀ {A B} → (Bit → A `→ B) → `Bit `× A `→ B
+  fork′ f = fork (f 0b) (f 1b)
+
+record HasXor {t} {T : Set t} (funU : FunUniverse T) : Set t where
+  constructor mk
+  open FunUniverse funU
+  field
+    xor : ∀ {n} → Bits n → `Endo (`Bits n)
+
+  vnot : ∀ {n} → `Endo (`Bits n)
+  vnot = xor 1ⁿ
+
+  ⟨⊕_⟩ : ∀ {n} → Bits n → `Endo (`Bits n)
+  ⟨⊕ xs ⟩ = xor xs
+
+record Bijective {t} {T : Set t} (funU : FunUniverse T) : Set t where
+  constructor mk
+
+  field
+    linRewiring : LinRewiring funU
+    hasBijFork  : HasBijFork  funU
+    hasXor      : HasXor      funU
+
 record Rewiring {t} {T : Set t} (funU : FunUniverse T) : Set t where
   constructor mk
   open FunUniverse funU
@@ -483,7 +572,6 @@ record Rewiring {t} {T : Set t} (funU : FunUniverse T) : Set t where
   replicate {zero}  = <[]>
   replicate {suc n} = < id , replicate > ⁏ <∷>
 
-  -- this is problematic if the space cost is 1 unit
   constBits′ : ∀ {n A} → Bits n → (A `× A) `→ `Vec A n
   constBits′ [] = <[]>
   constBits′ (b ∷ xs) = dup ⁏ < proj b ∷′ constBits′ xs >
@@ -494,11 +582,10 @@ record FunOps {t} {T : Set t} (funU : FunUniverse T) : Set t where
 
   field
     rewiring : Rewiring funU
+    hasFork  : HasFork  funU
 
     -- Bit
     <0b> <1b> : ∀ {_⊤} → _⊤ `→ `Bit
-    cond      : ∀ {A} → `Bit `× A `× A `→ A
-    fork      : ∀ {A B} (f g : A `→ B) → `Bit `× A `→ B
 
     -- Products
     -- * <_×_>; first; second; swap; assoc; <tt,id>; snd<tt,> come from LinRewiring
@@ -509,6 +596,26 @@ record FunOps {t} {T : Set t} (funU : FunUniverse T) : Set t where
 
   open Defaults⟨first-part⟩ funU
   open Rewiring rewiring public
+  open HasFork  hasFork  public
+
+  <if_then_else_> : ∀ {A B} (b : A `→ `Bit) (f g : A `→ B) → A `→ B
+  <if b then if-1 else if-0 > = < b , id > ⁏ fork if-0 if-1
+
+  not : `Bit `→ `Bit
+  not = <id,tt> ⁏ fork <0b> <1b>
+
+  -- We might want it to be part of the interface
+  hasXor : HasXor funU
+  hasXor = mk (DefaultXor.xor id not <_⊛>)
+
+  hasBijFork : HasBijFork funU
+  hasBijFork = mk (DefaultBijForkFromFork.bijFork <_,_> fst fork)
+
+  bijective : Bijective funU
+  bijective = mk linRewiring hasBijFork hasXor
+
+  open HasXor     hasXor public
+  open HasBijFork hasBijFork public
 
   infixr 3 _&&&_
   _&&&_ : ∀ {A B C} → (A `→ B) → (A `→ C) → A `→ B `× C
@@ -516,9 +623,6 @@ record FunOps {t} {T : Set t} (funU : FunUniverse T) : Set t where
 
   constBit : ∀ {_⊤} → Bit → _⊤ `→ `Bit
   constBit b = if b then <1b> else <0b>
-
-  <if_then_else_> : ∀ {A B} (b : A `→ `Bit) (f g : A `→ B) → A `→ B
-  <if b then if-1 else if-0 > = < b , id > ⁏ fork if-0 if-1
 
   -- Notice that this one costs 1 unit of space.
   dup⁏<_∷′_> : ∀ {n A B} → (A `→ B) → (A `→ `Vec B n)
@@ -561,7 +665,6 @@ record FunOps {t} {T : Set t} (funU : FunUniverse T) : Set t where
   <1ⁿ> : ∀ {n _⊤} → _⊤ `→ `Bits n
   <1ⁿ> = constBits 1ⁿ
 
-  -- this is problematic if the space cost is 1 unit
   constBits′′ : ∀ {n _⊤} → Bits n → _⊤ `→ `Bits n
   constBits′′ bs = <0,1> ⁏ constBits′ bs
 
@@ -603,9 +706,6 @@ record FunOps {t} {T : Set t} (funU : FunUniverse T) : Set t where
   fromBitsFun : ∀ {i o} → (i →ᵇ o) → i `→ᵇ o
   fromBitsFun f = fromFun (constBits ∘′ f)
 
-  not : `Bit `→ `Bit
-  not = <if id then <0b> else <1b> >
-
   <xor> : `Bit `× `Bit `→ `Bit
   <xor> = fork id not
 
@@ -625,8 +725,8 @@ record FunOps {t} {T : Set t} (funU : FunUniverse T) : Set t where
   <⊕> : ∀ {n} → `Bits n `× `Bits n `→ `Bits n
   <⊕> = zipWith <xor>
 
-  vnot : ∀ {n} → `Endo (`Bits n)
-  vnot = map not
+  -- vnot : ∀ {n} → `Endo (`Bits n)
+  -- vnot = map not
 
   allBits : ∀ n → `⊤ `→ `Vec (`Bits n) (2^ n)
   allBits zero    = < <[]> ∷[]>
