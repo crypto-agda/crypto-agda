@@ -42,8 +42,8 @@ open import fin-fun-universe
 open import const-fun-universe
 open import cost-fun-universe
 open import inverse-fun-universe
+open import circuit-fun-universe
 open import syntax-fun-universe
-open import bits-syntax-fun-universe
 
 -- TODO: Fix & restore the product of universes and ops
 

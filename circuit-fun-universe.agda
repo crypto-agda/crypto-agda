@@ -4,21 +4,21 @@ open import Data.Fin  using (Fin)
 
 open import data-universe
 
-module bits-syntax-fun-universe where
+module circuit-fun-universe where
 
-infix 0 _`→ᵇ_
-data _`→ᵇ_ : ℕ → ℕ → Set where
-  rewire : ∀ {i o} → (Fin o → Fin i) → i `→ᵇ o
+infix 0 _⌥_
+data _⌥_ : ℕ → ℕ → Set where
+  rewire : ∀ {i o} → (Fin o → Fin i) → i ⌥ o
     -- cost: 0 time, o space
-  _∘_    : ∀ {m n o} → (n `→ᵇ o) → (m `→ᵇ n) → (m `→ᵇ o)
+  _∘_    : ∀ {m n o} → (n ⌥ o) → (m ⌥ n) → (m ⌥ o)
     -- cost: sum time and space
-  <_×_>  : ∀ {m n o p} → (m `→ᵇ o) → (n `→ᵇ p) → (m + n) `→ᵇ (o + p)
+  <_×_>  : ∀ {m n o p} → (m ⌥ o) → (n ⌥ p) → (m + n) ⌥ (o + p)
     -- cost: max time and sum space
-  cond   : ∀ {n} → (1 + (n + n)) `→ᵇ n
+  cond   : ∀ {n} → (1 + (n + n)) ⌥ n
     -- cost: 1 time, 1 space
-  bits   : ∀ {n _⊤} → Bits n → _⊤ `→ᵇ n
+  bits   : ∀ {n _⊤} → Bits n → _⊤ ⌥ n
     -- cost: 0 time, n space
-  xor    : ∀ {n} → Bits n → n `→ᵇ n
+  xor    : ∀ {n} → Bits n → n ⌥ n
     -- xor: 1 time, n space
 
   {- derived rewiring
