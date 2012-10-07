@@ -19,7 +19,7 @@ data _⌥_ : ℕ → ℕ → Set where
   bits   : ∀ {n _⊤} → Bits n → _⊤ ⌥ n
     -- cost: 0 time, n space
   xor    : ∀ {n} → Bits n → n ⌥ n
-    -- xor: 1 time, n space
+    -- cost: 1 time, n space
 
   {- derived rewiring
   id        : ∀ {A} → A `→ A
