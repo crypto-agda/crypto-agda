@@ -235,17 +235,17 @@ module DDH
     DDHAdv : ★ → ★
     DDHAdv R = G → G → G → R → Bool
 
-    ⅁₀ : ∀ {R} {_I : ★} → DDHAdv R → (ℤq × ℤq × _I × R) → Bool
-    ⅁₀ D (x , y , _ , r) = D (g^ x) (g^ y) (g^ (x ⊠ y)) r
+    DDH⅁₀ : ∀ {R} {_I : ★} → DDHAdv R → (ℤq × ℤq × _I × R) → Bool
+    DDH⅁₀ D (x , y , _ , r) = D (g^ x) (g^ y) (g^ (x ⊠ y)) r
 
-    ⅁₁ : ∀ {R} → DDHAdv R → (ℤq × ℤq × ℤq × R) → Bool
-    ⅁₁ D (x , y , z , r) = D (g^ x) (g^ y) (g^ z) r
+    DDH⅁₁ : ∀ {R} → DDHAdv R → (ℤq × ℤq × ℤq × R) → Bool
+    DDH⅁₁ D (x , y , z , r) = D (g^ x) (g^ y) (g^ z) r
 
-    ⅁ : ∀ {R} → DDHAdv R → Bool → (ℤq × ℤq × ℤq × R) → Bool
-    ⅁ D b = (if b then ⅁₀ else ⅁₁) D
+    DDH⅁ : ∀ {R} → DDHAdv R → Bool → (ℤq × ℤq × ℤq × R) → Bool
+    DDH⅁ D b = (case b 0→ DDH⅁₀ 1→ DDH⅁₁) D
 
-    ⅁′ : ∀ {R} → DDHAdv R → (Bool × ℤq × ℤq × ℤq × R) → Bool
-    ⅁′ D (b , x , y , z , r) = ⅁ D b (x , y , z , r)
+    -- ⅁′ : ∀ {R} → DDHAdv R → (Bool × ℤq × ℤq × ℤq × R) → Bool
+    -- ⅁′ D (b , x , y , z , r) = DDH⅁ D b (x , y , z , r)
 
     module With↺ where
         open Univ ℤq
@@ -299,6 +299,7 @@ module El-Gamal-Generic
     EncAdv : ★ → ★
     EncAdv R = PubKey → R → (Bool → M) × (C → Bool)
 
+    {-
     Game0 : ∀ {R _I : Set} → EncAdv R → (Bool × ℤq × ℤq × _I × R) → Bool
     Game0 A (b , x , y , z , r) =
       let (pk , sk) = KeyGen x
@@ -316,6 +317,14 @@ module El-Gamal-Generic
 
     Game-0b≡Game0 : ∀ {R} → Game 0b ≡ Game0 {R}
     Game-0b≡Game0 = refl
+      -}
+
+    SS⅁ : ∀ {R _I : Set} → EncAdv R → Bool → (ℤq × ℤq × _I × R) → Bool
+    SS⅁ A b (x , y , z , r) =
+      let -- (pk , sk) = KeyGen x
+          (m , D) = A pk r in
+      D (Enc pk (m b) y)
+         where pk = g ^ x
 
     open DDH ℤq _⊠_ G (_^_ g) public
 
@@ -339,22 +348,63 @@ module El-Gamal-Base
     (_∙_ : G → G → G)
     where
 
+    g^_ : ℤq → G
+    g^ x = g ^ x
+
     _/_ : G → G → G
     x / y = x ∙ (y ⁻¹)
     open El-Gamal-Generic ℤq _⊠_ G g _^_ G _∙_ (flip _/_) public
 
     TrA : ∀ {R} → Bool → EncAdv R → DDHAdv R
-    TrA b A gˣ gʸ g? r = d (gʸ , g? ∙ m b)
+    TrA b A gˣ gʸ gˣʸ r = d (gʸ , gˣʸ ∙ m b)
        where m,d = A gˣ r
              m = proj₁ m,d
              d = proj₂ m,d
+
+    like-SS⅁ : ∀ {R _I : Set} → EncAdv R → Bool → (ℤq × ℤq × _I × R) → Bool
+    like-SS⅁ A b (x , y , z , r) =
+      let -- gˣ = g ^ x
+          -- gʸ = g ^ y
+          (m , D) = A gˣ r in
+      D (gʸ , (gˣ ^ y) ∙ m b)
+      where gˣ = g ^ x
+            gʸ = g ^ y
+
+    SS⅁≡like-SS⅁ : ∀ {R _I} → SS⅁ {R} {_I} ≡ like-SS⅁
+    SS⅁≡like-SS⅁ = refl
 
     module Proof
       -- (⊠-comm : Commutative _≡_ _⊠_)
       (dist-^-⊠ : ∀ α x y → α ^ (x ⊠ y) ≡ (α ^ x) ^ y)
       -- (^-comm : ∀ α x y → (α ^ x) ^ y ≡ (α ^ y) ^ x)
+
+      (#_ : ∀ {R} → (R → Bit) → ℕ)
+      (ddh-hyp : ∀ {R} (A : DDHAdv R) → # (DDH⅁ A 0b) ≡ # (DDH⅁ A 1b))
+      (otp-lem : ∀ (A : G → Bit) m → #(λ x → A (g^ x ∙ m)) ≡ #(λ x → A (g ^ x)))
+      -- (wk≈ : ∀ {R1 R2} (f : R2 → R1)(x y : R1 → Bit) (z t : R2 → Bit) → x ≈ y → z ≈ t)
       where
 
+        _≈_ : ∀ {R} → (f g : R → Bit) → Set
+        f ≈ g = # f ≡ # g
+
+        pf1 : ∀ {R} A b r → SS⅁ {R} A b r ≡ DDH⅁ (TrA b A) 0b r
+        pf1 A b (x , y , z , r) rewrite dist-^-⊠ g x y = refl
+
+        pf2 : ∀ {R} A b → DDH⅁ {R} (TrA b A) 0b ≈ DDH⅁ (TrA b A) 1b
+        pf2 A b = ddh-hyp (TrA b A)
+
+        pf3 : ∀ {R} A b → DDH⅁ {R} (TrA b A) 1b ≈ DDH⅁ (TrA (not b) A) 1b
+        pf3 {R} A b = pf3'
+          where
+            Aᵇ = TrA b A
+
+            -- pf3'' : # (DDH⅁₁ {R} Aᵇ) ≈ DDH⅁₁ (TrA (not b) A)
+            -- pf3'' = ?
+
+            pf3' : DDH⅁₁ {R} Aᵇ ≈ DDH⅁₁ (TrA (not b) A)
+            pf3' = {!wk≈ (λ { (x , y , z , r) → {!!} }) _ _ _ _ (otp-lem {!!} {!!})!}
+
+      {-
         pf1 : ∀ {R} A r → Game 0b {R} A r ≡ ⅁′ (TrA 1b A) r
         pf1 A (true , x , y , z , r) rewrite dist-^-⊠ g x y = refl
         pf1 A (false , x , y , z , r) = {!!}
@@ -362,7 +412,7 @@ module El-Gamal-Base
         pf2 : ∀ {R} A r → Game 1b {R} A r ≡ ⅁′ (TrA 0b A) r
         pf2 A (true , x , y , z , r)  = {!!}
         pf2 A (false , x , y , z , r) = {!!}
-
+-}
 module El-Gamal-Hashed
     (ℤq : ★)
     (_⊠_ : ℤq → ℤq → ℤq)
