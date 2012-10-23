@@ -380,8 +380,8 @@ module El-Gamal-Generic
   (g : G)
   (_^_ : G → ℤq → G)
   (Message : ★)
-  (_⊕_ : G → Message → Message)
-  (_⊕⁻¹_ : G → Message → Message)
+  (_∙_ : G → Message → Message)
+  (_∙⁻¹_ : G → Message → Message)
   where
 
     g^_ : ℤq → G
@@ -408,13 +408,13 @@ module El-Gamal-Generic
     Enc gˣ m y = gʸ , ζ where
       gʸ = g^ y
       δ = gˣ ^ y
-      ζ = δ ⊕ m
+      ζ = δ ∙ m
 
     -- Enc↺ : PubKey → Message → ↺ ℤq CipherText
     -- Enc↺ gˣ m = mk (Enc gˣ m)
 
     Dec : SecKey → CipherText → Message
-    Dec x (gʸ , ζ) = (gʸ ^ x) ⊕⁻¹ ζ
+    Dec x (gʸ , ζ) = (gʸ ^ x) ∙⁻¹ ζ
 
     EncAdv : ★ → ★
     EncAdv R = (R → PubKey → Bit → M) × (R → PubKey → C → Bit)
@@ -429,7 +429,7 @@ module El-Gamal-Generic
       let gˣ = g^ x
           gʸ = g^ y
           δ  = gˣ ^ case i 0→ y 1→ z
-          ζ  = δ ⊕ m r gˣ b
+          ζ  = δ ∙ m r gˣ b
       in b ==ᵇ D r gˣ (gʸ , ζ)
 
     {-
@@ -447,13 +447,13 @@ module El-Gamal-Generic
 
     OTP⅁ : ∀ {R : ★} → (R → G → Message) → (R → G → G → Message → Bit)
                      → (R × ℤq × ℤq × ℤq) → Bit
-    OTP⅁ M D (r , x , y , z) = D r gˣ gʸ (gᶻ ⊕ M r gˣ)
+    OTP⅁ M D (r , x , y , z) = D r gˣ gʸ (gᶻ ∙ M r gˣ)
       where gˣ = g^ x
             gʸ = g^ y
             gᶻ = g^ z
 
     TrA : ∀ {R} → Bit → EncAdv R → DDHAdv R
-    TrA b (m , D) r gˣ gʸ gˣʸ = D r gˣ (gʸ , gˣʸ ⊕ m r gˣ b)
+    TrA b (m , D) r gˣ gʸ gˣʸ = D r gˣ (gʸ , gˣʸ ∙ m r gˣ b)
 
 module El-Gamal-Base
     (ℤq : ★)
