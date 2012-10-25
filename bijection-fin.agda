@@ -146,11 +146,6 @@ module bijection-fin where
     ``evalArg `id       = id
     ``evalArg (S `∘ S₁) = ``evalArg S ∘ ``evalArg S₁
     ``evalArg (`swap m) = swap-fin m
-    
-    ``tail : ∀ {n} → ``Syn n → ``Syn (suc n)
-    ``tail `id = `id
-    ``tail (S `∘ S₁) = ``tail S `∘ ``tail S₁
-    ``tail (`swap m) = `swap (suc m)
 
     _``∘_ : ∀ {n} → ``Syn n → ``Syn n → ``Syn n
     `id ``∘ y = y
@@ -159,26 +154,33 @@ module bijection-fin where
     (x `∘ x₁) ``∘ `swap m = x `∘ (x₁ ``∘ `swap m)
     `swap m ``∘ y = `swap m `∘ y
 
+    ``tail : ∀ {n} → ``Syn n → ``Syn (suc n)
+    ``tail `id = `id
+    ``tail (S `∘ S₁) = ``tail S ``∘ ``tail S₁
+    ``tail (`swap m) = `swap (suc m)
+
     translate : ∀ {n} → `Syn n → ``Syn n
     translate `id = `id
     translate `swap = `swap 0
     translate (`tail S) = ``tail (translate S)
     translate (S `∘ S₁) = translate S ``∘ translate S₁
 
-    ``tail-p : ∀ {n} (S : ``Syn n) → fin-tail (``evalArg S) ≗ ``evalArg (``tail S)
-    ``tail-p `id zero = refl
-    ``tail-p `id (suc x) = refl
-    ``tail-p (S `∘ S₁) zero rewrite sym (``tail-p S₁ zero)   = ``tail-p S zero
-    ``tail-p (S `∘ S₁) (suc x) rewrite sym (``tail-p S₁ (suc x)) = ``tail-p S (suc (``evalArg S₁ x))
-    ``tail-p (`swap m) zero = refl
-    ``tail-p (`swap m) (suc x) = refl
-
-    ``∘-p : ∀ {n}(A B : ``Syn n) → ``evalArg (A ``∘ B) ≗ ``evalArg A ∘ ``evalArg B
+    ``∘-p : ∀ {n}(A B : ``Syn n) → ``evalArg (A ``∘ B) ≗ ``evalArg (A `∘ B)
     ``∘-p `id B x = refl
     ``∘-p (A `∘ A₁) `id x = refl
     ``∘-p (A `∘ A₁) (B `∘ B₁) x = refl
     ``∘-p (A `∘ A₁) (`swap m) x rewrite ``∘-p A₁ (`swap m) x = refl
     ``∘-p (`swap m) B x = refl
+
+    ``tail-p : ∀ {n} (S : ``Syn n) → fin-tail (``evalArg S) ≗ ``evalArg (``tail S)
+    ``tail-p `id zero = refl
+    ``tail-p `id (suc x) = refl
+    ``tail-p (S `∘ S₁) zero rewrite ``∘-p (``tail S) (``tail S₁) zero
+                                  | sym (``tail-p S₁ zero) = ``tail-p S zero
+    ``tail-p (S `∘ S₁) (suc x) rewrite ``∘-p (``tail S) (``tail S₁) (suc x)
+                                     | sym (``tail-p S₁ (suc x)) = ``tail-p S (suc (``evalArg S₁ x))
+    ``tail-p (`swap m) zero = refl
+    ``tail-p (`swap m) (suc x) = refl
 
     `eval`` : ∀ {n} (S : `Syn n) → `evalArg S ≗ ``evalArg (translate S)
     `eval`` `id       x = refl
