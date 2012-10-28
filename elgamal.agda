@@ -30,41 +30,6 @@ private
 case_0→_1→_ : ∀ {a} {A : Set a} → Bit → A → A → A
 case b 0→ e₀ 1→ e₁ = if b then e₁ else e₀
 
-module Sum where
-    Sum : ★ → ★
-    Sum A = (A → ℕ) → ℕ 
-
-    Count : ★ → ★
-    Count A = (A → Bit) → ℕ 
-
-    SumExt : ∀ {A} → Sum A → ★
-    SumExt sumA = ∀ {f g} → f ≗ g → sumA f ≡ sumA g
-
-    sumToCount : ∀ {A} → Sum A → Count A
-    sumToCount sumA f = sumA (Bool.toℕ ∘ f)
-
-    sum⊤ : Sum ⊤
-    sum⊤ f = f _
-
-    sum⊤-ext : SumExt sum⊤
-    sum⊤-ext f≗g = f≗g _
-
-    sumBit : Sum Bit
-    sumBit f = f 0b + f 1b
-
-    sumBit-ext : SumExt sumBit
-    sumBit-ext f≗g rewrite f≗g 0b | f≗g 1b = refl
-
-    -- liftM2 _,_ in the continuation monad
-    sumProd : ∀ {A B} → Sum A → Sum B → Sum (A × B)
-    sumProd sumA sumB f = sumA (λ x₀ →
-                           sumB (λ x₁ →
-                             f (x₀ , x₁)))
-
-    sumProd-ext : ∀ {A B} {sumA : Sum A} {sumB : Sum B} →
-                  SumExt sumA → SumExt sumB → SumExt (sumProd sumA sumB)
-    sumProd-ext sumA-ext sumB-ext f≗g = sumA-ext (λ x → sumB-ext (λ y → f≗g (x , y)))
-
 data `★ : ★ where
   `⊤   : `★
   `X   : `★
@@ -211,10 +176,10 @@ module ℤq-count
   _≈ᴬ_ : ∀ {A R} (f g : ↺ R A) → Set _
   _≈ᴬ_ {A} f g = ∀ (Adv : A → Bit) → ⟪ Adv · f ⟫ ≈↺ ⟪ Adv · g ⟫
 
-  lem : ∀ x → ⟨ x ⊞⟩ (⁇ `ℤq) ≈ᴬ ⁇ _ 
+  lem : ∀ x → ⟨ x ⊞⟩ (⁇ `ℤq) ≈ᴬ ⁇ _
   lem x Adv = sumℤq-⊞-lem x (Bool.toℕ ∘ Adv)
 
-  -- ∀ (A : ℤq → Bit) → # (A ⁇) 
+  -- ∀ (A : ℤq → Bit) → # (A ⁇)
 
 open Fin.Modulo renaming (sucmod to [suc])
 
