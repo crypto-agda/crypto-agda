@@ -221,9 +221,9 @@ module DLog (ℤq  : ★)
             -- (∙-assoc : ∀ α β γ → α ∙ (β ∙ γ) ≡ (α ∙ β) ∙ γ)
             (dist-^-⊞ : ∀ α x y → α ^ (x ⊞ y) ≡ (α ^ x) ∙ (α ^ y))
             (_==_ : G → G → Bool)
-            (==-refl  : ∀ {α} → (α == α) ≡ true)
-            (==-cong  : ∀ {α β b} (f : G → G) → α == β ≡ b → f α == f β ≡ b)
-            (==-true  : ∀ {α β} → α == β ≡ true → α ≡ β)
+            (==-refl    : ∀ {α} → (α == α) ≡ true)
+            (==-cong-∙  : ∀ {α β b} γ → α == β ≡ b → (γ ∙ α) == (γ ∙ β) ≡ b)
+            (==-true    : ∀ {α β} → α == β ≡ true → α ≡ β)
             (sumℤq      : Sum ℤq)
             (μℤq        : SumProp sumℤq)
             (Rₚ-xtra    : ★) -- extra prover/adversary randomness
@@ -259,7 +259,7 @@ module DLog (ℤq  : ★)
 
    check-∙' : ∀ p s π b → check p s ≡ b → check (π ∙P p) (π ∙S s) ≡ b
    check-∙' p s π true  check-p-s rewrite dist-^-⊞ g π s | ==-true check-p-s = ==-refl
-   check-∙' p s π false check-p-s rewrite dist-^-⊞ g π s = ==-cong (_∙_ (g^ π)) check-p-s
+   check-∙' p s π false check-p-s rewrite dist-^-⊞ g π s = ==-cong-∙ (g^ π) check-p-s
 
    check-∙ : ∀ p s π → check (π ∙P p) (π ∙S s) ≡ check p s
    check-∙ p s π = check-∙' p s π (check p s) refl
