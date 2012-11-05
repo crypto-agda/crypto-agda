@@ -14,6 +14,7 @@ open import Algebra.FunctionProperties
 open import Relation.Binary.PropositionalEquality as ≡
 import cont as cont
 open cont using (Cont; ContA)
+open import sum
 
 module elgamal where
 
@@ -23,12 +24,6 @@ private
 
     ★ : ★₁
     ★ = Set
-
-[0→_,1→_] : ∀ {a} {A : Set a} → A → A → Bit → A
-[0→ e₀ ,1→ e₁ ] b = if b then e₁ else e₀
-
-case_0→_1→_ : ∀ {a} {A : Set a} → Bit → A → A → A
-case b 0→ e₀ 1→ e₁ = if b then e₁ else e₀
 
 data `★ : ★ where
   `⊤   : `★
@@ -53,6 +48,11 @@ module Univ (X : ★) where
 
     Det : ★ → ★
     Det = ↺ `⊤
+
+    μU : SumProp X → ∀ u → SumProp (El u)
+    μU μX `⊤         = μ⊤
+    μU μX `X         = μX
+    μU μX (u₀ `× u₁) = μU μX u₀ ×μ μU μX u₁
 
 module EntropySmoothing
   (M    : ★)        -- Message
@@ -110,30 +110,19 @@ module EntropySmoothingWithKey
 module ℤq-count
   (ℤq : ★)
   (_⊞_ : ℤq → ℤq → ℤq)
-  (sumℤq : Sum.Sum ℤq)
-  (sumℤq-ext : Sum.SumExt sumℤq)
-  (sumℤq-⊞-lem : ∀ x f → sumℤq (f ∘ _⊞_ x) ≡ sumℤq f)
+  (μℤq : SumProp ℤq)
+  (sumℤq-⊞-lem : ∀ x f → sum μℤq (f ∘ _⊞_ x) ≡ sum μℤq f)
   where
 
-  open Sum
+  -- open Sum
   open Univ ℤq public
   open `★ public renaming (`X to `ℤq)
 
-  sum : ∀ u → Sum (El u)
-  sum `⊤         = sum⊤
-  sum `X         = sumℤq
-  sum (u₀ `× u₁) = sumProd (sum u₀) (sum u₁)
-
-  sum-ext : ∀ u → SumExt (sum u)
-  sum-ext `⊤         = sum⊤-ext
-  sum-ext `X         = sumℤq-ext
-  sum-ext (u₀ `× u₁) = sumProd-ext (sum-ext u₀) (sum-ext u₁)
-
   #_ : ∀ {u} → ↺ u Bit → ℕ
-  #_ {u} f = sum u (Bool.toℕ ∘ run↺ f)
+  #_ {u} f = sum (μU μℤq u) (Bool.toℕ ∘ run↺ f)
 
   #q_ : Count ℤq
-  #q_ = sumToCount sumℤq
+  #q_ = count μℤq
 
   ⁇ : ∀ R → ↺ R (El R)
   run↺ (⁇ _) = id
@@ -198,7 +187,7 @@ module ℤq-implem (q-2 : ℕ) where
   [1] = suc zero
 -}
 module ℤq-implem (q : ℕ) ([0]' [1]' : Fin q) where
-  open Sum
+  -- open Sum
   ℤq : ★
   ℤq = Fin q
 
@@ -233,13 +222,18 @@ module ℤq-implem (q : ℕ) ([0]' [1]' : Fin q) where
   _[^]_ : ℤq → ℤq → ℤq
   m [^] n = m [^]ℕ (Fin.toℕ n)
 
+  μℤq : SumProp ℤq
+  μℤq = μFin q
+
   allℤq : Vec ℤq q
   allℤq = allFin q
 
+  {-
   sumℤq : Sum ℤq
   sumℤq f = Vec.sum (vmap f allℤq)
+  -}
 
-  sumℤq-[suc]-lem : ∀ f → sumℤq (f ∘ [suc]) ≡ sumℤq f
+  sumℤq-[suc]-lem : ∀ f → sum μℤq (f ∘ [suc]) ≡ sum μℤq f
   sumℤq-[suc]-lem f rewrite ≡.sym (Vec.sum-map-rot₁ f allℤq)
                           | Vec.map-∘ f [suc] allℤq
                           | rot₁-map-sucmod q
@@ -247,21 +241,15 @@ module ℤq-implem (q : ℕ) ([0]' [1]' : Fin q) where
 
   --  comm-[suc]-ℕ⊞ : ∀ m n → [suc] (m ℕ⊞ n) ≡ m ℕ⊞ ([suc] n)
 
-  sumℤq-ℕ⊞-lem : ∀ m f → sumℤq (f ∘ _ℕ⊞_ m) ≡ sumℤq f
+  sumℤq-ℕ⊞-lem : ∀ m f → sum μℤq (f ∘ _ℕ⊞_ m) ≡ sum μℤq f
   sumℤq-ℕ⊞-lem zero f = refl
   sumℤq-ℕ⊞-lem (suc m) f rewrite sumℤq-[suc]-lem (f ∘ _ℕ⊞_ m)
                                | sumℤq-ℕ⊞-lem m f = refl
 
-  sumℤq-⊞-lem : ∀ m f → sumℤq (f ∘ _⊞_ m) ≡ sumℤq f
+  sumℤq-⊞-lem : ∀ m f → sum μℤq (f ∘ _⊞_ m) ≡ sum μℤq f
   sumℤq-⊞-lem = sumℤq-ℕ⊞-lem ∘ Fin.toℕ
 
-  vmap-ext : ∀ {A B : ★} {f g : A → B} {n} → f ≗ g → vmap f ≗ vmap {n = n} g
-  vmap-ext f≗g [] = refl
-  vmap-ext f≗g (x ∷ xs) rewrite f≗g x | vmap-ext f≗g xs = refl
-
-  sumℤq-ext : SumExt sumℤq
-  sumℤq-ext f≗g rewrite vmap-ext f≗g allℤq = refl
-
+  {-
 module G-implem (p q : ℕ) (g' : Fin p) (0[p] 1[p] : Fin p) (0[q] 1[q] : Fin q) where
   open ℤq-implem q 0[q] 1[q] public
   open ℤq-implem p 0[p] 1[p] public using () renaming (ℤq to G; _⊠_ to _∙_; _[^]ℕ_ to _^[p]_)
@@ -283,9 +271,8 @@ module G-implem (p q : ℕ) (g' : Fin p) (0[p] 1[p] : Fin p) (0[q] 1[q] : Fin q)
 module G-count
   (ℤq : ★)
   (_⊞_ : ℤq → ℤq → ℤq)
-  (sumℤq : Sum.Sum ℤq)
-  (sumℤq-ext : Sum.SumExt sumℤq)
-  (sumℤq-⊞-lem : ∀ x f → sumℤq (f ∘ _⊞_ x) ≡ sumℤq f)
+  (μℤq : SumProp ℤq)
+  (sumℤq-⊞-lem : ∀ x f → sum μℤq (f ∘ _⊞_ x) ≡ sum μℤq f)
   (G : ★)
   (g : G)
   (_^_ : G → ℤq → G)
@@ -295,8 +282,7 @@ module G-count
   g^_ : ℤq → G
   g^ n = g ^ n
 
-  open Sum
-  open ℤq-count ℤq _⊞_ sumℤq sumℤq-ext sumℤq-⊞-lem
+  open ℤq-count ℤq _⊞_ μℤq sumℤq-⊞-lem
 
   ⁇G : ↺ `ℤq G
   run↺ ⁇G x = g^ x
@@ -346,7 +332,19 @@ module El-Gamal-Generic
   (_^_ : G → ℤq → G)
   (Message : ★)
   (_∙_ : G → Message → Message)
-  (_∙⁻¹_ : G → Message → Message)
+
+  -- Required for decryption
+  (_/_ : Message → G → Message)
+
+  -- Required for the correctness proof
+  (/-∙ : ∀ x y → (x ∙ y) / x ≡ y)
+  (comm-^   : ∀ α x y → (α ^ x)^ y ≡ (α ^ y)^ x)
+
+  -- Required for the security proof
+  (dist-^-⊠ : ∀ α x y → α ^ (x ⊠ y) ≡ (α ^ x) ^ y)
+  (μℤq : SumProp ℤq)
+  (Rₐ : ★)
+  (μRₐ : SumProp Rₐ)
   where
 
     g^_ : ℤq → G
@@ -379,36 +377,31 @@ module El-Gamal-Generic
     -- Enc↺ gˣ m = mk (Enc gˣ m)
 
     Dec : SecKey → CipherText → Message
-    Dec x (gʸ , ζ) = (gʸ ^ x) ∙⁻¹ ζ
+    Dec x (gʸ , ζ) = ζ / (gʸ ^ x)
 
     EncAdv : ★ → ★
-    EncAdv R = (R → PubKey → Bit → M) × (R → PubKey → C → Bit)
+    EncAdv Rₐ = (Rₐ → PubKey → Bit → M)
+              × (Rₐ → PubKey → C → Bit)
 
-    SS⅁ : ∀ {R _I : ★} → EncAdv R → Bit → (R × ℤq × ℤq × _I) → Bit
-    SS⅁ (m , D) b (r , x , y , z) =
+    SS⅁ : ∀ {Rₐ _I : ★} → EncAdv Rₐ → Bit → (Rₐ × ℤq × ℤq × _I) → Bit
+    SS⅁ (m , D) b (rₐ , x , y , z) =
       let pk = proj₁ (KeyGen x) in
-      D r pk (Enc pk (m r pk b) y)
+      D rₐ pk (Enc pk (m rₐ pk b) y)
 
-    Game : (i : Bit) → ∀ {R} → EncAdv R → (Bit × R × ℤq × ℤq × ℤq) → Bit
-    Game i (m , D) (b , r , x , y , z) =
-      let gˣ = g^ x
-          gʸ = g^ y
-          δ  = gˣ ^ case i 0→ y 1→ z
-          ζ  = δ ∙ m r gˣ b
-      in b ==ᵇ D r gˣ (gʸ , ζ)
+      -- Unused
+    Game : (i : Bit) → ∀ {Rₐ} → EncAdv Rₐ → (Bit × Rₐ × ℤq × ℤq × ℤq) → Bit
+    Game i (m , D) (b , rₐ , x , y , z) = b ==ᵇ D rₐ gˣ (gʸ , ζ)
+      where gˣ = g^ x
+            gʸ = g^ y
+            δ  = gˣ ^ case i 0→ y 1→ z
+            ζ  = δ ∙ m rₐ gˣ b
 
     {-
-    Game-0b≡Game0 : ∀ {R} → Game 0b ≡ Game0 {R}
+    Game-0b≡Game0 : ∀ {Rₐ} → Game 0b ≡ Game0 {Rₐ}
     Game-0b≡Game0 = refl
       -}
 
     open DDH ℤq _⊠_ G g^_ public
-
-    -- Game0 ≈ Game 0b
-    -- Game1 = Game 1b
-
-    -- Game0 ≤ ε
-    -- Game1 ≡ 0
 
     OTP⅁ : ∀ {R : ★} → (R → G → Message) → (R → G → G → Message → Bit)
                      → (R × ℤq × ℤq × ℤq) → Bit
@@ -417,8 +410,100 @@ module El-Gamal-Generic
             gʸ = g^ y
             gᶻ = g^ z
 
-    TrA : ∀ {R} → Bit → EncAdv R → DDHAdv R
-    TrA b (m , D) r gˣ gʸ gˣʸ = D r gˣ (gʸ , gˣʸ ∙ m r gˣ b)
+    TrA : ∀ {Rₐ} → Bit → EncAdv Rₐ → DDHAdv Rₐ
+    TrA b (m , D) rₐ gˣ gʸ gˣʸ = D rₐ gˣ (gʸ , gˣʸ ∙ m rₐ gˣ b)
+
+    projM : ∀ {Rₐ} → EncAdv Rₐ → Bit → Rₐ → G → Message
+    projM (m , _) b rₐ gˣ = m rₐ gˣ b
+
+    projD : ∀ {Rₐ} → EncAdv Rₐ → Rₐ → G → G → Message → Bit
+    projD (_ , D) rₐ gˣ gʸ gᶻ∙M = D rₐ gˣ (gʸ , gᶻ∙M)
+
+    like-SS⅁ : ∀ {Rₐ _I : ★} → EncAdv Rₐ → Bit → (Rₐ × ℤq × ℤq × _I) → Bit
+    like-SS⅁ (m , D) b (rₐ , x , y , _z) =
+      D rₐ gˣ (gʸ , (gˣ ^ y) ∙ m rₐ gˣ b)
+      where gˣ = g^ x
+            gʸ = g^ y
+
+    SS⅁≡like-SS⅁ : ∀ {R _I} → SS⅁ {R} {_I} ≡ like-SS⅁
+    SS⅁≡like-SS⅁ = refl
+
+    -- open Sum
+
+    R = Rₐ × ℤq × ℤq × ℤq
+    μR : SumProp R
+    μR = μRₐ ×μ μℤq ×μ μℤq ×μ μℤq
+
+    #R_ : Count R
+    #R_ = count μR
+
+    #q_ : Count ℤq
+    #q_ = count μℤq
+
+    _≈q_ : (f g : ℤq → Bit) → ★
+    f ≈q g = #q f ≡ #q g
+
+    _≈R_ : (f g : R → Bit) → ★
+    f ≈R g = #R f ≡ #R g
+
+    functional-correctness : ∀ x y m → Dec x (Enc (g^ x) m y) ≡ m
+    functional-correctness x y m rewrite comm-^ g x y | /-∙ (g^ y ^ x) m = refl
+
+    module Proof
+        (ddh-hyp : (A : DDHAdv Rₐ) → DDH⅁ A 0b ≈R DDH⅁ A 1b)
+        (otp-lem : ∀ (A : Message → Bit) m₀ m₁ → (λ x → A (g^ x ∙ m₀)) ≈q (λ x → A (g^ x ∙ m₁)))
+        (A : EncAdv Rₐ) (b : Bit)
+      where
+
+        OTP⅁-lem : ∀ D M₀ M₁ → OTP⅁ M₀ D ≈R OTP⅁ M₁ D
+        OTP⅁-lem D M₀ M₁ = sum-ext μRₐ (λ r →
+                             sum-ext μℤq (λ x →
+                               sum-ext μℤq (λ y →
+                                 pf r x y)))
+          where
+          f0 = λ M r x y z → OTP⅁ M D (r , x , y , z)
+          f1 = λ M r x y → sum μℤq (Bool.toℕ ∘ f0 M r x y)
+          f2 = λ M r x → sum μℤq (f1 M r x)
+          f3 = λ M r → sum μℤq (f2 M r)
+          pf : ∀ r x y → f1 M₀ r x y ≡ f1 M₁ r x y
+          pf r x y = pf'
+            where gˣ = g^ x
+                  gʸ = g^ y
+                  m₀ = M₀ r gˣ
+                  m₁ = M₁ r gˣ
+                  f5 = λ M z → D r gˣ gʸ (g^ z ∙ M)
+                  pf' : f5 m₀ ≈q f5 m₁
+                  pf' rewrite otp-lem (D r gˣ gʸ) m₀ m₁ = refl
+
+        Aᵇ = TrA b A
+        A¬ᵇ = TrA (not b) A
+
+        pf0,5 : SS⅁ A b ≗ DDH⅁ Aᵇ 0b
+        pf0,5 (r , x , y , z) rewrite dist-^-⊠ g x y = refl
+
+        pf1 : SS⅁ A b ≈R DDH⅁ Aᵇ 0b
+        pf1 = sum-ext μR (cong Bool.toℕ ∘ pf0,5)
+
+        pf2 : DDH⅁ Aᵇ 0b ≈R DDH⅁ Aᵇ 1b
+        pf2 = ddh-hyp Aᵇ
+
+        pf2,5 : DDH⅁ Aᵇ 1b ≡ OTP⅁ (projM A b) (projD A)
+        pf2,5 = refl
+
+        pf3 : DDH⅁ Aᵇ 1b ≈R DDH⅁ A¬ᵇ 1b
+        pf3 = OTP⅁-lem (projD A) (projM A b) (projM A (not b))
+
+        pf4 : DDH⅁ A¬ᵇ 1b ≈R DDH⅁ A¬ᵇ 0b
+        pf4 = ≡.sym (ddh-hyp A¬ᵇ)
+
+        pf4,5 : SS⅁ A (not b) ≗ DDH⅁ A¬ᵇ 0b
+        pf4,5 (r , x , y , z) rewrite dist-^-⊠ g x y = refl
+
+        pf5 : SS⅁ A (not b) ≈R DDH⅁ A¬ᵇ 0b
+        pf5 = sum-ext μR (cong Bool.toℕ ∘ pf4,5)
+
+        final : SS⅁ A b ≈R SS⅁ A (not b)
+        final rewrite pf1 | pf2 | pf3 | pf4 | pf5 = refl
 
 module El-Gamal-Base
     (ℤq : ★)
@@ -426,115 +511,37 @@ module El-Gamal-Base
     (G : ★)
     (g : G)
     (_^_ : G → ℤq → G)
-    (_⁻¹ : G → G)
     (_∙_ : G → G → G)
+
+    -- Required for decryption
+    (_/_ : G → G → G)
+
+    -- Required for the correctness proof
+    (/-∙ : ∀ x y → (x ∙ y) / x ≡ y)
+    (comm-^   : ∀ α x y → (α ^ x)^ y ≡ (α ^ y)^ x)
+    
+    {-
+    (_⁻¹ : G → G)
+    (⁻¹-inverse : ∀ x → x ⁻¹ ∙ x ≡ 1G)
+    -}
+
+    -- Required for the proof
+    (dist-^-⊠ : ∀ α x y → α ^ (x ⊠ y) ≡ (α ^ x) ^ y)
+    (μℤq : SumProp ℤq)
+    (Rₐ : ★)
+    (μRₐ : SumProp Rₐ)
     where
 
-    _/_ : G → G → G
-    x / y = x ∙ (y ⁻¹)
-    open El-Gamal-Generic ℤq _⊠_ G g _^_ G _∙_ (flip _/_) public
+    open El-Gamal-Generic ℤq _⊠_ G g _^_ G _∙_
+           _/_ /-∙ comm-^
+           dist-^-⊠ μℤq Rₐ μRₐ public
 
-    like-SS⅁ : ∀ {R _I : ★} → EncAdv R → Bit → (R × ℤq × ℤq × _I) → Bit
-    like-SS⅁ (m , D) b (r , x , y , _z) =
-      D r gˣ (gʸ , (gˣ ^ y) ∙ m r gˣ b)
-      where gˣ = g^ x
-            gʸ = g^ y
+    module OTP⅁-LEM
+            (otp-lem1 : ∀ (A : G → Bit) m → (λ x → A (g^ x ∙ m)) ≈q (λ x → A (g^ x)))
+      where
 
-    SS⅁≡like-SS⅁ : ∀ {R _I} → SS⅁ {R} {_I} ≡ like-SS⅁
-    SS⅁≡like-SS⅁ = refl
-
-    open Sum
-    module WithSumRAndℤqProps
-        (Rₐ : ★)
-        (sumRₐ : Sum Rₐ)
-        (sumRₐ-ext : SumExt sumRₐ)
-        (dist-^-⊠ : ∀ α x y → α ^ (x ⊠ y) ≡ (α ^ x) ^ y)
-        (sumℤq : Sum ℤq)
-        (sumℤq-ext : SumExt sumℤq)
-        where
-
-        module SumR where
-          R = Rₐ × ℤq × ℤq × ℤq
-          sumR : Sum R
-          sumR = sumProd sumRₐ (sumProd sumℤq (sumProd sumℤq sumℤq))
-          #R_ : Count R
-          #R_ = sumToCount sumR
-          sumR-ext : SumExt sumR
-          sumR-ext = sumProd-ext sumRₐ-ext (sumProd-ext sumℤq-ext (sumProd-ext sumℤq-ext sumℤq-ext))
-        private
-            #q_ : Count ℤq
-            #q_ = sumToCount sumℤq
-
-        open SumR
-
-        _≈q_ : (f g : ℤq → Bit) → ★
-        f ≈q g = #q f ≡ #q g
-
-        _≈R_ : (f g : R → Bit) → ★
-        f ≈R g = #R f ≡ #R g
-
-        module EvenMoreProof
-            (ddh-hyp : (A : DDHAdv Rₐ) → DDH⅁ A 0b ≈R DDH⅁ A 1b)
-            (otp-lem : ∀ (A : G → Bit) m → (λ x → A (g^ x ∙ m)) ≈q (λ x → A (g^ x)))
-            where
-
-                otp-lem' : ∀ D M₀ M₁ → OTP⅁ M₀ D ≈R OTP⅁ M₁ D
-                otp-lem' D M₀ M₁ = sumRₐ-ext (λ r →
-                                     sumℤq-ext (λ x →
-                                       sumℤq-ext (λ y →
-                                         pf r x y)))
-                  where
-                  f0 = λ M r x y z → OTP⅁ M D (r , x , y , z)
-                  f1 = λ M r x y → sumℤq (Bool.toℕ ∘ f0 M r x y)
-                  f2 = λ M r x → sumℤq (f1 M r x)
-                  f3 = λ M r → sumℤq (f2 M r)
-                  pf : ∀ r x y → f1 M₀ r x y ≡ f1 M₁ r x y
-                  pf r x y = pf'
-                    where gˣ = g^ x
-                          gʸ = g^ y
-                          m₀ = M₀ r gˣ
-                          m₁ = M₁ r gˣ
-                          f5 = λ M z → D r gˣ gʸ (g^ z ∙ M)
-                          pf' : f5 m₀ ≈q f5 m₁
-                          pf' rewrite otp-lem (D r gˣ gʸ) m₀
-                                    | otp-lem (D r gˣ gʸ) m₁ = refl
-
-                projM : EncAdv Rₐ → Bit → Rₐ → G → G
-                projM (m , _) b r gˣ = m r gˣ b
-
-                projD : EncAdv Rₐ → Rₐ → G → G → G → Bit
-                projD (_ , D) r gˣ gʸ gᶻ∙M = D r gˣ (gʸ , gᶻ∙M)
-
-                module WithAdversary (A : EncAdv Rₐ) b where
-                    Aᵇ = TrA b A
-                    A¬ᵇ = TrA (not b) A
-
-                    pf0,5 : SS⅁ A b ≗ DDH⅁ Aᵇ 0b
-                    pf0,5 (r , x , y , z) rewrite dist-^-⊠ g x y = refl
-
-                    pf1 : SS⅁ A b ≈R DDH⅁ Aᵇ 0b
-                    pf1 = sumR-ext (cong Bool.toℕ ∘ pf0,5)
-
-                    pf2 : DDH⅁ Aᵇ 0b ≈R DDH⅁ Aᵇ 1b
-                    pf2 = ddh-hyp Aᵇ
-
-                    pf2,5 : DDH⅁ Aᵇ 1b ≡ OTP⅁ (projM A b) (projD A)
-                    pf2,5 = refl
-
-                    pf3 : DDH⅁ Aᵇ 1b ≈R DDH⅁ A¬ᵇ 1b
-                    pf3 = otp-lem' (projD A) (projM A b) (projM A (not b))
-
-                    pf4 : DDH⅁ A¬ᵇ 1b ≈R DDH⅁ A¬ᵇ 0b
-                    pf4 = ≡.sym (ddh-hyp A¬ᵇ)
-
-                    pf4,5 : SS⅁ A (not b) ≗ DDH⅁ A¬ᵇ 0b
-                    pf4,5 (r , x , y , z) rewrite dist-^-⊠ g x y = refl
-
-                    pf5 : SS⅁ A (not b) ≈R DDH⅁ A¬ᵇ 0b
-                    pf5 = sumR-ext (cong Bool.toℕ ∘ pf4,5)
-
-                    final : SS⅁ A b ≈R SS⅁ A (not b)
-                    final rewrite pf1 | pf2 | pf3 | pf4 | pf5 = refl
+        otp-lem : ∀ (A : G → Bit) m₀ m₁ → (λ x → A (g^ x ∙ m₀)) ≈q (λ x → A (g^ x ∙ m₁))
+        otp-lem A m₀ m₁ rewrite otp-lem1 A m₀ | otp-lem1 A m₁ = refl
 
 module El-Gamal-Hashed
     (ℤq : ★)
@@ -544,14 +551,38 @@ module El-Gamal-Hashed
     (_^_ : G → ℤq → G)
     -- (HKey : ★)
     (|M| : ℕ)
-    (ℋ : {-HKey →-} G → Bits |M|) where
+    (ℋ : {-HKey →-} G → Bits |M|)
+
+    -- (/-∙ : ∀ x y → (x ∙ y) / x ≡ y)
+    (comm-^   : ∀ α x y → (α ^ x)^ y ≡ (α ^ y)^ x)
+
+    -- Required for the proof
+    (dist-^-⊠ : ∀ α x y → α ^ (x ⊠ y) ≡ (α ^ x) ^ y)
+    (μℤq : SumProp ℤq)
+    (Rₐ : ★)
+    (μRₐ : SumProp Rₐ)
+    where
 
     Message = Bits |M|
 
     ℋ⟨_⟩⊕_ : G → Message → Message
     ℋ⟨ δ ⟩⊕ m = ℋ δ ⊕ m
 
-    open El-Gamal-Generic ℤq _⊠_ G g _^_ Message ℋ⟨_⟩⊕_
+    _/_ : Message → G → Message
+    _/_ = {!!}
+
+    {-
+    /-∙ : ∀ x y → (x ∙ y) / x ≡ y
+    /-∙ x y = ?
+
+    open El-Gamal-Generic ℤq _⊠_ G g _^_ Message ℋ⟨_⟩⊕_ _/_ {!!} {!!}
+           dist-^-⊠ sumℤq sumℤq-ext Rₐ sumRₐ sumRₐ-ext public
+           -}
+
+           {-
+    OTP⅁-lem : ∀ D M₀ M₁ → OTP⅁ M₀ D ≈R OTP⅁ M₁ D
+    OTP⅁-lem = ?
+    -}
 
 module ⟨ℤp⟩★ p-3 {- p is prime -} (`Rₐ : `★) where
   p : ℕ
@@ -567,26 +598,25 @@ module ⟨ℤp⟩★ p-3 {- p is prime -} (`Rₐ : `★) where
     _⁻¹ : G → G
     dist-^-⊠ : ∀ α x y → α ^ (x ⊠ y) ≡ (α ^ x) ^ y
 
-  module EB = El-Gamal-Base _ _⊠_ G g _^_ _⁻¹ _∙_
-  open EB hiding (g^_)
-
-  open ℤq-count ℤq _⊞_ sumℤq sumℤq-ext sumℤq-⊞-lem
+  open ℤq-count ℤq _⊞_ μℤq sumℤq-⊞-lem
 
   Rₐ = El `Rₐ
   sumRₐ = sum `Rₐ
   sumRₐ-ext = sum-ext `Rₐ
 
-  open WithSumRAndℤqProps Rₐ sumRₐ sumRₐ-ext dist-^-⊠ sumℤq sumℤq-ext
+  module EB = El-Gamal-Base _ _⊠_ G g _^_ _∙_ _⁻¹ dist-^-⊠ sumℤq sumℤq-ext Rₐ sumRₐ sumRₐ-ext
+  open EB hiding (g^_)
 
-  open SumR
   postulate
     ddh-hyp : (A : DDHAdv Rₐ) → DDH⅁ A 0b ≈R DDH⅁ A 1b
     otp-lem : ∀ (A : G → Bit) m → (λ x → A (g^ x ∙ m)) ≈q (λ x → A (g^ x))
 
-  open EvenMoreProof ddh-hyp otp-lem
+  open OTP⅁-LEM otp-lem
 
+  {-
   final : ∀ A → SS⅁ A 0b ≈R SS⅁ A 1b
-  final A = WithAdversary.final A 0b
+  final A = Proof.final ddh-hyp OTP⅁-lem A 0b
+  -}
 
 module ⟨ℤ11⟩★ = ⟨ℤp⟩★ (11 ∸ 3)
                    `X -- the amount of adversary randomness
