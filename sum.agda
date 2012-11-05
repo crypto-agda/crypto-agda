@@ -31,20 +31,18 @@ CountExt countᴬ = ∀ {f g} → f ≗ g → countᴬ f ≡ countᴬ g
 SumLin : ∀ {A} → Sum A → ★
 SumLin sumᴬ = ∀ f k → sumᴬ (λ x → k * f x) ≡ k * sumᴬ f
 
-record SumProp {A} (sumᴬ : Sum A) : ★ where
+record SumProp A : ★ where
   constructor mk
   field
-    sum-ext : SumExt sumᴬ
-    sum-lin : SumLin sumᴬ
-
-  sum : Sum A
-  sum = sumᴬ
+    sum : Sum A
+    sum-ext : SumExt sum
+    sum-lin : SumLin sum
 
   Card : ℕ
-  Card = sumᴬ (const 1)
+  Card = sum (const 1)
 
   count : Count A
-  count f = sumᴬ (Bool.toℕ ∘ f)
+  count f = sum (Bool.toℕ ∘ f)
 
   count-ext : CountExt count
   count-ext f≗g = sum-ext (cong Bool.toℕ ∘ f≗g)
@@ -57,8 +55,8 @@ sum₀ ≈Sum sum₁ = ∀ f → sum₀ f ≡ sum₁ f
 sum⊤ : Sum ⊤
 sum⊤ f = f _
 
-μ⊤ : SumProp sum⊤
-μ⊤ = mk sum⊤-ext sum⊤-lin
+μ⊤ : SumProp ⊤
+μ⊤ = mk sum⊤ sum⊤-ext sum⊤-lin
   where
     sum⊤-ext : SumExt sum⊤
     sum⊤-ext f≗g = f≗g _
@@ -69,8 +67,8 @@ sum⊤ f = f _
 sumBit : Sum Bit
 sumBit f = f 0b + f 1b
 
-μBit : SumProp sumBit
-μBit = mk sumBit-ext sumBit-lin
+μBit : SumProp Bit
+μBit = mk sumBit sumBit-ext sumBit-lin
   where
     sumBit-ext : SumExt sumBit
     sumBit-ext f≗g rewrite f≗g 0b | f≗g 1b = refl
@@ -83,6 +81,8 @@ sumBit f = f 0b + f 1b
             | ℕ°.distribʳ k (f 0b) (f 1b)
             = refl
 
+infixr 4 _×Sum_
+
 -- liftM2 _,_ in the continuation monad
 _×Sum_ : ∀ {A B} → Sum A → Sum B → Sum (A × B)
 (sumᴬ ×Sum sumᴮ) f = sumᴬ (λ x₀ →
@@ -93,12 +93,13 @@ _×Sum-ext_ : ∀ {A B} {sumᴬ : Sum A} {sumᴮ : Sum B} →
               SumExt sumᴬ → SumExt sumᴮ → SumExt (sumᴬ ×Sum sumᴮ)
 (sumA-ext ×Sum-ext sumB-ext) f≗g = sumA-ext (λ x → sumB-ext (λ y → f≗g (x , y)))
 
-_×μ_ : ∀ {A B} {sumᴬ : Sum A} {sumᴮ : Sum B}
-              → SumProp sumᴬ
-              → SumProp sumᴮ
-              → SumProp (sumᴬ ×Sum sumᴮ)
+infixr 4 _×μ_
+
+_×μ_ : ∀ {A B} → SumProp A
+               → SumProp B
+               → SumProp (A × B)
 (μA ×μ μB)
-   = mk (sum-ext μA ×Sum-ext sum-ext μB) lin
+   = mk (sum μA ×Sum sum μB) (sum-ext μA ×Sum-ext sum-ext μB) lin
    where
      lin : SumLin (sum μA ×Sum sum μB)
      lin f k rewrite sum-ext μA (λ x → sum-lin μB (λ y → f (x , y)) k) = sum-lin μA (λ x → sum μB (λ y → f (x , y))) k
@@ -106,41 +107,68 @@ _×μ_ : ∀ {A B} {sumᴬ : Sum A} {sumᴮ : Sum B}
 swapS : ∀ {A B} → Sum (A × B) → Sum (B × A)
 swapS sumA×B f = sumA×B (f ∘ swap)
 
-sum-const : ∀ {A} {sumᴬ : Sum A} (μA : SumProp sumᴬ) → ∀ k → sumᴬ (const k) ≡ Card μA * k
+{-
+×Sum-swap : ∀ {A B} (sumᴬ : Sum A) (sumᴮ : Sum B) →
+              (sumᴬ ×Sum sumᴮ) ≈Sum swapS (sumᴮ ×Sum sumᴬ)
+×Sum-swap sumᴬ sumᴮ f = {!!}
+
+-- wrong so far: ×Sum-swap (const 42) (const 1)
+-}
+
+-- sum (λ x → f x + g x) ≡ sum f + sum g
+
+sum-const : ∀ {A} (μA : SumProp A) → ∀ k → sum μA (const k) ≡ Card μA * k 
 sum-const μA k
   rewrite ℕ°.*-comm (Card μA) k
         | sym (sum-lin μA (const 1) k)
         | proj₂ ℕ°.*-identity k = refl
 
-_×Sum-proj₁_ : ∀ {A B} {sumᴬ : Sum A} {sumᴮ : Sum B}
-               (μA : SumProp sumᴬ)
-               (μB : SumProp sumᴮ)
-               f →
-               (sumᴬ ×Sum sumᴮ) (f ∘ proj₁) ≡ Card μB * sumᴬ f
-_×Sum-proj₁_ {sumᴮ = sumᴮ} (mk sumᴬ-ext sumᴬ-lin) μB f
-  rewrite sumᴬ-ext (sum-const μB ∘ f)
-        = sumᴬ-lin f (Card μB)
+infixr 4 _×Sum-proj₁_ _×Sum-proj₁'_ _×Sum-proj₂_ _×Sum-proj₂'_
 
-_×Sum-proj₂_ : ∀ {A B} {sumᴬ : Sum A} {sumᴮ : Sum B}
-               (μA : SumProp sumᴬ)
-               (μB : SumProp sumᴮ)
-               f →
-               (sumᴬ ×Sum sumᴮ) (f ∘ proj₂) ≡ Card μA * sumᴮ f
+_×Sum-proj₁_ : ∀ {A B}
+                 (μA : SumProp A)
+                 (μB : SumProp B)
+                 f →
+                 sum (μA ×μ μB) (f ∘ proj₁) ≡ Card μB * sum μA f
+(μA ×Sum-proj₁ μB) f
+  rewrite sum-ext μA (sum-const μB ∘ f)
+        = sum-lin μA f (Card μB)
+
+_×Sum-proj₂_ : ∀ {A B}
+                 (μA : SumProp A)
+                 (μB : SumProp B)
+                 f →
+                 sum (μA ×μ μB) (f ∘ proj₂) ≡ Card μA * sum μB f
 (μA ×Sum-proj₂ μB) f = sum-const μA (sum μB f)
 
-_×Sum-proj₁'_ : ∀ {A B} {sumᴬ : Sum A} {sumᴮ : Sum B}
-                  (μA : SumProp sumᴬ) (μB : SumProp sumᴮ)
+_×Sum-proj₁'_ : ∀ {A B}
+                  (μA : SumProp A) (μB : SumProp B)
                   {f} {g} →
-                  sumᴬ f ≡ sumᴬ g →
-                  (sumᴬ ×Sum sumᴮ) (f ∘ proj₁) ≡ (sumᴬ ×Sum sumᴮ) (g ∘ proj₁)
+                  sum μA f ≡ sum μA g →
+                  sum (μA ×μ μB) (f ∘ proj₁) ≡ sum (μA ×μ μB) (g ∘ proj₁)
 (μA ×Sum-proj₁' μB) {f} {g} sumf≡sumg
   rewrite (μA ×Sum-proj₁ μB) f
         | (μA ×Sum-proj₁ μB) g
         | sumf≡sumg = refl
 
-_×Sum-proj₂'_ : ∀ {A B} {sumᴬ : Sum A} {sumᴮ : Sum B}
-                  (μA : SumProp sumᴬ) (μB : SumProp sumᴮ)
+_×Sum-proj₂'_ : ∀ {A B}
+                  (μA : SumProp A) (μB : SumProp B)
                   {f} {g} →
-                  sumᴮ f ≡ sumᴮ g →
-                  (sumᴬ ×Sum sumᴮ) (f ∘ proj₂) ≡ (sumᴬ ×Sum sumᴮ) (g ∘ proj₂)
+                  sum μB f ≡ sum μB g →
+                  sum (μA ×μ μB) (f ∘ proj₂) ≡ sum (μA ×μ μB) (g ∘ proj₂)
 (μA ×Sum-proj₂' μB) sumf≡sumg = sum-ext μA (const sumf≡sumg)
+
+open import Data.Fin hiding (_+_)
+open import Data.Vec.NP as Vec renaming (map to vmap; sum to vsum)
+
+sumFin : ∀ n → Sum (Fin n)
+sumFin n f = vsum (vmap f (allFin n))
+
+μFin : ∀ n → SumProp (Fin n)
+μFin n = mk (sumFin n) sumFin-ext sumFin-lin
+  module SumFin where
+    sumFin-ext : SumExt (sumFin n)
+    sumFin-ext f≗g rewrite map-ext f≗g (allFin n) = refl
+
+    sumFin-lin : SumLin (sumFin n)
+    sumFin-lin f x = sum-distribˡ f x (allFin n)
