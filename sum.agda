@@ -2,6 +2,7 @@ open import Function
 open import Data.Nat.NP
 open import Data.Nat.Properties
 open import Data.Unit hiding (_≤_)
+open import Data.Sum
 open import Data.Product
 open import Data.Bits
 open import Data.Bool.NP as Bool
@@ -103,6 +104,33 @@ sumBit f = f 0b + f 1b
 
     sumBit-mon : SumMon sumBit
     sumBit-mon f g f≤°g = f≤°g 0b +-mono f≤°g 1b
+
+infixr 4 _+Sum_
+
+_+Sum_ : ∀ {A B} → Sum A → Sum B → Sum (A ⊎ B)
+(sumᴬ +Sum sumᴮ) f = sumᴬ (f ∘ inj₁) + sumᴮ (f ∘ inj₂)
+
+_+μ_ : ∀ {A B} → SumProp A
+               → SumProp B
+               → SumProp (A ⊎ B)
+(μA +μ μB) = mk +-μ +μ-ext +μ-lin +μ-hom +μ-mon
+  where
+    +-μ = sum μA +Sum sum μB
+    +μ-ext : SumExt +-μ 
+    +μ-ext f≗g rewrite sum-ext μA (f≗g ∘ inj₁) | sum-ext μB (f≗g ∘ inj₂) = refl
+
+    +μ-lin : SumLin +-μ
+    +μ-lin f k rewrite sum-lin μA (f ∘ inj₁) k | sum-lin μB (f ∘ inj₂) k 
+          = sym (proj₁ ℕ°.distrib k (sum μA (f ∘ inj₁)) (sum μB (f ∘ inj₂)))
+
+    +μ-hom : SumHom +-μ
+    +μ-hom f g rewrite sum-hom μA (f ∘ inj₁) (g ∘ inj₁) | sum-hom μB (f ∘ inj₂) (g ∘ inj₂)
+          = +-interchange (sum μA (f ∘ inj₁)) (sum μA (g ∘ inj₁))
+              (sum μB (f ∘ inj₂)) (sum μB (g ∘ inj₂))
+          
+    +μ-mon : SumMon +-μ
+    +μ-mon f g f≤°g = sum-mon μA (f ∘ inj₁) (g ∘ inj₁) (f≤°g ∘ inj₁)
+               +-mono sum-mon μB (f ∘ inj₂) (g ∘ inj₂) (f≤°g ∘ inj₂)
 
 infixr 4 _×Sum_
 
