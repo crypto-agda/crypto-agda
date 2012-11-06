@@ -1,5 +1,6 @@
 module single-bit-one-time-pad where
 
+open import Type
 open import Function.NP
 open import Data.Bool.NP as Bool
 open import Data.Product renaming (map to <_×_>)
@@ -20,7 +21,7 @@ K = Bit
 M = Bit
 C = Bit
 
-record Adv (S₀ S₁ S₂ : Set) ca : Set where
+record Adv (S₀ S₁ S₂ : ★) ca : ★ where
   constructor mk
   field
     step₀ : ↺ ca S₀
@@ -28,7 +29,7 @@ record Adv (S₀ S₁ S₂ : Set) ca : Set where
     step₂ : C × S₁ → S₂
     step₃ : S₂ → Bit
 
-record Adv₁ (S₀ S₁ : Set) ca : Set where
+record Adv₁ (S₀ S₁ : ★) ca : ★ where
   constructor mk
   field
     step₀ : ↺ ca S₀
@@ -36,7 +37,7 @@ record Adv₁ (S₀ S₁ : Set) ca : Set where
     step₂ : C × S₀ → S₁
     step₃ : S₁ → Bit
 
-Adv₂ : ∀ ca → Set
+Adv₂ : ∀ ca → ★
 Adv₂ ca = ↺ ca (C → Bit)
 
 module Run⅁′ {S₀ S₁ S₂ ca} (A : Adv S₀ S₁ S₂ ca) where

@@ -1,5 +1,6 @@
 module data-universe where
 
+open import Type
 import Level as L
 import Relation.Binary.PropositionalEquality as ≡
 open ≡ using (_≡_)
@@ -28,19 +29,19 @@ record Universe {t} (T : Set t) : Set t where
   infixr 2 _`×_
   infixl 2 _`^_
 
--- In Set-U, types are simply represented by Agda types (Set).
-Set-U : Universe Set
-Set-U = mk ⊤ Bit _×_ Vec
+-- In ★-U, types are simply represented by Agda types (★ or Set).
+★-U : Universe ★
+★-U = mk ⊤ Bit _×_ Vec
 
 -- In Bits-U, a type is represented by a natural number
 -- representing the width of the type in a binary representation.
--- A natural embedding in Set is the Bits type (aka Vec Bool).
+-- A natural embedding in ★ is the Bits type (aka Vec Bool).
 Bits-U : Universe ℕ
 Bits-U = mk 0 1 _+_ (flip _*_)
 
 -- In Fin-U, a type is represented by a natural number
 -- representing the cardinality of the type.
--- A natural embedding in Set is the Fin type.
+-- A natural embedding in ★ is the Fin type.
 Fin-U : Universe ℕ
 Fin-U = mk 1 2 _*_ _^_
 
@@ -66,7 +67,7 @@ Sym-U : ∀ t → Set (L.suc t)
 Sym-U t = ∀ {T : Set t} → Universe T → T
 
 -- Abstract syntax tree from types.
-data Ty : Set where
+data Ty : ★ where
   ⊤′ Bit′ : Ty
   _×′_    : Ty → Ty → Ty
   _^′_    : Ty → ℕ → Ty
@@ -89,7 +90,7 @@ fold-U u₀ {T} uni = go u₀
         go (t ^′ n)   = go t `^ n
 
 {-
-Σ-U : ∀ {t} {T : Set t} → Universe T → (P : T → Set) → Universe (Σ T P)
+Σ-U : ∀ {t} {T : Set t} → Universe T → (P : T → ★) → Universe (Σ T P)
 Σ-U T-U P = mk (`⊤ , {!!}) {!!} {!!} {!!}
   where open Universe T-U
 -}

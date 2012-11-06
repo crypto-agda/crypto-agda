@@ -1,3 +1,4 @@
+open import Type
 open import Data.Nat.NP
 open import data-universe
 open import fun-universe
@@ -6,13 +7,13 @@ module fun-state {t} {T : Set t} (S : T) (funU : FunUniverse T) where
 
 open FunUniverse funU
 
-_→ˢ_ : T → T → Set
+_→ˢ_ : T → T → ★
 A →ˢ B = A `× S `→ B `× S
 
-_→ˢᵇ_ : ℕ → ℕ → Set
+_→ˢᵇ_ : ℕ → ℕ → ★
 i →ˢᵇ o = `Bits i →ˢ `Bits o
 
-Endoˢ : T → Set
+Endoˢ : T → ★
 Endoˢ A = A →ˢ A
 
 funUˢ : FunUniverse T

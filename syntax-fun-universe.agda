@@ -1,15 +1,16 @@
+open import Type
 open import Data.Nat
 open import Data.Bits using (Bit; Bits; RewireTbl)
 open import Data.Fin using (Fin)
 open import data-universe
 open import fun-universe
 
-module syntax-fun-universe {-t-} {T : Set {-t-}} (dataU : Universe T) where
+module syntax-fun-universe {T : ★} (dataU : Universe T) where
 
 open Universe dataU
 
 infix 0 _`→_
-data _`→_ : T → T → Set {-t-} where
+data _`→_ : T → T → ★ where
     id        : ∀ {A} → A `→ A
     _∘_       : ∀ {A B C} → (B `→ C) → (A `→ B) → (A `→ C)
 

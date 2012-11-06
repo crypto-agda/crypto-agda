@@ -1,19 +1,20 @@
 module guessing-game where
 
+open import Type
 open import Function.NP
 open import Data.Nat.NP
 open import Data.Product
 open import Data.Fin hiding ({-Ordering; compare;-} _+_)
 open import Data.Bool -- hiding (_≟_)
 
-record Beh (MyMove OpMove : Set) : Set where
+record Beh (MyMove OpMove : ★) : ★ where
   constructor _,_
   field
     myMove : MyMove
     opMove : OpMove → Beh MyMove OpMove
 
 module OrderingTags where
-  data OrderingTag : Set where
+  data OrderingTag : ★ where
     LT EQ GT : OrderingTag
 
   tag : ∀ {m n} → Ordering m n → OrderingTag
@@ -26,19 +27,19 @@ module OrderingTags where
 
 open OrderingTags
 
-data Trace : Set where
+data Trace : ★ where
   say : (lastguess : ℕ) → Trace
   ask : (guess : ℕ) (ordering : OrderingTag) → Trace → Trace
 
-data Win answer : Trace → Set where
+data Win answer : Trace → ★ where
   win  : Win answer (say answer)
   step : ∀ {guess trace} → Win answer trace → Win answer (ask guess (cmp guess answer) trace)
 
-data ChalMove : Set where
+data ChalMove : ★ where
   chalStop : ChalMove
   chalStep : OrderingTag → ChalMove
 
-data AdvMove : Set where
+data AdvMove : ★ where
   advStop : (guess : ℕ) → AdvMove
   advStep : (guess : ℕ) → AdvMove
 
@@ -46,10 +47,10 @@ advGuess : AdvMove → ℕ
 advGuess (advStop guess) = guess
 advGuess (advStep guess) = guess
 
-Chal : Set
+Chal : ★
 Chal = Beh ChalMove AdvMove
 
-Adv : Set
+Adv : ★
 Adv = Beh AdvMove ChalMove
 
 chalBeh : (answer : ℕ) → AdvMove → Chal

@@ -1,5 +1,6 @@
 module one-time-semantic-security where
 
+open import Type
 open import Data.Nat using (ℕ; _+_)
 open import Data.Product using (∃; module Σ; _×_; _,_; proj₁; proj₂)
 import Data.Vec as V
@@ -19,7 +20,7 @@ open import flipbased-implem
 -- M  is the message space (|M| is the size of messages)
 -- C  is the cipher text space
 -- Rᵉ is the randomness used by the cipher.
-record EncParams : Set where
+record EncParams : ★ where
   constructor mk
   field
     |M| |C| |R|ᵉ : ℕ
@@ -29,7 +30,6 @@ record EncParams : Set where
   Rᵉ = Bits |R|ᵉ
 
   -- The type of the encryption function
-  Enc : Set
   Enc = M → ↺ |R|ᵉ C
 
 module EncParams² (ep₀ ep₁ : EncParams) where
@@ -68,7 +68,7 @@ module AbsSemSec {t} {T : Set t}
 
   open FunUniverse funU
 
-  record SemSecAdv (ep : EncParams) |R|ᵃ : Set where
+  record SemSecAdv (ep : EncParams) |R|ᵃ : ★ where
     constructor mk
 
     open FunEncParams funU ep
@@ -109,7 +109,7 @@ module AbsSemSec {t} {T : Set t}
 
     open FunEncParams funU ep public
 
-  SemSecReduction : ∀ ep₀ ep₁ (f : Coins → Coins) → Set
+  SemSecReduction : ∀ ep₀ ep₁ (f : Coins → Coins) → ★
   SemSecReduction ep₀ ep₁ f = ∀ {c} → SemSecAdv ep₀ c → SemSecAdv ep₁ (f c)
 
 -- Here we use Agda functions for FunUniverse.
@@ -144,7 +144,7 @@ module FunSemSec (homPrgDist : HomPrgDist) where
     _⇄_ : ∀ {|R|ᵃ} (E : Enc) (A : SemSecAdv ep |R|ᵃ) b → ↺ (|R|ᵃ + |R|ᵉ) Bit
     _⇄_ = runSemSec
 
-    _≗A_ : ∀ {p} (A₁ A₂ : SemSecAdv ep p) → Set
+    _≗A_ : ∀ {p} (A₁ A₂ : SemSecAdv ep p) → ★
     A₀ ≗A A₁ = observe A₀ ≗ observe A₁
       where open FunSemSecAdv
 
@@ -156,7 +156,7 @@ module FunSemSec (homPrgDist : HomPrgDist) where
              helper₂ = ≡.cong (λ m → step₂₃ A₁ (run↺ (E (proj (proj₁ m) b)) post , proj₂ (step₀₁ A₁ pre)))
                               (helper₀ A₁)
 
-    _≗E_ : ∀ (E₀ E₁ : Enc) → Set
+    _≗E_ : ∀ (E₀ E₁ : Enc) → ★
     E₀ ≗E E₁ = ∀ m → E₀ m ≗↺ E₁ m
 
     ≗E→≗⅁? : ∀ {E₀ E₁} → E₀ ≗E E₁ → ∀ {c} (A : SemSecAdv ep c)
@@ -175,15 +175,15 @@ module FunSemSec (homPrgDist : HomPrgDist) where
     open RunSemSec ep₀ public using () renaming (_⇄_ to _⇄₀_; _≗E_ to _≗E₀_; ≗E→⇓ to ≗E→⇓₀)
     open RunSemSec ep₁ public using () renaming (_⇄_ to _⇄₁_; _≗E_ to _≗E₁_; ≗E→⇓ to ≗E→⇓₁)
 
-    Reduction : Set
+    Reduction : ★
     Reduction = SemSecReduction ep₁ ep₀ f
 
-    SemSecTr : Tr → Set
+    SemSecTr : Tr → ★
     SemSecTr tr =
       ∃ λ (red : Reduction) →
         ∀ E {c} A → (tr E ⇄₁ A) ⇓ (E ⇄₀ red {c} A)
 
-    SemSecTr⁻¹ : Tr⁻¹ → Set
+    SemSecTr⁻¹ : Tr⁻¹ → ★
     SemSecTr⁻¹ tr⁻¹ =
       ∃ λ (red : Reduction) →
         ∀ E {c} A → (E ⇄₁ A) ⇓ (tr⁻¹ E ⇄₀ red {c} A)

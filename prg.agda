@@ -2,6 +2,7 @@ module prg where
 
 open import fun-universe
 
+open import Type
 open import Function
 open import Data.Nat.NP hiding (_==_)
 open import Data.Bool.NP hiding (_==_)
@@ -18,12 +19,12 @@ open import Data.Empty
 open import Data.Vec
 open import Relation.Binary.PropositionalEquality.NP
 
-PRGFun : (k n : ℕ) → Set
+PRGFun : (k n : ℕ) → ★
 PRGFun k n = Bits k → Bits n
 
 module PRG⅁₁ {k n} (PRG : PRGFun k n) where
   -- TODO: give the adv some rand
-  Adv : Set
+  Adv : ★
   Adv = Bits n → Bit
 
   chal : Bit → Bits (n + k) → Bits n

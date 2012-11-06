@@ -10,7 +10,7 @@ open import Data.Bits
 open import Data.Bool
 open import Algebra.FunctionProperties
 
-data I : ℕ → Set where
+data I : ℕ → ★ where
   `[]  : I 1
   `op₀ : ∀ {i} (b : Bit) (is : I (1 + i)) → I i
   `op₁ : ∀ {i} (op₁ : Op₁ Bit) (is : I (1 + i)) → I (1 + i)
@@ -30,7 +30,7 @@ open import circuit
 module Ck {C} (cb : CircuitBuilder C) where
   open CircuitBuilder cb
 
-  data IC : ℕ → Set where
+  data IC : ℕ → ★ where
     `[] : IC 1
     `op : ∀ {i ki ko} (op : C ki ko) (is : IC (ko + i)) → IC (ki + i)
 

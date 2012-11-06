@@ -1,4 +1,5 @@
 {-# OPTIONS --copatterns #-}
+open import Type
 open import Function
 open import Data.Product
 open import Data.Bool.NP as Bool
@@ -17,13 +18,6 @@ open cont using (Cont; ContA)
 open import sum
 
 module elgamal where
-
-private
-    ★₁ : Set₂
-    ★₁ = Set₁
-
-    ★ : ★₁
-    ★ = Set
 
 data `★ : ★ where
   `⊤   : `★

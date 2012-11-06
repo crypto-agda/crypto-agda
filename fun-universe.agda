@@ -1,5 +1,6 @@
 module fun-universe where
 
+open import Type
 open import Data.Nat.NP using (ℕ; zero; suc; _+_; _*_; 2^_)
 import Data.Bool.NP as B
 open B using (if_then_else_; true; false)
@@ -20,15 +21,15 @@ record FunUniverse {t} (T : Set t) : Set (L.suc t) where
   constructor _,_
   field
     universe : Universe T
-    _`→_     : T → T → Set
+    _`→_     : T → T → ★
 
   infix 0 _`→_
   open Universe universe public
 
-  _`→ᵇ_ : ℕ → ℕ → Set
+  _`→ᵇ_ : ℕ → ℕ → ★
   i `→ᵇ o = `Bits i `→ `Bits o
 
-  `Endo : T → Set
+  `Endo : T → ★
   `Endo A = A `→ A
 
 module OpFunU {t} {T : Set t} (funU : FunUniverse T) where

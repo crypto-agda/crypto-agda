@@ -1,4 +1,5 @@
 module prefect-bintree-sorting where
+open import Type
 import Level as L
 open import Function.NP
 import Data.Nat.NP as Nat
@@ -34,13 +35,13 @@ module MM where
  <→≤ : ∀ {x y} → x < y → x ≤ y
  <→≤ (s≤s p) = ≤-steps 1 p
 
- Monotone : ℕ → Endo ℕ → Set
+ Monotone : ℕ → Endo ℕ → ★
  Monotone ub f = ∀ {x y} → x ≤ y → y < ub → f x ≤ f y
 
- IsInj : ℕ → Endo ℕ → Set
+ IsInj : ℕ → Endo ℕ → ★
  IsInj ub f = ∀ {x y} → x < ub → y < ub → f x ≡ f y → x ≡ y
 
- Bounded : ℕ → Endo ℕ → Set
+ Bounded : ℕ → Endo ℕ → ★
  Bounded ub f = ∀ x → x < ub → f x < ub
 
  module M (f : ℕ → ℕ) {ub}
@@ -91,7 +92,7 @@ sortBij = sortBijT ∘ fromFun
 sortBij-sort : ∀ {n} (t : Tree (Bits n) n) → evalTree (sortBijT t) t ≡ sort t
 sortBij-sort = proof ∘ sort-bij
 
-IsInj : ∀ {i o} → (Bits i → Bits o) → Set
+IsInj : ∀ {i o} → (Bits i → Bits o) → ★
 IsInj f = ∀ {x y} → f x ≡ f y → x ≡ y
 
 idT : ∀ {n} → Tree (Bits n) n
@@ -100,7 +101,7 @@ idT = fromFun id
 toFun-idT : ∀ {n} → toFun idT ≗ id {A = Bits n}
 toFun-idT x = toFun∘fromFun id x
 
-InjT : ∀ {n} → Tree (Bits n) n → Set
+InjT : ∀ {n} → Tree (Bits n) n → ★
 InjT = IsInj ∘ toFun
 
 _⁻¹-inverseTree : ∀ {n} f → evalTree (f `⁏ f ⁻¹) ≗ id {A = Tree (Bits n) n}

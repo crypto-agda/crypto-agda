@@ -1,3 +1,4 @@
+open import Type
 open import Data.Nat.NP
 open import Data.Nat.Properties
 open import Data.Product using (∃)
@@ -16,21 +17,21 @@ module bit-guessing-game (homPrgDist : HomPrgDist) where
 
 open HomPrgDist homPrgDist
 
-GuessAdv : Coins → Set
+GuessAdv : Coins → ★
 GuessAdv = EXP
 
 runGuess⅁ : ∀ {ca} (A : GuessAdv ca) (b : Bit) → EXP ca
 runGuess⅁ A _ = A
 
 -- An oracle: an adversary who can break the guessing game.
-Oracle : Coins → Set
+Oracle : Coins → ★
 Oracle ca = ∃ (λ (A : GuessAdv ca) → breaks (runGuess⅁ A))
 
 -- The guessing game is secure iff all adversaries have
 -- only a neglible advantage over the game.
 -- Meaning that no adversary can be behave differently when
 -- the game is to guess 0 than when the game is to guess 1.
-GuessSec : Coins → Set
+GuessSec : Coins → ★
 GuessSec ca = ∀ (A : GuessAdv ca) → ¬(breaks (runGuess⅁ A))
 
 -- The adversary actually has to behave the same way in both

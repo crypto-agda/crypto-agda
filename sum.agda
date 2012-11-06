@@ -1,3 +1,4 @@
+open import Type
 open import Function
 open import Data.Nat.NP
 open import Data.Nat.Properties
@@ -10,14 +11,7 @@ open import Relation.Binary.PropositionalEquality
 
 module sum where
 
-private
-    ★₁ : Set₂
-    ★₁ = Set₁
-
-    ★ : ★₁
-    ★ = Set
-
-_≤°_ : ∀ {A : Set}(f g : A → ℕ) → Set
+_≤°_ : ∀ {A : ★}(f g : A → ℕ) → ★
 f ≤° g = ∀ x → f x ≤ g x
 
 Sum : ★ → ★

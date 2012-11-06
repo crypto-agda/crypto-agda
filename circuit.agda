@@ -1,5 +1,6 @@
 module circuit where
 
+open import Type
 open import Function
 open import Data.Nat.NP hiding (_≟_; compare)
 open import Data.Bits hiding (rewire; rewireTbl)
@@ -21,16 +22,16 @@ open import composable
 open import vcomp
 open import forkable
 
-CircuitType : Set₁
-CircuitType = (i o : ℕ) → Set
+CircuitType : ★₁
+CircuitType = (i o : ℕ) → ★
 
-RunCircuit : CircuitType → Set
+RunCircuit : CircuitType → ★
 RunCircuit C = ∀ {i o} → C i o → Bits i → Bits o
 
 RewireFun : CircuitType
 RewireFun i o = Fin o → Fin i
 
-record RewiringBuilder (C : CircuitType) : Set₁ where
+record RewiringBuilder (C : CircuitType) : ★₁ where
   constructor mk
 
   field
@@ -52,7 +53,7 @@ record RewiringBuilder (C : CircuitType) : Set₁ where
     idC : ∀ {i} → C i i
 
   field
-    _=[_]=_ : ∀ {i o} → Bits i → C i o → Bits o → Set
+    _=[_]=_ : ∀ {i o} → Bits i → C i o → Bits o → ★
 
     rewire-spec : ∀ {i o} (r : RewireFun i o) is → is =[ rewire r ]= Vec.rewire r is
 
@@ -164,7 +165,7 @@ record RewiringBuilder (C : CircuitType) : Set₁ where
   swap₂ = rev
   -- swap₂ = swap (# 0) (# 1)
 
-  Perm : ℕ → Set
+  Perm : ℕ → ★
   Perm n = List (Fin n × Fin n)
 
   perm : ∀ {i} → Perm i → C i i
@@ -180,7 +181,7 @@ record RewiringBuilder (C : CircuitType) : Set₁ where
   open Composable isComposable public
   open VComposable isVComposable public
 
-record CircuitBuilder (C : CircuitType) : Set₁ where
+record CircuitBuilder (C : CircuitType) : ★₁ where
   constructor mk
   field
     isRewiringBuilder : RewiringBuilder C
@@ -300,7 +301,7 @@ finFunRewiringBuilder = mk (opComp (ixFunComp Fin)) finFunOpVComp id id _=[_]=_ 
   where
     C = _→ᶠ_
 
-    _=[_]=_ : ∀ {i o} → Bits i → C i o → Bits o → Set
+    _=[_]=_ : ∀ {i o} → Bits i → C i o → Bits o → ★
     input =[ f ]= output = Vec.rewire f input ≡ output
 
     rewire-spec : ∀ {i o} (r : RewireFun i o) bs → bs =[ r ]= Vec.rewire r bs
@@ -314,7 +315,7 @@ tblRewiringBuilder = mk (mk _>>>_) (mk _***_) tabulate (allFin _) _=[_]=_ rewire
   where
     C = RewireTbl
 
-    _=[_]=_ : ∀ {i o} → Bits i → C i o → Bits o → Set
+    _=[_]=_ : ∀ {i o} → Bits i → C i o → Bits o → ★
     input =[ tbl ]= output = Vec.rewireTbl tbl input ≡ output
 
     rewire-spec : ∀ {i o} (r : RewireFun i o) bs → bs =[ tabulate r ]= Vec.rewire r bs
@@ -337,7 +338,7 @@ bitsFunRewiringBuilder = mk bitsFunComp bitsFunVComp Vec.rewire id _=[_]=_ rewir
   where
     C = _→ᵇ_
 
-    _=[_]=_ : ∀ {i o} → Bits i → C i o → Bits o → Set
+    _=[_]=_ : ∀ {i o} → Bits i → C i o → Bits o → ★
     input =[ f ]= output = f input ≡ output
 
     rewire-spec : ∀ {i o} (r : RewireFun i o) bs → bs =[ Vec.rewire r ]= Vec.rewire r bs
@@ -374,7 +375,7 @@ treeBitsRewiringBuilder = mk bintree.composable bintree.vcomposable rewire (rewi
     rewire : ∀ {i o} → RewireFun i o → C i o
     rewire f = fromFun (Vec.rewire f)
 
-    _=[_]=_ : ∀ {i o} → Bits i → C i o → Bits o → Set
+    _=[_]=_ : ∀ {i o} → Bits i → C i o → Bits o → ★
     input =[ tree ]= output = toFun tree input ≡ output
 
     rewire-spec : ∀ {i o} (r : RewireFun i o) bs → bs =[ rewire r ]= Vec.rewire r bs
@@ -429,7 +430,7 @@ module Test where
   bigtree : Tree (Bits 4) 4
   bigtree = fork (fork (fork (same 0000b) (same 0011b)) (fork (same 1000b) (same 1011b)))
                  (fork (fork (same 0100b) (same 0111b)) (fork (same 1100b) (same 1111b)))
-    where same : ∀ {n} {A : Set} → A → Tree A (suc n)
+    where same : ∀ {n} {A : ★} → A → Tree A (suc n)
           same x = fork (leaf x) (leaf x)
 
   test₁ : tbl ≡ tabulate fun

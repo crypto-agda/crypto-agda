@@ -1,5 +1,6 @@
 module hash where
 
+open import Type
 open import Data.Bits
 open import Data.Fin as Fin hiding (_<_; _≤_; fromℕ) renaming (_+_ to _+f_)
 open import Data.Fin.Props
@@ -10,14 +11,14 @@ open import Data.Bool
 open import Relation.Binary.PropositionalEquality.NP
 open import Function
 
-record PaddingScheme n (M : Set) : Set where
+record PaddingScheme n (M : ★) : ★ where
   constructor mk
   field
     padlen : M → ℕ
     pad : (m : M) → Vec (Bits n) (padlen m)
 
 module Merkle-Damgård₁
-  {T : Set}             -- Tag space
+  {T : ★}             -- Tag space
   {n}                   -- Block length
   (h : T → Bits n → T) -- Compression function
   where
@@ -27,13 +28,13 @@ module Merkle-Damgård₁
   H₁ tag (x ∷ xs) = H₁ (h tag x) xs
 
 module Merkle-Damgård₂
-  {T : Set}             -- Tag space
+  {T : ★}             -- Tag space
   {n}                   -- Block length
   (h : T → Bits n → T) -- Compression function
 
   (IV : T)              -- Initialization vector
 
-  {M : Set}
+  {M : ★}
   (paddingSch : PaddingScheme n M)
   where
 
@@ -113,7 +114,7 @@ module LengthPadding₁
            postulate helper' : Bits n
            -- helper' = subst Bits pf (helper {n ∸ (Fin.toℕ ℓ + 1 + Fin.toℕ s)} bs)
 
-record WithLast ℓ n : Set where
+record WithLast ℓ n : ★ where
   constructor mk
   field
     main : Vec (Bits n) ℓ

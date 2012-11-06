@@ -1,5 +1,6 @@
 module program-distance where
 
+open import Type
 open import Data.Bool
 open import Data.Vec.NP using (Vec; count; countᶠ)
 open import Data.Nat.NP
@@ -14,11 +15,11 @@ open import flipbased-implem
 open import Data.Bits
 
 -- Renaming Prg -> Exp?
-record HomPrgDist : Set₁ where
+record HomPrgDist : ★₁ where
   constructor mk
 
   field
-    _]-[_ : ∀ {n} (f g : EXP n) → Set
+    _]-[_ : ∀ {n} (f g : EXP n) → ★
     ]-[-irrefl : ∀ {n} (f : EXP n) → ¬ (f ]-[ f)
     ]-[-sym : ∀ {n} {f g : EXP n} → f ]-[ g → g ]-[ f
     ]-[-cong-left-≈↺ : ∀ {n} {f g h : EXP n} → f ≈↺ g → g ]-[ h → f ]-[ h
@@ -47,11 +48,11 @@ record HomPrgDist : Set₁ where
   ]-[-cong-≗↺ : ∀ {n} {f g f' g' : EXP n} → f ≗↺ g → f' ≗↺ g' → f ]-[ f' → g ]-[ g'
   ]-[-cong-≗↺ pf₀ pf₁ pf₂ = ]-[-cong-left-≗↺ (≗↺.sym pf₀) (]-[-cong-right-≗↺ pf₂ pf₁)
 
-  breaks : ∀ {n} → ⅁? n → Set
+  breaks : ∀ {n} → ⅁? n → ★
   breaks g = g 0b ]-[ g 1b
 
   -- An wining adversary for game g₀ reduces to a wining adversary for game g₁
-  _⇓_ : ∀ {c₀ c₁} (g₀ : ⅁? c₀) (g₁ : ⅁? c₁) → Set
+  _⇓_ : ∀ {c₀ c₁} (g₀ : ⅁? c₀) (g₁ : ⅁? c₁) → ★
   g₀ ⇓ g₁ = breaks g₀ → breaks g₁
 
   extensional-reduction : ∀ {c} {g₀ g₁ : ⅁? c} → g₀ ≗⅁? g₁ → g₀ ⇓ g₁
@@ -68,7 +69,7 @@ module HomImplem k where
   --  dist (#1 f) (#1 g) ≥ 2^(-k) * 2^ c            [ on rationals ]
   --  dist (#1 f) (#1 g) ≥ 2^(c - k)                [ on rationals ]
   --  dist (#1 f) (#1 g) ≥ 2^(c ∸ k)               [ on natural ]
-  _]-[_ : ∀ {n} (f g : EXP n) → Set
+  _]-[_ : ∀ {n} (f g : EXP n) → ★
   _]-[_ {n} f g = dist (count↺ f) (count↺ g) ≥ 2^(n ∸ k)
 
   ]-[-irrefl : ∀ {n} (f : EXP n) → ¬ (f ]-[ f)
@@ -89,10 +90,10 @@ module HomImplem k where
                   (λ {_ f g} → ]-[-sym {f = f} {g})
                   (λ {_ f g h} → ]-[-cong-left-≈↺ {f = f} {g} {h})
 
-record PrgDist : Set₁ where
+record PrgDist : ★₁ where
   constructor mk
   field
-    _]-[_ : ∀ {m n} → EXP m → EXP n → Set
+    _]-[_ : ∀ {m n} → EXP m → EXP n → ★
     ]-[-irrefl : ∀ {n} (f : EXP n) → ¬ (f ]-[ f)
     ]-[-sym : ∀ {m n} {f : EXP m} {g : EXP n} → f ]-[ g → g ]-[ f
     ]-[-cong-left-≋↺ : ∀ {m n o} {f : EXP m} {g : EXP n} {h : EXP o} → f ≋↺ g → g ]-[ h → f ]-[ h
@@ -121,18 +122,18 @@ record PrgDist : Set₁ where
   ]-[-cong-≗↺ : ∀ {c c'} {f g : EXP c} {f' g' : EXP c'} → f ≗↺ g → f' ≗↺ g' → f ]-[ f' → g ]-[ g'
   ]-[-cong-≗↺ pf₀ pf₁ pf₂ = ]-[-cong-left-≗↺ (≗↺.sym pf₀) (]-[-cong-right-≗↺ pf₂ pf₁)
 
-  breaks : ∀ {c} → ⅁? c → Set
+  breaks : ∀ {c} → ⅁? c → ★
   breaks EXP = EXP 0b ]-[ EXP 1b
 
   -- An wining adversary for game g₀ reduces to a wining adversary for game g₁
-  _⇓_ : ∀ {c₀ c₁} (g₀ : ⅁? c₀) (g₁ : ⅁? c₁) → Set
+  _⇓_ : ∀ {c₀ c₁} (g₀ : ⅁? c₀) (g₁ : ⅁? c₁) → ★
   g₀ ⇓ g₁ = breaks g₀ → breaks g₁
 
   extensional-reduction : ∀ {c} {g₀ g₁ : ⅁? c} → g₀ ≗⅁? g₁ → g₀ ⇓ g₁
   extensional-reduction same-games = ]-[-cong-≗↺ (same-games 0b) (same-games 1b)
 
 module Implem k where
-  _]-[_ : ∀ {m n} → EXP m → EXP n → Set
+  _]-[_ : ∀ {m n} → EXP m → EXP n → ★
   _]-[_ {m} {n} f g = dist ⟨2^ n * count↺ f ⟩ ⟨2^ m * count↺ g ⟩ ≥ 2^((m + n) ∸ k)
 
   ]-[-irrefl : ∀ {n} (f : EXP n) → ¬ (f ]-[ f)

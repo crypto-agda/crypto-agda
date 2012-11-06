@@ -61,7 +61,7 @@ module Rot where
     Rot-trans (krof p₀ p₁) (krof q₀ q₁) = fork (Rot-trans p₀ q₁) (Rot-trans p₁ q₀)
 
 module SwpOp where
-    data SwpOp : ℕ → Set where
+    data SwpOp : ℕ → ★ where
       ε : ∀ {n} → SwpOp n
 
       _⁏_ : ∀ {n} → SwpOp n → SwpOp n → SwpOp n

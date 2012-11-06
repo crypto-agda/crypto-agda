@@ -1,3 +1,4 @@
+open import Type
 open import Data.Bool.NP as Bool hiding (check)
 open import Data.Nat
 open import Data.Maybe
@@ -9,10 +10,6 @@ open import Relation.Binary.PropositionalEquality.NP
 open import sum
 
 module generic-zero-knowledge-interactive where
-
-private
-  ★ : Set₁
-  ★ = Set
 
 -- A random argument, this is only a formal notation to
 -- indicate that the argument is supposed to be picked

@@ -1,5 +1,6 @@
 -- Draft: we should move to something provably secure, like Schnorr signature.
 
+open import Type
 open import Function
 open import Data.Bool using (Bool; true; false; if_then_else_; _∨_)
 open import Data.Nat using (ℕ)
@@ -15,9 +16,9 @@ module dsa
 -- (q : ℕ) -- Bits N, Prime q
 -- (p : ℕ) -- Bits L, Prime p, st. ∃ k, q * k = p-1
 
-(ℤq : Set)
+(ℤq : ★)
 
-(G : Set) -- = ⟨ℤp⟩★ should for a group of order q
+(G : ★) -- = ⟨ℤp⟩★ should for a group of order q
 (g : G)   -- generator of the group G
 (_^_  : G → ℤq → G)
 (_∙pq_  : G → G → ℤq)
@@ -27,18 +28,18 @@ module dsa
 (_∙_  : ℤq → ℤq → ℤq)
 (_/_  : ℤq → ℤq → ℤq)
 
-(ℤq★ : Set)
+(ℤq★ : ★)
 (refine? : ℤq → Maybe ℤq★)
 (weaken : ℤq★ → ℤq)
 (_==_ : ℤq → ℤq → Bool)
 (_⁻¹ : ℤq★ → ℤq)
 
-(M : Set)
+(M : ★)
 (ℋ : M → ℤq)
 
 where
 
-Sig : Set
+Sig : ★
 Sig = ℤq★ × ℤq★
 
 Sign : (m : M) (x : ℤq) (r : ℤq) → Maybe Sig

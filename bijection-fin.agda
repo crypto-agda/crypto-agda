@@ -9,7 +9,7 @@ module bijection-fin where
   open import Data.Fin using (Fin ; zero ; suc ; fromℕ ; inject₁)
   open import Data.Vec hiding ([_])
 
-  data `Syn : ℕ → Set where 
+  data `Syn : ℕ → ★ where
     `id   : ∀ {n} → `Syn n
     `swap : ∀ {n} → `Syn (2 + n)
     `tail : ∀ {n} → `Syn n → `Syn (1 + n)
@@ -19,7 +19,7 @@ module bijection-fin where
 
   `Ix = ℕ
 
-  `Tree : Set → `Ix → Set
+  `Tree : ★ → `Ix → ★
   `Tree X = Vec X
 
   `fromFun : ∀ {i X} → (`Rep i → X) → `Tree X i
@@ -48,10 +48,10 @@ module bijection-fin where
   `evalArg (`tail f) = fin-tail (`evalArg f)
   `evalArg (S `∘ S₁) = `evalArg S ∘ `evalArg S₁
 
-  vec-swap : ∀ {n}{X : Set} → Endo (Vec X (2 + n))
+  vec-swap : ∀ {n}{X : ★} → Endo (Vec X (2 + n))
   vec-swap xs = head (tail xs) ∷ head xs ∷ tail (tail xs)
 
-  vec-tail : ∀ {n}{X : Set} → Endo (Vec X n) → Endo (Vec X (1 + n))
+  vec-tail : ∀ {n}{X : ★} → Endo (Vec X n) → Endo (Vec X (1 + n))
   vec-tail f xs = head xs ∷ f (tail xs)
 
   `evalTree : ∀ {i X} → `Syn i → Endo (`Tree X i)
@@ -130,7 +130,7 @@ module bijection-fin where
 
   module Alt-Syn where
 
-    data ``Syn : ℕ → Set where
+    data ``Syn : ℕ → ★ where
       `id : ∀ {n} → ``Syn n
       _`∘_ : ∀ {n} → ``Syn n → ``Syn n → ``Syn n
       `swap : ∀ {n} m → ``Syn (m + 2 + n)
@@ -192,11 +192,11 @@ module bijection-fin where
     `eval`` (S `∘ S₁) x rewrite ``∘-p (translate S) (translate S₁) x | sym (`eval`` S₁ x) | `eval`` S (`evalArg S₁ x) = refl
 
 
-  data Fin-View : ∀ {n} → Fin n → Set where
+  data Fin-View : ∀ {n} → Fin n → ★ where
     max : ∀ {n} → Fin-View (fromℕ n)
     inject : ∀ {n} → (i : Fin n) → Fin-View (inject₁ i)
 
-  data _≤F_ : ∀ {n} → Fin n → Fin n → Set where
+  data _≤F_ : ∀ {n} → Fin n → Fin n → ★ where
     z≤i : {n : ℕ}{i : Fin (suc n)} → zero ≤F i
     s≤s : {n : ℕ}{i j : Fin n} → i ≤F j → suc i ≤F suc j
 
@@ -204,7 +204,7 @@ module bijection-fin where
   ≤F-refl zero = z≤i
   ≤F-refl (suc i) = s≤s (≤F-refl i)
 
-  _<F_ : ∀ {n} → Fin n → Fin n → Set
+  _<F_ : ∀ {n} → Fin n → Fin n → ★
   i <F j = suc i ≤F inject₁ j
 
   nsuc-inj : ∀ {x y} → Data.Nat.NP.suc x ≡ suc y → x ≡ y
@@ -213,7 +213,7 @@ module bijection-fin where
   suc-inj : ∀ {n}{i j : Fin n} → Data.Fin.suc i ≡ suc j → i ≡ j
   suc-inj refl = refl 
 
-  data Sorted {X}(XC : Cmp X) : ∀ {l} → Vec X l  → Set where
+  data Sorted {X}(XC : Cmp X) : ∀ {l} → Vec X l  → ★ where
     []  : Sorted XC []
     sing : ∀ x → Sorted XC (x ∷ [])
     dbl-lt  : ∀ {l} x y {xs : Vec X l} → lt ≡ XC x y → Sorted XC (y ∷ xs) → Sorted XC (x ∷ y ∷ xs)
@@ -275,7 +275,7 @@ module bijection-fin where
 
     open import Data.Sum
 
-    _≤X_ : X → X → Set
+    _≤X_ : X → X → ★
     x ≤X y = XC x y ≡ lt ⊎ XC x y ≡ eq
 
     ≤X-trans : ∀ {x y z} → x ≤X y → y ≤X z → x ≤X z
@@ -419,7 +419,7 @@ module bijection-fin where
   fin-view {suc n} (suc .(fromℕ n)) | max = max
   fin-view {suc n} (suc .(inject₁ i)) | inject i = inject _
 
-  absurd : {X : Set} → .⊥ → X
+  absurd : {X : ★} → .⊥ → X
   absurd ()
 
   drop₁ : ∀ {n} → (i : Fin (suc n)) → .(i ≢ fromℕ n) → Fin n

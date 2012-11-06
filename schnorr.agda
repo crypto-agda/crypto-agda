@@ -1,3 +1,4 @@
+open import Type
 open import Data.Bool using (Bool; true; false) -- ; if_then_else_; _∨_)
 {-
 open import Function
@@ -10,9 +11,9 @@ open import Data.Product using (_×_; _,_; proj₁; proj₂)
 module schnorr
 -- (q : ℕ) -- Prime q
 
-(ℤq : Set)
+(ℤq : ★)
 
-(G : Set) -- = ⟨ℤp⟩★ should for a group of order q
+(G : ★) -- = ⟨ℤp⟩★ should for a group of order q
 (g : G)   -- generator of the group G
 (_^_  : G → ℤq → G)
 (_∙_  : G → G → G)
@@ -20,18 +21,18 @@ module schnorr
 (_⊟_  : ℤq → ℤq → ℤq)
 (_⊠_  : ℤq → ℤq → ℤq)
 
-(ℤq★ : Set) -- ℤq excluding 0
+(ℤq★ : ★) -- ℤq excluding 0
 (weaken : ℤq★ → ℤq)
 
 (_==_ : ℤq → ℤq → Bool)
 -- (_==ᴳ_ : G → G → Bool)
 
-(M : Set)
+(M : ★)
 (ℋ⟨_∥_⟩ : G → M → ℤq)  -- I flipped the order of arguments to fit the
                         -- "random prefix" assumption
 where
 
-Sig : Set
+Sig : ★
 Sig = ℤq × ℤq
 
 -- Do not call directly this function, use Sign
@@ -88,14 +89,14 @@ module Proof
   pf rewrite eᵥ≡e = ==-refl
 
 module HashFunctionRequirements
-    (Rd : Set)
-    (Message : Set)
-    (Hash : Set)
+    (Rd : ★)
+    (Message : ★)
+    (Hash : ★)
     (_==ᴴ_ : Hash → Hash → Bool)
     (ℋ⟨_∥_⟩ : Rd → Message → Hash)
     where
 
-    RPPAdv : Set → Set
+    RPPAdv : ★ → ★
     RPPAdv Rₐ = (Rₐ → Hash)
               × (Rₐ → Rd → Message)
 
@@ -104,7 +105,7 @@ module HashFunctionRequirements
       where h = A₀ rₐ
             m = A₁ rₐ rd
 
-    RPSPAdv : Set → Set
+    RPSPAdv : ★ → ★
     RPSPAdv Rₐ = (Rₐ → Message)
                × (Rₐ → Rd → Message)
 

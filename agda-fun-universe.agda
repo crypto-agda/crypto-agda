@@ -1,5 +1,6 @@
 module agda-fun-universe where
 
+open import Type
 open import Data.Bool using (if_then_else_)
 import Data.Vec.NP as V
 import Function as F
@@ -13,11 +14,11 @@ open import Data.Bits using (0b; 1b)
 open import data-universe
 open import fun-universe
 
--→- : Set → Set → Set
+-→- : ★ → ★ → ★
 -→- A B = A → B
 
-agdaFunU : FunUniverse Set
-agdaFunU = Set-U , -→-
+agdaFunU : FunUniverse ★
+agdaFunU = ★-U , -→-
 
 module AgdaFunUniverse = FunUniverse agdaFunU
 
