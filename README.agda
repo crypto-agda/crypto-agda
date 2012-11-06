@@ -4,6 +4,11 @@ module README where
 -- everywhere in this development.
 open import Data.Bits
 
+open import elgamal
+open import schnorr
+open import generic-zero-knowledge-interactive
+open import sum-properties
+
 -- Randomized programs
 open import flipbased
 open import flipbased-counting
