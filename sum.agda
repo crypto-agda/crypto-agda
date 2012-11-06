@@ -1,7 +1,7 @@
 open import Function
 open import Data.Nat.NP
 open import Data.Nat.Properties
-open import Data.Unit
+open import Data.Unit hiding (_≤_)
 open import Data.Product
 open import Data.Bits
 open import Data.Bool.NP as Bool
@@ -15,6 +15,9 @@ private
 
     ★ : ★₁
     ★ = Set
+
+_≤°_ : ∀ {A : Set}(f g : A → ℕ) → Set
+f ≤° g = ∀ x → f x ≤ g x
 
 Sum : ★ → ★
 Sum A = (A → ℕ) → ℕ
@@ -34,6 +37,9 @@ SumLin sumᴬ = ∀ f k → sumᴬ (λ x → k * f x) ≡ k * sumᴬ f
 SumHom : ∀ {A} → Sum A → ★
 SumHom sumᴬ = ∀ f g → sumᴬ (λ x → f x + g x) ≡ sumᴬ f + sumᴬ g
 
+SumMon : ∀ {A} → Sum A → ★
+SumMon sumᴬ = ∀ f g → f ≤° g → sumᴬ f ≤ sumᴬ g
+
 record SumProp A : ★ where
   constructor mk
   field
@@ -41,6 +47,7 @@ record SumProp A : ★ where
     sum-ext : SumExt sum
     sum-lin : SumLin sum
     sum-hom : SumHom sum
+    sum-mon : SumMon sum
 
   Card : ℕ
   Card = sum (const 1)
@@ -60,7 +67,7 @@ sum⊤ : Sum ⊤
 sum⊤ f = f _
 
 μ⊤ : SumProp ⊤
-μ⊤ = mk sum⊤ sum⊤-ext sum⊤-lin sum⊤-hom
+μ⊤ = mk sum⊤ sum⊤-ext sum⊤-lin sum⊤-hom sum⊤-mon
   where
     sum⊤-ext : SumExt sum⊤
     sum⊤-ext f≗g = f≗g _
@@ -71,11 +78,14 @@ sum⊤ f = f _
     sum⊤-hom : SumHom sum⊤
     sum⊤-hom f g = refl
 
+    sum⊤-mon : SumMon sum⊤
+    sum⊤-mon f g f≤°g = f≤°g tt
+
 sumBit : Sum Bit
 sumBit f = f 0b + f 1b
 
 μBit : SumProp Bit
-μBit = mk sumBit sumBit-ext sumBit-lin sumBit-hom
+μBit = mk sumBit sumBit-ext sumBit-lin sumBit-hom sumBit-mon
   where
     sumBit-ext : SumExt sumBit
     sumBit-ext f≗g rewrite f≗g 0b | f≗g 1b = refl
@@ -90,6 +100,9 @@ sumBit f = f 0b + f 1b
 
     sumBit-hom : SumHom sumBit
     sumBit-hom f g = +-interchange (f 0b) (g 0b) (f 1b) (g 1b)
+
+    sumBit-mon : SumMon sumBit
+    sumBit-mon f g f≤°g = f≤°g 0b +-mono f≤°g 1b
 
 infixr 4 _×Sum_
 
@@ -109,7 +122,7 @@ _×μ_ : ∀ {A B} → SumProp A
                → SumProp B
                → SumProp (A × B)
 (μA ×μ μB)
-   = mk (sum μA ×Sum sum μB) (sum-ext μA ×Sum-ext sum-ext μB) lin hom
+   = mk (sum μA ×Sum sum μB) (sum-ext μA ×Sum-ext sum-ext μB) lin hom mon
    where
      lin : SumLin (sum μA ×Sum sum μB)
      lin f k rewrite sum-ext μA (λ x → sum-lin μB (λ y → f (x , y)) k) = sum-lin μA (sum μB ∘ curry f) k
@@ -117,6 +130,10 @@ _×μ_ : ∀ {A B} → SumProp A
      hom : SumHom (sum μA ×Sum sum μB)
      hom f g rewrite sum-ext μA (λ x → sum-hom μB (λ y → f (x , y)) (λ y → g (x , y))) 
          = sum-hom μA (sum μB ∘ curry f) (sum μB ∘ curry g)
+
+     mon : SumMon (sum μA ×Sum sum μB)
+     mon f g f≤°g = sum-mon μA (sum μB ∘ curry f) (sum μB ∘ curry g) (λ x → sum-mon μB (curry f x) (curry g x) 
+                      (λ x₁ → f≤°g (x , x₁)))
 
 swapS : ∀ {A B} → Sum (A × B) → Sum (B × A)
 swapS sumA×B f = sumA×B (f ∘ swap)
@@ -179,7 +196,7 @@ sumFin : ∀ n → Sum (Fin n)
 sumFin n f = vsum (vmap f (allFin n))
 
 μFin : ∀ n → SumProp (Fin n)
-μFin n = mk (sumFin n) sumFin-ext sumFin-lin sumFin-hom
+μFin n = mk (sumFin n) sumFin-ext sumFin-lin sumFin-hom sumFin-mon
   module SumFin where
     sumFin-ext : SumExt (sumFin n)
     sumFin-ext f≗g rewrite map-ext f≗g (allFin n) = refl
@@ -189,3 +206,6 @@ sumFin n f = vsum (vmap f (allFin n))
     
     sumFin-hom : SumHom (sumFin n)
     sumFin-hom f g = sum-linear f g (allFin n)
+
+    sumFin-mon : SumMon (sumFin n)
+    sumFin-mon f g f≤°g = sum-mono f g f≤°g (allFin n)
