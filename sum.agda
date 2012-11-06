@@ -31,12 +31,16 @@ CountExt countᴬ = ∀ {f g} → f ≗ g → countᴬ f ≡ countᴬ g
 SumLin : ∀ {A} → Sum A → ★
 SumLin sumᴬ = ∀ f k → sumᴬ (λ x → k * f x) ≡ k * sumᴬ f
 
+SumHom : ∀ {A} → Sum A → ★
+SumHom sumᴬ = ∀ f g → sumᴬ (λ x → f x + g x) ≡ sumᴬ f + sumᴬ g
+
 record SumProp A : ★ where
   constructor mk
   field
     sum : Sum A
     sum-ext : SumExt sum
     sum-lin : SumLin sum
+    sum-hom : SumHom sum
 
   Card : ℕ
   Card = sum (const 1)
@@ -56,7 +60,7 @@ sum⊤ : Sum ⊤
 sum⊤ f = f _
 
 μ⊤ : SumProp ⊤
-μ⊤ = mk sum⊤ sum⊤-ext sum⊤-lin
+μ⊤ = mk sum⊤ sum⊤-ext sum⊤-lin sum⊤-hom
   where
     sum⊤-ext : SumExt sum⊤
     sum⊤-ext f≗g = f≗g _
@@ -64,11 +68,14 @@ sum⊤ f = f _
     sum⊤-lin : SumLin sum⊤
     sum⊤-lin f k = refl
 
+    sum⊤-hom : SumHom sum⊤
+    sum⊤-hom f g = refl
+
 sumBit : Sum Bit
 sumBit f = f 0b + f 1b
 
 μBit : SumProp Bit
-μBit = mk sumBit sumBit-ext sumBit-lin
+μBit = mk sumBit sumBit-ext sumBit-lin sumBit-hom
   where
     sumBit-ext : SumExt sumBit
     sumBit-ext f≗g rewrite f≗g 0b | f≗g 1b = refl
@@ -80,6 +87,9 @@ sumBit f = f 0b + f 1b
             | ℕ°.*-comm k (f 0b + f 1b)
             | ℕ°.distribʳ k (f 0b) (f 1b)
             = refl
+
+    sumBit-hom : SumHom sumBit
+    sumBit-hom f g = +-interchange (f 0b) (g 0b) (f 1b) (g 1b)
 
 infixr 4 _×Sum_
 
@@ -99,10 +109,14 @@ _×μ_ : ∀ {A B} → SumProp A
                → SumProp B
                → SumProp (A × B)
 (μA ×μ μB)
-   = mk (sum μA ×Sum sum μB) (sum-ext μA ×Sum-ext sum-ext μB) lin
+   = mk (sum μA ×Sum sum μB) (sum-ext μA ×Sum-ext sum-ext μB) lin hom
    where
      lin : SumLin (sum μA ×Sum sum μB)
-     lin f k rewrite sum-ext μA (λ x → sum-lin μB (λ y → f (x , y)) k) = sum-lin μA (λ x → sum μB (λ y → f (x , y))) k
+     lin f k rewrite sum-ext μA (λ x → sum-lin μB (λ y → f (x , y)) k) = sum-lin μA (sum μB ∘ curry f) k
+
+     hom : SumHom (sum μA ×Sum sum μB)
+     hom f g rewrite sum-ext μA (λ x → sum-hom μB (λ y → f (x , y)) (λ y → g (x , y))) 
+         = sum-hom μA (sum μB ∘ curry f) (sum μB ∘ curry g)
 
 swapS : ∀ {A B} → Sum (A × B) → Sum (B × A)
 swapS sumA×B f = sumA×B (f ∘ swap)
@@ -165,10 +179,13 @@ sumFin : ∀ n → Sum (Fin n)
 sumFin n f = vsum (vmap f (allFin n))
 
 μFin : ∀ n → SumProp (Fin n)
-μFin n = mk (sumFin n) sumFin-ext sumFin-lin
+μFin n = mk (sumFin n) sumFin-ext sumFin-lin sumFin-hom
   module SumFin where
     sumFin-ext : SumExt (sumFin n)
     sumFin-ext f≗g rewrite map-ext f≗g (allFin n) = refl
 
     sumFin-lin : SumLin (sumFin n)
     sumFin-lin f x = sum-distribˡ f x (allFin n)
+    
+    sumFin-hom : SumHom (sumFin n)
+    sumFin-hom f g = sum-linear f g (allFin n)
