@@ -21,12 +21,10 @@ record ↺ (A : ★) : ★ where
 
 module M (Permutation : ★)
          (_⁻¹         : Endo Permutation)
-         (sumπ        : Sum Permutation)
-         (μπ          : SumProp sumπ)
+         (μπ          : SumProp Permutation)
 
          (Rₚ-xtra     : ★) -- extra prover/adversary randomness
-         (sumRₚ-xtra  : Sum Rₚ-xtra)
-         (μRₚ-xtra    : SumProp sumRₚ-xtra)
+         (μRₚ-xtra    : SumProp Rₚ-xtra)
 
          (Problem     : ★)
          (_==_        : Problem → Problem → Bit)
@@ -50,18 +48,12 @@ module M (Permutation : ★)
     Rₚ : ★
     Rₚ = Permutation × Rₚ-xtra
 
-    sumRₚ : Sum Rₚ
-    sumRₚ = sumπ ×Sum sumRₚ-xtra
-
-    μRₚ : SumProp sumRₚ
+    μRₚ : SumProp Rₚ
     μRₚ = μπ ×μ μRₚ-xtra
 
     R = Bit × Rₚ
 
-    sumR : Sum R
-    sumR = sumBit ×Sum sumRₚ
-
-    μR : SumProp sumR
+    μR : SumProp R
     μR = μBit ×μ μRₚ
 
     check-π : Problem → Solution → Rₚ → Bit
@@ -221,11 +213,9 @@ module DLog (ℤq  : ★)
             (==-refl    : ∀ {α} → (α == α) ≡ true)
             (==-cong-∙  : ∀ {α β b} γ → α == β ≡ b → (γ ∙ α) == (γ ∙ β) ≡ b)
             (==-true    : ∀ {α β} → α == β ≡ true → α ≡ β)
-            (sumℤq      : Sum ℤq)
-            (μℤq        : SumProp sumℤq)
+            (μℤq        : SumProp ℤq)
             (Rₚ-xtra    : ★) -- extra prover/adversary randomness
-            (sumRₚ-xtra : Sum Rₚ-xtra)
-            (μRₚ-xtra   : SumProp sumRₚ-xtra)
+            (μRₚ-xtra   : SumProp Rₚ-xtra)
             (some-ℤq    : ℤq)
    where
 
@@ -270,7 +260,7 @@ module DLog (ℤq  : ★)
    check-easy : ∀ π → check (π ∙P easy-pb π) (π ∙S easy-sol π) ≡ true
    check-easy π rewrite dist-^-⊞ g π (easy-sol π) = ==-refl
 
-   open M Permutation _⁻¹ sumℤq μℤq Rₚ-xtra sumRₚ-xtra μRₚ-xtra
+   open M Permutation _⁻¹ μℤq Rₚ-xtra μRₚ-xtra
           Problem _==_ ==-refl _∙P_ ⁻¹-inverseP Solution _∙S_ ⁻¹-inverseS check check-∙ easy-pb easy-sol check-easy
 -- -}
 -- -}
