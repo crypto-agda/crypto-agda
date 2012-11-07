@@ -7,7 +7,7 @@ open import Data.Sum
 open import Data.Product
 open import Data.Bits
 open import Data.Bool.NP as Bool
-open import Relation.Binary.PropositionalEquality
+open import Relation.Binary.PropositionalEquality as ≡
 
 module sum where
 
@@ -35,14 +35,28 @@ SumHom sumᴬ = ∀ f g → sumᴬ (λ x → f x + g x) ≡ sumᴬ f + sumᴬ g
 SumMon : ∀ {A} → Sum A → ★
 SumMon sumᴬ = ∀ f g → f ≤° g → sumᴬ f ≤ sumᴬ g
 
-record SumProp A : ★ where
+record SumLinear {A} sumᴬ : ★ where
+  constructor mk
+  field
+    sum-lin : SumLin {A} sumᴬ
+    sum-hom : SumHom sumᴬ
+
+SumSwap : ∀ {A} → Sum A → ★₁
+SumSwap {A} sumᴬ = ∀ {B} f {sumᴮ} → SumLinear {B} sumᴮ → sumᴬ (sumᴮ ∘ f) ≡ sumᴮ (sumᴬ ∘ flip f)
+
+record SumProp A : ★₁ where
   constructor mk
   field
     sum : Sum A
+    is-linear : SumLinear sum
     sum-ext : SumExt sum
-    sum-lin : SumLin sum
-    sum-hom : SumHom sum
     sum-mon : SumMon sum
+    sum-swap : SumSwap sum
+
+  -- open SumLinear is-linear public
+
+  sum-lin = SumLinear.sum-lin is-linear
+  sum-hom = SumLinear.sum-hom is-linear
 
   Card : ℕ
   Card = sum (const 1)
@@ -62,7 +76,7 @@ sum⊤ : Sum ⊤
 sum⊤ f = f _
 
 μ⊤ : SumProp ⊤
-μ⊤ = mk sum⊤ sum⊤-ext sum⊤-lin sum⊤-hom sum⊤-mon
+μ⊤ = mk sum⊤ (mk sum⊤-lin sum⊤-hom) sum⊤-ext sum⊤-mon sum⊤-swap
   where
     sum⊤-ext : SumExt sum⊤
     sum⊤-ext f≗g = f≗g _
@@ -76,11 +90,14 @@ sum⊤ f = f _
     sum⊤-mon : SumMon sum⊤
     sum⊤-mon f g f≤°g = f≤°g tt
 
+    sum⊤-swap : SumSwap sum⊤
+    sum⊤-swap f sumᴬ-linear = refl
+
 sumBit : Sum Bit
 sumBit f = f 0b + f 1b
 
 μBit : SumProp Bit
-μBit = mk sumBit sumBit-ext sumBit-lin sumBit-hom sumBit-mon
+μBit = mk sumBit (mk sumBit-lin sumBit-hom) sumBit-ext sumBit-mon sumBit-swap
   where
     sumBit-ext : SumExt sumBit
     sumBit-ext f≗g rewrite f≗g 0b | f≗g 1b = refl
@@ -99,6 +116,9 @@ sumBit f = f 0b + f 1b
     sumBit-mon : SumMon sumBit
     sumBit-mon f g f≤°g = f≤°g 0b +-mono f≤°g 1b
 
+    sumBit-swap : SumSwap sumBit
+    sumBit-swap f sumᴬ-linear rewrite SumLinear.sum-hom sumᴬ-linear (f 0b) (f 1b) = refl
+
 infixr 4 _+Sum_
 
 _+Sum_ : ∀ {A B} → Sum A → Sum B → Sum (A ⊎ B)
@@ -107,7 +127,7 @@ _+Sum_ : ∀ {A B} → Sum A → Sum B → Sum (A ⊎ B)
 _+μ_ : ∀ {A B} → SumProp A
                → SumProp B
                → SumProp (A ⊎ B)
-(μA +μ μB) = mk +-μ +μ-ext +μ-lin +μ-hom +μ-mon
+(μA +μ μB) = mk +-μ (mk +μ-lin +μ-hom) +μ-ext +μ-mon +μ-swap
   where
     +-μ = sum μA +Sum sum μB
     +μ-ext : SumExt +-μ 
@@ -125,6 +145,12 @@ _+μ_ : ∀ {A B} → SumProp A
     +μ-mon : SumMon +-μ
     +μ-mon f g f≤°g = sum-mon μA (f ∘ inj₁) (g ∘ inj₁) (f≤°g ∘ inj₁)
                +-mono sum-mon μB (f ∘ inj₂) (g ∘ inj₂) (f≤°g ∘ inj₂)
+
+    +μ-swap : SumSwap +-μ
+    +μ-swap f {sumᴬ} sumᴬ-linear rewrite SumLinear.sum-hom sumᴬ-linear (λ x → sum μA (λ y → f (inj₁ y) x)) (λ x → sum μB (λ y → f (inj₂ y) x))
+      | sum-swap μA (f ∘ inj₁) sumᴬ-linear
+      | sum-swap μB (f ∘ inj₂) sumᴬ-linear
+      = refl
 
 infixr 4 _×Sum_
 
@@ -144,31 +170,27 @@ _×μ_ : ∀ {A B} → SumProp A
                → SumProp B
                → SumProp (A × B)
 (μA ×μ μB)
-   = mk (sum μA ×Sum sum μB) (sum-ext μA ×Sum-ext sum-ext μB) lin hom mon
+   = mk μ-× (mk lin hom) (sum-ext μA ×Sum-ext sum-ext μB) mon ×μ-swap
    where
-     lin : SumLin (sum μA ×Sum sum μB)
+     μ-× = sum μA ×Sum sum μB
+
+     lin : SumLin μ-×
      lin f k rewrite sum-ext μA (λ x → sum-lin μB (λ y → f (x , y)) k) = sum-lin μA (sum μB ∘ curry f) k
 
-     hom : SumHom (sum μA ×Sum sum μB)
+     hom : SumHom μ-×
      hom f g rewrite sum-ext μA (λ x → sum-hom μB (λ y → f (x , y)) (λ y → g (x , y))) 
          = sum-hom μA (sum μB ∘ curry f) (sum μB ∘ curry g)
 
-     mon : SumMon (sum μA ×Sum sum μB)
+     mon : SumMon μ-×
      mon f g f≤°g = sum-mon μA (sum μB ∘ curry f) (sum μB ∘ curry g) (λ x → sum-mon μB (curry f x) (curry g x) 
                       (λ x₁ → f≤°g (x , x₁)))
 
-swapS : ∀ {A B} → Sum (A × B) → Sum (B × A)
-swapS sumA×B f = sumA×B (f ∘ swap)
+     ×μ-swap : SumSwap μ-×
+     ×μ-swap f {sumˣ} sumˣ-linear rewrite sum-ext μA  (λ x → sum-swap μB (curry f x) sumˣ-linear)
+       = sum-swap μA (λ z x → sum μB (λ y → f (z , y) x)) sumˣ-linear
 
-{-
-×Sum-swap : ∀ {A B} (sumᴬ : Sum A) (sumᴮ : Sum B) →
-              (sumᴬ ×Sum sumᴮ) ≈Sum swapS (sumᴮ ×Sum sumᴬ)
-×Sum-swap sumᴬ sumᴮ f = {!!}
-
--- wrong so far: ×Sum-swap (const 42) (const 1)
--}
-
--- sum (λ x → f x + g x) ≡ sum f + sum g
+sum-0 : ∀ {A} (μA : SumProp A) → sum μA (const 0) ≡ 0
+sum-0 μA = sum-lin μA (λ _ → Graham's-number) 0
 
 sum-const : ∀ {A} (μA : SumProp A) → ∀ k → sum μA (const k) ≡ Card μA * k 
 sum-const μA k
@@ -218,7 +240,7 @@ sumFin : ∀ n → Sum (Fin n)
 sumFin n f = vsum (vmap f (allFin n))
 
 μFin : ∀ n → SumProp (Fin n)
-μFin n = mk (sumFin n) sumFin-ext sumFin-lin sumFin-hom sumFin-mon
+μFin n = mk (sumFin n) (mk sumFin-lin sumFin-hom) sumFin-ext sumFin-mon sumFin-swap
   module SumFin where
     sumFin-ext : SumExt (sumFin n)
     sumFin-ext f≗g rewrite map-ext f≗g (allFin n) = refl
@@ -231,3 +253,88 @@ sumFin n f = vsum (vmap f (allFin n))
 
     sumFin-mon : SumMon (sumFin n)
     sumFin-mon f g f≤°g = sum-mono f g f≤°g (allFin n)
+
+    sumFin-swap : SumSwap (sumFin n)
+    sumFin-swap f {sumˣ} sumˣ-linear = inner (allFin n) where
+      inner : ∀ {m}(xs : Vec (Fin n) m) → vsum (vmap (sumˣ ∘ f) xs) ≡ sumˣ (λ x → vsum (vmap (flip f x) xs))
+      inner [] = sym (SumLinear.sum-lin sumˣ-linear (const 1337) 0)
+      inner (x ∷ xs) rewrite inner xs = sym
+                                          (SumLinear.sum-hom sumˣ-linear (f x)
+                                                (λ y → vsum (vmap (flip f y) xs)))
+
+sumVec : ∀ {A} n → Sum A → Sum (Vec A n)
+sumVec zero    sumᴬ f = f []
+sumVec (suc n) sumᴬ f = sumᴬ (λ x → sumVec n sumᴬ (f ∘ _∷_ x))
+
+μVec : ∀ {A} (μA : SumProp A) n  → SumProp (Vec A n)
+μVec {A} μA n = mk (sV n)  (mk (sumVec-lin n) (sumVec-hom n)) (sumVec-ext n) (sumVec-mon n) (sumVec-swap n)
+  where
+    sV = flip sumVec (sum μA)
+
+    sumVec-ext : ∀ n → SumExt (sV n)
+    sumVec-ext zero    f≗g = f≗g []
+    sumVec-ext (suc n) f≗g = sum-ext μA (λ x → sumVec-ext n (f≗g ∘ _∷_ x))
+
+    sumVec-lin : ∀ n → SumLin (sV n)
+    sumVec-lin zero    f k = refl
+    sumVec-lin (suc n) f k rewrite sum-ext μA (λ x → sumVec-lin n (f ∘ _∷_ x) k)
+      = sum-lin μA (λ x → sV n (f ∘ _∷_ x)) k
+
+    sumVec-hom : ∀ n → SumHom (sV n)
+    sumVec-hom zero    f g = refl
+    sumVec-hom (suc n) f g rewrite sum-ext μA (λ x → sumVec-hom n (f ∘ _∷_ x) (g ∘ _∷_ x)) 
+      = sum-hom μA (λ x → sV n (f ∘ _∷_ x)) (λ x → sV n (g ∘ _∷_ x))
+
+    sumVec-mon : ∀ n → SumMon (sV n)
+    sumVec-mon zero    f g f≤°g = f≤°g []
+    sumVec-mon (suc n) f g f≤°g = sum-mon μA (λ x → sV n (f ∘ _∷_ x))
+                                             (λ x → sV n (g ∘ _∷_ x)) 
+                                    (λ x → sumVec-mon n (f ∘ _∷_ x) (g ∘ _∷_ x) (f≤°g ∘ _∷_ x))
+
+    sumVec-swap : ∀ n → SumSwap (sV n)
+    sumVec-swap zero    f        μˣ-linear = refl
+    sumVec-swap (suc n) f {sumˣ} μˣ-linear rewrite sum-ext μA (λ x → sumVec-swap n (f ∘ _∷_ x) μˣ-linear)
+      = sum-swap μA (λ z x → sumVec n (sum μA) (λ y → f (z ∷ y) x)) μˣ-linear
+
+sumVec-++ : ∀ {A} n {m} (μA : SumProp A)(f : Vec A (n + m)→ ℕ) 
+           → sum (μVec μA (n + m)) (λ xs → f xs)
+           ≡ sum (μVec μA n) (λ xs → sum (μVec μA m) (λ ys → f (xs ++ ys)))
+sumVec-++ zero    μA f = refl
+sumVec-++ (suc n) μA f = sum-ext μA (λ x → sumVec-++ n μA (f ∘ _∷_ x))
+
+sumVec-swap : ∀ {A} n {m} (μA : SumProp A)(f : Vec A (n + m) → ℕ)
+            → sum (μVec μA n) (λ xs → sum (μVec μA m) (λ ys → f (xs ++ ys)))
+            ≡ sum (μVec μA m) (λ ys → sum (μVec μA n) (λ xs → f (xs ++ ys)))
+sumVec-swap n {m} μA f = sum-swap (μVec μA n) (λ xs ys → f (xs ++ ys))
+                           (is-linear (μVec μA m))
+
+
+μ-view : ∀ {A B : Set} → (A → B) → SumProp A → SumProp B
+μ-view {A}{B} A→B μA = mk sumB (mk μB-lin μB-hom) μB-ext μB-mon μB-swap
+  where
+    sumB : Sum B
+    sumB f = sum μA (f ∘ A→B)
+
+    μB-ext : SumExt sumB
+    μB-ext f≗g = sum-ext μA (f≗g ∘ A→B)
+
+    μB-lin : SumLin sumB
+    μB-lin f k = sum-lin μA (f ∘ A→B) k
+
+    μB-hom : SumHom sumB
+    μB-hom f g = sum-hom μA (f ∘ A→B) (g ∘ A→B)
+
+    μB-mon : SumMon sumB
+    μB-mon f g f≤°g = sum-mon μA (f ∘ A→B) (g ∘ A→B) (f≤°g ∘ A→B)
+
+    μB-swap : SumSwap sumB
+    μB-swap f {sumˣ} sumˣ-linear = sum-swap μA (f ∘ A→B) sumˣ-linear
+
+μ-view-preserve : ∀ {A B} (A→B : A → B)(B→A : B → A)(A≈B : id ≗ B→A ∘ A→B) f (μA : SumProp A) → sum μA f ≡ sum (μ-view A→B μA) (f ∘ B→A)
+μ-view-preserve A→B B→A A≈B f μA = sum-ext μA (cong f ∘ A≈B)
+
+swapS : ∀ {A B} → SumProp (A × B) → SumProp (B × A)
+swapS = μ-view Data.Product.swap
+
+swapS-preserve : ∀ {A B} f (μA×B : SumProp (A × B)) → sum μA×B f ≡ sum (swapS μA×B) (f ∘ Data.Product.swap)
+swapS-preserve f μA×B =  μ-view-preserve Data.Product.swap Data.Product.swap (λ x → refl) f μA×B {- or refl -}

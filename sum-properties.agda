@@ -9,8 +9,8 @@ open import Function.NP
 
 open import sum
 
-import Relation.Binary.PropositionalEquality as ≡
-open ≡ using (_≡_ ; _≗_)
+import Relation.Binary.PropositionalEquality.NP as ≡
+open ≡ using (_≡_ ; _≗_ ; _≗₂_)
 
 sum-lem : ∀ {A : ★}(μA : SumProp A)(f g : A → ℕ) → sum μA f ≡ sum μA (λ x → f x ⊓ g x) + sum μA (λ x → f x ∸ g x)
 sum-lem μA f g = ≡.trans (sum-ext μA f≗f⊓g+f∸g) (sum-hom μA (λ x → f x ⊓ g x) (λ x → f x ∸ g x))
@@ -54,3 +54,7 @@ toℕ-⊔ false b = ≡.refl
 count-∨ : ∀ {A : ★}(μA : SumProp A)(f g : A → Bool) → count μA (λ x → f x ∨ g x) ≤ count μA f + count μA g
 count-∨ μA f g = ℕ≤.trans (ℕ≤.reflexive (sum-ext μA (λ x → ≡.sym (toℕ-⊔ (f x) (g x))))) 
                           (sum-⊔ μA (toℕ ∘ f) (toℕ ∘ g))
+
+
+sum-ext₂ : ∀ {A B}{f g : A → B → ℕ}(μA : SumProp A)(μB : SumProp B) → f ≗₂ g → sum μA (sum μB ∘ f) ≡ sum μA (sum μB ∘ g)
+sum-ext₂ μA μB f≗g = sum-ext μA (sum-ext μB ∘ f≗g)
