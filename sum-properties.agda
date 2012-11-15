@@ -1,6 +1,9 @@
 module sum-properties where
 
 open import Type
+
+import Level as L
+
 open import Data.Bool.NP
 open import Data.Nat.NP
 open import Data.Nat.Properties
@@ -58,3 +61,22 @@ count-∨ μA f g = ℕ≤.trans (ℕ≤.reflexive (sum-ext μA (λ x → ≡.sy
 
 sum-ext₂ : ∀ {A B}{f g : A → B → ℕ}(μA : SumProp A)(μB : SumProp B) → f ≗₂ g → sum μA (sum μB ∘ f) ≡ sum μA (sum μB ∘ g)
 sum-ext₂ μA μB f≗g = sum-ext μA (sum-ext μB ∘ f≗g)
+
+Injective : ∀ {a b}{A : Set a}{B : Set b}(f : A → B) → Set (a L.⊔ b)
+Injective f = ∀ {x y} → f x ≡ f y → x ≡ y
+
+StableUnderInjection : ∀ {A} → SumProp A → Set
+StableUnderInjection μ = ∀ f p → Injective p → sum μ f ≡ sum μ (f ∘ p)
+
+module _ where
+  open import bijection-fin
+  open import Data.Vec.NP
+
+  μFinSUI : ∀ {n} → StableUnderInjection (μFin n)
+  μFinSUI {n} f p p-inj rewrite ≡.sym (tabulate-∘ f id)
+                              | ≡.sym (tabulate-∘ (f ∘ p) id) = count-perm f p (λ x y → p-inj)
+
+
+#-StableUnderInjection : ∀ {A}{μ : SumProp A} → StableUnderInjection μ
+    → ∀ f p → Injective p → count μ f ≡ count μ (f ∘ p)
+#-StableUnderInjection sui f p p-inj = sui (toℕ ∘ f) p p-inj

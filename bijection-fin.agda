@@ -1,5 +1,7 @@
 module bijection-fin where
 
+  open import Type
+
   open import bijection
   open import Function.NP hiding (Cmp)
   open import Relation.Binary.PropositionalEquality
@@ -460,17 +462,20 @@ module bijection-fin where
     ; mono-inj→id   = `mono-inj→id
     }
 
-  open import Data.Bool
+  open import Data.Bool.NP
 
   count : ∀ {n} → (Fin n → ℕ) → ℕ
   count {n} f = sum (tabulate f)
+
+  count-ext : ∀ {n} → (f g : Fin n → ℕ) → f ≗ g → count f ≡ count g
+  count-ext {zero} f g f≗g = refl
+  count-ext {suc n} f g f≗g rewrite f≗g zero | count-ext (f ∘ suc) (g ∘ suc) (f≗g ∘ suc) = refl
 
   #⟨_⟩ : ∀ {n} → (Fin n → Bool) → ℕ
   #⟨ f ⟩ = count (λ x → if f x then 1 else 0)
 
   #-ext : ∀ {n} → (f g : Fin n → Bool) → f ≗ g → #⟨ f ⟩ ≡ #⟨ g ⟩
-  #-ext {zero} f g f≗g = refl
-  #-ext {suc n} f g f≗g rewrite f≗g zero | #-ext (f ∘ suc) (g ∘ suc) (f≗g ∘ suc) = refl
+  #-ext f g f≗g = count-ext (toℕ ∘ f) (toℕ ∘ g) (cong toℕ ∘ f≗g)
 
   com-assoc : ∀ x y z → x + (y + z) ≡ y + (x + z)
   com-assoc x y z rewrite 
@@ -485,14 +490,18 @@ module bijection-fin where
   syn-pres f (`tail S) rewrite syn-pres (f ∘ suc) S = refl
   syn-pres f (S `∘ S₁) rewrite syn-pres f S = syn-pres (f ∘ `evalArg S) S₁
 
+  count-perm : ∀ {n}(f : Fin n → ℕ)(p : Endo (Fin n)) → Is-Inj p
+         → count f ≡ count (f ∘ p)
+  count-perm f p p-inj = trans (syn-pres f (sort-bij p)) (count-ext _ _ f∘eval≗f∘p)
+   where
+     open abs interface
+     f∘eval≗f∘p : f ∘ `evalArg (sort-bij p) ≗ f ∘ p
+     f∘eval≗f∘p x rewrite thm p p-inj x = refl
+
+
   #-perm : ∀ {n}(f : Fin n → Bool)(p : Endo (Fin n)) → Is-Inj p
          → #⟨ f ⟩ ≡ #⟨ f ∘ p ⟩
-  #-perm f p p-inj = trans (syn-pres (λ x → if f x then 1 else 0) (sort-bij p))
-                       (#-ext _ _ f∘eval≗f∘p)
-    where 
-      open abs interface
-      f∘eval≗f∘p : f ∘ `evalArg (sort-bij p) ≗ f ∘ p
-      f∘eval≗f∘p x rewrite thm p p-inj x = refl
+  #-perm f p p-inj = count-perm (toℕ ∘ f) p p-inj
 
   test : `Syn 8
   test = abs.sort-bij interface (λ x → `evalArg (`tail `swap) x)

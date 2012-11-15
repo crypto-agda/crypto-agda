@@ -16,6 +16,7 @@ open import Relation.Binary.PropositionalEquality as ≡
 import cont as cont
 open cont using (Cont; ContA)
 open import sum
+open import sum-properties
 
 module elgamal where
 
@@ -199,8 +200,15 @@ module ℤq-implem (q : ℕ) ([0]' [1]' : Fin q) where
   suc m ℕ⊞ n = [suc] (m ℕ⊞ n)
   -}
 
+  ℕ⊞-inj : ∀ n {x y} → n ℕ⊞ x ≡ n ℕ⊞ y → x ≡ y
+  ℕ⊞-inj zero    eq = eq
+  ℕ⊞-inj (suc n) eq = sucmod-inj _ _ (ℕ⊞-inj n eq)
+
   _⊞_ : ℤq → ℤq → ℤq
   m ⊞ n = Fin.toℕ m ℕ⊞ n
+
+  ⊞-inj : ∀ m {x y} → m ⊞ x ≡ m ⊞ y → x ≡ y
+  ⊞-inj m = ℕ⊞-inj (Fin.toℕ m)
 
   _ℕ⊠_ : ℕ → ℤq → ℤq
   zero  ℕ⊠ n = [0]
@@ -243,7 +251,7 @@ module ℤq-implem (q : ℕ) ([0]' [1]' : Fin q) where
   sumℤq-⊞-lem : ∀ m f → sum μℤq (f ∘ _⊞_ m) ≡ sum μℤq f
   sumℤq-⊞-lem = sumℤq-ℕ⊞-lem ∘ Fin.toℕ
 
-  {-
+
 module G-implem (p q : ℕ) (g' : Fin p) (0[p] 1[p] : Fin p) (0[q] 1[q] : Fin q) where
   open ℤq-implem q 0[q] 1[q] public
   open ℤq-implem p 0[p] 1[p] public using () renaming (ℤq to G; _⊠_ to _∙_; _[^]ℕ_ to _^[p]_)
@@ -444,8 +452,8 @@ module El-Gamal-Generic
     functional-correctness x y m rewrite comm-^ g x y | /-∙ (g^ y ^ x) m = refl
 
     module Proof
-        (ddh-hyp : (A : DDHAdv Rₐ) → DDH⅁ A 0b ≈R DDH⅁ A 1b)
-        (otp-lem : ∀ (A : Message → Bit) m₀ m₁ → (λ x → A (g^ x ∙ m₀)) ≈q (λ x → A (g^ x ∙ m₁)))
+        (ddh-hyp : ∀ A → DDH⅁ A 0b ≈R DDH⅁ A 1b)
+        (otp-lem : ∀ A m₀ m₁ → (λ x → A (g^ x ∙ m₀)) ≈q (λ x → A (g^ x ∙ m₁)))
         (A : EncAdv Rₐ) (b : Bit)
       where
 
@@ -455,19 +463,10 @@ module El-Gamal-Generic
                                sum-ext μℤq (λ y →
                                  pf r x y)))
           where
-          f0 = λ M r x y z → OTP⅁ M D (r , x , y , z)
-          f1 = λ M r x y → sum μℤq (Bool.toℕ ∘ f0 M r x y)
-          f2 = λ M r x → sum μℤq (f1 M r x)
-          f3 = λ M r → sum μℤq (f2 M r)
-          pf : ∀ r x y → f1 M₀ r x y ≡ f1 M₁ r x y
-          pf r x y = pf'
-            where gˣ = g^ x
-                  gʸ = g^ y
-                  m₀ = M₀ r gˣ
-                  m₁ = M₁ r gˣ
-                  f5 = λ M z → D r gˣ gʸ (g^ z ∙ M)
-                  pf' : f5 m₀ ≈q f5 m₁
-                  pf' rewrite otp-lem (D r gˣ gʸ) m₀ m₁ = refl
+          pf : ∀ r x y → count μℤq (λ z → OTP⅁ M₀ D (r , x , y , z))
+                       ≡ count μℤq (λ z → OTP⅁ M₁ D (r , x , y , z))
+          pf r x y rewrite otp-lem (D r (g^ x) (g^ y)) (M₀ r (g^ x)) (M₁ r (g^ x))  = refl
+
 
         Aᵇ = TrA b A
         A¬ᵇ = TrA (not b) A
@@ -563,11 +562,12 @@ module El-Gamal-Hashed
     ℋ⟨ δ ⟩⊕ m = ℋ δ ⊕ m
 
     _/_ : Message → G → Message
-    _/_ = {!!}
+    _/_ m δ = ℋ δ ⊕ m
 
+ 
+    /-∙ : ∀ x y → ℋ⟨ x ⟩⊕ y / x ≡ y
+    /-∙ x y = {!!}
     {-
-    /-∙ : ∀ x y → (x ∙ y) / x ≡ y
-    /-∙ x y = ?
 
     open El-Gamal-Generic ℤq _⊠_ G g _^_ Message ℋ⟨_⟩⊕_ _/_ {!!} {!!}
            dist-^-⊠ sumℤq sumℤq-ext Rₐ sumRₐ sumRₐ-ext public
@@ -590,20 +590,32 @@ module ⟨ℤp⟩★ p-3 {- p is prime -} (`Rₐ : `★) where
 
   postulate
     _⁻¹ : G → G
+    _/_ : G → G → G
+    /-• : ∀ x y → (x ∙ y) / x ≡ y
+    comm-^ : ∀ α x y → (α ^ x)^ y ≡ (α ^ y)^ x
     dist-^-⊠ : ∀ α x y → α ^ (x ⊠ y) ≡ (α ^ x) ^ y
 
   open ℤq-count ℤq _⊞_ μℤq sumℤq-⊞-lem
 
-  Rₐ = El `Rₐ
-  sumRₐ = sum `Rₐ
-  sumRₐ-ext = sum-ext `Rₐ
+  μRₐ : SumProp (El `Rₐ)
+  μRₐ = μU μℤq `Rₐ
 
-  module EB = El-Gamal-Base _ _⊠_ G g _^_ _∙_ _⁻¹ dist-^-⊠ sumℤq sumℤq-ext Rₐ sumRₐ sumRₐ-ext
+  Rₐ = El `Rₐ
+  sumRₐ = sum μRₐ
+  sumRₐ-ext = sum-ext μRₐ
+
+  module EB = El-Gamal-Base _ _⊠_ G g _^_ _∙_ _/_ /-• comm-^ dist-^-⊠ μℤq Rₐ μRₐ
   open EB hiding (g^_)
+
+  otp-base-lem : ∀ (A : G → Bit) m → (A ∘ g^_) ≈q (A ∘ g^_ ∘ _⊞_ m)
+  otp-base-lem A m = #-StableUnderInjection {μ = μFin _} μFinSUI
+         (A ∘ g^_) (_⊞_ m) (⊞-inj m)
+   -- oh hai! this is:  sym (sumℤq-⊞-lem m (Bool.toℕ ∘ A ∘ g^_)) -- kthxbye
 
   postulate
     ddh-hyp : (A : DDHAdv Rₐ) → DDH⅁ A 0b ≈R DDH⅁ A 1b
     otp-lem : ∀ (A : G → Bit) m → (λ x → A (g^ x ∙ m)) ≈q (λ x → A (g^ x))
+
 
   open OTP⅁-LEM otp-lem
 

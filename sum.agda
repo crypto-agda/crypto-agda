@@ -190,7 +190,7 @@ _×μ_ : ∀ {A B} → SumProp A
        = sum-swap μA (λ z x → sum μB (λ y → f (z , y) x)) sumˣ-linear
 
 sum-0 : ∀ {A} (μA : SumProp A) → sum μA (const 0) ≡ 0
-sum-0 μA = sum-lin μA (λ _ → Graham's-number) 0
+sum-0 μA = sum-lin μA (λ _ → 0) 0
 
 sum-const : ∀ {A} (μA : SumProp A) → ∀ k → sum μA (const k) ≡ Card μA * k 
 sum-const μA k
@@ -237,7 +237,7 @@ open import Data.Fin hiding (_+_)
 open import Data.Vec.NP as Vec renaming (map to vmap; sum to vsum)
 
 sumFin : ∀ n → Sum (Fin n)
-sumFin n f = vsum (vmap f (allFin n))
+sumFin n f = vsum (vmap f (allFin n)) -- or vsum (tabulate f)
 
 μFin : ∀ n → SumProp (Fin n)
 μFin n = mk (sumFin n) (mk sumFin-lin sumFin-hom) sumFin-ext sumFin-mon sumFin-swap

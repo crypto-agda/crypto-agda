@@ -496,6 +496,7 @@ module SortingDataIxProperties {ℓ a} {A : Set a} (_≤ᴬ_ : A → A → Set �
     open SortedDataIx _≤ᴬ_ isPreorder
     open Sorting-⊓-⊔ _⊓ᴬ_ _⊔ᴬ_
 
+    {-# NO_TERMINATION_CHECK #-} -- needed due to a bug in Termination/SparseMatrix.hs blowUpSparseVector
     merge-pres : ∀ {n} {t : Tree A (1 + n)} {l h} → Sorted t l h → merge t ≡ t
     merge-pres (fork leaf leaf x) = ≡.cong₂ (fork on leaf) (⊓-spec x) (⊔-spec x)
     merge-pres {t = fork (fork t₀ t₁) (fork u₀ u₁)}
