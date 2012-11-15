@@ -299,16 +299,16 @@ module DDH
     DDHAdv R = R → G → G → G → Bit
 
     DDH⅁₀ : ∀ {R} {_I : ★} → DDHAdv R → (R × ℤq × ℤq × _I) → Bit
-    DDH⅁₀ D (r , x , y , _) = D r (g^ x) (g^ y) (g^ (x ⊠ y))
+    DDH⅁₀ d (r , x , y , _) = d r (g^ x) (g^ y) (g^ (x ⊠ y))
 
     DDH⅁₁ : ∀ {R} → DDHAdv R → (R × ℤq × ℤq × ℤq) → Bit
-    DDH⅁₁ D (r , x , y , z) = D r (g^ x) (g^ y) (g^ z)
+    DDH⅁₁ d (r , x , y , z) = d r (g^ x) (g^ y) (g^ z)
 
     DDH⅁ : ∀ {R} → DDHAdv R → Bit → (R × ℤq × ℤq × ℤq) → Bit
-    DDH⅁ D b = (case b 0→ DDH⅁₀ 1→ DDH⅁₁) D
+    DDH⅁ d b = (case b 0→ DDH⅁₀ 1→ DDH⅁₁) d
 
     -- DDH⅁′ : ∀ {R} → DDHAdv R → (Bit × ℤq × ℤq × ℤq × R) → Bit
-    -- DDH⅁′ D (b , x , y , z , r) = DDH⅁ D b (x , y , z , r)
+    -- DDH⅁′ d (b , x , y , z , r) = DDH⅁ d b (x , y , z , r)
 
     module With↺ where
         open Univ ℤq
@@ -316,7 +316,7 @@ module DDH
         DDHAdv↺ : `★ → ★
         DDHAdv↺ R = G → G → G → ↺ R Bit
         DDH⅁₀↺ : ∀ {R _I} → DDHAdv↺ R → ↺ (R `× `ℤq `× `ℤq `× _I) Bit
-        run↺ (DDH⅁₀↺ D) = DDH⅁₀ (λ a b c d → run↺ (D b c d) a)
+        run↺ (DDH⅁₀↺ d) = DDH⅁₀ (λ a b c d → run↺ (d b c d) a)
 
 module El-Gamal-Generic
   (ℤq : ★)
@@ -378,13 +378,13 @@ module El-Gamal-Generic
               × (Rₐ → PubKey → C → Bit)
 
     SS⅁ : ∀ {Rₐ _I : ★} → EncAdv Rₐ → Bit → (Rₐ × ℤq × ℤq × _I) → Bit
-    SS⅁ (m , D) b (rₐ , x , y , z) =
+    SS⅁ (m , d) b (rₐ , x , y , z) =
       let pk = proj₁ (KeyGen x) in
-      D rₐ pk (Enc pk (m rₐ pk b) y)
+      d rₐ pk (Enc pk (m rₐ pk b) y)
 
       -- Unused
     Game : (i : Bit) → ∀ {Rₐ} → EncAdv Rₐ → (Bit × Rₐ × ℤq × ℤq × ℤq) → Bit
-    Game i (m , D) (b , rₐ , x , y , z) = b ==ᵇ D rₐ gˣ (gʸ , ζ)
+    Game i (m , d) (b , rₐ , x , y , z) = b ==ᵇ d rₐ gˣ (gʸ , ζ)
       where gˣ = g^ x
             gʸ = g^ y
             δ  = gˣ ^ case i 0→ y 1→ z
@@ -399,23 +399,23 @@ module El-Gamal-Generic
 
     OTP⅁ : ∀ {R : ★} → (R → G → Message) → (R → G → G → Message → Bit)
                      → (R × ℤq × ℤq × ℤq) → Bit
-    OTP⅁ M D (r , x , y , z) = D r gˣ gʸ (gᶻ ∙ M r gˣ)
+    OTP⅁ M d (r , x , y , z) = d r gˣ gʸ (gᶻ ∙ M r gˣ)
       where gˣ = g^ x
             gʸ = g^ y
             gᶻ = g^ z
 
     TrA : ∀ {Rₐ} → Bit → EncAdv Rₐ → DDHAdv Rₐ
-    TrA b (m , D) rₐ gˣ gʸ gˣʸ = D rₐ gˣ (gʸ , gˣʸ ∙ m rₐ gˣ b)
+    TrA b (m , d) rₐ gˣ gʸ gˣʸ = d rₐ gˣ (gʸ , gˣʸ ∙ m rₐ gˣ b)
 
     projM : ∀ {Rₐ} → EncAdv Rₐ → Bit → Rₐ → G → Message
     projM (m , _) b rₐ gˣ = m rₐ gˣ b
 
     projD : ∀ {Rₐ} → EncAdv Rₐ → Rₐ → G → G → Message → Bit
-    projD (_ , D) rₐ gˣ gʸ gᶻ∙M = D rₐ gˣ (gʸ , gᶻ∙M)
+    projD (_ , d) rₐ gˣ gʸ gᶻ∙M = d rₐ gˣ (gʸ , gᶻ∙M)
 
     like-SS⅁ : ∀ {Rₐ _I : ★} → EncAdv Rₐ → Bit → (Rₐ × ℤq × ℤq × _I) → Bit
-    like-SS⅁ (m , D) b (rₐ , x , y , _z) =
-      D rₐ gˣ (gʸ , (gˣ ^ y) ∙ m rₐ gˣ b)
+    like-SS⅁ (m , d) b (rₐ , x , y , _z) =
+      d rₐ gˣ (gʸ , (gˣ ^ y) ∙ m rₐ gˣ b)
       where gˣ = g^ x
             gʸ = g^ y
 
@@ -449,13 +449,13 @@ module El-Gamal-Generic
         (A : EncAdv Rₐ) (b : Bit)
       where
 
-        OTP⅁-lem : ∀ D M₀ M₁ → OTP⅁ M₀ D ≈R OTP⅁ M₁ D
-        OTP⅁-lem D M₀ M₁ = sum-ext μRₐ (λ r →
+        OTP⅁-lem : ∀ d M₀ M₁ → OTP⅁ M₀ d ≈R OTP⅁ M₁ d
+        OTP⅁-lem d M₀ M₁ = sum-ext μRₐ (λ r →
                              sum-ext μℤq (λ x →
                                sum-ext μℤq (λ y →
                                  pf r x y)))
           where
-          f0 = λ M r x y z → OTP⅁ M D (r , x , y , z)
+          f0 = λ M r x y z → OTP⅁ M d (r , x , y , z)
           f1 = λ M r x y → sum μℤq (Bool.toℕ ∘ f0 M r x y)
           f2 = λ M r x → sum μℤq (f1 M r x)
           f3 = λ M r → sum μℤq (f2 M r)
@@ -465,9 +465,9 @@ module El-Gamal-Generic
                   gʸ = g^ y
                   m₀ = M₀ r gˣ
                   m₁ = M₁ r gˣ
-                  f5 = λ M z → D r gˣ gʸ (g^ z ∙ M)
+                  f5 = λ M z → d r gˣ gʸ (g^ z ∙ M)
                   pf' : f5 m₀ ≈q f5 m₁
-                  pf' rewrite otp-lem (D r gˣ gʸ) m₀ m₁ = refl
+                  pf' rewrite otp-lem (d r gˣ gʸ) m₀ m₁ = refl
 
         Aᵇ = TrA b A
         A¬ᵇ = TrA (not b) A
@@ -574,7 +574,7 @@ module El-Gamal-Hashed
            -}
 
            {-
-    OTP⅁-lem : ∀ D M₀ M₁ → OTP⅁ M₀ D ≈R OTP⅁ M₁ D
+    OTP⅁-lem : ∀ d M₀ M₁ → OTP⅁ M₀ d ≈R OTP⅁ M₁ d
     OTP⅁-lem = ?
     -}
 
