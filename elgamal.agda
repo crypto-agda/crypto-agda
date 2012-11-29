@@ -324,7 +324,7 @@ module DDH
         DDHAdv↺ : `★ → ★
         DDHAdv↺ R = G → G → G → ↺ R Bit
         DDH⅁₀↺ : ∀ {R _I} → DDHAdv↺ R → ↺ (R `× `ℤq `× `ℤq `× _I) Bit
-        run↺ (DDH⅁₀↺ d) = DDH⅁₀ (λ a b c d → run↺ (d b c d) a)
+        run↺ (DDH⅁₀↺ d) = DDH⅁₀ (λ x y z t → run↺ (d y z t) x)
 
 module El-Gamal-Generic
   (ℤq : ★)
@@ -463,9 +463,9 @@ module El-Gamal-Generic
                                sum-ext μℤq (λ y →
                                  pf r x y)))
           where
-          pf : ∀ r x y → count μℤq (λ z → OTP⅁ M₀ D (r , x , y , z))
-                       ≡ count μℤq (λ z → OTP⅁ M₁ D (r , x , y , z))
-          pf r x y rewrite otp-lem (D r (g^ x) (g^ y)) (M₀ r (g^ x)) (M₁ r (g^ x))  = refl
+          pf : ∀ r x y → count μℤq (λ z → OTP⅁ M₀ d (r , x , y , z))
+                       ≡ count μℤq (λ z → OTP⅁ M₁ d (r , x , y , z))
+          pf r x y rewrite otp-lem (d r (g^ x) (g^ y)) (M₀ r (g^ x)) (M₁ r (g^ x))  = refl
 
         Aᵇ = TrA b A
         A¬ᵇ = TrA (not b) A
