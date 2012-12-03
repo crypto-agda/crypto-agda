@@ -469,7 +469,7 @@ _×μ_ : ∀ {A B} → SumProp A
              sᴬ = search μA _∙_
              sᴮ = search μB _∙_
              sᴬᴮ = srch _∙_
--}
+
 sum-const : ∀ {A} (μA : SumProp A) → ∀ k → sum μA (const k) ≡ Card μA * k
 sum-const μA k
   rewrite ℕ°.*-comm (Card μA) k
