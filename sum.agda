@@ -221,7 +221,7 @@ record SumProp A : ★₁ where
 
   sum-lin : SumLin sum
   sum-lin f zero    = sum-zero
-  sum-lin f (suc k) = {!!}
+  sum-lin f (suc k) = ≡.trans (sum-hom f (λ x → k * f x)) (≡.cong₂ _+_ (≡.refl {x = sum f}) (sum-lin f k))
   {-
     rewrite sum-hom f (λ x → k * f x)
           | sum-lin f k = {!≡.refl!}
@@ -336,8 +336,8 @@ _+Sum_ : ∀ {A B} → Sum A → Sum B → Sum (A ⊎ B)
 _+μ_ : ∀ {A B} → SumProp A
                → SumProp B
                → SumProp (A ⊎ B)
-_+μ_ {A} {B} μA μB = ?
-{-
+-- _+μ_ {A} {B} μA μB = {!!}
+-- {-
 _+μ_ {A} {B} μA μB = mk srch ext mono swp eps hom
   where
     sᴬ : Search A
@@ -386,7 +386,7 @@ _+μ_ {A} {B} μA μB = mk srch ext mono swp eps hom
       where open Sgrp sg
             g = λ x → search μA _∙_ (λ y → f (inj₁ y) x)
             h = λ x → search μB _∙_ (λ y → f (inj₂ y) x)
--}
+
 infixr 4 _×Search_
 
 -- liftM2 _,_ in the continuation monad
@@ -423,8 +423,8 @@ infixr 4 _×μ_
 _×μ_ : ∀ {A B} → SumProp A
                → SumProp B
                → SumProp (A × B)
-(μA ×μ μB) = ?
-{-
+(μA ×μ μB) -- = {!!}
+-- {-
    = mk srch ext mono swp eps hom
    where
      srch : Search _ -- (A × B)
