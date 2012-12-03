@@ -1,18 +1,78 @@
+import Level as L
 open import Type
 open import Function
+open import Algebra
+open import Algebra.FunctionProperties.NP
 open import Data.Nat.NP
 open import Data.Nat.Properties
 open import Data.Unit hiding (_≤_)
 open import Data.Sum
+open import Data.Maybe.NP
 open import Data.Product
 open import Data.Bits
 open import Data.Bool.NP as Bool
-open import Relation.Binary.PropositionalEquality as ≡
+open import Function.Equality using (_⟨$⟩_)
+import Function.Inverse as FI
+open FI using (_↔_; module Inverse)
+open import Function.Related.TypeIsomorphisms.NP
+open import Relation.Binary.NP
+import Relation.Binary.PropositionalEquality as ≡
+open ≡ using (_≡_; _≗_)
 
 module sum where
 
 _≤°_ : ∀ {A : ★}(f g : A → ℕ) → ★
 f ≤° g = ∀ x → f x ≤ g x
+
+Semigroup₀ = Semigroup L.zero L.zero
+Monoid₀ = Monoid L.zero L.zero
+CommutativeMonoid₀ = CommutativeMonoid L.zero L.zero
+Preorder₀ = Preorder L.zero L.zero L.zero
+
+module PO (po : Preorder₀) where
+  open Preorder po public renaming (_∼_ to _⊆_)
+  _⊆°_ : ∀ {A : ★}(f g : A → Carrier) → ★
+  f ⊆° g = ∀ x → f x ⊆ g x
+  
+module SgrpExtra (sg : Semigroup₀) where
+  open Semigroup sg
+  open Setoid-Reasoning (Semigroup.setoid sg) public
+  C : ★
+  C = Carrier
+  _≈°_ : ∀ {A : ★} (f g : A → C) → ★
+  f ≈° g = ∀ x → f x ≈ g x 
+  _∙°_   : ∀ {A : ★} (f g : A → C) → A → C
+  (f ∙° g) x = f x ∙ g x
+  infixl 7 _-∙-_
+  _-∙-_ : _∙_ Preserves₂ _≈_ ⟶ _≈_ ⟶ _≈_
+  _-∙-_ = ∙-cong
+
+module Sgrp (sg : Semigroup₀) where
+  open Semigroup sg public
+  open SgrpExtra sg public
+
+module Mon (m : Monoid₀) where
+  open Monoid m public
+  sg = semigroup
+  open SgrpExtra semigroup public
+
+module CMon (cm : CommutativeMonoid₀) where
+  open CommutativeMonoid cm public
+  sg = semigroup
+  m = monoid
+  open SgrpExtra sg public
+
+  ∙-interchange : Interchange _≈_ _∙_ _∙_
+  ∙-interchange = InterchangeFromAssocCommCong.∙-interchange
+                    _≈_ isEquivalence
+                    _∙_ assoc comm (λ _ → flip ∙-cong refl)
+
+Search : ★ → ★₁
+Search A = ∀ {B} → (_∙_ : B → B → B) → (A → B) → B
+
+SearchMon : ★ → ★₁
+SearchMon A = (m : Monoid₀) → let open Mon m in
+                              (A → C) → C
 
 Sum : ★ → ★
 Sum A = (A → ℕ) → ℕ
@@ -20,65 +80,118 @@ Sum A = (A → ℕ) → ℕ
 Count : ★ → ★
 Count A = (A → Bit) → ℕ
 
+SearchExt : ∀ {A} → Search A → ★₁
+SearchExt sᴬ = ∀ sg {f g} → let open Sgrp sg in
+                            f ≈° g → sᴬ _∙_ f ≈ sᴬ _∙_ g
+
 SumExt : ∀ {A} → Sum A → ★
 SumExt sumᴬ = ∀ {f g} → f ≗ g → sumᴬ f ≡ sumᴬ g
 
 CountExt : ∀ {A} → Count A → ★
 CountExt countᴬ = ∀ {f g} → f ≗ g → countᴬ f ≡ countᴬ g
 
-SumZer : ∀ {A} → Sum A → ★
-SumZer sumᵃ = sumᵃ (λ _ → 0) ≡ 0
+Searchε : ∀ {A} → SearchMon A → ★₁
+Searchε sᴬ = ∀ m → let open Mon m in
+                   sᴬ m (const ε) ≈ ε
+
+SumZero : ∀ {A} → Sum A → ★
+SumZero sumᴬ = sumᴬ (λ _ → 0) ≡ 0
 
 SumLin : ∀ {A} → Sum A → ★
 SumLin sumᴬ = ∀ f k → sumᴬ (λ x → k * f x) ≡ k * sumᴬ f
 
+SearchHom : ∀ {A} → Search A → ★₁
+SearchHom sᴬ = ∀ sg f g → let open Sgrp sg in
+                          sᴬ _∙_ (f ∙° g) ≈ sᴬ _∙_ f ∙ sᴬ _∙_ g
+
+SearchMonHom : ∀ {A} → SearchMon A → ★₁
+SearchMonHom sᴬ = ∀ (cm : CommutativeMonoid₀) f g →
+                         let open CMon cm in
+                         sᴬ m (f ∙° g) ≈ sᴬ m f ∙ sᴬ m g
+
+{-search-hom′ :
+  ∀ {a b}
+    {A : Set a} {B : Set b} {R}
+    (_+_ : A → A → A)
+    (_*_ : B → B → B)
+    (f : A → B)
+    (p : R → A)
+    (hom : ∀ x y → f (x + y) ≡ f x * f y)
+    → f (search _+_ p) ≡ search _*_ (f ∘ p)
+search-hom′ = ?
+{-
+search-hom {zero}  _   _   _ _ _   = refl
+search-hom {suc n} _+_ _*_ f p hom =
+   trans (hom _ _)
+         (cong₂ _*_ (search-hom _+_ _*_ f (p ∘ 0∷_) hom)
+                    (search-hom _+_ _*_ f (p ∘ 1∷_) hom))
+-}
+-}
+
 SumHom : ∀ {A} → Sum A → ★
 SumHom sumᴬ = ∀ f g → sumᴬ (λ x → f x + g x) ≡ sumᴬ f + sumᴬ g
 
-SumMon : ∀ {A} → Sum A → ★
-SumMon sumᴬ = ∀ {f g} → f ≤° g → sumᴬ f ≤ sumᴬ g
+SearchMono : ∀ {A} → Search A → ★₁
+SearchMono sᴬ = ∀ {C : ★} (_⊆_ : C → C → ★) → -- let open PO {C} _⊆_ in
+                ∀ {_∙_} (∙-mono : _∙_ Preserves₂ _⊆_ ⟶ _⊆_ ⟶ _⊆_)
+                  {f g} →
+                  (∀ x → f x ⊆ g x) → sᴬ _∙_ f ⊆ sᴬ _∙_ g
 
-record SumLinear {A} sumᴬ : ★ where
-  constructor mk
-  field
-    sum-lin : SumLin {A} sumᴬ
-    sum-hom : SumHom sumᴬ
+SumMono : ∀ {A} → Sum A → ★
+SumMono sumᴬ = ∀ {f g} → f ≤° g → sumᴬ f ≤ sumᴬ g
 
-SumSwap : ∀ {A} → Sum A → ★₁
-SumSwap {A} sumᴬ = ∀ {B} f {sumᴮ} → SumLinear {B} sumᴮ → sumᴬ (sumᴮ ∘ f) ≡ sumᴮ (sumᴬ ∘ flip f)
+SearchSwap : ∀ {A} → Search A → ★₁
+SearchSwap {A} sᴬ = ∀ {B} sg f → let open Sgrp sg in ∀ {sᴮ : (B → C) → C}
 
-mkSumLin : ∀ {A} → {sum : Sum A} → SumHom sum → SumZer sum → SumLin sum
-mkSumLin sum-hom sum-zer f zero    = sum-zer
-mkSumLin {sum = sum} sum-hom sum-zer f (suc k) rewrite
-    sum-hom f (λ x → k * f x)
-  | mkSumLin {sum = sum} sum-hom sum-zer f k = refl
+  → (hom : ∀ f g → sᴮ (f ∙° g) ≈ sᴮ f ∙ sᴮ g)
+  → sᴬ _∙_ (sᴮ ∘ f) ≈ sᴮ (sᴬ _∙_ ∘ flip f)
 
-mkSumZer : ∀ {A} → {sum : Sum A} → SumLin sum → SumZer sum
-mkSumZer sum-lin = sum-lin (λ _ → 0) 0
+SumLin⇒SumZero : ∀ {A} → {sum : Sum A} → SumLin sum → SumZero sum
+SumLin⇒SumZero sum-lin = sum-lin (λ _ → 0) 0
 
-mkSumExt : ∀ {A} → {sum : Sum A} → SumMon sum → SumExt sum
-mkSumExt sum-mon f≗g = ℕ≤.antisym (sum-mon (ℕ≤.reflexive ∘ f≗g)) (sum-mon (ℕ≤.reflexive ∘ sym ∘ f≗g))
+mkSumExt : ∀ {A} → {sum : Sum A} → SumMono sum → SumExt sum
+mkSumExt sum-mono f≗g = ℕ≤.antisym (sum-mono (ℕ≤.reflexive ∘ f≗g)) (sum-mono (ℕ≤.reflexive ∘ ≡.sym ∘ f≗g))
 
-mkSumMon : ∀ {A} → {sum : Sum A} → SumExt sum → SumHom sum → SumMon sum
+mkSumMon : ∀ {A} → {sum : Sum A} → SumExt sum → SumHom sum → SumMono sum
 mkSumMon {sum = sum} sum-ext sum-hom {f} {g} f≤°g =
     sum f                         ≤⟨ m≤m+n _ _ ⟩
-    sum f + sum (λ x → g x ∸ f x) ≡⟨ sym (sum-hom _ _) ⟩
+    sum f + sum (λ x → g x ∸ f x) ≡⟨ ≡.sym (sum-hom _ _) ⟩
     sum (λ x → f x + (g x ∸ f x)) ≡⟨ sum-ext (m+n∸m≡n ∘ f≤°g) ⟩
     sum g ∎ where open ≤-Reasoning
+
+searchMonFromSearch : ∀ {A} → Search A → SearchMon A
+searchMonFromSearch s m = s _∙_ where open Mon m
 
 record SumProp A : ★₁ where
   constructor mk
   field
-    sum : Sum A
-    is-linear : SumLinear sum
-    sum-ext : SumExt sum
-    sum-mon : SumMon sum
-    sum-swap : SumSwap sum
+    search      : Search A
+    search-ext  : SearchExt search
+    search-mono : SearchMono search
+    search-swap : SearchSwap search
+  searchMon : SearchMon A
+  searchMon m = let open Mon m in search _∙_
+  field
+    search-ε   : Searchε searchMon
+    search-hom : SearchMonHom searchMon
+  sum : Sum A
+  sum = search _+_
+  sum-ext : SumExt sum
+  sum-ext = search-ext ℕ+.semigroup
+  sum-zero : SumZero sum
+  sum-zero = search-ε ℕ+.monoid
+  sum-hom : SumHom sum
+  sum-hom = search-hom ℕ°.+-commutativeMonoid
+  sum-mono : SumMono sum
+  sum-mono = search-mono _≤_ _+-mono_
 
-  -- open SumLinear is-linear public
-
-  sum-lin = SumLinear.sum-lin is-linear
-  sum-hom = SumLinear.sum-hom is-linear
+  sum-lin : SumLin sum
+  sum-lin f zero    = sum-zero
+  sum-lin f (suc k) = ?
+  {-
+    rewrite sum-hom f (λ x → k * f x)
+          | sum-lin f k = {!≡.refl!}
+          -}
 
   Card : ℕ
   Card = sum (const 1)
@@ -87,60 +200,86 @@ record SumProp A : ★₁ where
   count f = sum (Bool.toℕ ∘ f)
 
   count-ext : CountExt count
-  count-ext f≗g = sum-ext (cong Bool.toℕ ∘ f≗g)
+  count-ext f≗g = sum-ext (≡.cong Bool.toℕ ∘ f≗g)
 
 open SumProp public
+
+search-swap' : ∀ {A B} cm (μA : SumProp A) (μB : SumProp B) f →
+               let open CMon cm
+                   sᴬ = search μA _∙_
+                   sᴮ = search μB _∙_ in
+               sᴬ (sᴮ ∘ f) ≈ sᴮ (sᴬ ∘ flip f)
+search-swap' cm μA μB f = search-swap μA sg f (search-hom μB cm)
+  where open CMon cm
+
+sum-swap : ∀ {A B} (μA : SumProp A) (μB : SumProp B) f →
+           sum μA (sum μB ∘ f) ≡ sum μB (sum μA ∘ flip f)
+sum-swap = search-swap' ℕ°.+-commutativeMonoid
 
 _≈Sum_ : ∀ {A} → (sum₀ sum₁ : Sum A) → ★
 sum₀ ≈Sum sum₁ = ∀ f → sum₀ f ≡ sum₁ f
 
-sum⊤ : Sum ⊤
-sum⊤ f = f _
-
 μ⊤ : SumProp ⊤
-μ⊤ = mk sum⊤ (mk sum⊤-lin sum⊤-hom) sum⊤-ext sum⊤-mon sum⊤-swap
+μ⊤ = mk search⊤ ext mono search⊤-swap eps hom
   where
-    sum⊤-ext : SumExt sum⊤
-    sum⊤-ext f≗g = f≗g _
+    search⊤ : Search ⊤
+    search⊤ _ f = f _
 
-    sum⊤-zer : SumZer sum⊤
-    sum⊤-zer = refl
+    searchMon⊤ : SearchMon ⊤
+    searchMon⊤ _ f = f _
 
-    sum⊤-lin : SumLin sum⊤
-    sum⊤-lin f k = refl
+    ext : SearchExt search⊤
+    ext _ f≗g = f≗g _
 
-    sum⊤-hom : SumHom sum⊤
-    sum⊤-hom f g = refl
+    mono : SearchMono search⊤
+    mono _ _ f≤°g = f≤°g _
 
-    sum⊤-mon : SumMon sum⊤
-    sum⊤-mon f≤°g = f≤°g _
+    eps : Searchε searchMon⊤
+    eps m = Monoid.refl m
 
-    sum⊤-swap : SumSwap sum⊤
-    sum⊤-swap f sumᴬ-linear = refl
+    search⊤-swap : SearchSwap search⊤
+    search⊤-swap sg f hom = refl
+      where open Sgrp sg
 
-sumBit : Sum Bit
-sumBit f = f 0b + f 1b
+    hom : SearchMonHom searchMon⊤
+    hom m f g = CommutativeMonoid.refl m
 
 μBit : SumProp Bit
-μBit = mk sumBit (mk sumBit-lin sumBit-hom) sumBit-ext sumBit-mon sumBit-swap
+μBit = mk searchBit ext mono swp eps hom
   where
-    sumBit-ext : SumExt sumBit
-    sumBit-ext f≗g rewrite f≗g 0b | f≗g 1b = refl
+    searchBit : Search Bit
+    searchBit _∙_ f = f 0b ∙ f 1b
 
-    sumBit-zero : sumBit (const 0) ≡ 0
-    sumBit-zero = refl
+    searchMonBit : SearchMon Bit
+    searchMonBit m f = f 0b ∙ f 1b
+      where open Mon m
 
-    sumBit-hom : SumHom sumBit
-    sumBit-hom f g = +-interchange (f 0b) (g 0b) (f 1b) (g 1b)
+    ext : SearchExt searchBit
+    ext sg f≗g = f≗g 0b -∙- f≗g 1b
+      where open Sgrp sg
 
-    sumBit-lin : SumLin sumBit
-    sumBit-lin = mkSumLin sumBit-hom sumBit-zero
+    mono : SearchMono searchBit
+    mono po _∙-mono_ f⊆°g = f⊆°g 0b ∙-mono f⊆°g 1b
 
-    sumBit-mon : SumMon sumBit
-    sumBit-mon f≤°g = f≤°g 0b +-mono f≤°g 1b
+    eps : Searchε searchMonBit
+    eps m = proj₁ identity ε
+      where open Monoid m
 
-    sumBit-swap : SumSwap sumBit
-    sumBit-swap f sumᴬ-linear rewrite SumLinear.sum-hom sumᴬ-linear (f 0b) (f 1b) = refl
+    hom : SearchMonHom searchMonBit
+    hom cm f g = ∙-interchange (f 0b) (g 0b) (f 1b) (g 1b)
+      where open CMon cm
+
+    sumBit : Sum Bit
+    sumBit f = f 0b + f 1b
+
+    swp : SearchSwap searchBit
+    swp sg f homᴮ = sym (homᴮ (f 0b) (f 1b))
+      where open Sgrp sg
+
+infixr 4 _+Search_
+
+_+Search_ : ∀ {A B} → Search A → Search B → Search (A ⊎ B)
+(searchᴬ +Search searchᴮ) _∙_ f = searchᴬ _∙_ (f ∘ inj₁) ∙ searchᴮ _∙_ (f ∘ inj₂)
 
 infixr 4 _+Sum_
 
@@ -150,32 +289,63 @@ _+Sum_ : ∀ {A B} → Sum A → Sum B → Sum (A ⊎ B)
 _+μ_ : ∀ {A B} → SumProp A
                → SumProp B
                → SumProp (A ⊎ B)
-(μA +μ μB) = mk +-μ (mk +μ-lin +μ-hom) +μ-ext +μ-mon +μ-swap
+(μA +μ μB) = mk srch ext mono swp eps hom
   where
-    +-μ = sum μA +Sum sum μB
-    +μ-ext : SumExt +-μ 
-    +μ-ext f≗g rewrite sum-ext μA (f≗g ∘ inj₁) | sum-ext μB (f≗g ∘ inj₂) = refl
+    sᴬ = search μA
+    sᴮ = search μB
+    srch = sᴬ +Search sᴮ
+    sMonᴬ = searchMon μA
+    sMonᴮ = searchMon μB
+    srchMon = searchMonFromSearch srch
+    ext : SearchExt srch
+    ext sg f≗g = search-ext μA sg (f≗g ∘ inj₁) -∙- search-ext μB sg (f≗g ∘ inj₂)
+      where open Sgrp sg
 
-    +μ-zero : +-μ (λ _ → zero) ≡ zero
-    +μ-zero rewrite sum-lin μA (λ _ → 0) 0 | sum-lin μB (λ _ → 0) 0 = refl
+    eps : Searchε srchMon
+    eps m = srchMon m (const ε)
+          ≈⟨ search-ε μA m -∙- search-ε μB m ⟩
+            ε ∙ ε
+          ≈⟨ proj₁ identity ε ⟩
+            ε
+          ∎
+      where open Mon m
 
-    +μ-lin : SumLin +-μ
-    +μ-lin f k rewrite sum-lin μA (f ∘ inj₁) k | sum-lin μB (f ∘ inj₂) k 
-          = sym (proj₁ ℕ°.distrib k (sum μA (f ∘ inj₁)) (sum μB (f ∘ inj₂)))
+    mono : SearchMono srch
+    mono po _∙-mono_ f⊆°g = monoᴬ (f⊆°g ∘ inj₁) ∙-mono monoᴮ (f⊆°g ∘ inj₂)
+      where
+      monoᴬ = search-mono μA po _∙-mono_
+      monoᴮ = search-mono μB po _∙-mono_
 
-    +μ-hom : SumHom +-μ
-    +μ-hom f g rewrite sum-hom μA (f ∘ inj₁) (g ∘ inj₁) | sum-hom μB (f ∘ inj₂) (g ∘ inj₂)
-          = +-interchange (sum μA (f ∘ inj₁)) (sum μA (g ∘ inj₁))
-              (sum μB (f ∘ inj₂)) (sum μB (g ∘ inj₂))
-          
-    +μ-mon : SumMon +-μ
-    +μ-mon f≤°g = sum-mon μA (f≤°g ∘ inj₁) +-mono sum-mon μB (f≤°g ∘ inj₂)
+    hom : SearchMonHom srchMon
+    hom cm f g
+      = srchMon m (f ∙° g)
+      ≈⟨ search-hom μA cm (f ∘ inj₁) (g ∘ inj₁) -∙-
+         search-hom μB cm (f ∘ inj₂) (g ∘ inj₂) ⟩
+        (sMonᴬ m (f ∘ inj₁) ∙ sMonᴬ m (g ∘ inj₁)) ∙
+        (sMonᴮ m (f ∘ inj₂) ∙ sMonᴮ m (g ∘ inj₂))
+      ≈⟨ ∙-interchange (sMonᴬ m (f ∘ inj₁)) (sMonᴬ m (g ∘ inj₁))
+                       (sMonᴮ m (f ∘ inj₂)) (sMonᴮ m (g ∘ inj₂)) ⟩
+        srchMon m f ∙ srchMon m g
+      ∎ 
+      where open CMon cm
 
-    +μ-swap : SumSwap +-μ
-    +μ-swap f {sumᴬ} sumᴬ-linear rewrite SumLinear.sum-hom sumᴬ-linear (λ x → sum μA (λ y → f (inj₁ y) x)) (λ x → sum μB (λ y → f (inj₂ y) x))
-      | sum-swap μA (f ∘ inj₁) sumᴬ-linear
-      | sum-swap μB (f ∘ inj₂) sumᴬ-linear
-      = refl
+    swp : SearchSwap srch
+    swp sg f hom = trans (∙-cong (search-swap μA sg (f ∘ inj₁) hom) (search-swap μB sg (f ∘ inj₂) hom)) (sym (hom g h))
+      where open Sgrp sg
+            g = λ x → search μA _∙_ (λ y → f (inj₁ y) x)
+            h = λ x → search μB _∙_ (λ y → f (inj₂ y) x)
+
+infixr 4 _×Search_
+
+-- liftM2 _,_ in the continuation monad
+_×Search_ : ∀ {A B} → Search A → Search B → Search (A × B)
+(searchᴬ ×Search searchᴮ) m f = searchᴬ m (λ x₀ →
+                                  searchᴮ m (λ x₁ →
+                                    f (x₀ , x₁)))
+
+_×SearchExt_ : ∀ {A B} {sᴬ : Search A} {sᴮ : Search B} →
+              SearchExt sᴬ → SearchExt sᴮ → SearchExt (sᴬ ×Search sᴮ)
+(sᴬ-ext ×SearchExt sᴮ-ext) sg f≗g = sᴬ-ext sg (sᴮ-ext sg ∘ curry f≗g)
 
 infixr 4 _×Sum_
 
@@ -185,45 +355,62 @@ _×Sum_ : ∀ {A B} → Sum A → Sum B → Sum (A × B)
                        sumᴮ (λ x₁ →
                          f (x₀ , x₁)))
 
-_×Sum-ext_ : ∀ {A B} {sumᴬ : Sum A} {sumᴮ : Sum B} →
-              SumExt sumᴬ → SumExt sumᴮ → SumExt (sumᴬ ×Sum sumᴮ)
-(sumA-ext ×Sum-ext sumB-ext) f≗g = sumA-ext (sumB-ext ∘ curry f≗g)
-
 infixr 4 _×μ_
 
 _×μ_ : ∀ {A B} → SumProp A
                → SumProp B
                → SumProp (A × B)
 (μA ×μ μB)
-   = mk μ-× (mk lin hom) (sum-ext μA ×Sum-ext sum-ext μB) mon ×μ-swap
+   = mk srch ext mono swp eps hom
    where
-     μ-× = sum μA ×Sum sum μB
+     srch = search μA ×Search search μB
+     srchMon = searchMonFromSearch srch
 
-     zero' : μ-× (λ _ → 0) ≡ 0
-     zero' rewrite sum-lin μB (λ _ → 0) 0 = sum-lin μA (λ _ → 0) 0
+     ext : SearchExt srch
+     ext sg f≗g = search-ext μA sg (search-ext μB sg ∘ curry f≗g)
 
-     lin : SumLin μ-×
-     lin f k rewrite sum-ext μA (λ x → sum-lin μB (λ y → f (x , y)) k) = sum-lin μA (sum μB ∘ curry f) k
+     eps : Searchε srchMon
+     eps m = srchMon m (const ε)
+           ≈⟨ search-ext μA sg (const (search-ε μB m)) ⟩
+             searchMon μA m (const ε)
+           ≈⟨ search-ε μA m ⟩
+             ε
+           ∎
+       where open Mon m
 
-     hom : SumHom μ-×
-     hom f g rewrite sum-ext μA (λ x → sum-hom μB (λ y → f (x , y)) (λ y → g (x , y))) 
-         = sum-hom μA (sum μB ∘ curry f) (sum μB ∘ curry g)
+     mono : SearchMono srch
+     mono po ∙mono f≤°g = monoᴬ (monoᴮ ∘ curry f≤°g)
+      where
+      monoᴬ = search-mono μA po ∙mono
+      monoᴮ = search-mono μB po ∙mono
 
-     mon : SumMon μ-×
-     mon f≤°g = sum-mon μA (sum-mon μB ∘ curry f≤°g)
+     hom : SearchMonHom srchMon
+     hom cm f g
+       = srch _∙_ (f ∙° g)
+       ≈⟨ search-ext μA sg (λ x → search-hom μB cm (curry f x) (curry g x)) ⟩
+         search μA _∙_ (λ x → search μB _∙_ (curry f x) ∙ search μB _∙_ (curry g x))
+       ≈⟨ search-hom μA cm (search μB _∙_ ∘ curry f) (search μB _∙_ ∘ curry g) ⟩
+         srch _∙_ f ∙ srch _∙_ g
+       ∎ where open CMon cm
 
-     ×μ-swap : SumSwap μ-×
-     ×μ-swap f {sumˣ} sumˣ-linear rewrite sum-ext μA  (λ x → sum-swap μB (curry f x) sumˣ-linear)
-       = sum-swap μA (λ z x → sum μB (λ y → f (z , y) x)) sumˣ-linear
+     swp : SearchSwap srch
+     swp sg f {g} hom = sᴬᴮ (g ∘ f)
+                      ≈⟨ search-ext μA sg (λ x → search-swap μB sg (curry f x) hom) ⟩
+                        sᴬ (λ z → g (λ x → sᴮ (curry (flip f x) z)))
+                      ≈⟨ search-swap μA sg (λ z x → sᴮ (curry (flip f x) z)) hom ⟩
+                        g (sᴬᴮ ∘ flip f)
+                      ∎
+       where open Sgrp sg
+             sᴬ = search μA _∙_
+             sᴮ = search μB _∙_
+             sᴬᴮ = srch _∙_
 
-sum-0 : ∀ {A} (μA : SumProp A) → sum μA (const 0) ≡ 0
-sum-0 μA = sum-lin μA (λ _ → 0) 0
 
 sum-const : ∀ {A} (μA : SumProp A) → ∀ k → sum μA (const k) ≡ Card μA * k 
 sum-const μA k
   rewrite ℕ°.*-comm (Card μA) k
-        | sym (sum-lin μA (const 1) k)
-        | proj₂ ℕ°.*-identity k = refl
+        | ≡.sym (sum-lin μA (const 1) k)
+        | proj₂ ℕ°.*-identity k = ≡.refl
 
 infixr 4 _×Sum-proj₁_ _×Sum-proj₁'_ _×Sum-proj₂_ _×Sum-proj₂'_
 
@@ -251,7 +438,7 @@ _×Sum-proj₁'_ : ∀ {A B}
 (μA ×Sum-proj₁' μB) {f} {g} sumf≡sumg
   rewrite (μA ×Sum-proj₁ μB) f
         | (μA ×Sum-proj₁ μB) g
-        | sumf≡sumg = refl
+        | sumf≡sumg = ≡.refl
 
 _×Sum-proj₂'_ : ∀ {A B}
                   (μA : SumProp A) (μB : SumProp B)
@@ -260,44 +447,106 @@ _×Sum-proj₂'_ : ∀ {A B}
                   sum (μA ×μ μB) (f ∘ proj₂) ≡ sum (μA ×μ μB) (g ∘ proj₂)
 (μA ×Sum-proj₂' μB) sumf≡sumg = sum-ext μA (const sumf≡sumg)
 
+μ-view : ∀ {A B} → (A → B) → SumProp A → SumProp B
+μ-view {A}{B} A→B μA = mk searchᴮ ext mono swp eps hom
+  where
+    searchᴮ : Search B
+    searchᴮ m f = search μA m (f ∘ A→B)
+    searchMonᴮ = searchMonFromSearch searchᴮ
+
+    ext : SearchExt searchᴮ
+    ext m f≗g = search-ext μA m (f≗g ∘ A→B)
+
+    eps : Searchε searchMonᴮ
+    eps = search-ε μA
+
+    mono : SearchMono searchᴮ
+    mono po ∙mono f≤°g = search-mono μA po ∙mono (f≤°g ∘ A→B)
+
+    hom : SearchMonHom searchMonᴮ
+    hom m f g = search-hom μA m (f ∘ A→B) (g ∘ A→B)
+
+    swp : SearchSwap searchᴮ
+    swp sg f hom = search-swap μA sg (f ∘ A→B) hom
+
+μ-iso : ∀ {A B} → (A ↔ B) → SumProp A → SumProp B
+μ-iso A↔B = μ-view (_⟨$⟩_ (Inverse.to A↔B))
+
+μ-view-preserve : ∀ {A B} (A→B : A → B)(B→A : B → A)(A≈B : id ≗ B→A ∘ A→B) f (μA : SumProp A) → sum μA f ≡ sum (μ-view A→B μA) (f ∘ B→A)
+μ-view-preserve A→B B→A A≈B f μA = sum-ext μA (≡.cong f ∘ A≈B)
+
+μ-iso-preserve : ∀ {A B} (A↔B : A ↔ B) f (μA : SumProp A) → sum μA f ≡ sum (μ-iso A↔B μA) (f ∘ _⟨$⟩_ (Inverse.from A↔B))
+μ-iso-preserve A↔B f μA = μ-view-preserve (_⟨$⟩_ (Inverse.to A↔B)) (_⟨$⟩_ (Inverse.from A↔B))
+                            (≡.sym ∘ Inverse.left-inverse-of A↔B) f μA
+
 open import Data.Fin hiding (_+_)
-open import Data.Vec.NP as Vec renaming (map to vmap; sum to vsum)
+open import Data.Vec.NP as Vec renaming (map to vmap; sum to vsum; foldr to vfoldr)
+
+vmsum : ∀ m {n} → let open Mon m in
+                  Vec C n → C
+vmsum m = vfoldr _ _∙_ ε
+  where open Monoid m
+
+searchMonFin : ∀ n → SearchMon (Fin n)
+searchMonFin n m f = vmsum m (vmap f (allFin n)) -- or vsum (tabulate f)
+
+searchFinSuc : ∀ n → Search (Fin (suc n))
+searchFinSuc n _∙_ f = vfoldr _ _∙_ (f zero) (vmap (f ∘ suc) (allFin n))
 
 sumFin : ∀ n → Sum (Fin n)
 sumFin n f = vsum (vmap f (allFin n)) -- or vsum (tabulate f)
 
-μFin : ∀ n → SumProp (Fin n)
-μFin n = mk (sumFin n) (mk sumFin-lin sumFin-hom) sumFin-ext sumFin-mon sumFin-swap
+μMaybe : ∀ {A} → SumProp A → SumProp (Maybe A)
+μMaybe μA = μ-iso (FI.sym Maybe↔⊤⊎) (μ⊤ +μ μA)
+
+μMaybe^ : ∀ {A} n → SumProp A → SumProp (Maybe^ n A)
+μMaybe^ zero    μA = μA
+μMaybe^ (suc n) μA = μMaybe (μMaybe^ n μA)
+
+μFin : ∀ n → SumProp (Fin (suc n))
+μFin n = μ-iso (Maybe^⊤↔Fin1+ n) (μMaybe^ n μ⊤)
+{-
+μFin n = mk (searchFin n) ext eps hom sumFin-mon sumFin-swap
   module SumFin where
-    sumFin-ext : SumExt (sumFin n)
-    sumFin-ext f≗g rewrite map-ext f≗g (allFin n) = refl
+    ext : SearchMonExt (searchFin n)
+    ext m f≗g = {!map-ext f≗g (allFin n)!}
+      where open Mon m
 
-    sumFin-lin : SumLin (sumFin n)
-    sumFin-lin f x = sum-distribˡ f x (allFin n)
+    eps : Searchε (searchFin n)
+    eps = {!!}
 
-    sumFin-zero : SumZer (sumFin n)
-    sumFin-zero = mkSumZer sumFin-lin
-    
-    sumFin-hom : SumHom (sumFin n)
-    sumFin-hom f g = sum-linear f g (allFin n)
+    hom : SearchMonHom (searchFin n)
+    hom m f g = {!sum-linear f g (allFin n)!}
 
-    sumFin-mon : SumMon (sumFin n)
+    sumFin-mon : SumMono (sumFin n)
     sumFin-mon f≤°g = sum-mono f≤°g (allFin n)
 
     sumFin-swap : SumSwap (sumFin n)
     sumFin-swap f {sumˣ} sumˣ-linear = inner (allFin n) where
       inner : ∀ {m}(xs : Vec (Fin n) m) → vsum (vmap (sumˣ ∘ f) xs) ≡ sumˣ (λ x → vsum (vmap (flip f x) xs))
-      inner [] = sym (SumLinear.sum-lin sumˣ-linear (const 1337) 0)
-      inner (x ∷ xs) rewrite inner xs = sym
+      inner [] = ≡.sym (SumLinear.sum-lin sumˣ-linear (const 1337) 0)
+      inner (x ∷ xs) rewrite inner xs = ≡.sym
                                           (SumLinear.sum-hom sumˣ-linear (f x)
                                                 (λ y → vsum (vmap (flip f y) xs)))
-
-sumVec : ∀ {A} n → Sum A → Sum (Vec A n)
-sumVec zero    sumᴬ f = f []
-sumVec (suc n) sumᴬ f = sumᴬ (λ x → sumVec n sumᴬ (f ∘ _∷_ x))
+-}
 
 μVec : ∀ {A} (μA : SumProp A) n  → SumProp (Vec A n)
-μVec {A} μA n = mk (sV n)  (mk (sumVec-lin n) (sumVec-hom n)) (sumVec-ext n) (sumVec-mon n) (sumVec-swap n)
+μVec μA zero    = μ-view (const []) μ⊤
+μVec μA (suc n) = μ-view (uncurry _∷_) (μA ×μ μVec μA n)
+
+{-
+searchVec : ∀ {A} n → Search A → Search (Vec A n)
+searchVec zero    searchᴬ m f = f []
+searchVec (suc n) searchᴬ m f = searchᴬ m (λ x → searchVec n searchᴬ m (f ∘ _∷_ x))
+
+sumVec : ∀ {A} n → Sum A → Sum (Vec A n)
+sumVec n sumᴬ = searchVec n (λ m → {!sumᴬ!}) ℕ+.monoid
+
+sumVec zero    sumᴬ f = f []
+sumVec (suc n) sumᴬ f = (sumᴬ ×Sum sumVec n sumᴬ) (λ { (x , xs) → f (x ∷ xs) })
+
+μVec' : ∀ {A} (μA : SumProp A) n  → SumProp (Vec A n)
+μVec' {A} μA n = mk (searchVec n (search μA))  (mk (sumVec-lin n) (sumVec-hom n)) (sumVec-ext n) (sumVec-mon n) (sumVec-swap n)
   where
     sV = flip sumVec (sum μA)
 
@@ -306,63 +555,49 @@ sumVec (suc n) sumᴬ f = sumᴬ (λ x → sumVec n sumᴬ (f ∘ _∷_ x))
     sumVec-ext (suc n) f≗g = sum-ext μA (λ x → sumVec-ext n (f≗g ∘ _∷_ x))
 
     sumVec-lin : ∀ n → SumLin (sV n)
-    sumVec-lin zero    f k = refl
+    sumVec-lin zero    f k = ≡.refl
     sumVec-lin (suc n) f k rewrite sum-ext μA (λ x → sumVec-lin n (f ∘ _∷_ x) k)
       = sum-lin μA (λ x → sV n (f ∘ _∷_ x)) k
 
     sumVec-hom : ∀ n → SumHom (sV n)
-    sumVec-hom zero    f g = refl
+    sumVec-hom zero    f g = ≡.refl
     sumVec-hom (suc n) f g rewrite sum-ext μA (λ x → sumVec-hom n (f ∘ _∷_ x) (g ∘ _∷_ x)) 
       = sum-hom μA (λ x → sV n (f ∘ _∷_ x)) (λ x → sV n (g ∘ _∷_ x))
 
-    sumVec-mon : ∀ n → SumMon (sV n)
+    sumVec-mon : ∀ n → SumMono (sV n)
     sumVec-mon zero    f≤°g = f≤°g []
-    sumVec-mon (suc n) f≤°g = sum-mon μA (λ x → sumVec-mon n (f≤°g ∘ _∷_ x))
+    sumVec-mon (suc n) f≤°g = sum-mono μA (λ x → sumVec-mon n (f≤°g ∘ _∷_ x))
 
     sumVec-swap : ∀ n → SumSwap (sV n)
-    sumVec-swap zero    f        μˣ-linear = refl
+    sumVec-swap zero    f        μˣ-linear = ≡.refl
     sumVec-swap (suc n) f {sumˣ} μˣ-linear rewrite sum-ext μA (λ x → sumVec-swap n (f ∘ _∷_ x) μˣ-linear)
       = sum-swap μA (λ z x → sumVec n (sum μA) (λ y → f (z ∷ y) x)) μˣ-linear
+-}
 
-sumVec-++ : ∀ {A} n {m} (μA : SumProp A)(f : Vec A (n + m)→ ℕ) 
-           → sum (μVec μA (n + m)) (λ xs → f xs)
-           ≡ sum (μVec μA n) (λ xs → sum (μVec μA m) (λ ys → f (xs ++ ys)))
-sumVec-++ zero    μA f = refl
-sumVec-++ (suc n) μA f = sum-ext μA (λ x → sumVec-++ n μA (f ∘ _∷_ x))
+searchVec-++ : ∀ {A} n {m} (μA : SumProp A) sg
+               → let open Sgrp sg in
+                 (f : Vec A (n + m) → C)
+               → search (μVec μA (n + m)) _∙_ f
+               ≈ search (μVec μA n) _∙_ (λ xs → search (μVec μA m) _∙_
+                  (λ ys → f (xs ++ ys)))
+searchVec-++ zero    μA sg f = Sgrp.refl sg
+searchVec-++ (suc n) μA sg f = search-ext μA sg (λ x →
+                                  searchVec-++ n μA sg (f ∘ _∷_ x))
 
 sumVec-swap : ∀ {A} n {m} (μA : SumProp A)(f : Vec A (n + m) → ℕ)
             → sum (μVec μA n) (λ xs → sum (μVec μA m) (λ ys → f (xs ++ ys)))
             ≡ sum (μVec μA m) (λ ys → sum (μVec μA n) (λ xs → f (xs ++ ys)))
-sumVec-swap n {m} μA f = sum-swap (μVec μA n) (λ xs ys → f (xs ++ ys))
-                           (is-linear (μVec μA m))
-
-
-μ-view : ∀ {A B : Set} → (A → B) → SumProp A → SumProp B
-μ-view {A}{B} A→B μA = mk sumB (mk μB-lin μB-hom) μB-ext μB-mon μB-swap
-  where
-    sumB : Sum B
-    sumB f = sum μA (f ∘ A→B)
-
-    μB-ext : SumExt sumB
-    μB-ext f≗g = sum-ext μA (f≗g ∘ A→B)
-
-    μB-lin : SumLin sumB
-    μB-lin f k = sum-lin μA (f ∘ A→B) k
-
-    μB-hom : SumHom sumB
-    μB-hom f g = sum-hom μA (f ∘ A→B) (g ∘ A→B)
-
-    μB-mon : SumMon sumB
-    μB-mon f≤°g = sum-mon μA (f≤°g ∘ A→B)
-
-    μB-swap : SumSwap sumB
-    μB-swap f {sumˣ} sumˣ-linear = sum-swap μA (f ∘ A→B) sumˣ-linear
-
-μ-view-preserve : ∀ {A B} (A→B : A → B)(B→A : B → A)(A≈B : id ≗ B→A ∘ A→B) f (μA : SumProp A) → sum μA f ≡ sum (μ-view A→B μA) (f ∘ B→A)
-μ-view-preserve A→B B→A A≈B f μA = sum-ext μA (cong f ∘ A≈B)
+sumVec-swap n {m} μA f = sum-swap (μVec μA n) (μVec μA m) (λ xs ys → f (xs ++ ys))
 
 swapS : ∀ {A B} → SumProp (A × B) → SumProp (B × A)
 swapS = μ-view Data.Product.swap
+  -- μ-iso ×-comm
 
 swapS-preserve : ∀ {A B} f (μA×B : SumProp (A × B)) → sum μA×B f ≡ sum (swapS μA×B) (f ∘ Data.Product.swap)
-swapS-preserve f μA×B =  μ-view-preserve Data.Product.swap Data.Product.swap (λ x → refl) f μA×B {- or refl -}
+swapS-preserve f μA×B =  μ-view-preserve Data.Product.swap Data.Product.swap (λ x → ≡.refl) f μA×B {- or ≡.refl -}
+-- -}
+-- -}
+-- -}
+-- -}
+-- -}
+-- -}
