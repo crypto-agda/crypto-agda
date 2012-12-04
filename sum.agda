@@ -91,7 +91,7 @@ SearchInd {A} srch = ∀ {C}
                        (P   : ((A → C) → C) → ★)
                        {_∙_ : Op₂ C}
                        (P∙  : ∀ {s₀ s₁} → P s₀ → P s₁ → P (λ f → s₀ f ∙ s₁ f))
-                       (Pf  : ∀ (x : A) → P (λ f → f x))
+                       (Pf  : ∀ x → P (λ f → f x))
                      → P (srch _∙_)
 
 SearchInd' : ∀ {A} → Search A → ★₁
