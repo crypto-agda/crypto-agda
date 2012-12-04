@@ -65,7 +65,7 @@ count-lem₂ μA f g rewrite sum-lem₂ μA (toℕ ∘ f) (toℕ ∘ g)
 
 sum-⊔ : ∀ {A : ★}(μA : SumProp A)(f g : A → ℕ) → sum μA (λ x → f x ⊔ g x) ≤ sum μA f + sum μA g
 sum-⊔ μA f g = ℕ≤.trans
-                 (sum-mon μA (λ x → ⊔≤+ (f x) (g x)))
+                 (sum-mono μA (λ x → ⊔≤+ (f x) (g x)))
                  (ℕ≤.reflexive (sum-hom μA f g))
   where
     ⊔≤+ : ∀ a b → a ⊔ b ≤ a + b

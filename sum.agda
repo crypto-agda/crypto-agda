@@ -27,12 +27,6 @@ f ≤° g = ∀ x → f x ≤ g x
 Semigroup₀ = Semigroup L.zero L.zero
 Monoid₀ = Monoid L.zero L.zero
 CommutativeMonoid₀ = CommutativeMonoid L.zero L.zero
-Preorder₀ = Preorder L.zero L.zero L.zero
-
-module PO (po : Preorder₀) where
-  open Preorder po public renaming (_∼_ to _⊆_)
-  _⊆°_ : ∀ {A : ★}(f g : A → Carrier) → ★
-  f ⊆° g = ∀ x → f x ⊆ g x
 
 module SgrpExtra (sg : Semigroup₀) where
   open Semigroup sg
@@ -55,8 +49,6 @@ module Mon (m : Monoid₀) where
   open Monoid m public
   sg = semigroup
   open SgrpExtra semigroup public
-  Is-ε : Carrier → ★
-  Is-ε x = x ≈ ε
 
 module CMon (cm : CommutativeMonoid₀) where
   open CommutativeMonoid cm public
@@ -87,24 +79,13 @@ Count : ★ → ★
 Count A = (A → Bit) → ℕ
 
 SearchInd : ∀ {A} → Search A → ★₁
-SearchInd {A} srch = ∀ {C}
-                       (P   : ((A → C) → C) → ★)
-                       {_∙_ : Op₂ C}
-                       (P∙  : ∀ {s₀ s₁} → P s₀ → P s₁ → P (λ f → s₀ f ∙ s₁ f))
-                       (Pf  : ∀ x → P (λ f → f x))
-                     → P (srch _∙_)
-
-SearchInd' : ∀ {A} → Search A → ★₁
-SearchInd' {A} srch = ∀ {C}
-                        (P   : C → ★)
-                        {_∙_ : C → C → C}
-                        (P∙  : ∀ {x y} → P x → P y → P (x ∙ y))
-                        {f   : A → C}
-                        (Pf  : ∀ x → P (f x))
-                      → P (srch _∙_ f)
+SearchInd {A} srch = ∀ (P  : Search A → ★)
+                       (P∙ : ∀ {s₀ s₁ : Search A} → P s₀ → P s₁ → P (λ _∙_ f → s₀ _∙_ f ∙ s₁ _∙_ f))
+                       (Pf : ∀ x → P (λ _ f → f x))
+                     →  P srch
 
 SearchMono : ∀ {A} → Search A → ★₁
-SearchMono sᴬ = ∀ {C : ★} (_⊆_ : C → C → ★) → -- let open PO {C} _⊆_ in
+SearchMono sᴬ = ∀ {C} (_⊆_ : C → C → ★) →
                 ∀ {_∙_} (∙-mono : _∙_ Preserves₂ _⊆_ ⟶ _⊆_ ⟶ _⊆_)
                   {f g} →
                   (∀ x → f x ⊆ g x) → sᴬ _∙_ f ⊆ sᴬ _∙_ g
@@ -138,25 +119,6 @@ SearchMonHom sᴬ = ∀ (cm : CommutativeMonoid₀) f g →
                          let open CMon cm in
                          sᴬ m (f ∙° g) ≈ sᴬ m f ∙ sᴬ m g
 
-{-search-hom′ :
-  ∀ {a b}
-    {A : Set a} {B : Set b} {R}
-    (_+_ : A → A → A)
-    (_*_ : B → B → B)
-    (f : A → B)
-    (p : R → A)
-    (hom : ∀ x y → f (x + y) ≡ f x * f y)
-    → f (search _+_ p) ≡ search _*_ (f ∘ p)
-search-hom′ = ?
-{-
-search-hom {zero}  _   _   _ _ _   = refl
-search-hom {suc n} _+_ _*_ f p hom =
-   trans (hom _ _)
-         (cong₂ _*_ (search-hom _+_ _*_ f (p ∘ 0∷_) hom)
-                    (search-hom _+_ _*_ f (p ∘ 1∷_) hom))
--}
--}
-
 SumHom : ∀ {A} → Sum A → ★
 SumHom sumᴬ = ∀ f g → sumᴬ (λ x → f x + g x) ≡ sumᴬ f + sumᴬ g
 
@@ -183,23 +145,20 @@ sum-ext+sum-hom⇒sum-mono {sum = sum} sum-ext sum-hom {f} {g} f≤°g =
     sum g ∎ where open ≤-Reasoning
 
 record SumProp A : ★₁ where
-  constructor mk
+  constructor _,_
   field
-    search      : Search A
-    search-ind  : SearchInd search
-
-  search-ind' : SearchInd' search
-  search-ind' P P∙ {f} Pf = search-ind (λ s → P (s f)) P∙ Pf
+    search     : Search A
+    search-ind : SearchInd search
 
   search-ext : SearchExt search
-  search-ext sg {f} {g} f≈°g = search-ind (λ s → s f ≈ s g) ∙-cong f≈°g
+  search-ext sg {f} {g} f≈°g = search-ind (λ s → s _ f ≈ s _ g) ∙-cong f≈°g
     where open Sgrp sg
 
   search-mono : SearchMono search
-  search-mono _⊆_ {_∙_} _∙-mono_ {f} {g} f⊆°g = search-ind (λ s → s f ⊆ s g) _∙-mono_ f⊆°g
+  search-mono _⊆_ _∙-mono_ {f} {g} f⊆°g = search-ind (λ s → s _ f ⊆ s _ g) _∙-mono_ f⊆°g
 
   search-swap : SearchSwap search
-  search-swap sg f {sᴮ} pf = search-ind (λ s → s (sᴮ ∘ f) ≈ sᴮ (s ∘ flip f)) (λ p q → trans (∙-cong p q) (sym (pf _ _))) (λ _ → refl)
+  search-swap sg f {sᴮ} pf = search-ind (λ s → s _ (sᴮ ∘ f) ≈ sᴮ (s _ ∘ flip f)) (λ p q → trans (∙-cong p q) (sym (pf _ _))) (λ _ → refl)
     where open Sgrp sg
 
   searchMon : SearchMon A
@@ -207,13 +166,25 @@ record SumProp A : ★₁ where
     where open Mon m
 
   search-ε : Searchε searchMon
-  search-ε m = search-ind' Is-ε (λ x≈ε y≈ε → trans (∙-cong x≈ε y≈ε) (proj₁ identity ε)) (λ _ → refl)
+  search-ε m = search-ind (λ s → s _ (const ε) ≈ ε) (λ x≈ε y≈ε → trans (∙-cong x≈ε y≈ε) (proj₁ identity ε)) (λ _ → refl)
     where open Mon m
 
   search-hom : SearchMonHom searchMon
-  search-hom cm f g = search-ind (λ s → s (f ∙° g) ≈ s f ∙ s g)
+  search-hom cm f g = search-ind (λ s → s _ (f ∙° g) ≈ s _ f ∙ s _ g)
                                  (λ p₀ p₁ → trans (∙-cong p₀ p₁) (∙-interchange _ _ _ _)) (λ _ → refl)
     where open CMon cm
+
+  search-hom′ :
+      ∀ {S T}
+        (_+_ : Op₂ S)
+        (_*_ : Op₂ T)
+        (f   : S → T)
+        (g   : A → S)
+        (hom : ∀ x y → f (x + y) ≡ f x * f y)
+        → f (search _+_ g) ≡ search _*_ (f ∘ g)
+  search-hom′ _+_ _*_ f g hom = search-ind (λ s → f (s _+_ g) ≡ s _*_ (f ∘ g))
+                                           (λ p q → ≡.trans (hom _ _) (≡.cong₂ _*_ p q))
+                                           (λ _ → ≡.refl)
 
   sum : Sum A
   sum = search _+_
@@ -261,37 +232,16 @@ _≈Sum_ : ∀ {A} → (sum₀ sum₁ : Sum A) → ★
 sum₀ ≈Sum sum₁ = ∀ f → sum₀ f ≡ sum₁ f
 
 μ⊤ : SumProp ⊤
-μ⊤ = mk search⊤ ind
+μ⊤ = srch , ind
   where
-    search⊤ : Search ⊤
-    search⊤ _ f = f _
+    srch : Search ⊤
+    srch _ f = f _
 
-    ind : SearchInd search⊤
+    ind : SearchInd srch
     ind _ _ Pf = Pf _
 
-    {- derived from ind
-    ext : SearchExt search⊤
-    ext _ f≗g = f≗g _
-
-    searchMon⊤ : SearchMon ⊤
-    searchMon⊤ _ f = f _
-
-    mono : SearchMono search⊤
-    mono _ _ f≤°g = f≤°g _
-
-    eps : Searchε searchMon⊤
-    eps m = Monoid.refl m
-
-    search⊤-swap : SearchSwap search⊤
-    search⊤-swap sg f hom = refl
-      where open Sgrp sg
-
-    hom : SearchMonHom searchMon⊤
-    hom m f g = CommutativeMonoid.refl m
-    -}
-
 μBit : SumProp Bit
-μBit = mk searchBit ind
+μBit = searchBit , ind
   where
     searchBit : Search Bit
     searchBit _∙_ f = f 0b ∙ f 1b
@@ -299,126 +249,35 @@ sum₀ ≈Sum sum₁ = ∀ f → sum₀ f ≡ sum₁ f
     ind : SearchInd searchBit
     ind _ _P∙_ Pf = Pf 0b P∙ Pf 1b
 
-    {- derived from ind
-    searchMonBit : SearchMon Bit
-    searchMonBit m f = f 0b ∙ f 1b
-      where open Mon m
-
-    ext : SearchExt searchBit
-    ext sg f≗g = f≗g 0b -∙- f≗g 1b
-      where open Sgrp sg
-
-    mono : SearchMono searchBit
-    mono po _∙-mono_ f⊆°g = f⊆°g 0b ∙-mono f⊆°g 1b
-
-    eps : Searchε searchMonBit
-    eps m = proj₁ identity ε
-      where open Monoid m
-
-    hom : SearchMonHom searchMonBit
-    hom cm f g = ∙-interchange (f 0b) (g 0b) (f 1b) (g 1b)
-      where open CMon cm
-
-    sumBit : Sum Bit
-    sumBit f = f 0b + f 1b
-
-    swp : SearchSwap searchBit
-    swp sg f homᴮ = sym (homᴮ (f 0b) (f 1b))
-      where open Sgrp sg
-    -}
-
 infixr 4 _+Search_
 
 _+Search_ : ∀ {A B} → Search A → Search B → Search (A ⊎ B)
 (searchᴬ +Search searchᴮ) _∙_ f = searchᴬ _∙_ (f ∘ inj₁) ∙ searchᴮ _∙_ (f ∘ inj₂)
 
-_+SearchInd'_ : ∀ {A B} {sᴬ : Search A} {sᴮ : Search B} →
-                       SearchInd' sᴬ → SearchInd' sᴮ → SearchInd' (sᴬ +Search sᴮ)
-(Psᴬ +SearchInd' Psᴮ) P P∙ Pf = P∙ (Psᴬ P P∙ (Pf ∘ inj₁)) (Psᴮ P P∙ (Pf ∘ inj₂))
-
 _+SearchInd_ : ∀ {A B} {sᴬ : Search A} {sᴮ : Search B} →
-                       SearchInd sᴬ → SearchInd sᴮ → SearchInd (sᴬ +Search sᴮ)
+                 SearchInd sᴬ → SearchInd sᴮ → SearchInd (sᴬ +Search sᴮ)
 (Psᴬ +SearchInd Psᴮ) P P∙ Pf
-  = P∙ (Psᴬ (λ s → P (λ f → s (f ∘ inj₁))) P∙ (Pf ∘ inj₁))
-       (Psᴮ (λ s → P (λ f → s (f ∘ inj₂))) P∙ (Pf ∘ inj₂))
+  = P∙ (Psᴬ (λ s → P (λ _ f → s _ (f ∘ inj₁))) P∙ (Pf ∘ inj₁))
+       (Psᴮ (λ s → P (λ _ f → s _ (f ∘ inj₂))) P∙ (Pf ∘ inj₂))
 
 infixr 4 _+Sum_
 
 _+Sum_ : ∀ {A B} → Sum A → Sum B → Sum (A ⊎ B)
 (sumᴬ +Sum sumᴮ) f = sumᴬ (f ∘ inj₁) + sumᴮ (f ∘ inj₂)
 
-_+μ_ : ∀ {A B} → SumProp A
-               → SumProp B
-               → SumProp (A ⊎ B)
-_+μ_ {A} {B} μA μB = mk _ (search-ind μA +SearchInd search-ind μB)
-    {- derived from ind
-  where
-    ext : SearchExt srch
-    ext sg f≗g = search-ext μA sg (f≗g ∘ inj₁) -∙- search-ext μB sg (f≗g ∘ inj₂)
-      where open Sgrp sg
-
-    sᴬ : Search A
-    sᴬ = search μA
-    sᴮ : Search B
-    sᴮ = search μB
-    srch : Search (A ⊎ B)
-    srch = sᴬ +Search sᴮ
-    sMonᴬ = searchMon μA
-    sMonᴮ = searchMon μB
-    srchMon = searchMonFromSearch srch
-    eps : Searchε srchMon
-    eps m = srchMon m (const ε)
-          ≈⟨ search-ε μA m -∙- search-ε μB m ⟩
-            ε ∙ ε
-          ≈⟨ proj₁ identity ε ⟩
-            ε
-          ∎
-      where open Mon m
-
-    mono : SearchMono srch
-    mono po _∙-mono_ f⊆°g = monoᴬ (f⊆°g ∘ inj₁) ∙-mono monoᴮ (f⊆°g ∘ inj₂)
-      where
-      monoᴬ = search-mono μA po _∙-mono_
-      monoᴮ = search-mono μB po _∙-mono_
-
-    hom : SearchMonHom srchMon
-    hom cm f g
-      = srchMon m (f ∙° g)
-      ≈⟨ search-hom μA cm (f ∘ inj₁) (g ∘ inj₁) -∙-
-         search-hom μB cm (f ∘ inj₂) (g ∘ inj₂) ⟩
-        (sMonᴬ m (f ∘ inj₁) ∙ sMonᴬ m (g ∘ inj₁)) ∙
-        (sMonᴮ m (f ∘ inj₂) ∙ sMonᴮ m (g ∘ inj₂))
-      ≈⟨ ∙-interchange (sMonᴬ m (f ∘ inj₁)) (sMonᴬ m (g ∘ inj₁))
-                       (sMonᴮ m (f ∘ inj₂)) (sMonᴮ m (g ∘ inj₂)) ⟩
-        srchMon m f ∙ srchMon m g
-      ∎
-      where open CMon cm
-
-    swp : SearchSwap srch
-    swp sg f hom = trans (∙-cong (search-swap μA sg (f ∘ inj₁) hom) (search-swap μB sg (f ∘ inj₂) hom)) (sym (hom g h))
-      where open Sgrp sg
-            g = λ x → search μA _∙_ (λ y → f (inj₁ y) x)
-            h = λ x → search μB _∙_ (λ y → f (inj₂ y) x)
-    -}
+_+μ_ : ∀ {A B} → SumProp A → SumProp B → SumProp (A ⊎ B)
+μA +μ μB = _ , search-ind μA +SearchInd search-ind μB
 
 infixr 4 _×Search_
 
 -- liftM2 _,_ in the continuation monad
 _×Search_ : ∀ {A B} → Search A → Search B → Search (A × B)
-(searchᴬ ×Search searchᴮ) m f = searchᴬ m (λ x₀ →
-                                  searchᴮ m (λ x₁ →
-                                    f (x₀ , x₁)))
-
-_×SearchInd'_ : ∀ {A B} {sᴬ : Search A} {sᴮ : Search B}
-                       (Psᴬ : SearchInd' sᴬ)
-                       (Psᴮ : SearchInd' sᴮ) → SearchInd' (sᴬ ×Search sᴮ)
-(Psᴬ ×SearchInd' Psᴮ) P P∙ Pf = Psᴬ P P∙ (λ x → Psᴮ P P∙ (curry Pf x))
+(searchᴬ ×Search searchᴮ) op f = searchᴬ op (λ x → searchᴮ op (curry f x))
 
 _×SearchInd_ : ∀ {A B} {sᴬ : Search A} {sᴮ : Search B}
-                       (Psᴬ : SearchInd sᴬ)
-                       (Psᴮ : SearchInd sᴮ) → SearchInd (sᴬ ×Search sᴮ)
-_×SearchInd_ {sᴬ = sᴬ} {sᴮ} Psᴬ Psᴮ P {_∙_} P∙ Pf =
-  Psᴬ (λ s → P (λ f → s (λ x → sᴮ _∙_ (curry f x)))) P∙ (λ x → Psᴮ (λ s → P (λ f → s (curry f x))) P∙ (curry Pf x))
+               → SearchInd sᴬ → SearchInd sᴮ → SearchInd (sᴬ ×Search sᴮ)
+(Psᴬ ×SearchInd Psᴮ) P P∙ Pf =
+  Psᴬ (λ s → P (λ _ _ → s _ _)) P∙ (Psᴮ (λ s → P (λ _ _ → s _ _)) P∙ ∘ curry Pf)
 
 _×SearchExt_ : ∀ {A B} {sᴬ : Search A} {sᴮ : Search B} →
               SearchExt sᴬ → SearchExt sᴮ → SearchExt (sᴬ ×Search sᴮ)
@@ -434,54 +293,8 @@ _×Sum_ : ∀ {A B} → Sum A → Sum B → Sum (A × B)
 
 infixr 4 _×μ_
 
-_×μ_ : ∀ {A B} → SumProp A
-               → SumProp B
-               → SumProp (A × B)
-(μA ×μ μB) = mk _ (search-ind μA ×SearchInd search-ind μB)
-{- derived from SearchInd
-   where
-     srch = search μA ×Search search μB
-     srchMon = searchMonFromSearch srch
-
-     ext : SearchExt srch
-     ext sg f≗g = search-ext μA sg (search-ext μB sg ∘ curry f≗g)
-
-     eps : Searchε srchMon
-     eps m = srchMon m (const ε)
-           ≈⟨ search-ext μA sg (const (search-ε μB m)) ⟩
-             searchMon μA m (const ε)
-           ≈⟨ search-ε μA m ⟩
-             ε
-           ∎
-       where open Mon m
-
-     mono : SearchMono srch
-     mono po ∙mono f≤°g = monoᴬ (monoᴮ ∘ curry f≤°g)
-      where
-      monoᴬ = search-mono μA po ∙mono
-      monoᴮ = search-mono μB po ∙mono
-
-     hom : SearchMonHom srchMon
-     hom cm f g
-       = srch _∙_ (f ∙° g)
-       ≈⟨ search-ext μA sg (λ x → search-hom μB cm (curry f x) (curry g x)) ⟩
-         search μA _∙_ (λ x → search μB _∙_ (curry f x) ∙ search μB _∙_ (curry g x))
-       ≈⟨ search-hom μA cm (search μB _∙_ ∘ curry f) (search μB _∙_ ∘ curry g) ⟩
-         srch _∙_ f ∙ srch _∙_ g
-       ∎ where open CMon cm
-
-     swp : SearchSwap srch
-     swp sg f {g} hom = sᴬᴮ (g ∘ f)
-                      ≈⟨ search-ext μA sg (λ x → search-swap μB sg (curry f x) hom) ⟩
-                        sᴬ (λ z → g (λ x → sᴮ (curry (flip f x) z)))
-                      ≈⟨ search-swap μA sg (λ z x → sᴮ (curry (flip f x) z)) hom ⟩
-                        g (sᴬᴮ ∘ flip f)
-                      ∎
-       where open Sgrp sg
-             sᴬ = search μA _∙_
-             sᴮ = search μB _∙_
-             sᴬᴮ = srch _∙_
-             -}
+_×μ_ : ∀ {A B} → SumProp A → SumProp B → SumProp (A × B)
+μA ×μ μB = _ , search-ind μA ×SearchInd search-ind μB
 
 sum-const : ∀ {A} (μA : SumProp A) → ∀ k → sum μA (const k) ≡ Card μA * k
 sum-const μA k
@@ -525,32 +338,13 @@ _×Sum-proj₂'_ : ∀ {A B}
 (μA ×Sum-proj₂' μB) sumf≡sumg = sum-ext μA (const sumf≡sumg)
 
 μ-view : ∀ {A B} → (A → B) → SumProp A → SumProp B
-μ-view {A}{B} A→B μA = mk searchᴮ ind
+μ-view {A}{B} A→B μA = searchᴮ , ind
   where
     searchᴮ : Search B
     searchᴮ m f = search μA m (f ∘ A→B)
 
     ind : SearchInd searchᴮ
-    ind P P∙ Pf = search-ind μA (λ s → P (λ f → s (f ∘ A→B))) P∙ (Pf ∘ A→B)
-
-    {- derived from ind
-    ext : SearchExt searchᴮ
-    ext m f≗g = search-ext μA m (f≗g ∘ A→B)
-
-    searchMonᴮ = searchMonFromSearch searchᴮ
-
-    eps : Searchε searchMonᴮ
-    eps = search-ε μA
-
-    mono : SearchMono searchᴮ
-    mono po ∙mono f≤°g = search-mono μA po ∙mono (f≤°g ∘ A→B)
-
-    hom : SearchMonHom searchMonᴮ
-    hom m f g = search-hom μA m (f ∘ A→B) (g ∘ A→B)
-
-    swp : SearchSwap searchᴮ
-    swp sg f hom = search-swap μA sg (f ∘ A→B) hom
-    -}
+    ind P P∙ Pf = search-ind μA (λ s → P (λ _ f → s _ (f ∘ A→B))) P∙ (Pf ∘ A→B)
 
 μ-iso : ∀ {A B} → (A ↔ B) → SumProp A → SumProp B
 μ-iso A↔B = μ-view (_⟨$⟩_ (Inverse.to A↔B))
@@ -588,30 +382,6 @@ sumFin n f = vsum (vmap f (allFin n)) -- or vsum (tabulate f)
 
 μFin : ∀ n → SumProp (Fin (suc n))
 μFin n = μ-iso (Maybe^⊤↔Fin1+ n) (μMaybe^ n μ⊤)
-{-
-μFin n = mk (searchFin n) ext eps hom sumFin-mon sumFin-swap
-  module SumFin where
-    ext : SearchMonExt (searchFin n)
-    ext m f≗g = {!map-ext f≗g (allFin n)!}
-      where open Mon m
-
-    eps : Searchε (searchFin n)
-    eps = {!!}
-
-    hom : SearchMonHom (searchFin n)
-    hom m f g = {!sum-linear f g (allFin n)!}
-
-    sumFin-mon : SumMono (sumFin n)
-    sumFin-mon f≤°g = sum-mono f≤°g (allFin n)
-
-    sumFin-swap : SumSwap (sumFin n)
-    sumFin-swap f {sumˣ} sumˣ-linear = inner (allFin n) where
-      inner : ∀ {m}(xs : Vec (Fin n) m) → vsum (vmap (sumˣ ∘ f) xs) ≡ sumˣ (λ x → vsum (vmap (flip f x) xs))
-      inner [] = ≡.sym (SumLinear.sum-lin sumˣ-linear (const 1337) 0)
-      inner (x ∷ xs) rewrite inner xs = ≡.sym
-                                          (SumLinear.sum-hom sumˣ-linear (f x)
-                                                (λ y → vsum (vmap (flip f y) xs)))
--}
 
 μVec : ∀ {A} (μA : SumProp A) n  → SumProp (Vec A n)
 μVec μA zero    = μ-view (const []) μ⊤
@@ -627,34 +397,6 @@ sumVec n sumᴬ = searchVec n (λ m → {!sumᴬ!}) ℕ+.monoid
 
 sumVec zero    sumᴬ f = f []
 sumVec (suc n) sumᴬ f = (sumᴬ ×Sum sumVec n sumᴬ) (λ { (x , xs) → f (x ∷ xs) })
-
-μVec' : ∀ {A} (μA : SumProp A) n  → SumProp (Vec A n)
-μVec' {A} μA n = mk (searchVec n (search μA))  (mk (sumVec-lin n) (sumVec-hom n)) (sumVec-ext n) (sumVec-mon n) (sumVec-swap n)
-  where
-    sV = flip sumVec (sum μA)
-
-    sumVec-ext : ∀ n → SumExt (sV n)
-    sumVec-ext zero    f≗g = f≗g []
-    sumVec-ext (suc n) f≗g = sum-ext μA (λ x → sumVec-ext n (f≗g ∘ _∷_ x))
-
-    sumVec-lin : ∀ n → SumLin (sV n)
-    sumVec-lin zero    f k = ≡.refl
-    sumVec-lin (suc n) f k rewrite sum-ext μA (λ x → sumVec-lin n (f ∘ _∷_ x) k)
-      = sum-lin μA (λ x → sV n (f ∘ _∷_ x)) k
-
-    sumVec-hom : ∀ n → SumHom (sV n)
-    sumVec-hom zero    f g = ≡.refl
-    sumVec-hom (suc n) f g rewrite sum-ext μA (λ x → sumVec-hom n (f ∘ _∷_ x) (g ∘ _∷_ x))
-      = sum-hom μA (λ x → sV n (f ∘ _∷_ x)) (λ x → sV n (g ∘ _∷_ x))
-
-    sumVec-mon : ∀ n → SumMono (sV n)
-    sumVec-mon zero    f≤°g = f≤°g []
-    sumVec-mon (suc n) f≤°g = sum-mono μA (λ x → sumVec-mon n (f≤°g ∘ _∷_ x))
-
-    sumVec-swap : ∀ n → SumSwap (sV n)
-    sumVec-swap zero    f        μˣ-linear = ≡.refl
-    sumVec-swap (suc n) f {sumˣ} μˣ-linear rewrite sum-ext μA (λ x → sumVec-swap n (f ∘ _∷_ x) μˣ-linear)
-      = sum-swap μA (λ z x → sumVec n (sum μA) (λ y → f (z ∷ y) x)) μˣ-linear
 -}
 
 searchVec-++ : ∀ {A} n {m} (μA : SumProp A) sg
