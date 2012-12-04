@@ -3,7 +3,7 @@ open import Type
 open import Function
 open import Algebra
 open import Algebra.FunctionProperties.NP
-open import Data.Nat.NP
+open import Data.Nat.NP hiding (_^_)
 open import Data.Nat.Properties
 open import Data.Unit hiding (_≤_)
 open import Data.Sum
@@ -14,6 +14,7 @@ open import Data.Bool.NP as Bool
 open import Function.Equality using (_⟨$⟩_)
 import Function.Inverse as FI
 open FI using (_↔_; module Inverse)
+import Function.Related as FR
 open import Function.Related.TypeIsomorphisms.NP
 open import Relation.Binary.NP
 import Relation.Binary.PropositionalEquality as ≡
@@ -90,9 +91,12 @@ SearchMono sᴬ = ∀ {C} (_⊆_ : C → C → ★) →
                   {f g} →
                   (∀ x → f x ⊆ g x) → sᴬ _∙_ f ⊆ sᴬ _∙_ g
 
+SearchSgExt : ∀ {A} → Search A → ★₁
+SearchSgExt sᴬ = ∀ sg {f g} → let open Sgrp sg in
+                              f ≈° g → sᴬ _∙_ f ≈ sᴬ _∙_ g
+
 SearchExt : ∀ {A} → Search A → ★₁
-SearchExt sᴬ = ∀ sg {f g} → let open Sgrp sg in
-                            f ≈° g → sᴬ _∙_ f ≈ sᴬ _∙_ g
+SearchExt {A} sᴬ = ∀ {B} op {f g : A → B} → f ≗ g → sᴬ op f ≡ sᴬ op g
 
 SumExt : ∀ {A} → Sum A → ★
 SumExt sumᴬ = ∀ {f g} → f ≗ g → sumᴬ f ≡ sumᴬ g
@@ -150,9 +154,12 @@ record SumProp A : ★₁ where
     search     : Search A
     search-ind : SearchInd search
 
-  search-ext : SearchExt search
-  search-ext sg {f} {g} f≈°g = search-ind (λ s → s _ f ≈ s _ g) ∙-cong f≈°g
+  search-sg-ext : SearchSgExt search
+  search-sg-ext sg {f} {g} f≈°g = search-ind (λ s → s _ f ≈ s _ g) ∙-cong f≈°g
     where open Sgrp sg
+
+  search-ext : SearchExt search
+  search-ext op = search-ind (λ s → s _ _ ≡ s _ _) (≡.cong₂ op)
 
   search-mono : SearchMono search
   search-mono _⊆_ _∙-mono_ {f} {g} f⊆°g = search-ind (λ s → s _ f ⊆ s _ g) _∙-mono_ f⊆°g
@@ -190,7 +197,7 @@ record SumProp A : ★₁ where
   sum = search _+_
 
   sum-ext : SumExt sum
-  sum-ext = search-ext ℕ+.semigroup
+  sum-ext = search-ext _+_
 
   sum-zero : SumZero sum
   sum-zero = search-ε ℕ+.monoid
@@ -230,6 +237,9 @@ sum-swap = search-swap' ℕ°.+-commutativeMonoid
 
 _≈Sum_ : ∀ {A} → (sum₀ sum₁ : Sum A) → ★
 sum₀ ≈Sum sum₁ = ∀ f → sum₀ f ≡ sum₁ f
+
+_≈Search_ : ∀ {A} → (s₀ s₁ : Search A) → ★₁
+s₀ ≈Search s₁ = ∀ {B} (op : Op₂ B) f → s₀ op f ≡ s₁ op f
 
 μ⊤ : SumProp ⊤
 μ⊤ = srch , ind
@@ -356,22 +366,26 @@ _×Sum-proj₂'_ : ∀ {A B}
 μ-iso-preserve A↔B f μA = μ-view-preserve (_⟨$⟩_ (Inverse.to A↔B)) (_⟨$⟩_ (Inverse.from A↔B))
                             (≡.sym ∘ Inverse.left-inverse-of A↔B) f μA
 
-open import Data.Fin hiding (_+_)
-open import Data.Vec.NP as Vec renaming (map to vmap; sum to vsum; foldr to vfoldr)
+open import Data.Fin using (Fin; zero; suc)
+open import Data.Vec.NP as Vec using (Vec; tabulate; _++_) renaming (map to vmap; sum to vsum; foldr to vfoldr; foldr₁ to vfoldr₁)
 
 vmsum : ∀ m {n} → let open Mon m in
                   Vec C n → C
 vmsum m = vfoldr _ _∙_ ε
   where open Monoid m
 
-searchMonFin : ∀ n → SearchMon (Fin n)
-searchMonFin n m f = vmsum m (vmap f (allFin n)) -- or vsum (tabulate f)
+vsgsum : ∀ sg {n} → let open Sgrp sg in
+                    Vec C (suc n) → C
+vsgsum sg = vfoldr₁ _∙_
+  where open Sgrp sg
+
+-- let's recall that: tabulate f ≗ vmap f (allFin n)
+
+-- searchMonFin : ∀ n → SearchMon (Fin n)
+-- searchMonFin n m f = vmsum m (tabulate f)
 
 searchFinSuc : ∀ n → Search (Fin (suc n))
-searchFinSuc n _∙_ f = vfoldr _ _∙_ (f zero) (vmap (f ∘ suc) (allFin n))
-
-sumFin : ∀ n → Sum (Fin n)
-sumFin n f = vsum (vmap f (allFin n)) -- or vsum (tabulate f)
+searchFinSuc n _∙_ f = vfoldr₁ _∙_ (tabulate f)
 
 μMaybe : ∀ {A} → SumProp A → SumProp (Maybe A)
 μMaybe μA = μ-iso (FI.sym Maybe↔⊤⊎) (μ⊤ +μ μA)
@@ -380,34 +394,49 @@ sumFin n f = vsum (vmap f (allFin n)) -- or vsum (tabulate f)
 μMaybe^ zero    μA = μA
 μMaybe^ (suc n) μA = μMaybe (μMaybe^ n μA)
 
+{-
+μFin : ∀ n → SumProp (Fin (suc n))
+μFin n = searchFinSuc n , ind n
+  where ind : ∀ n → SearchInd (searchFinSuc n)
+        ind zero    P P∙ Pf = Pf zero
+        ind (suc n) P P∙ Pf = P∙ (Pf zero) (ind n (λ s → P (λ op f → s op (f ∘ suc))) P∙ (Pf ∘ suc))
+-}
+
 μFin : ∀ n → SumProp (Fin (suc n))
 μFin n = μ-iso (Maybe^⊤↔Fin1+ n) (μMaybe^ n μ⊤)
 
+sumFin : ∀ n → Sum (Fin n)
+sumFin n f = vsum (tabulate f)
+
+sumFin-spec : ∀ n → sumFin (suc n) ≗ sum (μFin n)
+sumFin-spec zero    f = ℕ°.+-comm (f zero) 0
+sumFin-spec (suc n) f = ≡.cong (_+_ (f zero)) (sumFin-spec n (f ∘ suc))
+
+μ^ : ∀ {A} (μA : SumProp A) n → SumProp (A ^ n)
+μ^ μA zero    = μ⊤
+μ^ μA (suc n) = μA ×μ μ^ μA n
+
 μVec : ∀ {A} (μA : SumProp A) n  → SumProp (Vec A n)
-μVec μA zero    = μ-view (const []) μ⊤
-μVec μA (suc n) = μ-view (uncurry _∷_) (μA ×μ μVec μA n)
+μVec μA n = μ-iso (^↔Vec n) (μ^ μA n)
 
-{-
 searchVec : ∀ {A} n → Search A → Search (Vec A n)
-searchVec zero    searchᴬ m f = f []
-searchVec (suc n) searchᴬ m f = searchᴬ m (λ x → searchVec n searchᴬ m (f ∘ _∷_ x))
+searchVec zero    searchᴬ op f = f []
+searchVec (suc n) searchᴬ op f = searchᴬ op (λ x → searchVec n searchᴬ op (f ∘ _∷_ x))
 
-sumVec : ∀ {A} n → Sum A → Sum (Vec A n)
-sumVec n sumᴬ = searchVec n (λ m → {!sumᴬ!}) ℕ+.monoid
-
-sumVec zero    sumᴬ f = f []
-sumVec (suc n) sumᴬ f = (sumᴬ ×Sum sumVec n sumᴬ) (λ { (x , xs) → f (x ∷ xs) })
--}
+searchVec-spec : ∀ {A} (μA : SumProp A) n → searchVec n (search μA) ≈Search search (μVec μA n)
+searchVec-spec μA zero    op f = ≡.refl
+searchVec-spec μA (suc n) op f = search-ext μA op (λ x → searchVec-spec μA n op (f ∘ _∷_ x))
 
 searchVec-++ : ∀ {A} n {m} (μA : SumProp A) sg
                → let open Sgrp sg in
                  (f : Vec A (n + m) → C)
                → search (μVec μA (n + m)) _∙_ f
-               ≈ search (μVec μA n) _∙_ (λ xs → search (μVec μA m) _∙_
-                  (λ ys → f (xs ++ ys)))
+               ≈ search (μVec μA n) _∙_ (λ xs →
+                   search (μVec μA m) _∙_ (λ ys →
+                     f (xs ++ ys)))
 searchVec-++ zero    μA sg f = Sgrp.refl sg
-searchVec-++ (suc n) μA sg f = search-ext μA sg (λ x →
-                                  searchVec-++ n μA sg (f ∘ _∷_ x))
+searchVec-++ (suc n) μA sg f = search-sg-ext μA sg (λ x →
+                                 searchVec-++ n μA sg (f ∘ _∷_ x))
 
 sumVec-swap : ∀ {A} n {m} (μA : SumProp A)(f : Vec A (n + m) → ℕ)
             → sum (μVec μA n) (λ xs → sum (μVec μA m) (λ ys → f (xs ++ ys)))
@@ -415,11 +444,10 @@ sumVec-swap : ∀ {A} n {m} (μA : SumProp A)(f : Vec A (n + m) → ℕ)
 sumVec-swap n {m} μA f = sum-swap (μVec μA n) (μVec μA m) (λ xs ys → f (xs ++ ys))
 
 swapS : ∀ {A B} → SumProp (A × B) → SumProp (B × A)
-swapS = μ-view Data.Product.swap
-  -- μ-iso ×-comm
+swapS = μ-iso swap-iso
 
-swapS-preserve : ∀ {A B} f (μA×B : SumProp (A × B)) → sum μA×B f ≡ sum (swapS μA×B) (f ∘ Data.Product.swap)
-swapS-preserve f μA×B =  μ-view-preserve Data.Product.swap Data.Product.swap (λ x → ≡.refl) f μA×B {- or ≡.refl -}
+swapS-preserve : ∀ {A B} f (μA×B : SumProp (A × B)) → sum μA×B f ≡ sum (swapS μA×B) (f ∘ swap)
+swapS-preserve = μ-iso-preserve swap-iso
 -- -}
 -- -}
 -- -}
