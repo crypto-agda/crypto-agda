@@ -89,12 +89,20 @@ StableUnderInjection μ = ∀ f p → Injective p → sum μ f ≡ sum μ (f ∘
 
 module _ where
   open import bijection-fin
-  open import Data.Vec.NP
+  open import Data.Fin using (Fin; zero; suc)
+  open import Data.Vec.NP renaming (sum to vsum)
+
+  sumFin : ∀ n → Sum (Fin n)
+  sumFin n f = vsum (tabulate f)
+
+  sumFin-spec : ∀ n → sumFin (suc n) ≗ sum (μFinSuc n)
+  sumFin-spec zero    f = ℕ°.+-comm (f zero) 0
+  sumFin-spec (suc n) f = ≡.cong (_+_ (f zero)) (sumFin-spec n (f ∘ suc))
 
   sumFinSUI : ∀ n f p → Injective p → sumFin n f ≡ sumFin n (f ∘ p)
   sumFinSUI n f p p-inj = count-perm f p (λ x y → p-inj)
 
-  μFinSUI : ∀ {n} → StableUnderInjection (μFin n)
+  μFinSUI : ∀ {n} → StableUnderInjection (μFinSuc n)
   μFinSUI {n} f p p-inj rewrite ≡.sym (sumFin-spec n f)
                               | ≡.sym (sumFin-spec n (f ∘ p))
                               = sumFinSUI (suc n) f p p-inj
