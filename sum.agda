@@ -199,6 +199,9 @@ record SumProp A : ★₁ where
                                            (λ p q → ≡.trans (hom _ _) (≡.cong₂ _*_ p q))
                                            (λ _ → ≡.refl)
 
+  StableUnder : (A → A) → ★₁
+  StableUnder p = ∀ {B} (op : Op₂ B) f → search op f ≡ search op (f ∘ p)
+
   sum : Sum A
   sum = search _+_
 
@@ -221,6 +224,12 @@ record SumProp A : ★₁ where
   sum-lin f zero    = sum-zero
   sum-lin f (suc k) = ≡.trans (sum-hom f (λ x → k * f x)) (≡.cong₂ _+_ (≡.refl {x = sum f}) (sum-lin f k))
 
+  SumStableUnder : (A → A) → ★
+  SumStableUnder p = ∀ f → sum f ≡ sum (f ∘ p)
+
+  sumStableUnder : ∀ {p} → StableUnder p → SumStableUnder p
+  sumStableUnder SU-p = SU-p _+_
+
   Card : ℕ
   Card = sum (const 1)
 
@@ -229,6 +238,12 @@ record SumProp A : ★₁ where
 
   count-ext : CountExt count
   count-ext f≗g = sum-ext (≡.cong Bool.toℕ ∘ f≗g)
+
+  CountStableUnder : (A → A) → ★
+  CountStableUnder p = ∀ f → count f ≡ count (f ∘ p)
+
+  countStableUnder : ∀ {p} → SumStableUnder p → CountStableUnder p
+  countStableUnder sumSU-p f = sumSU-p (Bool.toℕ ∘ f)
 
 open SumProp public
 

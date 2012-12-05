@@ -12,7 +12,7 @@ open import Data.Bits
 import Data.Vec.NP as Vec
 open Vec using (Vec; []; _∷_; _∷ʳ_; allFin; lookup) renaming (map to vmap)
 open import Algebra.FunctionProperties
-open import Relation.Binary.PropositionalEquality as ≡
+open import Relation.Binary.PropositionalEquality.NP as ≡
 import cont as cont
 open cont using (Cont; ContA)
 open import sum
@@ -106,7 +106,7 @@ module ℤq-count
   (ℤq : ★)
   (_⊞_ : ℤq → ℤq → ℤq)
   (μℤq : SumProp ℤq)
-  (sumℤq-⊞-lem : ∀ x f → sum μℤq (f ∘ _⊞_ x) ≡ sum μℤq f)
+  (⊞-stable : ∀ x → SumStableUnder μℤq (_⊞_ x))
   where
 
   -- open Sum
@@ -114,7 +114,7 @@ module ℤq-count
   open `★ public renaming (`X to `ℤq)
 
   #_ : ∀ {u} → ↺ u Bit → ℕ
-  #_ {u} f = sum (μU μℤq u) (Bool.toℕ ∘ run↺ f)
+  #_ {u} f = count (μU μℤq u) (run↺ f)
 
   #q_ : Count ℤq
   #q_ = count μℤq
@@ -161,11 +161,11 @@ module ℤq-count
   _≈ᴬ_ {A} f g = ∀ (Adv : A → Bit) → ⟪ Adv · f ⟫ ≈↺ ⟪ Adv · g ⟫
 
   lem : ∀ x → ⟨ x ⊞⟩ (⁇ `ℤq) ≈ᴬ ⁇ _
-  lem x Adv = sumℤq-⊞-lem x (Bool.toℕ ∘ Adv)
+  lem x Adv = sym (⊞-stable x (Bool.toℕ ∘ Adv))
 
   -- ∀ (A : ℤq → Bit) → # (A ⁇)
 
-open Fin.Modulo renaming (sucmod to [suc])
+open Fin.Modulo renaming (sucmod to [suc]; sucmod-inj to [suc]-inj)
 
 {-
 module ℤq-implem (q-2 : ℕ) where
@@ -181,10 +181,19 @@ module ℤq-implem (q-2 : ℕ) where
   [1] : ℤq
   [1] = suc zero
 -}
-module ℤq-implem (q : ℕ) ([0]' [1]' : Fin q) where
+module ℤq-implem (q-1 : ℕ) ([0]' [1]' : Fin (suc q-1)) where
   -- open Sum
+  q : ℕ
+  q = suc q-1
+
   ℤq : ★
   ℤq = Fin q
+
+  μℤq : SumProp ℤq
+  μℤq = μFinSuc q-1
+
+  sumℤq : Sum ℤq
+  sumℤq = sum μℤq
 
   [0] : ℤq
   [0] = [0]'
@@ -192,23 +201,28 @@ module ℤq-implem (q : ℕ) ([0]' [1]' : Fin q) where
   [1] : ℤq
   [1] = [1]'
 
+  [suc]-stable : SumStableUnder μℤq [suc]
+  [suc]-stable = μFinSUI [suc] [suc]-inj
+
   _ℕ⊞_ : ℕ → ℤq → ℤq
   zero  ℕ⊞ n = n
   suc m ℕ⊞ n = m ℕ⊞ ([suc] n)
-  {-
-  zero  ℕ⊞ n = n
-  suc m ℕ⊞ n = [suc] (m ℕ⊞ n)
-  -}
 
   ℕ⊞-inj : ∀ n {x y} → n ℕ⊞ x ≡ n ℕ⊞ y → x ≡ y
   ℕ⊞-inj zero    eq = eq
-  ℕ⊞-inj (suc n) eq = sucmod-inj _ _ (ℕ⊞-inj n eq)
+  ℕ⊞-inj (suc n) eq = [suc]-inj (ℕ⊞-inj n eq)
+
+  ℕ⊞-stable : ∀ m → SumStableUnder μℤq (_ℕ⊞_ m)
+  ℕ⊞-stable m = μFinSUI (_ℕ⊞_ m) (ℕ⊞-inj m)
 
   _⊞_ : ℤq → ℤq → ℤq
   m ⊞ n = Fin.toℕ m ℕ⊞ n
 
   ⊞-inj : ∀ m {x y} → m ⊞ x ≡ m ⊞ y → x ≡ y
   ⊞-inj m = ℕ⊞-inj (Fin.toℕ m)
+
+  ⊞-stable : ∀ m → SumStableUnder μℤq (_⊞_ m)
+  ⊞-stable m = μFinSUI (_⊞_ m) (⊞-inj m)
 
   _ℕ⊠_ : ℕ → ℤq → ℤq
   zero  ℕ⊠ n = [0]
@@ -224,37 +238,9 @@ module ℤq-implem (q : ℕ) ([0]' [1]' : Fin q) where
   _[^]_ : ℤq → ℤq → ℤq
   m [^] n = m [^]ℕ (Fin.toℕ n)
 
-  μℤq : SumProp ℤq
-  μℤq = μFin q
-
-  allℤq : Vec ℤq q
-  allℤq = allFin q
-
-  {-
-  sumℤq : Sum ℤq
-  sumℤq f = Vec.sum (vmap f allℤq)
-  -}
-
-  sumℤq-[suc]-lem : ∀ f → sum μℤq (f ∘ [suc]) ≡ sum μℤq f
-  sumℤq-[suc]-lem f rewrite ≡.sym (Vec.sum-map-rot₁ f allℤq)
-                          | Vec.map-∘ f [suc] allℤq
-                          | rot₁-map-sucmod q
-                          = refl
-
-  --  comm-[suc]-ℕ⊞ : ∀ m n → [suc] (m ℕ⊞ n) ≡ m ℕ⊞ ([suc] n)
-
-  sumℤq-ℕ⊞-lem : ∀ m f → sum μℤq (f ∘ _ℕ⊞_ m) ≡ sum μℤq f
-  sumℤq-ℕ⊞-lem zero f = refl
-  sumℤq-ℕ⊞-lem (suc m) f rewrite sumℤq-[suc]-lem (f ∘ _ℕ⊞_ m)
-                               | sumℤq-ℕ⊞-lem m f = refl
-
-  sumℤq-⊞-lem : ∀ m f → sum μℤq (f ∘ _⊞_ m) ≡ sum μℤq f
-  sumℤq-⊞-lem = sumℤq-ℕ⊞-lem ∘ Fin.toℕ
-
-
-module G-implem (p q : ℕ) (g' : Fin p) (0[p] 1[p] : Fin p) (0[q] 1[q] : Fin q) where
-  open ℤq-implem q 0[q] 1[q] public
-  open ℤq-implem p 0[p] 1[p] public using () renaming (ℤq to G; _⊠_ to _∙_; _[^]ℕ_ to _^[p]_)
+module G-implem (p-1 q-1 : ℕ) (g' 0[p] 1[p] : Fin (suc p-1)) (0[q] 1[q] : Fin (suc q-1)) where
+  open ℤq-implem q-1 0[q] 1[q] public
+  open ℤq-implem p-1 0[p] 1[p] public using () renaming (ℤq to G; _⊠_ to _∙_; _[^]ℕ_ to _^[p]_)
 
   g : G
   g = g'
@@ -274,7 +260,7 @@ module G-count
   (ℤq : ★)
   (_⊞_ : ℤq → ℤq → ℤq)
   (μℤq : SumProp ℤq)
-  (sumℤq-⊞-lem : ∀ x f → sum μℤq (f ∘ _⊞_ x) ≡ sum μℤq f)
+  (⊞-stable : ∀ x → SumStableUnder μℤq (_⊞_ x))
   (G : ★)
   (g : G)
   (_^_ : G → ℤq → G)
@@ -284,7 +270,7 @@ module G-count
   g^_ : ℤq → G
   g^ n = g ^ n
 
-  open ℤq-count ℤq _⊞_ μℤq sumℤq-⊞-lem
+  open ℤq-count ℤq _⊞_ μℤq ⊞-stable
 
   ⁇G : ↺ `ℤq G
   run↺ ⁇G x = g^ x
@@ -589,12 +575,27 @@ module ⟨ℤp⟩★ p-3 {- p is prime -} (`Rₐ : `★) where
 
   postulate
     _⁻¹ : G → G
-    _/_ : G → G → G
-    /-• : ∀ x y → (x ∙ y) / x ≡ y
-    comm-^ : ∀ α x y → (α ^ x)^ y ≡ (α ^ y)^ x
-    dist-^-⊠ : ∀ α x y → α ^ (x ⊠ y) ≡ (α ^ x) ^ y
 
-  open ℤq-count ℤq _⊞_ μℤq sumℤq-⊞-lem
+  _/_ : G → G → G
+  x / y = x ∙ (y ⁻¹)
+
+  postulate
+    /-• : ∀ x y → (x ∙ y) / x ≡ y
+    dist-^-⊠ : ∀ α x y → α ^ (x ⊠ y) ≡ (α ^ x) ^ y
+    ⊠-comm : ∀ x y → x ⊠ y ≡ y ⊠ x
+
+  comm-^ : ∀ α x y → (α ^ x)^ y ≡ (α ^ y)^ x
+  comm-^ α x y = (α ^ x)^ y
+               ≡⟨ sym (dist-^-⊠ α x y) ⟩
+                  α ^ (x ⊠ y)
+               ≡⟨ cong (_^_ α) (⊠-comm x y) ⟩
+                  α ^ (y ⊠ x)
+               ≡⟨ dist-^-⊠ α y x ⟩
+                  (α ^ y)^ x
+               ∎
+    where open ≡-Reasoning
+
+  open ℤq-count ℤq _⊞_ μℤq ⊞-stable
 
   μRₐ : SumProp (El `Rₐ)
   μRₐ = μU μℤq `Rₐ
@@ -607,9 +608,7 @@ module ⟨ℤp⟩★ p-3 {- p is prime -} (`Rₐ : `★) where
   open EB hiding (g^_)
 
   otp-base-lem : ∀ (A : G → Bit) m → (A ∘ g^_) ≈q (A ∘ g^_ ∘ _⊞_ m)
-  otp-base-lem A m = #-StableUnderInjection {μ = μFin _} μFinSUI
-         (A ∘ g^_) (_⊞_ m) (⊞-inj m)
-   -- oh hai! this is:  sym (sumℤq-⊞-lem m (Bool.toℕ ∘ A ∘ g^_)) -- kthxbye
+  otp-base-lem A m = ⊞-stable m (Bool.toℕ ∘ A ∘ g^_)
 
   postulate
     ddh-hyp : (A : DDHAdv Rₐ) → DDH⅁ A 0b ≈R DDH⅁ A 1b

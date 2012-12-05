@@ -85,7 +85,10 @@ Injective : ∀ {a b}{A : Set a}{B : Set b}(f : A → B) → Set (a L.⊔ b)
 Injective f = ∀ {x y} → f x ≡ f y → x ≡ y
 
 StableUnderInjection : ∀ {A} → SumProp A → Set
-StableUnderInjection μ = ∀ f p → Injective p → sum μ f ≡ sum μ (f ∘ p)
+StableUnderInjection μ = ∀ p → Injective p → SumStableUnder μ p
+
+CountStableUnderInjection : ∀ {A} → SumProp A → Set
+CountStableUnderInjection μ = ∀ p → Injective p → CountStableUnder μ p
 
 module _ where
   open import bijection-fin
@@ -103,10 +106,9 @@ module _ where
   sumFinSUI n f p p-inj = count-perm f p (λ x y → p-inj)
 
   μFinSUI : ∀ {n} → StableUnderInjection (μFinSuc n)
-  μFinSUI {n} f p p-inj rewrite ≡.sym (sumFin-spec n f)
+  μFinSUI {n} p p-inj f rewrite ≡.sym (sumFin-spec n f)
                               | ≡.sym (sumFin-spec n (f ∘ p))
                               = sumFinSUI (suc n) f p p-inj
 
-#-StableUnderInjection : ∀ {A}{μ : SumProp A} → StableUnderInjection μ
-    → ∀ f p → Injective p → count μ f ≡ count μ (f ∘ p)
-#-StableUnderInjection sui f p p-inj = sui (toℕ ∘ f) p p-inj
+#-StableUnderInjection : ∀ {A}{μ : SumProp A} → StableUnderInjection μ → CountStableUnderInjection μ
+#-StableUnderInjection sui p p-inj f = sui p p-inj (toℕ ∘ f)
