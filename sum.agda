@@ -85,6 +85,12 @@ SearchInd {A} srch = ∀ (P  : Search A → ★)
                        (Pf : ∀ x → P (λ _ f → f x))
                      →  P srch
 
+SumInd : ∀ {A} → Sum A → ★₁
+SumInd {A} sum = ∀ (P  : Sum A → ★)
+                   (P+ : ∀ {s₀ s₁ : Sum A} → P s₀ → P s₁ → P (λ f → s₀ f + s₁ f))
+                   (Pf : ∀ x → P (λ f → f x))
+                →  P sum
+
 SearchMono : ∀ {A} → Search A → ★₁
 SearchMono sᴬ = ∀ {C} (_⊆_ : C → C → ★) →
                 ∀ {_∙_} (∙-mono : _∙_ Preserves₂ _⊆_ ⟶ _⊆_ ⟶ _⊆_)
@@ -195,6 +201,9 @@ record SumProp A : ★₁ where
 
   sum : Sum A
   sum = search _+_
+
+  sum-ind : SumInd sum
+  sum-ind P P+ Pf = search-ind (λ s → P (s _+_)) P+ Pf
 
   sum-ext : SumExt sum
   sum-ext = search-ext _+_
@@ -394,23 +403,14 @@ searchFinSuc n _∙_ f = vfoldr₁ _∙_ (tabulate f)
 μMaybe^ zero    μA = μA
 μMaybe^ (suc n) μA = μMaybe (μMaybe^ n μA)
 
-{-
-μFin : ∀ n → SumProp (Fin (suc n))
-μFin n = searchFinSuc n , ind n
+μFinSuc : ∀ n → SumProp (Fin (suc n))
+μFinSuc n = searchFinSuc n , ind n
   where ind : ∀ n → SearchInd (searchFinSuc n)
         ind zero    P P∙ Pf = Pf zero
         ind (suc n) P P∙ Pf = P∙ (Pf zero) (ind n (λ s → P (λ op f → s op (f ∘ suc))) P∙ (Pf ∘ suc))
--}
 
-μFin : ∀ n → SumProp (Fin (suc n))
-μFin n = μ-iso (Maybe^⊤↔Fin1+ n) (μMaybe^ n μ⊤)
-
-sumFin : ∀ n → Sum (Fin n)
-sumFin n f = vsum (tabulate f)
-
-sumFin-spec : ∀ n → sumFin (suc n) ≗ sum (μFin n)
-sumFin-spec zero    f = ℕ°.+-comm (f zero) 0
-sumFin-spec (suc n) f = ≡.cong (_+_ (f zero)) (sumFin-spec n (f ∘ suc))
+μFinSucIso : ∀ n → SumProp (Fin (suc n))
+μFinSucIso n = μ-iso (Maybe^⊤↔Fin1+ n) (μMaybe^ n μ⊤)
 
 μ^ : ∀ {A} (μA : SumProp A) n → SumProp (A ^ n)
 μ^ μA zero    = μ⊤
