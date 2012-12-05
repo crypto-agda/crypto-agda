@@ -236,14 +236,15 @@ StableIfFinable μA fin f p p-inj
         open Finable fin
 
 
-{-
 module _ where
   open import bijection-fin
   open import Data.Vec.NP
 
-  μFinSUI : ∀ {n} → StableUnderInjection (μFin n)
-  μFinSUI {n} f p p-inj rewrite ≡.sym (tabulate-∘ f id)
-                              | ≡.sym (tabulate-∘ (f ∘ p) id) = count-perm f p (λ x y → p-inj)
--}
+  sumFinSUI : ∀ n f p → Injective p → sumFin n f ≡ sumFin n (f ∘ p)
+  sumFinSUI n f p p-inj = count-perm f p (λ x y → p-inj)
 
+  μFinSUI : ∀ {n} → StableUnderInjection (μFin n)
+  μFinSUI {n} f p p-inj rewrite ≡.sym (sumFin-spec n f)
+                              | ≡.sym (sumFin-spec n (f ∘ p))
+                              = sumFinSUI (suc n) f p p-inj
 
