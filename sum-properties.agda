@@ -10,7 +10,7 @@ open import Data.Bool.NP
 open import Data.Nat.NP
 open import Data.Nat.Properties
 
-open import Data.Product
+open import Data.Product renaming (map to pmap)
 open import Data.Sum
 open import Data.Unit using (⊤)
 
@@ -46,22 +46,6 @@ sum-lem₂ μA f g =
     lemma (suc a) (suc b) rewrite +-assoc-comm a 1 b
                                 | +-assoc-comm (a ⊔ b) 1 (a ⊓ b) = ≡.cong (suc ∘ suc) (lemma a b)
 
-toℕ-⊓ : ∀ a b → toℕ a ⊓ toℕ b ≡ toℕ (a ∧ b)
-toℕ-⊓ true true = ≡.refl
-toℕ-⊓ true false = ≡.refl
-toℕ-⊓ false b = ≡.refl
-
-toℕ-⊔ : ∀ a b → toℕ a ⊔ toℕ b ≡ toℕ (a ∨ b)
-toℕ-⊔ true true = ≡.refl
-toℕ-⊔ true false = ≡.refl
-toℕ-⊔ false b = ≡.refl
-
-toℕ-∸ : ∀ a b → toℕ a ∸ toℕ b ≡ toℕ (a ∧ not b)
-toℕ-∸ true true = ≡.refl
-toℕ-∸ true false = ≡.refl
-toℕ-∸ false true = ≡.refl
-toℕ-∸ false false = ≡.refl
-
 count-lem : ∀ {A : ★}(μA : SumProp A)(f g : A → Bool)
           → count μA f ≡ count μA (λ x → f x ∧ g x) + count μA (λ x → f x ∧ not (g x))
 count-lem μA f g rewrite sum-lem μA (toℕ ∘ f) (toℕ ∘ g)
@@ -78,11 +62,6 @@ sum-⊔ : ∀ {A : ★}(μA : SumProp A)(f g : A → ℕ) → sum μA (λ x → 
 sum-⊔ μA f g = ℕ≤.trans
                  (sum-mono μA (λ x → ⊔≤+ (f x) (g x)))
                  (ℕ≤.reflexive (sum-hom μA f g))
-  where
-    ⊔≤+ : ∀ a b → a ⊔ b ≤ a + b
-    ⊔≤+ zero b = ℕ≤.refl
-    ⊔≤+ (suc a) zero = ℕ≤.reflexive (≡.cong suc (ℕ°.+-comm 0 a))
-    ⊔≤+ (suc a) (suc b) = s≤s (ℕ≤.trans (⊔≤+ a b) (ℕ≤.trans (≤-step ℕ≤.refl) (ℕ≤.reflexive (+-assoc-comm 1 a b))))
 
 count-∨ : ∀ {A : ★}(μA : SumProp A)(f g : A → Bool) → count μA (λ x → f x ∨ g x) ≤ count μA f + count μA g
 count-∨ μA f g = ℕ≤.trans (ℕ≤.reflexive (sum-ext μA (λ x → ≡.sym (toℕ-⊔ (f x) (g x))))) 
@@ -102,157 +81,189 @@ StableUnderInjection μ = ∀ f p → Injective p → sum μ f ≡ sum μ (f ∘
     → ∀ f p → Injective p → count μ f ≡ count μ (f ∘ p)
 #-StableUnderInjection sui f p p-inj = sui (toℕ ∘ f) p p-inj
 
-open import Data.Fin using (Fin ; zero ; suc)
+infix 4 _≈_
 
-record Finable {A : Set}(μA : SumProp A) : Set where
+record _≈_ {A B} (μA : SumProp A)(μB : SumProp B) : Set where
   constructor mk
   field
-    FinCard  : ℕ
-
-  FIN = Fin (suc FinCard)
-
-  field
-    iso      : A ↔ Fin (suc FinCard)
-    
-  toFin : A → FIN
-  toFin x = Inv.Inverse.to iso ⟨$⟩ x
-
-  fromFin : FIN → A
-  fromFin x = Inv.Inverse.from iso ⟨$⟩ x
-
-  field
-    sums-ok  : ∀ f → sum μA f ≡ sum (μFinSuc FinCard) (f ∘ fromFin)
-
-  from-inj : Injective fromFin
-  from-inj = Inv.Inverse.injective (Inv.sym iso)
-
-  to-inj : Injective toFin
-  to-inj = Inv.Inverse.injective iso
-
-  iso' : fromFin ∘ toFin ≗ id
-  iso' = Inv.Inverse.left-inverse-of iso
-
-⊤-Finable : Finable μ⊤
-⊤-Finable = mk 0 iso sums-ok where
-
-  iso : _
-  iso = ⊤ ↔⟨ sym A⊎⊥↔A ⟩
-        (⊤ ⊎ ⊥) ↔⟨ Inv.id ⊎-cong sym Fin0↔⊥ ⟩
-        (⊤ ⊎ Fin 0) ↔⟨ sym Fin∘suc↔⊤⊎Fin ⟩
-        Fin (suc 0) ∎
-    where open EquationalReasoning
-          open import Relation.Binary.Sum
-
-  sums-ok : (_ : _) → _
-  sums-ok f = ≡.refl
-
-+-Finable : ∀ {A B}(μA : SumProp A)(μB : SumProp B) → Finable μA → Finable μB → Finable (μA +μ μB)
-+-Finable {A}{B} μA μB finA finB = mk FinCard iso sums-ok where
-
-  |A| |B| : ℕ
-  |A| = suc (Finable.FinCard finA)
-  |B| = suc (Finable.FinCard finB)
-
-  μFinA = μFinSuc (Finable.FinCard finA)
-  μFinB = μFinSuc (Finable.FinCard finB)
-
-  FinCard : _
-  FinCard = Finable.FinCard finA + |B|
-
-  iso : _
-  iso = (A ⊎ B) 
-      ↔⟨ (Finable.iso finA) ⊎-cong (Finable.iso finB) ⟩ 
-        (Fin |A| ⊎ Fin |B|)
-      ↔⟨ Fin-⊎-+ |A| |B| ⟩
-        Fin (|A| + |B|)
-      ∎
-    where 
-      open import Relation.Binary.Sum
-      open EquationalReasoning
-
+    iso : A ↔ B
   from : ∀ {A B : Set} → A ↔ B → B → A
   from iso x = Inv.Inverse.from iso ⟨$⟩ x
 
   to : ∀ {A B : Set} → A ↔ B → A → B
   to iso x = Inv.Inverse.to iso ⟨$⟩ x
 
-  fromFin : Fin (|A| + |B|) → A ⊎ B
-  fromFin x = from iso x
-  
-  open import Data.Vec.NP using (Vec ; foldr₁ ; tabulate-ext)
-  vsum : ∀ {n} → Vec ℕ (suc n) → ℕ
-  vsum = foldr₁ _+_
+  from-inj : ∀ {A B : Set} (eq : A ↔ B) → Injective (from eq)
+  from-inj eq = Inv.Inverse.injective (Inv.sym eq)
 
-  fin-proof : ∀ n m (f : Fin (suc n) ⊎ Fin (suc m) → ℕ) → 
-                      sum (μFinSuc n) (f ∘ inj₁) 
-                    + sum (μFinSuc m) (f ∘ inj₂) 
-                    ≡ sum (μFinSuc (n + suc m)) (f ∘ from  (Fin-⊎-+ (suc n) (suc m)))
-  fin-proof zero m f    rewrite tabulate-ext (≡.cong (f ∘ inj₂ ∘ suc) ∘ ≡.sym ∘ Inv.Inverse.right-inverse-of (Maybe^⊥↔Fin m)) = ≡.refl
-  fin-proof (suc n) m f = sum (μFinSuc (suc n)) (f ∘ inj₁) + sum (μFinSuc m) (f ∘ inj₂) 
-                        ≡⟨ ℕ°.+-assoc (f (inj₁ zero)) (sum (μFinSuc n) (f ∘ inj₁ ∘ suc)) (sum (μFinSuc m) (f ∘ inj₂)) ⟩ 
-                          f (inj₁ zero) + (sum (μFinSuc n) (f ∘ inj₁ ∘ suc) + sum (μFinSuc m) (f ∘ inj₂))
-                        ≡⟨ ≡.cong (_+_ (f (inj₁ zero))) (fin-proof n m (F f)) ⟩
-                          f (inj₁ zero) + sum (μFinSuc (n + suc m)) (F f ∘ from (Fin-⊎-+ (suc n) (suc m)))
-                        ≡⟨ ≡.cong (_+_ (f (inj₁ zero))) (sum-ext (μFinSuc (n + suc m)) (F-proof (suc n) (suc m) f)) ⟩
-                          f (inj₁ zero) + sum (μFinSuc (n + suc m)) (f ∘ from (Fin-⊎-+ (suc (suc n)) (suc m)) ∘ suc)
-                        ≡⟨ ≡.refl ⟩
-                          sum (μFinSuc (suc n + suc m))
-                                     (f ∘ from (Fin-⊎-+ (suc (suc n)) (suc m))) 
-                        ∎
-    where 
-      open ≡.≡-Reasoning
-      F : ∀ {n m} → (Fin (suc n) ⊎ Fin m → ℕ) → Fin n ⊎ Fin m → ℕ
-      F f = [ (f ∘ inj₁ ∘ suc) , (f ∘ inj₂) ]
+  to-inj : ∀ {A B : Set} (eq : A ↔ B) → Injective (to eq)
+  to-inj eq = Inv.Inverse.injective eq
 
+  field
+    sums-ok : ∀ f → sum μA f ≡ sum μB (f ∘ from iso)
 
-      F-proof : ∀ n m f → F f ∘ from (Fin-⊎-+ n m) ≗ f ∘ from (Fin-⊎-+ (suc n) m) ∘ suc
-      F-proof n m f x with (Inv.Inverse.from (Maybe^-⊎-+ n m) ⟨$⟩ (Inv.Inverse.from (Maybe^⊥↔Fin (n + m)) ⟨$⟩ x))
-      ... | inj₁ y = ≡.refl
-      ... | inj₂ y = ≡.refl
+  sums-ok' : ∀ f → sum μB f ≡ sum μA (f ∘ to iso)
+  sums-ok' f = sum μB f
+             ≡⟨ sum-ext μB (≡.cong f ∘ ≡.sym ∘ Inv.Inverse.right-inverse-of iso) ⟩
+               sum μB (f ∘ to iso ∘ from iso)
+             ≡⟨ ≡.sym (sums-ok (f ∘ to iso)) ⟩
+               sum μA (f ∘ to iso)
+             ∎
+    where open ≡.≡-Reasoning
+
+≈-refl : ∀ {A} (μA : SumProp A) → μA ≈ μA
+≈-refl μA = mk Inv.id (λ f → ≡.refl)
+
+≈-id : ∀ {A} {μA : SumProp A} → μA ≈ μA
+≈-id = ≈-refl _
+
+≈-sym : ∀ {A B}{μA : SumProp A}{μB : SumProp B} → μA ≈ μB → μB ≈ μA
+≈-sym A≈B = mk (Inv.sym iso) sums-ok'
+  where open _≈_ A≈B
+
+≈-trans : ∀ {A B C}{μA : SumProp A}{μB : SumProp B}{μC : SumProp C} → μA ≈ μB → μB ≈ μC → μA ≈ μC
+≈-trans A≈B B≈C = mk (iso B≈C Inv.∘ iso A≈B) (λ f → ≡.trans (sums-ok A≈B f) (sums-ok B≈C (f ∘ from A≈B (iso A≈B))))
+  where open _≈_
+
+infix 2 _≈∎
+infixr 2 _≈⟨_⟩_
+
+_≈∎ : ∀ {A} (μA : SumProp A) → μA ≈ μA
+_≈∎ = ≈-refl
+
+_≈⟨_⟩_ : ∀ {A B C} (μA : SumProp A){μB : SumProp B}{μC : SumProp C} → μA ≈ μB → μB ≈ μC → μA ≈ μC
+_ ≈⟨ A≈B ⟩ B≈C = ≈-trans A≈B B≈C
+
+Fin0≈⊤ : μFinSuc zero ≈ μ⊤
+Fin0≈⊤ = mk iso sums-ok where
+  open import Relation.Binary.Sum
+  iso : _
+  iso = (A⊎⊥↔A Inv.∘ Inv.id ⊎-cong Fin0↔⊥) Inv.∘ Fin∘suc↔⊤⊎Fin
 
   sums-ok : (_ : _) → _
-  sums-ok f = sum (μA +μ μB) f
-            ≡⟨ ≡.cong₂ _+_ (Finable.sums-ok finA (f ∘ inj₁)) (Finable.sums-ok finB (f ∘ inj₂)) ⟩
-              sum μFinA (f ∘ inj₁ ∘ from (Finable.iso finA))
-            + sum μFinB (f ∘ inj₂ ∘ from (Finable.iso finB))
-            ≡⟨ ≡.cong₂ _+_ (sum-ext μFinA {f = f ∘ inj₁ ∘ from (Finable.iso finA)} (λ x → ≡.refl)) 
-                           (sum-ext μFinB {f = f ∘ inj₂ ∘ from (Finable.iso finB)} (λ _ → ≡.refl)) ⟩ 
-              sum μFinA (f ∘ from F ∘ inj₁)
-            + sum μFinB (f ∘ from F ∘ inj₂)
-            ≡⟨ fin-proof _ _ (f ∘ from F) ⟩
-              sum (μFinSuc FinCard) (f ∘ from F ∘ from (Fin-⊎-+ |A| |B|))
-            ≡⟨ ≡.refl ⟩
-              sum (μFinSuc FinCard) (f ∘ from iso) 
-            ∎
-    where
-      open ≡.≡-Reasoning
-      open import Relation.Binary.Sum
-      F :  (A ⊎ B) ↔ (Fin |A| ⊎ Fin |B|)
-      F = Finable.iso finA ⊎-cong Finable.iso finB
+  sums-ok = λ x → ≡.refl
+
+⊤+Fin : ∀ {n} → μ⊤ +μ μFinSuc n ≈ μFinSuc (suc n)
+⊤+Fin {n} = mk iso sums-ok where
+  iso : _
+  iso = Inv.sym Fin∘suc↔⊤⊎Fin
+
+  sums-ok : (_ : _) → _
+  sums-ok f = ≡.refl
+
+⊤×A≈A : ∀ {A}{μA : SumProp A} → μ⊤ ×μ μA ≈ μA
+⊤×A≈A = mk iso sums-ok where
+  iso : _
+  iso = ⊤×A↔A
+
+  sums-ok : (_ : _) → _
+  sums-ok f = ≡.refl
+
+μFinPres : ∀ {m n} → m ≡ n → μFinSuc m ≈ μFinSuc n
+μFinPres eq rewrite eq = ≈-refl _
+
+_+μ-cong_ : ∀ {A B C D}{μA : SumProp A}{μB : SumProp B}{μC : SumProp C}{μD : SumProp D}
+          → μA ≈ μC → μB ≈ μD → μA +μ μB ≈ μC +μ μD
+A≈C +μ-cong B≈D = mk iso sums-ok where
+  open import Relation.Binary.Sum
+  iso : _
+  iso = (_≈_.iso A≈C) ⊎-cong (_≈_.iso B≈D)
+
+  sums-ok : (_ : _) → _
+  sums-ok f = ≡.cong₂ _+_ (_≈_.sums-ok A≈C (f ∘ inj₁)) (_≈_.sums-ok B≈D (f ∘ inj₂))
+
++μ-assoc : ∀ {A B C}(μA : SumProp A)(μB : SumProp B)(μC : SumProp C)
+         → (μA +μ μB) +μ μC ≈ μA +μ (μB +μ μC)
++μ-assoc μA μB μC = mk iso sums-ok where
+  iso : _
+  iso = ⊎-CMon.assoc _ _ _
+
+  sums-ok : (_ : _) → _
+  sums-ok f = ℕ°.+-assoc (sum μA (f ∘ inj₁ ∘ inj₁)) (sum μB (f ∘ inj₁ ∘ inj₂)) (sum μC (f ∘ inj₂))
+
+_×μ-cong_ :  ∀ {A B C D}{μA : SumProp A}{μB : SumProp B}{μC : SumProp C}{μD : SumProp D}
+          → μA ≈ μC → μB ≈ μD → μA ×μ μB ≈ μC ×μ μD
+_×μ-cong_ {μA = μA}{μD = μD} A≈C B≈D = mk iso sums-ok where
+  open import Relation.Binary.Product.Pointwise
+  iso : _
+  iso = _≈_.iso A≈C ×-cong _≈_.iso B≈D
+
+  sums-ok : (_ : _) → _
+  sums-ok f = ≡.trans (sum-ext μA (_≈_.sums-ok B≈D ∘ curry f))
+                      (_≈_.sums-ok A≈C (λ a →
+            sum μD (λ d → f (a , Inv.Inverse.from (_≈_.iso B≈D) ⟨$⟩ d))))
+
+×+-distrib : ∀ {A B C}(μA : SumProp A)(μB : SumProp B)(μC : SumProp C)
+           → (μA +μ μB) ×μ μC ≈ (μA ×μ μC) +μ (μB ×μ μC)
+×+-distrib μA μB μC = mk iso sums-ok where
+  iso : _
+  iso = ×⊎°.distribʳ _ _ _
+
+  sums-ok : (_ : _) → _
+  sums-ok f = ≡.refl
+
++-≈ : ∀ m n → (μFinSuc m) +μ (μFinSuc n) ≈ μFinSuc (m + suc n)
++-≈ zero n = μFinSuc zero +μ μFinSuc n
+           ≈⟨ Fin0≈⊤ +μ-cong ≈-refl (μFinSuc n) ⟩
+             μ⊤ +μ μFinSuc n
+           ≈⟨ ⊤+Fin ⟩
+             μFinSuc (suc n)
+           ≈∎
++-≈ (suc m) n = μFinSuc (suc m) +μ μFinSuc n
+              ≈⟨ ≈-sym ⊤+Fin +μ-cong ≈-refl (μFinSuc n) ⟩
+                (μ⊤ +μ μFinSuc m) +μ μFinSuc n
+              ≈⟨ +μ-assoc μ⊤ (μFinSuc m) (μFinSuc n) ⟩
+                μ⊤ +μ (μFinSuc m +μ μFinSuc n)
+              ≈⟨ ≈-refl μ⊤ +μ-cong +-≈ m n ⟩
+                μ⊤ +μ μFinSuc (m + suc n)
+              ≈⟨ ⊤+Fin ⟩
+                μFinSuc (suc m + suc n)
+              ≈∎
+
+×-≈ : ∀ m n → μFinSuc m ×μ μFinSuc n ≈ μFinSuc (n + m * suc n)
+×-≈ zero n    = μFinSuc 0 ×μ μFinSuc n
+              ≈⟨ Fin0≈⊤ ×μ-cong (≈-refl (μFinSuc n)) ⟩
+                μ⊤ ×μ μFinSuc n
+              ≈⟨ ⊤×A≈A ⟩
+                μFinSuc n
+              ≈⟨ μFinPres (ℕ°.+-comm 0 n) ⟩
+                μFinSuc (n + 0)
+              ≈∎
+×-≈ (suc m) n = μFinSuc (suc m) ×μ μFinSuc n
+              ≈⟨ ≈-sym ⊤+Fin ×μ-cong ≈-refl (μFinSuc n) ⟩
+                (μ⊤ +μ μFinSuc m) ×μ μFinSuc n
+              ≈⟨ ×+-distrib μ⊤ (μFinSuc m) (μFinSuc n) ⟩
+                (μ⊤ ×μ μFinSuc n) +μ (μFinSuc m ×μ μFinSuc n)
+              ≈⟨ ⊤×A≈A {μA = μFinSuc n} +μ-cong ×-≈ m n ⟩
+                μFinSuc n +μ μFinSuc (n + m * suc n)
+              ≈⟨ +-≈ n (n + m * suc n) ⟩
+                μFinSuc (n + suc m * suc n)
+              ≈∎
+
+open import Data.Fin using (Fin ; zero ; suc)
+
+Finable : ∀ {A} → SumProp A → Set
+Finable μA = Σ ℕ λ FinCard → μA ≈ μFinSuc FinCard
+
+⊤-Finable : Finable μ⊤
+⊤-Finable = 0 , ≈-sym Fin0≈⊤
+
++-Finable : ∀ {A B}(μA : SumProp A)(μB : SumProp B) → Finable μA → Finable μB → Finable (μA +μ μB)
++-Finable μA μB (|A| , A≈) (|B| , B≈) = (|A| + suc |B|) ,
+  ( μA +μ μB
+  ≈⟨ A≈ +μ-cong B≈ ⟩
+    μFinSuc |A| +μ μFinSuc |B|
+  ≈⟨ +-≈ |A| |B| ⟩
+    μFinSuc (|A| + suc |B|) ≈∎)
 
 ×-Finable : ∀ {A B}(μA : SumProp A)(μB : SumProp B) → Finable μA → Finable μB → Finable (μA ×μ μB)
-×-Finable {A} {B} μA μB finA finB = mk FinCard iso sums-ok where
-  |A| |B| : ℕ
-  |A| = suc (Finable.FinCard finA)
-  |B| = suc (Finable.FinCard finB)
-
-  μFinA = μFinSuc (Finable.FinCard finA)
-  μFinB = μFinSuc (Finable.FinCard finB)
-
-  FinCard = Finable.FinCard finB + Finable.FinCard finA * |B|
-
-  prf : suc FinCard ≡ |A| * |B|
-  prf = ≡.refl
-
-  iso : _
-  iso = (A × B) ↔⟨ (Finable.iso finA) ×-cong (Finable.iso finB) ⟩ 
-        (Fin |A| × Fin |B|) ↔⟨ {!!} ⟩
-        Fin (|A| * |B|) ∎
-    where open EquationalReasoning
-          open import Relation.Binary.Product.Pointwise
-
-  sums-ok : (_ : _) → _
-  sums-ok f = {!!}
+×-Finable μA μB (|A| , A≈) (|B| , B≈) = (|B| + |A| * suc |B|) ,
+  ( μA ×μ μB
+  ≈⟨ A≈ ×μ-cong B≈ ⟩
+    μFinSuc |A| ×μ μFinSuc |B|
+  ≈⟨ ×-≈ |A| |B| ⟩
+    μFinSuc (|B| + |A| * suc |B|)
+  ≈∎)
 
 module _ where
   open import bijection-fin
@@ -274,18 +285,24 @@ module _ where
                               | ≡.sym (sumFin-spec n (f ∘ p))
                               = sumFinSUI (suc n) f p p-inj
 
-StableIfFinable : ∀ {A} (μA : SumProp A) → Finable μA → StableUnderInjection μA
-StableIfFinable μA fin f p p-inj
-  = sum μA f
-  ≡⟨ sums-ok f ⟩
-    sum (μFinSuc FinCard) (f ∘ fromFin)
-  ≡⟨ μFinSUI (f ∘ fromFin) (toFin ∘ p ∘ fromFin) (from-inj ∘ p-inj ∘ to-inj) ⟩
-    sum (μFinSuc FinCard) (f ∘ fromFin ∘ toFin ∘ p ∘ fromFin)
-  ≡⟨ sum-ext (μFinSuc FinCard) (λ x → ≡.cong f (iso' (p (fromFin x)))) ⟩
-    sum (μFinSuc FinCard) (f ∘ p ∘ fromFin)
-  ≡⟨ ≡.sym (sums-ok (f ∘ p)) ⟩
-    sum μA (f ∘ p)
+StableUnder≈ : ∀ {A B} (μA : SumProp A)(μB : SumProp B) → μA ≈ μB
+             → StableUnderInjection μA → StableUnderInjection μB
+StableUnder≈ μA μB μA≈μB μA-SUI f p p-inj
+  = sum μB f
+  ≡⟨ sums-ok' f ⟩
+    sum μA (f ∘ to iso)
+  ≡⟨ μA-SUI (f ∘ to iso) (from iso ∘ p ∘ to iso) (to-inj iso ∘ p-inj ∘ from-inj iso) ⟩
+    sum μA (f ∘ to iso ∘ from iso ∘ p ∘ to iso)
+  ≡⟨ ≡.sym (sums-ok' (f ∘ to iso ∘ from iso ∘ p)) ⟩
+    sum μB (f ∘ to iso ∘ from iso ∘ p)
+  ≡⟨ sum-ext μB (≡.cong f ∘ Inv.Inverse.right-inverse-of iso ∘ p) ⟩
+    sum μB (f ∘ p)
   ∎
   where open ≡.≡-Reasoning
-        open Finable fin
+        open _≈_ μA≈μB
 
+StableIfFinable : ∀ {A} (μA : SumProp A) → Finable μA → StableUnderInjection μA
+StableIfFinable μA (FinCard , A≈Fin)
+  = StableUnder≈ (μFinSuc FinCard) μA (≈-sym A≈Fin) μFinSUI
+
+-- -}
