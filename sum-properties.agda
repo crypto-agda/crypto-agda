@@ -4,11 +4,22 @@ open import Type
 
 import Level as L
 
+open import Data.Empty using (⊥)
+
 open import Data.Bool.NP
 open import Data.Nat.NP
 open import Data.Nat.Properties
 
+open import Data.Product
+open import Data.Sum
+open import Data.Unit using (⊤)
+
 open import Function.NP
+import Function.Inverse as Inv
+open Inv using (_↔_)
+open import Function.Related
+open import Function.Related.TypeIsomorphisms.NP
+open import Function.Equality using (_⟨$⟩_)
 
 open import sum
 
@@ -97,172 +108,151 @@ record Finable {A : Set}(μA : SumProp A) : Set where
   constructor mk
   field
     FinCard  : ℕ
-    toFin    : A → Fin FinCard
-    fromFin  : Fin FinCard → A
-    to-inj   : Injective toFin
-    from-inj : Injective fromFin
-    iso      : fromFin ∘ toFin ≗ id
-    sums-ok  : ∀ f → sum μA f ≡ sumFin FinCard (f ∘ fromFin)
 
-postulate
-  Fin-Stab : ∀ n → StableUnderInjection (μFin n)
+  FIN = Fin (suc FinCard)
+
+  field
+    iso      : A ↔ Fin (suc FinCard)
+    
+  toFin : A → FIN
+  toFin x = Inv.Inverse.to iso ⟨$⟩ x
+
+  fromFin : FIN → A
+  fromFin x = Inv.Inverse.from iso ⟨$⟩ x
+
+  field
+    sums-ok  : ∀ f → sum μA f ≡ sum (μFinSuc FinCard) (f ∘ fromFin)
+
+  from-inj : Injective fromFin
+  from-inj = Inv.Inverse.injective (Inv.sym iso)
+
+  to-inj : Injective toFin
+  to-inj = Inv.Inverse.injective iso
+
+  iso' : fromFin ∘ toFin ≗ id
+  iso' = Inv.Inverse.left-inverse-of iso
 
 ⊤-Finable : Finable μ⊤
-⊤-Finable = mk 1 (λ x → zero) (λ x → _) (λ x₁ → ≡.refl) (λ x₁ → help) (λ x → ≡.refl) (λ f → ?)
-  where help : {x y : Fin 1} → x ≡ y
-        help {zero} {zero} = ≡.refl
-        help {zero} {suc ()}
-        help {suc ()}
+⊤-Finable = mk 0 iso sums-ok where
+
+  iso : _
+  iso = ⊤ ↔⟨ sym A⊎⊥↔A ⟩
+        (⊤ ⊎ ⊥) ↔⟨ Inv.id ⊎-cong sym Fin0↔⊥ ⟩
+        (⊤ ⊎ Fin 0) ↔⟨ sym Fin∘suc↔⊤⊎Fin ⟩
+        Fin (suc 0) ∎
+    where open EquationalReasoning
+          open import Relation.Binary.Sum
+
+  sums-ok : (_ : _) → _
+  sums-ok f = ≡.refl
 
 +-Finable : ∀ {A B}(μA : SumProp A)(μB : SumProp B) → Finable μA → Finable μB → Finable (μA +μ μB)
-+-Finable {A}{B} μA μB finA finB = mk FinCard toFin fromFin to-inj from-inj iso sums-ok where
-    open import Data.Sum
-    open import Data.Empty
++-Finable {A}{B} μA μB finA finB = mk FinCard iso sums-ok where
 
-    |A| = Finable.FinCard finA
-    |B| = Finable.FinCard finB
+  |A| |B| : ℕ
+  |A| = suc (Finable.FinCard finA)
+  |B| = suc (Finable.FinCard finB)
 
-    Fsuc-injective : ∀ {n} {i j : Fin n} → Fin.suc i ≡ suc j → i ≡ j
-    Fsuc-injective ≡.refl = ≡.refl
-    
-    inj₁-inj : ∀ {A B : Set} {x y : A} → inj₁ {B = B} x ≡ inj₁ y → x ≡ y
-    inj₁-inj ≡.refl = ≡.refl
+  μFinA = μFinSuc (Finable.FinCard finA)
+  μFinB = μFinSuc (Finable.FinCard finB)
 
-    inj₂-inj : ∀ {A B : Set} {x y : B} → inj₂ {A = A} x ≡ inj₂ y → x ≡ y
-    inj₂-inj ≡.refl = ≡.refl
+  FinCard : _
+  FinCard = Finable.FinCard finA + |B|
 
-    fin₁ : ∀ n {m} → Fin n → Fin (n + m)
-    fin₁ zero ()
-    fin₁ (suc n) zero = zero
-    fin₁ (suc n) (suc i) = suc (fin₁ n i)
-
-    fin₂ : ∀ n {m} → Fin m → Fin (n + m)
-    fin₂ zero i = i
-    fin₂ (suc n) i = suc (fin₂ n i)
-
-    toFin' : ∀ {n} {m} → Fin n ⊎ Fin m → Fin (n + m)
-    toFin' {n} (inj₁ x) = fin₁ n x
-    toFin' {n} (inj₂ y) = fin₂ n y
-
-    fin₁-inj : ∀ n {m} → Injective (fin₁ n {m})
-    fin₁-inj .(suc n) {m} {zero {n}} {zero} x≡y = ≡.refl
-    fin₁-inj .(suc n) {m} {zero {n}} {suc y} ()
-    fin₁-inj .(suc n) {m} {suc {n} x} {zero} ()
-    fin₁-inj .(suc n) {m} {suc {n} x} {suc y} x≡y = ≡.cong suc (fin₁-inj n (Fsuc-injective x≡y))
-
-    fin₂-inj : ∀ n {m} → Injective (fin₂ n {m})
-    fin₂-inj zero eq = eq
-    fin₂-inj (suc n) eq = fin₂-inj n (Fsuc-injective eq)
-
-    fin₁≠fin₂ : ∀ n {m} x y → (fin₁ n {m} x ≡ fin₂ n y) → ⊥
-    fin₁≠fin₂ .(suc n) (zero {n}) zero ()
-    fin₁≠fin₂ .(suc n) (zero {n}) (suc y) ()
-    fin₁≠fin₂ .(suc n) (suc {n} x) zero eq = fin₁≠fin₂ n x zero (Fsuc-injective eq)
-    fin₁≠fin₂ .(suc n) (suc {n} x) (suc y) eq = fin₁≠fin₂ n x (suc y) (Fsuc-injective eq)
-
-    fromFin' : ∀ n {m} → Fin (n + m) → Fin n ⊎ Fin m
-    fromFin' zero k = inj₂ k
-    fromFin' (suc n) zero = inj₁ zero
-    fromFin' (suc n) (suc k) with fromFin' n k
-    ... | inj₁ x = inj₁ (suc x)
-    ... | inj₂ y = inj₂ y
-
-    fromFin'-inj : ∀ n {m} x y → fromFin' n {m} x ≡ fromFin' n y → x ≡ y
-    fromFin'-inj zero x y eq = inj₂-inj eq
-    fromFin'-inj (suc n) zero zero eq = ≡.refl
-    fromFin'-inj (suc n) zero (suc y) eq = {!!}
-    fromFin'-inj (suc n) (suc x) zero eq = {!!}
-    fromFin'-inj (suc n) (suc x) (suc y) eq = {!fromFin'-inj n x y!}
-
-    fromFin'-inj₁ : ∀ n {m} x → fromFin' n {m} (fin₁ n x) ≡ inj₁ x
-    fromFin'-inj₁ zero ()
-    fromFin'-inj₁ (suc n) zero = ≡.refl
-    fromFin'-inj₁ (suc n) {m} (suc x) rewrite fromFin'-inj₁ n {m} x  = ≡.refl
-
-    fromFin'-inj₂ : ∀ n {m} x → fromFin' n {m} (fin₂ n x) ≡ inj₂ x
-    fromFin'-inj₂ zero x = ≡.refl
-    fromFin'-inj₂ (suc n) x rewrite fromFin'-inj₂ n x = ≡.refl
-
-    FinCard  : ℕ
-    FinCard = Finable.FinCard finA + Finable.FinCard finB
-
-    toFin    : A ⊎ B → Fin FinCard
-    toFin (inj₁ x) = toFin' (inj₁ (Finable.toFin finA x))
-    toFin (inj₂ y) = toFin' {n = |A|} (inj₂ (Finable.toFin finB y))
-
-    fromFin  : Fin FinCard → A ⊎ B
-    fromFin x+y with fromFin' |A| x+y
-    ... | inj₁ x = inj₁ (Finable.fromFin finA x)
-    ... | inj₂ y = inj₂ (Finable.fromFin finB y)
-
-    to-inj   : Injective toFin
-    to-inj {inj₁ x} {inj₁ x₁} tx≡ty = ≡.cong inj₁ (Finable.to-inj finA (fin₁-inj |A| tx≡ty))
-    to-inj {inj₁ x} {inj₂ y} tx≡ty = ⊥-elim (fin₁≠fin₂ |A| _ _ tx≡ty)
-    to-inj {inj₂ y} {inj₁ x} tx≡ty = ⊥-elim (fin₁≠fin₂ |A| _ _ (≡.sym tx≡ty))
-    to-inj {inj₂ y} {inj₂ y₁} tx≡ty = ≡.cong inj₂ (Finable.to-inj finB (fin₂-inj |A| tx≡ty))
-
-    from-inj : Injective fromFin
-    from-inj {x} {y} fx≡fy = {!!}
-
-    iso      : fromFin ∘ toFin ≗ id
-    iso (inj₁ x) rewrite fromFin'-inj₁ |A| {|B|} (Finable.toFin finA x) | Finable.iso finA x = ≡.refl
-    iso (inj₂ y) rewrite fromFin'-inj₂ |A| {|B|} (Finable.toFin finB y) | Finable.iso finB y = ≡.refl
-
-    fin-proof : ∀ n m (f : Fin n ⊎ Fin m → ℕ) → sumFin n (f ∘ inj₁) + sumFin m (f ∘ inj₂) ≡ sumFin (n + m) (f ∘ fromFin' n)
-    fin-proof zero    m f = ≡.refl
-    fin-proof (suc n) m f = sumFin (suc n) (f ∘ inj₁) + sumFin m (f ∘ inj₂)
-                          ≡⟨ ℕ°.+-assoc (f (inj₁ zero)) (sumFin n (f' f ∘ inj₁))
-                               (sumFin m (f ∘ inj₂)) ⟩
-                            f (inj₁ zero) + (sumFin n (f' f ∘ inj₁) + sumFin m (f ∘ inj₂))
-                          ≡⟨ ≡.cong (_+_ (f (inj₁ zero))) (fin-proof n m (f' f)) ⟩
-                            f (inj₁ zero) + (sumFin (n + m) (f' f ∘ fromFin' n))
-                          ≡⟨ ≡.cong (λ p → f (inj₁ zero) + vsum p)
-                               (tabulate≗ (λ x → ≡.sym (f'-proof n x f))) ⟩
-                            sumFin (suc n + m) (f ∘ fromFin' (suc n)) 
-                          ∎
-     where open ≡.≡-Reasoning
-           open import Data.Vec renaming (sum to vsum)
-
-           tabulate≗ : ∀ {n} {A : Set}{f g : Fin n → A} → f ≗ g → tabulate f ≡ tabulate g
-           tabulate≗ {zero} eq = ≡.refl
-           tabulate≗ {suc n₁} eq rewrite eq zero | tabulate≗ (eq ∘ suc) = ≡.refl
-
-           f' : ∀ {n m} → (Fin (suc n) ⊎ Fin m → ℕ) → Fin n ⊎ Fin m → ℕ
-           f' f (inj₁ x) = f (inj₁ (suc x))
-           f' f (inj₂ x) = f (inj₂ x)
-
-           f'-proof : ∀ n {m} x f → f (fromFin' (suc n) (suc x)) ≡ f' {m = m} f (fromFin' n x)
-           f'-proof n x f with fromFin' n x
-           ... | inj₁ p = ≡.refl
-           ... | inj₂ p = ≡.refl
-
-    sums-ok  : ∀ f → sum (μA +μ μB) f ≡ sumFin FinCard (f ∘ fromFin)
-    sums-ok f =
-        sum (μA +μ μB) f
-      ≡⟨ ≡.cong₂ _+_ (Finable.sums-ok finA (f ∘ inj₁))
-           (Finable.sums-ok finB (f ∘ inj₂)) ⟩
-        sumFin (Finable.FinCard finA) (f ∘ inj₁ ∘ Finable.fromFin finA)
-      + sumFin (Finable.FinCard finB) (f ∘ inj₂ ∘ Finable.fromFin finB)
-      ≡⟨ {!!} ⟩
-        sumFin FinCard (f ∘ fromFin)
+  iso : _
+  iso = (A ⊎ B) 
+      ↔⟨ (Finable.iso finA) ⊎-cong (Finable.iso finB) ⟩ 
+        (Fin |A| ⊎ Fin |B|)
+      ↔⟨ Fin-⊎-+ |A| |B| ⟩
+        Fin (|A| + |B|)
       ∎
-      where open ≡.≡-Reasoning
+    where 
+      open import Relation.Binary.Sum
+      open EquationalReasoning
 
-StableIfFinable : ∀ {A} (μA : SumProp A) → Finable μA → StableUnderInjection μA
-StableIfFinable μA fin f p p-inj
-  = sum μA f
-  ≡⟨ sums-ok f ⟩
-    sumFin FinCard (f ∘ fromFin)
-  ≡⟨ Fin-Stab FinCard (f ∘ fromFin) (toFin ∘ p ∘ fromFin) (from-inj ∘ p-inj ∘ to-inj) ⟩
-    sumFin FinCard (f ∘ fromFin ∘ toFin ∘ p ∘ fromFin)
-  ≡⟨ sum-ext (μFin FinCard) (λ x → ≡.cong f (iso (p (fromFin x)))) ⟩
-    sumFin FinCard (f ∘ p ∘ fromFin)
-  ≡⟨ ≡.sym (sums-ok (f ∘ p)) ⟩
-    sum μA (f ∘ p)
-  ∎
-  where open ≡.≡-Reasoning
-        open Finable fin
+  from : ∀ {A B : Set} → A ↔ B → B → A
+  from iso x = Inv.Inverse.from iso ⟨$⟩ x
 
+  to : ∀ {A B : Set} → A ↔ B → A → B
+  to iso x = Inv.Inverse.to iso ⟨$⟩ x
+
+  fromFin : Fin (|A| + |B|) → A ⊎ B
+  fromFin x = from iso x
+  
+  open import Data.Vec.NP using (Vec ; foldr₁ ; tabulate-ext)
+  vsum : ∀ {n} → Vec ℕ (suc n) → ℕ
+  vsum = foldr₁ _+_
+
+  fin-proof : ∀ n m (f : Fin (suc n) ⊎ Fin (suc m) → ℕ) → 
+                      sum (μFinSuc n) (f ∘ inj₁) 
+                    + sum (μFinSuc m) (f ∘ inj₂) 
+                    ≡ sum (μFinSuc (n + suc m)) (f ∘ from  (Fin-⊎-+ (suc n) (suc m)))
+  fin-proof zero m f    rewrite tabulate-ext (≡.cong (f ∘ inj₂ ∘ suc) ∘ ≡.sym ∘ Inv.Inverse.right-inverse-of (Maybe^⊥↔Fin m)) = ≡.refl
+  fin-proof (suc n) m f = sum (μFinSuc (suc n)) (f ∘ inj₁) + sum (μFinSuc m) (f ∘ inj₂) 
+                        ≡⟨ ℕ°.+-assoc (f (inj₁ zero)) (sum (μFinSuc n) (f ∘ inj₁ ∘ suc)) (sum (μFinSuc m) (f ∘ inj₂)) ⟩ 
+                          f (inj₁ zero) + (sum (μFinSuc n) (f ∘ inj₁ ∘ suc) + sum (μFinSuc m) (f ∘ inj₂))
+                        ≡⟨ ≡.cong (_+_ (f (inj₁ zero))) (fin-proof n m (F f)) ⟩
+                          f (inj₁ zero) + sum (μFinSuc (n + suc m)) (F f ∘ from (Fin-⊎-+ (suc n) (suc m)))
+                        ≡⟨ ≡.cong (_+_ (f (inj₁ zero))) (sum-ext (μFinSuc (n + suc m)) (F-proof (suc n) (suc m) f)) ⟩
+                          f (inj₁ zero) + sum (μFinSuc (n + suc m)) (f ∘ from (Fin-⊎-+ (suc (suc n)) (suc m)) ∘ suc)
+                        ≡⟨ ≡.refl ⟩
+                          sum (μFinSuc (suc n + suc m))
+                                     (f ∘ from (Fin-⊎-+ (suc (suc n)) (suc m))) 
+                        ∎
+    where 
+      open ≡.≡-Reasoning
+      F : ∀ {n m} → (Fin (suc n) ⊎ Fin m → ℕ) → Fin n ⊎ Fin m → ℕ
+      F f = [ (f ∘ inj₁ ∘ suc) , (f ∘ inj₂) ]
+
+
+      F-proof : ∀ n m f → F f ∘ from (Fin-⊎-+ n m) ≗ f ∘ from (Fin-⊎-+ (suc n) m) ∘ suc
+      F-proof n m f x with (Inv.Inverse.from (Maybe^-⊎-+ n m) ⟨$⟩ (Inv.Inverse.from (Maybe^⊥↔Fin (n + m)) ⟨$⟩ x))
+      ... | inj₁ y = ≡.refl
+      ... | inj₂ y = ≡.refl
+
+  sums-ok : (_ : _) → _
+  sums-ok f = sum (μA +μ μB) f
+            ≡⟨ ≡.cong₂ _+_ (Finable.sums-ok finA (f ∘ inj₁)) (Finable.sums-ok finB (f ∘ inj₂)) ⟩
+              sum μFinA (f ∘ inj₁ ∘ from (Finable.iso finA))
+            + sum μFinB (f ∘ inj₂ ∘ from (Finable.iso finB))
+            ≡⟨ ≡.cong₂ _+_ (sum-ext μFinA {f = f ∘ inj₁ ∘ from (Finable.iso finA)} (λ x → ≡.refl)) 
+                           (sum-ext μFinB {f = f ∘ inj₂ ∘ from (Finable.iso finB)} (λ _ → ≡.refl)) ⟩ 
+              sum μFinA (f ∘ from F ∘ inj₁)
+            + sum μFinB (f ∘ from F ∘ inj₂)
+            ≡⟨ fin-proof _ _ (f ∘ from F) ⟩
+              sum (μFinSuc FinCard) (f ∘ from F ∘ from (Fin-⊎-+ |A| |B|))
+            ≡⟨ ≡.refl ⟩
+              sum (μFinSuc FinCard) (f ∘ from iso) 
+            ∎
+    where
+      open ≡.≡-Reasoning
+      open import Relation.Binary.Sum
+      F :  (A ⊎ B) ↔ (Fin |A| ⊎ Fin |B|)
+      F = Finable.iso finA ⊎-cong Finable.iso finB
+
+×-Finable : ∀ {A B}(μA : SumProp A)(μB : SumProp B) → Finable μA → Finable μB → Finable (μA ×μ μB)
+×-Finable {A} {B} μA μB finA finB = mk FinCard iso sums-ok where
+  |A| |B| : ℕ
+  |A| = suc (Finable.FinCard finA)
+  |B| = suc (Finable.FinCard finB)
+
+  μFinA = μFinSuc (Finable.FinCard finA)
+  μFinB = μFinSuc (Finable.FinCard finB)
+
+  FinCard = Finable.FinCard finB + Finable.FinCard finA * |B|
+
+  prf : suc FinCard ≡ |A| * |B|
+  prf = ≡.refl
+
+  iso : _
+  iso = (A × B) ↔⟨ (Finable.iso finA) ×-cong (Finable.iso finB) ⟩ 
+        (Fin |A| × Fin |B|) ↔⟨ {!!} ⟩
+        Fin (|A| * |B|) ∎
+    where open EquationalReasoning
+          open import Relation.Binary.Product.Pointwise
+
+  sums-ok : (_ : _) → _
+  sums-ok f = {!!}
 
 module _ where
   open import bijection-fin
@@ -282,5 +272,20 @@ module _ where
   μFinSUI : ∀ {n} → StableUnderInjection (μFinSuc n)
   μFinSUI {n} f p p-inj rewrite ≡.sym (sumFin-spec n f)
                               | ≡.sym (sumFin-spec n (f ∘ p))
-                              = {!sumFin-spec n (f ∘ p)!} -- {!sumFinSUI (suc n) f p p-inj!}
+                              = sumFinSUI (suc n) f p p-inj
+
+StableIfFinable : ∀ {A} (μA : SumProp A) → Finable μA → StableUnderInjection μA
+StableIfFinable μA fin f p p-inj
+  = sum μA f
+  ≡⟨ sums-ok f ⟩
+    sum (μFinSuc FinCard) (f ∘ fromFin)
+  ≡⟨ μFinSUI (f ∘ fromFin) (toFin ∘ p ∘ fromFin) (from-inj ∘ p-inj ∘ to-inj) ⟩
+    sum (μFinSuc FinCard) (f ∘ fromFin ∘ toFin ∘ p ∘ fromFin)
+  ≡⟨ sum-ext (μFinSuc FinCard) (λ x → ≡.cong f (iso' (p (fromFin x)))) ⟩
+    sum (μFinSuc FinCard) (f ∘ p ∘ fromFin)
+  ≡⟨ ≡.sym (sums-ok (f ∘ p)) ⟩
+    sum μA (f ∘ p)
+  ∎
+  where open ≡.≡-Reasoning
+        open Finable fin
 
