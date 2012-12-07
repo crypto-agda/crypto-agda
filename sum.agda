@@ -448,6 +448,49 @@ swapS = μ-iso swap-iso
 
 swapS-preserve : ∀ {A B} f (μA×B : SumProp (A × B)) → sum μA×B f ≡ sum (swapS μA×B) (f ∘ swap)
 swapS-preserve = μ-iso-preserve swap-iso
+
+module _ {A : Set}(μA : SumProp A) where
+
+  sA = search μA
+
+  extend : ∀ {n} → A → (Fin n → A) → Fin (suc n) → A
+  extend x g zero    = x
+  extend x g (suc i) = g i
+
+  abs : Fin 0 → A
+  abs ()
+
+  -- There is one function Fin 0 → A (called abs) so this should be fine
+  -- if not there is a version below that forces the domain to be non-empty
+  sFun : ∀ n → Search (Fin n → A)
+  sFun zero    op f = f abs
+  sFun (suc n) op f = sA op (λ x → sFun n op (f ∘ extend x))
+
+  Ind : ∀ n → SearchInd (sFun n)
+  Ind zero    P P∙ Pf = Pf abs
+  Ind (suc n) P P∙ Pf = 
+    search-ind μA (λ sa → P (λ op f → sa op (λ x → sFun n op (f ∘ extend x)))) 
+      P∙ 
+      (λ x → Ind n (λ sf → P (λ op f → sf op (f ∘ extend x))) 
+        P∙ (Pf ∘ extend x))
+
+  μFun : ∀ {n} → SumProp (Fin n → A)
+  μFun = sFun _ , Ind _
+
+{-
+  -- If we want to force non-empty domain
+
+  sFun : ∀ n → Search (Fin (suc n) → A)
+  sFun zero    op f = sA op (f ∘ const)
+  sFun (suc n) op f = sA op (λ x → sFun n op (f ∘ extend x))
+
+  Ind : ∀ n → SearchInd (sFun n)
+  Ind zero    P P∙ Pf = search-ind μA (λ sa → P (λ op f → sa op (f ∘ const))) P∙ (Pf ∘ const)
+  Ind (suc n) P P∙ Pf = search-ind μA (λ sa → P (λ op f → sa op (λ x → sFun n op (f ∘ extend x)))) 
+      P∙ 
+      (λ x → Ind n (λ sf → P (λ op f → sf op (f ∘ extend x))) P∙ (Pf ∘ extend x))
+
+-}
 -- -}
 -- -}
 -- -}

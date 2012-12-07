@@ -110,6 +110,20 @@ record _≈_ {A B} (μA : SumProp A)(μB : SumProp B) : Set where
                sum μA (f ∘ to)
              ∎
     where open ≡.≡-Reasoning
+  StableUnder≈ : StableUnderInjection μA → StableUnderInjection μB
+  StableUnder≈ μA-SUI f p p-inj
+    = sum μB f
+    ≡⟨ sums-ok' f ⟩
+      sum μA (f ∘ to)
+    ≡⟨ μA-SUI (f ∘ to) (from ∘ p ∘ to) (to-inj ∘ p-inj ∘ from-inj) ⟩
+      sum μA (f ∘ to ∘ from ∘ p ∘ to)
+    ≡⟨ ≡.sym (sums-ok' (f ∘ to ∘ from ∘ p)) ⟩
+      sum μB (f ∘ to ∘ from ∘ p)
+    ≡⟨ sum-ext μB (≡.cong f ∘ Inv.Inverse.right-inverse-of iso ∘ p) ⟩
+      sum μB (f ∘ p)
+    ∎
+    where open ≡.≡-Reasoning
+
 
 ≈-refl : ∀ {A} (μA : SumProp A) → μA ≈ μA
 ≈-refl μA = mk Inv.id (λ f → ≡.refl)
@@ -314,24 +328,8 @@ module _ where
                               | ≡.sym (sumFin-spec n (f ∘ p))
                               = sumFinSUI (suc n) f p p-inj
 
-StableUnder≈ : ∀ {A B} (μA : SumProp A)(μB : SumProp B) → μA ≈ μB
-             → StableUnderInjection μA → StableUnderInjection μB
-StableUnder≈ μA μB μA≈μB μA-SUI f p p-inj
-  = sum μB f
-  ≡⟨ sums-ok' f ⟩
-    sum μA (f ∘ to)
-  ≡⟨ μA-SUI (f ∘ to) (from ∘ p ∘ to) (to-inj ∘ p-inj ∘ from-inj) ⟩
-    sum μA (f ∘ to ∘ from ∘ p ∘ to)
-  ≡⟨ ≡.sym (sums-ok' (f ∘ to ∘ from ∘ p)) ⟩
-    sum μB (f ∘ to ∘ from ∘ p)
-  ≡⟨ sum-ext μB (≡.cong f ∘ Inv.Inverse.right-inverse-of iso ∘ p) ⟩
-    sum μB (f ∘ p)
-  ∎
-  where open ≡.≡-Reasoning
-        open _≈_ μA≈μB
-
 StableIfFinable : ∀ {A} (μA : SumProp A) → Finable μA → StableUnderInjection μA
-StableIfFinable μA (FinCard , A≈Fin)
-  = StableUnder≈ (μFinSuc FinCard) μA (≈-sym A≈Fin) μFinSUI
+StableIfFinable μA (_ , A≈Fin)
+  = _≈_.StableUnder≈ (≈-sym A≈Fin) μFinSUI
 
 -- -}
