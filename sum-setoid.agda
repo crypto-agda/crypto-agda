@@ -11,18 +11,18 @@ open import Data.Maybe.NP
 open import Data.Product
 open import Data.Bits
 open import Data.Bool.NP as Bool
-open import Function.Equality using (_⟨$⟩_)
+open import Function.Equality using (_⟨$⟩_ ; ≡-setoid)
 import Function.Inverse as FI
 open FI using (_↔_; module Inverse)
 import Function.Related as FR
 open import Function.Related.TypeIsomorphisms.NP
 open import Relation.Binary.NP
+open import Relation.Binary.Sum
+open import Relation.Binary.Product.Pointwise
 import Relation.Binary.PropositionalEquality as ≡
 open ≡ using (_≡_; _≗_)
 
 module sum-setoid where
-
-SEToid = Setoid L.zero L.zero
 
 _≤°_ : ∀ {A : ★}(f g : A → ℕ) → ★
 f ≤° g = ∀ x → f x ≤ g x
@@ -261,6 +261,9 @@ record SumPropoid (As : Setoid L.zero L.zero) : ★₁ where
   search-extoid : SearchExtoid {As} search
   search-extoid op {f = f}{g} f≈g = search-ind (λ s₁ → s₁ op f ≡ s₁ op g) (≡.cong₂ op) (λ x → f≈g (Setoid.refl As))
 
+SumProp : ★ → ★₁
+SumProp A = SumPropoid (≡.setoid A)
+
 open SumPropoid public
 
 search-swap' : ∀ {A B} cm (μA : SumPropoid A) (μB : SumPropoid B) f →
@@ -281,7 +284,7 @@ sum₀ ≈Sum sum₁ = ∀ f → sum₀ f ≡ sum₁ f
 _≈Search_ : ∀ {A} → (s₀ s₁ : Search A) → ★₁
 s₀ ≈Search s₁ = ∀ {B} (op : Op₂ B) f → s₀ op f ≡ s₁ op f
 
-{-
+
 μ⊤ : SumProp ⊤
 μ⊤ = srch , ind
   where
@@ -316,7 +319,7 @@ infixr 4 _+Sum_
 _+Sum_ : ∀ {A B} → Sum A → Sum B → Sum (A ⊎ B)
 (sumᴬ +Sum sumᴮ) f = sumᴬ (f ∘ inj₁) + sumᴮ (f ∘ inj₂)
 
-_+μ_ : ∀ {A B} → SumProp A → SumProp B → SumProp (A ⊎ B)
+_+μ_ : ∀ {A B} → SumPropoid A → SumPropoid B → SumPropoid (A ⊎-setoid B)
 μA +μ μB = _ , search-ind μA +SearchInd search-ind μB
 
 infixr 4 _×Search_
@@ -344,7 +347,7 @@ _×Sum_ : ∀ {A B} → Sum A → Sum B → Sum (A × B)
 
 infixr 4 _×μ_
 
-_×μ_ : ∀ {A B} → SumProp A → SumProp B → SumProp (A × B)
+_×μ_ : ∀ {A B} → SumPropoid A → SumPropoid B → SumPropoid (A ×-setoid B)
 μA ×μ μB = _ , search-ind μA ×SearchInd search-ind μB
 
 sum-const : ∀ {A} (μA : SumProp A) → ∀ k → sum μA (const k) ≡ Card μA * k
@@ -427,19 +430,22 @@ vsgsum sg = vfoldr₁ _∙_
 
 searchFinSuc : ∀ n → Search (Fin (suc n))
 searchFinSuc n _∙_ f = vfoldr₁ _∙_ (tabulate f)
+{-
 
 μMaybe : ∀ {A} → SumProp A → SumProp (Maybe A)
 μMaybe μA = μ-iso (FI.sym Maybe↔⊤⊎) (μ⊤ +μ μA)
 
-μMaybe^ : ∀ {A} n → SumProp A → SumProp (Maybe^ n A)
+μMaybe^ : ∀ {A} n → SumPropoid A → SumPropoid (Maybe^ n A)
 μMaybe^ zero    μA = μA
 μMaybe^ (suc n) μA = μMaybe (μMaybe^ n μA)
-
+-}
 μFinSuc : ∀ n → SumProp (Fin (suc n))
 μFinSuc n = searchFinSuc n , ind n
   where ind : ∀ n → SearchInd (searchFinSuc n)
         ind zero    P P∙ Pf = Pf zero
         ind (suc n) P P∙ Pf = P∙ (Pf zero) (ind n (λ s → P (λ op f → s op (f ∘ suc))) P∙ (Pf ∘ suc))
+
+{-
 
 μFinSucIso : ∀ n → SumProp (Fin (suc n))
 μFinSucIso n = μ-iso (Maybe^⊤↔Fin1+ n) (μMaybe^ n μ⊤)
