@@ -24,10 +24,12 @@ open import Function.Related.TypeIsomorphisms.NP
 import Function.Equality as FE
 open FE using (_⟨$⟩_)
 
+import Function.Injection as FInj
+
 open import sum-setoid
 
 open import Relation.Binary
-open import Relation.Binary.Sum
+open import Relation.Binary.Sum.NP
 open import Relation.Binary.Product.Pointwise
 import Relation.Binary.PropositionalEquality.NP as ≡
 open ≡ using (_≡_ ; _≗_ ; _≗₂_)
@@ -79,10 +81,10 @@ Injectivoid : ∀ {A B : SEToid} → (Setoid.Carrier A → Setoid.Carrier B) →
 Injectivoid {A}{B} f = ∀ {x y} → Setoid._≈_ B (f x) (f y) → Setoid._≈_ A x y
 
 StableUnderInjection : ∀ {A} → SumPropoid A → Set
-StableUnderInjection {A} μ = ∀ p → Setoid._≈_ A =[ p ]⇒ Setoid._≈_ A → Injectivoid {A}{A} p → SumStableUnder μ p
+StableUnderInjection {A} μ = ∀ p → SumStableUnder μ (FInj.Injection.to p)
 
 CountStableUnderInjection : ∀ {A} → SumPropoid A → Set
-CountStableUnderInjection μ = ∀ p → Injective p → CountStableUnder μ p
+CountStableUnderInjection μ = ∀ p → CountStableUnder μ (FInj.Injection.to p)
 
 {-
 #-StableUnderInjection : ∀ {A}{μ : SumPropoid A} → StableUnderInjection μ
@@ -90,7 +92,11 @@ CountStableUnderInjection μ = ∀ p → Injective p → CountStableUnder μ p
 #-StableUnderInjection sui f p p-inj = {!sui p p-inj (toℕ ∘ f)!}
 -}
 
-infix 4 _≈_ _≈'_
+sum$ : ∀ {As} → SumPropoid As → (As FE.⟶ ≡.setoid ℕ) → ℕ
+sum$ μA f = sum μA (_⟨$⟩_ f)
+
+infix 4 _≈_ -- _≈'_
+
 
 
 record _≈_ {As Bs : SEToid}(μA : SumPropoid As)(μB : SumPropoid Bs): Set where
@@ -102,61 +108,65 @@ record _≈_ {As Bs : SEToid}(μA : SumPropoid As)(μB : SumPropoid Bs): Set whe
     A = Setoid.Carrier As
     B = Setoid.Carrier Bs
 
-  from : B → A
-  from x = Inv.Inverse.from iso ⟨$⟩ x
+  from : Bs FE.⟶ As
+  from = Inv.Inverse.from iso
 
-  to : A → B
-  to x = Inv.Inverse.to iso ⟨$⟩ x
+  from$ : B → A
+  from$ = _⟨$⟩_ from
 
-  from-inj : Injectivoid {Bs} {As} from
-  from-inj = Inv.Inverse.injective (Inv.sym iso)
+  to : As FE.⟶ Bs
+  to = Inv.Inverse.to iso
 
-  to-inj : Injectivoid {As} {Bs} to
-  to-inj = Inv.Inverse.injective iso
+  to$ : A → B
+  to$ = _⟨$⟩_ to
 
-  from-pres : ∀ {x y} → Setoid._≈_ Bs x y → Setoid._≈_ As (from x) (from y)
-  from-pres {x} {y} x≈y = let open Setoid Bs in to-inj (trans (Inv.Inverse.right-inverse-of iso x) (trans x≈y (sym (Inv.Inverse.right-inverse-of iso y))))
+  from-inj : FInj.Injection Bs As -- Injectivoid {Bs} {As} from$
+  from-inj = Inv.Inverse.injection (Inv.sym iso)
 
-  to-pres : ∀ {x y} → Setoid._≈_ As x y → Setoid._≈_ Bs (to x) (to y)
-  to-pres {x} {y} x≈y = let open Setoid As in from-inj (trans (Inv.Inverse.left-inverse-of iso x) (trans x≈y (sym (Inv.Inverse.left-inverse-of iso y))))
+  to-inj : FInj.Injection As Bs -- Injectivoid {As} {Bs} to$
+  to-inj = Inv.Inverse.injection iso
+
 
   field
-    sums-ok : ∀ f → (∀ {x y} → Setoid._≈_ As x y → f x ≡ f y) → sum μA f ≡ sum μB (f ∘ from)
+    sums-ok : ∀ f → sum$ μA f ≡ sum$ μB (f FE.∘ from)
 
-  sums-ok' : ∀ f → (∀ {x y} → Setoid._≈_ Bs x y → f x ≡ f y) → sum μB f ≡ sum μA (f ∘ to)
-  sums-ok' f f-pres 
-             = sum μB f
-             ≡⟨ SumPropoid.search-extoid μB _+_ {f = f}
-                  {g = f ∘ to ∘ from} (λ {x}{y} x≈y → f-pres (SB.trans x≈y (SB.sym (Inv.Inverse.right-inverse-of iso y)))) ⟩
-               sum μB (f ∘ to ∘ from)
-             ≡⟨ ≡.sym (sums-ok (f ∘ to) (λ {x}{y} x≈y → f-pres (from-inj (SA.trans (Inv.Inverse.left-inverse-of iso x) (SA.trans x≈y (SA.sym (Inv.Inverse.left-inverse-of iso y))))))) ⟩
-               sum μA (f ∘ to)
+  sums-ok' : ∀ f → sum$ μB f ≡ sum$ μA (f FE.∘ to)
+  sums-ok' f
+             = sum$ μB f
+             ≡⟨ search-extoid μB _+_ {f = f}
+                  {g = f FE.∘ to FE.∘ from}
+                  (λ {x}{y} x≈y → FE.cong f (SB.trans x≈y (SB.sym (Inv.Inverse.right-inverse-of iso y)))) ⟩
+               sum$ μB (f FE.∘ to FE.∘ from)
+             ≡⟨ ≡.sym (sums-ok (f FE.∘ to)) ⟩
+               sum$ μA (f FE.∘ to)
              ∎
     where open ≡.≡-Reasoning
           module SB = Setoid Bs
           module SA = Setoid As
 
+
+
   StableUnder≈ : StableUnderInjection μA → StableUnderInjection μB
-  StableUnder≈ μA-SUI p p-pres p-inj f f-pres
-    = sum μB f
-    ≡⟨ sums-ok' f f-pres ⟩
-      sum μA (f ∘ to)
-    ≡⟨ μA-SUI (from ∘ p ∘ to) (from-pres ∘ p-pres ∘ to-pres) (to-inj ∘ p-inj ∘ from-inj) (f ∘ to) (f-pres ∘ to-pres) ⟩
-      sum μA (f ∘ to ∘ from ∘ p ∘ to)
-    ≡⟨ ≡.sym (sums-ok' (f ∘ to ∘ from ∘ p) (f-pres ∘ to-pres ∘ from-pres ∘ p-pres)) ⟩
-      sum μB (f ∘ to ∘ from ∘ p)
-    ≡⟨ search-extoid μB _+_ {f = f ∘ to ∘ from ∘ p} {g = f ∘ p} (f-pres ∘ Setoid.trans Bs (Inv.Inverse.right-inverse-of iso _) ∘ p-pres) ⟩
-      sum μB (f ∘ p)
+  StableUnder≈ μA-SUI p f
+    = sum$ μB f
+    ≡⟨ sums-ok' f ⟩
+      sum$ μA (f FE.∘ to)
+    ≡⟨ μA-SUI (from-inj FInj.∘ p FInj.∘ to-inj) (f FE.∘ to) ⟩
+      sum$ μA (f FE.∘ to FE.∘ from FE.∘ FInj.Injection.to p FE.∘ to)
+    ≡⟨ ≡.sym (sums-ok' (f FE.∘ to FE.∘ from FE.∘ FInj.Injection.to p)) ⟩
+      sum$ μB (f FE.∘ to FE.∘ from FE.∘ FInj.Injection.to p)
+    ≡⟨ search-extoid μB _+_
+         {f = f FE.∘ to FE.∘ from FE.∘ FInj.Injection.to p}
+         {g = f FE.∘ FInj.Injection.to p} (FE.cong f ∘ Setoid.trans Bs (Inv.Inverse.right-inverse-of iso _) ∘ FE.cong (FInj.Injection.to p)) ⟩
+      sum$ μB (f FE.∘ FInj.Injection.to p)
     ∎
     where open ≡.≡-Reasoning
-
-
 
 _≈'_ : ∀ {A B} (μA : SumProp A)(μB : SumProp B) → Set
 _≈'_ = _≈_
 
 ≈-refl : ∀ {A} (μA : SumPropoid A) → μA ≈ μA
-≈-refl μA = mk Inv.id (λ f f-pres → ≡.refl)
+≈-refl μA = mk Inv.id (λ f → ≡.refl)
 
 ≈-id : ∀ {A} {μA : SumPropoid A} → μA ≈ μA
 ≈-id = ≈-refl _
@@ -166,7 +176,7 @@ _≈'_ = _≈_
   where open _≈_ A≈B
 
 ≈-trans : ∀ {A B C}{μA : SumPropoid A}{μB : SumPropoid B}{μC : SumPropoid C} → μA ≈ μB → μB ≈ μC → μA ≈ μC
-≈-trans A≈B B≈C = mk (iso B≈C Inv.∘ iso A≈B) (λ f f-pres → ≡.trans (sums-ok A≈B f f-pres) (sums-ok B≈C (f ∘ from A≈B) (f-pres ∘ from-pres A≈B)))
+≈-trans A≈B B≈C = mk (iso B≈C Inv.∘ iso A≈B) (λ f → ≡.trans (sums-ok A≈B f) (sums-ok B≈C (f FE.∘ from A≈B)))
   where open _≈_
 
 infix 2 _≈∎
@@ -206,8 +216,8 @@ Fin0≈⊤ = mk iso sums-ok where
   iso : _
   iso = (A⊎⊥↔A Inv.∘ Inv.id ⊎-cong Fin0↔⊥) Inv.∘ Fin∘suc↔⊤⊎Fin
 
-  sums-ok : (_ : _) → _ → _
-  sums-ok f f-resp = ≡.refl
+  sums-ok : (_ : _) → _
+  sums-ok f = ≡.refl
 
 
 ⊤+Fin : ∀ {n} → μ⊤ +μ μFinSuc n ≈ μFinSuc (suc n)
@@ -215,16 +225,16 @@ Fin0≈⊤ = mk iso sums-ok where
   iso : _
   iso = Inv.sym (Inv._∘_ (lift-⊎ {⊤} {Fin (suc n)}) Fin∘suc↔⊤⊎Fin)
 
-  sums-ok : (_ : _) → _ → _
-  sums-ok f f-resp = ≡.refl
+  sums-ok : (_ : _) → _
+  sums-ok f = ≡.refl
 
 ⊤×A≈A : ∀ {A}{μA : SumProp A} → μ⊤ ×μ μA ≈ μA
 ⊤×A≈A {A} = mk iso sums-ok where
   iso : _
   iso = ×-ICMon.identityˡ _
 
-  sums-ok : (_ : _) → _ → _
-  sums-ok f f-resp = ≡.refl
+  sums-ok : (_ : _) → _
+  sums-ok f = ≡.refl
 
 μFinPres : ∀ {m n} → m ≡ n → μFinSuc m ≈ μFinSuc n
 μFinPres eq rewrite eq = ≈-refl _
@@ -235,9 +245,9 @@ A≈C +μ-cong B≈D = mk iso sums-ok where
   iso : _
   iso = (_≈_.iso A≈C) ⊎-inverse (_≈_.iso B≈D) -- (_≈_.iso A≈C) ⊎-cong (_≈_.iso B≈D)
 
-  sums-ok : (_ : _) → _ → _
-  sums-ok f f-resp = ≡.cong₂ _+_ (_≈_.sums-ok A≈C (f ∘ inj₁) (λ x≈y → f-resp (₁∼₁ x≈y)))
-                                 (_≈_.sums-ok B≈D (f ∘ inj₂) (λ x≈y → f-resp (₂∼₂ x≈y)))
+  sums-ok : (_ : _) → _
+  sums-ok f = ≡.cong₂ _+_ (_≈_.sums-ok A≈C (f FE.∘ inj₁-setoid)) -- (λ x≈y → f-resp (₁∼₁ x≈y)))
+                          (_≈_.sums-ok B≈D (f FE.∘ inj₂-setoid)) -- (λ x≈y → f-resp (₂∼₂ x≈y)))
 
 +μ-assoc : ∀ {A B C}(μA : SumPropoid A)(μB : SumPropoid B)(μC : SumPropoid C)
          → (μA +μ μB) +μ μC ≈ μA +μ (μB +μ μC)
@@ -245,8 +255,8 @@ A≈C +μ-cong B≈D = mk iso sums-ok where
   iso : _
   iso = ⊎-ICMon.assoc _ _ _
 
-  sums-ok : (_ : _) → _ → _
-  sums-ok f f-pres = ℕ°.+-assoc (sum μA (f ∘ inj₁ ∘ inj₁)) (sum μB (f ∘ inj₁ ∘ inj₂)) (sum μC (f ∘ inj₂))
+  sums-ok : (_ : _) → _
+  sums-ok f = ℕ°.+-assoc (sum μA (_⟨$⟩_ f ∘ inj₁ ∘ inj₁)) (sum μB (_⟨$⟩_ f ∘ inj₁ ∘ inj₂)) (sum μC (_⟨$⟩_ f ∘ inj₂))
 
 
 +μ-comm : ∀ {A B}(μA : SumPropoid A)(μB : SumPropoid B)
@@ -255,30 +265,34 @@ A≈C +μ-cong B≈D = mk iso sums-ok where
   iso : _
   iso = ⊎-ICMon.comm _ _
 
-  sums-ok : (_ : _) → _ → _
-  sums-ok f f-pres = ℕ°.+-comm (sum μA (f ∘ inj₁)) (sum μB (f ∘ inj₂))
+  sums-ok : (_ : _) → _
+  sums-ok f = ℕ°.+-comm (sum$ μA (f FE.∘ inj₁-setoid)) (sum$ μB (f FE.∘ inj₂-setoid))
 
 _×μ-cong_ :  ∀ {A B C D}{μA : SumPropoid A}{μB : SumPropoid B}{μC : SumPropoid C}{μD : SumPropoid D}
           → μA ≈ μC → μB ≈ μD → μA ×μ μB ≈ μC ×μ μD
-_×μ-cong_ {A}{B} {μA = μA}{μD = μD} A≈C B≈D = mk iso sums-ok where
+_×μ-cong_ {A}{B}{C}{D}{μA}{μB}{μC}{μD} A≈C B≈D = mk iso sums-ok where
   open import Relation.Binary.Product.Pointwise
   iso : _
   iso = _≈_.iso A≈C ×-inverse _≈_.iso B≈D
 
-  sums-ok : (_ : _) → _ → _
-  sums-ok f f-pres = ≡.trans (sum-ext μA (λ x → _≈_.sums-ok B≈D (curry f x)
-                                         (λ x≈y → f-pres (Setoid.refl A , x≈y))))
-                      (_≈_.sums-ok A≈C (λ a → sum μD (curry f a ∘ (_≈_.from B≈D)))
-                                       (λ x≈y → sum-ext μD (λ z → f-pres (x≈y , Setoid.refl B))))
-
+  sums-ok : (_ : (A ×-setoid B) FE.⟶ ≡.setoid ℕ) → _
+  sums-ok f = sum$ (μA ×μ μB) f
+            ≡⟨ sum-ext μA (λ xa → _≈_.sums-ok B≈D (record
+               { _⟨$⟩_ = λ x → f ⟨$⟩ (xa , x)
+               ; cong = λ x → FE.cong f (Setoid.refl A , x) })) ⟩
+              sum$ (μA ×μ μD) (f FE.∘ FE.id {A = A} ×-⟶ _≈_.from B≈D)
+            ≡⟨ _≈_.sums-ok A≈C (record { _⟨$⟩_ = _; cong = λ x → search-ext μD _+_ (λ y → FE.cong f (x , Setoid.refl B)) }) ⟩
+              sum$ (μC ×μ μD) (f FE.∘ Inv.Inverse.from iso)
+            ∎ where open ≡.≡-Reasoning
+   
 ×μ-assoc : ∀ {A B C}(μA : SumPropoid A)(μB : SumPropoid B)(μC : SumPropoid C)
          → (μA ×μ μB) ×μ μC ≈ μA ×μ (μB ×μ μC)
 ×μ-assoc {A}{B}{C} μA μB μC = mk iso sums-ok where
   iso : _
   iso = ×-ICMon.assoc A B C
 
-  sums-ok : (_ : _) → _ → _
-  sums-ok f f-pres = ≡.refl
+  sums-ok : (_ : _) → _
+  sums-ok f = ≡.refl
 
 ×μ-comm : ∀ {A B}(μA : SumPropoid A)(μB : SumPropoid B)
         → μA ×μ μB ≈ μB ×μ μA
@@ -286,8 +300,8 @@ _×μ-cong_ {A}{B} {μA = μA}{μD = μD} A≈C B≈D = mk iso sums-ok where
   iso : _
   iso = ×-ICMon.comm A B
 
-  sums-ok : (_ : _) → _ → _
-  sums-ok f f-pres = sum-swap μA μB (curry f)
+  sums-ok : (_ : _) → _
+  sums-ok f = sum-swap μA μB (curry (_⟨$⟩_ f))
 
 
 ×+-distrib : ∀ {A B C}(μA : SumPropoid A)(μB : SumPropoid B)(μC : SumPropoid C)
@@ -296,8 +310,8 @@ _×μ-cong_ {A}{B} {μA = μA}{μD = μD} A≈C B≈D = mk iso sums-ok where
   iso : _
   iso = ×⊎°I.distribʳ C A B
 
-  sums-ok : (_ : _) → _ → _
-  sums-ok f f-resp = ≡.refl
+  sums-ok : (_ : _) → _
+  sums-ok f = ≡.refl
 
 +-≈ : ∀ m n → (μFinSuc m) +μ (μFinSuc n) ≈ μFinSuc (m + suc n)
 +-≈ zero n    = μFinSuc zero +μ μFinSuc n
@@ -381,10 +395,10 @@ module _ where
   sumFinSUI n f p p-inj = count-perm f p (λ _ _ → p-inj)
 
   μFinSUI : ∀ {n} → StableUnderInjection (μFinSuc n)
-  μFinSUI {n} p p-resp p-inj f f-resp
-    rewrite ≡.sym (sumFin-spec n f)
-          | ≡.sym (sumFin-spec n (f ∘ p))
-          = sumFinSUI (suc n) f p p-inj
+  μFinSUI {n} p f
+    rewrite ≡.sym (sumFin-spec n (_⟨$⟩_ f))
+          | ≡.sym (sumFin-spec n (_⟨$⟩_ (f FE.∘ FInj.Injection.to p)))
+          = sumFinSUI (suc n) (_⟨$⟩_ f) (_⟨$⟩_ (FInj.Injection.to p)) (FInj.Injection.injective p)
 
 StableIfFinable : ∀ {A} (μA : SumProp A) → Finable μA → StableUnderInjection μA
 StableIfFinable μA (_ , A≈Fin)

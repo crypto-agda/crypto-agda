@@ -11,9 +11,12 @@ open import Data.Maybe.NP
 open import Data.Product
 open import Data.Bits
 open import Data.Bool.NP as Bool
-open import Function.Equality using (_⟨$⟩_ ; ≡-setoid)
+import Function.Equality as FE
+open FE using (_⟨$⟩_ ; ≡-setoid)
+import Function.Injection as Finj
 import Function.Inverse as FI
 open FI using (_↔_; module Inverse)
+open import Function.LeftInverse using (_RightInverseOf_)
 import Function.Related as FR
 open import Function.Related.TypeIsomorphisms.NP
 open import Relation.Binary.NP
@@ -113,7 +116,7 @@ SearchExtFun-úber : ∀ {A B} → (SF : Search (A → B)) → SearchInd SF → 
 SearchExtFun-úber sf sf-ind op {f = f}{g} f≈g = sf-ind (λ s → s op f ≡ s op g) (≡.cong₂ op) (λ x → f≈g (λ _ → ≡.refl))
 
 SearchExtoid : ∀ {A : Setoid L.zero L.zero} → Search (Setoid.Carrier A) → ★₁
-SearchExtoid {A} sᴬ = ∀ {M} op {f g : Setoid.Carrier A → M} → (∀ {x y} → Setoid._≈_ A x y → f x ≡ g y) → sᴬ op f ≡ sᴬ op g
+SearchExtoid {A} sᴬ = ∀ {M} op {f g : A FE.⟶ ≡.setoid M} → Setoid._≈_ (A FE.⇨ ≡.setoid M) f g →  sᴬ op (_⟨$⟩_ f) ≡ sᴬ op (_⟨$⟩_ g)
 
 SumExt : ∀ {A} → Sum A → ★
 SumExt sumᴬ = ∀ {f g} → f ≗ g → sumᴬ f ≡ sumᴬ g
@@ -212,8 +215,8 @@ record SumPropoid (As : Setoid L.zero L.zero) : ★₁ where
                                            (λ p q → ≡.trans (hom _ _) (≡.cong₂ _*_ p q))
                                            (λ _ → ≡.refl)
 
-  StableUnder : (A → A) → ★₁
-  StableUnder p = ∀ {B} (op : Op₂ B) f → search op f ≡ search op (f ∘ p)
+  StableUnder : As FE.⟶ As  → ★₁
+  StableUnder p = ∀ {B} (op : Op₂ B) f → search op f ≡ search op (f ∘ _⟨$⟩_ p)
 
   sum : Sum A
   sum = search _+_
@@ -237,11 +240,11 @@ record SumPropoid (As : Setoid L.zero L.zero) : ★₁ where
   sum-lin f zero    = sum-zero
   sum-lin f (suc k) = ≡.trans (sum-hom f (λ x → k * f x)) (≡.cong₂ _+_ (≡.refl {x = sum f}) (sum-lin f k))
 
-  SumStableUnder : (A → A) → ★
-  SumStableUnder p = ∀ f → (∀ {x y} → Setoid._≈_ As x y → f x ≡.≡ f y) → sum f ≡ sum (f ∘ p)
+  SumStableUnder : As FE.⟶ As → ★
+  SumStableUnder p = ∀ (f : As FE.⟶ ≡.setoid ℕ) → sum (_⟨$⟩_ f) ≡ sum (_⟨$⟩_ (f FE.∘ p))
 
   sumStableUnder : ∀ {p} → StableUnder p → SumStableUnder p
-  sumStableUnder SU-p f _ = SU-p _+_ f
+  sumStableUnder SU-p f = SU-p _+_ (_⟨$⟩_ f)
 
   Card : ℕ
   Card = sum (const 1)
@@ -252,14 +255,14 @@ record SumPropoid (As : Setoid L.zero L.zero) : ★₁ where
   count-ext : CountExt count
   count-ext f≗g = sum-ext (≡.cong Bool.toℕ ∘ f≗g)
 
-  CountStableUnder : (A → A) → ★
-  CountStableUnder p = ∀ f → (∀ {x y} → Setoid._≈_ As x y → f x ≡.≡ f y) → count f ≡ count (f ∘ p)
+  CountStableUnder : As FE.⟶ As → ★
+  CountStableUnder p = ∀ (f : As FE.⟶ ≡.setoid Bool) → count (_⟨$⟩_ f) ≡ count (_⟨$⟩_ (f FE.∘ p))
 
   countStableUnder : ∀ {p} → SumStableUnder p → CountStableUnder p
-  countStableUnder sumSU-p f f-pres = sumSU-p (Bool.toℕ ∘ f) (≡.cong Bool.toℕ ∘ f-pres)
+  countStableUnder sumSU-p f = sumSU-p (≡.:→-to-Π Bool.toℕ FE.∘ f)
 
   search-extoid : SearchExtoid {As} search
-  search-extoid op {f = f}{g} f≈g = search-ind (λ s₁ → s₁ op f ≡ s₁ op g) (≡.cong₂ op) (λ x → f≈g (Setoid.refl As))
+  search-extoid op {f = f}{g} f≈g = search-ind (λ s₁ → s₁ op (_⟨$⟩_ f) ≡ s₁ op (_⟨$⟩_ g)) (≡.cong₂ op) (λ x → f≈g (Setoid.refl As))
 
 SumProp : ★ → ★₁
 SumProp A = SumPropoid (≡.setoid A)
@@ -391,24 +394,28 @@ _×Sum-proj₂'_ : ∀ {A B}
                   sum (μA ×μ μB) (f ∘ proj₂) ≡ sum (μA ×μ μB) (g ∘ proj₂)
 (μA ×Sum-proj₂' μB) sumf≡sumg = sum-ext μA (const sumf≡sumg)
 
-μ-view : ∀ {A B} → (A → B) → SumProp A → SumProp B
+μ-view : ∀ {A B} → (A FE.⟶ B) → SumPropoid A → SumPropoid B
 μ-view {A}{B} A→B μA = searchᴮ , ind
   where
-    searchᴮ : Search B
-    searchᴮ m f = search μA m (f ∘ A→B)
+    searchᴮ : Search (Setoid.Carrier B)
+    searchᴮ m f = search μA m (f ∘ _⟨$⟩_ A→B)
 
     ind : SearchInd searchᴮ
-    ind P P∙ Pf = search-ind μA (λ s → P (λ _ f → s _ (f ∘ A→B))) P∙ (Pf ∘ A→B)
+    ind P P∙ Pf = search-ind μA (λ s → P (λ _ f → s _ (f ∘ _⟨$⟩_ A→B))) P∙ (Pf ∘ _⟨$⟩_ A→B)
 
-μ-iso : ∀ {A B} → (A ↔ B) → SumProp A → SumProp B
-μ-iso A↔B = μ-view (_⟨$⟩_ (Inverse.to A↔B))
+μ-iso : ∀ {A B} → (FI.Inverse A B) → SumPropoid A → SumPropoid B
+μ-iso A↔B = μ-view (Inverse.to A↔B)
 
-μ-view-preserve : ∀ {A B} (A→B : A → B)(B→A : B → A)(A≈B : id ≗ B→A ∘ A→B) f (μA : SumProp A) → sum μA f ≡ sum (μ-view A→B μA) (f ∘ B→A)
-μ-view-preserve A→B B→A A≈B f μA = sum-ext μA (≡.cong f ∘ A≈B)
+
+μ-view-preserve : ∀ {A B} (A→B : A FE.⟶ B)(B→A : B FE.⟶ A)(A≈B : A→B RightInverseOf B→A)
+                  (f : A FE.⟶ ≡.setoid ℕ) (μA : SumPropoid A)
+                → sum μA (_⟨$⟩_ f) ≡ sum (μ-view A→B μA) (_⟨$⟩_ (f FE.∘  B→A))
+μ-view-preserve {A}{B} A→B B→A A≈B f μA = sum-ext μA (λ x → FE.cong f (Setoid.sym A (A≈B x) ))
 
 μ-iso-preserve : ∀ {A B} (A↔B : A ↔ B) f (μA : SumProp A) → sum μA f ≡ sum (μ-iso A↔B μA) (f ∘ _⟨$⟩_ (Inverse.from A↔B))
-μ-iso-preserve A↔B f μA = μ-view-preserve (_⟨$⟩_ (Inverse.to A↔B)) (_⟨$⟩_ (Inverse.from A↔B))
-                            (≡.sym ∘ Inverse.left-inverse-of A↔B) f μA
+μ-iso-preserve A↔B f μA = μ-view-preserve (Inverse.to A↔B) (Inverse.from A↔B)
+                            (Inverse.left-inverse-of A↔B)
+                          (≡.:→-to-Π f) μA
 
 open import Data.Fin using (Fin; zero; suc)
 open import Data.Vec.NP as Vec using (Vec; tabulate; _++_) renaming (map to vmap; sum to vsum; foldr to vfoldr; foldr₁ to vfoldr₁)
@@ -430,15 +437,17 @@ vsgsum sg = vfoldr₁ _∙_
 
 searchFinSuc : ∀ n → Search (Fin (suc n))
 searchFinSuc n _∙_ f = vfoldr₁ _∙_ (tabulate f)
-{-
+
 
 μMaybe : ∀ {A} → SumProp A → SumProp (Maybe A)
-μMaybe μA = μ-iso (FI.sym Maybe↔⊤⊎) (μ⊤ +μ μA)
+μMaybe μA = μ-iso (FI.sym Maybe↔⊤⊎ FI.∘ lift-⊎) (μ⊤ +μ μA)
 
-μMaybe^ : ∀ {A} n → SumPropoid A → SumPropoid (Maybe^ n A)
+
+μMaybe^ : ∀ {A} n → SumProp A → SumProp (Maybe^ n A)
 μMaybe^ zero    μA = μA
 μMaybe^ (suc n) μA = μMaybe (μMaybe^ n μA)
--}
+
+
 μFinSuc : ∀ n → SumProp (Fin (suc n))
 μFinSuc n = searchFinSuc n , ind n
   where ind : ∀ n → SearchInd (searchFinSuc n)
