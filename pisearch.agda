@@ -1,7 +1,7 @@
 {-# OPTIONS --type-in-type #-}
 module pisearch where
 open import Type hiding (★_)
-open import Function
+open import Function.NP
 open import Data.Product
 open import Data.Sum
 open import Data.Bool.NP
@@ -12,9 +12,6 @@ open import sum
 
 Tree : ∀ {A} → Search A → (A → ★) → ★
 Tree sA B = sA _×_ B
-
-Π : (A : ★) → (B : A → ★) → ★
-Π A B = (x : A) → B x
 
 ToFun : ∀ {A} (sA : Search A) → ★
 ToFun {A} sA = ∀ {B} → Tree sA B → Π A B
