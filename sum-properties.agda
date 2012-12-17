@@ -2,6 +2,7 @@ module sum-properties where
 
 open import Type
 import Level as L
+open L using (Lift)
 open import Data.Empty using (⊥)
 open import Data.Bool.NP
 open Data.Bool.NP.Indexed
@@ -9,6 +10,8 @@ open import Data.Nat.NP
 open import Data.Nat.Properties
 open import Data.Product renaming (map to pmap)
 open import Data.Sum
+open import Relation.Binary.Product.Pointwise
+open import Data.Maybe
 open import Data.Unit using (⊤)
 open import Function.NP
 import Function.Inverse as Inv
@@ -18,10 +21,11 @@ open import Function.Related.TypeIsomorphisms.NP
 open import Function.Equality using (_⟨$⟩_)
 
 open import sum
+open import Relation.Binary.Sum
 import Relation.Binary.PropositionalEquality.NP as ≡
 open ≡ using (_≡_ ; _≗_ ; _≗₂_)
 
-module _ {A : ★} (μA : SumProp A) (f g : A → ℕ) where
+module _M1 {A : ★} (μA : SumProp A) (f g : A → ℕ) where
     open ≡.≡-Reasoning
 
     sum-⊓-∸ : sum μA f ≡ sum μA (f ⊓° g) + sum μA (f ∸° g)
@@ -37,6 +41,7 @@ module _ {A : ★} (μA : SumProp A) (f g : A → ℕ) where
 
     sum-⊔ : sum μA (f ⊔° g) ≤ sum μA f + sum μA g
     sum-⊔ = ℕ≤.trans (sum-mono μA (f ⟨ ⊔≤+ ⟩° g)) (ℕ≤.reflexive (sum-hom μA f g))
+open _M1
 
 module _M2 {A : ★} (μA : SumProp A) (f g : A → Bool) where
     count-∧-not : count μA f ≡ count μA (f ∧° g) + count μA (f ∧° not° g)
@@ -67,9 +72,102 @@ StableUnderInjection μ = ∀ p → Injective p → SumStableUnder μ p
 CountStableUnderInjection : ∀ {A} → SumProp A → Set
 CountStableUnderInjection μ = ∀ p → Injective p → CountStableUnder μ p
 
-#-StableUnderInjection : ∀ {A}{μ : SumProp A} → StableUnderInjection μ
-    → ∀ f p → Injective p → count μ f ≡ count μ (f ∘ p)
-#-StableUnderInjection sui f p p-inj = sui (toℕ ∘ f) p p-inj
+#-StableUnderInjection : ∀ {A}{μ : SumProp A} → StableUnderInjection μ → CountStableUnderInjection μ
+#-StableUnderInjection sui p p-inj f = sui p p-inj (toℕ ∘ f)
+
+⊤SUI : StableUnderInjection μ⊤
+⊤SUI f p x = ≡.refl
+
+{-
+stableMaybe : ∀ {A} (μA : SumProp A) → StableUnderInjection μA
+                                     → StableUnderInjection (μMaybe μA)
+stableMaybe {A} μA suiA f p p-inj with p nothing | ≡.inspect p nothing
+... | nothing | ≡.[ eq ] = {!!}
+  where h : ∀ x → p (just x) ≡ just {!!}
+        h = {!!}
+        p' : A → A
+        p' x = {!p (just x)!}
+        p'-inj : Injective p'
+        p'-inj = {!!}
+... | just pn | ≡.[ eq ] = ≡.trans (≡.cong (λ x → f nothing + x) (suiA (f ∘ just) p' p'-inj)) {!!}
+  where p' : A → A
+        p' x = maybe id pn (p (just x))
+        p'-inj : Injective p'
+        p'-inj = {!!}
+        
+SumsOk : ∀ {A B} → SumProp A → SumProp B → A ↔ B → ★
+SumsOk μA μB iso = ∀ f → sum μA f ≡ sum μB (f ∘ from)
+  where from = _⟨$⟩_ (Inv.Inverse.from iso)
+        
+module StableIso {A B}(μA : SumProp A)(μB : SumProp B)(iso : A ↔ B)
+                 (sums-ok : SumsOk μA μB iso)
+                 (suiB    : StableUnderInjection μB) where
+  to : A → B
+  to x = Inv.Inverse.to iso ⟨$⟩ x
+
+  from : B → A
+  from x = Inv.Inverse.from iso ⟨$⟩ x
+
+  from-inj : Injective from
+  from-inj = Inv.Inverse.injective (Inv.sym iso)
+
+  to-inj : Injective to
+  to-inj = Inv.Inverse.injective iso
+
+  left-inv : from ∘ to ≗ id
+  left-inv = Inv.Inverse.left-inverse-of iso
+
+  stable : StableUnderInjection μA
+  stable f p p-inj
+    = sum μA f
+    ≡⟨ sums-ok f ⟩
+      sum μB (f ∘ from)
+    ≡⟨ suiB (f ∘ from) (to ∘ p ∘ from) (from-inj ∘ p-inj ∘ to-inj) ⟩
+      sum μB (f ∘ from ∘ to ∘ p ∘ from)
+    ≡⟨ sum-ext μB (λ x → ≡.cong f (left-inv (p (from x)))) ⟩
+      sum μB (f ∘ p ∘ from)
+    ≡⟨ ≡.sym (sums-ok (f ∘ p)) ⟩
+      sum μA (f ∘ p)
+    ∎
+    where open ≡.≡-Reasoning
+
+record Iso1+ {A : Set}(μA : SumProp A) : ★₁ where
+  constructor mk
+  field
+    B   : ★
+    μB  : SumProp B
+    iso : A ↔ Maybe B
+
+  toMaybe : A → Maybe B
+  toMaybe x = Inv.Inverse.to iso ⟨$⟩ x
+
+  fromMaybe : Maybe B → A
+  fromMaybe x = Inv.Inverse.from iso ⟨$⟩ x
+
+  field
+    sums-ok  : ∀ f → sum μA f ≡ sum (μMaybe μB) (f ∘ fromMaybe)
+
+  from-inj : Injective fromMaybe
+  from-inj = Inv.Inverse.injective (Inv.sym iso)
+
+  to-inj : Injective toMaybe
+  to-inj = Inv.Inverse.injective iso
+
+  left-inv : fromMaybe ∘ toMaybe ≗ id
+  left-inv = Inv.Inverse.left-inverse-of iso
+
+  stable : StableUnderInjection (μMaybe μB) → StableUnderInjection μA
+  stable suiMB = StableIso.stable μA (μMaybe μB) iso sums-ok suiMB
+
+-- iso1+⊤ : Iso1+ μ⊤
+-- iso1+⊤ = {!mk !}
+
+iso1+Maybe : ∀ {A} (μA : SumProp A) → Iso1+ μA → Iso1+ (μMaybe μA)
+iso1+Maybe {A} μA A≅1+ = mk A μA Inv.id (λ f → ≡.refl)
+
+iso1+FinSuc : ∀ n → Iso1+ (μFinSuc (suc n))
+iso1+FinSuc n = mk (Fin (suc n)) (μFinSuc n) Fin∘suc↔Maybe∘Fin (λ f → ≡.refl)
+-}
 
 infix 4 _≈_
 
@@ -100,12 +198,13 @@ record _≈_ {A B} (μA : SumProp A)(μB : SumProp B) : Set where
                sum μA (f ∘ to)
              ∎
     where open ≡.≡-Reasoning
+
   StableUnder≈ : StableUnderInjection μA → StableUnderInjection μB
-  StableUnder≈ μA-SUI f p p-inj
+  StableUnder≈ μA-SUI p p-inj f
     = sum μB f
     ≡⟨ sums-ok' f ⟩
       sum μA (f ∘ to)
-    ≡⟨ μA-SUI (f ∘ to) (from ∘ p ∘ to) (to-inj ∘ p-inj ∘ from-inj) ⟩
+    ≡⟨ μA-SUI (from ∘ p ∘ to) (to-inj ∘ p-inj ∘ from-inj) (f ∘ to) ⟩
       sum μA (f ∘ to ∘ from ∘ p ∘ to)
     ≡⟨ ≡.sym (sums-ok' (f ∘ to ∘ from ∘ p)) ⟩
       sum μB (f ∘ to ∘ from ∘ p)
@@ -113,7 +212,6 @@ record _≈_ {A B} (μA : SumProp A)(μB : SumProp B) : Set where
       sum μB (f ∘ p)
     ∎
     where open ≡.≡-Reasoning
-
 
 ≈-refl : ∀ {A} (μA : SumProp A) → μA ≈ μA
 ≈-refl μA = mk Inv.id (λ f → ≡.refl)
@@ -138,8 +236,8 @@ _≈∎ = ≈-refl
 _≈⟨_⟩_ : ∀ {A B C} (μA : SumProp A){μB : SumProp B}{μC : SumProp C} → μA ≈ μB → μB ≈ μC → μA ≈ μC
 _ ≈⟨ A≈B ⟩ B≈C = ≈-trans A≈B B≈C
 
-Fin0≈⊤ : μFinSuc zero ≈ μ⊤
-Fin0≈⊤ = mk iso sums-ok where
+Fin1≈⊤ : μFin 1 ≈ μ⊤
+Fin1≈⊤ = mk iso sums-ok where
   open import Relation.Binary.Sum
   iso : _
   iso = (A⊎⊥↔A Inv.∘ Inv.id ⊎-cong Fin0↔⊥) Inv.∘ Fin∘suc↔⊤⊎Fin
@@ -147,8 +245,9 @@ Fin0≈⊤ = mk iso sums-ok where
   sums-ok : (_ : _) → _
   sums-ok f = ≡.refl
 
-⊤+Fin : ∀ {n} → μ⊤ +μ μFinSuc n ≈ μFinSuc (suc n)
-⊤+Fin {n} = mk iso sums-ok where
+⊤+Fin : ∀ {n pf} → μ⊤ +μ μFin n {pf} ≈ μFin (suc n)
+⊤+Fin {zero} {()}
+⊤+Fin {suc n} = mk iso sums-ok where
   iso : _
   iso = Inv.sym Fin∘suc↔⊤⊎Fin
 
@@ -163,8 +262,30 @@ Fin0≈⊤ = mk iso sums-ok where
   sums-ok : (_ : _) → _
   sums-ok f = ≡.refl
 
-μFinPres : ∀ {m n} → m ≡ n → μFinSuc m ≈ μFinSuc n
+μFinSucPres : ∀ {m n} → m ≡ n → μFinSuc m ≈ μFinSuc n
+μFinSucPres eq rewrite eq = ≈-refl _
+
+μFinPres : ∀ {m n pfm pfn} → m ≡ n → μFin m {pfm} ≈ μFin n {pfn}
 μFinPres eq rewrite eq = ≈-refl _
+
+  {-
+Maybe-Finable : ∀ {A} (μA : SumProp A) → Finable μA → Finable (μMaybe μA)
+Maybe-Finable {A} μA finA = mk card iso sums-ok where
+  module FinA = Finable finA
+  card = suc FinA.FinCard
+
+  |A| : ℕ
+  |A| = suc (Finable.FinCard finA)
+
+  iso : _
+  iso = (⊤ ⊎ A)       ↔⟨ Inv.id ⊎-cong FinA.iso ⟩
+        (⊤ ⊎ Fin |A|) ↔⟨ sym Fin∘suc↔⊤⊎Fin ⟩
+        Fin (suc |A|) ∎
+    where open EquationalReasoning
+
+  sums-ok : (_ : _) → _
+  sums-ok f = ≡.cong (λ x → f (inj₁ _) + x) (FinA.sums-ok _)
+-}
 
 _+μ-cong_ : ∀ {A B C D}{μA : SumProp A}{μB : SumProp B}{μC : SumProp C}{μD : SumProp D}
           → μA ≈ μC → μB ≈ μD → μA +μ μB ≈ μC +μ μD
@@ -232,9 +353,40 @@ _×μ-cong_ {μA = μA}{μD = μD} A≈C B≈D = mk iso sums-ok where
   sums-ok : (_ : _) → _
   sums-ok f = ≡.refl
 
+_Suc-+_ : ∀ {m} → Suc m → ∀ n → Suc (m + n)
+_Suc-+_ {zero}  () _
+_Suc-+_ {suc m} _  _ = _
+
++-≈ : ∀ m n {pfm pfn} → (μFin m {pfm}) +μ (μFin n {pfn}) ≈ μFin (m + n) {pfm Suc-+ n}
++-≈ zero _ {()}
++-≈ _ zero {_} {()}
++-≈ (suc m) (suc n) = μFin (suc m) +μ μFin (suc n)
+                    ≈⟨ {!!} ⟩
+                      μFin (suc m + suc n)
+                    ≈∎
+{-
++-≈ (suc zero) (suc n) = μFin 1 +μ μFin (suc n)
+               ≈⟨ Fin1≈⊤ +μ-cong ≈-refl (μFin (suc n)) ⟩
+                μ⊤ +μ μFinSuc n
+              ≈⟨ ⊤+Fin ⟩
+                μFinSuc (suc n)
+              ≈∎
++-≈ (suc (suc m)) (suc n) = μFinSuc (suc m) +μ μFinSuc n
+              ≈⟨ ≈-sym ⊤+Fin +μ-cong ≈-refl (μFinSuc n) ⟩
+                (μ⊤ +μ μFinSuc m) +μ μFinSuc n
+              ≈⟨ +μ-assoc μ⊤ (μFinSuc m) (μFinSuc n) ⟩
+                μ⊤ +μ (μFinSuc m +μ μFinSuc n)
+              ≈⟨ ≈-refl μ⊤ +μ-cong +-≈ (suc m) (suc n) ⟩
+                μ⊤ +μ μFinSuc (m + suc n)
+              ≈⟨ ⊤+Fin ⟩
+                μFinSuc (suc m + suc n)
+              ≈∎
+              -}
+
+{-
 +-≈ : ∀ m n → (μFinSuc m) +μ (μFinSuc n) ≈ μFinSuc (m + suc n)
 +-≈ zero n    = μFinSuc zero +μ μFinSuc n
-              ≈⟨ Fin0≈⊤ +μ-cong ≈-refl (μFinSuc n) ⟩
+              ≈⟨ Fin1≈⊤ +μ-cong ≈-refl (μFinSuc n) ⟩
                 μ⊤ +μ μFinSuc n
               ≈⟨ ⊤+Fin ⟩
                 μFinSuc (suc n)
@@ -252,11 +404,11 @@ _×μ-cong_ {μA = μA}{μD = μD} A≈C B≈D = mk iso sums-ok where
 
 ×-≈ : ∀ m n → μFinSuc m ×μ μFinSuc n ≈ μFinSuc (n + m * suc n)
 ×-≈ zero n    = μFinSuc 0 ×μ μFinSuc n
-              ≈⟨ Fin0≈⊤ ×μ-cong (≈-refl (μFinSuc n)) ⟩
+              ≈⟨ Fin1≈⊤ ×μ-cong (≈-refl (μFinSuc n)) ⟩
                 μ⊤ ×μ μFinSuc n
               ≈⟨ ⊤×A≈A ⟩
                 μFinSuc n
-              ≈⟨ μFinPres (ℕ°.+-comm 0 n) ⟩
+              ≈⟨ μFinSucPres (ℕ°.+-comm 0 n) ⟩
                 μFinSuc (n + 0)
               ≈∎
 ×-≈ (suc m) n = μFinSuc (suc m) ×μ μFinSuc n
@@ -270,13 +422,17 @@ _×μ-cong_ {μA = μA}{μD = μD} A≈C B≈D = mk iso sums-ok where
                 μFinSuc (n + suc m * suc n)
               ≈∎
 
+-- μA→B ≈ μFinSuc (m ^ n)
+-- μB   ≈ μFinSuc m
+-- μMaybe→ μA→B μB ≈ μFinSuc (m * m ^ n)
+
 open import Data.Fin using (Fin ; zero ; suc)
 
 Finable : ∀ {A} → SumProp A → Set
 Finable μA = Σ ℕ λ FinCard → μA ≈ μFinSuc FinCard
 
 ⊤-Finable : Finable μ⊤
-⊤-Finable = 0 , ≈-sym Fin0≈⊤
+⊤-Finable = 0 , ≈-sym Fin1≈⊤
 
 Fin-Finable : ∀ {n} → Finable (μFinSuc n)
 Fin-Finable {n} = n , ≈-refl (μFinSuc n)
@@ -298,7 +454,7 @@ Fin-Finable {n} = n , ≈-refl (μFinSuc n)
     μFinSuc (|B| + |A| * suc |B|)
   ≈∎)
 
-module _ where
+module _M3 where
   open import bijection-fin
   open import Data.Fin using (Fin; zero; suc)
   open import Data.Vec.NP renaming (sum to vsum)
@@ -317,9 +473,60 @@ module _ where
   μFinSUI {n} p p-inj f rewrite ≡.sym (sumFin-spec n f)
                               | ≡.sym (sumFin-spec n (f ∘ p))
                               = sumFinSUI (suc n) f p p-inj
+open _M3 public
 
 StableIfFinable : ∀ {A} (μA : SumProp A) → Finable μA → StableUnderInjection μA
 StableIfFinable μA (_ , A≈Fin)
   = _≈_.StableUnder≈ (≈-sym A≈Fin) μFinSUI
 
--- -}
+Decomposable : ★ → ★₁
+Decomposable A = (A ↔ ⊤) ⊎ (∃ λ (B : ★) → A ↔ Maybe B)
+
+open EquationalReasoning
+
+dec-iso : ∀ {A B} → (A ↔ B) → Decomposable A → Decomposable B
+dec-iso A↔B (inj₁ A↔⊤) = inj₁ (A↔⊤ Inv.∘ sym A↔B)
+dec-iso A↔B (inj₂ (C , A↔MaybeC)) = inj₂ (C , A↔MaybeC Inv.∘ sym A↔B)
+
+Maybe×⊎ : ∀ {A B : ★} → (Maybe A × B) ↔ (B ⊎ (A × B))
+Maybe×⊎ {A} {B} = (Maybe A × B)   ↔⟨ Maybe↔⊤⊎ ×-cong Inv.id ⟩
+                  ((⊤ ⊎ A) × B)   ↔⟨ ×⊎°.distribʳ B ⊤ A ⟩
+                  (⊤ × B ⊎ A × B) ↔⟨ ⊤×A↔A ⊎-cong Inv.id ⟩
+                  (B ⊎ (A × B))   ∎
+
+dec× : ∀ {A B} → Decomposable A → Decomposable B → Decomposable (A × B)
+dec× {A} {B} (inj₁ A↔⊤) dB = dec-iso (B      ↔⟨ sym ⊤×A↔A ⟩
+                                     (⊤ × B) ↔⟨ sym A↔⊤ ×-cong Inv.id ⟩
+                                     (A × B) ∎) dB
+dec× {A} {B} dA (inj₁ B↔⊤) = dec-iso (A      ↔⟨ sym A×⊤↔A ⟩
+                                     (A × ⊤) ↔⟨ Inv.id ×-cong sym B↔⊤ ⟩
+                                     (A × B) ∎) dA
+dec× {A} {B} (inj₂ (C , A↔1+C)) (inj₂ (D , B↔1+D))
+  = inj₂ (_ , Maybe-⊎ Inv.∘ Maybe×⊎ Inv.∘ A↔1+C ×-cong B↔1+D)
+
+dec+ : ∀ {A B} → Decomposable A → Decomposable B → Decomposable (A ⊎ B)
+dec+ {A} {B} (inj₁ A↔⊤)         dB = inj₂ (B , sym Maybe↔⊤⊎ Inv.∘ A↔⊤ ⊎-cong Inv.id)
+dec+ {A} {B} (inj₂ (C , A↔1+C)) dB = inj₂ ((C ⊎ B) , sym Maybe↔⊤⊎
+                                               Inv.∘ ⊎-CMon.assoc ⊤ C B
+                                               Inv.∘ (Maybe↔⊤⊎ Inv.∘ A↔1+C) ⊎-cong Inv.id)
+
+{-
+dB = dec-iso {!!} dB
+  where dec : Decomposable (A × B)
+{-
+ -- B     + C×B
+ -- 1×B   + C×B
+ -- (1+C) × B
+ -- A     × B
+ -}
+
+Stable× : ∀ {A} (μA : SumProp A) {B} (μB : SumProp B)
+                (suiA : StableUnderInjection μA)
+                (suiB : StableUnderInjection μB)
+              → StableUnderInjection (μA ×μ μB)
+Stable× μA μB suiA suiB = {!!}
+
+        -- -}
+        -- -}
+        -- -}
+        -- -}
