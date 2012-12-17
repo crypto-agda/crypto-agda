@@ -246,7 +246,8 @@ swapS-preserve = μ-iso-preserve swap-iso
 
 module _ {A : Set}(μA : SumProp A) where
 
-  sA = search μA
+  private
+    sA = search μA
 
   extend : ∀ {n} → A → (Fin n → A) → Fin (suc n) → A
   extend x g zero    = x
