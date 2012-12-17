@@ -26,19 +26,19 @@ toFun-Σ : ∀ {A} {B : A → ★} (sA : Search A) (sB : ∀ {x} → Search (B x
           → ToFun sA
           → (∀ {x} → ToFun (sB {x}))
           → ToFun (ΣSearch sA (λ {x} → sB {x}))
-toFun-Σ _ _ PA PB t = uncurry (PB ∘ PA t)
+toFun-Σ _ _ toFunA toFunB t = uncurry (toFunB ∘ toFunA t)
 
 fromFun-Σ : ∀ {A} {B : A → ★} (sA : Search A) (sB : ∀ {x} → Search (B x))
             → FromFun sA
             → (∀ {x} → FromFun (sB {x}))
             → FromFun (ΣSearch sA (λ {x} → sB {x}))
-fromFun-Σ _ _ PA PB f = PA (PB ∘ curry f)
+fromFun-Σ _ _ fromFunA fromFunB f = fromFunA (fromFunB ∘ curry f)
 
 toFun-× : ∀ {A B} (sA : Search A) (sB : Search B) → ToFun sA → ToFun sB → ToFun (sA ×Search sB)
-toFun-× sA sB PA PB = toFun-Σ sA sB PA PB
+toFun-× sA sB toFunA toFunB = toFun-Σ sA sB toFunA toFunB
 
 fromFun-× : ∀ {A B} (sA : Search A) (sB : Search B) → FromFun sA → FromFun sB → FromFun (sA ×Search sB)
-fromFun-× sA sB PA PB = fromFun-Σ sA sB PA PB
+fromFun-× sA sB fromFunA fromFunB = fromFun-Σ sA sB fromFunA fromFunB
 
 toFun-Bit : ToFun (search μBit)
 toFun-Bit (f , t) false = f
@@ -48,11 +48,11 @@ fromFun-Bit : FromFun (search μBit)
 fromFun-Bit f = f false , f true
 
 toFun-⊎ : ∀ {A B} (sA : Search A) (sB : Search B) → ToFun sA → ToFun sB → ToFun (sA +Search sB)
-toFun-⊎ sA sB PA PB (t , u) (inj₁ x) = PA t x
-toFun-⊎ sA sB PA PB (t , u) (inj₂ x) = PB u x
+toFun-⊎ sA sB toFunA toFunB (t , u) (inj₁ x) = toFunA t x
+toFun-⊎ sA sB toFunA toFunB (t , u) (inj₂ x) = toFunB u x
 
 fromFun-⊎ : ∀ {A B} (sA : Search A) (sB : Search B) → FromFun sA → FromFun sB → FromFun (sA +Search sB)
-fromFun-⊎ sA sB PA PB f = PA (f ∘ inj₁) , PB (f ∘ inj₂)
+fromFun-⊎ sA sB fromFunA fromFunB f = fromFunA (f ∘ inj₁) , fromFunB (f ∘ inj₂)
 
 -- toFun-searchInd : ∀ {A} {sA : Search A} → SearchInd sA → ToFun sA
 -- toFun-searchInd {A} {sA} indA {B} t = ?
