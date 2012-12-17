@@ -7,7 +7,7 @@ open import Search.Searchable
 module Search.Searchable.Product where
 
 private
-    Cont : ★₀ → ★₀ → ★₀  
+    Cont : ★₀ → ★₀ → ★₀
     Cont M A = (A → M) → M
 
     -- liftM2 _,_ in the continuation monad
