@@ -22,6 +22,9 @@ ToFun {A} sA = ∀ {B} → Tree sA B → Π A B
 FromFun : ∀ {A} (sA : Search A) → ★
 FromFun {A} sA = ∀ {B} → Π A B → Tree sA B
 
+fromFun-searchInd : ∀ {A} {sA : Search A} → SearchInd sA → FromFun sA
+fromFun-searchInd indA = indA (λ s → Tree s _) _,_
+
 toFun-Σ : ∀ {A} {B : A → ★} (sA : Search A) (sB : ∀ {x} → Search (B x))
           → ToFun sA
           → (∀ {x} → ToFun (sB {x}))
@@ -33,6 +36,46 @@ fromFun-Σ : ∀ {A} {B : A → ★} (sA : Search A) (sB : ∀ {x} → Search (B
             → (∀ {x} → FromFun (sB {x}))
             → FromFun (ΣSearch sA (λ {x} → sB {x}))
 fromFun-Σ _ _ fromFunA fromFunB f = fromFunA (fromFunB ∘ curry f)
+
+open import Relation.Binary.PropositionalEquality
+ToFrom : ∀ {A} (sA : Search A)
+           (toFunA : ToFun sA)
+           (fromFunA : FromFun sA)
+         → ★
+ToFrom {A} sA toFunA fromFunA = ∀ {B} (f : Π A B) x → toFunA (fromFunA f) x ≡ f x
+
+FromTo : ∀ {A} (sA : Search A)
+           (toFunA : ToFun sA)
+           (fromFunA : FromFun sA)
+         → ★
+FromTo sA toFunA fromFunA = ∀ {B} (t : Tree sA B) → fromFunA (toFunA t) ≡ t
+
+module Σ-props {A} {B : A → ★}
+                (μA : Searchable A) (μB : ∀ {x} → Searchable (B x)) where
+    sA = search μA
+    sB : ∀ {x} → Search (B x)
+    sB {x} = search (μB {x})
+    fromFunA : FromFun sA
+    fromFunA = fromFun-searchInd (search-ind μA)
+    fromFunB : ∀ {x} → FromFun (sB {x})
+    fromFunB {x} = fromFun-searchInd (search-ind (μB {x}))
+    module ToFrom
+             (toFunA : ToFun sA)
+             (toFunB : ∀ {x} → ToFun (sB {x}))
+             (toFromA : ToFrom sA toFunA fromFunA)
+             (toFromB : ∀ {x} → ToFrom (sB {x}) toFunB fromFunB) where
+        toFrom-Σ : ToFrom (ΣSearch sA (λ {x} → sB {x})) (toFun-Σ sA sB toFunA toFunB) (fromFun-Σ sA sB fromFunA fromFunB)
+        toFrom-Σ f (x , y) rewrite toFromA (fromFunB ∘ curry f) x = toFromB (curry f x) y
+
+    {- we need a search-ind-ext...
+    module FromTo
+                 (toFunA : ToFun sA)
+                 (toFunB : ∀ {x} → ToFun (sB {x}))
+                 (toFromA : FromTo sA toFunA fromFunA)
+                 (toFromB : ∀ {x} → FromTo (sB {x}) toFunB fromFunB) where
+        toFrom-Σ : FromTo (ΣSearch sA (λ {x} → sB {x})) (toFun-Σ sA sB toFunA toFunB) (fromFun-Σ sA sB fromFunA fromFunB)
+        toFrom-Σ t = {!toFromA!} -- {!(λ x → toFromB (toFunA t x))!}
+    -}
 
 toFun-× : ∀ {A B} (sA : Search A) (sB : Search B) → ToFun sA → ToFun sB → ToFun (sA ×Search sB)
 toFun-× sA sB toFunA toFunB = toFun-Σ sA sB toFunA toFunB
@@ -56,6 +99,3 @@ fromFun-⊎ sA sB fromFunA fromFunB f = fromFunA (f ∘ inj₁) , fromFunB (f �
 
 -- toFun-searchInd : ∀ {A} {sA : Search A} → SearchInd sA → ToFun sA
 -- toFun-searchInd {A} {sA} indA {B} t = ?
-
-fromFun-searchInd : ∀ {A} {sA : Search A} → SearchInd sA → FromFun sA
-fromFun-searchInd indA = indA (λ s → Tree s _) _,_
