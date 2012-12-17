@@ -10,52 +10,52 @@ open import Search.Searchable.Product
 open import Search.Searchable
 open import sum
 
-Π' : ∀ {A} → Search A → (A → ★) → ★
-Π' sA B = sA _×_ B
+Tree : ∀ {A} → Search A → (A → ★) → ★
+Tree sA B = sA _×_ B
 
-Π : (A : ★₀) → (B : A → ★₀) → ★₀
+Π : (A : ★) → (B : A → ★) → ★
 Π A B = (x : A) → B x
 
-P→ : ∀ {A} (sA : Search A) → ★₀
-P→ {A} sA = ∀ {B} → Π' sA B → Π A B
+ToFun : ∀ {A} (sA : Search A) → ★
+ToFun {A} sA = ∀ {B} → Tree sA B → Π A B
 
-P← : ∀ {A} (sA : Search A) → ★₀
-P← {A} sA = ∀ {B} → Π A B → Π' sA B
+FromFun : ∀ {A} (sA : Search A) → ★
+FromFun {A} sA = ∀ {B} → Π A B → Tree sA B
 
-P→Σ : ∀ {A} {B : A → ★} (sA : Search A) (sB : ∀ {x} → Search (B x))
-     → P→ sA
-     → (∀ {x} → P→ (sB {x}))
-     → P→ (ΣSearch sA (λ {x} → sB {x}))
-P→Σ _ _ PA PB t = uncurry (PB ∘ PA t)
+toFun-Σ : ∀ {A} {B : A → ★} (sA : Search A) (sB : ∀ {x} → Search (B x))
+          → ToFun sA
+          → (∀ {x} → ToFun (sB {x}))
+          → ToFun (ΣSearch sA (λ {x} → sB {x}))
+toFun-Σ _ _ PA PB t = uncurry (PB ∘ PA t)
 
-P←Σ : ∀ {A} {B : A → ★} (sA : Search A) (sB : ∀ {x} → Search (B x))
-      → P← sA
-      → (∀ {x} → P← (sB {x}))
-      → P← (ΣSearch sA (λ {x} → sB {x}))
-P←Σ _ _ PA PB f = PA (PB ∘ curry f)
+fromFun-Σ : ∀ {A} {B : A → ★} (sA : Search A) (sB : ∀ {x} → Search (B x))
+            → FromFun sA
+            → (∀ {x} → FromFun (sB {x}))
+            → FromFun (ΣSearch sA (λ {x} → sB {x}))
+fromFun-Σ _ _ PA PB f = PA (PB ∘ curry f)
 
-P→× : ∀ {A B} (sA : Search A) (sB : Search B) → P→ sA → P→ sB → P→ (sA ×Search sB)
-P→× sA sB PA PB = P→Σ sA sB PA PB
+toFun-× : ∀ {A B} (sA : Search A) (sB : Search B) → ToFun sA → ToFun sB → ToFun (sA ×Search sB)
+toFun-× sA sB PA PB = toFun-Σ sA sB PA PB
 
-P←× : ∀ {A B} (sA : Search A) (sB : Search B) → P← sA → P← sB → P← (sA ×Search sB)
-P←× sA sB PA PB = P←Σ sA sB PA PB
+fromFun-× : ∀ {A B} (sA : Search A) (sB : Search B) → FromFun sA → FromFun sB → FromFun (sA ×Search sB)
+fromFun-× sA sB PA PB = fromFun-Σ sA sB PA PB
 
-P→Bit : P→ (search μBit)
-P→Bit (f , t) false = f
-P→Bit (f , t) true  = t
+toFun-Bit : ToFun (search μBit)
+toFun-Bit (f , t) false = f
+toFun-Bit (f , t) true  = t
 
-P←Bit : P← (search μBit)
-P←Bit f = f false , f true
+fromFun-Bit : FromFun (search μBit)
+fromFun-Bit f = f false , f true
 
-P→⊎ : ∀ {A B} (sA : Search A) (sB : Search B) → P→ sA → P→ sB → P→ (sA +Search sB)
-P→⊎ sA sB PA PB (t , u) (inj₁ x) = PA t x
-P→⊎ sA sB PA PB (t , u) (inj₂ x) = PB u x
+toFun-⊎ : ∀ {A B} (sA : Search A) (sB : Search B) → ToFun sA → ToFun sB → ToFun (sA +Search sB)
+toFun-⊎ sA sB PA PB (t , u) (inj₁ x) = PA t x
+toFun-⊎ sA sB PA PB (t , u) (inj₂ x) = PB u x
 
-P←⊎ : ∀ {A B} (sA : Search A) (sB : Search B) → P← sA → P← sB → P← (sA +Search sB)
-P←⊎ sA sB PA PB f = PA (f ∘ inj₁) , PB (f ∘ inj₂)
+fromFun-⊎ : ∀ {A B} (sA : Search A) (sB : Search B) → FromFun sA → FromFun sB → FromFun (sA +Search sB)
+fromFun-⊎ sA sB PA PB f = PA (f ∘ inj₁) , PB (f ∘ inj₂)
 
--- P→Ind : ∀ {A} {sA : Search A} → SearchInd sA → P→ sA
--- P→Ind {A} {sA} indA {B} t = ?
+-- toFun-searchInd : ∀ {A} {sA : Search A} → SearchInd sA → ToFun sA
+-- toFun-searchInd {A} {sA} indA {B} t = ?
 
-P←Ind : ∀ {A} {sA : Search A} → SearchInd sA → P← sA
-P←Ind indA = indA (λ s → Π' s _) _,_
+fromFun-searchInd : ∀ {A} {sA : Search A} → SearchInd sA → FromFun sA
+fromFun-searchInd indA = indA (λ s → Tree s _) _,_
