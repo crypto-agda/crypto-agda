@@ -10,23 +10,23 @@ open import Search.Searchable.Product
 open import Search.Searchable
 open import sum
 
-Tree : ∀ {A} → Search A → (A → ★) → ★
-Tree sA B = sA _×_ B
+Data : ∀ {A} → Search A → (A → ★) → ★
+Data sA B = sA _×_ B
 
 ToFun : ∀ {A} (sA : Search A) → ★
-ToFun {A} sA = ∀ {B} → Tree sA B → Π A B
+ToFun {A} sA = ∀ {B} → Data sA B → Π A B
 
 FromFun : ∀ {A} (sA : Search A) → ★
-FromFun {A} sA = ∀ {B} → Π A B → Tree sA B
+FromFun {A} sA = ∀ {B} → Π A B → Data sA B
 
 fromFun-searchInd : ∀ {A} {sA : Search A} → SearchInd sA → FromFun sA
-fromFun-searchInd indA = indA (λ s → Tree s _) _,_
+fromFun-searchInd indA = indA (λ s → Data s _) _,_
 
 toFun-Σ : ∀ {A} {B : A → ★} (sA : Search A) (sB : ∀ {x} → Search (B x))
           → ToFun sA
           → (∀ {x} → ToFun (sB {x}))
           → ToFun (ΣSearch sA (λ {x} → sB {x}))
-toFun-Σ _ _ toFunA toFunB t = uncurry (toFunB ∘ toFunA t)
+toFun-Σ _ _ toFunA toFunB d = uncurry (toFunB ∘ toFunA d)
 
 fromFun-Σ : ∀ {A} {B : A → ★} (sA : Search A) (sB : ∀ {x} → Search (B x))
             → FromFun sA
@@ -34,7 +34,7 @@ fromFun-Σ : ∀ {A} {B : A → ★} (sA : Search A) (sB : ∀ {x} → Search (B
             → FromFun (ΣSearch sA (λ {x} → sB {x}))
 fromFun-Σ _ _ fromFunA fromFunB f = fromFunA (fromFunB ∘ curry f)
 
-open import Relation.Binary.PropositionalEquality
+open import Relation.Binary.PropositionalEquality hiding ([_])
 ToFrom : ∀ {A} (sA : Search A)
            (toFunA : ToFun sA)
            (fromFunA : FromFun sA)
@@ -45,7 +45,7 @@ FromTo : ∀ {A} (sA : Search A)
            (toFunA : ToFun sA)
            (fromFunA : FromFun sA)
          → ★
-FromTo sA toFunA fromFunA = ∀ {B} (t : Tree sA B) → fromFunA (toFunA t) ≡ t
+FromTo sA toFunA fromFunA = ∀ {B} (d : Data sA B) → fromFunA (toFunA d) ≡ d
 
 module Σ-props {A} {B : A → ★}
                 (μA : Searchable A) (μB : ∀ {x} → Searchable (B x)) where
@@ -88,11 +88,22 @@ fromFun-Bit : FromFun (search μBit)
 fromFun-Bit f = f false , f true
 
 toFun-⊎ : ∀ {A B} (sA : Search A) (sB : Search B) → ToFun sA → ToFun sB → ToFun (sA +Search sB)
-toFun-⊎ sA sB toFunA toFunB (t , u) (inj₁ x) = toFunA t x
-toFun-⊎ sA sB toFunA toFunB (t , u) (inj₂ x) = toFunB u x
+toFun-⊎ sA sB toFunA toFunB (x , y) = [ toFunA x , toFunB y ]
 
 fromFun-⊎ : ∀ {A B} (sA : Search A) (sB : Search B) → FromFun sA → FromFun sB → FromFun (sA +Search sB)
 fromFun-⊎ sA sB fromFunA fromFunB f = fromFunA (f ∘ inj₁) , fromFunB (f ∘ inj₂)
+
+Point : ∀ {A} → Search A → (A → ★) → ★
+Point sA B = sA _⊎_ B
+
+ToPair : ∀ {A} (sA : Search A) → ★
+ToPair {A} sA = ∀ {B} → Point sA B → Σ A B
+
+FromPair : ∀ {A} (sA : Search A) → ★
+FromPair {A} sA = ∀ {B} → Σ A B → Point sA B
+
+toPair-searchInd : ∀ {A} {sA : Search A} → SearchInd sA → ToPair sA
+toPair-searchInd indA = indA ToPair (λ P0 P1 → [ P0 , P1 ]) (λ η → _,_ η)
 
 -- toFun-searchInd : ∀ {A} {sA : Search A} → SearchInd sA → ToFun sA
 -- toFun-searchInd {A} {sA} indA {B} t = ?
