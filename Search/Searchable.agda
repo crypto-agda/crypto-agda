@@ -1,39 +1,45 @@
+import Level as L
+open L using () renaming (zero to ₀)
 open import Type hiding (★)
-open import Function
+open import Function.NP
 open import Search.Type
 open import Algebra.FunctionProperties.NP
 open import Data.Bool.NP as Bool
-open import Data.Nat.NP hiding (_^_)
+open import Data.Nat.NP hiding (_^_; _⊔_)
 open import Data.Nat.Properties
 open import Data.Product
+open import Data.Sum
 import Relation.Binary.PropositionalEquality as ≡
 open ≡ using (_≡_)
 
 module Search.Searchable where
 
-record Searchable A : ★₁ where
-  constructor _,_
-  field
-    search     : Search A
-    search-ind : SearchInd search
+private
+  ₁ = L.suc ₀
 
-  search-sg-ext : SearchSgExt search
+module Searchable'
+    {m p A}
+    {search     : Search m A}
+    (search-ind : SearchInd p search) where
+
+  search-sg-ext : SearchSgExt _ search
   search-sg-ext sg {f} {g} f≈°g = search-ind (λ s → s _ f ≈ s _ g) ∙-cong f≈°g
     where open Sgrp sg
 
-  search-ext : SearchExt search
-  search-ext op = search-ind (λ s → s _ _ ≡ s _ _) (≡.cong₂ op)
-
-  search-mono : SearchMono search
+  search-mono : SearchMono _ search
   search-mono _⊆_ _∙-mono_ {f} {g} f⊆°g = search-ind (λ s → s _ f ⊆ s _ g) _∙-mono_ f⊆°g
 
-  search-swap : SearchSwap search
+  search-swap : SearchSwap _ search
   search-swap sg f {sᴮ} pf = search-ind (λ s → s _ (sᴮ ∘ f) ≈ sᴮ (s _ ∘ flip f)) (λ p q → trans (∙-cong p q) (sym (pf _ _))) (λ _ → refl)
     where open Sgrp sg
 
-  searchMon : SearchMon A
+  searchMon : SearchMon _ m A
   searchMon m = search _∙_
     where open Mon m
+
+    {-
+  search-ext : SearchExt search
+  search-ext op = search-ind (λ s → s _ _ ≡ s _ _) (≡.cong₂ op)
 
   search-ε : Searchε searchMon
   search-ε m = search-ind (λ s → s _ (const ε) ≈ ε) (λ x≈ε y≈ε → trans (∙-cong x≈ε y≈ε) (proj₁ identity ε)) (λ _ → refl)
@@ -64,8 +70,11 @@ record Searchable A : ★₁ where
                                            (λ p q → ≡.trans (hom _ _) (≡.cong₂ _*_ p q))
                                            (λ _ → ≡.refl)
 
-  StableUnder : (A → A) → ★₁
-  StableUnder p = ∀ {B} (op : Op₂ B) f → search op f ≡ search op (f ∘ p)
+module Searchable₀
+    {A}
+    {search     : Search₀ A}
+    (search-ind : SearchInd₀ search) where
+  open Searchable' search-ind
 
   sum : Sum A
   sum = search _+_
@@ -110,4 +119,28 @@ record Searchable A : ★₁ where
   countStableUnder : ∀ {p} → SumStableUnder p → CountStableUnder p
   countStableUnder sumSU-p f = sumSU-p (Bool.toℕ ∘ f)
 
+module Searchable₁₀ {A} {search₁ : Search₁ A}
+                    (search-ind₀ : SearchInd ₀ search₁) where
+
+  dataFromFun : DataFromFun search₁
+  dataFromFun = search-ind₀ (λ s → Data s _) _,_
+
+module Searchable₁₁ {A} {search₁ : Search₁ A}
+                    (search-ind₁ : SearchInd ₁ search₁) where
+
+  pointToPair : PointToPair search₁
+  pointToPair = search-ind₁ PointToPair (λ P0 P1 → [ P0 , P1 ]) (λ η → _,_ η)
+
+record Searchable m p A : ★ (L.suc (m L.⊔ p)) where
+  constructor _,_
+  field
+    search     : Search m A
+    search-ind : SearchInd p search
+
+  open Searchable' search-ind
+
 open Searchable public
+-- -}
+-- -}
+-- -}
+-- -}

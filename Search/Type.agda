@@ -1,156 +1,177 @@
 module Search.Type where
 
-import Level as L
-open import Type
-open import Function
-open import Data.Nat
+open import Level using () renaming (zero to ₀)
+open import Type hiding (★)
+open import Function.NP
+open import Data.Nat.NP
 open import Data.Bits
-open import Algebra
-open import Algebra.FunctionProperties.NP
-open import Relation.Binary.NP
-{-
-open import Data.Nat.NP hiding (_^_)
-open import Data.Nat.Properties
-open import Data.Unit hiding (_≤_)
-open import Data.Sum
-open import Data.Maybe.NP
 open import Data.Product
-open import Data.Bool.NP as Bool
-open import Function.Equality using (_⟨$⟩_)
-import Function.Inverse as FI
-open FI using (_↔_; module Inverse)
-import Function.Related as FR
-open import Function.Related.TypeIsomorphisms.NP
+open import Data.Sum
+open import Algebra
+import Algebra.FunctionProperties.NP as FP
 open import Relation.Binary.NP
--}
 import Relation.Binary.PropositionalEquality as ≡
 open ≡ using (_≡_; _≗_)
 
-_≤°_ : ∀ {A : ★}(f g : A → ℕ) → ★
-f ≤° g = ∀ x → f x ≤ g x
-
-Semigroup₀ = Semigroup L.zero L.zero
-Monoid₀ = Monoid L.zero L.zero
-CommutativeMonoid₀ = CommutativeMonoid L.zero L.zero
-
-module SgrpExtra (sg : Semigroup₀) where
+module SgrpExtra {c ℓ} (sg : Semigroup c ℓ) where
   open Semigroup sg
   open Setoid-Reasoning (Semigroup.setoid sg) public
-  C : ★
+  C : ★ _
   C = Carrier
-  _≈°_ : ∀ {A : ★} (f g : A → C) → ★
+  _≈°_ : ∀ {a} {A : ★ a} (f g : A → C) → ★ _
   f ≈° g = ∀ x → f x ≈ g x
-  _∙°_   : ∀ {A : ★} (f g : A → C) → A → C
+  _∙°_   : ∀ {a} {A : ★ a} (f g : A → C) → A → C
   (f ∙° g) x = f x ∙ g x
   infixl 7 _-∙-_
   _-∙-_ : _∙_ Preserves₂ _≈_ ⟶ _≈_ ⟶ _≈_
   _-∙-_ = ∙-cong
 
-module Sgrp (sg : Semigroup₀) where
+module Sgrp {c ℓ} (sg : Semigroup c ℓ) where
   open Semigroup sg public
   open SgrpExtra sg public
 
-module Mon (m : Monoid₀) where
+module Mon {c ℓ} (m : Monoid c ℓ) where
   open Monoid m public
   sg = semigroup
   open SgrpExtra semigroup public
 
-module CMon (cm : CommutativeMonoid₀) where
+module CMon {c ℓ} (cm : CommutativeMonoid c ℓ) where
   open CommutativeMonoid cm public
   sg = semigroup
   m = monoid
   open SgrpExtra sg public
+  open FP _≈_
 
-  ∙-interchange : Interchange _≈_ _∙_ _∙_
+  ∙-interchange : Interchange _∙_ _∙_
   ∙-interchange = InterchangeFromAssocCommCong.∙-interchange
-                    _≈_ isEquivalence
+                    isEquivalence
                     _∙_ assoc comm (λ _ → flip ∙-cong refl)
 
-Search : ★ → ★₁
-Search A = ∀ {B} → (_∙_ : B → B → B) → (A → B) → B
--- Search A = ∀ {I : ★} {F : I → ★} → (_∙_ : ∀ {i} → F i → F i → F i) → ∀ {i} → (A → F i) → F i
+Search : ∀ ℓ → ★₀ → ★ _
+Search ℓ A = ∀ {M : ★ ℓ} → (_∙_ : M → M → M) → (A → M) → M
 
-SearchMon : ★ → ★₁
-SearchMon A = (m : Monoid₀) → let open Mon m in
-                              (A → C) → C
+Search₀ : ★₀ → ★₁
+Search₀ = Search _
 
-searchMonFromSearch : ∀ {A} → Search A → SearchMon A
+Search₁ : ★₀ → ★₂
+Search₁ = Search _
+
+SearchMon : ∀ ℓ r → ★₀ → ★ _
+SearchMon ℓ r A = (M : Monoid ℓ r) → let open Mon M in
+                                     (A → C) → C
+
+SearchMon₀ : ★₀ → ★ _
+SearchMon₀ = SearchMon ₀ ₀
+
+searchMonFromSearch : ∀ {ℓ r A}
+                      → Search ℓ A → SearchMon ℓ r A
 searchMonFromSearch s m = s _∙_ where open Mon m
 
-Sum : ★ → ★
+Sum : ★₀ → ★₀
 Sum A = (A → ℕ) → ℕ
 
-Count : ★ → ★
+Count : ★₀ → ★₀
 Count A = (A → Bit) → ℕ
 
-SearchInd : ∀ {A} → Search A → ★₁
-SearchInd {A} srch = ∀ (P  : Search A → ★)
-                       (P∙ : ∀ {s₀ s₁ : Search A} → P s₀ → P s₁ → P (λ _∙_ f → s₀ _∙_ f ∙ s₁ _∙_ f))
-                       (Pf : ∀ x → P (λ _ f → f x))
-                     →  P srch
+StableUnder : ∀ {ℓ A} → Search ℓ A → (A → A) → ★ _
+StableUnder search p = ∀ {M} op (f : _ → M) → search op f ≡ search op (f ∘ p)
+
+SearchInd : ∀ p {ℓ A} → Search ℓ A → ★ _
+SearchInd p {ℓ} {A} srch =
+  ∀ (P  : Search ℓ A → ★ p)
+    (P∙ : ∀ {s₀ s₁ : Search ℓ A} → P s₀ → P s₁ → P (λ _∙_ f → s₀ _∙_ f ∙ s₁ _∙_ f))
+    (Pf : ∀ x → P (λ _ f → f x))
+  → P srch
+
+SearchInd₀ : ∀ {ℓ A} → Search ℓ A → ★ _
+SearchInd₀ = SearchInd ₀
 
 SumInd : ∀ {A} → Sum A → ★₁
-SumInd {A} sum = ∀ (P  : Sum A → ★)
+SumInd {A} sum = ∀ (P  : Sum A → ★₀)
                    (P+ : ∀ {s₀ s₁ : Sum A} → P s₀ → P s₁ → P (λ f → s₀ f + s₁ f))
                    (Pf : ∀ x → P (λ f → f x))
                 →  P sum
 
-SearchMono : ∀ {A} → Search A → ★₁
-SearchMono sᴬ = ∀ {C} (_⊆_ : C → C → ★) →
-                ∀ {_∙_} (∙-mono : _∙_ Preserves₂ _⊆_ ⟶ _⊆_ ⟶ _⊆_)
-                  {f g} →
-                  (∀ x → f x ⊆ g x) → sᴬ _∙_ f ⊆ sᴬ _∙_ g
+SearchMono : ∀ r {ℓ A} → Search ℓ A → ★ _
+SearchMono r sᴬ = ∀ {C} (_⊆_ : C → C → ★ r)
+                    {_∙_} (∙-mono : _∙_ Preserves₂ _⊆_ ⟶ _⊆_ ⟶ _⊆_)
+                    {f g} →
+                    (∀ x → f x ⊆ g x) → sᴬ _∙_ f ⊆ sᴬ _∙_ g
 
-SearchSgExt : ∀ {A} → Search A → ★₁
-SearchSgExt sᴬ = ∀ sg {f g} → let open Sgrp sg in
-                              f ≈° g → sᴬ _∙_ f ≈ sᴬ _∙_ g
+SearchSgExt : ∀ r {ℓ A} → Search ℓ A → ★ _
+SearchSgExt r {ℓ} sᴬ = ∀ (sg : Semigroup ℓ r) {f g}
+                       → let open Sgrp sg in
+                         f ≈° g → sᴬ _∙_ f ≈ sᴬ _∙_ g
 
-SearchExt : ∀ {A} → Search A → ★₁
-SearchExt {A} sᴬ = ∀ {B} op {f g : A → B} → f ≗ g → sᴬ op f ≡ sᴬ op g
+SearchExt : ∀ {ℓ A} → Search ℓ A → ★ _
+SearchExt {ℓ} {A} sᴬ = ∀ {M} op {f g : A → M} → f ≗ g → sᴬ op f ≡ sᴬ op g
 
-SumExt : ∀ {A} → Sum A → ★
+SumExt : ∀ {A} → Sum A → ★ _
 SumExt sumᴬ = ∀ {f g} → f ≗ g → sumᴬ f ≡ sumᴬ g
 
-CountExt : ∀ {A} → Count A → ★
+CountExt : ∀ {A} → Count A → ★ _
 CountExt countᴬ = ∀ {f g} → f ≗ g → countᴬ f ≡ countᴬ g
 
-Searchε : ∀ {A} → SearchMon A → ★₁
+Searchε : ∀ {ℓ r A} → SearchMon ℓ r A → ★ _
 Searchε sᴬ = ∀ m → let open Mon m in
                    sᴬ m (const ε) ≈ ε
 
-SumZero : ∀ {A} → Sum A → ★
+SumZero : ∀ {A} → Sum A → ★ _
 SumZero sumᴬ = sumᴬ (λ _ → 0) ≡ 0
 
-SearchLinˡ : ∀ {A} → SearchMon A → ★₁
-SearchLinˡ sᴬ = ∀ m _◎_ f k → let open Mon m in
-                 _DistributesOverˡ_ _≈_ _◎_ _∙_ →
+SearchLinˡ : ∀ {ℓ r A} → SearchMon ℓ r A → ★ _
+SearchLinˡ sᴬ = ∀ m _◎_ f k →
+                 let open Mon m
+                     open FP _≈_ in
+                 _◎_ DistributesOverˡ _∙_ →
                  sᴬ m (λ x → k ◎ f x) ≈ k ◎ sᴬ m f
 
-SearchLinʳ : ∀ {A} → SearchMon A → ★₁
-SearchLinʳ sᴬ = ∀ m _◎_ f k → let open Mon m in
-                 _DistributesOverʳ_ _≈_ _◎_ _∙_ →
+SearchLinʳ : ∀ {ℓ r A} → SearchMon ℓ r A → ★ _
+SearchLinʳ sᴬ = ∀ m _◎_ f k →
+                 let open Mon m
+                     open FP _≈_ in
+                 _◎_ DistributesOverʳ _∙_ →
                  sᴬ m (λ x → f x ◎ k) ≈ sᴬ m f ◎ k
 
-SumLin : ∀ {A} → Sum A → ★
+SumLin : ∀ {A} → Sum A → ★ _
 SumLin sumᴬ = ∀ f k → sumᴬ (λ x → k * f x) ≡ k * sumᴬ f
 
-SearchHom : ∀ {A} → Search A → ★₁
-SearchHom sᴬ = ∀ sg f g → let open Sgrp sg in
-                          sᴬ _∙_ (f ∙° g) ≈ sᴬ _∙_ f ∙ sᴬ _∙_ g
+SearchHom : ∀ r {ℓ A} → Search ℓ A → ★ _
+SearchHom r sᴬ = ∀ sg f g → let open Sgrp {_} {r} sg in
+                            sᴬ _∙_ (f ∙° g) ≈ sᴬ _∙_ f ∙ sᴬ _∙_ g
 
-SearchMonHom : ∀ {A} → SearchMon A → ★₁
-SearchMonHom sᴬ = ∀ (cm : CommutativeMonoid₀) f g →
-                         let open CMon cm in
-                         sᴬ m (f ∙° g) ≈ sᴬ m f ∙ sᴬ m g
+SearchMonHom : ∀ {ℓ r A} → SearchMon ℓ r A → ★ _
+SearchMonHom sᴬ = ∀ cm f g →
+                    let open CMon cm in
+                    sᴬ m (f ∙° g) ≈ sᴬ m f ∙ sᴬ m g
 
-SumHom : ∀ {A} → Sum A → ★
+SumHom : ∀ {A} → Sum A → ★ _
 SumHom sumᴬ = ∀ f g → sumᴬ (λ x → f x + g x) ≡ sumᴬ f + sumᴬ g
 
-SumMono : ∀ {A} → Sum A → ★
+SumMono : ∀ {A} → Sum A → ★ _
 SumMono sumᴬ = ∀ {f g} → f ≤° g → sumᴬ f ≤ sumᴬ g
 
-SearchSwap : ∀ {A} → Search A → ★₁
-SearchSwap {A} sᴬ = ∀ {B} sg f →
-                    let open Sgrp sg in ∀ {sᴮ : (B → C) → C}
-                  → (hom : ∀ f g → sᴮ (f ∙° g) ≈ sᴮ f ∙ sᴮ g)
-                  → sᴬ _∙_ (sᴮ ∘ f) ≈ sᴮ (sᴬ _∙_ ∘ flip f)
+SearchSwap : ∀ r {ℓ A} → Search ℓ A → ★ _
+SearchSwap r {ℓ} {A} sᴬ = ∀ {B : ★₀} sg f →
+                            let open Sgrp {_} {r} sg in
+                          ∀ {sᴮ : (B → C) → C}
+                          → (hom : ∀ f g → sᴮ (f ∙° g) ≈ sᴮ f ∙ sᴮ g)
+                          → sᴬ _∙_ (sᴮ ∘ f) ≈ sᴮ (sᴬ _∙_ ∘ flip f)
+
+Data : ∀ {b A} → Search _ A → (A → ★ b) → ★ b
+Data sA = sA _×_
+
+DataToFun : ∀ {b A} → Search _ A → ★ _
+DataToFun {b} {A} sA = ∀ {B : A → ★ b} → Data sA B → Π A B
+
+DataFromFun : ∀ {b A} → Search _ A → ★ _
+DataFromFun {b} {A} sA = ∀ {B : A → ★ b} → Π A B → Data sA B
+
+Point : ∀ {b A} → Search _ A → (A → ★ b) → ★ b
+Point sA = sA _⊎_
+
+PointToPair : ∀ {b A} → Search _ A → ★ _
+PointToPair {b} {A} sA = ∀ {B : A → ★ b} → Point sA B → Σ A B
+
+PointFromPair : ∀ {b A} → Search _ A → ★ _
+PointFromPair {b} {A} sA = ∀ {B : A → ★ b} → Σ A B → Point sA B

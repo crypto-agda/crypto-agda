@@ -10,15 +10,6 @@ open import Search.Searchable.Product
 open import Search.Searchable
 open import sum
 
-Data : ∀ {A} → Search A → (A → ★) → ★
-Data sA B = sA _×_ B
-
-ToFun : ∀ {A} (sA : Search A) → ★
-ToFun {A} sA = ∀ {B} → Data sA B → Π A B
-
-FromFun : ∀ {A} (sA : Search A) → ★
-FromFun {A} sA = ∀ {B} → Π A B → Data sA B
-
 fromFun-searchInd : ∀ {A} {sA : Search A} → SearchInd sA → FromFun sA
 fromFun-searchInd indA = indA (λ s → Data s _) _,_
 
@@ -92,15 +83,6 @@ toFun-⊎ sA sB toFunA toFunB (x , y) = [ toFunA x , toFunB y ]
 
 fromFun-⊎ : ∀ {A B} (sA : Search A) (sB : Search B) → FromFun sA → FromFun sB → FromFun (sA +Search sB)
 fromFun-⊎ sA sB fromFunA fromFunB f = fromFunA (f ∘ inj₁) , fromFunB (f ∘ inj₂)
-
-Point : ∀ {A} → Search A → (A → ★) → ★
-Point sA B = sA _⊎_ B
-
-ToPair : ∀ {A} (sA : Search A) → ★
-ToPair {A} sA = ∀ {B} → Point sA B → Σ A B
-
-FromPair : ∀ {A} (sA : Search A) → ★
-FromPair {A} sA = ∀ {B} → Σ A B → Point sA B
 
 toPair-searchInd : ∀ {A} {sA : Search A} → SearchInd sA → ToPair sA
 toPair-searchInd indA = indA ToPair (λ P0 P1 → [ P0 , P1 ]) (λ η → _,_ η)
