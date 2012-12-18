@@ -274,42 +274,46 @@ module _ {A : Set}(μA : SumProp A) where
   μFun = sFun _ , Ind _
 
 
-bigDistr : ∀ I J F → search (μFinSuc I) _*_ (search (μFinSuc J) _+_ ∘ F)
-                   ≡.≡ search (μFun (μFinSuc J)) _+_ (λ f → search (μFinSuc I) _*_ (λ i → F i (f i)))
-bigDistr zero    _ _ = ≡.refl
-bigDistr (suc I) J F
-  = Π' (suc I) (Σ' J ∘ F)
-  ≡⟨ ≡.refl ⟩
-    (Σ' J ∘ F) zero * Π' I (Σ' J ∘ Fj)
-  ≡⟨ ≡.cong (_*_ ((Σ' J ∘ F) zero)) (bigDistr I J Fj) ⟩
-    (Σ' J ∘ F) zero * ΣF I J (λ f → Π' I (λ i → F (suc i) (f i)))
-  ≡⟨ ≡.sym
-       (search-linˡ (μF I J) ℕ+.monoid _*_
-        (λ f → Π' I (λ i → F (suc i) (f i))) (Σ' J (F zero)) (proj₁ (ℕ°.distrib)))⟩
-    ΣF I J (λ f → (Σ' J ∘ F) zero * Π' I (λ i → F (suc i) (f i)))
-  ≡⟨ search-ext (μF I J) _+_
-    {λ f → (Σ' J ∘ F) zero * Π' I (λ i → F (suc i) (f i))}
-    {λ f → Σ' J (λ j → F zero j * (Π' I λ i → F  (suc i) (f i)))}
-    (λ f → ≡.sym (search-linʳ (μ J) ℕ+.monoid _*_ (F zero) (Π' I (λ i → F (suc i) (f i))) (proj₂ ℕ°.distrib))) ⟩
-    ΣF I J (λ f → Σ' J (λ j → F zero j * (Π' I λ i → F  (suc i) (f i))))
-  ≡⟨ search-ext (μF I J) _+_
-     {(λ f → Σ' J (λ j → F zero j * (Π' I λ i → F  (suc i) (f i))))}
-     {(λ f → Σ' J (λ j → Π' (suc I) (λ i → F i (extend (μFinSuc J) j f i))))}
-     (λ f → ≡.refl) ⟩
-    ΣF I J (λ f → Σ' J (λ j → Π' (suc I) (λ i → F i (extend (μFinSuc J) j f i))))
-  ≡⟨ search-swap (μF I J) ℕ+.semigroup (λ f j → Π' (suc I) (λ i → F i (extend (μ J) j f i))) {sᴮ = sum (μ J)} (sum-hom (μ J)) ⟩
-    Σ' J (λ j → ΣF I J (λ f → Π' (suc I) (λ i → F i (extend (μFinSuc J) j f i))))
-  ≡⟨ ≡.refl ⟩
-    ΣF (suc I) J (λ f → Π' (suc I) (λ i → F i (f i)))
-  ∎
-  where
-    open ≡.≡-Reasoning
-    μ = μFinSuc
-    μF = λ i j → μFun (μ j) {suc i}
-    Π' = λ i → search (μ i) _*_
-    Σ' = λ i → search (μ i) _+_
-    ΣF = λ i j → search (μF i j) _+_
-    Fj = λ i j → F (suc i) j
+module _ {A}(μA : SumProp A)
+  (cmonoid : CommutativeMonoid L.zero L.zero)
+  (_◎_      : let open CMon cmonoid in Carrier  → Carrier → Carrier)
+  (distrib  : let open CMon cmonoid in _DistributesOver_ _≈_ _◎_ _∙_)
+  (_◎-cong_ : let open CMon cmonoid in _◎_ Preserves₂ _≈_ ⟶ _≈_ ⟶ _≈_) where
+
+  open CMon cmonoid
+  sᴬ = search μA _∙_
+
+  bigDistr : ∀ I F → search (μFinSuc I) _◎_ (sᴬ ∘ F)
+                   ≈ search (μFun μA) _∙_ (λ f → search (μFinSuc I) _◎_ (λ i → F i (f i)))
+  bigDistr zero    _ = refl
+  bigDistr (suc I) F
+    = Π' (suc I) (sᴬ ∘ F)
+    ≈⟨ refl ⟩
+      sᴬ (F zero) ◎ Π' I (sᴬ ∘ Fj)
+    ≈⟨ refl ◎-cong bigDistr I Fj ⟩
+      (sᴬ ∘ F) zero ◎ ΣF I (λ f → Π' I (λ i → F (suc i) (f i)))
+    ≈⟨ sym
+      (search-linˡ (μF I) monoid _◎_
+             (λ f → Π' I (λ i → F (suc i) (f i))) (sᴬ (F zero)) (proj₁ distrib)) ⟩
+      ΣF I (λ f → (sᴬ ∘ F) zero ◎ Π' I (λ i → F (suc i) (f i)))
+    ≈⟨ search-sg-ext (μF I) (Monoid.semigroup monoid)
+      (λ f → sym (search-linʳ μA  monoid _◎_ (F zero) (Π' I (λ i → F (suc i) (f i))) (proj₂ distrib))) ⟩
+      ΣF I (λ f → sᴬ (λ j → F zero j ◎ (Π' I λ i → F  (suc i) (f i))))
+    ≈⟨ search-sg-ext (μF I) (Monoid.semigroup monoid)
+      {(λ f → sᴬ (λ j → F zero j ◎ (Π' I λ i → F  (suc i) (f i))))}
+      {(λ f → sᴬ (λ j → Π' (suc I) (λ i → F i (extend μA j f i))))}
+      (λ f → refl) ⟩
+      ΣF I (λ f → sᴬ (λ j → Π' (suc I) (λ i → F i (extend μA j f i))))
+    ≈⟨ search-swap (μF I) (Monoid.semigroup monoid) (λ f j → Π' (suc I) (λ i → F i (extend μA j f i))) {sᴮ = sᴬ} (search-hom μA cmonoid) ⟩
+      sᴬ (λ j → ΣF I (λ f → Π' (suc I) (λ i → F i (extend μA j f i))))
+    ≈⟨ refl ⟩
+      ΣF (suc I) (λ f → Π' (suc I) (λ i → F i (f i)))
+    ∎
+    where
+      μF = λ i → μFun μA {suc i}
+      Π' = λ i → search (μFinSuc i) _◎_
+      ΣF = λ i → search (μF i) _∙_
+      Fj = λ i j → F (suc i) j
 
 {-
   -- If we want to force non-empty domain
