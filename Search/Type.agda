@@ -121,6 +121,16 @@ Searchε sᴬ = ∀ m → let open Mon m in
 SumZero : ∀ {A} → Sum A → ★
 SumZero sumᴬ = sumᴬ (λ _ → 0) ≡ 0
 
+SearchLinˡ : ∀ {A} → SearchMon A → ★₁
+SearchLinˡ sᴬ = ∀ m _◎_ f k → let open Mon m in
+                 _DistributesOverˡ_ _≈_ _◎_ _∙_ →
+                 sᴬ m (λ x → k ◎ f x) ≈ k ◎ sᴬ m f
+
+SearchLinʳ : ∀ {A} → SearchMon A → ★₁
+SearchLinʳ sᴬ = ∀ m _◎_ f k → let open Mon m in
+                 _DistributesOverʳ_ _≈_ _◎_ _∙_ →
+                 sᴬ m (λ x → f x ◎ k) ≈ sᴬ m f ◎ k
+
 SumLin : ∀ {A} → Sum A → ★
 SumLin sumᴬ = ∀ f k → sumᴬ (λ x → k * f x) ≡ k * sumᴬ f
 

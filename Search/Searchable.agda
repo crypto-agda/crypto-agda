@@ -44,6 +44,14 @@ record Searchable A : ★₁ where
                                  (λ p₀ p₁ → trans (∙-cong p₀ p₁) (∙-interchange _ _ _ _)) (λ _ → refl)
     where open CMon cm
 
+  search-linˡ : SearchLinˡ searchMon
+  search-linˡ m _◎_ f k dist = search-ind (λ s → s _∙_ (λ x → k ◎ f x) ≈ k ◎ s _∙_ f) (λ x x₁ → trans (∙-cong x x₁) (sym (dist k _ _))) (λ x → refl)
+    where open Mon m
+
+  search-linʳ : SearchLinʳ searchMon
+  search-linʳ m _◎_ f k dist = search-ind (λ s → s _∙_ (λ x → f x ◎ k) ≈ s _∙_ f ◎ k) (λ x x₁ → trans (∙-cong x x₁) (sym (dist k _ _))) (λ x → refl)
+    where open Mon m
+
   search-hom′ :
       ∀ {S T}
         (_+_ : Op₂ S)

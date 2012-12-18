@@ -18,7 +18,7 @@ open FI using (_↔_; module Inverse)
 import Function.Related as FR
 open import Function.Related.TypeIsomorphisms.NP
 open import Relation.Binary.NP
-import Relation.Binary.PropositionalEquality as ≡
+import Relation.Binary.PropositionalEquality.NP as ≡
 open ≡ using (_≡_; _≗_)
 open import Search.Type
 open import Search.Searchable renaming (Searchable to SumProp)
@@ -271,6 +271,44 @@ module _ {A : Set}(μA : SumProp A) where
 
   μFun : ∀ {n} → SumProp (Fin n → A)
   μFun = sFun _ , Ind _
+
+
+bigDistr : ∀ I J F → search (μFinSuc I) _*_ (search (μFinSuc J) _+_ ∘ F)
+                   ≡.≡ search (μFun (μFinSuc J)) _+_ (λ f → search (μFinSuc I) _*_ (λ i → F i (f i)))
+bigDistr zero    _ _ = ≡.refl
+bigDistr (suc I) J F
+  = Π' (suc I) (Σ' J ∘ F)
+  ≡⟨ ≡.refl ⟩
+    (Σ' J ∘ F) zero * Π' I (Σ' J ∘ Fj)
+  ≡⟨ ≡.cong (_*_ ((Σ' J ∘ F) zero)) (bigDistr I J Fj) ⟩
+    (Σ' J ∘ F) zero * ΣF I J (λ f → Π' I (λ i → F (suc i) (f i)))
+  ≡⟨ ≡.sym
+       (search-linˡ (μF I J) ℕ+.monoid _*_
+        (λ f → Π' I (λ i → F (suc i) (f i))) (Σ' J (F zero)) (proj₁ (ℕ°.distrib)))⟩
+    ΣF I J (λ f → (Σ' J ∘ F) zero * Π' I (λ i → F (suc i) (f i)))
+  ≡⟨ search-ext (μF I J) _+_
+    {λ f → (Σ' J ∘ F) zero * Π' I (λ i → F (suc i) (f i))}
+    {λ f → Σ' J (λ j → F zero j * (Π' I λ i → F  (suc i) (f i)))}
+    (λ f → ≡.sym (search-linʳ (μ J) ℕ+.monoid _*_ (F zero) (Π' I (λ i → F (suc i) (f i))) (proj₂ ℕ°.distrib))) ⟩
+    ΣF I J (λ f → Σ' J (λ j → F zero j * (Π' I λ i → F  (suc i) (f i))))
+  ≡⟨ search-ext (μF I J) _+_
+     {(λ f → Σ' J (λ j → F zero j * (Π' I λ i → F  (suc i) (f i))))}
+     {(λ f → Σ' J (λ j → Π' (suc I) (λ i → F i (extend (μFinSuc J) j f i))))}
+     (λ f → ≡.refl) ⟩
+    ΣF I J (λ f → Σ' J (λ j → Π' (suc I) (λ i → F i (extend (μFinSuc J) j f i))))
+  ≡⟨ search-swap (μF I J) ℕ+.semigroup (λ f j → Π' (suc I) (λ i → F i (extend (μ J) j f i))) {sᴮ = sum (μ J)} (sum-hom (μ J)) ⟩
+    Σ' J (λ j → ΣF I J (λ f → Π' (suc I) (λ i → F i (extend (μFinSuc J) j f i))))
+  ≡⟨ ≡.refl ⟩
+    ΣF (suc I) J (λ f → Π' (suc I) (λ i → F i (f i)))
+  ∎
+  where
+    open ≡.≡-Reasoning
+    μ = μFinSuc
+    μF = λ i j → μFun (μ j) {suc i}
+    Π' = λ i → search (μ i) _*_
+    Σ' = λ i → search (μ i) _+_
+    ΣF = λ i j → search (μF i j) _+_
+    Fj = λ i j → F (suc i) j
 
 {-
   -- If we want to force non-empty domain
