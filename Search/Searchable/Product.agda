@@ -29,7 +29,7 @@ private
 ΣSearchInd Psᴬ Psᴮ P P∙ Pf =
   Psᴬ (λ s → P (λ _ _ → s _ _)) P∙ (λ x → Psᴮ {x} (λ s → P (λ _ _ → s _ _)) P∙ (curry Pf x))
 
-μΣ : ∀ {m p A} {B : A → ★ _} → Searchable m p A → (∀ {x} → Searchable m p (B x)) → Searchable m p (Σ A B)
+μΣ : ∀ {A} {B : A → ★ _} → Searchable A → (∀ {x} → Searchable (B x)) → Searchable (Σ A B)
 μΣ μA μB = _ , ΣSearchInd (search-ind μA) (search-ind μB)
 
 -- From now on, these are derived definitions for convenience and pedagogical reasons
@@ -44,8 +44,13 @@ searchᴬ ×Search searchᴮ = ΣSearch searchᴬ searchᴮ
 
 infixr 4 _×μ_
 
-_×μ_ : ∀ {m p A B} → Searchable m p A → Searchable m p B → Searchable m p (A × B)
+_×μ_ : ∀ {A B} → Searchable A → Searchable B → Searchable (A × B)
 μA ×μ μB = μΣ μA μB
+
+_×SearchInd_ : ∀ {m p A B} {sᴬ : Search m A} {sᴮ : Search m B}
+               → SearchInd p sᴬ → SearchInd p sᴮ
+               → SearchInd p (sᴬ ×Search sᴮ)
+Psᴬ ×SearchInd Psᴮ = ΣSearchInd Psᴬ Psᴮ
 
 infixr 4 _×Sum_
 

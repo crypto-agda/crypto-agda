@@ -136,8 +136,8 @@ module Searchable₀
     {A}
     {search     : Search₀ A}
     (search-ind : SearchInd₀ search) where
-  open Searchableₘₚ search-ind
-  open Searchableₘ search-ind
+  open Searchableₘₚ search-ind public
+  open Searchableₘ  search-ind public
 
   sum : Sum A
   sum = search _+_
@@ -200,12 +200,12 @@ module Searchable₁₁ {A} {search₁ : Search₁ A}
   pointToPair : PointToPair search₁
   pointToPair = search-ind₁ PointToPair (λ P0 P1 → [ P0 , P1 ]) (λ η → _,_ η)
 
-record Searchable m p A : ★ (L.suc (m L.⊔ p)) where
+record Searchable A : ★₁ where
   constructor _,_
   field
-    search     : Search m A
-    search-ind : SearchInd p search
+    search     : Search₀ A
+    search-ind : SearchInd₀ search
 
-  open Searchableₘₚ search-ind
+  open Searchable₀ search-ind public
 
 open Searchable public

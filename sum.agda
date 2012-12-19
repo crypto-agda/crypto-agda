@@ -1,7 +1,7 @@
 import Level as L
 open L using (Lift)
 open import Type hiding (★)
-open import Function
+open import Function.NP
 open import Algebra
 open import Algebra.FunctionProperties.NP
 open import Data.Nat.NP hiding (_^_)
@@ -23,74 +23,51 @@ open ≡ using (_≡_; _≗_)
 open import Search.Type
 open import Search.Searchable renaming (Searchable to SumProp)
 open import Search.Searchable.Product
+open import Search.Derived
+--open Searchable₀
 
 module sum where
-
-sum-lin⇒sum-zero : ∀ {A} → {sum : Sum A} → SumLin sum → SumZero sum
-sum-lin⇒sum-zero sum-lin = sum-lin (λ _ → 0) 0
-
-sum-mono⇒sum-ext : ∀ {A} → {sum : Sum A} → SumMono sum → SumExt sum
-sum-mono⇒sum-ext sum-mono f≗g = ℕ≤.antisym (sum-mono (ℕ≤.reflexive ∘ f≗g)) (sum-mono (ℕ≤.reflexive ∘ ≡.sym ∘ f≗g))
-
-sum-ext+sum-hom⇒sum-mono : ∀ {A} → {sum : Sum A} → SumExt sum → SumHom sum → SumMono sum
-sum-ext+sum-hom⇒sum-mono {sum = sum} sum-ext sum-hom {f} {g} f≤°g =
-    sum f                         ≤⟨ m≤m+n _ _ ⟩
-    sum f + sum (λ x → g x ∸ f x) ≡⟨ ≡.sym (sum-hom _ _) ⟩
-    sum (λ x → f x + (g x ∸ f x)) ≡⟨ sum-ext (m+n∸m≡n ∘ f≤°g) ⟩
-    sum g ∎ where open ≤-Reasoning
-
-search-swap' : ∀ {A B} cm (μA : SumProp A) (μB : SumProp B) f →
-               let open CMon cm
-                   sᴬ = search μA _∙_
-                   sᴮ = search μB _∙_ in
-               sᴬ (sᴮ ∘ f) ≈ sᴮ (sᴬ ∘ flip f)
-search-swap' cm μA μB f = search-swap μA sg f (search-hom μB cm)
-  where open CMon cm
-
-sum-swap : ∀ {A B} (μA : SumProp A) (μB : SumProp B) f →
-           sum μA (sum μB ∘ f) ≡ sum μB (sum μA ∘ flip f)
-sum-swap = search-swap' ℕ°.+-commutativeMonoid
 
 _≈Sum_ : ∀ {A} → (sum₀ sum₁ : Sum A) → ★ _
 sum₀ ≈Sum sum₁ = ∀ f → sum₀ f ≡ sum₁ f
 
-_≈Search_ : ∀ {A} → (s₀ s₁ : Search A) → ★₁
+_≈Search_ : ∀ {A} → (s₀ s₁ : Search _ A) → ★₁
 s₀ ≈Search s₁ = ∀ {B} (op : Op₂ B) f → s₀ op f ≡ s₁ op f
 
 μLift⊤ : SumProp (Lift ⊤)
 μLift⊤ = _ , ind
   where
-    srch : Search (Lift ⊤)
+    srch : Search _ (Lift ⊤)
     srch _ f = f _
 
-    ind : SearchInd srch
+    ind : SearchInd _ srch
     ind _ _ Pf = Pf _
 
 μ⊤ : SumProp ⊤
 μ⊤ = srch , ind
   where
-    srch : Search ⊤
+    srch : Search _ ⊤
     srch _ f = f _
 
-    ind : SearchInd srch
+    ind : SearchInd _ srch
     ind _ _ Pf = Pf _
 
 μBit : SumProp Bit
 μBit = searchBit , ind
   where
-    searchBit : Search Bit
+    searchBit : Search _ Bit
     searchBit _∙_ f = f 0b ∙ f 1b
 
-    ind : SearchInd searchBit
+    ind : SearchInd _ searchBit
     ind _ _P∙_ Pf = Pf 0b P∙ Pf 1b
 
 infixr 4 _+Search_
 
-_+Search_ : ∀ {A B} → Search A → Search B → Search (A ⊎ B)
+_+Search_ : ∀ {m A B} → Search m A → Search m B → Search m (A ⊎ B)
 (searchᴬ +Search searchᴮ) _∙_ f = searchᴬ _∙_ (f ∘ inj₁) ∙ searchᴮ _∙_ (f ∘ inj₂)
 
-_+SearchInd_ : ∀ {A B} {sᴬ : Search A} {sᴮ : Search B} →
-                 SearchInd sᴬ → SearchInd sᴮ → SearchInd (sᴬ +Search sᴮ)
+_+SearchInd_ : ∀ {m p A B} {sᴬ : Search m A} {sᴮ : Search m B} →
+                 SearchInd p sᴬ → SearchInd p sᴮ → SearchInd p (sᴬ +Search sᴮ)
 (Psᴬ +SearchInd Psᴮ) P P∙ Pf
   = P∙ (Psᴬ (λ s → P (λ _ f → s _ (f ∘ inj₁))) P∙ (Pf ∘ inj₁))
        (Psᴮ (λ s → P (λ _ f → s _ (f ∘ inj₂))) P∙ (Pf ∘ inj₂))
@@ -109,6 +86,57 @@ A ⊎' B = Σ Bool (cond A B)
 
 _μ⊎'_ : ∀ {A B} → SumProp A → SumProp B → SumProp (A ⊎' B)
 μA μ⊎' μB = μΣ μBit (λ { {true} → μA ; {false} → μB })
+
+SΠΣ⁻ : ∀ {m A} {B : A → ★ _} {C : Σ A B → ★ _}
+       → Search m ((x : A) (y : B x) → C (x , y))
+       → Search m (Π (Σ A B) C)
+SΠΣ⁻ s _∙_ f = s _∙_ (f ∘ uncurry)
+
+SΠΣ⁻-ind : ∀ {m p A} {B : A → ★ _} {C : Σ A B → ★ _}
+           → {s : Search m ((x : A) (y : B x) → C (x , y))}
+           → SearchInd p s
+           → SearchInd p (SΠΣ⁻ s)
+SΠΣ⁻-ind ind P P∙ Pf = ind (P ∘ SΠΣ⁻) P∙ (Pf ∘ uncurry)
+
+S×⁻ : ∀ {m A B C} → Search m (A → B → C) → Search m (A × B → C)
+S×⁻ = SΠΣ⁻
+
+S×⁻-ind : ∀ {m p A B C}
+          → {s : Search m (A → B → C)}
+          → SearchInd p s
+          → SearchInd p (S×⁻ s)
+S×⁻-ind = SΠΣ⁻-ind
+
+SΠ⊎⁻ : ∀ {m A B} {C : A ⊎ B → ★ _}
+    -- → Search m (Π A (C ∘ inj₁)) → Search m (Π B (C ∘ inj₂))
+       → Search m (Π A (C ∘ inj₁) × Π B (C ∘ inj₂))
+       → Search m (Π (A ⊎ B) C)
+SΠ⊎⁻ s _∙_ f = s _∙_ (f ∘ uncurry [_,_])
+
+SΠ⊎⁻-ind : ∀ {m p A B} {C : A ⊎ B → ★ _}
+             {- {sA : Search m (Π A (C ∘ inj₁))}
+             (iA : SearchInd p sA)
+             {sB : Search m (Π B (C ∘ inj₂))}
+             (iB : SearchInd p sB) -}
+             {s : Search m (Π A (C ∘ inj₁) × Π B (C ∘ inj₂))}
+             (i : SearchInd p s)
+           → SearchInd p (SΠ⊎⁻ {C = C} s) -- A sB)
+SΠ⊎⁻-ind i P P∙ Pf = i (P ∘ SΠ⊎⁻) P∙ (Pf ∘ uncurry [_,_])
+
+{- For each A→C function
+   and each B→C function
+   an A⊎B→C function is yield
+ -}
+S⊎⁻ : ∀ {m A B C} → Search m (A → C) → Search m (B → C)
+                  → Search m (A ⊎ B → C)
+S⊎⁻ sA sB =  SΠ⊎⁻ (sA ×Search sB)
+
+S⊤ : ∀ {m A} → Search m A → Search m (⊤ → A)
+S⊤ sA _∙_ f = sA _∙_ (f ∘ const)
+
+SΠBit : ∀ {m A} → Search m (A 0b) → Search m (A 1b)
+                → Search m (Π Bit A)
+SΠBit sA₀ sA₁ _∙_ f = sA₀ _∙_ λ x → sA₁ _∙_ λ y → f (Cond _ y x)
 
 sum-const : ∀ {A} (μA : SumProp A) → ∀ k → sum μA (const k) ≡ Card μA * k
 sum-const μA k
@@ -154,10 +182,10 @@ _×Sum-proj₂'_ : ∀ {A B}
 μ-view : ∀ {A B} → (A → B) → SumProp A → SumProp B
 μ-view {A}{B} A→B μA = searchᴮ , ind
   where
-    searchᴮ : Search B
+    searchᴮ : Search _ B
     searchᴮ m f = search μA m (f ∘ A→B)
 
-    ind : SearchInd searchᴮ
+    ind : SearchInd _ searchᴮ
     ind P P∙ Pf = search-ind μA (λ s → P (λ _ f → s _ (f ∘ A→B))) P∙ (Pf ∘ A→B)
 
 μ-iso : ∀ {A B} → (A ↔ B) → SumProp A → SumProp B
@@ -188,7 +216,7 @@ vsgsum sg = vfoldr₁ _∙_
 -- searchMonFin : ∀ n → SearchMon (Fin n)
 -- searchMonFin n m f = vmsum m (tabulate f)
 
-searchFinSuc : ∀ n → Search (Fin (suc n))
+searchFinSuc : ∀ n → Search _ (Fin (suc n))
 searchFinSuc n _∙_ f = vfoldr₁ _∙_ (tabulate f)
 
 μMaybe : ∀ {A} → SumProp A → SumProp (Maybe A)
@@ -200,7 +228,7 @@ searchFinSuc n _∙_ f = vfoldr₁ _∙_ (tabulate f)
 
 μFinSuc : ∀ n → SumProp (Fin (suc n))
 μFinSuc n = searchFinSuc n , ind n
-  where ind : ∀ n → SearchInd (searchFinSuc n)
+  where ind : ∀ n → SearchInd _ (searchFinSuc n)
         ind zero    P P∙ Pf = Pf zero
         ind (suc n) P P∙ Pf = P∙ (Pf zero) (ind n (λ s → P (λ op f → s op (f ∘ suc))) P∙ (Pf ∘ suc))
 
@@ -214,7 +242,7 @@ searchFinSuc n _∙_ f = vfoldr₁ _∙_ (tabulate f)
 μVec : ∀ {A} (μA : SumProp A) n  → SumProp (Vec A n)
 μVec μA n = μ-iso (^↔Vec n) (μ^ μA n)
 
-searchVec : ∀ {A} n → Search A → Search (Vec A n)
+searchVec : ∀ {m A} n → Search m A → Search m (Vec A n)
 searchVec zero    searchᴬ op f = f []
 searchVec (suc n) searchᴬ op f = searchᴬ op (λ x → searchVec n searchᴬ op (f ∘ _∷_ x))
 
@@ -258,21 +286,20 @@ module _ {A : Set}(μA : SumProp A) where
 
   -- There is one function Fin 0 → A (called abs) so this should be fine
   -- if not there is a version below that forces the domain to be non-empty
-  sFun : ∀ n → Search (Fin n → A)
+  sFun : ∀ n → Search _ (Fin n → A)
   sFun zero    op f = f abs
   sFun (suc n) op f = sA op (λ x → sFun n op (f ∘ extend x))
 
-  Ind : ∀ n → SearchInd (sFun n)
+  Ind : ∀ n → SearchInd _ (sFun n)
   Ind zero    P P∙ Pf = Pf abs
-  Ind (suc n) P P∙ Pf = 
-    search-ind μA (λ sa → P (λ op f → sa op (λ x → sFun n op (f ∘ extend x)))) 
-      P∙ 
-      (λ x → Ind n (λ sf → P (λ op f → sf op (f ∘ extend x))) 
+  Ind (suc n) P P∙ Pf =
+    search-ind μA (λ sa → P (λ op f → sa op (λ x → sFun n op (f ∘ extend x))))
+      P∙
+      (λ x → Ind n (λ sf → P (λ op f → sf op (f ∘ extend x)))
         P∙ (Pf ∘ extend x))
 
   μFun : ∀ {n} → SumProp (Fin n → A)
   μFun = sFun _ , Ind _
-
 
 module _ {A}(μA : SumProp A)
   (cmonoid : CommutativeMonoid L.zero L.zero)
