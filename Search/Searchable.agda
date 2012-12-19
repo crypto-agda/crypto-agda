@@ -1,54 +1,122 @@
+import Level as L
+open L using () renaming (zero to ₀)
 open import Type hiding (★)
-open import Function
+open import Function.NP
 open import Search.Type
 open import Algebra.FunctionProperties.NP
 open import Data.Bool.NP as Bool
-open import Data.Nat.NP hiding (_^_)
+open import Data.Nat.NP hiding (_^_; _⊔_)
 open import Data.Nat.Properties
+open import Algebra
 open import Data.Product
+open import Data.Sum
+open import Data.Tree.Binary
+import Data.List as List
+open List using (List; _++_)
 import Relation.Binary.PropositionalEquality as ≡
 open ≡ using (_≡_)
 
 module Search.Searchable where
 
-record Searchable A : ★₁ where
-  constructor _,_
-  field
-    search     : Search A
-    search-ind : SearchInd search
+private
+  ₁ = L.suc ₀
 
-  search-sg-ext : SearchSgExt search
+fromBinTree : ∀ {m A} → BinTree A → Search m A
+fromBinTree (leaf x)   _   f = f x
+fromBinTree (fork ℓ r) _∙_ f = fromBinTree ℓ _∙_ f ∙ fromBinTree r _∙_ f
+
+fromBinTree-ind : ∀ {m p A} (t : BinTree A) → SearchInd p (fromBinTree {m} t)
+fromBinTree-ind (leaf x)   P P∙ Pf = Pf x
+fromBinTree-ind (fork ℓ r) P P∙ Pf = P∙ (fromBinTree-ind ℓ P P∙ Pf)
+                                        (fromBinTree-ind r P P∙ Pf)
+
+plugKit : ∀ {m p A} (M : Monoid m p) → SearchIndKit _ {A = A} (SearchPlug M)
+plugKit M = (λ Ps Ps' _ x →
+                  trans (∙-cong (sym (Ps _ _)) refl)
+                        (trans (assoc _ _ _)
+                               (trans (∙-cong refl (Ps' _ x)) (Ps _ _))))
+            , (λ x f _ → ∙-cong (proj₂ identity (f x)) refl)
+     where open Mon M
+
+module Searchableₘₚ
+    {m p A}
+    {search     : Search m A}
+    (search-ind : SearchInd p search) where
+
+  search-sg-ext : SearchSgExt _ search
   search-sg-ext sg {f} {g} f≈°g = search-ind (λ s → s _ f ≈ s _ g) ∙-cong f≈°g
     where open Sgrp sg
+
+  search-mono : SearchMono _ search
+  search-mono _⊆_ _∙-mono_ {f} {g} f⊆°g =
+    search-ind (λ s → s _ f ⊆ s _ g) _∙-mono_ f⊆°g
+
+  search-swap : SearchSwap _ search
+  search-swap sg f {sᴮ} pf =
+    search-ind (λ s → s _ (sᴮ ∘ f) ≈ sᴮ (s _ ∘ flip f))
+               (λ p q → trans (∙-cong p q) (sym (pf _ _)))
+               (λ _ → refl)
+    where open Sgrp sg
+
+  searchMon : ∀ {ℓ} (M : Monoid m ℓ) → SearchMon M A
+  searchMon M = search _∙_
+    where open Mon M
+
+  search∘ : ∀ {M} → (M → M → M) → (A → M) → (M → M)
+  search∘ = search∘FromSearch search
+
+  searchMon∘ : ∀ {ℓ} (M : Monoid m ℓ) → SearchMon M A
+  searchMon∘ M f = search∘ _∙_ f ε where open Mon M
+
+module Searchableₘ
+    {m A}
+    {search     : Search m A}
+    (search-ind : SearchInd m search) where
+  open Searchableₘₚ search-ind
+
+  search∘-plug : (M : Monoid m m) → SearchPlug M search
+  search∘-plug M = search-ind $kit plugKit M
+
+  searchMon∘-spec : ∀ (M : Monoid _ m) →
+                      let open Mon M in
+                      (f : A → C) → searchMon M f ≈ searchMon∘ M f
+  searchMon∘-spec M f = proj₂ (search-ind
+                     (λ s → SearchPlug M s × s _∙_ f ≈ search∘FromSearch s _∙_ f ε)
+                     (λ {s} {s'} Ps Ps' →
+                        P∙ {s} {s'} (proj₁ Ps) (proj₁ Ps')
+                      , trans (∙-cong (proj₂ Ps) (proj₂ Ps')) (proj₁ Ps f _))
+                     (λ x → Pf x , sym (proj₂ identity _)))
+                        where open Mon M
+                              open SearchIndKit (plugKit M)
+
+  search∘-ind : ∀ (M : Monoid m m) → SearchMonInd m M (searchMon∘ M)
+  search∘-ind M P P∙ Pf P≈ =
+    proj₂ (search-ind (λ s → SearchPlug M s × P (λ f → s _∘′_ (_∙_ ∘ f) ε))
+               (λ {s} {s'} Ps Ps' → SearchIndKit.P∙ (plugKit M) {s} {s'} (proj₁ Ps) (proj₁ Ps')
+                                  , P≈ (λ f → proj₁ Ps f _) (P∙ (proj₂ Ps) (proj₂ Ps')))
+               (λ x → SearchIndKit.Pf (plugKit M) x
+                    , P≈ (λ f → sym (proj₂ identity _)) (Pf x)))
+    where open Mon M
 
   search-ext : SearchExt search
   search-ext op = search-ind (λ s → s _ _ ≡ s _ _) (≡.cong₂ op)
 
-  search-mono : SearchMono search
-  search-mono _⊆_ _∙-mono_ {f} {g} f⊆°g = search-ind (λ s → s _ f ⊆ s _ g) _∙-mono_ f⊆°g
+  search-ε : Searchε m m search
+  search-ε M = search-ind (λ s → s _ (const ε) ≈ ε)
+                          (λ x≈ε y≈ε → trans (∙-cong x≈ε y≈ε) (proj₁ identity ε))
+                          (λ _ → refl)
+    where open Mon M
 
-  search-swap : SearchSwap search
-  search-swap sg f {sᴮ} pf = search-ind (λ s → s _ (sᴮ ∘ f) ≈ sᴮ (s _ ∘ flip f)) (λ p q → trans (∙-cong p q) (sym (pf _ _))) (λ _ → refl)
-    where open Sgrp sg
-
-  searchMon : SearchMon A
-  searchMon m = search _∙_
-    where open Mon m
-
-  search-ε : Searchε searchMon
-  search-ε m = search-ind (λ s → s _ (const ε) ≈ ε) (λ x≈ε y≈ε → trans (∙-cong x≈ε y≈ε) (proj₁ identity ε)) (λ _ → refl)
-    where open Mon m
-
-  search-hom : SearchMonHom searchMon
+  search-hom : SearchMonHom m m search
   search-hom cm f g = search-ind (λ s → s _ (f ∙° g) ≈ s _ f ∙ s _ g)
                                  (λ p₀ p₁ → trans (∙-cong p₀ p₁) (∙-interchange _ _ _ _)) (λ _ → refl)
     where open CMon cm
 
-  search-linˡ : SearchLinˡ searchMon
+  search-linˡ : SearchLinˡ m m search
   search-linˡ m _◎_ f k dist = search-ind (λ s → s _∙_ (λ x → k ◎ f x) ≈ k ◎ s _∙_ f) (λ x x₁ → trans (∙-cong x x₁) (sym (dist k _ _))) (λ x → refl)
     where open Mon m
 
-  search-linʳ : SearchLinʳ searchMon
+  search-linʳ : SearchLinʳ m m search
   search-linʳ m _◎_ f k dist = search-ind (λ s → s _∙_ (λ x → f x ◎ k) ≈ s _∙_ f ◎ k) (λ x x₁ → trans (∙-cong x x₁) (sym (dist k _ _))) (λ x → refl)
     where open Mon m
 
@@ -64,8 +132,12 @@ record Searchable A : ★₁ where
                                            (λ p q → ≡.trans (hom _ _) (≡.cong₂ _*_ p q))
                                            (λ _ → ≡.refl)
 
-  StableUnder : (A → A) → ★₁
-  StableUnder p = ∀ {B} (op : Op₂ B) f → search op f ≡ search op (f ∘ p)
+module Searchable₀
+    {A}
+    {search     : Search₀ A}
+    (search-ind : SearchInd₀ search) where
+  open Searchableₘₚ search-ind
+  open Searchableₘ search-ind
 
   sum : Sum A
   sum = search _+_
@@ -89,10 +161,7 @@ record Searchable A : ★₁ where
   sum-lin f zero    = sum-zero
   sum-lin f (suc k) = ≡.trans (sum-hom f (λ x → k * f x)) (≡.cong₂ _+_ (≡.refl {x = sum f}) (sum-lin f k))
 
-  SumStableUnder : (A → A) → ★ _
-  SumStableUnder p = ∀ f → sum f ≡ sum (f ∘ p)
-
-  sumStableUnder : ∀ {p} → StableUnder p → SumStableUnder p
+  sumStableUnder : ∀ {p} → StableUnder search p → SumStableUnder sum p
   sumStableUnder SU-p = SU-p _+_
 
   Card : ℕ
@@ -104,10 +173,39 @@ record Searchable A : ★₁ where
   count-ext : CountExt count
   count-ext f≗g = sum-ext (≡.cong Bool.toℕ ∘ f≗g)
 
-  CountStableUnder : (A → A) → ★ _
-  CountStableUnder p = ∀ f → count f ≡ count (f ∘ p)
-
-  countStableUnder : ∀ {p} → SumStableUnder p → CountStableUnder p
+  countStableUnder : ∀ {p} → SumStableUnder sum p → CountStableUnder count p
   countStableUnder sumSU-p f = sumSU-p (Bool.toℕ ∘ f)
+
+  toBinTree : BinTree A
+  toBinTree = search fork leaf
+
+  toList : List A
+  toList = search _++_ List.[_]
+
+  toList∘ : List A
+  toList∘ = search∘ _++_ List.[_] List.[]
+
+  toList≡toList∘ : toList ≡ toList∘
+  toList≡toList∘ = searchMon∘-spec (List.monoid A) List.[_]
+
+module Searchable₁₀ {A} {search₁ : Search₁ A}
+                    (search-ind₀ : SearchInd ₀ search₁) where
+
+  dataFromFun : DataFromFun search₁
+  dataFromFun = search-ind₀ (λ s → Data s _) _,_
+
+module Searchable₁₁ {A} {search₁ : Search₁ A}
+                    (search-ind₁ : SearchInd ₁ search₁) where
+
+  pointToPair : PointToPair search₁
+  pointToPair = search-ind₁ PointToPair (λ P0 P1 → [ P0 , P1 ]) (λ η → _,_ η)
+
+record Searchable m p A : ★ (L.suc (m L.⊔ p)) where
+  constructor _,_
+  field
+    search     : Search m A
+    search-ind : SearchInd p search
+
+  open Searchableₘₚ search-ind
 
 open Searchable public
