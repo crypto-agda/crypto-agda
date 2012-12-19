@@ -25,7 +25,6 @@ open import Search.Type
 open import Search.Searchable renaming (Searchable to SumProp)
 open import Search.Searchable.Product
 open import Search.Derived
---open Searchable₀
 
 module sum where
 
@@ -202,13 +201,15 @@ _×Sum-proj₂'_ : ∀ {A B}
 open import Data.Fin using (Fin; zero; suc)
 open import Data.Vec.NP as Vec using (Vec; tabulate; _++_) renaming (map to vmap; sum to vsum; foldr to vfoldr; foldr₁ to vfoldr₁)
 
-vmsum : ∀ m {n} → let open Mon m in
-                  Vec C n → C
+vmsum : ∀ {c ℓ} (m : Monoid c ℓ) {n} →
+          let open Mon m in
+          Vec C n → C
 vmsum m = vfoldr _ _∙_ ε
-  where open Monoid m
+  where open Mon m
 
-vsgsum : ∀ sg {n} → let open Sgrp sg in
-                    Vec C (suc n) → C
+vsgsum : ∀ {c ℓ} (sg : Semigroup c ℓ) {n} →
+           let open Sgrp sg in
+           Vec C (suc n) → C
 vsgsum sg = vfoldr₁ _∙_
   where open Sgrp sg
 
@@ -217,7 +218,7 @@ vsgsum sg = vfoldr₁ _∙_
 -- searchMonFin : ∀ n → SearchMon (Fin n)
 -- searchMonFin n m f = vmsum m (tabulate f)
 
-searchFinSuc : ∀ n → Search _ (Fin (suc n))
+searchFinSuc : ∀ {m} n → Search m (Fin (suc n))
 searchFinSuc n _∙_ f = vfoldr₁ _∙_ (tabulate f)
 
 μMaybe : ∀ {A} → SumProp A → SumProp (Maybe A)

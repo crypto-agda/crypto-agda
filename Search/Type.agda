@@ -5,6 +5,7 @@ open import Type hiding (★)
 open import Function.NP
 open import Data.Nat.NP hiding (_⊔_)
 open import Data.Bits
+open import Data.Indexed
 open import Algebra
 open import Relation.Binary.NP
 open import Data.Product
@@ -140,37 +141,28 @@ Sum A = (A → ℕ) → ℕ
 Count : ★₀ → ★₀
 Count A = (A → Bit) → ℕ
 
-record SearchIndKit {A} (P : Search A → ★) : ★₁ where
-  constructor comma
-  field
-    P∙ : ∀ {s₀ s₁ : Search A} → P s₀ → P s₁ → P (λ _∙_ f → s₀ _∙_ f ∙ s₁ _∙_ f)
-    Pf : ∀ x → P (λ _ f → f x)
+_×Kit_ : ∀ {m p A} {P : Search m A → ★ p}{Q : Search m A → ★ p}
+       → SearchIndKit p P → SearchIndKit p Q → SearchIndKit p (P ×° Q)
+Pk ×Kit Qk = (λ x y → P∙ Pk (proj₁ x) (proj₁ y) , P∙ Qk (proj₂ x) (proj₂ y))
+           , (λ x → Pf Pk x , Pf Qk x)
+           where open SearchIndKit
 
-_×Kit_ : ∀ {A} {P : Search A → ★}{Q : Search A → ★}
-       → SearchIndKit P → SearchIndKit Q → SearchIndKit (λ s → P s × Q s)
-Pk ×Kit Qk = comma (λ x y → SearchIndKit.P∙ Pk (proj₁ x) (proj₁ y)
-                          , SearchIndKit.P∙ Qk (proj₂ x) (proj₂ y))
-                   (λ x → SearchIndKit.Pf Pk x , SearchIndKit.Pf Qk x)
+SearchInd-Extra : ∀ p {m A} → Search m A → ★ _
+SearchInd-Extra p {m} {A} srch =
+  ∀ (Q     : Search m A → ★ p)
+    (Q-kit : SearchIndKit p Q)
+    (P     : Search m A → ★ p)
+    (P∙    : ∀ {s₀ s₁ : Search m A} → Q s₀ → Q s₁ → P s₀ → P s₁
+             → P (s₀ ∙Search s₁))
+    (Pf    : ∀ x → P (constSearch x))
+  → P srch
 
-SearchInd : ∀ {A} → Search A → ★₁
-SearchInd {A} srch = ∀ (P  : Search A → ★)
-                       (P∙ : ∀ {s₀ s₁ : Search A} → P s₀ → P s₁ → P (λ _∙_ f → s₀ _∙_ f ∙ s₁ _∙_ f))
-                       (Pf : ∀ x → P (λ _ f → f x))
-                     →  P srch
-
-SearchInd-Extra : ∀ {A} → Search A → ★₁
-SearchInd-Extra {A} srch = ∀ (Q  : Search A → ★)
-                             (Q-kit : SearchIndKit Q)
-                             (P  : Search A → ★)
-                             (P∙ : ∀ {s₀ s₁ : Search A} → Q s₀ → Q s₁ → P s₀ → P s₁
-                                 → P (λ _∙_ f → s₀ _∙_ f ∙ s₁ _∙_ f))
-                             (Pf : ∀ x → P (λ _ f → f x))
-                           → P srch
-
-to-extra : ∀ {A}{s : Search A} → SearchInd s → SearchInd-Extra s
-to-extra s-ind Q Q-kit P P∙ Pf = proj₂ (s-ind (λ s → Q s × P s)
-         (λ x x₁ → (SearchIndKit.P∙ Q-kit (proj₁ x) (proj₁ x₁)) , (P∙ (proj₁ x) (proj₁ x₁) (proj₂ x) (proj₂ x₁)))
-         (λ x → (SearchIndKit.Pf Q-kit x) , (Pf x)))
+to-extra : ∀ {p m A} {s : Search m A} → SearchInd p s → SearchInd-Extra p s
+to-extra s-ind Q Q-kit P P∙ Pf =
+ proj₂ (s-ind (Q ×° P)
+         (λ { (a , b) (c , d) → Q∙ a c , P∙ a c b d })
+         (λ x → Qf x , Pf x))
+ where open SearchIndKit Q-kit renaming (P∙ to Q∙; Pf to Qf)
 
 StableUnder : ∀ {ℓ A} → Search ℓ A → (A → A) → ★ _
 StableUnder search p = ∀ {M} op (f : _ → M) → search op f ≡ search op (f ∘ p)
