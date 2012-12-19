@@ -303,7 +303,8 @@ module _ {A : Set}(μA : SumProp A) where
   μFun : ∀ {n} → SumProp (Fin n → A)
   μFun = sFun _ , Ind _
 
-module _ {A}(μA : SumProp A)
+module BigDistr
+  {A}(μA : SumProp A)
   (cm       : CommutativeMonoid L.zero L.zero)
   -- we want (open CMon cm) !!!
   (_◎_      : let open CMon cm in C  → C → C)
@@ -312,14 +313,14 @@ module _ {A}(μA : SumProp A)
 
   open CMon cm
 
-  μF = μFun μA
+  μF→A = μFun μA
 
   -- Sum over A values
   Σᴬ = search μA _∙_
 
   -- Sum over (Fin(1+I)→A) functions
   Σ' : ∀ {I} → ((Fin (suc I) → A) → C) → C
-  Σ' = search μF _∙_
+  Σ' = search μF→A _∙_
 
   -- Product over Fin(1+I) values
   Π' = λ I → search (μFinSuc I) _◎_
@@ -329,15 +330,12 @@ module _ {A}(μA : SumProp A)
   bigDistr (suc I) F
     = Σᴬ (F zero) ◎ Π' I (Σᴬ ∘ F ∘ suc)
     ≈⟨ refl ◎-cong bigDistr I (F ∘ suc) ⟩
-      Σᴬ (F zero) ◎ Σ' (Π' I ∘ F')
-    ≈⟨ sym (search-linʳ μA monoid _◎_ (F zero) (Σ' (Π' I ∘ F')) (proj₂ distrib)) ⟩
-      Σᴬ (λ j → F zero j ◎ Σ' (Π' I ∘ F'))
-    ≈⟨ search-sg-ext μA semigroup (λ j → sym (search-linˡ μF monoid _◎_ (Π' I ∘ F') (F zero j) (proj₁ distrib))) ⟩
-      (Σᴬ λ j → Σ' λ f → F zero j ◎ Π' I (F' f))
+      Σᴬ (F zero) ◎ Σ' (Π' I ∘ _ˢ_ (F ∘ suc))
+    ≈⟨ sym (search-linʳ μA monoid _◎_ (F zero) (Σ' (Π' I ∘ _ˢ_ (F ∘ suc))) (proj₂ distrib)) ⟩
+      Σᴬ (λ j → F zero j ◎ Σ' (Π' I ∘ _ˢ_ (F ∘ suc)))
+    ≈⟨ search-sg-ext μA semigroup (λ j → sym (search-linˡ μF→A monoid _◎_ (Π' I ∘ _ˢ_ (F ∘ suc)) (F zero j) (proj₁ distrib))) ⟩
+      (Σᴬ λ j → Σ' λ f → F zero j ◎ Π' I ((F ∘ suc) ˢ f))
     ∎
-    where
-      F' : (Fin (suc I) → A) → Fin (suc I) → C
-      F' = _ˢ_ (F ∘ suc)
 
 -- -}
 -- -}
