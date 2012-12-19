@@ -7,23 +7,25 @@ open import Search.Searchable
 module Search.Searchable.Product where
 
 private
-    Cont : ★₀ → ★₀ → ★₀
+    Cont : ∀ {a m} → ★ m → ★ a → ★ _
     Cont M A = (A → M) → M
 
-    -- liftM2 _,_ in the continuation monad
-    _×F_ : ∀ {A B M} → Cont M A → Cont M B → Cont M (A × B)
-    (fA ×F fB) f = fA (fB ∘ curry f)
-    -- (fA ×F fB) f = fA λ x → fB (f (x , y)
-
-    ΣF : ∀ {A B M} → Cont M A → (∀ {x} → Cont M (B x)) → Cont M (Σ A B)
+    ΣF : ∀ {a b m} {A : ★ a} {B : A → ★ b} {M : ★ m}
+         → Cont M A → (∀ {x} → Cont M (B x)) → Cont M (Σ A B)
     ΣF fA fB f = fA (fB ∘ curry f)
 
-ΣSearch : ∀ {A} {B : A → ★₀} → Search A → (∀ {x} → Search (B x)) → Search (Σ A B)
+    -- liftM2 _,_ in the continuation monad
+    _×F_ : ∀ {a b m} {A : ★ a} {B : ★ b} {M : ★ m} → Cont M A → Cont M B → Cont M (A × B)
+    fA ×F fB = ΣF fA fB
+    -- (fA ×F fB) f = fA (fB ∘ curry f)
+    -- (fA ×F fB) f = fA λ x → fB (f (x , y)
+
+ΣSearch : ∀ {m A} {B : A → ★₀} → Search m A → (∀ {x} → Search m (B x)) → Search m (Σ A B)
 ΣSearch searchᴬ searchᴮ op = ΣF (searchᴬ op) (searchᴮ op)
 
-ΣSearchInd : ∀ {A} {B : A → ★₀}
-               {sᴬ : Search A} {sᴮ : ∀ {x} → Search (B x)}
-             → SearchInd sᴬ → (∀ {x} → SearchInd (sᴮ {x})) → SearchInd (ΣSearch sᴬ sᴮ)
+ΣSearchInd : ∀ {m p A} {B : A → ★₀}
+               {sᴬ : Search m A} {sᴮ : ∀ {x} → Search m (B x)}
+             → SearchInd p sᴬ → (∀ {x} → SearchInd p (sᴮ {x})) → SearchInd p (ΣSearch sᴬ sᴮ)
 ΣSearchInd Psᴬ Psᴮ P P∙ Pf =
   Psᴬ (λ s → P (λ _ _ → s _ _)) P∙ (λ x → Psᴮ {x} (λ s → P (λ _ _ → s _ _)) P∙ (curry Pf x))
 
@@ -37,13 +39,18 @@ private
 
 infixr 4 _×Search_
 
-_×Search_ : ∀ {A B} → Search A → Search B → Search (A × B)
+_×Search_ : ∀ {m A B} → Search m A → Search m B → Search m (A × B)
 searchᴬ ×Search searchᴮ = ΣSearch searchᴬ searchᴮ
 
 infixr 4 _×μ_
 
 _×μ_ : ∀ {A B} → Searchable A → Searchable B → Searchable (A × B)
 μA ×μ μB = μΣ μA μB
+
+_×SearchInd_ : ∀ {m p A B} {sᴬ : Search m A} {sᴮ : Search m B}
+               → SearchInd p sᴬ → SearchInd p sᴮ
+               → SearchInd p (sᴬ ×Search sᴮ)
+Psᴬ ×SearchInd Psᴮ = ΣSearchInd Psᴬ Psᴮ
 
 infixr 4 _×Sum_
 
@@ -57,11 +64,11 @@ private
                           sumᴮ x₀ (λ x₁ →
                             f (x₀ , x₁)))
 
-    _×Search'_ : ∀ {A B} → Search A → Search B → Search (A × B)
+    _×Search'_ : ∀ {A B} → Search₀ A → Search _ B → Search _ (A × B)
     (searchᴬ ×Search' searchᴮ) op f = searchᴬ op (λ x → searchᴮ op (curry f x))
 
-    _×SearchInd'_ : ∀ {A B} {sᴬ : Search A} {sᴮ : Search B}
-                    → SearchInd sᴬ → SearchInd sᴮ → SearchInd (sᴬ ×Search' sᴮ)
+    _×SearchInd'_ : ∀ {A B} {sᴬ : Search _ A} {sᴮ : Search _ B}
+                    → SearchInd₀ sᴬ → SearchInd₀ sᴮ → SearchInd₀ (sᴬ ×Search' sᴮ)
     (Psᴬ ×SearchInd' Psᴮ) P P∙ Pf =
       Psᴬ (λ s → P (λ _ _ → s _ _)) P∙ (Psᴮ (λ s → P (λ _ _ → s _ _)) P∙ ∘ curry Pf)
 
