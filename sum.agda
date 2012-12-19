@@ -12,6 +12,7 @@ open import Data.Maybe.NP
 open import Data.Product
 open import Data.Bits
 open import Data.Bool.NP as Bool
+open import Function.NP
 open import Function.Equality using (_⟨$⟩_)
 import Function.Inverse as FI
 open FI using (_↔_; module Inverse)
@@ -273,48 +274,6 @@ module _ {A : Set}(μA : SumProp A) where
   μFun : ∀ {n} → SumProp (Fin n → A)
   μFun = sFun _ , Ind _
 
-
-module _ {A}(μA : SumProp A)
-  (cmonoid : CommutativeMonoid L.zero L.zero)
-  (_◎_      : let open CMon cmonoid in Carrier  → Carrier → Carrier)
-  (distrib  : let open CMon cmonoid in _DistributesOver_ _≈_ _◎_ _∙_)
-  (_◎-cong_ : let open CMon cmonoid in _◎_ Preserves₂ _≈_ ⟶ _≈_ ⟶ _≈_) where
-
-  open CMon cmonoid
-  sᴬ = search μA _∙_
-
-  bigDistr : ∀ I F → search (μFinSuc I) _◎_ (sᴬ ∘ F)
-                   ≈ search (μFun μA) _∙_ (λ f → search (μFinSuc I) _◎_ (λ i → F i (f i)))
-  bigDistr zero    _ = refl
-  bigDistr (suc I) F
-    = Π' (suc I) (sᴬ ∘ F)
-    ≈⟨ refl ⟩
-      sᴬ (F zero) ◎ Π' I (sᴬ ∘ Fj)
-    ≈⟨ refl ◎-cong bigDistr I Fj ⟩
-      (sᴬ ∘ F) zero ◎ ΣF I (λ f → Π' I (λ i → F (suc i) (f i)))
-    ≈⟨ sym
-      (search-linˡ (μF I) monoid _◎_
-             (λ f → Π' I (λ i → F (suc i) (f i))) (sᴬ (F zero)) (proj₁ distrib)) ⟩
-      ΣF I (λ f → (sᴬ ∘ F) zero ◎ Π' I (λ i → F (suc i) (f i)))
-    ≈⟨ search-sg-ext (μF I) (Monoid.semigroup monoid)
-      (λ f → sym (search-linʳ μA  monoid _◎_ (F zero) (Π' I (λ i → F (suc i) (f i))) (proj₂ distrib))) ⟩
-      ΣF I (λ f → sᴬ (λ j → F zero j ◎ (Π' I λ i → F  (suc i) (f i))))
-    ≈⟨ search-sg-ext (μF I) (Monoid.semigroup monoid)
-      {(λ f → sᴬ (λ j → F zero j ◎ (Π' I λ i → F  (suc i) (f i))))}
-      {(λ f → sᴬ (λ j → Π' (suc I) (λ i → F i (extend μA j f i))))}
-      (λ f → refl) ⟩
-      ΣF I (λ f → sᴬ (λ j → Π' (suc I) (λ i → F i (extend μA j f i))))
-    ≈⟨ search-swap (μF I) (Monoid.semigroup monoid) (λ f j → Π' (suc I) (λ i → F i (extend μA j f i))) {sᴮ = sᴬ} (search-hom μA cmonoid) ⟩
-      sᴬ (λ j → ΣF I (λ f → Π' (suc I) (λ i → F i (extend μA j f i))))
-    ≈⟨ refl ⟩
-      ΣF (suc I) (λ f → Π' (suc I) (λ i → F i (f i)))
-    ∎
-    where
-      μF = λ i → μFun μA {suc i}
-      Π' = λ i → search (μFinSuc i) _◎_
-      ΣF = λ i → search (μF i) _∙_
-      Fj = λ i j → F (suc i) j
-
 {-
   -- If we want to force non-empty domain
 
@@ -329,6 +288,42 @@ module _ {A}(μA : SumProp A)
       (λ x → Ind n (λ sf → P (λ op f → sf op (f ∘ extend x))) P∙ (Pf ∘ extend x))
 
 -}
+
+module _ {A}(μA : SumProp A) 
+  (cmonoid : CommutativeMonoid L.zero L.zero)
+  (_◎_      : let open CMon cmonoid in C  → C → C)
+  (distrib  : let open CMon cmonoid in _DistributesOver_ _≈_ _◎_ _∙_)
+  (_◎-cong_ : let open CMon cmonoid in _◎_ Preserves₂ _≈_ ⟶ _≈_ ⟶ _≈_) where
+
+  open CMon cmonoid
+  sᴬ = search μA _∙_
+
+  bigDistr : ∀ I F → search (μFinSuc I) _◎_ (search μA          _∙_ ∘ F)
+                   ≈ search (μFun μA)   _∙_ (search (μFinSuc I) _◎_ ∘ _ˢ_ F)
+  bigDistr zero    _ = refl
+  bigDistr (suc I) F
+    = sᴬ (F zero) ◎ Π' I (sᴬ ∘ Fj)
+    ≈⟨ refl ◎-cong bigDistr I Fj ⟩
+      (sᴬ ∘ F) zero ◎ ΣF (Π' I ∘ F')
+    ≈⟨ sym (search-linˡ μF monoid _◎_ (Π' I ∘ F') (sᴬ (F zero)) (proj₁ distrib)) ⟩
+      ΣF (λ f → (sᴬ ∘ F) zero ◎ Π' I (F' f))
+    ≈⟨ search-sg-ext μF semigroup
+           (λ f → sym (search-linʳ μA  monoid _◎_ (F zero) (Π' I (F' f)) (proj₂ distrib))) ⟩
+      ΣF (λ f → sᴬ (λ j → F zero j ◎ Π' I (F' f)))
+    ≈⟨ search-sg-ext μF semigroup {(λ f → sᴬ (λ j → F zero j ◎ Π' I (F' f)))} (λ f → refl) ⟩
+      ΣF (λ f → sᴬ (λ j → Π' (suc I) (λ i → F i (extend μA j f i))))
+    ≈⟨ search-swap μF semigroup (λ f j → Π' (suc I) (λ i → F i (extend μA j f i)))
+      {sᴮ = sᴬ} (search-hom μA cmonoid) ⟩
+      sᴬ (λ j → ΣF (λ f → Π' (suc I) (λ i → F i (extend μA j f i))))
+    ∎
+    where
+      F' : (Fin (suc I) → A) → Fin (suc I) → C
+      F' = λ f i → F (suc i) (f i)
+      μF = μFun μA {suc I}
+      Π' = λ i → search (μFinSuc i) _◎_
+      ΣF = search (μFun μA {suc I}) _∙_
+      Fj = λ i j → F (suc i) j
+
 -- -}
 -- -}
 -- -}

@@ -14,7 +14,9 @@ open import Data.Nat.Properties
 open import Data.Unit hiding (_≤_)
 open import Data.Sum
 open import Data.Maybe.NP
+-}
 open import Data.Product
+{-
 open import Data.Bool.NP as Bool
 open import Function.Equality using (_⟨$⟩_)
 import Function.Inverse as FI
@@ -83,11 +85,37 @@ Sum A = (A → ℕ) → ℕ
 Count : ★ → ★
 Count A = (A → Bit) → ℕ
 
+record SearchIndKit {A} (P : Search A → ★) : ★₁ where
+  constructor comma
+  field
+    P∙ : ∀ {s₀ s₁ : Search A} → P s₀ → P s₁ → P (λ _∙_ f → s₀ _∙_ f ∙ s₁ _∙_ f)
+    Pf : ∀ x → P (λ _ f → f x)
+
+_×Kit_ : ∀ {A} {P : Search A → ★}{Q : Search A → ★}
+       → SearchIndKit P → SearchIndKit Q → SearchIndKit (λ s → P s × Q s)
+Pk ×Kit Qk = comma (λ x y → SearchIndKit.P∙ Pk (proj₁ x) (proj₁ y)
+                          , SearchIndKit.P∙ Qk (proj₂ x) (proj₂ y))
+                   (λ x → SearchIndKit.Pf Pk x , SearchIndKit.Pf Qk x)
+
 SearchInd : ∀ {A} → Search A → ★₁
 SearchInd {A} srch = ∀ (P  : Search A → ★)
                        (P∙ : ∀ {s₀ s₁ : Search A} → P s₀ → P s₁ → P (λ _∙_ f → s₀ _∙_ f ∙ s₁ _∙_ f))
                        (Pf : ∀ x → P (λ _ f → f x))
                      →  P srch
+
+SearchInd-Extra : ∀ {A} → Search A → ★₁
+SearchInd-Extra {A} srch = ∀ (Q  : Search A → ★)
+                             (Q-kit : SearchIndKit Q)
+                             (P  : Search A → ★)
+                             (P∙ : ∀ {s₀ s₁ : Search A} → Q s₀ → Q s₁ → P s₀ → P s₁
+                                 → P (λ _∙_ f → s₀ _∙_ f ∙ s₁ _∙_ f))
+                             (Pf : ∀ x → P (λ _ f → f x))
+                           → P srch
+
+to-extra : ∀ {A}{s : Search A} → SearchInd s → SearchInd-Extra s
+to-extra s-ind Q Q-kit P P∙ Pf = proj₂ (s-ind (λ s → Q s × P s)
+         (λ x x₁ → (SearchIndKit.P∙ Q-kit (proj₁ x) (proj₁ x₁)) , (P∙ (proj₁ x) (proj₁ x₁) (proj₂ x) (proj₂ x₁)))
+         (λ x → (SearchIndKit.Pf Q-kit x) , (Pf x)))
 
 SumInd : ∀ {A} → Sum A → ★₁
 SumInd {A} sum = ∀ (P  : Sum A → ★)
