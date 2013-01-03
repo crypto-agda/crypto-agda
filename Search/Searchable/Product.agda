@@ -32,6 +32,13 @@ private
 μΣ : ∀ {A} {B : A → ★ _} → Searchable A → (∀ {x} → Searchable (B x)) → Searchable (Σ A B)
 μΣ μA μB = _ , ΣSearchInd (search-ind μA) (search-ind μB)
 
+-- using view-search ?
+proj₁-search : ∀ {m A} {B : A → ★ _} → Search m (Σ A B) → Search m A
+proj₁-search s _∙_ f = s _∙_ (f ∘ proj₁)
+
+proj₂-search : ∀ {m A B} → Search m (A × B) → Search m B
+proj₂-search s _∙_ f = s _∙_ (f ∘ proj₂)
+
 -- From now on, these are derived definitions for convenience and pedagogical reasons
 
 ΣSum : ∀ {A} {B : A → ★₀} → Sum A → (∀ {x} → Sum (B x)) → Sum (Σ A B)

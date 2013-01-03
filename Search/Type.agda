@@ -79,6 +79,9 @@ SearchInd p {ℓ} {A} srch =
     (Pf : ∀ x → P (λ _ f → f x))
   → P srch
 
+constSearch-ind : ∀ {ℓ p A} (x : A) → SearchInd p (constSearch {ℓ} x)
+constSearch-ind x _ _ Pf = Pf x
+
 record SearchIndKit p {ℓ A} (P : Search ℓ A → ★ p) : ★ (ₛ ℓ ⊔ p) where
   constructor _,_
   field
