@@ -80,7 +80,6 @@ _+Sum_ : ∀ {A B} → Sum A → Sum B → Sum (A ⊎ B)
 _+μ_ : ∀ {A B} → SumProp A → SumProp B → SumProp (A ⊎ B)
 μA +μ μB = _ , search-ind μA +SearchInd search-ind μB
 
-
 _⊎'_ : ★₀ → ★₀ → ★₀
 A ⊎' B = Σ Bool (cond A B)
 
