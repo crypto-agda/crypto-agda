@@ -31,18 +31,6 @@ open import Search.Type
 
 module sum-setoid where
 
-[Search] : ([★₀] [→] [★₁]) Search
-[Search] Aₚ = ∀⟨ Mₚ ∶ [★₀] ⟩[→] [Op₂] Mₚ [→] (Aₚ [→] Mₚ) [→] Mₚ
-
-⟦Search⟧ : (⟦★₀⟧ ⟦→⟧ ⟦★₁⟧) Search Search
-⟦Search⟧ Aᵣ = ∀⟨ Mᵣ ∶ ⟦★₀⟧ ⟩⟦→⟧ ⟦Op₂⟧ Mᵣ ⟦→⟧ (Aᵣ ⟦→⟧ Mᵣ) ⟦→⟧ Mᵣ
-
--- Trimmed down version of ⟦Search⟧
-⟦Search⟧₁ : ∀ {A : ★} (Aᵣ : A → A → ★) → Search A → ★₁
-⟦Search⟧₁ Aᵣ s = ⟦Search⟧ Aᵣ s s
-
-SearchExtFun : ∀ {A B} → Search (A → B) → ★₁
-SearchExtFun {A}{B} sᴬᴮ = ∀ {M} op {f g : (A → B) → M} → (∀ {φ ψ} → φ ≗ ψ → f φ ≡ g ψ) → sᴬᴮ op f ≡ sᴬᴮ op g
 
 SearchExtFun-úber : ∀ {A B} → (SF : Search (A → B)) → SearchInd SF → SearchExtFun SF
 SearchExtFun-úber sf sf-ind op {f = f}{g} f≈g = sf-ind (λ s → s op f ≡ s op g) (≡.cong₂ op) (λ x → f≈g (λ _ → ≡.refl))

@@ -13,6 +13,7 @@ open import Data.Sum
 open import Data.Tree.Binary
 import Data.List as List
 open List using (List; _++_)
+open import Relation.Binary
 import Relation.Binary.PropositionalEquality as ≡
 open ≡ using (_≡_)
 
@@ -101,6 +102,11 @@ module Searchableₘ
   search-ext : SearchExt search
   search-ext op = search-ind (λ s → s _ _ ≡ s _ _) (≡.cong₂ op)
 
+  ⟦search⟧ᵤ : ∀ {Aᵣ : A → A → ★_ _}
+               (Aᵣ-refl : Reflexive Aᵣ)
+              → ⟦Search⟧ᵤ Aᵣ search search
+  ⟦search⟧ᵤ Aᵣ-refl Mᵣ ∙ᵣ fᵣ = search-ind (λ s → Mᵣ (s _ _) (s _ _)) (λ η → ∙ᵣ η) (λ η → fᵣ Aᵣ-refl)
+  
   search-ε : Searchε m m search
   search-ε M = search-ind (λ s → s _ (const ε) ≈ ε)
                           (λ x≈ε y≈ε → trans (∙-cong x≈ε y≈ε) (proj₁ identity ε))
@@ -141,6 +147,11 @@ module Searchable₀
 
   sum : Sum A
   sum = search _+_
+
+  ⟦search⟧ : ∀ {Aᵣ : A → A → ★_ _}
+               (Aᵣ-refl : Reflexive Aᵣ)
+              → ⟦Search⟧ Aᵣ search search
+  ⟦search⟧ = ⟦search⟧ᵤ
 
   sum-ind : SumInd sum
   sum-ind P P+ Pf = search-ind (λ s → P (s _+_)) P+ Pf
@@ -209,3 +220,36 @@ record Searchable A : ★₁ where
   open Searchable₀ search-ind public
 
 open Searchable public
+
+
+SearchForFun : ★₀ → ★₁
+SearchForFun A = ∀ {X} → Searchable X → Searchable (A → X)
+
+record Funable A : ★₂ where
+  constructor _,_
+  field
+    searchable : Searchable A
+    negative   : SearchForFun A
+
+module DistFun {A} (μA : Searchable A)
+                   (μA→ : SearchForFun A)
+                   {B} (μB : Searchable B){X}
+                   (_≈_ : X → X → ★ ₀)
+                   (∙ : X → X → X)
+                   (◎ : X → X → X) where
+
+  Π' = search μA ◎
+  Σᴮ = search μB ∙
+  Σ' = search (μA→ μB) ∙
+
+  DistFun = ∀ f → Π' (Σᴮ ∘ f) ≈ Σ' (Π' ∘ _ˢ_ f)
+                     
+  
+DistFun : ∀ {A} → Searchable A → SearchForFun A → ★₁
+DistFun μA μA→ = ∀ {B} (μB : Searchable B) c → let open CMon {L.zero}{L.zero} c in
+                   ∀ ◎ → _DistributesOver_ _≈_ ◎ _∙_ → ◎ Preserves₂ _≈_ ⟶ _≈_ ⟶ _≈_
+                   → DistFun.DistFun μA μA→ μB _≈_ _∙_ ◎
+
+
+DistFunable : ∀ {A} → Funable A → ★₁
+DistFunable (μA , μA→) = DistFun μA μA→

@@ -98,6 +98,13 @@ SΠΣ⁻-ind : ∀ {m p A} {B : A → ★ _} {C : Σ A B → ★ _}
            → SearchInd p (SΠΣ⁻ s)
 SΠΣ⁻-ind ind P P∙ Pf = ind (P ∘ SΠΣ⁻) P∙ (Pf ∘ uncurry)
 
+μΠΣ⁻ : ∀ {A B}{C : Σ A B → ★₀} → SumProp ((x : A)(y : B x) → C (x , y)) → SumProp ((p : Σ A B) → C p)
+μΠΣ⁻ μ = (SΠΣ⁻ (search μ)) , (SΠΣ⁻-ind (search-ind μ))
+
+Σ-Fun : ∀ {A B} → Funable A → (Funable B) → Funable (A × B)
+Σ-Fun (μA , μA→) FB  = μΣ μA (searchable FB) , (λ x → μΠΣ⁻ (μA→ (negative FB x)))
+  where open Funable
+
 S×⁻ : ∀ {m A B C} → Search m (A → B → C) → Search m (A × B → C)
 S×⁻ = SΠΣ⁻
 
@@ -123,6 +130,10 @@ SΠ⊎⁻-ind : ∀ {m p A B} {C : A ⊎ B → ★ _}
            → SearchInd p (SΠ⊎⁻ {C = C} s) -- A sB)
 SΠ⊎⁻-ind i P P∙ Pf = i (P ∘ SΠ⊎⁻) P∙ (Pf ∘ uncurry [_,_])
 
+μΠ⊎⁻ : ∀ {A B}{C : A ⊎ B → ★ _} → SumProp (Π A (C ∘ inj₁) × Π B (C ∘ inj₂))
+     → SumProp (Π (A ⊎ B) C)
+μΠ⊎⁻ (μ , μ-ind) = (SΠ⊎⁻ μ) , (SΠ⊎⁻-ind μ-ind)
+
 {- For each A→C function
    and each B→C function
    an A⊎B→C function is yield
@@ -131,12 +142,15 @@ S⊎⁻ : ∀ {m A B C} → Search m (A → C) → Search m (B → C)
                   → Search m (A ⊎ B → C)
 S⊎⁻ sA sB =  SΠ⊎⁻ (sA ×Search sB)
 
+_⊎-Fun_ : ∀ {A B} → Funable A → Funable B → Funable (A ⊎ B)
+_⊎-Fun_ (μA , μA→) (μB , μB→) = (μA +μ μB) , (λ X → μΠ⊎⁻ (μA→ X ×μ μB→ X))
+
 S⊤ : ∀ {m A} → Search m A → Search m (⊤ → A)
 S⊤ sA _∙_ f = sA _∙_ (f ∘ const)
 
 SΠBit : ∀ {m A} → Search m (A 0b) → Search m (A 1b)
                 → Search m (Π Bit A)
-SΠBit sA₀ sA₁ _∙_ f = sA₀ _∙_ λ x → sA₁ _∙_ λ y → f (Cond _ y x)
+SΠBit sA₀ sA₁ _∙_ f = sA₀ _∙_ λ x → sA₁ _∙_ λ y → f λ {true → y; false → x}
 
 sum-const : ∀ {A} (μA : SumProp A) → ∀ k → sum μA (const k) ≡ Card μA * k
 sum-const μA k
@@ -315,7 +329,7 @@ module BigDistr
 
   μF→A = μFun μA
 
-  -- Sum over A values
+  -- Sum over A
   Σᴬ = search μA _∙_
 
   -- Sum over (Fin(1+I)→A) functions
@@ -336,6 +350,57 @@ module BigDistr
     ≈⟨ search-sg-ext μA semigroup (λ j → sym (search-linˡ μF→A monoid _◎_ (Π' I ∘ _ˢ_ (F ∘ suc)) (F zero j) (proj₁ distrib))) ⟩
       (Σᴬ λ j → Σ' λ f → F zero j ◎ Π' I ((F ∘ suc) ˢ f))
     ∎
+
+FinDist : ∀ {n} → DistFun (μFinSuc n) (λ μX → μFun μX)
+FinDist μB c ◎ distrib ◎-cong f = BigDistr.bigDistr μB c ◎ distrib ◎-cong _ f
+
+simple : ∀ {A : Set}{P : A → A → Set} → (∀ x → P x x) → {x y : A} → x ≡ y → P x y
+simple r ≡.refl = r _ 
+
+×-Dist : ∀ {A B} FA FB → DistFunable {A} FA → DistFunable {B} FB → DistFunable (Σ-Fun FA FB)
+×-Dist FA FB FA-dist FB-dist μX c _⊙_ distrib _⊙-cong_ f 
+  = Πᴬ (λ x → Πᴮ (λ y → Σ' (f (x , y)))) 
+  ≈⟨ ⟦search⟧ (searchable FA){_≡_} ≡.refl _≈_ (λ x y → x ⊙-cong y)
+       (λ { {x} {.x} ≡.refl → FB-dist μX c _⊙_ distrib _⊙-cong_ (curry f x)}) ⟩
+    Πᴬ (λ x → Σᴮ (λ fb → Πᴮ (λ y → f (x , y) (fb y))))
+  ≈⟨ FA-dist (negative FB μX) c _⊙_ distrib _⊙-cong_
+       (λ x fb → search (searchable FB) _⊙_ (λ y → f (x , y) (fb y))) ⟩
+    Σᴬᴮ (λ fab → Πᴬ (λ x → Πᴮ (λ y → f (x , y) (fab x y))))
+  ∎
+  where
+    open CMon c
+    open Funable
+
+    Σ' = search μX _∙_
+
+    Πᴬ = search (searchable FA) _⊙_
+    Πᴮ = search (searchable FB) _⊙_
+    
+    Σᴬᴮ = search (negative FA (negative FB μX)) _∙_
+    Σᴮ  = search (negative FB μX) _∙_
+
+⊎-Dist : ∀ {A B} FA FB → DistFunable {A} FA → DistFunable {B} FB → DistFunable (FA ⊎-Fun FB)
+⊎-Dist FA FB FA-dist FB-dist μX c _◎_ distrib _◎-cong_ f 
+ = Πᴬ (Σ' ∘ f ∘ inj₁) ◎ Πᴮ (Σ' ∘ f ∘ inj₂) 
+ ≈⟨ FA-dist μX c _◎_ distrib _◎-cong_ (f ∘ inj₁) ◎-cong FB-dist μX c _◎_ distrib _◎-cong_ (f ∘ inj₂) ⟩ 
+   Σᴬ (λ fa → Πᴬ (λ i → f (inj₁ i) (fa i))) ◎ Σᴮ (λ fb → Πᴮ (λ i → f (inj₂ i) (fb i)))
+ ≈⟨ sym (search-linʳ (negative FA μX) monoid _◎_ _ _ (proj₂ distrib)) ⟩
+   Σᴬ (λ fa → Πᴬ (λ i → f (inj₁ i) (fa i)) ◎ Σᴮ (λ fb → Πᴮ (λ i → f (inj₂ i) (fb i)))) 
+ ≈⟨ search-sg-ext (negative FA μX) semigroup (λ fa → sym (search-linˡ (negative FB μX) monoid _◎_ _ _ (proj₁ distrib))) ⟩
+   (Σᴬ λ fa → Σᴮ λ fb → Πᴬ ((f ∘ inj₁) ˢ fa) ◎ Πᴮ ((f ∘ inj₂) ˢ fb))
+ ∎
+ where
+    open CMon c
+    open Funable
+    
+    Σ' = search μX _∙_
+
+    Πᴬ = search (searchable FA) _◎_
+    Πᴮ = search (searchable FB) _◎_
+    
+    Σᴬ = search (negative FA μX) _∙_
+    Σᴮ = search (negative FB μX) _∙_
+
 
 -- -}
 -- -}

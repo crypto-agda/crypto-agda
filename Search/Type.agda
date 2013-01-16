@@ -12,6 +12,8 @@ open import Data.Product
 open import Data.Sum
 import Algebra.FunctionProperties.NP as FP
 open FP using (Op₂)
+open import Relation.Unary.Logical
+open import Relation.Binary.Logical
 open import Relation.Binary.NP
 import Relation.Binary.PropositionalEquality as ≡
 open ≡ using (_≡_; _≗_)
@@ -57,7 +59,7 @@ module CMon {c ℓ} (cm : CommutativeMonoid c ℓ) where
                     isEquivalence
                     _∙_ assoc comm (λ _ → flip ∙-cong refl)
 
-Search : ∀ ℓ → ★₀ → ★ _
+Search : ∀ ℓ → ★₀ → ★ ₛ ℓ
 Search ℓ A = ∀ {M : ★ ℓ} → (_∙_ : M → M → M) → (A → M) → M
 
 Search₀ : ★₀ → ★₁
@@ -65,6 +67,19 @@ Search₀ = Search _
 
 Search₁ : ★₀ → ★₂
 Search₁ = Search _
+
+[Search] : ([★₀] [→] [★₁]) (Search _)
+[Search] Aₚ = ∀⟨ Mₚ ∶ [★₀] ⟩[→] [Op₂] Mₚ [→] (Aₚ [→] Mₚ) [→] Mₚ
+
+⟦Search⟧ : (⟦★₀⟧ ⟦→⟧ ⟦★₁⟧) (Search _) (Search _)
+⟦Search⟧ Aᵣ = ∀⟨ Mᵣ ∶ ⟦★₀⟧ ⟩⟦→⟧ ⟦Op₂⟧ Mᵣ ⟦→⟧ (Aᵣ ⟦→⟧ Mᵣ) ⟦→⟧ Mᵣ
+
+⟦Search⟧ᵤ : ∀ {ℓ} → (⟦★₀⟧ ⟦→⟧ ⟦★⟧ (ₛ ℓ)) (Search ℓ) (Search ℓ)
+⟦Search⟧ᵤ {ℓ} Aᵣ = ∀⟨ Mᵣ ∶ ⟦★⟧ ℓ ⟩⟦→⟧ ⟦Op₂⟧ Mᵣ ⟦→⟧ (Aᵣ ⟦→⟧ Mᵣ) ⟦→⟧ Mᵣ
+
+-- Trimmed down version of ⟦Search⟧
+⟦Search⟧₁ : ∀ {A : ★_ _} (Aᵣ : A → A → ★_ _) → Search _ A → ★₁
+⟦Search⟧₁ Aᵣ s = ⟦Search⟧ Aᵣ s s
 
 _∙Search_ : ∀ {ℓ A} → Search ℓ A → Search ℓ A → Search ℓ A
 (s₀ ∙Search s₁) _∙_ f = s₀ _∙_ f ∙ s₁ _∙_ f
@@ -184,6 +199,10 @@ SearchMono r sᴬ = ∀ {C} (_⊆_ : C → C → ★ r)
                     {_∙_} (∙-mono : _∙_ Preserves₂ _⊆_ ⟶ _⊆_ ⟶ _⊆_)
                     {f g} →
                     (∀ x → f x ⊆ g x) → sᴬ _∙_ f ⊆ sᴬ _∙_ g
+
+
+SearchExtFun : ∀ {A B} → Search _ (A → B) → ★₁
+SearchExtFun {A}{B} sᴬᴮ = ∀ {M} op {f g : (A → B) → M} → (∀ {φ ψ} → φ ≗ ψ → f φ ≡ g ψ) → sᴬᴮ op f ≡ sᴬᴮ op g
 
 SearchSgExt : ∀ r {ℓ A} → Search ℓ A → ★ _
 SearchSgExt r {ℓ} sᴬ = ∀ (sg : Semigroup ℓ r) {f g}

@@ -21,6 +21,7 @@ open import Function.Related.TypeIsomorphisms.NP
 open import Function.Equality using (_⟨$⟩_)
 
 open import sum
+open import Search.Searchable renaming (Searchable to SumProp)
 open import Relation.Binary.Sum
 import Relation.Binary.PropositionalEquality.NP as ≡
 open ≡ using (_≡_ ; _≗_ ; _≗₂_)
