@@ -48,8 +48,8 @@ module _ {a b c} {A : ★ a} {B : ★ b} {C : A → ★ c} (f : A ↔ B) where
     right p = mkΣ≡ (C ∘ from f) (right-f (proj₁ p)) (helper p)
             where
                 helper : ∀ p → subst (C ∘ from f) (right-f (proj₁ p)) (coe (proj₁ (⇐ p)) (proj₂ (⇐ p))) ≡ proj₂ p
-                helper p with left-f (from f (proj₁ p)) | right-f (proj₁ p)
-                ... | q | r = {!!}
+                helper p with to f (from f (proj₁ p)) | right-f (proj₁ p) | left-f (from f (proj₁ p))
+                helper _ | ._ | refl | refl = refl
   first-iso : Σ A C ↔ Σ B (C ∘ from f)
   first-iso = inverses (⇒) (⇐) left right
 
