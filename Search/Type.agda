@@ -270,6 +270,9 @@ SearchSwap r {ℓ} {A} sᴬ = ∀ {B : ★₀} sg f →
                           → (hom : ∀ f g → sᴮ (f ∙° g) ≈ sᴮ f ∙ sᴮ g)
                           → sᴬ _∙_ (sᴮ ∘ f) ≈ sᴮ (sᴬ _∙_ ∘ flip f)
 
+Unique : ∀ {A} → Cmp A → Count A → ★ _
+Unique cmp count = ∀ x → count (cmp x) ≡ 1
+
 Data : ∀ {b A} → Search _ A → (A → ★ b) → ★ b
 Data sA = sA _×_
 

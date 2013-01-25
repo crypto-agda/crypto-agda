@@ -1,8 +1,11 @@
 open import Type hiding (★)
 open import Function.NP
+open import Data.Bool using (true ; false ; _∧_ ; if_then_else_)
 open import Data.Product
 open import Search.Type
 open import Search.Searchable
+
+open import Relation.Binary.PropositionalEquality.NP using (_≡_ ; module ≡-Reasoning)
 
 module Search.Searchable.Product where
 
@@ -63,6 +66,19 @@ infixr 4 _×Sum_
 
 _×Sum_ : ∀ {A B} → Sum A → Sum B → Sum (A × B)
 sumᴬ ×Sum sumᴮ = ΣSum sumᴬ sumᴮ
+
+×-cmp : ∀ {A B : ★₀ } → Cmp A → Cmp B → Cmp (A × B)
+×-cmp ca cb (a , b) (a' , b') = ca a a' ∧ cb b b'
+
+×-Unique : ∀ {A B}(μA : Searchable A)(μB : Searchable B)(cA : Cmp A)(cB : Cmp B) → Unique cA (count μA) → Unique cB (count μB) → Unique (×-cmp cA cB) (count (μA ×μ μB))
+×-Unique μA μB cA cB uA uB (x , y) = count (μA ×μ μB) (×-cmp cA cB (x , y)) ≡⟨ search-ext μA _ (λ x' → help (cA x x')) ⟩
+                                     count μA (cA x) ≡⟨ uA x ⟩
+                                     1 ∎
+  where
+    open ≡-Reasoning
+    help : ∀ b → count μB (λ y' → b ∧ cB y y') ≡ (if b then 1 else 0)
+    help true = uB y
+    help false = sum-zero μB
 
 -- Those are here only for pedagogical use
 private

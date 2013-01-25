@@ -54,19 +54,17 @@ module MM where
   ... | inj₁ q = ⊥-elim (sucx≰x y (≡.subst (λ z → suc z ℕ≤ y) (f-inj {x} {y} (<-trans p y<ub) y<ub q) p))
   ... | inj₂ q = q
 
-  -- f-mono-<′ : ∀ {x} → suc x < ub → f x < f (suc x)
-
   le : ∀ n → suc n < ub → f (suc n) ≤ n → f n < n
   le n 1+n<ub p = ℕ≤.trans (f-mono-< {n} {suc n} ℕ≤.refl 1+n<ub) p
-
-  bo : ∀ b → b < ub → ¬(f b < b)
-  bo zero _ ()
-  bo (suc b) b<ub (s≤s p) = bo b (ℕ≤.trans (s≤s (≤-step ℕ≤.refl)) b<ub) (le b b<ub p)
 
   fp : ∀ b → b < ub → Bounded (suc b) f → f b ≡ b
   fp b b<ub bub with split-≤ (bub b ℕ≤.refl)
   ... | inj₁ p = suc-injective p
   ... | inj₂ p = ⊥-elim (bo b b<ub (≤-pred p))
+    where
+      bo : ∀ b → b < ub → ¬(f b < b)
+      bo zero _ ()
+      bo (suc b) b<ub (s≤s p) = bo b (ℕ≤.trans (s≤s (≤-step ℕ≤.refl)) b<ub) (le b b<ub p)
 
   ob : ∀ b → b ≤ ub → Bounded b f → ∀ x → x < b → f x ≡ x
   ob zero b≤ub bub _ ()
