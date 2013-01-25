@@ -30,16 +30,26 @@ module _ {a r} {A : ★ a} {R : ★ r} where
 
 module _ {a b c} {A : ★ a} {B : ★ b} {C : A → ★ c} (f : A ↔ B) where
   private
+    left-f = FI.Inverse.left-inverse-of f
+    right-f = FI.Inverse.right-inverse-of f
     coe : ∀ x → C x → C (from f (to f x))
-    coe x = ≡.subst C (≡.sym (FI.Inverse.left-inverse-of f x))
+    coe x = ≡.subst C (≡.sym (left-f x))
+    coe' : (xp : Σ A C) → C (from f (to f (proj₁ xp)))
+    coe' (x , p) = coe x p
     ⇒ : Σ A C → Σ B (C ∘ from f)
     ⇒ (x , p) = to f x , coe x p
     ⇐ : Σ B (C ∘ from f) → Σ A C
     ⇐ (x , p) = from f x , p
     left : ∀ x → ⇐ (⇒ x) ≡ x
-    left (x , p) rewrite FI.Inverse.left-inverse-of f x = refl
+    left (x , p) rewrite left-f x = refl
+    mkΣ≡ : ∀ {a b} {A : ★ a} {x y : A} (B : A → ★ b) {p : B x} {q : B y} (xy : x ≡ y) → subst B xy p ≡ q → (x , p) ≡ (y , q)
+    mkΣ≡ _ xy h rewrite xy | h = refl
     right : ∀ x → ⇒ (⇐ x) ≡ x
-    right (x , p) = ?
+    right p = mkΣ≡ (C ∘ from f) (right-f (proj₁ p)) (helper p)
+            where
+                helper : ∀ p → subst (C ∘ from f) (right-f (proj₁ p)) (coe (proj₁ (⇐ p)) (proj₂ (⇐ p))) ≡ proj₂ p
+                helper p with to f (from f (proj₁ p)) | right-f (proj₁ p) | left-f (from f (proj₁ p))
+                helper _ | ._ | refl | refl = refl
   first-iso : Σ A C ↔ Σ B (C ∘ from f)
   first-iso = inverses (⇒) (⇐) left right
 
