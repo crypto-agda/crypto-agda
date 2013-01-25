@@ -28,6 +28,10 @@ module _ {a r} {A : ★ a} {R : ★ r} where
   ≈-sym : Symmetric {A = A → R} _≈_
   ≈-sym p O = FI.sym (p O)
 
+private -- move to NP?
+  mkΣ≡ : ∀ {a b} {A : ★ a} {x y : A} (B : A → ★ b) {p : B x} {q : B y} (xy : x ≡ y) → subst B xy p ≡ q → (x , p) ≡ (y , q)
+  mkΣ≡ _ xy h rewrite xy | h = refl
+
 module _ {a b c} {A : ★ a} {B : ★ b} {C : A → ★ c} (f : A ↔ B) where
   private
     left-f = FI.Inverse.left-inverse-of f
@@ -42,8 +46,6 @@ module _ {a b c} {A : ★ a} {B : ★ b} {C : A → ★ c} (f : A ↔ B) where
     ⇐ (x , p) = from f x , p
     left : ∀ x → ⇐ (⇒ x) ≡ x
     left (x , p) rewrite left-f x = refl
-    mkΣ≡ : ∀ {a b} {A : ★ a} {x y : A} (B : A → ★ b) {p : B x} {q : B y} (xy : x ≡ y) → subst B xy p ≡ q → (x , p) ≡ (y , q)
-    mkΣ≡ _ xy h rewrite xy | h = refl
     right : ∀ x → ⇒ (⇐ x) ≡ x
     right p = mkΣ≡ (C ∘ from f) (right-f (proj₁ p)) (helper p)
             where
@@ -52,6 +54,13 @@ module _ {a b c} {A : ★ a} {B : ★ b} {C : A → ★ c} (f : A ↔ B) where
                 helper _ | ._ | refl | refl = refl
   first-iso : Σ A C ↔ Σ B (C ∘ from f)
   first-iso = inverses (⇒) (⇐) left right
+
+module _ {a r} {A : ★ a} {R : ★ r} (f : A → R) (p : A ↔ A) where
+  stable : f ≈ (f ∘ from p)
+  stable _ = first-iso p
+
+  stable′ : f ≈ (f ∘ to p)
+  stable′ _ = first-iso (FI.sym p)
 
 module _ {a b r} {A : ★ a} {B : ★ b} {R : ★ r} where
   _≋_ : (f : A → R) (g : B → R) → ★ _
