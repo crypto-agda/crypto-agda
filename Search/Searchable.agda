@@ -106,7 +106,7 @@ module Searchableₘ
                (Aᵣ-refl : Reflexive Aᵣ)
               → ⟦Search⟧ᵤ Aᵣ search search
   ⟦search⟧ᵤ Aᵣ-refl Mᵣ ∙ᵣ fᵣ = search-ind (λ s → Mᵣ (s _ _) (s _ _)) (λ η → ∙ᵣ η) (λ η → fᵣ Aᵣ-refl)
-  
+
   search-ε : Searchε m m search
   search-ε M = search-ind (λ s → s _ (const ε) ≈ ε)
                           (λ x≈ε y≈ε → trans (∙-cong x≈ε y≈ε) (proj₁ identity ε))
@@ -202,14 +202,14 @@ module Searchable₀
 module Searchable₁₀ {A} {search₁ : Search₁ A}
                     (search-ind₀ : SearchInd ₀ search₁) where
 
-  dataFromFun : DataFromFun search₁
-  dataFromFun = search-ind₀ (λ s → Data s _) _,_
+  Π→data : Π→Data search₁
+  Π→data = search-ind₀ (λ s → Data s _) _,_
 
 module Searchable₁₁ {A} {search₁ : Search₁ A}
                     (search-ind₁ : SearchInd ₁ search₁) where
 
-  pointToPair : PointToPair search₁
-  pointToPair = search-ind₁ PointToPair (λ P0 P1 → [ P0 , P1 ]) (λ η → _,_ η)
+  point→Σ : Point→Σ search₁
+  point→Σ = search-ind₁ Point→Σ (λ P0 P1 → [ P0 , P1 ]) (λ η → _,_ η)
 
 record Searchable A : ★₁ where
   constructor _,_
@@ -243,8 +243,8 @@ module DistFun {A} (μA : Searchable A)
   Σ' = search (μA→ μB) ∙
 
   DistFun = ∀ f → Π' (Σᴮ ∘ f) ≈ Σ' (Π' ∘ _ˢ_ f)
-                     
-  
+
+
 DistFun : ∀ {A} → Searchable A → SearchForFun A → ★₁
 DistFun μA μA→ = ∀ {B} (μB : Searchable B) c → let open CMon {L.zero}{L.zero} c in
                    ∀ ◎ → _DistributesOver_ _≈_ ◎ _∙_ → ◎ Preserves₂ _≈_ ⟶ _≈_ ⟶ _≈_
