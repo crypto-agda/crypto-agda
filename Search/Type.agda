@@ -3,6 +3,7 @@ module Search.Type where
 open import Level using (_⊔_) renaming (zero to ₀; suc to ₛ)
 open import Type hiding (★)
 open import Function.NP
+open import Function.Inverse using (_↔_)
 open import Data.Nat.NP hiding (_⊔_)
 open import Data.Bits
 open import Data.Indexed
@@ -276,18 +277,24 @@ Unique cmp count = ∀ x → count (cmp x) ≡ 1
 Data : ∀ {b A} → Search _ A → (A → ★ b) → ★ b
 Data sA = sA _×_
 
-DataToFun : ∀ {b A} → Search _ A → ★ _
-DataToFun {b} {A} sA = ∀ {B : A → ★ b} → Data sA B → Π A B
+Data→Π : ∀ {b A} → Search _ A → ★ _
+Data→Π {b} {A} sA = ∀ {B : A → ★ b} → Data sA B → Π A B
 
-DataFromFun : ∀ {b A} → Search _ A → ★ _
-DataFromFun {b} {A} sA = ∀ {B : A → ★ b} → Π A B → Data sA B
+Π→Data : ∀ {b A} → Search _ A → ★ _
+Π→Data {b} {A} sA = ∀ {B : A → ★ b} → Π A B → Data sA B
+
+Data↔Π : ∀ {b A} → Search _ A → ★ _
+Data↔Π {b} {A} sA = ∀ {B : A → ★ b} → Data sA B ↔ Π A B
 
 Point : ∀ {b A} → Search _ A → (A → ★ b) → ★ b
 Point sA = sA _⊎_
 
-PointToPair : ∀ {b A} → Search _ A → ★ _
-PointToPair {b} {A} sA = ∀ {B : A → ★ b} → Point sA B → Σ A B
+Point→Σ : ∀ {b A} → Search _ A → ★ _
+Point→Σ {b} {A} sA = ∀ {B : A → ★ b} → Point sA B → Σ A B
 
-PointFromPair : ∀ {b A} → Search _ A → ★ _
-PointFromPair {b} {A} sA = ∀ {B : A → ★ b} → Σ A B → Point sA B
+Σ→Point : ∀ {b A} → Search _ A → ★ _
+Σ→Point {b} {A} sA = ∀ {B : A → ★ b} → Σ A B → Point sA B
+
+Point↔Σ : ∀ {b A} → Search _ A → ★ _
+Point↔Σ {b} {A} sA = ∀ {B : A → ★ b} → Point sA B ↔ Σ A B
 -- -}

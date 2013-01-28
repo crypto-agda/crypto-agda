@@ -80,6 +80,18 @@ sumᴬ ×Sum sumᴮ = ΣSum sumᴬ sumᴮ
     help true = uB y
     help false = sum-zero μB
 
+module _ {A} {B : A → _} {sᴬ : Search₁ A} {sᴮ : ∀ {x} → Search₁ (B x)} where
+  Σ-Σ→Point : Σ→Point sᴬ → (∀ {x} → Σ→Point (sᴮ {x})) → Σ→Point (ΣSearch sᴬ (λ {x} → sᴮ {x}))
+  Σ-Σ→Point fᴬ fᴮ ((x , y) , z) = fᴬ (x , fᴮ (y , z))
+  Σ-Data→Π : Data→Π sᴬ → (∀ {x} → Data→Π (sᴮ {x})) → Data→Π (ΣSearch sᴬ (λ {x} → sᴮ {x}))
+  Σ-Data→Π fᴬ fᴮ g (x , y) = fᴮ (fᴬ g x) y
+
+module _ {A B} {sᴬ : Search₁ A} {sᴮ : Search₁ B} where
+  _×Σ→Point_ : Σ→Point sᴬ → Σ→Point sᴮ → Σ→Point (sᴬ ×Search sᴮ)
+  (fᴬ ×Σ→Point fᴮ) = Σ-Σ→Point {sᴬ = sᴬ} {sᴮ = sᴮ} fᴬ fᴮ
+  _×Data→Π_ : Data→Π sᴬ → Data→Π sᴮ → Data→Π (sᴬ ×Search sᴮ)
+  (fᴬ ×Data→Π fᴮ) = Σ-Data→Π {sᴬ = sᴬ} {sᴮ = sᴮ} fᴬ fᴮ
+
 -- Those are here only for pedagogical use
 private
     ΣSum' : ∀ {A} {B : A → ★₀} → Sum A → (∀ x → Sum (B x)) → Sum (Σ A B)

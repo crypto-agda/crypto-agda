@@ -14,8 +14,8 @@ open import Data.Bits
 open import Data.Bool.NP as Bool
 open import Function.NP
 open import Function.Equality using (_⟨$⟩_)
-import Function.Inverse as FI
-open FI using (_↔_; module Inverse)
+import Function.Inverse.NP as FI
+open FI using (_↔_; inverses; module Inverse) renaming (_$₁_ to to; _$₂_ to from)
 import Function.Related as FR
 open import Function.Related.TypeIsomorphisms.NP
 open import Relation.Binary.NP
@@ -52,14 +52,32 @@ s₀ ≈Search s₁ = ∀ {B} (op : Op₂ B) f → s₀ op f ≡ s₁ op f
     ind : SearchInd _ srch
     ind _ _ Pf = Pf _
 
-μBit : SumProp Bit
-μBit = searchBit , ind
-  where
-    searchBit : Search _ Bit
-    searchBit _∙_ f = f 0b ∙ f 1b
+searchBit : ∀ {m} → Search m Bit
+searchBit _∙_ f = f 0b ∙ f 1b
 
-    ind : SearchInd _ searchBit
-    ind _ _P∙_ Pf = Pf 0b P∙ Pf 1b
+searchBit-ind : ∀ {m p} → SearchInd p {m} searchBit
+searchBit-ind _ _P∙_ Pf = Pf 0b P∙ Pf 1b
+
+μBit : SumProp Bit
+μBit = searchBit , searchBit-ind
+
+Bit-Σ→Point : ∀ {a} → Σ→Point {a} searchBit
+Bit-Σ→Point (false , x) = inj₁ x
+Bit-Σ→Point (true ,  x) = inj₂ x
+
+Bit-Point↔Σ : Point↔Σ {L.zero} searchBit
+Bit-Point↔Σ {B} = inverses point→Σ Bit-Σ→Point (⇒) (⇐)
+  where open Searchable₁₁ searchBit-ind
+        ⇒ : (x : B 0b ⊎ B 1b) → _
+        ⇒ (inj₁ x) = ≡.refl
+        ⇒ (inj₂ x) = ≡.refl
+        ⇐ : (x : Σ Bit B) → _
+        ⇐ (false , x) = ≡.refl
+        ⇐ (true  , x) = ≡.refl
+
+Bit-Data→Π : ∀ {a} → Data→Π {a} searchBit
+Bit-Data→Π (x , y) false = x
+Bit-Data→Π (x , y) true  = y
 
 infixr 4 _+Search_
 
@@ -79,6 +97,24 @@ _+Sum_ : ∀ {A B} → Sum A → Sum B → Sum (A ⊎ B)
 
 _+μ_ : ∀ {A B} → SumProp A → SumProp B → SumProp (A ⊎ B)
 μA +μ μB = _ , search-ind μA +SearchInd search-ind μB
+
+module _ {A B} {sᴬ : Search₁ A} {sᴮ : Search₁ B} where
+  sᴬ⁺ᴮ = sᴬ +Search sᴮ
+  _+Σ→Point_ : Σ→Point sᴬ → Σ→Point sᴮ → Σ→Point sᴬ⁺ᴮ
+  (fᴬ +Σ→Point fᴮ) (inj₁ x , y) = inj₁ (fᴬ (x , y))
+  (fᴬ +Σ→Point fᴮ) (inj₂ x , y) = inj₂ (fᴮ (x , y))
+
+  {-
+  _+Point↔Σ_ : Point↔Σ sᴬ → Point↔Σ sᴮ → Point↔Σ {L.zero} sᴬ⁺ᴮ
+  _+Point↔Σ_ fᴬ fᴮ {B} = inverses {!point→Σ!} (from fᴬ +Σ→Point from fᴮ) (⇒) {!!} -- (⇒) (⇐)
+      where
+        ⇒ : (x : sᴬ _⊎_ (B ∘ inj₁) ⊎ sᴮ _⊎_ (B ∘ inj₂)) → _
+        ⇒ (inj₁ x) = {!!}
+        ⇒ (inj₂ x) = {!!}
+  -}
+
+  _+Data→Π_ : Data→Π sᴬ → Data→Π sᴮ → Data→Π (sᴬ +Search sᴮ)
+  (fᴬ +Data→Π fᴮ) (x , y) = [ fᴬ x , fᴮ y ]
 
 _⊎'_ : ★₀ → ★₀ → ★₀
 A ⊎' B = Σ Bool (cond A B)
