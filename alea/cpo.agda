@@ -109,37 +109,38 @@ record cpo {D} (o : Order D) : Set where
   _$_ lubm' = lub
   mon lubm' {a}{b} x₁ = lub-ext {mk (λ z → a $ z) (mon a)}{mk (λ z → b $ z) (mon b)} x₁
 
-.lub-swap : ∀ {D}{o : Order D}(c : cpo o)
-           → let open cpo c
-                 open Order o
-             in ∀ f → lub (lubm ∘m f) ≤ lub (lubm ∘m swapm f)
-lub-swap {D}{o} c f = lubLUB (lubm ∘m f) (lub (lubm ∘m swapm f))
-                   (λ n → lubLUB (f $ n) (lub (lubm ∘m swapm f))
-                   (λ n₁ → transitive (lubUB (swapm f $ n₁) n) (lubUB (lubm ∘m swapm f) n₁)))
-  where
-    open cpo c
-    open Order o
+module _ where
+  .lub-swap : ∀ {D}{o : Order D}(c : cpo o)
+             → let open cpo c
+                   open Order o
+               in ∀ f → lub (lubm ∘m f) ≤ lub (lubm ∘m swapm f)
+  lub-swap {D}{o} c f = lubLUB (lubm ∘m f) (lub (lubm ∘m swapm f))
+                     (λ n → lubLUB (f $ n) (lub (lubm ∘m swapm f))
+                     (λ n₁ → transitive (lubUB (swapm f $ n₁) n) (lubUB (lubm ∘m swapm f) n₁)))
+    where
+      open cpo c
+      open Order o
 
-funcpo : ∀ {A D}{od : Order D} → cpo od → cpo (A o→ od)
-funcpo cpod = mk (λ x → d0) (λ f x → lub (f $m x)) (λ x x₁ → Dbot (x x₁)) (λ f n x → lubUB (f $m x) n)
-  (λ f x x₁ x₂ → lubLUB (f $m x₂) (x x₂) (λ n → x₁ n x₂))
-  where
-    open cpo cpod
-    open Nat
-    open ≡ using (_≡_)
+  funcpo : ∀ {A D}{od : Order D} → cpo od → cpo (A o→ od)
+  funcpo cpod = mk (λ x → d0) (λ f x → lub (f $m x)) (λ x x₁ → Dbot (x x₁)) (λ f n x → lubUB (f $m x) n)
+    (λ f x x₁ x₂ → lubLUB (f $m x₂) (x x₂) (λ n → x₁ n x₂))
+    where
+      open cpo cpod
+      open Nat
+      open ≡ using (_≡_)
 
-_c→m_ : ∀ {A D}(oa : Order A){od : Order D} → cpo od → cpo (oa o→m od)
-_c→m_ {A} oa {od} cpod = mk (mk (λ x → d0) (λ x₁ → Order.reflexive od))
-                        (λ f → mk (cpo.lub (funcpo {A} cpod)
-                                     (mk (λ n a → (f $ n) $ a) (mon f)))
-                                  (λ {x}{y}x≤y → lubLUB _ _ (λ n → transitive (mon (f $ n) x≤y) (lubUB (mk (λ v → (f $ v) $ y) (λ r → mon f r y)) n))))
-                        (λ x x₁ → Dbot (x $ x₁))
-                        (λ f n x → lubUB (mk (λ m → (f $ m) $ x) (λ x₂ → mon f x₂ x)) n)
-                        (λ f x x₁ x₂ → lubLUB (mk (λ n → _$_ (f $ n)) (mon f) $m x₂) (x $ x₂) (λ n → x₁ n x₂))
-  where
-    open cpo cpod
-    open Order od renaming (_≤_ to _≤ᵈ_)
-    open Order oa using () renaming (_≤_ to _≤ᵃ_)
+  _c→m_ : ∀ {A D}(oa : Order A){od : Order D} → cpo od → cpo (oa o→m od)
+  _c→m_ {A} oa {od} cpod = mk (mk (λ x → d0) (λ x₁ → Order.reflexive od))
+                          (λ f → mk (cpo.lub (funcpo {A} cpod)
+                                       (mk (λ n a → (f $ n) $ a) (mon f)))
+                                    (λ {x}{y}x≤y → lubLUB _ _ (λ n → transitive (mon (f $ n) x≤y) (lubUB (mk (λ v → (f $ v) $ y) (λ r → mon f r y)) n))))
+                          (λ x x₁ → Dbot (x $ x₁))
+                          (λ f n x → lubUB (mk (λ m → (f $ m) $ x) (λ x₂ → mon f x₂ x)) n)
+                          (λ f x x₁ x₂ → lubLUB (mk (λ n → _$_ (f $ n)) (mon f) $m x₂) (x $ x₂) (λ n → x₁ n x₂))
+    where
+      open cpo cpod
+      open Order od renaming (_≤_ to _≤ᵈ_)
+      open Order oa using () renaming (_≤_ to _≤ᵃ_)
 
 record continous {A B}{oa : Order A}{ob : Order B}
                  (c1 : cpo oa)(c2 : cpo ob)(f : oa →m ob) : Set where
@@ -160,7 +161,12 @@ open continous
 
 module Distr
   (Ur  : Set) -- the set [0,1]
+  (1/_+1 : Nat.ℕ → Ur)
+  (_+_ : Ur → Ur → Ur)
+  (_×_ : Ur → Ur → Ur)
   (oUr : Order Ur)
+  (≤-cong-+ : let open Order oUr in ∀ {x y z w} → x ≤ z → y ≤ w → x + y ≤ z + w)
+  (≤-cong-× : let open Order oUr in ∀ {x y z w} → x ≤ z → y ≤ w → x × y ≤ z × w)
   (U   : cpo oUr) where
 
   record distr A : Set where
@@ -227,6 +233,16 @@ module Distr
 
     open Order oUr
     open cpo U
+    open import Data.Bool
+
+    postulate
+      EXPLODE : ∀ {A : Set} → A
+
+
+    flip : distr Bool
+    _$_ (μ flip) f = (1/ 1 +1 × f true) + (1/ 1 +1 × f false)
+    mon (μ flip) r = ≤-cong-+ (≤-cong-× reflexive (r true)) (≤-cong-× reflexive (r false))
+    muContinous flip h = EXPLODE
 
     Munit : ∀ {A} → A → distr A
     Munit x = mk (mk (λ f → f x) (λ x≤y → x≤y x)) (λ h → reflexive)
