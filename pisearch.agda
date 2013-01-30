@@ -13,18 +13,6 @@ open import sum
 fromFun-searchInd : ∀ {A} {sA : Search A} → SearchInd sA → FromFun sA
 fromFun-searchInd indA = indA (λ s → Data s _) _,_
 
-toFun-Σ : ∀ {A} {B : A → ★} (sA : Search A) (sB : ∀ {x} → Search (B x))
-          → ToFun sA
-          → (∀ {x} → ToFun (sB {x}))
-          → ToFun (ΣSearch sA (λ {x} → sB {x}))
-toFun-Σ _ _ toFunA toFunB d = uncurry (toFunB ∘ toFunA d)
-
-fromFun-Σ : ∀ {A} {B : A → ★} (sA : Search A) (sB : ∀ {x} → Search (B x))
-            → FromFun sA
-            → (∀ {x} → FromFun (sB {x}))
-            → FromFun (ΣSearch sA (λ {x} → sB {x}))
-fromFun-Σ _ _ fromFunA fromFunB f = fromFunA (fromFunB ∘ curry f)
-
 open import Relation.Binary.PropositionalEquality hiding ([_])
 ToFrom : ∀ {A} (sA : Search A)
            (toFunA : ToFun sA)

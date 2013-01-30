@@ -72,8 +72,8 @@ _∘m'_ : ∀ {A B C}{oa : Order A}{ob : Order B}{oc : Order C}
 _$_ (f ∘m' g) x = f $ (g $ x)
 mon (f ∘m' g) x = mon f (mon g x)
 
-_$m_ : ∀ {A B C}{oa : Order A}{oc : Order C} → oa →m (funOrder {B} oc)
-     → B → oa →m oc
+_$m_ : ∀ {A B C}{oa : Order A}{oc : Order C}
+       → oa →m (B o→ oc) → B → oa →m oc
 _$m_ {oa = oa}{oc} f b = mk (λ a → (f $ a) b) (λ x≤y → mon f x≤y b )
 
 _$m'_ : ∀ {A B C}{oa : Order A}{oc : Order C} → oa →m (funOrder {B} oc)

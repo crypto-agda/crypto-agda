@@ -1,5 +1,5 @@
 import Level as L
-open L using (Lift)
+open L using (Lift; lift)
 open import Type hiding (★)
 open import Function.NP
 open import Algebra
@@ -12,6 +12,7 @@ open import Data.Maybe.NP
 open import Data.Product
 open import Data.Bits
 open import Data.Bool.NP as Bool
+open import Data.Fin using (Fin)
 open import Function.NP
 open import Function.Equality using (_⟨$⟩_)
 import Function.Inverse.NP as FI
@@ -22,8 +23,9 @@ open import Relation.Binary.NP
 import Relation.Binary.PropositionalEquality.NP as ≡
 open ≡ using (_≡_; _≗_)
 open import Search.Type
-open import Search.Searchable renaming (Searchable to SumProp)
+open import Search.Searchable renaming (Searchable to Searchable)
 open import Search.Searchable.Product
+open import Search.Searchable.Sum
 open import Search.Derived
 
 module sum where
@@ -34,17 +36,31 @@ sum₀ ≈Sum sum₁ = ∀ f → sum₀ f ≡ sum₁ f
 _≈Search_ : ∀ {A} → (s₀ s₁ : Search _ A) → ★₁
 s₀ ≈Search s₁ = ∀ {B} (op : Op₂ B) f → s₀ op f ≡ s₁ op f
 
-μLift⊤ : SumProp (Lift ⊤)
-μLift⊤ = _ , ind
+μ-iso : ∀ {A B} → (A ↔ B) → Searchable A → Searchable B
+μ-iso {A}{B} A↔B μA = mk searchᴮ ind ade
   where
-    srch : Search _ (Lift ⊤)
-    srch _ f = f _
+    A→B = to A↔B
 
-    ind : SearchInd _ srch
-    ind _ _ Pf = Pf _
+    searchᴮ : Search _ B
+    searchᴮ m f = search μA m (f ∘ A→B)
 
-μ⊤ : SumProp ⊤
-μ⊤ = srch , ind
+    sumᴮ = searchᴮ _+_
+
+    ind : SearchInd _ searchᴮ
+    ind P P∙ Pf = search-ind μA (λ s → P (λ _ f → s _ (f ∘ A→B))) P∙ (Pf ∘ A→B)
+
+    ade : AdequateSum sumᴮ
+    ade f = sym-first-iso A↔B FI.∘ adequate-sum μA (f ∘ A→B)
+
+-- I guess this could be more general
+μ-iso-preserve : ∀ {A B} (A↔B : A ↔ B) f (μA : Searchable A) → sum μA f ≡ sum (μ-iso A↔B μA) (f ∘ from A↔B)
+μ-iso-preserve A↔B f μA = sum-ext μA (≡.cong f ∘ ≡.sym ∘ Inverse.left-inverse-of A↔B)
+
+μLift : ∀ {A} → Searchable A → Searchable (Lift A)
+μLift = μ-iso (FI.sym Lift↔id)
+
+μ⊤ : Searchable ⊤
+μ⊤ = mk _ ind ade
   where
     srch : Search _ ⊤
     srch _ f = f _
@@ -52,74 +68,39 @@ s₀ ≈Search s₁ = ∀ {B} (op : Op₂ B) f → s₀ op f ≡ s₁ op f
     ind : SearchInd _ srch
     ind _ _ Pf = Pf _
 
+    ade : AdequateSum (srch _+_)
+    ade x = FI.sym ⊤×A↔A
+
 searchBit : ∀ {m} → Search m Bit
 searchBit _∙_ f = f 0b ∙ f 1b
 
 searchBit-ind : ∀ {m p} → SearchInd p {m} searchBit
 searchBit-ind _ _P∙_ Pf = Pf 0b P∙ Pf 1b
 
-μBit : SumProp Bit
-μBit = searchBit , searchBit-ind
+μBit : Searchable Bit
+μBit = μ-iso (FI.sym Bit↔⊤⊎⊤) (μ⊤ ⊎-μ μ⊤)
 
-Bit-Σ→Point : ∀ {a} → Σ→Point {a} searchBit
-Bit-Σ→Point (false , x) = inj₁ x
-Bit-Σ→Point (true ,  x) = inj₂ x
+focusBit : ∀ {a} → Focus {a} searchBit
+focusBit (false , x) = inj₁ x
+focusBit (true ,  x) = inj₂ x
 
-Bit-Point↔Σ : Point↔Σ {L.zero} searchBit
-Bit-Point↔Σ {B} = inverses point→Σ Bit-Σ→Point (⇒) (⇐)
+focusedBit : Focused {L.zero} searchBit
+focusedBit {B} = inverses focusBit unfocus (⇒) (⇐)
   where open Searchable₁₁ searchBit-ind
-        ⇒ : (x : B 0b ⊎ B 1b) → _
-        ⇒ (inj₁ x) = ≡.refl
-        ⇒ (inj₂ x) = ≡.refl
-        ⇐ : (x : Σ Bit B) → _
-        ⇐ (false , x) = ≡.refl
-        ⇐ (true  , x) = ≡.refl
+        ⇒ : (x : Σ Bit B) → _
+        ⇒ (false , x) = ≡.refl
+        ⇒ (true  , x) = ≡.refl
+        ⇐ : (x : B 0b ⊎ B 1b) → _
+        ⇐ (inj₁ x) = ≡.refl
+        ⇐ (inj₂ x) = ≡.refl
 
-Bit-Data→Π : ∀ {a} → Data→Π {a} searchBit
-Bit-Data→Π (x , y) false = x
-Bit-Data→Π (x , y) true  = y
-
-infixr 4 _+Search_
-
-_+Search_ : ∀ {m A B} → Search m A → Search m B → Search m (A ⊎ B)
-(searchᴬ +Search searchᴮ) _∙_ f = searchᴬ _∙_ (f ∘ inj₁) ∙ searchᴮ _∙_ (f ∘ inj₂)
-
-_+SearchInd_ : ∀ {m p A B} {sᴬ : Search m A} {sᴮ : Search m B} →
-                 SearchInd p sᴬ → SearchInd p sᴮ → SearchInd p (sᴬ +Search sᴮ)
-(Psᴬ +SearchInd Psᴮ) P P∙ Pf
-  = P∙ (Psᴬ (λ s → P (λ _ f → s _ (f ∘ inj₁))) P∙ (Pf ∘ inj₁))
-       (Psᴮ (λ s → P (λ _ f → s _ (f ∘ inj₂))) P∙ (Pf ∘ inj₂))
-
-infixr 4 _+Sum_
-
-_+Sum_ : ∀ {A B} → Sum A → Sum B → Sum (A ⊎ B)
-(sumᴬ +Sum sumᴮ) f = sumᴬ (f ∘ inj₁) + sumᴮ (f ∘ inj₂)
-
-_+μ_ : ∀ {A B} → SumProp A → SumProp B → SumProp (A ⊎ B)
-μA +μ μB = _ , search-ind μA +SearchInd search-ind μB
-
-module _ {A B} {sᴬ : Search₁ A} {sᴮ : Search₁ B} where
-  sᴬ⁺ᴮ = sᴬ +Search sᴮ
-  _+Σ→Point_ : Σ→Point sᴬ → Σ→Point sᴮ → Σ→Point sᴬ⁺ᴮ
-  (fᴬ +Σ→Point fᴮ) (inj₁ x , y) = inj₁ (fᴬ (x , y))
-  (fᴬ +Σ→Point fᴮ) (inj₂ x , y) = inj₂ (fᴮ (x , y))
-
-  {-
-  _+Point↔Σ_ : Point↔Σ sᴬ → Point↔Σ sᴮ → Point↔Σ {L.zero} sᴬ⁺ᴮ
-  _+Point↔Σ_ fᴬ fᴮ {B} = inverses {!point→Σ!} (from fᴬ +Σ→Point from fᴮ) (⇒) {!!} -- (⇒) (⇐)
-      where
-        ⇒ : (x : sᴬ _⊎_ (B ∘ inj₁) ⊎ sᴮ _⊎_ (B ∘ inj₂)) → _
-        ⇒ (inj₁ x) = {!!}
-        ⇒ (inj₂ x) = {!!}
-  -}
-
-  _+Data→Π_ : Data→Π sᴬ → Data→Π sᴮ → Data→Π (sᴬ +Search sᴮ)
-  (fᴬ +Data→Π fᴮ) (x , y) = [ fᴬ x , fᴮ y ]
+lookupBit : ∀ {a} → Lookup {a} searchBit
+lookupBit = {!proj!}
 
 _⊎'_ : ★₀ → ★₀ → ★₀
 A ⊎' B = Σ Bool (cond A B)
 
-_μ⊎'_ : ∀ {A B} → SumProp A → SumProp B → SumProp (A ⊎' B)
+_μ⊎'_ : ∀ {A B} → Searchable A → Searchable B → Searchable (A ⊎' B)
 μA μ⊎' μB = μΣ μBit (λ { {true} → μA ; {false} → μB })
 
 SΠΣ⁻ : ∀ {m A} {B : A → ★ _} {C : Σ A B → ★ _}
@@ -133,8 +114,8 @@ SΠΣ⁻-ind : ∀ {m p A} {B : A → ★ _} {C : Σ A B → ★ _}
            → SearchInd p (SΠΣ⁻ s)
 SΠΣ⁻-ind ind P P∙ Pf = ind (P ∘ SΠΣ⁻) P∙ (Pf ∘ uncurry)
 
-μΠΣ⁻ : ∀ {A B}{C : Σ A B → ★₀} → SumProp ((x : A)(y : B x) → C (x , y)) → SumProp ((p : Σ A B) → C p)
-μΠΣ⁻ μ = (SΠΣ⁻ (search μ)) , (SΠΣ⁻-ind (search-ind μ))
+μΠΣ⁻ : ∀ {A B}{C : Σ A B → ★₀} → Searchable ((x : A)(y : B x) → C (x , y)) → Searchable ((p : Σ A B) → C p)
+μΠΣ⁻ μ = mk (SΠΣ⁻ (search μ)) (SΠΣ⁻-ind (search-ind μ)) {!!}
 
 Σ-Fun : ∀ {A B} → Funable A → (Funable B) → Funable (A × B)
 Σ-Fun (μA , μA→) FB  = μΣ μA (searchable FB) , (λ x → μΠΣ⁻ (μA→ (negative FB x)))
@@ -165,9 +146,9 @@ SΠ⊎⁻-ind : ∀ {m p A B} {C : A ⊎ B → ★ _}
            → SearchInd p (SΠ⊎⁻ {C = C} s) -- A sB)
 SΠ⊎⁻-ind i P P∙ Pf = i (P ∘ SΠ⊎⁻) P∙ (Pf ∘ uncurry [_,_])
 
-μΠ⊎⁻ : ∀ {A B}{C : A ⊎ B → ★ _} → SumProp (Π A (C ∘ inj₁) × Π B (C ∘ inj₂))
-     → SumProp (Π (A ⊎ B) C)
-μΠ⊎⁻ (μ , μ-ind) = (SΠ⊎⁻ μ) , (SΠ⊎⁻-ind μ-ind)
+μΠ⊎⁻ : ∀ {A B}{C : A ⊎ B → ★ _} → Searchable (Π A (C ∘ inj₁) × Π B (C ∘ inj₂))
+     → Searchable (Π (A ⊎ B) C)
+μΠ⊎⁻ (mk s s-ind s-ade) = mk (SΠ⊎⁻ s) (SΠ⊎⁻-ind s-ind) {!!}
 
 {- For each A→C function
    and each B→C function
@@ -175,10 +156,10 @@ SΠ⊎⁻-ind i P P∙ Pf = i (P ∘ SΠ⊎⁻) P∙ (Pf ∘ uncurry [_,_])
  -}
 S⊎⁻ : ∀ {m A B C} → Search m (A → C) → Search m (B → C)
                   → Search m (A ⊎ B → C)
-S⊎⁻ sA sB =  SΠ⊎⁻ (sA ×Search sB)
+S⊎⁻ sA sB =  SΠ⊎⁻ (sA ×-search sB)
 
 _⊎-Fun_ : ∀ {A B} → Funable A → Funable B → Funable (A ⊎ B)
-_⊎-Fun_ (μA , μA→) (μB , μB→) = (μA +μ μB) , (λ X → μΠ⊎⁻ (μA→ X ×μ μB→ X))
+_⊎-Fun_ (μA , μA→) (μB , μB→) = (μA ⊎-μ μB) , (λ X → μΠ⊎⁻ (μA→ X ×-μ μB→ X))
 
 S⊤ : ∀ {m A} → Search m A → Search m (⊤ → A)
 S⊤ sA _∙_ f = sA _∙_ (f ∘ const)
@@ -187,7 +168,7 @@ SΠBit : ∀ {m A} → Search m (A 0b) → Search m (A 1b)
                 → Search m (Π Bit A)
 SΠBit sA₀ sA₁ _∙_ f = sA₀ _∙_ λ x → sA₁ _∙_ λ y → f λ {true → y; false → x}
 
-sum-const : ∀ {A} (μA : SumProp A) → ∀ k → sum μA (const k) ≡ Card μA * k
+sum-const : ∀ {A} (μA : Searchable A) → ∀ k → sum μA (const k) ≡ Card μA * k
 sum-const μA k
   rewrite ℕ°.*-comm (Card μA) k
         | ≡.sym (sum-lin μA (const 1) k)
@@ -196,56 +177,37 @@ sum-const μA k
 infixr 4 _×Sum-proj₁_ _×Sum-proj₁'_ _×Sum-proj₂_ _×Sum-proj₂'_
 
 _×Sum-proj₁_ : ∀ {A B}
-                 (μA : SumProp A)
-                 (μB : SumProp B)
+                 (μA : Searchable A)
+                 (μB : Searchable B)
                  f →
-                 sum (μA ×μ μB) (f ∘ proj₁) ≡ Card μB * sum μA f
+                 sum (μA ×-μ μB) (f ∘ proj₁) ≡ Card μB * sum μA f
 (μA ×Sum-proj₁ μB) f
   rewrite sum-ext μA (sum-const μB ∘ f)
         = sum-lin μA f (Card μB)
 
 _×Sum-proj₂_ : ∀ {A B}
-                 (μA : SumProp A)
-                 (μB : SumProp B)
+                 (μA : Searchable A)
+                 (μB : Searchable B)
                  f →
-                 sum (μA ×μ μB) (f ∘ proj₂) ≡ Card μA * sum μB f
+                 sum (μA ×-μ μB) (f ∘ proj₂) ≡ Card μA * sum μB f
 (μA ×Sum-proj₂ μB) f = sum-const μA (sum μB f)
 
 _×Sum-proj₁'_ : ∀ {A B}
-                  (μA : SumProp A) (μB : SumProp B)
+                  (μA : Searchable A) (μB : Searchable B)
                   {f} {g} →
                   sum μA f ≡ sum μA g →
-                  sum (μA ×μ μB) (f ∘ proj₁) ≡ sum (μA ×μ μB) (g ∘ proj₁)
+                  sum (μA ×-μ μB) (f ∘ proj₁) ≡ sum (μA ×-μ μB) (g ∘ proj₁)
 (μA ×Sum-proj₁' μB) {f} {g} sumf≡sumg
   rewrite (μA ×Sum-proj₁ μB) f
         | (μA ×Sum-proj₁ μB) g
         | sumf≡sumg = ≡.refl
 
 _×Sum-proj₂'_ : ∀ {A B}
-                  (μA : SumProp A) (μB : SumProp B)
+                  (μA : Searchable A) (μB : Searchable B)
                   {f} {g} →
                   sum μB f ≡ sum μB g →
-                  sum (μA ×μ μB) (f ∘ proj₂) ≡ sum (μA ×μ μB) (g ∘ proj₂)
+                  sum (μA ×-μ μB) (f ∘ proj₂) ≡ sum (μA ×-μ μB) (g ∘ proj₂)
 (μA ×Sum-proj₂' μB) sumf≡sumg = sum-ext μA (const sumf≡sumg)
-
-μ-view : ∀ {A B} → (A → B) → SumProp A → SumProp B
-μ-view {A}{B} A→B μA = searchᴮ , ind
-  where
-    searchᴮ : Search _ B
-    searchᴮ m f = search μA m (f ∘ A→B)
-
-    ind : SearchInd _ searchᴮ
-    ind P P∙ Pf = search-ind μA (λ s → P (λ _ f → s _ (f ∘ A→B))) P∙ (Pf ∘ A→B)
-
-μ-iso : ∀ {A B} → (A ↔ B) → SumProp A → SumProp B
-μ-iso A↔B = μ-view (_⟨$⟩_ (Inverse.to A↔B))
-
-μ-view-preserve : ∀ {A B} (A→B : A → B)(B→A : B → A)(A≈B : id ≗ B→A ∘ A→B) f (μA : SumProp A) → sum μA f ≡ sum (μ-view A→B μA) (f ∘ B→A)
-μ-view-preserve A→B B→A A≈B f μA = sum-ext μA (≡.cong f ∘ A≈B)
-
-μ-iso-preserve : ∀ {A B} (A↔B : A ↔ B) f (μA : SumProp A) → sum μA f ≡ sum (μ-iso A↔B μA) (f ∘ _⟨$⟩_ (Inverse.from A↔B))
-μ-iso-preserve A↔B f μA = μ-view-preserve (_⟨$⟩_ (Inverse.to A↔B)) (_⟨$⟩_ (Inverse.from A↔B))
-                            (≡.sym ∘ Inverse.left-inverse-of A↔B) f μA
 
 open import Data.Fin using (Fin; zero; suc)
 open import Data.Vec.NP as Vec using (Vec; tabulate; _++_) renaming (map to vmap; sum to vsum; foldr to vfoldr; foldr₁ to vfoldr₁)
@@ -270,38 +232,38 @@ vsgsum sg = vfoldr₁ _∙_
 searchFinSuc : ∀ {m} n → Search m (Fin (suc n))
 searchFinSuc n _∙_ f = vfoldr₁ _∙_ (tabulate f)
 
-μMaybe : ∀ {A} → SumProp A → SumProp (Maybe A)
-μMaybe μA = μ-iso (FI.sym Maybe↔⊤⊎) (μ⊤ +μ μA)
+μMaybe : ∀ {A} → Searchable A → Searchable (Maybe A)
+μMaybe μA = μ-iso (FI.sym Maybe↔⊤⊎) (μ⊤ ⊎-μ μA)
 
-μMaybe^ : ∀ {A} n → SumProp A → SumProp (Maybe^ n A)
+μMaybe^ : ∀ {A} n → Searchable A → Searchable (Maybe^ n A)
 μMaybe^ zero    μA = μA
 μMaybe^ (suc n) μA = μMaybe (μMaybe^ n μA)
 
-μFinSuc : ∀ n → SumProp (Fin (suc n))
-μFinSuc n = searchFinSuc n , ind n
+μFinSuc : ∀ n → Searchable (Fin (suc n))
+μFinSuc n = mk _ (ind n) {!!}
   where ind : ∀ n → SearchInd _ (searchFinSuc n)
         ind zero    P P∙ Pf = Pf zero
         ind (suc n) P P∙ Pf = P∙ (Pf zero) (ind n (λ s → P (λ op f → s op (f ∘ suc))) P∙ (Pf ∘ suc))
 
-μFinSucIso : ∀ n → SumProp (Fin (suc n))
+μFinSucIso : ∀ n → Searchable (Fin (suc n))
 μFinSucIso n = μ-iso (Maybe^⊤↔Fin1+ n) (μMaybe^ n μ⊤)
 
-μ^ : ∀ {A} (μA : SumProp A) n → SumProp (A ^ n)
-μ^ μA zero    = μLift⊤
-μ^ μA (suc n) = μA ×μ μ^ μA n
+μ^ : ∀ {A} (μA : Searchable A) n → Searchable (A ^ n)
+μ^ μA zero    = μLift μ⊤
+μ^ μA (suc n) = μA ×-μ μ^ μA n
 
-μVec : ∀ {A} (μA : SumProp A) n  → SumProp (Vec A n)
+μVec : ∀ {A} (μA : Searchable A) n  → Searchable (Vec A n)
 μVec μA n = μ-iso (^↔Vec n) (μ^ μA n)
 
 searchVec : ∀ {m A} n → Search m A → Search m (Vec A n)
 searchVec zero    searchᴬ op f = f []
 searchVec (suc n) searchᴬ op f = searchᴬ op (λ x → searchVec n searchᴬ op (f ∘ _∷_ x))
 
-searchVec-spec : ∀ {A} (μA : SumProp A) n → searchVec n (search μA) ≈Search search (μVec μA n)
+searchVec-spec : ∀ {A} (μA : Searchable A) n → searchVec n (search μA) ≈Search search (μVec μA n)
 searchVec-spec μA zero    op f = ≡.refl
 searchVec-spec μA (suc n) op f = search-ext μA op (λ x → searchVec-spec μA n op (f ∘ _∷_ x))
 
-searchVec-++ : ∀ {A} n {m} (μA : SumProp A) sg
+searchVec-++ : ∀ {A} n {m} (μA : Searchable A) sg
                → let open Sgrp sg in
                  (f : Vec A (n + m) → C)
                → search (μVec μA (n + m)) _∙_ f
@@ -312,18 +274,18 @@ searchVec-++ zero    μA sg f = Sgrp.refl sg
 searchVec-++ (suc n) μA sg f = search-sg-ext μA sg (λ x →
                                  searchVec-++ n μA sg (f ∘ _∷_ x))
 
-sumVec-swap : ∀ {A} n {m} (μA : SumProp A)(f : Vec A (n + m) → ℕ)
+sumVec-swap : ∀ {A} n {m} (μA : Searchable A)(f : Vec A (n + m) → ℕ)
             → sum (μVec μA n) (λ xs → sum (μVec μA m) (λ ys → f (xs ++ ys)))
             ≡ sum (μVec μA m) (λ ys → sum (μVec μA n) (λ xs → f (xs ++ ys)))
 sumVec-swap n {m} μA f = sum-swap (μVec μA n) (μVec μA m) (λ xs ys → f (xs ++ ys))
 
-swapS : ∀ {A B} → SumProp (A × B) → SumProp (B × A)
+swapS : ∀ {A B} → Searchable (A × B) → Searchable (B × A)
 swapS = μ-iso swap-iso
 
-swapS-preserve : ∀ {A B} f (μA×B : SumProp (A × B)) → sum μA×B f ≡ sum (swapS μA×B) (f ∘ swap)
+swapS-preserve : ∀ {A B} f (μA×B : Searchable (A × B)) → sum μA×B f ≡ sum (swapS μA×B) (f ∘ swap)
 swapS-preserve = μ-iso-preserve swap-iso
 
-module _ {A : Set}(μA : SumProp A) where
+module _ {A : Set}(μA : Searchable A) where
 
   private
     sA = search μA
@@ -341,19 +303,19 @@ module _ {A : Set}(μA : SumProp A) where
   sFun zero    op f = f abs
   sFun (suc n) op f = sA op (λ x → sFun n op (f ∘ extend x))
 
-  Ind : ∀ n → SearchInd _ (sFun n)
-  Ind zero    P P∙ Pf = Pf abs
-  Ind (suc n) P P∙ Pf =
+  ind : ∀ n → SearchInd _ (sFun n)
+  ind zero    P P∙ Pf = Pf abs
+  ind (suc n) P P∙ Pf =
     search-ind μA (λ sa → P (λ op f → sa op (λ x → sFun n op (f ∘ extend x))))
       P∙
-      (λ x → Ind n (λ sf → P (λ op f → sf op (f ∘ extend x)))
+      (λ x → ind n (λ sf → P (λ op f → sf op (f ∘ extend x)))
         P∙ (Pf ∘ extend x))
 
-  μFun : ∀ {n} → SumProp (Fin n → A)
-  μFun = sFun _ , Ind _
+  μFun : ∀ {n} → Searchable (Fin n → A)
+  μFun = mk _ (ind _) {!!}
 
 module BigDistr
-  {A}(μA : SumProp A)
+  {A}(μA : Searchable A)
   (cm       : CommutativeMonoid L.zero L.zero)
   -- we want (open CMon cm) !!!
   (_◎_      : let open CMon cm in C  → C → C)
@@ -390,11 +352,11 @@ FinDist : ∀ {n} → DistFun (μFinSuc n) (λ μX → μFun μX)
 FinDist μB c ◎ distrib ◎-cong f = BigDistr.bigDistr μB c ◎ distrib ◎-cong _ f
 
 simple : ∀ {A : Set}{P : A → A → Set} → (∀ x → P x x) → {x y : A} → x ≡ y → P x y
-simple r ≡.refl = r _ 
+simple r ≡.refl = r _
 
 ×-Dist : ∀ {A B} FA FB → DistFunable {A} FA → DistFunable {B} FB → DistFunable (Σ-Fun FA FB)
-×-Dist FA FB FA-dist FB-dist μX c _⊙_ distrib _⊙-cong_ f 
-  = Πᴬ (λ x → Πᴮ (λ y → Σ' (f (x , y)))) 
+×-Dist FA FB FA-dist FB-dist μX c _⊙_ distrib _⊙-cong_ f
+  = Πᴬ (λ x → Πᴮ (λ y → Σ' (f (x , y))))
   ≈⟨ ⟦search⟧ (searchable FA){_≡_} ≡.refl _≈_ (λ x y → x ⊙-cong y)
        (λ { {x} {.x} ≡.refl → FB-dist μX c _⊙_ distrib _⊙-cong_ (curry f x)}) ⟩
     Πᴬ (λ x → Σᴮ (λ fb → Πᴮ (λ y → f (x , y) (fb y))))
@@ -410,29 +372,29 @@ simple r ≡.refl = r _
 
     Πᴬ = search (searchable FA) _⊙_
     Πᴮ = search (searchable FB) _⊙_
-    
+
     Σᴬᴮ = search (negative FA (negative FB μX)) _∙_
     Σᴮ  = search (negative FB μX) _∙_
 
 ⊎-Dist : ∀ {A B} FA FB → DistFunable {A} FA → DistFunable {B} FB → DistFunable (FA ⊎-Fun FB)
-⊎-Dist FA FB FA-dist FB-dist μX c _◎_ distrib _◎-cong_ f 
- = Πᴬ (Σ' ∘ f ∘ inj₁) ◎ Πᴮ (Σ' ∘ f ∘ inj₂) 
- ≈⟨ FA-dist μX c _◎_ distrib _◎-cong_ (f ∘ inj₁) ◎-cong FB-dist μX c _◎_ distrib _◎-cong_ (f ∘ inj₂) ⟩ 
+⊎-Dist FA FB FA-dist FB-dist μX c _◎_ distrib _◎-cong_ f
+ = Πᴬ (Σ' ∘ f ∘ inj₁) ◎ Πᴮ (Σ' ∘ f ∘ inj₂)
+ ≈⟨ FA-dist μX c _◎_ distrib _◎-cong_ (f ∘ inj₁) ◎-cong FB-dist μX c _◎_ distrib _◎-cong_ (f ∘ inj₂) ⟩
    Σᴬ (λ fa → Πᴬ (λ i → f (inj₁ i) (fa i))) ◎ Σᴮ (λ fb → Πᴮ (λ i → f (inj₂ i) (fb i)))
  ≈⟨ sym (search-linʳ (negative FA μX) monoid _◎_ _ _ (proj₂ distrib)) ⟩
-   Σᴬ (λ fa → Πᴬ (λ i → f (inj₁ i) (fa i)) ◎ Σᴮ (λ fb → Πᴮ (λ i → f (inj₂ i) (fb i)))) 
+   Σᴬ (λ fa → Πᴬ (λ i → f (inj₁ i) (fa i)) ◎ Σᴮ (λ fb → Πᴮ (λ i → f (inj₂ i) (fb i))))
  ≈⟨ search-sg-ext (negative FA μX) semigroup (λ fa → sym (search-linˡ (negative FB μX) monoid _◎_ _ _ (proj₁ distrib))) ⟩
    (Σᴬ λ fa → Σᴮ λ fb → Πᴬ ((f ∘ inj₁) ˢ fa) ◎ Πᴮ ((f ∘ inj₂) ˢ fb))
  ∎
  where
     open CMon c
     open Funable
-    
+
     Σ' = search μX _∙_
 
     Πᴬ = search (searchable FA) _◎_
     Πᴮ = search (searchable FB) _◎_
-    
+
     Σᴬ = search (negative FA μX) _∙_
     Σᴮ = search (negative FB μX) _∙_
 

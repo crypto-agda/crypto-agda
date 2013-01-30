@@ -11,6 +11,9 @@ open import Algebra
 open import Relation.Binary.NP
 open import Data.Product
 open import Data.Sum
+open import Data.Bool.NP using (Bool; ✓)
+open import Data.Maybe.NP using (_→?_)
+open import Data.Fin using (Fin)
 import Algebra.FunctionProperties.NP as FP
 open FP using (Op₂)
 open import Relation.Unary.Logical
@@ -82,11 +85,11 @@ Search₁ = Search _
 ⟦Search⟧₁ : ∀ {A : ★_ _} (Aᵣ : A → A → ★_ _) → Search _ A → ★₁
 ⟦Search⟧₁ Aᵣ s = ⟦Search⟧ Aᵣ s s
 
-_∙Search_ : ∀ {ℓ A} → Search ℓ A → Search ℓ A → Search ℓ A
-(s₀ ∙Search s₁) _∙_ f = s₀ _∙_ f ∙ s₁ _∙_ f
+_∙-search_ : ∀ {ℓ A} → Search ℓ A → Search ℓ A → Search ℓ A
+(s₀ ∙-search s₁) _∙_ f = s₀ _∙_ f ∙ s₁ _∙_ f
 
-constSearch : ∀ {ℓ A} → A → Search ℓ A
-constSearch x _ f = f x
+const-search : ∀ {ℓ A} → A → Search ℓ A
+const-search x _ f = f x
 
 SearchInd : ∀ p {ℓ A} → Search ℓ A → ★ _
 SearchInd p {ℓ} {A} srch =
@@ -95,14 +98,14 @@ SearchInd p {ℓ} {A} srch =
     (Pf : ∀ x → P (λ _ f → f x))
   → P srch
 
-constSearch-ind : ∀ {ℓ p A} (x : A) → SearchInd p (constSearch {ℓ} x)
-constSearch-ind x _ _ Pf = Pf x
+const-search-ind : ∀ {ℓ p A} (x : A) → SearchInd p (const-search {ℓ} x)
+const-search-ind x _ _ Pf = Pf x
 
 record SearchIndKit p {ℓ A} (P : Search ℓ A → ★ p) : ★ (ₛ ℓ ⊔ p) where
   constructor _,_
   field
-    P∙ : ∀ {s₀ s₁ : Search ℓ A} → P s₀ → P s₁ → P (s₀ ∙Search s₁)
-    Pf : ∀ x → P (constSearch x)
+    P∙ : ∀ {s₀ s₁ : Search ℓ A} → P s₀ → P s₁ → P (s₀ ∙-search s₁)
+    Pf : ∀ x → P (const-search x)
 
 _$kit_ : ∀ {p ℓ A} {P : Search ℓ A → ★ p} {s : Search ℓ A}
          → SearchInd p s → SearchIndKit p P → P s
@@ -157,14 +160,23 @@ searchMonFromSearch s M = s _∙_ where open Mon M
 Sum : ★₀ → ★₀
 Sum A = (A → ℕ) → ℕ
 
+AdequateSum : ∀ {A} → Sum A → ★₀
+AdequateSum {A} sumᴬ = ∀ f → Fin (sumᴬ f) ↔ Σ A (Fin ∘ f)
+
 Count : ★₀ → ★₀
 Count A = (A → Bit) → ℕ
 
-_×Kit_ : ∀ {m p A} {P : Search m A → ★ p}{Q : Search m A → ★ p}
-       → SearchIndKit p P → SearchIndKit p Q → SearchIndKit p (P ×° Q)
-Pk ×Kit Qk = (λ x y → P∙ Pk (proj₁ x) (proj₁ y) , P∙ Qk (proj₂ x) (proj₂ y))
-           , (λ x → Pf Pk x , Pf Qk x)
-           where open SearchIndKit
+Find? : ★₀ → ★₁
+Find? A = ∀ {B : ★₀} → (A →? B) →? B
+
+FindKey : ★₀ → ★₀
+FindKey A = (A → Bool) →? A
+
+_,-kit_ : ∀ {m p A} {P : Search m A → ★ p}{Q : Search m A → ★ p}
+          → SearchIndKit p P → SearchIndKit p Q → SearchIndKit p (P ×° Q)
+Pk ,-kit Qk = (λ x y → P∙ Pk (proj₁ x) (proj₁ y) , P∙ Qk (proj₂ x) (proj₂ y))
+            , (λ x → Pf Pk x , Pf Qk x)
+             where open SearchIndKit
 
 SearchInd-Extra : ∀ p {m A} → Search m A → ★ _
 SearchInd-Extra p {m} {A} srch =
@@ -172,8 +184,8 @@ SearchInd-Extra p {m} {A} srch =
     (Q-kit : SearchIndKit p Q)
     (P     : Search m A → ★ p)
     (P∙    : ∀ {s₀ s₁ : Search m A} → Q s₀ → Q s₁ → P s₀ → P s₁
-             → P (s₀ ∙Search s₁))
-    (Pf    : ∀ x → P (constSearch x))
+             → P (s₀ ∙-search s₁))
+    (Pf    : ∀ x → P (const-search x))
   → P srch
 
 to-extra : ∀ {p m A} {s : Search m A} → SearchInd p s → SearchInd-Extra p s
@@ -274,27 +286,27 @@ SearchSwap r {ℓ} {A} sᴬ = ∀ {B : ★₀} sg f →
 Unique : ∀ {A} → Cmp A → Count A → ★ _
 Unique cmp count = ∀ x → count (cmp x) ≡ 1
 
-Data : ∀ {b A} → Search _ A → (A → ★ b) → ★ b
-Data sA = sA _×_
+DataΠ : ∀ {b A} → Search _ A → (A → ★ b) → ★ b
+DataΠ sA = sA _×_
 
-Data→Π : ∀ {b A} → Search _ A → ★ _
-Data→Π {b} {A} sA = ∀ {B : A → ★ b} → Data sA B → Π A B
+Lookup : ∀ {b A} → Search _ A → ★ _
+Lookup {b} {A} sA = ∀ {B : A → ★ b} → DataΠ sA B → Π A B
 
-Π→Data : ∀ {b A} → Search _ A → ★ _
-Π→Data {b} {A} sA = ∀ {B : A → ★ b} → Π A B → Data sA B
+Reify : ∀ {b A} → Search _ A → ★ _
+Reify {b} {A} sA = ∀ {B : A → ★ b} → Π A B → DataΠ sA B
 
-Data↔Π : ∀ {b A} → Search _ A → ★ _
-Data↔Π {b} {A} sA = ∀ {B : A → ★ b} → Data sA B ↔ Π A B
+Reified : ∀ {b A} → Search _ A → ★ _
+Reified {b} {A} sA = ∀ {B : A → ★ b} → Π A B ↔ DataΠ sA B
 
-Point : ∀ {b A} → Search _ A → (A → ★ b) → ★ b
-Point sA = sA _⊎_
+ΣPoint : ∀ {b A} → Search _ A → (A → ★ b) → ★ b
+ΣPoint sA = sA _⊎_
 
-Point→Σ : ∀ {b A} → Search _ A → ★ _
-Point→Σ {b} {A} sA = ∀ {B : A → ★ b} → Point sA B → Σ A B
+Unfocus : ∀ {b A} → Search _ A → ★ _
+Unfocus {b} {A} sA = ∀ {B : A → ★ b} → ΣPoint sA B → Σ A B
 
-Σ→Point : ∀ {b A} → Search _ A → ★ _
-Σ→Point {b} {A} sA = ∀ {B : A → ★ b} → Σ A B → Point sA B
+Focus : ∀ {b A} → Search _ A → ★ _
+Focus {b} {A} sA = ∀ {B : A → ★ b} → Σ A B → ΣPoint sA B
 
-Point↔Σ : ∀ {b A} → Search _ A → ★ _
-Point↔Σ {b} {A} sA = ∀ {B : A → ★ b} → Point sA B ↔ Σ A B
+Focused : ∀ {b A} → Search _ A → ★ _
+Focused {b} {A} sA = ∀ {B : A → ★ b} → Σ A B ↔ ΣPoint sA B
 -- -}

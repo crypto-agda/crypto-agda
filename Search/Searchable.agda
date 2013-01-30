@@ -7,6 +7,7 @@ open import Algebra.FunctionProperties.NP
 open import Data.Bool.NP as Bool
 open import Data.Nat.NP hiding (_^_; _⊔_)
 open import Data.Nat.Properties
+open import Data.Maybe.NP
 open import Algebra
 open import Data.Product
 open import Data.Sum
@@ -199,23 +200,33 @@ module Searchable₀
   toList≡toList∘ : toList ≡ toList∘
   toList≡toList∘ = searchMon∘-spec (List.monoid A) List.[_]
 
+  find? : Find? A
+  find? = search (M?._∣_ _)
+
+  findKey : FindKey A
+  findKey pred = find? (λ x → if pred x then just x else nothing)
+
 module Searchable₁₀ {A} {search₁ : Search₁ A}
                     (search-ind₀ : SearchInd ₀ search₁) where
 
-  Π→data : Π→Data search₁
-  Π→data = search-ind₀ (λ s → Data s _) _,_
+  reify : Reify search₁
+  reify = search-ind₀ (λ s → DataΠ s _) _,_
 
 module Searchable₁₁ {A} {search₁ : Search₁ A}
                     (search-ind₁ : SearchInd ₁ search₁) where
 
-  point→Σ : Point→Σ search₁
-  point→Σ = search-ind₁ Point→Σ (λ P0 P1 → [ P0 , P1 ]) (λ η → _,_ η)
+  unfocus : Unfocus search₁
+  unfocus = search-ind₁ Unfocus (λ P Q → [ P , Q ]) (λ η → _,_ η)
 
 record Searchable A : ★₁ where
-  constructor _,_
+  constructor mk
   field
     search     : Search₀ A
     search-ind : SearchInd₀ search
+
+  open Searchable₀ search-ind
+  field
+    adequate-sum : AdequateSum sum
 
   open Searchable₀ search-ind public
 
