@@ -95,7 +95,7 @@ focusedBit {B} = inverses focusBit unfocus (⇒) (⇐)
         ⇐ (inj₂ x) = ≡.refl
 
 lookupBit : ∀ {a} → Lookup {a} searchBit
-lookupBit = {!proj!}
+lookupBit = proj
 
 _⊎'_ : ★₀ → ★₀ → ★₀
 A ⊎' B = Σ Bool (cond A B)
@@ -103,60 +103,56 @@ A ⊎' B = Σ Bool (cond A B)
 _μ⊎'_ : ∀ {A B} → Searchable A → Searchable B → Searchable (A ⊎' B)
 μA μ⊎' μB = μΣ μBit (λ { {true} → μA ; {false} → μB })
 
-SΠΣ⁻ : ∀ {m A} {B : A → ★ _} {C : Σ A B → ★ _}
-       → Search m ((x : A) (y : B x) → C (x , y))
-       → Search m (Π (Σ A B) C)
-SΠΣ⁻ s _∙_ f = s _∙_ (f ∘ uncurry)
+private -- unused
+    SΠΣ⁻ : ∀ {m A} {B : A → ★ _} {C : Σ A B → ★ _}
+           → Search m ((x : A) (y : B x) → C (x , y))
+           → Search m (Π (Σ A B) C)
+    SΠΣ⁻ s _∙_ f = s _∙_ (f ∘ uncurry)
 
-SΠΣ⁻-ind : ∀ {m p A} {B : A → ★ _} {C : Σ A B → ★ _}
-           → {s : Search m ((x : A) (y : B x) → C (x , y))}
-           → SearchInd p s
-           → SearchInd p (SΠΣ⁻ s)
-SΠΣ⁻-ind ind P P∙ Pf = ind (P ∘ SΠΣ⁻) P∙ (Pf ∘ uncurry)
+    SΠΣ⁻-ind : ∀ {m p A} {B : A → ★ _} {C : Σ A B → ★ _}
+               → {s : Search m ((x : A) (y : B x) → C (x , y))}
+               → SearchInd p s
+               → SearchInd p (SΠΣ⁻ s)
+    SΠΣ⁻-ind ind P P∙ Pf = ind (P ∘ SΠΣ⁻) P∙ (Pf ∘ uncurry)
 
-μΠΣ⁻ : ∀ {A B}{C : Σ A B → ★₀} → Searchable ((x : A)(y : B x) → C (x , y)) → Searchable ((p : Σ A B) → C p)
-μΠΣ⁻ μ = mk (SΠΣ⁻ (search μ)) (SΠΣ⁻-ind (search-ind μ)) {!!}
+    S×⁻ : ∀ {m A B C} → Search m (A → B → C) → Search m (A × B → C)
+    S×⁻ = SΠΣ⁻
 
-Σ-Fun : ∀ {A B} → Funable A → (Funable B) → Funable (A × B)
+    S×⁻-ind : ∀ {m p A B C}
+              → {s : Search m (A → B → C)}
+              → SearchInd p s
+              → SearchInd p (S×⁻ s)
+    S×⁻-ind = SΠΣ⁻-ind
+
+    SΠ⊎⁻ : ∀ {m A B} {C : A ⊎ B → ★ _}
+           → Search m (Π A (C ∘ inj₁) × Π B (C ∘ inj₂))
+           → Search m (Π (A ⊎ B) C)
+    SΠ⊎⁻ s _∙_ f = s _∙_ (f ∘ uncurry [_,_])
+
+    SΠ⊎⁻-ind : ∀ {m p A B} {C : A ⊎ B → ★ _}
+                 {s : Search m (Π A (C ∘ inj₁) × Π B (C ∘ inj₂))}
+                 (i : SearchInd p s)
+               → SearchInd p (SΠ⊎⁻ {C = C} s) -- A sB)
+    SΠ⊎⁻-ind i P P∙ Pf = i (P ∘ SΠ⊎⁻) P∙ (Pf ∘ uncurry [_,_])
+
+    {- For each A→C function
+       and each B→C function
+       an A⊎B→C function is yield
+     -}
+    S⊎⁻ : ∀ {m A B C} → Search m (A → C) → Search m (B → C)
+                      → Search m (A ⊎ B → C)
+    S⊎⁻ sA sB =  SΠ⊎⁻ (sA ×-search sB)
+
+μΠΣ⁻ : ∀ {A B}{C : Σ A B → ★₀} → Searchable ((x : A)(y : B x) → C (x , y)) → Searchable (Π (Σ A B) C)
+μΠΣ⁻ = μ-iso (FI.sym curried)
+
+Σ-Fun : ∀ {A B} → Funable A → Funable B → Funable (A × B)
 Σ-Fun (μA , μA→) FB  = μΣ μA (searchable FB) , (λ x → μΠΣ⁻ (μA→ (negative FB x)))
   where open Funable
 
-S×⁻ : ∀ {m A B C} → Search m (A → B → C) → Search m (A × B → C)
-S×⁻ = SΠΣ⁻
-
-S×⁻-ind : ∀ {m p A B C}
-          → {s : Search m (A → B → C)}
-          → SearchInd p s
-          → SearchInd p (S×⁻ s)
-S×⁻-ind = SΠΣ⁻-ind
-
-SΠ⊎⁻ : ∀ {m A B} {C : A ⊎ B → ★ _}
-    -- → Search m (Π A (C ∘ inj₁)) → Search m (Π B (C ∘ inj₂))
-       → Search m (Π A (C ∘ inj₁) × Π B (C ∘ inj₂))
-       → Search m (Π (A ⊎ B) C)
-SΠ⊎⁻ s _∙_ f = s _∙_ (f ∘ uncurry [_,_])
-
-SΠ⊎⁻-ind : ∀ {m p A B} {C : A ⊎ B → ★ _}
-             {- {sA : Search m (Π A (C ∘ inj₁))}
-             (iA : SearchInd p sA)
-             {sB : Search m (Π B (C ∘ inj₂))}
-             (iB : SearchInd p sB) -}
-             {s : Search m (Π A (C ∘ inj₁) × Π B (C ∘ inj₂))}
-             (i : SearchInd p s)
-           → SearchInd p (SΠ⊎⁻ {C = C} s) -- A sB)
-SΠ⊎⁻-ind i P P∙ Pf = i (P ∘ SΠ⊎⁻) P∙ (Pf ∘ uncurry [_,_])
-
 μΠ⊎⁻ : ∀ {A B}{C : A ⊎ B → ★ _} → Searchable (Π A (C ∘ inj₁) × Π B (C ∘ inj₂))
      → Searchable (Π (A ⊎ B) C)
-μΠ⊎⁻ (mk s s-ind s-ade) = mk (SΠ⊎⁻ s) (SΠ⊎⁻-ind s-ind) {!!}
-
-{- For each A→C function
-   and each B→C function
-   an A⊎B→C function is yield
- -}
-S⊎⁻ : ∀ {m A B C} → Search m (A → C) → Search m (B → C)
-                  → Search m (A ⊎ B → C)
-S⊎⁻ sA sB =  SΠ⊎⁻ (sA ×-search sB)
+μΠ⊎⁻ = μ-iso {!!}
 
 _⊎-Fun_ : ∀ {A B} → Funable A → Funable B → Funable (A ⊎ B)
 _⊎-Fun_ (μA , μA→) (μB , μB→) = (μA ⊎-μ μB) , (λ X → μΠ⊎⁻ (μA→ X ×-μ μB→ X))
@@ -239,14 +235,16 @@ searchFinSuc n _∙_ f = vfoldr₁ _∙_ (tabulate f)
 μMaybe^ zero    μA = μA
 μMaybe^ (suc n) μA = μMaybe (μMaybe^ n μA)
 
+{-
 μFinSuc : ∀ n → Searchable (Fin (suc n))
 μFinSuc n = mk _ (ind n) {!!}
   where ind : ∀ n → SearchInd _ (searchFinSuc n)
         ind zero    P P∙ Pf = Pf zero
         ind (suc n) P P∙ Pf = P∙ (Pf zero) (ind n (λ s → P (λ op f → s op (f ∘ suc))) P∙ (Pf ∘ suc))
+-}
 
-μFinSucIso : ∀ n → Searchable (Fin (suc n))
-μFinSucIso n = μ-iso (Maybe^⊤↔Fin1+ n) (μMaybe^ n μ⊤)
+μFinSuc : ∀ n → Searchable (Fin (suc n))
+μFinSuc n = μ-iso (Maybe^⊤↔Fin1+ n) (μMaybe^ n μ⊤)
 
 μ^ : ∀ {A} (μA : Searchable A) n → Searchable (A ^ n)
 μ^ μA zero    = μLift μ⊤
