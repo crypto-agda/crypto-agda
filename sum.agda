@@ -26,6 +26,8 @@ open import Search.Type
 open import Search.Searchable renaming (Searchable to Searchable)
 open import Search.Searchable.Product
 open import Search.Searchable.Sum
+open import Search.Searchable.Maybe
+-- open import Search.Searchable.Fin
 open import Search.Derived
 
 module sum where
@@ -35,73 +37,6 @@ sum₀ ≈Sum sum₁ = ∀ f → sum₀ f ≡ sum₁ f
 
 _≈Search_ : ∀ {A} → (s₀ s₁ : Search _ A) → ★₁
 s₀ ≈Search s₁ = ∀ {B} (op : Op₂ B) f → s₀ op f ≡ s₁ op f
-
-μ-iso : ∀ {A B} → (A ↔ B) → Searchable A → Searchable B
-μ-iso {A}{B} A↔B μA = mk searchᴮ ind ade
-  where
-    A→B = to A↔B
-
-    searchᴮ : Search _ B
-    searchᴮ m f = search μA m (f ∘ A→B)
-
-    sumᴮ = searchᴮ _+_
-
-    ind : SearchInd _ searchᴮ
-    ind P P∙ Pf = search-ind μA (λ s → P (λ _ f → s _ (f ∘ A→B))) P∙ (Pf ∘ A→B)
-
-    ade : AdequateSum sumᴮ
-    ade f = sym-first-iso A↔B FI.∘ adequate-sum μA (f ∘ A→B)
-
--- I guess this could be more general
-μ-iso-preserve : ∀ {A B} (A↔B : A ↔ B) f (μA : Searchable A) → sum μA f ≡ sum (μ-iso A↔B μA) (f ∘ from A↔B)
-μ-iso-preserve A↔B f μA = sum-ext μA (≡.cong f ∘ ≡.sym ∘ Inverse.left-inverse-of A↔B)
-
-μLift : ∀ {A} → Searchable A → Searchable (Lift A)
-μLift = μ-iso (FI.sym Lift↔id)
-
-μ⊤ : Searchable ⊤
-μ⊤ = mk _ ind ade
-  where
-    srch : Search _ ⊤
-    srch _ f = f _
-
-    ind : SearchInd _ srch
-    ind _ _ Pf = Pf _
-
-    ade : AdequateSum (srch _+_)
-    ade x = FI.sym ⊤×A↔A
-
-searchBit : ∀ {m} → Search m Bit
-searchBit _∙_ f = f 0b ∙ f 1b
-
-searchBit-ind : ∀ {m p} → SearchInd p {m} searchBit
-searchBit-ind _ _P∙_ Pf = Pf 0b P∙ Pf 1b
-
-μBit : Searchable Bit
-μBit = μ-iso (FI.sym Bit↔⊤⊎⊤) (μ⊤ ⊎-μ μ⊤)
-
-focusBit : ∀ {a} → Focus {a} searchBit
-focusBit (false , x) = inj₁ x
-focusBit (true ,  x) = inj₂ x
-
-focusedBit : Focused {L.zero} searchBit
-focusedBit {B} = inverses focusBit unfocus (⇒) (⇐)
-  where open Searchable₁₁ searchBit-ind
-        ⇒ : (x : Σ Bit B) → _
-        ⇒ (false , x) = ≡.refl
-        ⇒ (true  , x) = ≡.refl
-        ⇐ : (x : B 0b ⊎ B 1b) → _
-        ⇐ (inj₁ x) = ≡.refl
-        ⇐ (inj₂ x) = ≡.refl
-
-lookupBit : ∀ {a} → Lookup {a} searchBit
-lookupBit = proj
-
-_⊎'_ : ★₀ → ★₀ → ★₀
-A ⊎' B = Σ Bool (cond A B)
-
-_μ⊎'_ : ∀ {A B} → Searchable A → Searchable B → Searchable (A ⊎' B)
-μA μ⊎' μB = μΣ μBit (λ { {true} → μA ; {false} → μB })
 
 private -- unused
     SΠΣ⁻ : ∀ {m A} {B : A → ★ _} {C : Σ A B → ★ _}
@@ -163,6 +98,12 @@ S⊤ sA _∙_ f = sA _∙_ (f ∘ const)
 SΠBit : ∀ {m A} → Search m (A 0b) → Search m (A 1b)
                 → Search m (Π Bit A)
 SΠBit sA₀ sA₁ _∙_ f = sA₀ _∙_ λ x → sA₁ _∙_ λ y → f λ {true → y; false → x}
+
+_⊎'_ : ★₀ → ★₀ → ★₀
+A ⊎' B = Σ Bool (cond A B)
+
+_μ⊎'_ : ∀ {A B} → Searchable A → Searchable B → Searchable (A ⊎' B)
+μA μ⊎' μB = μΣ μBit (λ { {true} → μA ; {false} → μB })
 
 sum-const : ∀ {A} (μA : Searchable A) → ∀ k → sum μA (const k) ≡ Card μA * k
 sum-const μA k
@@ -228,13 +169,6 @@ vsgsum sg = vfoldr₁ _∙_
 searchFinSuc : ∀ {m} n → Search m (Fin (suc n))
 searchFinSuc n _∙_ f = vfoldr₁ _∙_ (tabulate f)
 
-μMaybe : ∀ {A} → Searchable A → Searchable (Maybe A)
-μMaybe μA = μ-iso (FI.sym Maybe↔⊤⊎) (μ⊤ ⊎-μ μA)
-
-μMaybe^ : ∀ {A} n → Searchable A → Searchable (Maybe^ n A)
-μMaybe^ zero    μA = μA
-μMaybe^ (suc n) μA = μMaybe (μMaybe^ n μA)
-
 {-
 μFinSuc : ∀ n → Searchable (Fin (suc n))
 μFinSuc n = mk _ (ind n) {!!}
@@ -282,35 +216,6 @@ swapS = μ-iso swap-iso
 
 swapS-preserve : ∀ {A B} f (μA×B : Searchable (A × B)) → sum μA×B f ≡ sum (swapS μA×B) (f ∘ swap)
 swapS-preserve = μ-iso-preserve swap-iso
-
-module _ {A : Set}(μA : Searchable A) where
-
-  private
-    sA = search μA
-
-  extend : ∀ {n} → A → (Fin n → A) → Fin (suc n) → A
-  extend x g zero    = x
-  extend x g (suc i) = g i
-
-  abs : Fin 0 → A
-  abs ()
-
-  -- There is one function Fin 0 → A (called abs) so this should be fine
-  -- if not there is a version below that forces the domain to be non-empty
-  sFun : ∀ n → Search _ (Fin n → A)
-  sFun zero    op f = f abs
-  sFun (suc n) op f = sA op (λ x → sFun n op (f ∘ extend x))
-
-  ind : ∀ n → SearchInd _ (sFun n)
-  ind zero    P P∙ Pf = Pf abs
-  ind (suc n) P P∙ Pf =
-    search-ind μA (λ sa → P (λ op f → sa op (λ x → sFun n op (f ∘ extend x))))
-      P∙
-      (λ x → ind n (λ sf → P (λ op f → sf op (f ∘ extend x)))
-        P∙ (Pf ∘ extend x))
-
-  μFun : ∀ {n} → Searchable (Fin n → A)
-  μFun = mk _ (ind _) {!!}
 
 module BigDistr
   {A}(μA : Searchable A)

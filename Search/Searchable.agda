@@ -1,5 +1,5 @@
 import Level as L
-open L using () renaming (zero to ₀)
+open L using (Lift) renaming (zero to ₀)
 open import Type hiding (★)
 open import Function.NP
 open import Search.Type
@@ -11,12 +11,16 @@ open import Data.Maybe.NP
 open import Algebra
 open import Data.Product
 open import Data.Sum
+open import Data.Unit using (⊤)
 open import Data.Tree.Binary
 import Data.List as List
 open List using (List; _++_)
 open import Relation.Binary
 import Relation.Binary.PropositionalEquality as ≡
 open ≡ using (_≡_)
+open import Function.Related.TypeIsomorphisms.NP
+import Function.Inverse.NP as FI
+open FI using (_↔_; inverses; module Inverse) renaming (_$₁_ to to; _$₂_ to from)
 
 module Search.Searchable where
 
@@ -264,3 +268,38 @@ DistFun μA μA→ = ∀ {B} (μB : Searchable B) c → let open CMon {L.zero}{L
 
 DistFunable : ∀ {A} → Funable A → ★₁
 DistFunable (μA , μA→) = DistFun μA μA→
+
+μ-iso : ∀ {A B} → (A ↔ B) → Searchable A → Searchable B
+μ-iso {A}{B} A↔B μA = mk searchᴮ ind ade
+  where
+    A→B = to A↔B
+
+    searchᴮ : Search _ B
+    searchᴮ m f = search μA m (f ∘ A→B)
+
+    sumᴮ = searchᴮ _+_
+
+    ind : SearchInd _ searchᴮ
+    ind P P∙ Pf = search-ind μA (λ s → P (λ _ f → s _ (f ∘ A→B))) P∙ (Pf ∘ A→B)
+
+    ade : AdequateSum sumᴮ
+    ade f = sym-first-iso A↔B FI.∘ adequate-sum μA (f ∘ A→B)
+
+-- I guess this could be more general
+μ-iso-preserve : ∀ {A B} (A↔B : A ↔ B) f (μA : Searchable A) → sum μA f ≡ sum (μ-iso A↔B μA) (f ∘ from A↔B)
+μ-iso-preserve A↔B f μA = sum-ext μA (≡.cong f ∘ ≡.sym ∘ Inverse.left-inverse-of A↔B)
+
+μLift : ∀ {A} → Searchable A → Searchable (Lift A)
+μLift = μ-iso (FI.sym Lift↔id)
+
+μ⊤ : Searchable ⊤
+μ⊤ = mk _ ind ade
+  where
+    srch : Search _ ⊤
+    srch _ f = f _
+
+    ind : SearchInd _ srch
+    ind _ _ Pf = Pf _
+
+    ade : AdequateSum (srch _+_)
+    ade x = FI.sym ⊤×A↔A
