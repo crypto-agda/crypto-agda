@@ -7,12 +7,14 @@ open FI using (_↔_; inverses; module Inverse) renaming (_$₁_ to to; _$₂_ t
 open import Function.Related.TypeIsomorphisms.NP
 open import Data.Product.NP
 open import Data.Sum
+open import Data.Bits
 open import Data.Fin using (Fin)
 open import Search.Type
 open import Search.Searchable
 
 open import Relation.Binary.Sum
-open import Relation.Binary.PropositionalEquality.NP using (_≡_ ; module ≡-Reasoning; cong)
+import Relation.Binary.PropositionalEquality.NP as ≡
+open ≡ using (_≡_ ; module ≡-Reasoning; cong)
 
 module Search.Searchable.Sum where
 
@@ -78,6 +80,31 @@ module _ {A B} {sᴬ : Search₁ A} {sᴮ : Search₁ B} where
   _⊎-reify_ : Reify sᴬ → Reify sᴮ → Reify (sᴬ ⊎-search sᴮ)
   (reifyᴬ ⊎-reify reifyᴮ) f = (reifyᴬ (f ∘ inj₁)) , (reifyᴮ (f ∘ inj₂))
 
+searchBit : ∀ {m} → Search m Bit
+searchBit _∙_ f = f 0b ∙ f 1b
+
+searchBit-ind : ∀ {m p} → SearchInd p {m} searchBit
+searchBit-ind _ _P∙_ Pf = Pf 0b P∙ Pf 1b
+
+μBit : Searchable Bit
+μBit = μ-iso (FI.sym Bit↔⊤⊎⊤) (μ⊤ ⊎-μ μ⊤)
+
+focusBit : ∀ {a} → Focus {a} searchBit
+focusBit (false , x) = inj₁ x
+focusBit (true ,  x) = inj₂ x
+
+focusedBit : Focused {L.zero} searchBit
+focusedBit {B} = inverses focusBit unfocus (⇒) (⇐)
+  where open Searchable₁₁ searchBit-ind
+        ⇒ : (x : Σ Bit B) → _
+        ⇒ (false , x) = ≡.refl
+        ⇒ (true  , x) = ≡.refl
+        ⇐ : (x : B 0b ⊎ B 1b) → _
+        ⇐ (inj₁ x) = ≡.refl
+        ⇐ (inj₂ x) = ≡.refl
+
+lookupBit : ∀ {a} → Lookup {a} searchBit
+lookupBit = proj
  -- -}
  -- -}
  -- -}
