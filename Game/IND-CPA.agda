@@ -20,7 +20,7 @@ where
 -- the public key, the message we want (m₀, m₁). The adversary
 -- returns the message to encrypt. Remember that the adversary
 -- is a pure and deterministic function, therefore Bit → Message
--- is the same Message × Message.
+-- is the same as Message × Message.
 AdvStep₀ : ★
 AdvStep₀ = Rₐ → PubKey → Bit → Message
 
