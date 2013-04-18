@@ -32,5 +32,11 @@ module _ {A : Set}(μA : Searchable A) where
       (λ x → ind n (λ sf → P (λ op f → sf op (f ∘ extend x)))
         P∙ (Pf ∘ extend x))
 
+  sumFun : ∀ n → Sum (Fin n → A)
+  sumFun n = sFun n _+_
+
+  ade : ∀ n → AdequateSum (sumFun n)
+  ade n = {!!}
+
   μFun : ∀ {n} → Searchable (Fin n → A)
-  μFun = mk _ (ind _) {!!}
+  μFun = mk _ (ind _) (ade _)
