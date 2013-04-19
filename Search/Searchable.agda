@@ -236,7 +236,6 @@ record Searchable A : ★₁ where
 
 open Searchable public
 
-
 SearchForFun : ★₀ → ★₁
 SearchForFun A = ∀ {X} → Searchable X → Searchable (A → X)
 

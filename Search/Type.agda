@@ -204,6 +204,13 @@ SumStableUnder sum p = ∀ f → sum f ≡ sum (f ∘ p)
 CountStableUnder : ∀ {A} → Count A → (A → A) → ★ _
 CountStableUnder count p = ∀ f → count f ≡ count (f ∘ p)
 
+-- TODO: remove the hard-wired ≡
+Injective : ∀ {a b}{A : ★ a}{B : ★ b}(f : A → B) → ★ _
+Injective f = ∀ {x y} → f x ≡ f y → x ≡ y
+
+SumStableUnderInjection : ∀ {A} → Sum A → ★ _
+SumStableUnderInjection sum = ∀ p → Injective p → SumStableUnder sum p
+
 SumInd : ∀ {A} → Sum A → ★₁
 SumInd {A} sum = ∀ (P  : Sum A → ★₀)
                    (P+ : ∀ {s₀ s₁ : Sum A} → P s₀ → P s₁ → P (λ f → s₀ f + s₁ f))

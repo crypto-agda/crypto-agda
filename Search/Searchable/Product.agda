@@ -38,7 +38,8 @@ module _ {m A} {B : A → ★₀} {sᴬ : Search m A} {sᴮ : ∀ {x} → Search
 
 module _ {A} {B : A → ★₀} {sumᴬ : Sum A} {sumᴮ : ∀ {x} → Sum (B x)} where
 
-    sumᴬᴮ = sumᴬ ,-Cont (λ {x} → sumᴮ {x})
+    private
+        sumᴬᴮ = sumᴬ ,-Cont (λ {x} → sumᴮ {x})
 
     adequate-sumΣ : AdequateSum sumᴬ → (∀ {x} → AdequateSum (sumᴮ {x})) → AdequateSum sumᴬᴮ
     adequate-sumΣ asumᴬ asumᴮ f = Fin (sumᴬᴮ f)

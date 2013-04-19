@@ -20,55 +20,20 @@ open import Function.Related
 open import Function.Related.TypeIsomorphisms.NP
 open import Function.Equality using (_⟨$⟩_)
 
-open import sum
+--open import sum
+open import Search.Type
+open import Search.Sum
 open import Search.Searchable renaming (Searchable to SumProp)
+open import Search.Searchable.Fin
+open import Search.Searchable.Sum
 open import Relation.Binary.Sum
 import Relation.Binary.PropositionalEquality.NP as ≡
 open ≡ using (_≡_ ; _≗_ ; _≗₂_)
 
-module _M1 {A : ★} (μA : SumProp A) (f g : A → ℕ) where
-    open ≡.≡-Reasoning
-
-    sum-⊓-∸ : sum μA f ≡ sum μA (f ⊓° g) + sum μA (f ∸° g)
-    sum-⊓-∸ = sum μA f                          ≡⟨ sum-ext μA (f ⟨ a≡a⊓b+a∸b ⟩° g) ⟩
-              sum μA ((f ⊓° g) +° (f ∸° g))     ≡⟨ sum-hom μA (f ⊓° g) (f ∸° g) ⟩
-              sum μA (f ⊓° g) + sum μA (f ∸° g) ∎
-
-    sum-⊔-⊓ : sum μA f + sum μA g ≡ sum μA (f ⊔° g) + sum μA (f ⊓° g)
-    sum-⊔-⊓ = sum μA f + sum μA g               ≡⟨ ≡.sym (sum-hom μA f g) ⟩
-              sum μA (f +° g)                   ≡⟨ sum-ext μA (f ⟨ a+b≡a⊔b+a⊓b ⟩° g) ⟩
-              sum μA (f ⊔° g +° f ⊓° g)         ≡⟨ sum-hom μA (f ⊔° g) (f ⊓° g) ⟩
-              sum μA (f ⊔° g) + sum μA (f ⊓° g) ∎
-
-    sum-⊔ : sum μA (f ⊔° g) ≤ sum μA f + sum μA g
-    sum-⊔ = ℕ≤.trans (sum-mono μA (f ⟨ ⊔≤+ ⟩° g)) (ℕ≤.reflexive (sum-hom μA f g))
-open _M1
-
 module _M2 {A : ★} (μA : SumProp A) (f g : A → Bool) where
-    count-∧-not : count μA f ≡ count μA (f ∧° g) + count μA (f ∧° not° g)
-    count-∧-not rewrite sum-⊓-∸ μA (toℕ ∘ f) (toℕ ∘ g)
-                      | sum-ext μA (f ⟨ toℕ-⊓ ⟩° g)
-                      | sum-ext μA (f ⟨ toℕ-∸ ⟩° g)
-                      = ≡.refl
-
-    count-∨-∧ : count μA f + count μA g ≡ count μA (f ∨° g) + count μA (f ∧° g)
-    count-∨-∧ rewrite sum-⊔-⊓ μA (toℕ ∘ f) (toℕ ∘ g)
-                    | sum-ext μA (f ⟨ toℕ-⊔ ⟩° g)
-                    | sum-ext μA (f ⟨ toℕ-⊓ ⟩° g)
-                    = ≡.refl
-
-    count-∨≤+ : count μA (f ∨° g) ≤ count μA f + count μA g
-    count-∨≤+ = ℕ≤.trans (ℕ≤.reflexive (sum-ext μA (≡.sym ∘ (f ⟨ toℕ-⊔ ⟩° g))))
-                         (sum-⊔ μA (toℕ ∘ f) (toℕ ∘ g))
 
 sum-ext₂ : ∀ {A B}{f g : A → B → ℕ}(μA : SumProp A)(μB : SumProp B) → f ≗₂ g → sum μA (sum μB ∘ f) ≡ sum μA (sum μB ∘ g)
 sum-ext₂ μA μB f≗g = sum-ext μA (sum-ext μB ∘ f≗g)
-
-Injective : ∀ {a b}{A : Set a}{B : Set b}(f : A → B) → Set (a L.⊔ b)
-Injective f = ∀ {x y} → f x ≡ f y → x ≡ y
-
-StableUnderInjection : ∀ {A} → SumProp A → Set
-StableUnderInjection μ = ∀ p → Injective p → SumStableUnder μ p
 
 CountStableUnderInjection : ∀ {A} → SumProp A → Set
 CountStableUnderInjection μ = ∀ p → Injective p → CountStableUnder μ p
@@ -237,6 +202,7 @@ _≈∎ = ≈-refl
 _≈⟨_⟩_ : ∀ {A B C} (μA : SumProp A){μB : SumProp B}{μC : SumProp C} → μA ≈ μB → μB ≈ μC → μA ≈ μC
 _ ≈⟨ A≈B ⟩ B≈C = ≈-trans A≈B B≈C
 
+{-
 Fin1≈⊤ : μFin 1 ≈ μ⊤
 Fin1≈⊤ = mk iso sums-ok where
   open import Relation.Binary.Sum
@@ -245,8 +211,9 @@ Fin1≈⊤ = mk iso sums-ok where
 
   sums-ok : (_ : _) → _
   sums-ok f = ≡.refl
+-}
 
-⊤+Fin : ∀ {n pf} → μ⊤ +μ μFin n {pf} ≈ μFin (suc n)
+⊤+Fin : ∀ {n pf} → μ⊤ ⊎-μ μFin n {pf} ≈ μFin (suc n)
 ⊤+Fin {zero} {()}
 ⊤+Fin {suc n} = mk iso sums-ok where
   iso : _

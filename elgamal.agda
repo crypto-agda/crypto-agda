@@ -15,8 +15,10 @@ open import Algebra.FunctionProperties
 open import Relation.Binary.PropositionalEquality.NP as ≡
 import cont as cont
 open cont using (Cont; ContA)
-open import sum
-open import sum-properties
+open import Search.Type
+open import Search.Searchable
+open import Search.Searchable.Product
+open import Search.Searchable.Fin
 
 module elgamal where
 
@@ -44,10 +46,10 @@ module Univ (X : ★) where
     Det : ★ → ★
     Det = ↺ `⊤
 
-    μU : SumProp X → ∀ u → SumProp (El u)
+    μU : Searchable X → ∀ u → Searchable (El u)
     μU μX `⊤         = μ⊤
     μU μX `X         = μX
-    μU μX (u₀ `× u₁) = μU μX u₀ ×μ μU μX u₁
+    μU μX (u₀ `× u₁) = μU μX u₀ ×-μ μU μX u₁
 
 module EntropySmoothing
   (M    : ★)        -- Message
@@ -105,8 +107,8 @@ module EntropySmoothingWithKey
 module ℤq-count
   (ℤq : ★)
   (_⊞_ : ℤq → ℤq → ℤq)
-  (μℤq : SumProp ℤq)
-  (⊞-stable : ∀ x → SumStableUnder μℤq (_⊞_ x))
+  (μℤq : Searchable ℤq)
+  (⊞-stable : ∀ x → SumStableUnder (sum μℤq) (_⊞_ x))
   where
 
   -- open Sum
@@ -189,7 +191,7 @@ module ℤq-implem (q-1 : ℕ) ([0]' [1]' : Fin (suc q-1)) where
   ℤq : ★
   ℤq = Fin q
 
-  μℤq : SumProp ℤq
+  μℤq : Searchable ℤq
   μℤq = μFinSuc q-1
 
   sumℤq : Sum ℤq
@@ -201,7 +203,7 @@ module ℤq-implem (q-1 : ℕ) ([0]' [1]' : Fin (suc q-1)) where
   [1] : ℤq
   [1] = [1]'
 
-  [suc]-stable : SumStableUnder μℤq [suc]
+  [suc]-stable : SumStableUnder (sum μℤq) [suc]
   [suc]-stable = μFinSUI [suc] [suc]-inj
 
   _ℕ⊞_ : ℕ → ℤq → ℤq
@@ -212,7 +214,7 @@ module ℤq-implem (q-1 : ℕ) ([0]' [1]' : Fin (suc q-1)) where
   ℕ⊞-inj zero    eq = eq
   ℕ⊞-inj (suc n) eq = [suc]-inj (ℕ⊞-inj n eq)
 
-  ℕ⊞-stable : ∀ m → SumStableUnder μℤq (_ℕ⊞_ m)
+  ℕ⊞-stable : ∀ m → SumStableUnder (sum μℤq) (_ℕ⊞_ m)
   ℕ⊞-stable m = μFinSUI (_ℕ⊞_ m) (ℕ⊞-inj m)
 
   _⊞_ : ℤq → ℤq → ℤq
@@ -221,7 +223,7 @@ module ℤq-implem (q-1 : ℕ) ([0]' [1]' : Fin (suc q-1)) where
   ⊞-inj : ∀ m {x y} → m ⊞ x ≡ m ⊞ y → x ≡ y
   ⊞-inj m = ℕ⊞-inj (Fin.toℕ m)
 
-  ⊞-stable : ∀ m → SumStableUnder μℤq (_⊞_ m)
+  ⊞-stable : ∀ m → SumStableUnder (sum μℤq) (_⊞_ m)
   ⊞-stable m = μFinSUI (_⊞_ m) (⊞-inj m)
 
   _ℕ⊠_ : ℕ → ℤq → ℤq
@@ -259,8 +261,8 @@ module G-implem (p-1 q-1 : ℕ) (g' 0[p] 1[p] : Fin (suc p-1)) (0[q] 1[q] : Fin 
 module G-count
   (ℤq : ★)
   (_⊞_ : ℤq → ℤq → ℤq)
-  (μℤq : SumProp ℤq)
-  (⊞-stable : ∀ x → SumStableUnder μℤq (_⊞_ x))
+  (μℤq : Searchable ℤq)
+  (⊞-stable : ∀ x → SumStableUnder (sum μℤq) (_⊞_ x))
   (G : ★)
   (g : G)
   (_^_ : G → ℤq → G)
@@ -330,9 +332,9 @@ module El-Gamal-Generic
 
   -- Required for the security proof
   (dist-^-⊠ : ∀ α x y → α ^ (x ⊠ y) ≡ (α ^ x) ^ y)
-  (μℤq : SumProp ℤq)
+  (μℤq : Searchable ℤq)
   (Rₐ : ★)
-  (μRₐ : SumProp Rₐ)
+  (μRₐ : Searchable Rₐ)
   where
 
     g^_ : ℤq → G
@@ -419,8 +421,8 @@ module El-Gamal-Generic
     -- open Sum
 
     R = Rₐ × ℤq × ℤq × ℤq
-    μR : SumProp R
-    μR = μRₐ ×μ μℤq ×μ μℤq ×μ μℤq
+    μR : Searchable R
+    μR = μRₐ ×-μ μℤq ×-μ μℤq ×-μ μℤq
 
     #R_ : Count R
     #R_ = count μR
@@ -505,9 +507,9 @@ module El-Gamal-Base
 
     -- Required for the proof
     (dist-^-⊠ : ∀ α x y → α ^ (x ⊠ y) ≡ (α ^ x) ^ y)
-    (μℤq : SumProp ℤq)
+    (μℤq : Searchable ℤq)
     (Rₐ : ★)
-    (μRₐ : SumProp Rₐ)
+    (μRₐ : Searchable Rₐ)
     where
 
     open El-Gamal-Generic ℤq _⊠_ G g _^_ G _∙_
@@ -536,9 +538,9 @@ module El-Gamal-Hashed
 
     -- Required for the proof
     (dist-^-⊠ : ∀ α x y → α ^ (x ⊠ y) ≡ (α ^ x) ^ y)
-    (μℤq : SumProp ℤq)
+    (μℤq : Searchable ℤq)
     (Rₐ : ★)
-    (μRₐ : SumProp Rₐ)
+    (μRₐ : Searchable Rₐ)
     where
 
     Message = Bits |M|
@@ -597,7 +599,7 @@ module ⟨ℤp⟩★ p-3 {- p is prime -} (`Rₐ : `★) where
 
   open ℤq-count ℤq _⊞_ μℤq ⊞-stable
 
-  μRₐ : SumProp (El `Rₐ)
+  μRₐ : Searchable (El `Rₐ)
   μRₐ = μU μℤq `Rₐ
 
   Rₐ = El `Rₐ
