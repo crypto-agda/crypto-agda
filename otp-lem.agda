@@ -34,6 +34,27 @@ module _ {A B}(GA : Group A)(GB : Group B)(f : A → B)(searchA : Search zero A)
   open Group GA using (-_) renaming (_∙_ to _+_ ; ε to 0g)
   open Group GB using ()   renaming (_∙_ to _*_ ; ε to 1g ; -_ to 1/_)
 
+  {- How all this is related to elgamal
+
+  the Group GA is ℤq with modular addition as operation
+  the Group GB is the cyclic group with order q
+
+  f is g^, the proof only need that it is a group homomorphism
+  and that it has a right inverse
+
+  we require that the search (for type A) function (should work with only summation)
+  is Stable under addition of GA (notice that we have flip in there that is so that
+  we don't need commutativity
+
+  finally we require that the search function respects extensionality
+  -}
+  
+  {-
+   I had some problems with using the standard library definiton of Groups
+   so I rolled my own, therefor I need some boring proofs first
+
+  -}
+  
   help : ∀ x y → x ≡ (x * y) * 1/ y
   help x y = x
            ≡⟨ sym (proj₂ identity x) ⟩
@@ -93,7 +114,14 @@ module _ {A B}(GA : Group A)(GB : Group B)(f : A → B)(searchA : Search zero A)
                ≡⟨ f-pres-ε ⟩
                  1g
                ∎
-  
+  {-
+    While this proof looks complicated it basically just adds inverse of m₀ and then adds m₁ (from image of f)
+    we need the homomorphic property to pull out the values.
+
+    Should be possible to simplify a little, or atleast name some parts betweeen calls of sui..
+  -}
+
+               
   -- this proof isn't actually any hard..
   thm : ∀ {X}(op : X → X → X)(O : B → X) m₀ m₁ → searchA op (λ x → O (f x * m₀)) ≡ searchA op (λ x → O (f x * m₁))
   thm op O m₀ m₁ = searchA op (λ x → O (f x * m₀))
