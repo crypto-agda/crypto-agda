@@ -118,7 +118,6 @@ module _ {A B}(GA : Group A)(GB : Group B)(f : A → B)(searchA : Search zero A)
     While this proof looks complicated it basically just adds inverse of m₀ and then adds m₁ (from image of f)
     we need the homomorphic property to pull out the values.
 
-    Should be possible to simplify a little, or atleast name some parts betweeen calls of sui..
   -}
 
                
@@ -127,25 +126,24 @@ module _ {A B}(GA : Group A)(GB : Group B)(f : A → B)(searchA : Search zero A)
   thm op O m₀ m₁ = searchA op (λ x → O (f x * m₀))
                  ≡⟨ sui (- [f] m₀) op (λ x → O (f x * m₀)) ⟩
                    searchA op (λ x → O (f (x + - [f] m₀)  * m₀))
-                 ≡⟨ search-ext op (λ x → cong (λ p → O (p * m₀)) (f-homo x (- [f] m₀))) ⟩
-                   searchA op (λ x → O ((f x * f(- [f] m₀))  * m₀))
-                 ≡⟨ cong (λ p → searchA op (λ x → O ((f x * p) * m₀))) (f-pres-inv ([f] m₀)) ⟩
-                   searchA op (λ x → O ((f x * 1/ f([f] m₀))  * m₀))
-                 ≡⟨ search-ext op (λ x → cong O (Group.assoc GB (f x) (1/ f ([f] m₀)) m₀)) ⟩
-                   searchA op (λ x → O (f x * (1/ f([f] m₀)  * m₀)))
-                 ≡⟨ cong (λ p → searchA op (λ x → O (f x * (1/ p * m₀)))) (f-sur m₀) ⟩
-                   searchA op (λ x → O (f x * (1/ m₀ * m₀)))
-                 ≡⟨ cong (λ p → searchA op (λ x → O (f x * p))) (proj₁ (Group.inverse GB) m₀) ⟩
-                   searchA op (λ x → O (f x * 1g))
-                 ≡⟨ search-ext op (λ x → cong O (proj₂ (Group.identity GB) (f x))) ⟩
+                 ≡⟨ search-ext op (λ x → cong O (lemma1 x)) ⟩
                    searchA op (λ x → O (f x ))
                  ≡⟨ sui ([f] m₁) op (λ x → O (f x)) ⟩
                    searchA op (λ x → O (f (x + [f] m₁)))
-                 ≡⟨ search-ext op (λ x → cong O (f-homo x ([f] m₁))) ⟩
-                   searchA op (λ x → O (f x * f ([f] m₁)))
-                 ≡⟨ cong (λ p → searchA op (λ x → O (f x * p))) (f-sur m₁) ⟩
+                 ≡⟨ search-ext op (λ x → cong O (lemma2 x)) ⟩
                    searchA op (λ x → O (f x * m₁))
                  ∎
     where
       open ≡-Reasoning
-      
+
+      lemma1 : ∀ x → f (x + - [f] m₀) * m₀ ≡ f x
+      lemma1 x rewrite f-homo x (- [f] m₀)
+                     | f-pres-inv ([f] m₀)
+                     | f-sur m₀
+                     | Group.assoc GB (f x) (1/ m₀) m₀
+                     | proj₁ (Group.inverse GB) m₀
+                     | proj₂ (Group.identity GB) (f x) = refl
+
+      lemma2 : ∀ x → f (x + [f] m₁) ≡ f x * m₁
+      lemma2 x rewrite f-homo x ([f] m₁)
+                     | f-sur m₁ = refl
