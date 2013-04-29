@@ -1,0 +1,64 @@
+module dist-props where
+
+open import Data.Bool
+open import Data.Nat.NP
+open import Data.Product
+
+open import Function
+
+open import Search.Type
+open import Search.Sum
+
+open import Search.Searchable.Sum
+open import Search.Searchable.Product
+
+open import Relation.Binary.PropositionalEquality.NP
+
+module GameFlipping (R : Set)(sum : Sum R)(sum-ind : SumInd sum)(X Y : R → Bool) where
+
+  R' = Bool × R
+  sum' : Sum R'
+  sum' = searchBit _+_ ×-sum sum
+
+  open FromSum sum' renaming (count to count')
+  open FromSumInd sum-ind
+
+  _==ᴮ_ : Bool → Bool → Bool
+  true  ==ᴮ y = y
+  false ==ᴮ y = not y
+
+  G : R' → Bool
+  G (b , r) = b ==ᴮ (if b then X r else Y r)
+
+  1/2 : R' → Bool
+  1/2 = proj₁
+
+  lemma : ∀ X → sum (const 1) ≡ count (not ∘ X) + count X
+  lemma X = sum-ind P (λ {a}{b} → part1 {a}{b}) part2
+    where
+      # = FromSum.count
+      
+      P = λ s → s (const 1) ≡ # s (not ∘ X) + # s X
+      
+      part1 : ∀ {s₀ s₁} → P s₀ → P s₁ → P (λ f → s₀ f + s₁ f)
+      part1 {s₀} {s₁} Ps₀ Ps₁ rewrite Ps₀ | Ps₁ = +-interchange (# s₀ (not ∘ X)) (# s₀ X) (# s₁ (not ∘ X)) (# s₁ X)  
+
+      part2 : ∀ x → P (λ f → f x)
+      part2 x with X x
+      part2 x | true  = refl
+      part2 x | false = refl
+      
+
+  thm : dist (count' G) (count' 1/2) ≡ dist (count X) (count Y)
+  thm = dist (count' G) (count' 1/2)
+      ≡⟨ refl ⟩
+        dist (count (not ∘ Y) + count X) (sum (const 0) + sum (const 1))
+      ≡⟨ cong (λ p → dist (count (not ∘ Y) + count X) (p + sum (const 1))) sum-zero ⟩
+        dist (count (not ∘ Y) + count X) (sum (const 1))
+      ≡⟨ cong (dist (count (not ∘ Y) + count X)) (lemma Y) ⟩
+        dist (count (not ∘ Y) + count X) (count (not ∘ Y) + count Y)
+      ≡⟨ dist-x+ (count (not ∘ Y)) (count X) (count Y) ⟩
+        dist (count X) (count Y)
+      ∎
+    where
+      open ≡-Reasoning
