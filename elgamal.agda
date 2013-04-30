@@ -1,18 +1,13 @@
--- {-# OPTIONS --copatterns #-}
-open import Level renaming (zero to ₀)
+{-# OPTIONS --copatterns #-}
 open import Type
 open import Function
 open import Data.Product
-open import Data.Bool.NP as Bool
 open import Data.Unit
-open import Data.Maybe.NP
 import Data.Fin.NP as Fin
-open Fin using (Fin; zero; suc) renaming (#_ to ##_)
-open import Data.Nat.NP hiding (_^_)
-open import Data.Bits
-import Data.Vec.NP as Vec
-open Vec using (Vec; []; _∷_; _∷ʳ_; allFin; lookup) renaming (map to vmap)
-open import Algebra.FunctionProperties
+open Fin using (Fin; zero; suc) renaming (#_ to ##_; toℕ to Fin▹ℕ)
+open import Data.Nat.NP hiding (_^_; _==_)
+open import Data.Bit
+open import Data.Bits hiding (_==_)
 open import Relation.Binary.PropositionalEquality.NP as ≡
 import Game.DDH
 import Game.IND-CPA
@@ -20,11 +15,11 @@ import Cipher.ElGamal.Generic
 open import Search.Type
 open import Search.Searchable renaming (Searchable to Explorable)
 open import Search.Searchable.Product
+open import Search.Searchable.Fin
 open import Relation.Binary.NP
 
 module elgamal where
 
-{-
 data `★ : ★ where
   `⊤   : `★
   `X   : `★
@@ -52,10 +47,8 @@ module Univ (X : ★) where
     μU : Explorable X → ∀ u → Explorable (El u)
     μU μX `⊤         = μ⊤
     μU μX `X         = μX
-    μU μX (u₀ `× u₁) = μU μX u₀ ×μ μU μX u₁
--}
+    μU μX (u₀ `× u₁) = μU μX u₀ ×-μ μU μX u₁
 
-{-
 module ℤq-count
   (ℤq : ★)
   (_⊞_ : ℤq → ℤq → ℤq)
@@ -115,7 +108,7 @@ module ℤq-count
   _≈ᴬ_ {A} f g = ∀ (Adv : A → Bit) → ⟪ Adv · f ⟫ ≈↺ ⟪ Adv · g ⟫
 
   lem : ∀ x → ⟨ x ⊞⟩ (⁇ `ℤq) ≈ᴬ ⁇ _
-  lem x Adv = sym (⊞-stable x (Bool.toℕ ∘ Adv))
+  lem x Adv = sym (⊞-stable x (Bit▹ℕ ∘ Adv))
 
   -- ∀ (A : ℤq → Bit) → # (A ⁇)
 
@@ -170,10 +163,10 @@ module ℤq-implem (q-1 : ℕ) ([0]' [1]' : Fin (suc q-1)) where
   ℕ⊞-stable m = μFinSUI (_ℕ⊞_ m) (ℕ⊞-inj m)
 
   _⊞_ : ℤq → ℤq → ℤq
-  m ⊞ n = Fin.toℕ m ℕ⊞ n
+  m ⊞ n = Fin▹ℕ m ℕ⊞ n
 
   ⊞-inj : ∀ m {x y} → m ⊞ x ≡ m ⊞ y → x ≡ y
-  ⊞-inj m = ℕ⊞-inj (Fin.toℕ m)
+  ⊞-inj m = ℕ⊞-inj (Fin▹ℕ m)
 
   ⊞-stable : ∀ m → SumStableUnder (sum μℤq) (_⊞_ m)
   ⊞-stable m = μFinSUI (_⊞_ m) (⊞-inj m)
@@ -183,14 +176,14 @@ module ℤq-implem (q-1 : ℕ) ([0]' [1]' : Fin (suc q-1)) where
   suc m ℕ⊠ n = n ⊞ (m ℕ⊠ n)
 
   _⊠_ : ℤq → ℤq → ℤq
-  m ⊠ n = Fin.toℕ m ℕ⊠ n
+  m ⊠ n = Fin▹ℕ m ℕ⊠ n
 
   _[^]ℕ_ : ℤq → ℕ → ℤq
   m [^]ℕ zero  = [1]
   m [^]ℕ suc n = m ⊠ (m [^]ℕ n)
 
   _[^]_ : ℤq → ℤq → ℤq
-  m [^] n = m [^]ℕ (Fin.toℕ n)
+  m [^] n = m [^]ℕ (Fin▹ℕ n)
 
 module G-implem (p-1 q-1 : ℕ) (g' 0[p] 1[p] : Fin (suc p-1)) (0[q] 1[q] : Fin (suc q-1)) where
   open ℤq-implem q-1 0[q] 1[q] public
@@ -200,7 +193,7 @@ module G-implem (p-1 q-1 : ℕ) (g' 0[p] 1[p] : Fin (suc p-1)) (0[q] 1[q] : Fin 
   g = g'
 
   _^_ : G → ℤq → G
-  x ^ n = x ^[p] Fin.toℕ n
+  x ^ n = x ^[p] Fin▹ℕ n
 
   g^_ : ℤq → G
   g^ n = g ^ n
@@ -236,7 +229,6 @@ module G-count
   #G-∙ : ∀ f m → #G (f ∘ _∙_ m) ≡ #G f
   #G-∙ f m = {!!}
   -}
--}
 
 module El-Gamal-Generic
   (ℤq       : ★)
@@ -279,13 +271,13 @@ module El-Gamal-Generic
     open IND-CPA using (R)
 
     UnusedGame : (i : Bit) → IND-CPA.Adv → (Bit × Rₐ × ℤq × ℤq × ℤq) → Bit
-    UnusedGame i (m , d) (b , rₐ , x , y , z) = b ==ᵇ d rₐ gˣ (gʸ , ζ)
+    UnusedGame i (m , d) (b , rₐ , x , y , z) = b == d rₐ gˣ (gʸ , ζ)
       where gˣ = g^ x
             gʸ = g^ y
             δ  = gˣ ^ case i 0→ y 1→ z
             ζ  = δ ∙ m rₐ gˣ b
 
-    module DDH = Game.DDH ℤq _⊠_ G g^_ Rₐ
+    module DDH = Game.DDH ℤq G g _^_ Rₐ
 
     OTP⅁ : (Rₐ → G → Message) → (Rₐ → G → G → Message → Bit) → R → Bit
     OTP⅁ M d (r , x , y , z) = d r gˣ gʸ (gᶻ ∙ M r gˣ)
@@ -312,7 +304,7 @@ module El-Gamal-Generic
         IND-CPA-⅁≡like-⅁ : IND-CPA.⅁ ≡ like-⅁
         IND-CPA-⅁≡like-⅁ = refl
 
-    R = Rₐ × ℤq × ℤq × ℤq
+    -- R = Rₐ × ℤq × ℤq × ℤq
     μR : Explorable R
     μR = μRₐ ×-μ μℤq ×-μ μℤq ×-μ μℤq
 
@@ -339,7 +331,7 @@ module El-Gamal-Generic
     open _≈ᴿ_ public
 
     ≈ᴿ-trans : Transitive _≈ᴿ_
-    ≈ᴿ-trans (mk p) (mk q) rewrite p | q = {!mk ≡.refl!}
+    ≈ᴿ-trans (mk p) (mk q) = mk (≡.trans p q)
 
     module ≈ᴿ-Reasoning where
       open Trans-Reasoning _≈ᴿ_ ≈ᴿ-trans public using () renaming (_≈⟨_⟩_ to _≈ᴿ⟨_⟩_)
@@ -384,7 +376,7 @@ module El-Gamal-Generic
 
         final : IND-CPA.⅁ b A ≈ᴿ IND-CPA.⅁ ¬b A
         final = IND-CPA.⅁ b A
-              ≈ᴿ⟨ mk (sum-ext μR (cong Bool.toℕ ∘ pf0,5)) ⟩
+              ≈ᴿ⟨ mk (sum-ext μR (cong Bit▹ℕ ∘ pf0,5)) ⟩
                 DDH.⅁₀ Aᵇ
               ≈ᴿ⟨ ddh-hyp Aᵇ ⟩
                 DDH.⅁₁ Aᵇ
@@ -392,7 +384,7 @@ module El-Gamal-Generic
                 DDH.⅁₁ A¬ᵇ
               ≈ᴿ⟨ mk (≡.sym (un-≈ᴿ (ddh-hyp A¬ᵇ))) ⟩
                 DDH.⅁₀ A¬ᵇ
-              ≈ᴿ⟨ mk (≡.sym (sum-ext μR (cong Bool.toℕ ∘ pf4,5))) ⟩
+              ≈ᴿ⟨ mk (≡.sym (sum-ext μR (cong Bit▹ℕ ∘ pf4,5))) ⟩
                 IND-CPA.⅁ ¬b A
               ∎
 
@@ -434,7 +426,6 @@ module El-Gamal-Base
         otp-lem : ∀ (A : G → Bit) m₀ m₁ → (λ x → A (g^ x ∙ m₀)) ≈q (λ x → A (g^ x ∙ m₁))
         otp-lem A m₀ m₁ rewrite otp-lem1 A m₀ | otp-lem1 A m₁ = refl
 
-        {-
 module El-Gamal-Hashed
     (ℤq : ★)
     (_⊠_ : ℤq → ℤq → ℤq)
@@ -462,11 +453,10 @@ module El-Gamal-Hashed
 
     _/_ : Message → G → Message
     _/_ m δ = ℋ δ ⊕ m
-
+{-
 
     /-∙ : ∀ x y → ℋ⟨ x ⟩⊕ y / x ≡ y
     /-∙ x y = {!!}
-    {-
 
     open El-Gamal-Generic ℤq _⊠_ G g _^_ Message ℋ⟨_⟩⊕_ _/_ {!!} {!!}
            dist-^-⊠ sumℤq sumℤq-ext Rₐ sumRₐ sumRₐ-ext public
@@ -522,10 +512,10 @@ module ⟨ℤp⟩★ p-3 {- p is prime -} (`Rₐ : `★) where
   open EB hiding (g^_)
 
   otp-base-lem : ∀ (A : G → Bit) m → (A ∘ g^_) ≈q (A ∘ g^_ ∘ _⊞_ m)
-  otp-base-lem A m = ⊞-stable m (Bool.toℕ ∘ A ∘ g^_)
+  otp-base-lem A m = ⊞-stable m (Bit▹ℕ ∘ A ∘ g^_)
 
   postulate
-    ddh-hyp : (A : DDHAdv Rₐ) → DDH⅁ A 0b ≈ᴿ DDH⅁ A 1b
+    ddh-hyp : (A : DDH.Adv) → DDH.⅁₀ A ≈ᴿ DDH.⅁₁ A
     otp-lem : ∀ (A : G → Bit) m → (λ x → A (g^ x ∙ m)) ≈q (λ x → A (g^ x))
 
 

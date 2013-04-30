@@ -7,7 +7,7 @@ open FI using (_↔_; inverses; module Inverse) renaming (_$₁_ to to; _$₂_ t
 open import Function.Related.TypeIsomorphisms.NP
 open import Data.Product.NP
 open import Data.Sum
-open import Data.Bits
+open import Data.Bit
 open import Data.Fin using (Fin)
 open import Search.Type
 open import Search.Searchable
@@ -90,15 +90,15 @@ searchBit-ind _ _P∙_ Pf = Pf 0b P∙ Pf 1b
 μBit = μ-iso (FI.sym Bit↔⊤⊎⊤) (μ⊤ ⊎-μ μ⊤)
 
 focusBit : ∀ {a} → Focus {a} searchBit
-focusBit (false , x) = inj₁ x
-focusBit (true ,  x) = inj₂ x
+focusBit (0b , x) = inj₁ x
+focusBit (1b , x) = inj₂ x
 
 focusedBit : Focused {L.zero} searchBit
 focusedBit {B} = inverses focusBit unfocus (⇒) (⇐)
   where open Searchable₁₁ searchBit-ind
         ⇒ : (x : Σ Bit B) → _
-        ⇒ (false , x) = ≡.refl
-        ⇒ (true  , x) = ≡.refl
+        ⇒ (0b , x) = ≡.refl
+        ⇒ (1b , x) = ≡.refl
         ⇐ : (x : B 0b ⊎ B 1b) → _
         ⇐ (inj₁ x) = ≡.refl
         ⇐ (inj₂ x) = ≡.refl

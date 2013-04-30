@@ -1,5 +1,6 @@
 open import Type
 open import Data.Product
+open import Data.Bit
 open import Data.Bits
 
 module Game.IND-CPA
