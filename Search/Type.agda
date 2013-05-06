@@ -5,6 +5,7 @@ open import Type hiding (★)
 open import Function.NP
 open import Function.Inverse using (_↔_)
 open import Data.Nat.NP hiding (_⊔_)
+open import Data.Bit
 open import Data.Bits
 open import Data.Indexed
 open import Algebra
