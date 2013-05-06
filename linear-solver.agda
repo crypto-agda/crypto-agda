@@ -282,3 +282,26 @@ module example₂ where
   test2 : (A B C : Ty) → (A × B) × C ⟶  (B × A) × C
   test2 A B C = rewire ((# 0 , # 1) , # 2) ((# 1 , # 0) , # 2) _ where
     open STest 3 (λ i → lookup i (A ∷ B ∷ C ∷ []))
+
+
+module example₃ where
+
+  open import Data.Unit
+  open import Data.Product
+  open import Data.Vec
+
+  open import Function using (flip ; const)
+  
+  open import Function.Inverse
+  open import Function.Related.TypeIsomorphisms.NP
+
+  open ×-CMon using () renaming (∙-cong to ×-cong ; assoc to ×-assoc)
+
+  module STest n M = Syntax Set _×_ ⊤ _↔_ id (flip _∘_) A×⊤↔A (sym A×⊤↔A) (A×⊤↔A ∘ swap-iso) (swap-iso ∘ sym A×⊤↔A)
+                            ×-cong first-iso (λ x → second-iso (const x))
+                            (sym (×-assoc _ _ _)) (×-assoc _ _ _) swap-iso n M
+
+  test : ∀ A B C → ((A × B) × C) ↔ (C × (B × A))
+  test A B C = rewire ((# 0 , # 1) , # 2) (# 2 , (# 1 , # 0)) _ where
+    open STest 3 (λ i → lookup i (A ∷ B ∷ C ∷ []))
+
