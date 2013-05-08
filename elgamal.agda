@@ -4,7 +4,7 @@ open import Function
 open import Data.Product
 open import Data.Unit
 import Data.Fin.NP as Fin
-open Fin using (Fin; zero; suc) renaming (#_ to ##_; toℕ to Fin▹ℕ)
+open Fin using (Fin; zero; suc; Fin▹ℕ) renaming (#_ to ##_)
 open import Data.Nat.NP hiding (_^_; _==_)
 open import Data.Bit
 open import Data.Bits hiding (_==_)
