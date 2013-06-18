@@ -1,6 +1,6 @@
 module prg where
 
-open import fun-universe
+-- open import fun-universe
 
 open import Type
 open import Function
@@ -9,6 +9,7 @@ open import Data.Bool.NP hiding (_==_)
 open import Data.Nat.Properties
 open import Data.Bool.Properties
 open import Data.Bits
+open import Data.Bit hiding (_==_)
 open import Data.Bits.Count
 import Data.Bits.Search as Search
 open Search using (search-hom)
@@ -77,6 +78,7 @@ module PRG⅁ {k n} (PRG : PRGFun k n) where
   brute≗not∘brute′ : brute′ ≗ not ∘ brute
   brute≗not∘brute′ x = trans (sym (not-involutive _)) (cong not (not∘brute′≗brute x))
 
+  {-
 module PRG⅁₂ {k n |R|ᵃ : ℕ} (PRG : PRGFun k n) where
 
     module AbsAdv {t} {T : Set t} (funU : FunUniverse T) where
@@ -142,4 +144,7 @@ module PRG⅁₂ {k n |R|ᵃ : ℕ} (PRG : PRGFun k n) where
 
   Goal:
     breaks (⁇⇄ redA) ⇔ ⁇⇄ redA 0b ]-[ ⁇⇄ redA 1b
-    -}
+--  -}
+--  -}
+--  -}
+--  -}
