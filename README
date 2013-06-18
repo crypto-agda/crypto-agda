@@ -1,0 +1,8 @@
+This development is based on two other sub-projects:
+  * https://github.com/crypto-agda/explore
+
+    Big operators as exploration functions in Agda
+
+  * https://github.com/crypto-agda/agda-nplib
+
+    An extension of Agda standard library
