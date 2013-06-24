@@ -1,4 +1,4 @@
-module linear-solver where
+module Solver.Linear where
 
 open import Data.Nat as ℕ using (ℕ)
 open import Data.Fin as F using (Fin)
@@ -13,8 +13,8 @@ module Syntax {a} (A : Set a)(_x_ : A → A → A)(T : A)
   (<tt,id>' : ∀ {A} → R' (T x A) A)
   (<tt,id>⁻¹' : ∀ {A} → R' A (T x A))
   (⟨_×'_⟩   : ∀ {A B C D} → R' A C → R' B D → R' (A x B) (C x D))
-  (first'    : ∀ {A B C} → R' A B → R' (A x C) (B x C))
-  (second'   : ∀ {A B C} → R' B C → R' (A x B) (A x C))
+  (first'   : ∀ {A B C} → R' A B → R' (A x C) (B x C))
+  (second'  : ∀ {A B C} → R' B C → R' (A x B) (A x C))
   (assoc'   : ∀ {A B C} → R' (A x (B x C)) ((A x B) x C))
   (assoc⁻¹' : ∀ {A B C} → R' ((A x B) x C) (A x (B x C)))
   (swap'    : ∀ {A B}   → R' (A x B) (B x A))

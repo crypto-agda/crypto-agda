@@ -1,4 +1,4 @@
-module data-universe where
+module FunUniverse.Data where
 
 open import Type
 import Level as L
@@ -6,7 +6,7 @@ import Relation.Binary.PropositionalEquality as ≡
 open ≡ using (_≡_)
 open import Function
 open import Data.Nat.NP using (ℕ; _+_; _*_; _^_)
-open import Data.Bits using (Bit)
+open import Data.Bit using (Bit)
 open import Data.Unit using (⊤)
 open import Data.Product using (Σ; _×_; _,_) renaming (zip to ×-zip)
 open import Data.Vec using (Vec)

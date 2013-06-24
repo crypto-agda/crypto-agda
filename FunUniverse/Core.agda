@@ -1,4 +1,4 @@
-module fun-universe where
+module FunUniverse.Core where
 
 open import Type
 open import Data.Nat.NP using (ℕ; zero; suc; _+_; _*_; 2^_)
@@ -11,11 +11,12 @@ import Data.Vec.NP as V
 import Level as L
 open V using (Vec; []; _∷_)
 
-open import Data.Bits using (Bit; Bits; _→ᵇ_; RewireTbl; 0b; 1b; 0ⁿ; 1ⁿ)
+open import Data.Bit using (Bit; 0b; 1b)
+open import Data.Bits using (Bits; _→ᵇ_; RewireTbl; 0ⁿ; 1ⁿ)
 
-import bintree as Tree
+import FunUniverse.BinTree as Tree
 open Tree using (Tree)
-open import data-universe
+open import FunUniverse.Data
 
 record FunUniverse {t} (T : Set t) : Set (L.suc t) where
   constructor _,_

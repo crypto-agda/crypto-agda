@@ -1,12 +1,15 @@
 open import Type
 open import Data.Nat.NP
-open import data-universe
-open import fun-universe
+open import Data.Bits hiding (rewire; rewireTbl)
+open import Data.Fin using (Fin)
+open import FunUniverse.Data
+open import FunUniverse.Core
 
-module fun-state {t} {T : Set t} (S : T) (funU : FunUniverse T) where
+module FunUniverse.State {t} {T : Set t} (S : T) (funU : FunUniverse T) where
 
 open FunUniverse funU
 
+infixr 0 _→ˢ_
 _→ˢ_ : T → T → ★
 A →ˢ B = A `× S `→ B `× S
 
@@ -17,7 +20,7 @@ Endoˢ : T → ★
 Endoˢ A = A →ˢ A
 
 funUˢ : FunUniverse T
-funUˢ = mk universe _→ˢ_
+funUˢ = universe , _→ˢ_
 
 module LinRewiringˢ (linRewiring : LinRewiring funU) where
 
@@ -30,13 +33,13 @@ module LinRewiringˢ (linRewiring : LinRewiring funU) where
   _∘ˢ_ = _∘_
 
   firstˢ : ∀ {A B C} → (A →ˢ C) → (A `× B) →ˢ (C `× B)
-  firstˢ f = assoc ⁏ second swap ⁏ first f ⁏ second swap ⁏ assoc′
+  firstˢ f = {!assoc ⁏ second swap ⁏ first f ⁏ second swap ⁏ assoc′!}
 
   secondˢ : ∀ {A B C} → (B →ˢ C) → (A `× B) →ˢ (A `× C)
   secondˢ f = assoc ⁏ second f ⁏ assoc′
 
-  <_×_>  : ∀ {A B C D} → (A →ˢ C) → (B →ˢ D) → (A `× B) →ˢ (C `× D)
-  < f × g > = assoc ⁏ second swap ⁏ first f ⁏ second swap ⁏ second g ⁏ assoc′
+  <_×_>ˢ  : ∀ {A B C D} → (A →ˢ C) → (B →ˢ D) → (A `× B) →ˢ (C `× D)
+  < f × g >ˢ = {!assoc ⁏ second swap ⁏ first f ⁏ second swap ⁏ second g ⁏ assoc′!}
 
   swapˢ : ∀ {A B} → (A `× B) →ˢ (B `× A)
   swapˢ = first swap
@@ -44,11 +47,11 @@ module LinRewiringˢ (linRewiring : LinRewiring funU) where
   assocˢ : ∀ {A B C} → ((A `× B) `× C) →ˢ (A `× (B `× C))
   assocˢ = first assoc
 
-  <tt,id>ˢ : ∀ {A} → A →ˢ `⊤ `× A
+  <tt,id>ˢ : ∀ {A} → A →ˢ (`⊤ `× A)
   <tt,id>ˢ = first <tt,id>
 
-  snd<tt,>ˢ : ∀ {A} → `⊤ `× A →ˢ A
-  snd<tt,>ˢ = first snd<tt,>ˢ
+  snd<tt,>ˢ : ∀ {A} → (`⊤ `× A) →ˢ A
+  snd<tt,>ˢ = {!first snd<tt,>ˢ!}
 
   tt→[]ˢ : ∀ {A} → `⊤ →ˢ `Vec A 0
   tt→[]ˢ = first tt→[]
@@ -63,30 +66,30 @@ module LinRewiringˢ (linRewiring : LinRewiring funU) where
   unconsˢ = first uncons
 
   linRewiringˢ : LinRewiring funUˢ
-  linRewiringˢ = ?
+  linRewiringˢ = {!!}
 
 module Rewiringˢ (rewiring : Rewiring funU) where
   open Rewiring rewiring
   open LinRewiringˢ linRewiring public
-
-  <_,_> : ∀ {A B C} → (A →ˢ B) → (A →ˢ C) → A →ˢ B `× C
-  < f , g > = dupˢ ⁏ < f × g >ˢ
 
   -- All the remainings are defined with 'first'
 
   ttˢ : ∀ {_⊤} → _⊤ →ˢ `⊤
   ttˢ = first tt
 
-  dupˢ : ∀ {A} → A →ˢ A `× A
+  dupˢ : ∀ {A} → A →ˢ (A `× A)
   dupˢ = first dup
+
+  <_,_>ˢ : ∀ {A B C} → (A →ˢ B) → (A →ˢ C) → A →ˢ (B `× C)
+  < f , g >ˢ = dupˢ ⁏ < f × g >ˢ
 
   <[]>ˢ : ∀ {_⊤ A} → _⊤ →ˢ `Vec A 0
   <[]>ˢ = first <[]>
 
-  fstˢ : ∀ {A B} → A `× B →ˢ A
+  fstˢ : ∀ {A B} → (A `× B) →ˢ A
   fstˢ = first fst
 
-  sndˢ : ∀ {A B} → A `× B →ˢ B
+  sndˢ : ∀ {A B} → (A `× B) →ˢ B
   sndˢ = first snd
 
   rewireˢ : ∀ {i o} → (Fin o → Fin i) → i →ˢᵇ o
@@ -96,7 +99,7 @@ module Rewiringˢ (rewiring : Rewiring funU) where
   rewireTblˢ tbl = first (rewireTbl tbl)
 
   rewiringˢ : Rewiring funUˢ
-  rewiringˢ = ?
+  rewiringˢ = {!!}
 
 module FunOpsˢ (funOps : FunOps funU) where
 
@@ -117,4 +120,4 @@ module FunOpsˢ (funOps : FunOps funU) where
   condˢ = first cond
 
   funOpsˢ : FunOps funUˢ
-  funOpsˢ = ?
+  funOpsˢ = {!!}

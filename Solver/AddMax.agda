@@ -1,4 +1,4 @@
-module Add-Max-Solver where
+module Solver.AddMax where
 
 import Algebra
 

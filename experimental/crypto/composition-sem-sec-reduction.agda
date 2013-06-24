@@ -8,8 +8,8 @@ open ≡ using (_≗_)
 
 open import flipbased-implem using (run↺; map↺)
 open import program-distance using (module HomPrgDist; HomPrgDist)
-open import fun-universe
-open import agda-fun-universe
+open import FunUniverse.Core
+open import FunUniverse.Agda
 open import one-time-semantic-security
 import bit-guessing-game
 

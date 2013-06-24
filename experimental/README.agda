@@ -37,19 +37,6 @@ open import one-time-semantic-security
 -- A simple reduction on ciphers.
 open import composition-sem-sec-reduction
 
--- Tracking space and time through a restricted universe
--- of functions.
-open import data-universe
-open import fun-universe
-open import agda-fun-universe
-open import bits-fun-universe
-open import fin-fun-universe
-open import const-fun-universe
-open import cost-fun-universe
-open import inverse-fun-universe
-open import circuit-fun-universe
-open import syntax-fun-universe
-
 -- TODO: Fix & restore the product of universes and ops
 
 -- Draft modules of previous attempts.

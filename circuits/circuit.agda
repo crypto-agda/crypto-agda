@@ -1,8 +1,9 @@
-module circuit where
+module circuits.circuit where
 
 open import Type
 open import Function
 open import Data.Nat.NP hiding (_≟_; compare)
+open import Data.Bit renaming (_==_ to _==ᵇ_)
 open import Data.Bits hiding (rewire; rewireTbl)
 open import Data.Bits.Bits2
 open import Data.Bool hiding (_≟_)
@@ -18,15 +19,15 @@ import Data.Vec.Properties as VecProps
 open VecProps using (tabulate∘lookup)
 open import Relation.Nullary.Decidable hiding (map)
 open import Relation.Binary.PropositionalEquality
-open import composable
-open import vcomp
-open import forkable
+open import Composition.Horizontal
+open import Composition.Vertical
+open import Composition.Forkable
 
 CircuitType : ★₁
 CircuitType = (i o : ℕ) → ★
 
 RunCircuit : CircuitType → ★
-RunCircuit C = ∀ {i o} → C i o → Bits i → Bits o
+RunCircuit C = ∀ {i o} → C i o → i →ᵇ o
 
 RewireFun : CircuitType
 RewireFun i o = Fin o → Fin i
@@ -35,9 +36,9 @@ record RewiringBuilder (C : CircuitType) : ★₁ where
   constructor mk
 
   field
-    isComposable  : Composable C
+    isHComposable : HComposable C
     isVComposable : VComposable _+_ C
-  open Composable isComposable
+  open HComposable isHComposable
   open VComposable isVComposable
 
   field
@@ -178,14 +179,14 @@ record RewiringBuilder (C : CircuitType) : ★₁ where
   tailC : ∀ {i} → C (1 + i) i
   tailC = dropC 1
 
-  open Composable isComposable public
+  open HComposable isHComposable public
   open VComposable isVComposable public
 
 record CircuitBuilder (C : CircuitType) : ★₁ where
   constructor mk
   field
     isRewiringBuilder : RewiringBuilder C
-    arr : ∀ {i o} → (Bits i → Bits o) → C i o
+    arr : ∀ {i o} → i →ᵇ o → C i o
     leafC : ∀ {o} → Bits o → C 0 o
     isForkable : Forkable suc C
 
@@ -236,7 +237,7 @@ record CircuitBuilder (C : CircuitType) : ★₁ where
   padR : ∀ {i} k → C i (i + k)
   padR k = padL k >>> commC k _
 
-  arr' : ∀ {i o} → (Bits i → Bits o) → C i o
+  arr' : ∀ {i o} → i →ᵇ o → C i o
   arr' {zero}  f = leafC (f [])
   arr' {suc i} f = forkC (arr' {i} (f ∘ 0∷_)) (arr' (f ∘ 1∷_))
 
@@ -297,7 +298,7 @@ _→ᶠ_ : CircuitType
 i →ᶠ o = Fin o → Fin i
 
 finFunRewiringBuilder : RewiringBuilder _→ᶠ_
-finFunRewiringBuilder = mk (opComp (ixFunComp Fin)) finFunOpVComp id id _=[_]=_ rewire-spec idC-spec
+finFunRewiringBuilder = mk (opHComp (ixFunHComp Fin)) finFunOpVComp id id _=[_]=_ rewire-spec idC-spec
   where
     C = _→ᶠ_
 
@@ -334,7 +335,7 @@ tblRewiringBuilder = mk (mk _>>>_) (mk _***_) tabulate (allFin _) _=[_]=_ rewire
     _***_ {i₀} c₀ c₁ = vmap (inject+ _) c₀ ++ vmap (raise i₀) c₁
 
 bitsFunRewiringBuilder : RewiringBuilder _→ᵇ_
-bitsFunRewiringBuilder = mk bitsFunComp bitsFunVComp Vec.rewire id _=[_]=_ rewire-spec idC-spec
+bitsFunRewiringBuilder = mk bitsFunHComp bitsFunVComp Vec.rewire id _=[_]=_ rewire-spec idC-spec
   where
     C = _→ᵇ_
 
@@ -361,16 +362,12 @@ module BitsFunExtras where
   ... | pre , post , eq with ++-decomp {xs = xs} {pre} {ys} {post} eq
   ... | eq1 , eq2 rewrite eq1 | eq2 = refl
 
-open import bintree hiding (_>>>_; _***_)
-open import flipbased-tree -- hiding (_***_)
+open import FunUniverse.BinTree as BinTree hiding (_>>>_; _***_)
 
-TreeBits : CircuitType
-TreeBits i o = Tree (Bits o) i
-
-treeBitsRewiringBuilder : RewiringBuilder TreeBits
-treeBitsRewiringBuilder = mk bintree.composable bintree.vcomposable rewire (rewire id) _=[_]=_ rewire-spec idC-spec
+treeBitsRewiringBuilder : RewiringBuilder _→ᵗ_
+treeBitsRewiringBuilder = mk BinTree.hcomposable BinTree.vcomposable rewire (rewire id) _=[_]=_ rewire-spec idC-spec
   where
-    C = TreeBits
+    C = _→ᵗ_
 
     rewire : ∀ {i o} → RewireFun i o → C i o
     rewire f = fromFun (Vec.rewire f)
@@ -384,8 +381,8 @@ treeBitsRewiringBuilder = mk bintree.composable bintree.vcomposable rewire (rewi
     idC-spec : ∀ {i} (bs : Bits i) → bs =[ rewire id ]= bs
     idC-spec bs rewrite toFun∘fromFun (tabulate ∘ flip Vec.lookup) bs | tabulate∘lookup bs = refl
 
-treeBitsCircuitBuilder : CircuitBuilder TreeBits
-treeBitsCircuitBuilder = mk treeBitsRewiringBuilder fromFun leaf bintree.forkable
+treeBitsCircuitBuilder : CircuitBuilder _→ᵗ_
+treeBitsCircuitBuilder = mk treeBitsRewiringBuilder fromFun leaf BinTree.forkable
 
 RewiringTree : CircuitType
 RewiringTree i o = Tree (Fin i) o
@@ -397,7 +394,7 @@ module RewiringWith2^Outputs where
     rewire f = fromFun (f ∘ toFin)
 
     lookupFin : ∀ {i o} → C i ⟨2^ o ⟩ → Fin (2^ o) → Fin i
-    lookupFin c x = bintree.lookup (fromFin x) c
+    lookupFin c x = BinTree.lookup (fromFin x) c
 
     _>>>_ : ∀ {i m o} → C i ⟨2^ m ⟩ → C (2^ m) ⟨2^ o ⟩ → C i ⟨2^ o ⟩
     f >>> g = rewire (lookupFin f ∘ lookupFin g)
@@ -445,6 +442,10 @@ module Test where
   test₄ : bigtree ≡ abs treeBitsRewiringBuilder
   test₄ = refl
 
-  -- open RewiringWith2^Outputs
-  -- test₅ : tabulate (lookupFin tinytree) ≡ tbl
-  -- test₅ = refl
+  open RewiringWith2^Outputs
+  test₅ : tabulate (lookupFin tinytree) ≡ tbl
+  test₅ = refl
+
+  -- -}
+  -- -}
+  -- -}

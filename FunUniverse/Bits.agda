@@ -1,4 +1,4 @@
-module bits-fun-universe where
+module FunUniverse.Bits where
 
 open import Data.Nat.NP using (ℕ; _*_; module ℕ°)
 open import Data.Bool using (if_then_else_)
@@ -10,10 +10,11 @@ open F using (const; _∘′_)
 open V using (Vec; []; _∷_; _++_; [_])
 open × using (_×_; _,_; proj₁; proj₂; uncurry)
 
-open import Data.Bits using (_→ᵇ_; 0b; 1b; RewireTbl)
+open import Data.Bit using (0b; 1b)
+open import Data.Bits using (_→ᵇ_; RewireTbl)
 
-open import data-universe
-open import fun-universe
+open import FunUniverse.Data
+open import FunUniverse.Core
 
 bitsFunU : FunUniverse ℕ
 bitsFunU = Bits-U , _→ᵇ_
