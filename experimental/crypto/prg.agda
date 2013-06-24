@@ -1,6 +1,6 @@
 module prg where
 
--- open import fun-universe
+-- open import FunUniverse.Core
 
 open import Type
 open import Function

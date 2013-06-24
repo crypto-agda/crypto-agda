@@ -1,11 +1,12 @@
 open import Type
 open import Data.Nat
-open import Data.Bits using (Bit; Bits; RewireTbl)
+open import Data.Bit using (Bit)
+open import Data.Bits using (Bits; RewireTbl)
 open import Data.Fin using (Fin)
-open import data-universe
-open import fun-universe
+open import FunUniverse.Data
+open import FunUniverse.Core
 
-module syntax-fun-universe {T : ★} (dataU : Universe T) where
+module FunUniverse.Syntax {T : ★} (dataU : Universe T) where
 
 open Universe dataU
 

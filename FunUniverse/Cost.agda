@@ -1,4 +1,4 @@
-module cost-fun-universe where
+module FunUniverse.Cost where
 
 open import Data.Nat.NP using (ℕ; zero; suc; _+_; _*_; 2*_; 2^_; _^_; _⊔_; module ℕ°; module ⊔°; 2*′_)
 open import Data.Bool using (true; false)
@@ -12,10 +12,10 @@ open V using (Vec; []; _∷_; _++_; [_])
 open × using (_×_)
 open ≡ using (_≡_; _≗_)
 
-open import Data.Bits using (Bits; 0∷_; 1∷_)
+open import Data.Bits using (Bits; 0∷_; 1∷_; _→ᵇ_)
 
-open import fun-universe
-open import const-fun-universe
+open import FunUniverse.Core
+open import FunUniverse.Const
 
 module D where
   open Data.DifferenceNat public renaming (suc to suc#; _+_ to _+#_)
@@ -101,7 +101,7 @@ module SeqTimeOpsD where
   #nodes zero    = 0#
   #nodes (suc i) = 1# +# #nodes i +# #nodes i
 
-  fromBitsFun≡ : ∀ {i o} (f : Bits i → Bits o) → fromBitsFun f ≗ #nodes i
+  fromBitsFun≡ : ∀ {i o} (f : i →ᵇ o) → fromBitsFun f ≗ #nodes i
   fromBitsFun≡ {zero} f x = constBits≡0 (f []) x
   fromBitsFun≡ {suc i} f x rewrite fromBitsFun≡ {i} (f ∘′ 1∷_) x
                                  | fromBitsFun≡ {i} (f ∘′ 0∷_) (#nodes i x) = ≡.refl
@@ -266,7 +266,7 @@ module TimeOps where
   constBits≡0 {suc n} (b ∷ bs) rewrite constBit≡0 b
                                      | constBits≡0 bs = ≡.refl
 
-  fromBitsFun≡i : ∀ {i o} (f : Bits i → Bits o) → fromBitsFun f ≡ i
+  fromBitsFun≡i : ∀ {i o} (f : i →ᵇ o) → fromBitsFun f ≡ i
   fromBitsFun≡i {zero}  f rewrite constBits≡0 (f []) = ≡.refl
   fromBitsFun≡i {suc i} f rewrite fromBitsFun≡i {i} (f ∘′ 1∷_)
                                 | fromBitsFun≡i {i} (f ∘′ 0∷_)
@@ -367,7 +367,7 @@ module SpaceOps where
   fromBitsFun-cost zero    o = o
   fromBitsFun-cost (suc i) o = 1 + 2*(fromBitsFun-cost i o)
 
-  fromBitsFun≡ : ∀ {i o} (f : Bits i → Bits o) → fromBitsFun f ≡ fromBitsFun-cost i o
+  fromBitsFun≡ : ∀ {i o} (f : i →ᵇ o) → fromBitsFun f ≡ fromBitsFun-cost i o
   fromBitsFun≡ {zero}  {o} f rewrite constBits≡n (f []) | ℕ°.+-comm o 0 = ≡.refl
   fromBitsFun≡ {suc i} {o} f rewrite fromBitsFun≡ {i} (f ∘′ 1∷_)
                                    | fromBitsFun≡ {i} (f ∘′ 0∷_)

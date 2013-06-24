@@ -9,8 +9,8 @@ open ≡ using (_≗_)
 
 open import Data.Bits using (Bit; Bits; proj)
 
-open import fun-universe
-open import agda-fun-universe
+open import FunUniverse.Core
+open import FunUniverse.Agda
 open import program-distance
 open import flipbased-implem
 

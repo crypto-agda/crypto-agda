@@ -1,10 +1,10 @@
-module const-fun-universe where
+module FunUniverse.Const where
 
 open import Type
 open import Data.Unit using (⊤)
 
-open import data-universe
-open import fun-universe
+open import FunUniverse.Data
+open import FunUniverse.Core
 
 constFuns : ★ → FunUniverse ⊤
 constFuns A = ⊤-U , λ _ _ → A

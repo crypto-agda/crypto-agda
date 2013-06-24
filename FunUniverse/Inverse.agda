@@ -1,8 +1,8 @@
-open import fun-universe
+open import FunUniverse.Core
 
 open import Data.Nat
 
-module inverse-fun-universe {t} {T : Set t}
+module FunUniverse.Inverse {t} {T : Set t}
                             (funU : FunUniverse T)
                             (bijU : Bijective funU) where
 

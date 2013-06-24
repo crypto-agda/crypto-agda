@@ -1,4 +1,4 @@
-module agda-fun-universe where
+module FunUniverse.Agda where
 
 open import Type
 open import Data.Bool using (if_then_else_)
@@ -9,10 +9,10 @@ open F using (const; _∘′_)
 open V using ([]; _∷_)
 open × using (_×_; _,_; proj₁; proj₂; uncurry)
 
-open import Data.Bits using (0b; 1b)
+open import Data.Bit using (0b; 1b)
 
-open import data-universe
-open import fun-universe
+open import FunUniverse.Data
+open import FunUniverse.Core
 
 -→- : ★ → ★ → ★
 -→- A B = A → B

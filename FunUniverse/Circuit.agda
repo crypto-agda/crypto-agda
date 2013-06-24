@@ -3,9 +3,9 @@ open import Data.Nat  using (ℕ; _+_)
 open import Data.Bits using (Bits)
 open import Data.Fin  using (Fin)
 
-open import data-universe
+open import FunUniverse.Data
 
-module circuit-fun-universe where
+module FunUniverse.Circuit where
 
 infix 0 _⌥_
 data _⌥_ : ℕ → ℕ → ★ where

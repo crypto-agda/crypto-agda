@@ -1,4 +1,5 @@
 open import Type
+open import Data.Bit
 open import Data.Bits
 open import Data.Product
 

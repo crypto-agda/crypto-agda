@@ -1,4 +1,4 @@
-module dist-props where
+module Game.Transformation.InternalExternal where
 
 open import Data.Two
 open import Data.Nat.NP hiding (_==_)
@@ -6,23 +6,23 @@ open import Data.Product
 
 open import Function
 
-open import Search.Type
-open import Search.Sum
-
-open import Search.Searchable.Sum
-open import Search.Searchable.Product
+open import Explore.Type
+open import Explore.Summable
+open import Explore.Sum
+open import Explore.Product
 
 open import Relation.Binary.PropositionalEquality.NP
 
 module GameFlipping (R : Set)(sum : Sum R)(sum-ind : SumInd sum)(⅁ : 𝟚 → R → 𝟚) where
+  open Operators
   X Y : R → 𝟚
   X = ⅁ 0'
   Y = ⅁ 1'
   R' = 𝟚 × R
   sum' : Sum R'
-  sum' = searchBit _+_ ×-sum sum
+  sum' = exploreBit _+_ ×ˢ sum
 
-  open FromSum sum' renaming (count to #'_)
+  open FromSum    sum'    renaming (count to #'_)
   open FromSumInd sum-ind renaming (count to #_)
 
   G : R' → 𝟚
