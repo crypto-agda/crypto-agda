@@ -122,12 +122,21 @@ module _ where
       open Order o
 
   funcpo : ∀ {A D}{od : Order D} → cpo od → cpo (A o→ od)
-  funcpo cpod = mk (λ x → d0) (λ f x → lub (f $m x)) (λ x x₁ → Dbot (x x₁)) (λ f n x → lubUB (f $m x) n)
-    (λ f x x₁ x₂ → lubLUB (f $m x₂) (x x₂) (λ n → x₁ n x₂))
+  funcpo {A}{D}{od}cpod = mk fbot flub fDbot flubUB flubLUB
     where
-      open cpo cpod
+      module D = cpo cpod
       open Nat
       open ≡ using (_≡_)
+      fbot : A → D
+      fbot _ = D.d0
+      flub : _ → _
+      flub f = λ x → D.lub (f $m x)
+      .fDbot : (_ : _) → _
+      fDbot f = λ x → D.Dbot (f x)
+      .flubUB : (_ : _) → _
+      flubUB f = λ n x → D.lubUB (f $m x) n
+      .flubLUB : (_ : _) → _
+      flubLUB f = λ x x₁ x₂ → D.lubLUB (f $m x₂) (x x₂) (λ n → x₁ n x₂)
 
   _c→m_ : ∀ {A D}(oa : Order A){od : Order D} → cpo od → cpo (oa o→m od)
   _c→m_ {A} oa {od} cpod = mk (mk (λ x → d0) (λ x₁ → Order.reflexive od))
