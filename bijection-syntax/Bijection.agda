@@ -5,7 +5,7 @@ open import Function.NP hiding (Cmp)
 open import Function.Injection hiding (id ; _∘_)
 open import Relation.Binary.PropositionalEquality
 
-module bijection where
+module bijection-syntax.Bijection where
 
 Is-Inj : ∀ {A B : Set} → (A → B) → Set
 Is-Inj f = ∀ x y → f x ≡ f y → x ≡ y

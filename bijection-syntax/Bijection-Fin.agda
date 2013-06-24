@@ -1,8 +1,8 @@
-module bijection-fin where
+module bijection-syntax.Bijection-Fin where
 
   open import Type
 
-  open import bijection
+  open import bijection-syntax.Bijection
   open import Function.NP hiding (Cmp)
   open import Relation.Binary.PropositionalEquality
 
@@ -325,8 +325,7 @@ module bijection-fin where
 
   module toNat n (f : Endo (Fin (suc n)))(f-inj : Is-Inj f)(f-mono : Is-Mono `RC `RC f) where
   
-    import prefect-bintree-sorting
-    open prefect-bintree-sorting.MM
+    open import Data.Nat.BoundedMonoInj-is-Id
     open import Data.Sum
 
     move-to-RC : ∀ {n}{x y : Fin n} → x ≤F y → `RC x y ≡ lt ⊎ `RC x y ≡ eq
