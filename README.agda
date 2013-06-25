@@ -1,5 +1,7 @@
 module README where
 
+open import Explore.README
+
 open import Game.DDH
 open import Game.IND-CPA
 open import Game.EntropySmoothing
@@ -16,7 +18,7 @@ open import FunUniverse.README
 
 open import bijection-syntax.README
 
---open import alea.cpo
+open import alea.cpo
 
 open import circuits.circuit
 
