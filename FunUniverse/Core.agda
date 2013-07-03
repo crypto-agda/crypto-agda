@@ -442,6 +442,12 @@ record LinRewiring {t} {T : Set t} (funU : FunUniverse T) : Set t where
                   ⁏ assoc′
                   ⁏ first <∷>
 
+  rot-left : ∀ m {n A} → `Vec A (m + n) `→ `Vec A (n + m)
+  rot-left m = splitAt m ⁏ swap ⁏ append
+
+  rot-right : ∀ {m} n {A} → `Vec A (m + n) `→ `Vec A (n + m)
+  rot-right {m} _ = rot-left m
+
   folda : ∀ n {A} → (A `× A `→ A) → `Vec A (2^ n) `→ A
   folda zero    f = head<∷>
   folda (suc n) f = splitAt (2^ n) ⁏ < folda n f × folda n f > ⁏ f
@@ -515,7 +521,7 @@ record Rewiring {t} {T : Set t} (funU : FunUniverse T) : Set t where
   field
     linRewiring : LinRewiring funU
 
-    -- Unit
+    -- Unit (ignoring its argument)
     tt : ∀ {_⊤} → _⊤ `→ `⊤
 
     -- Products (all that comes from LinRewiring)
@@ -744,6 +750,17 @@ record FunOps {t} {T : Set t} (funU : FunUniverse T) : Set t where
   sucB : ∀ {n} → `Bits n `→ `Bits n
   sucB = sucBCarry ⁏ tail
 
+  half-adder : `Bit `× `Bit `→ `Bit `× `Bit
+  half-adder = < <xor> , <and> >
+
+  full-adder : `Bit `× `Bit `× `Bit `→ `Bit `× `Bit
+  full-adder = < (sc₂ ⁏ fst) , < (sc₁ ⁏ snd) , (sc₂ ⁏ snd) > ⁏ <or> >
+    where a   = snd ⁏ fst
+          b   = snd ⁏ snd
+          cᵢₙ = fst
+          sc₁ = < a , b > ⁏ half-adder
+          sc₂ = < (sc₁ ⁏ fst) , cᵢₙ > ⁏ half-adder
+
   lookupTbl : ∀ {n A} → `Bits n `× `Vec A (2^ n) `→ A
   lookupTbl {zero} = snd ⁏ head
   lookupTbl {suc n}
@@ -796,3 +813,4 @@ module Defaults {t} {T : Set t} (funU : FunUniverse T) where
     <[]> : ∀ {_⊤ A} → _⊤ `→ `Vec A 0
     <[]> = tt ⁏ tt→[]
     open DefaultRewireTbl rewire public
+-- -}
