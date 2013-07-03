@@ -52,6 +52,8 @@ open import Data.Vec as Vec using ([]; _∷_)
 
 module STest n M = Syntax T _`×_ `𝟙 _`→_ id _⁏_ fst <id,tt> snd <tt,id> <_×_> first second assoc′ assoc swap n M
 
+--iter : ∀ {n A B S} → (S `× A `→ S `× B) → S `× `Vec A n `→ `Vec B n
+
 iter : ∀ {n A B C D} → (D `× A `× B `→ D `× C) → D `× `Vec A n `× `Vec B n `→ `Vec C n
 iter {zero}  F = <[]>
 iter {suc n} F = < id × < uncons × uncons > >
@@ -71,7 +73,7 @@ adder = <tt⁏ <0b> , id > ⁏ iter full-adder
 infixl 4 _`⊞_
 _`⊞_ : ∀ {A} (f g : A `→ Word) → A `→ Word
 _`⊞_ = lift₂ <⊞>
-  
+
 <_,_,_> : ∀ {Γ A B C} → Γ `→ A → Γ `→ B → Γ `→ C → Γ `→ (A `× B `× C)
 < f₀ , f₁ , f₂ > = < f₀ , < f₁ , f₂ > >
 
@@ -80,10 +82,10 @@ _`⊞_ = lift₂ <⊞>
                               → Γ `→ (A `× B `× C `× D `× E)
 < f₀ , f₁ , f₂ , f₃ , f₄ > = < f₀ , < f₁ , < f₂ , f₃ , f₄ > > >
 
-<<<₅ : Word `→ Word
+<<<₅ : `Endo Word
 <<<₅ = rot-left 5
 
-<<<₃₀ : Word `→ Word
+<<<₃₀ : `Endo Word
 <<<₃₀ = rot-left 30
 
 Word² = Word `× Word
@@ -91,60 +93,60 @@ Word³ = Word `× Word²
 Word⁴ = Word `× Word³
 Word⁵ = Word `× Word⁴
 
-iterateⁿ : ∀ {A} n → (Fin n → A `→ A) → A `→ A
+iterateⁿ : ∀ {A} n → (Fin n → `Endo A) → `Endo A
 iterateⁿ zero    f = id
 iterateⁿ (suc n) f = f zero ⁏ iterateⁿ n (f ∘ suc)
 
-_²⁰ : ∀ {A} → (Fin 20 → A `→ A) → (A `→ A)
+_²⁰ : ∀ {A} → (Fin 20 → `Endo A) → `Endo A
 _²⁰ = iterateⁿ 20
-
-A-E : T
-A-E = Word⁵
 
 module _ (#ʷ : ℕ → `𝟙 `→ Word) where
 
-  module Iterations
-    (A B C D E : A-E `→ Word)
-    where
+  K₀ = #ʷ 0x5A827999
+  K₂ = #ʷ 0x6ED9EBA1
+  K₄ = #ʷ 0x8F1BBCDC
+  K₆ = #ʷ 0xCA62C1D6
 
-    module _ (F : A-E `→ Word)
-             (K : `𝟙  `→ Word)
-             (W : `𝟙  `→ Word) where
-        Iteration = < A' , A , (B ⁏ <<<₃₀) , C , D >
-         where A' = F `⊞ E `⊞ (A ⁏ <<<₅) `⊞ (tt ⁏ W) `⊞ (tt ⁏ K)
+  H0 = #ʷ 0x67452301
+  H1 = #ʷ 0xEFCDAB89
+  H2 = #ʷ 0x98BADCFE
+  H3 = #ʷ 0x10325476
+  H4 = #ʷ 0xC3D2E1F0
 
-    module _ 
-        (W : Fin 80 → `𝟙 `→ Word) where
+  A B C D E : Word⁵ `→ Word
+  A = fst
+  B = snd ⁏ fst
+  C = snd ⁏ snd ⁏ fst
+  D = snd ⁏ snd ⁏ snd ⁏ fst
+  E = snd ⁏ snd ⁏ snd ⁏ snd
 
-        Iteration⁸⁰ =
-              (Iteration F₀ K₀ ∘ W₀)²⁰ ⁏
-              (Iteration F₂ K₂ ∘ W₂)²⁰ ⁏
-              (Iteration F₄ K₄ ∘ W₄)²⁰ ⁏
-              (Iteration F₆ K₆ ∘ W₆)²⁰
-          where
-            F₀ = B `∧ C `∨ `not B `∧ D
-            F₂ = B `⊕ C `⊕ D
-            F₄ = B `∧ C `∨ B `∧ D `∨ C `∧ D
-            F₆ = F₂
+  F₀ = B `∧ C `∨ `not B `∧ D
+  F₂ = B `⊕ C `⊕ D
+  F₄ = B `∧ C `∨ B `∧ D `∨ C `∧ D
+  F₆ = F₂
 
-            K₀ = #ʷ 0x5A827999
-            K₂ = #ʷ 0x6ED9EBA1
-            K₄ = #ʷ 0x8F1BBCDC
-            K₆ = #ʷ 0xCA62C1D6
+  module _ (F : Word⁵ `→ Word)
+           (K : `𝟙  `→ Word)
+           (W : `𝟙  `→ Word) where
+    Iteration = < A' , A , (B ⁏ <<<₃₀) , C , D >
+      where A' = F `⊞ E `⊞ (A ⁏ <<<₅) `⊞ (tt ⁏ W) `⊞ (tt ⁏ K)
 
-            W₀ W₂ W₄ W₆ : Fin 20 → `𝟙 `→ Word
-            W₀ = W ∘ inject+ 60
-            W₂ = W ∘ inject+ 40 ∘ raise 20
-            W₄ = W ∘ inject+ 20 ∘ raise 40
-            W₆ = W              ∘ raise 60
+  module _ (W : Fin 80 → `𝟙 `→ Word) where
+    W₀ W₂ W₄ W₆ : Fin 20 → `𝟙 `→ Word
+    W₀ = W ∘ inject+ 60 ∘ raise  0
+    W₂ = W ∘ inject+ 40 ∘ raise 20
+    W₄ = W ∘ inject+ 20 ∘ raise 40
+    W₆ = W ∘ inject+  0 ∘ raise 60
 
-  SHA1 : (Fin 80 → `𝟙 `→ Word) → A-E `→ A-E
-  SHA1 = Iterations.Iteration⁸⁰ H0 H1 H2 H3 H4
-   where
-    H0 = tt ⁏ #ʷ 0x67452301
-    H1 = tt ⁏ #ʷ 0xEFCDAB89
-    H2 = tt ⁏ #ʷ 0x98BADCFE
-    H3 = tt ⁏ #ʷ 0x10325476
-    H4 = tt ⁏ #ʷ 0xC3D2E1F0
+    Iteration⁸⁰ : `Endo Word⁵
+    Iteration⁸⁰ =
+      (Iteration F₀ K₀ ∘ W₀)²⁰ ⁏
+      (Iteration F₂ K₂ ∘ W₂)²⁰ ⁏
+      (Iteration F₄ K₄ ∘ W₄)²⁰ ⁏
+      (Iteration F₆ K₆ ∘ W₆)²⁰
+
+    -- WIP
+    SHA1 : `𝟙 `→ Word⁵
+    SHA1 = < H0 , < H1 , < H2 , < H3 , H4 > > > > ⁏ Iterations.Iteration⁸⁰
 
 -- -}
