@@ -25,6 +25,7 @@ module Syntax {a} (A : Set a)(_x_ : A → A → A)(T : A)
   open import Relation.Nullary using (yes ; no)
   open import Relation.Nullary.Decidable
 
+  infixr 5 _,_
   data Syn : Set where
    var : Var → Syn
    tt  : Syn
@@ -222,6 +223,7 @@ module Syntax {a} (A : Set a)(_x_ : A → A → A)(T : A)
   rewire' f eq = let S ⇛ S' = f $ⁿ vmap Syn.var (allFin  nrVars)
          in rewire S S' eq
  
+         {- move them to sub modules
 module example where
 
   open import Data.Vec
@@ -305,3 +307,4 @@ module example₃ where
   test A B C = rewire ((# 0 , # 1) , # 2) (# 2 , (# 1 , # 0)) _ where
     open STest 3 (λ i → lookup i (A ∷ B ∷ C ∷ []))
 
+-}
