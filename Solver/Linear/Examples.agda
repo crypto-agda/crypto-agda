@@ -1,19 +1,62 @@
 module Solver.Linear.Examples where
 
+open import Solver.Linear.Syntax
 open import Solver.Linear
-open import Data.String
+import Data.String as String
 open import Data.Zero
 open import Relation.Binary.NP
 open import Relation.Nullary.Decidable
 open import Data.Vec
+open import Data.Nat
 open import Data.Product
 open import Data.Unit
 open import Function
 open import FunUniverse.Agda
+open import Relation.Binary.PropositionalEquality
+
+module #Vars {a} {A : Set a}
+             (_≟ᴬ_ : Decidable (_≡_ {A = A})) where
+  #vars : Syn A → ℕ
+  #vars tt      = 0
+  #vars (var x) = 1
+  #vars (t , u) = #vars t + #vars u
+
+  open import Data.List
+  vars : (t : Syn A) → List A → List A
+  vars tt      = id
+  vars (var x) = _∷_ x
+  vars (t , u) = vars t ∘ vars u
+
+  lookupVar : ∀ {b} {B : Set b} (t : Syn A) → Vec B (#vars t)
+                                 → A → B → B
+  lookupVar (var x) bs a₁ = {!!}
+  lookupVar tt bs a₁ = {!!}
+  lookupVar (t , t₁) bs a₁ = {!lookupVar t bs!}
+
+module Syntaxˢ' {a} {A : Set a} {funU} linRewiring where
+  open Syntax (λ x y → ⌊ String≤._<?_ x y ⌋) String._≟_ {a} {A} {funU} linRewiring public
+  open import Solver.Linear.Parser
+
+  open #Vars String._≟_
+
+  module _ s {s-ok} where
+    e = parseEqˢ s {s-ok}
+    t = LHS _ e
+    v = vars t
+    module _ {Γ : Vec A (#vars t)} where
+      ℓ = lookupVar v Γ
+      module _ {e-ok : EqOk? ℓ e} where
+        rewireˢ : EvalEq ℓ e
+        rewireˢ = rewire ℓ e {e-ok}
+
+{-
+(Vec A n → B) → N-ary n A B
+
+Syn String → String → A
+
+--((String → A) → B)
 
 module example1 where
-
-  -- need to etaexpand this because otherwise we get an error
   open Syntaxˢ funLin
   test : (A B C : Set) → (A × B) × C → (B × A) × C
   test A B C = rewireˢ Γ "(A,B),C↦(B,A),C"
