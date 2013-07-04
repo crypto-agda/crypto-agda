@@ -169,7 +169,7 @@ record FunOps {t} {T : Set t} (funU : FunUniverse T) : Set t where
   <if b then if-1 else if-0 > = < b , id > ⁏ fork if-0 if-1
 
   not : `Bit `→ `Bit
-  not = <id,tt> ⁏ fork <0b> <1b>
+  not = <id,tt> ⁏ fork <1b> <0b>
 
   -- We might want it to be part of the interface
   hasXor : HasXor funU
