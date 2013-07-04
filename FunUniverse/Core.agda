@@ -26,8 +26,12 @@ record HasBijFork {t} {T : Set t} (funU : FunUniverse T) : Set t where
   constructor mk
   open FunUniverse funU
   field
+    -- bijFork f₀ f₁ (0' , x) = 0' , f₀ x
+    -- bijFork f₀ f₁ (1' , x) = 1' , f₁ x
     bijFork : ∀ {A B} (f g : A `→ B) → `Bit `× A `→ `Bit `× B
 
+  -- bijFork′ f₀ f₁ (0' , x) = 0' , f₀ 0' x
+  -- bijFork′ f₀ f₁ (1' , x) = 1' , f₁ 1' x
   bijFork′ : ∀ {A B} → (Bit → A `→ B) → `Bit `× A `→ `Bit `× B
   bijFork′ f = bijFork (f 0b) (f 1b)
 
@@ -35,9 +39,13 @@ record HasFork {t} {T : Set t} (funU : FunUniverse T) : Set t where
   constructor _,_
   open FunUniverse funU
   field
+    -- cond (0' , x₀ , x₁) = x₀
+    -- cond (1' , x₀ , x₁) = x₁
     -- See Defaults.DefaultCond
     cond : ∀ {A} → `Bit `× A `× A `→ A
 
+    -- fork f₀ f₁ (0' , x) = f₀ x
+    -- fork f₀ f₁ (1' , x) = f₁ x
     -- See Defaults.DefaultFork
     fork : ∀ {A B} (f g : A `→ B) → `Bit `× A `→ B
 
@@ -156,6 +164,7 @@ record FunOps {t} {T : Set t} (funU : FunUniverse T) : Set t where
   open Rewiring rewiring public
   open HasFork  hasFork  public
 
+  -- Bad idea™
   <if_then_else_> : ∀ {A B} (b : A `→ `Bit) (f g : A `→ B) → A `→ B
   <if b then if-1 else if-0 > = < b , id > ⁏ fork if-0 if-1
 
