@@ -72,8 +72,10 @@ ex-𝟙⇒𝟙 = parseEqˢ "𝟙↦𝟙"
 ex₁ : Eq String
 ex₁ = parseEqˢ " ( A , B,(𝟙,C),(D))↦ B,C , A"
 
+{-
 test-ex₁ : ex₁ ≡ ((var"A" , (var"B", (tt , var"C") , var"D"))
                 ↦ (var"B" , var"C" , var"A"))
 test-ex₁ = refl
+-}
 
 -- -}
