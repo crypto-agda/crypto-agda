@@ -12,6 +12,8 @@ open × using (_×_; _,_; proj₁; proj₂; uncurry)
 open import Data.Bit using (0b; 1b)
 
 open import FunUniverse.Data
+open import FunUniverse.Category
+open import FunUniverse.Rewiring.Linear
 open import FunUniverse.Core
 
 -→- : ★ → ★ → ★
@@ -22,8 +24,11 @@ agdaFunU = ★-U , -→-
 
 module AgdaFunUniverse = FunUniverse agdaFunU
 
+funCat : Category -→-
+funCat = F.id , _∘′_
+
 funLin : LinRewiring agdaFunU
-funLin = mk F.id _∘′_
+funLin = mk funCat
             (λ f → ×.map f F.id)
             ×.swap (λ {((x , y) , z) → x , (y , z) }) (λ x → _ , x) proj₂
             (λ f g → ×.map f g) (λ f → ×.map F.id f)
