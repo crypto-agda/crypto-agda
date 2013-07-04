@@ -217,4 +217,29 @@ module AgdaSHA1 where
 
   SHA1-on-0s : Word⁵
   SHA1-on-0s = SHA1 1 (λ _ _ _ → V.replicate 0') _
+
+open import IO
+import IO.Primitive
+open import Data.One
+open import Data.Two
+open import Data.Product
+open import Coinduction
+putBit : 𝟚 → IO 𝟙
+putBit 1' = putStr "1"
+putBit 0' = putStr "0"
+putBits : ∀ {n} → Vec 𝟚 n → IO 𝟙
+putBits [] = return _
+putBits (x ∷ bs) = ♯ putBit x >> ♯ putBits bs
+put× : ∀ {A B : Set} → (A → IO 𝟙) → (B → IO 𝟙) → (A × B) → IO 𝟙
+put× pA pB (x , y) = ♯ pA x >> ♯ pB y
+{-
+main : IO.Primitive.IO 𝟙
+main = IO.run (put× putBits (put× putBits (put× putBits (put× putBits
+          putBits))) AgdaSHA1.SHA1-on-0s)
+-}
+firstBit : ∀ {A : Set} → (V.Vec 𝟚 32 × A) → 𝟚
+firstBit ((b ∷ _) , _) = b
+main : IO.Primitive.IO 𝟙
+main = IO.run (putBit (firstBit AgdaSHA1.SHA1-on-0s))
+
 -- -}
