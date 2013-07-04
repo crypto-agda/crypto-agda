@@ -1,7 +1,7 @@
 module FunUniverse.Agda where
 
 open import Type
-open import Data.Bool using (if_then_else_)
+open import Data.Two using (proj′)
 import Data.Vec.NP as V
 import Function as F
 import Data.Product as ×
@@ -39,8 +39,8 @@ funRewiring = mk funLin _ (λ x → x , x) (F.const []) ×.<_,_> proj₁ proj₂
                  V.rewire V.rewireTbl
 
 funFork : HasFork agdaFunU
-funFork = (λ { (b , x , y) → if b then x else y })
-        , (λ { f g (b , x) → (if b then f else g) x })
+funFork = (λ { (b , xy)    → proj′ xy b })
+        , (λ { f g (b , x) → proj′ (f , g) b x })
 
 agdaFunOps : FunOps agdaFunU
 agdaFunOps = mk funRewiring funFork (F.const 0b) (F.const 1b)
