@@ -312,13 +312,25 @@ record FunOps {t} {T : Set t} (funU : FunUniverse T) : Set t where
   half-adder : `Bit `× `Bit `→ `Bit `× `Bit
   half-adder = < <xor> , <and> >
 
+  -- full-adder (Cᵢₙ , A , B) = (Cₒᵤₜ , S)
   full-adder : `Bit `× `Bit `× `Bit `→ `Bit `× `Bit
+  full-adder = < cout , s >
+    where a    = snd ⁏ fst
+          b    = snd ⁏ snd
+          cin  = fst
+          s    = second <xor> ⁏ <xor>
+          cout = <   < a , b > ⁏ <and>
+                 , < < a , b > ⁏ <xor> , cin > ⁏ <and> >
+               ⁏ <or> -- this one can also be a <xor>
+
+  {-
   full-adder = < (sc₂ ⁏ fst) , < (sc₁ ⁏ snd) , (sc₂ ⁏ snd) > ⁏ <or> >
     where a   = snd ⁏ fst
           b   = snd ⁏ snd
           cᵢₙ = fst
           sc₁ = < a , b > ⁏ half-adder
           sc₂ = < (sc₁ ⁏ fst) , cᵢₙ > ⁏ half-adder
+  -}
 
   lookupTbl : ∀ {n A} → `Bits n `× `Vec A (2^ n) `→ A
   lookupTbl {zero} = snd ⁏ head
