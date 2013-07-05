@@ -210,13 +210,13 @@ module FunSHA1
       SHA1 n W = < H0 , H1 , H2 , H3 , H4 >
                ⁏ ite' n W hash-block
 
+      SHA1-on-0s : `𝟙 `→ Word⁵
+      SHA1-on-0s = SHA1 1 (λ _ _ → <0ⁿ>)
+
 module AgdaSHA1 where
   open import FunUniverse.Agda
   open FunSHA1 agdaFunOps
   open import Data.Two
-
-  SHA1-on-0s : Word⁵
-  SHA1-on-0s = SHA1 1 (λ _ _ _ → V.replicate 0') _
 
 open import IO
 import IO.Primitive
@@ -239,7 +239,12 @@ main = IO.run (put× putBits (put× putBits (put× putBits (put× putBits
 -}
 firstBit : ∀ {A : Set} → (V.Vec 𝟚 32 × A) → 𝟚
 firstBit ((b ∷ _) , _) = b
+import FunUniverse.Cost as Cost
+open import Data.Nat.Show
+sha1-cost : ℕ
+sha1-cost = FunSHA1.SHA1-on-0s Cost.timeOps
 main : IO.Primitive.IO 𝟙
-main = IO.run (putBit (firstBit AgdaSHA1.SHA1-on-0s))
+--main = IO.run (putBit (firstBit (AgdaSHA1.SHA1-on-0s _)))
+main = IO.run (putStrLn (show sha1-cost))
 
 -- -}
