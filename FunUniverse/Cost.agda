@@ -2,6 +2,7 @@ module FunUniverse.Cost where
 
 open import Data.Nat.NP using (ℕ; zero; suc; _+_; _*_; 2*_; 2^_; _^_; _⊔_; module ℕ°; module ⊔°; 2*′_)
 open import Data.Bool using (true; false)
+open import Data.One
 import Data.DifferenceNat
 import Data.Vec.NP as V
 import Function as F
@@ -11,10 +12,13 @@ open F using (const; _∘′_)
 open V using (Vec; []; _∷_; _++_; [_])
 open × using (_×_)
 open ≡ using (_≡_; _≗_)
+open import Level.NP hiding (_⊔_)
 
 open import Data.Bits using (Bits; 0∷_; 1∷_; _→ᵇ_)
 
 open import FunUniverse.Core
+open import FunUniverse.Category
+open import FunUniverse.Rewiring.Linear
 open import FunUniverse.Const
 
 module D where
@@ -112,11 +116,13 @@ TimeCost = constFuns Time
 Space = ℕ
 SpaceCost = constFuns Space
 
+seqTimeCat : Category {₀} {₀} {𝟙} (λ _ _ → Time)
+seqTimeCat = 0 , _+_
+
 seqTimeLin : LinRewiring TimeCost
 seqTimeLin =
   record {
-    id = 0;
-    _∘_ = _+_;
+    cat = seqTimeCat;
     first = F.id;
     swap = 0;
     assoc = 0;
@@ -152,11 +158,13 @@ seqTimeOps = record { rewiring = seqTimeRewiring; hasFork = seqTimeFork;
 seqTimeBij : Bijective TimeCost
 seqTimeBij = FunOps.bijective seqTimeOps
 
+timeCat : Category (λ _ _ → Time)
+timeCat = seqTimeCat
+
 timeLin : LinRewiring TimeCost
 timeLin =
   record {
-    id = 0;
-    _∘_ = _+_;
+    cat = timeCat;
     first = F.id;
     swap = 0;
     assoc = 0;
@@ -273,6 +281,7 @@ module TimeOps where
                                 | ℕ°.+-comm (i ⊔ i) 0
                                 = ≡.cong suc (i⊔i≡i i)
 
+                                {-
 spaceLin : LinRewiring SpaceCost
 spaceLin =
   record {
@@ -380,3 +389,7 @@ time×spaceOps = ×⊤-Ops timeOps spaceOps
 
 module Time×SpaceOps = FunOps time×spaceOps
 -}
+-- -}
+-- -}
+-- -}
+-- -}
