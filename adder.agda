@@ -64,8 +64,11 @@ open import Data.Two
 open import Data.Product
 open import Coinduction
 open import FunUniverse.Agda
+open import Data.Nat.Show
 open FunAdder agdaFunOps
 open FunOps agdaFunOps
+import FunUniverse.Cost as Cost
+module TimeCost = FunOps Cost.timeOps
 putBit : 𝟚 → IO 𝟙
 putBit 1' = putStr "1"
 putBit 0' = putStr "0"
@@ -75,11 +78,15 @@ putBits (x ∷ bs) = ♯ putBit x >> ♯ putBits bs
 arg1   = bits 8 0x0b _
 arg2   = bits 8 0x1f _
 result = adder (arg1 , arg2)
+adder-cost : ℕ → ℕ
+adder-cost n = FunAdder.adder Cost.timeOps {n}
 mainIO : IO 𝟙
 mainIO = ♯ putBits arg1 >>
       ♯ (♯ putStr " + " >>
       ♯ (♯ putBits arg2 >>
       ♯ (♯ putStr " = " >>
-         ♯ putBits result)))
+      ♯ (♯ putBits result >>
+      ♯ (♯ putStr " cost:" >>
+         ♯ putStr (show (adder-cost 8)))))))
 main : IO.Primitive.IO 𝟙
 main = IO.run mainIO
