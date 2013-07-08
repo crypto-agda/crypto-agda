@@ -70,6 +70,9 @@ record LinRewiring {t} {T : ★_ t} (funU : FunUniverse T) : ★_ t where
   swap-top : ∀ {A B C} → A `× B `× C `→ B `× A `× C
   swap-top = assoc-first swap
 
+  around : ∀ {A B C D X} → (A `× B `→ C `× D) → A `× X `× B `→ C `× X `× D
+  around f = swap-top ⁏ second f ⁏ swap-top
+
   -- Like assoc-first but for second
   assoc-second : ∀ {A B C D E} → (B `× C `→ E `× D) → (A `× B) `× C `→ (A `× E) `× D
   assoc-second f = assoc ⁏ second f ⁏ assoc′

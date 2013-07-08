@@ -106,11 +106,11 @@ module FunSHA1
             open import Data.Two
             L▹V : ∀ {n} → List 𝟚 → Vec 𝟚 n
             L▹V {zero} xs = []
-            L▹V {suc n} [] = V.replicate 0'
+            L▹V {suc n} [] = V.replicate 0₂
             L▹V {suc n} (x ∷ xs) = x ∷ L▹V xs
             F▹𝟚 : Fin 2 → 𝟚
-            F▹𝟚 zero    = 0'
-            F▹𝟚 (suc _) = 1'
+            F▹𝟚 zero    = 0₂
+            F▹𝟚 (suc _) = 1₂
 
             {-
     [_-_mod_] : ℕ → ℕ → ℕ → ℕ
@@ -123,14 +123,7 @@ module FunSHA1
     #ʷ = bits 32
 
     <⊞⁵> : Word⁵ `× Word⁵ `→ Word⁵
-    <⊞⁵> = helper ⁏ < <⊞> × < <⊞> × < <⊞> × < <⊞> × <⊞> > > > >
-      where
-        open LinSolver
-        helper = λ {A} {B} {C} {D} {E} {F} {G} {H} {I} {J} →
-          rewireᶠ (A ∷ B ∷ C ∷ D ∷ E ∷ F ∷ G ∷ H ∷ I ∷ J ∷ [])
-                  (λ a b c d e f g h i j →
-                    ((a , b , c , d , e) , (f , g , h , i , j) ↦
-                     ((a , f) , (b , g) , (c , h) , (d , i) , (e , j))))
+    <⊞⁵> = < <⊞> `zip` < <⊞> `zip` < <⊞> `zip` < <⊞> `zip` <⊞> > > > >
 
     iterateⁿ : ∀ {A} n → (Fin n → `Endo A) → `Endo A
     iterateⁿ zero    f = id
@@ -225,8 +218,8 @@ open import Data.Two
 open import Data.Product
 open import Coinduction
 putBit : 𝟚 → IO 𝟙
-putBit 1' = putStr "1"
-putBit 0' = putStr "0"
+putBit 1₂ = putStr "1"
+putBit 0₂ = putStr "0"
 putBits : ∀ {n} → Vec 𝟚 n → IO 𝟙
 putBits [] = return _
 putBits (x ∷ bs) = ♯ putBit x >> ♯ putBits bs

@@ -137,11 +137,11 @@ module Syntax
   insert : ∀ {S} x → NF S → NFP (var x , S)
   insert y tt = (var y) ⊢ `<id,tt>
   insert y (var i) with y ≤V₂ i
-  ... | 1' = (var y :: var i) ⊢ `id
-  ... | 0' = (var i :: var y) ⊢ `swap
+  ... | 1₂ = (var y :: var i) ⊢ `id
+  ... | 0₂ = (var i :: var y) ⊢ `swap
   insert y (var i :: n1) with y ≤V₂ i
-  ... | 1' = (var y :: (var i :: n1)) ⊢ `id
-  ... | 0' with insert y n1
+  ... | 1₂ = (var y :: (var i :: n1)) ⊢ `id
+  ... | 0₂ with insert y n1
   ... | t ⊢ p = (var i :: t) ⊢ (⟨ `id ``× p ⟩ ∻ (`assoc ∻ (⟨ `swap ``× `id ⟩ ∻ `assoc⁻¹)))
 
   sort : ∀ {x : Syn} → NF x → NFP x

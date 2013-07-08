@@ -16,8 +16,8 @@ open import Relation.Binary.PropositionalEquality.NP
 module GameFlipping (R : Set)(sum : Sum R)(sum-ind : SumInd sum)(⅁ : 𝟚 → R → 𝟚) where
   open Operators
   X Y : R → 𝟚
-  X = ⅁ 0'
-  Y = ⅁ 1'
+  X = ⅁ 0₂
+  Y = ⅁ 1₂
   R' = 𝟚 × R
   sum' : Sum R'
   sum' = exploreBit _+_ ×ˢ sum
@@ -46,15 +46,15 @@ module GameFlipping (R : Set)(sum : Sum R)(sum-ind : SumInd sum)(⅁ : 𝟚 → 
 
       part2 : ∀ x → P (λ f → f x)
       part2 x with X x
-      part2 x | 0' = refl
-      part2 x | 1' = refl
+      part2 x | 0₂ = refl
+      part2 x | 1₂ = refl
 
   thm : dist (#' G) (#' 1/2) ≡ dist (# Y) (# X)
   thm = dist (#' G) (#' 1/2)
       ≡⟨ cong (dist (#' G)) helper ⟩
         dist (#' G) (#(not ∘ X) + # X)
       ≡⟨ refl ⟩ -- #' definition
-        dist (# (_==_ 0' ∘ X) + # (_==_ 1' ∘ Y)) (# (not ∘ X) + # X)
+        dist (# (_==_ 0₂ ∘ X) + # (_==_ 1₂ ∘ Y)) (# (not ∘ X) + # X)
       ≡⟨ refl ⟩ -- #' definition
         dist (# (not ∘ X) + # Y) (# (not ∘ X) + # X)
       ≡⟨ dist-x+ (# (not ∘ X)) (# Y) (# X) ⟩
