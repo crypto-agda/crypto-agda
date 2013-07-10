@@ -25,7 +25,7 @@ module FunUniverse.Defaults.FirstPart {t} {T : Set t} (funU : FunUniverse T) whe
   module DefaultsGroup2
     (id : ∀ {A} → A `→ A)
     (_∘_ : ∀ {A B C} → (B `→ C) → (A `→ B) → (A `→ C))
-    (tt : ∀ {_⊤} → _⊤ `→ `⊤)
+    (tt : ∀ {_⊤} → _⊤ `→ `𝟙)
     (<_,_> : ∀ {A B C} → (A `→ B) → (A `→ C) → A `→ B `× C)
     (fst   : ∀ {A B} → A `× B `→ A)
     (snd   : ∀ {A B} → A `× B `→ B) where
@@ -44,10 +44,10 @@ module FunUniverse.Defaults.FirstPart {t} {T : Set t} (funU : FunUniverse T) whe
     assoc : ∀ {A B C} → ((A `× B) `× C) `→ (A `× (B `× C))
     assoc = < fst ∘ fst , first snd >
 
-    <tt,id> : ∀ {A} → A `→ `⊤ `× A
+    <tt,id> : ∀ {A} → A `→ `𝟙 `× A
     <tt,id> = < tt , id >
 
-    snd<tt,> : ∀ {A} → `⊤ `× A `→ A
+    snd<tt,> : ∀ {A} → `𝟙 `× A `→ A
     snd<tt,> = snd
 
   module DefaultSecondFromFirstSwap
@@ -82,8 +82,8 @@ module FunUniverse.Defaults.FirstPart {t} {T : Set t} (funU : FunUniverse T) whe
 
   module DefaultsGroup1
     (_∘_ : ∀ {A B C} → (B `→ C) → (A `→ B) → (A `→ C))
-    (tt : ∀ {_⊤} → _⊤ `→ `⊤)
-    (snd<tt,> : ∀ {A} → `⊤ `× A `→ A)
+    (tt : ∀ {_⊤} → _⊤ `→ `𝟙)
+    (snd<tt,> : ∀ {A} → `𝟙 `× A `→ A)
     (dup   : ∀ {A} → A `→ A `× A)
     (swap  : ∀ {A B} → (A `× B) `→ (B `× A))
     (first : ∀ {A B C} → (A `→ C) → (A `× B) `→ (C `× B)) where

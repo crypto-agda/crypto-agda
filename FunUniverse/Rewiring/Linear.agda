@@ -25,16 +25,16 @@ record LinRewiring {t} {T : ★_ t} (funU : FunUniverse T) : ★_ t where
     first    : ∀ {A B C} → (A `→ C) → (A `× B) `→ (C `× B)
     swap     : ∀ {A B} → (A `× B) `→ (B `× A)
     assoc    : ∀ {A B C} → ((A `× B) `× C) `→ (A `× (B `× C))
-    <tt,id>  : ∀ {A} → A `→ `⊤ `× A
-    snd<tt,> : ∀ {A} → `⊤ `× A `→ A
+    <tt,id>  : ∀ {A} → A `→ `𝟙 `× A
+    snd<tt,> : ∀ {A} → `𝟙 `× A `→ A
 
     -- Products (derived from group 1 or 2)
     <_×_>  : ∀ {A B C D} → (A `→ C) → (B `→ D) → (A `× B) `→ (C `× D)
     second : ∀ {A B C} → (B `→ C) → (A `× B) `→ (A `× C)
 
     -- Vectors
-    tt→[]  : ∀ {A} → `⊤ `→ `Vec A 0
-    []→tt  : ∀ {A} → `Vec A 0 `→ `⊤
+    tt→[]  : ∀ {A} → `𝟙 `→ `Vec A 0
+    []→tt  : ∀ {A} → `Vec A 0 `→ `𝟙
     <∷>    : ∀ {n A} → (A `× `Vec A n) `→ `Vec A (1 + n)
     uncons : ∀ {n A} → `Vec A (1 + n) `→ (A `× `Vec A n)
 
@@ -46,16 +46,16 @@ record LinRewiring {t} {T : ★_ t} (funU : FunUniverse T) : ★_ t where
   _***_ : ∀ {A B C D} → (A `→ C) → (B `→ D) → (A `× B) `→ (C `× D)
   f *** g = < f × g >
 
-  <id,tt> : ∀ {A} → A `→ A `× `⊤
+  <id,tt> : ∀ {A} → A `→ A `× `𝟙
   <id,tt> = <tt,id> ⁏ swap
 
-  <tt⁏_,_> : ∀ {A B C} → (`⊤ `→ B) → (A `→ C) → A `→ B `× C
+  <tt⁏_,_> : ∀ {A B C} → (`𝟙 `→ B) → (A `→ C) → A `→ B `× C
   <tt⁏ f , g > = <tt,id> ⁏ < f × g >
 
-  <_,tt⁏_> : ∀ {A B C} → (A `→ B) → (`⊤ `→ C) → A `→ B `× C
+  <_,tt⁏_> : ∀ {A B C} → (A `→ B) → (`𝟙 `→ C) → A `→ B `× C
   < f ,tt⁏ g > = <tt⁏ g , f > ⁏ swap
 
-  fst<,tt> : ∀ {A} → A `× `⊤ `→ A
+  fst<,tt> : ∀ {A} → A `× `𝟙 `→ A
   fst<,tt> = swap ⁏ snd<tt,>
 
   fst<,[]> : ∀ {A B} → A `× `Vec B 0 `→ A
@@ -68,15 +68,32 @@ record LinRewiring {t} {T : ★_ t} (funU : FunUniverse T) : ★_ t where
   assoc-first : ∀ {A B C D E} → (A `× B `→ D `× E) → A `× B `× C `→ D `× E `× C
   assoc-first f = assoc′ ⁏ first f ⁏ assoc
 
+  -- Like assoc-first but for second
+  assoc-second : ∀ {A B C D E} → (B `× C `→ E `× D) → (A `× B) `× C `→ (A `× E) `× D
+  assoc-second f = assoc ⁏ second f ⁏ assoc′
+
   swap-top : ∀ {A B C} → A `× B `× C `→ B `× A `× C
   swap-top = assoc-first swap
 
   around : ∀ {A B C D X} → (A `× B `→ C `× D) → A `× X `× B `→ C `× X `× D
   around f = swap-top ⁏ second f ⁏ swap-top
 
-  -- Like assoc-first but for second
-  assoc-second : ∀ {A B C D E} → (B `× C `→ E `× D) → (A `× B) `× C `→ (A `× E) `× D
-  assoc-second f = assoc ⁏ second f ⁏ assoc′
+  inner : ∀ {A B C D} → (A `→ B) → C `× A `× D `→ C `× B `× D
+  inner f = swap-top ⁏ first f ⁏ swap-top
+
+  {-
+
+  X ------------> X
+        +---+
+  A --->|   |---> C
+        | f |
+  B --->|   |---> D
+        +---+
+  Y ------------> Y
+
+  -}
+  inner2 : ∀ {A B C D X Y} → (A `× B `→ C `× D) → (X `× A) `× (B `× Y) `→ (X `× C) `× (D `× Y)
+  inner2 f = assoc-first (assoc-second f)
 
   <_×₁_> : ∀ {A B C D E F} → (A `× B `→ D `× E) → (C `→ F) → A `× B `× C `→ D `× E `× F
   < f ×₁ g > = assoc′ ⁏ < f × g > ⁏ assoc
@@ -87,12 +104,7 @@ record LinRewiring {t} {T : ★_ t} (funU : FunUniverse T) : ★_ t where
   <_`zip`_> : ∀ {A B C D E F} → ((A `× B) `→ C)
                            → ((D `× E) `→ F)
                            → ((A `× D) `× (B `× E)) `→ (C `× F)
-  < f `zip` g > = assoc-first (assoc-second swap) ⁏ < f × g >
-
-{- This one use one unit of space
-  < f `zip` g > = < < fst × fst > ⁏ f ,
-                    < snd × snd > ⁏ g >
--}
+  < f `zip` g > = inner2 swap ⁏ < f × g >
 
   <_∷′_> : ∀ {n A B C} → (A `→ C) → (B `→ `Vec C n)
                        → A `× B `→ `Vec C (1 + n)
@@ -102,11 +114,11 @@ record LinRewiring {t} {T : ★_ t} (funU : FunUniverse T) : ★_ t where
                   → `Vec A (1 + m) `→ `Vec B (1 + n)
   < f ∷ g > = uncons ⁏ < f ∷′ g >
 
-  <tt⁏_∷′_> : ∀ {n A B} → (`⊤ `→ B) → (A `→ `Vec B n)
+  <tt⁏_∷′_> : ∀ {n A B} → (`𝟙 `→ B) → (A `→ `Vec B n)
                        → A `→ `Vec B (1 + n)
   <tt⁏ f ∷′ g > = <tt⁏ f , g > ⁏ <∷>
 
-  <_∷′tt⁏_> : ∀ {n A B} → (A `→ B) → (`⊤ `→ `Vec B n)
+  <_∷′tt⁏_> : ∀ {n A B} → (A `→ B) → (`𝟙 `→ `Vec B n)
                         → A `→ `Vec B (1 + n)
   < f ∷′tt⁏ g > = < f ,tt⁏ g > ⁏ <∷>
 
@@ -125,7 +137,7 @@ record LinRewiring {t} {T : ★_ t} (funU : FunUniverse T) : ★_ t where
   head<∷> : ∀ {A} → `Vec A 1 `→ A
   head<∷> = uncons ⁏ fst<,[]>
 
-  constVec⊤ : ∀ {n a} {A : ★_ a} {B} → (A → `⊤ `→ B) → Vec A n → `⊤ `→ `Vec B n
+  constVec⊤ : ∀ {n a} {A : ★_ a} {B} → (A → `𝟙 `→ B) → Vec A n → `𝟙 `→ `Vec B n
   constVec⊤ f [] = tt→[]
   constVec⊤ f (x ∷ xs) = <tt⁏ f x ∷′ constVec⊤ f xs >
 
@@ -187,8 +199,8 @@ record LinRewiring {t} {T : ★_ t} (funU : FunUniverse T) : ★_ t where
                  ⁏ second append
                  ⁏ <∷>
 
-  <_++_> : ∀ {m n A} → (`⊤ `→ `Vec A m) → (`⊤ `→ `Vec A n) →
-                         `⊤ `→ `Vec A (m + n)
+  <_++_> : ∀ {m n A} → (`𝟙 `→ `Vec A m) → (`𝟙 `→ `Vec A n) →
+                         `𝟙 `→ `Vec A (m + n)
   < f ++ g > = <tt⁏ f , g > ⁏ append
 
   splitAt : ∀ m {n A} → `Vec A (m + n) `→ (`Vec A m `× `Vec A n)
@@ -219,7 +231,7 @@ record LinRewiring {t} {T : ★_ t} (funU : FunUniverse T) : ★_ t where
   bind : ∀ {m n A B} → (A `→ `Vec B m) → `Vec A n `→ `Vec B (n * m)
   bind f = map f ⁏ concat
 
-  replicate⊤ : ∀ n → `⊤ `→ `Vec `⊤ n
+  replicate⊤ : ∀ n → `𝟙 `→ `Vec `𝟙 n
   replicate⊤ _ = constVec⊤ (λ _ → id) (V.replicate {A = 𝟙} _)
 
   open Category cat public

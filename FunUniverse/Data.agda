@@ -6,9 +6,9 @@ import Level as L
 import Relation.Binary.PropositionalEquality as ≡
 open ≡ using (_≡_)
 open import Function
-open import Data.Nat.NP using (ℕ; _+_; _*_; _^_)
-open import Data.Bit using (Bit)
-open import Data.Unit using (⊤)
+open import Data.Nat.NP using (ℕ; _+_; _*_; _*′_; _^_)
+open import Data.One using (𝟙)
+open import Data.Two using (𝟚)
 open import Data.Product using (Σ; _×_; _,_) renaming (zip to ×-zip)
 open import Data.Vec using (Vec)
 
@@ -16,13 +16,16 @@ open import Data.Vec using (Vec)
 record Universe {t} (T : Set t) : Set t where
   constructor mk
   field
-    `⊤    : T
-    `Bit  : T
+    `𝟙    : T
+    `𝟚    : T
     _`×_  : T → T → T
     _`^_  : T → ℕ → T
 
   `Vec : T → ℕ → T
   `Vec A n = A `^ n
+
+  `Bit : T
+  `Bit = `𝟚
 
   `Bits : ℕ → T
   `Bits n = `Bit `^ n
@@ -32,13 +35,13 @@ record Universe {t} (T : Set t) : Set t where
 
 -- In ★-U, types are simply represented by Agda types (★ or Set).
 ★-U : Universe ★
-★-U = mk ⊤ Bit _×_ Vec
+★-U = mk 𝟙 𝟚 _×_ Vec
 
 -- In Bits-U, a type is represented by a natural number
 -- representing the width of the type in a binary representation.
 -- A natural embedding in ★ is the Bits type (aka Vec Bool).
 Bits-U : Universe ℕ
-Bits-U = mk 0 1 _+_ (flip _*_)
+Bits-U = mk 0 1 _+_ _*′_
 
 -- In Fin-U, a type is represented by a natural number
 -- representing the cardinality of the type.
@@ -46,17 +49,17 @@ Bits-U = mk 0 1 _+_ (flip _*_)
 Fin-U : Universe ℕ
 Fin-U = mk 1 2 _*_ _^_
 
--- In ⊤-U, there is only one possible type.
-⊤-U : Universe ⊤
-⊤-U = _ -- Agda figures out that there is only one such universe
+-- In 𝟙-U, there is only one possible type.
+𝟙-U : Universe 𝟙
+𝟙-U = _ -- Agda figures out that there is only one such universe
 
-⊤-U-uniq : {U₀ U₁ : Universe ⊤} → U₀ ≡ U₁
-⊤-U-uniq = ≡.refl
+𝟙-U-uniq : {U₀ U₁ : Universe 𝟙} → U₀ ≡ U₁
+𝟙-U-uniq = ≡.refl
 
 -- Take the product of two universes. All types have two components, one from
 -- each of the forming universes.
 ×-U : ∀ {s t} {S : Set s} {T : Set t} → Universe S → Universe T → Universe (S × T)
-×-U S-U T-U = mk (S.`⊤ , T.`⊤) (S.`Bit , T.`Bit) (×-zip S._`×_ T._`×_)
+×-U S-U T-U = mk (S.`𝟙 , T.`𝟙) (S.`𝟚 , T.`𝟚) (×-zip S._`×_ T._`×_)
                  (λ { (A₀ , A₁) n → S.`Vec A₀ n , T.`Vec A₁ n })
   where module S = Universe S-U
         module T = Universe T-U
@@ -69,13 +72,13 @@ Sym-U t = ∀ {T : Set t} → Universe T → T
 
 -- Abstract syntax tree from types.
 data Ty : ★ where
-  ⊤′ Bit′ : Ty
-  _×′_    : Ty → Ty → Ty
-  _^′_    : Ty → ℕ → Ty
+  𝟙′ 𝟚′ : Ty
+  _×′_  : Ty → Ty → Ty
+  _^′_  : Ty → ℕ → Ty
 
 -- Ty-U is the universe of the syntactic represented types.
 Ty-U : Universe Ty
-Ty-U = mk ⊤′ Bit′ _×′_ _^′_
+Ty-U = mk 𝟙′ 𝟚′ _×′_ _^′_
 
 -- Turn a syntactic type into a symantic one.
 -- Alternatively:
@@ -85,14 +88,14 @@ fold-U : ∀ {t} → Ty → Sym-U t
 fold-U u₀ {T} uni = go u₀
   where open Universe uni
         go : Ty → T
-        go ⊤′         = `⊤
-        go Bit′       = `Bit
+        go 𝟙′         = `𝟙
+        go 𝟚′         = `𝟚
         go (t₀ ×′ t₁) = go t₀ `× go t₁
         go (t ^′ n)   = go t `^ n
 
 {-
 Σ-U : ∀ {t} {T : Set t} → Universe T → (P : T → ★) → Universe (Σ T P)
-Σ-U T-U P = mk (`⊤ , {!!}) {!!} {!!} {!!}
+Σ-U T-U P = mk (`𝟙 , {!!}) {!!} {!!} {!!}
   where open Universe T-U
 -}
 

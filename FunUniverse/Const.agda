@@ -8,9 +8,9 @@ open import FunUniverse.Data
 open import FunUniverse.Core
 
 constFuns : ★ → FunUniverse ⊤
-constFuns A = ⊤-U , λ _ _ → A
+constFuns A = 𝟙-U , λ _ _ → A
 
 module ConstFunTypes A = FunUniverse (constFuns A)
 
-⊤-FunOps : FunOps (constFuns ⊤)
-⊤-FunOps = _
+𝟙-FunOps : FunOps (constFuns ⊤)
+𝟙-FunOps = _

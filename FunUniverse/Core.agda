@@ -81,7 +81,7 @@ record Rewiring {t} {T : Set t} (funU : FunUniverse T) : Set t where
     linRewiring : LinRewiring funU
 
     -- Unit (ignoring its argument)
-    tt : ∀ {_⊤} → _⊤ `→ `⊤
+    tt : ∀ {_⊤} → _⊤ `→ `𝟙
 
     -- Products (all that comes from LinRewiring)
     dup : ∀ {A} → A `→ A `× A
@@ -110,7 +110,7 @@ record Rewiring {t} {T : Set t} (funU : FunUniverse T) : Set t where
   tail : ∀ {n A} → `Vec A (1 + n) `→ `Vec A n
   tail = uncons ⁏ snd
 
-  constVec : ∀ {n a _⊤} {A : Set a} {B} → (A → `⊤ `→ B) → Vec A n → _⊤ `→ `Vec B n
+  constVec : ∀ {n a _⊤} {A : Set a} {B} → (A → `𝟙→ B) → Vec A n → _⊤ `→ `Vec B n
   constVec f vec = tt ⁏ constVec⊤ f vec
 
   take : ∀ m {n A} → `Vec A (m + n) `→ `Vec A m
@@ -254,21 +254,21 @@ record FunOps {t} {T : Set t} (funU : FunUniverse T) : Set t where
   _`→?_ : T → T → Set
   A `→? B = A `→ `Maybe B
 
-  search : ∀ {n A} → (A `× A `→ A) → (`Bits n `→ A) → `⊤ `→ A
+  search : ∀ {n A} → (A `× A `→ A) → (`Bits n `→ A) → `𝟙→ A
   search {zero}  _  f = <[]> ⁏ f
   search {suc n} op f = <tt⁏ search op (f ∘ <0∷>) , search op (f ∘ <1∷>) > ⁏ op
 
-  find? : ∀ {n A} → (`Bits n `→? A) → `⊤ `→? A
+  find? : ∀ {n A} → (`Bits n `→? A) → `𝟙 `→? A
   find? = search _∣?_
 
-  findB : ∀ {n} → (`Bits n `→ `Bit) → `⊤ `→? `Bits n
+  findB : ∀ {n} → (`Bits n `→ `Bit) → `𝟙 `→? `Bits n
   findB pred = find? <if pred then <just> else <nothing> >
 
-  fromTree : ∀ {n A} → Tree (`⊤ `→ A) n → `Bits n `→ A
+  fromTree : ∀ {n A} → Tree (`𝟙 `→ A) n → `Bits n `→ A
   fromTree (Tree.leaf x) = tt ⁏ x
   fromTree (Tree.fork t₀ t₁) = uncons ⁏ fork (fromTree t₀) (fromTree t₁)
 
-  fromFun : ∀ {n A} → (Bits n → `⊤ `→ A) → `Bits n `→ A
+  fromFun : ∀ {n A} → (Bits n → `𝟙→ A) → `Bits n `→ A
   fromFun = fromTree ∘′ Tree.fromFun
 
   fromBitsFun : ∀ {i o} → (i →ᵇ o) → i `→ᵇ o
@@ -296,7 +296,7 @@ record FunOps {t} {T : Set t} (funU : FunUniverse T) : Set t where
   -- vnot : ∀ {n} → `Endo (`Bits n)
   -- vnot = map not
 
-  allBits : ∀ n → `⊤ `→ `Vec (`Bits n) (2^ n)
+  allBits : ∀ n → `𝟙→ `Vec (`Bits n) (2^ n)
   allBits zero    = < <[]> ∷[]>
   allBits (suc n) = < bs ⁏ map <0∷> ++ bs ⁏ map <1∷> >
     where bs = allBits n
@@ -341,13 +341,13 @@ record FunOps {t} {T : Set t} (funU : FunUniverse T) : Set t where
     ⁏ fork (second (take (2^ n)) ⁏ lookupTbl)
            (second (drop (2^ n)) ⁏ lookupTbl)
 
-  funFromTbl : ∀ {n A} → Vec (`⊤ `→ A) (2^ n) → (`Bits n `→ A)
+  funFromTbl : ∀ {n A} → Vec (`𝟙→ A) (2^ n) → (`Bits n `→ A)
   funFromTbl {zero} (x ∷ []) = tt ⁏ x
   funFromTbl {suc n} tbl
     = uncons ⁏ fork (funFromTbl (V.take (2^ n) tbl))
                     (funFromTbl (V.drop (2^ n) tbl))
 
-  tblFromFun : ∀ {n A} → (`Bits n `→ A) → `⊤ `→ `Vec A (2^ n)
+  tblFromFun : ∀ {n A} → (`Bits n `→ A) → `𝟙→ `Vec A (2^ n)
   tblFromFun {zero}  f = < <[]> ⁏ f ∷[]>
   tblFromFun {suc n} f = < tblFromFun (<0∷> ⁏ f) ++
                            tblFromFun (<1∷> ⁏ f) >
@@ -376,7 +376,7 @@ module Defaults {t} {T : Set t} (funU : FunUniverse T) where
 
   module RewiringDefaults
     (linRewiring : LinRewiring funU)
-    (tt       : ∀ {_⊤} → _⊤ `→ `⊤)
+    (tt       : ∀ {_⊤} → _⊤ `→𝟙)
     (dup      : ∀ {A} → A `→ A `× A)
     (rewire   : ∀ {i o} → (Fin o → Fin i) → i `→ᵇ o) where
 

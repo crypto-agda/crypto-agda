@@ -17,7 +17,7 @@ module FunAdder
   (funOps : FunOps funU)
   where
 
-    open FunUniverse funU renaming (`⊤ to `𝟙; `Bit to `𝟚)
+    open FunUniverse funU
     open FunOps funOps renaming (_∘_ to _`∘_)
 
 
@@ -39,8 +39,8 @@ module FunAdder
 
     open import Data.Digit
 
-    bits : ∀ ℓ → ℕ → `𝟙 `→ `Bits ℓ
-    bits ℓ n₀ = constBits (V.reverse (L▹V (L.map F▹𝟚 (proj₁ (toDigits 2 n₀)))))
+    ℕ▹`Bits : ∀ ℓ → ℕ → `𝟙 `→ `Bits ℓ
+    ℕ▹`Bits ℓ n₀ = constBits (V.reverse (L▹V (L.map F▹𝟚 (proj₁ (toDigits 2 n₀)))))
       where open import Data.List as L
             open import Data.Product
             open import Data.Two
@@ -74,8 +74,8 @@ putBits : ∀ {n} → Vec 𝟚 n → IO 𝟙
 putBits [] = return _
 putBits (x ∷ bs) = ♯ putBit x >> ♯ putBits bs
 -}
-arg1   = bits 8 0x0b _
-arg2   = bits 8 0x1f _
+arg1   = ℕ▹`Bits 8 0x0b _
+arg2   = ℕ▹`Bits 8 0x1f _
 result = adder (arg1 , arg2)
 adder-cost : ℕ → ℕ
 adder-cost n = FunAdder.adder Cost.timeOps {n}
