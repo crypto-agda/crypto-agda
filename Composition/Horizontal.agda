@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 module Composition.Horizontal where
 
 open import Level

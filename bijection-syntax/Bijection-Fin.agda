@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 module bijection-syntax.Bijection-Fin where
 
   open import Type

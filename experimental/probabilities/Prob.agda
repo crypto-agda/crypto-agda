@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 module Prob where
 
 open import Data.Bool

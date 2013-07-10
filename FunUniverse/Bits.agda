@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 module FunUniverse.Bits where
 
 open import Data.Nat.NP using (ℕ; _*_; module ℕ°)

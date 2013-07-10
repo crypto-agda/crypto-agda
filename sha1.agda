@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 -- https://upload.wikimedia.org/wikipedia/commons/e/e2/SHA-1.svg
 -- http://www.faqs.org/rfcs/rfc3174.html
 open import Type

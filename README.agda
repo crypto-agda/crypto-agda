@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 module README where
 
 open import Explore.README

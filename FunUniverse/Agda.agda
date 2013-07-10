@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 module FunUniverse.Agda where
 
 open import Type

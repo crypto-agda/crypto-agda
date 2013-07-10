@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 module one-time-semantic-security where
 
 open import Type

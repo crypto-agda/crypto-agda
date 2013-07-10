@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 module FunUniverse.Data where
 
 open import Type

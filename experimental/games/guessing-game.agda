@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 module guessing-game where
 
 open import Type

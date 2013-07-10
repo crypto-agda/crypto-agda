@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 open import Function
 open import Data.Nat.NP
 open import Data.Fin using (Fin)

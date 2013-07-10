@@ -1,3 +1,4 @@
+-- NOTE with-K
 module Solver.AddMax where
 
 import Algebra

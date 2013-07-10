@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 module FunUniverse.FlatFunsProd where
 
 open import Data.Unit using (⊤)

@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 module FunUniverse.Const where
 
 open import Type

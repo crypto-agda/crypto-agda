@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 module prefect-bintree-sorting where
 open import Type
 import Level as L

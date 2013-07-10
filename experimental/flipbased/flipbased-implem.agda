@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 module flipbased-implem where
 
 open import Function

@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 module FunUniverse.README where
 
 -- Tracking space and time through a restricted universe

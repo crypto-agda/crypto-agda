@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 module Solver.Linear.Examples where
 
 open import Solver.Linear.Syntax

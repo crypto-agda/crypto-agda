@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 module single-bit-one-time-pad where
 
 open import Type

@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 module prg where
 
 -- open import FunUniverse.Core

@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 open import Level.NP
 open import Type
 open import FunUniverse.Types

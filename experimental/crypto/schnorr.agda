@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 open import Type
 open import Data.Bool using (Bool; true; false) -- ; if_then_else_; _∨_)
 {-

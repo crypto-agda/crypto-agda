@@ -1,3 +1,4 @@
+-- NOTE with-K
 module FunUniverse.BinTree where
 
 open import Type hiding (★)

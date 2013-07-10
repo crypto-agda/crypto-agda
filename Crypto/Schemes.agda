@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 module Crypto.Schemes where
 
 open import Type

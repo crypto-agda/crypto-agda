@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 -- This module is an example of the use of the circuit building library.
 -- The point is to start with a tiny bytecode evaluator for bit operations.
 module bytecode where

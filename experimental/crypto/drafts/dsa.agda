@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 -- Draft: we should move to something provably secure, like Schnorr signature.
 
 open import Type

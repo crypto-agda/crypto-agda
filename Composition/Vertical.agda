@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 module Composition.Vertical where
 
 open import Level

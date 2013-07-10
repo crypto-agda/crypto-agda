@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 open import Type
 open import Data.Nat  using (ℕ; _+_)
 open import Data.Bits using (Bits)

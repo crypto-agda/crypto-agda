@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 module bijection-syntax.README where
 
 open import bijection-syntax.Bijection

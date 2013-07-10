@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 Trans R S = S → M R S
           = S → R → S
           = W R S → S

@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 module flipbased-no-split where
 
 open import Function

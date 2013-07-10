@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 module hash where
 
 open import Type

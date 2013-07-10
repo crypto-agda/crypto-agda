@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 open import Algebra
 import Level as L
 open L using () renaming (_⊔_ to _L⊔_)

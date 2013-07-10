@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 open import FunUniverse.Core
 module FunUniverse.Interface.Two
          {t} {T : Set t} (funU : FunUniverse T) where

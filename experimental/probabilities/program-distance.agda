@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 module program-distance where
 
 open import Type

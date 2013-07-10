@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 module circuits.circuit where
 
 open import Type

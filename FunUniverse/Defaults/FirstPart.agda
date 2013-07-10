@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 open import FunUniverse.Types
 import Data.Vec as V
 open V using (Vec)

@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 module flipbased-product-implem where
 
 open import Function

@@ -1,3 +1,4 @@
+-- NOTE with-K
 module Solver.Linear where
 
 open import FunUniverse.Types

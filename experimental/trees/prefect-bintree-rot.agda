@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 module prefect-bintree-rot where
 
 {-

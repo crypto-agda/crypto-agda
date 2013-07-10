@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 module README where
 
 -- A module for bit-vectors which is used almost

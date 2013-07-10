@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 module composition-sem-sec-reduction where
 
 open import Data.Nat.NP using (ℕ)

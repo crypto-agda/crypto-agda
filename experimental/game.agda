@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 module game where
 
 open import Level using (Lift) renaming (_⊔_ to _L⊔_)

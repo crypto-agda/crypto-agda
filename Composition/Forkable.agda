@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 module Composition.Forkable where
 
 open import Type  hiding (★)

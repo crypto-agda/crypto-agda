@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 open import FunUniverse.Core
 open import Data.Nat.NP
 module FunUniverse.Interface.Bits

@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 {-# OPTIONS --copatterns #-}
 open import Type
 open import Function

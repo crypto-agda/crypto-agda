@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 -- This module is an early draft of a previous attempt at probabilities of randomized programs.
 
 open import Data.Bool.Properties

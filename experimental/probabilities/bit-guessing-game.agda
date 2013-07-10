@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 open import Type
 open import Data.Nat.NP
 open import Data.Nat.Properties

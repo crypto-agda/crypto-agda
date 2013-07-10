@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 module md5 where
 
 open import Type

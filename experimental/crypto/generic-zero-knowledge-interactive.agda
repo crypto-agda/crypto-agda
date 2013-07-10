@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 open import Type
 open import Data.Bool.NP as Bool hiding (check)
 open import Data.Nat

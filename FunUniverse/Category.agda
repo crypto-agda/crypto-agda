@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 open import Level.NP using (_⊔_)
 open import Type hiding (★)
 open import Function.NP using (Endo)

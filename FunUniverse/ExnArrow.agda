@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 A `→? B = A `→ Bit `× B
 
 {-

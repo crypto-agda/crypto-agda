@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 open import Data.Vec as Vec using ([]; _∷_)
 open import Text.Parser
 open import Data.One

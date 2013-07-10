@@ -1,3 +1,4 @@
+-- NOTE with-K
 module Game.Transformation.InternalExternal where
 
 open import Data.Two

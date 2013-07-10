@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 {- This file illustrate that if we were given a (non-indexed)
    monad to write randomized programs then we could embed
    randomized programs modeled as deterministic programs taking

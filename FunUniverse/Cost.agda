@@ -1,3 +1,4 @@
+-- NOTE with-K
 module FunUniverse.Cost where
 
 open import Data.Nat.NP using (ℕ; zero; suc; _+_; _*_; 2*_; 2^_; _^_; _⊔_; module ℕ°; module ⊔°; 2*′_)

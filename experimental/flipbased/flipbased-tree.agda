@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 module flipbased-tree where
 
 open import Function using (flip)

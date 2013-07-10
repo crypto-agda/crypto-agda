@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 {-# OPTIONS --copatterns #-}
 module alea.cpo where
 
