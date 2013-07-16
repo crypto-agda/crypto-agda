@@ -30,6 +30,9 @@ module FromNand (nand : `𝟚 `× `𝟚 `→ `𝟚) where
     dispatch : A `× B `× C `→ D `× E
     dispatch = first dup ⁏ inner2 swap ⁏ < f × g > 
 
-  --fork c e0 e1 = (not c ∧ e0) ∨ (c ∧ e1)
-  fork : `𝟚 `× `𝟚 `× `𝟚 `→ `𝟚
-  fork = dispatch (< not × id > ⁏ and) and ⁏ or
+  -- 2-to-1 multiplexer
+  -- mux (s , (e₀ , e₁)) = eₛ
+  -- or
+  -- mux (s , (e₀ , e₁)) = (not s ∧ e₀) ∨ (s ∧ e₁)
+  mux : `𝟚 `× (`𝟚 `× `𝟚) `→ `𝟚
+  mux = dispatch (< not × id > ⁏ and) and ⁏ or
