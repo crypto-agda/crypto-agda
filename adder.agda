@@ -23,14 +23,8 @@ module FunAdder
 
     --iter : ∀ {n A B S} → (S `× A `→ S `× B) → S `× `Vec A n `→ `Vec B n
 
-    iter : ∀ {n A B S} → (S `× A `→ S `× B) → S `× `Vec A n `→ S `× `Vec B n
-    iter {zero}  F = second <[]>
-    iter {suc n} F = second uncons
-                   ⁏ assoc-first F ⁏ around (iter F)
-                   ⁏ second <∷>
-
     msb-adder : ∀ {n} → `Bits n `× `Bits n `→ `Bits n
-    msb-adder = <tt⁏ <0b> , zip > ⁏ iter full-adder ⁏ snd
+    msb-adder = <tt⁏ <0₂> , zip > ⁏ mapAccum full-adder ⁏ snd
 
     -- TODO reverses all over the places... switch to lsb first?
     -- lsb
