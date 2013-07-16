@@ -1,4 +1,4 @@
--- NOTE with-K
+{-# OPTIONS --without-K #-}
 module FunUniverse.BinTree where
 
 open import Type hiding (★)
@@ -55,10 +55,10 @@ expand (fork t₀ t₁) = fork (expand t₀) (expand t₁)
 
 fromConst≡leafⁿ : ∀ {n a} {A : ★ a} (x : A) → fromFun (const x) ≡ leafⁿ {n} x
 fromConst≡leafⁿ {zero}  _ = refl
-fromConst≡leafⁿ {suc n} x rewrite fromConst≡leafⁿ {n} x = refl
+fromConst≡leafⁿ {suc n} x = cong₂ fork (fromConst≡leafⁿ x) (fromConst≡leafⁿ x)
 
 fromFun∘toFun : ∀ {n a} {A : ★ a} (t : Tree A n) → fromFun (toFun t) ≡ expand t
-fromFun∘toFun (leaf x) = fromConst≡leafⁿ x
+fromFun∘toFun (leaf x)     = fromConst≡leafⁿ x
 fromFun∘toFun (fork t₀ t₁) = cong₂ fork (fromFun∘toFun t₀) (fromFun∘toFun t₁)
 
 lookup : ∀ {n a} {A : ★ a} → Bits n → Tree A n → A
@@ -125,9 +125,11 @@ Rot-sym (leaf x) = leaf x
 Rot-sym (fork p₀ p₁) = fork (Rot-sym p₀) (Rot-sym p₁)
 Rot-sym (krof p₀ p₁) = krof (Rot-sym p₁) (Rot-sym p₀)
 
+{- with-K
 Rot-trans : ∀ {n a} {A : ★ a} → Transitive (Rot {A = A} {n})
 Rot-trans (leaf x) q = q
 Rot-trans (fork p₀ p₁) (fork q₀ q₁) = fork (Rot-trans p₀ q₀) (Rot-trans p₁ q₁)
 Rot-trans (fork p₀ p₁) (krof q₀ q₁) = krof (Rot-trans p₀ q₀) (Rot-trans p₁ q₁)
 Rot-trans (krof p₀ p₁) (fork q₀ q₁) = krof (Rot-trans p₀ q₁) (Rot-trans p₁ q₀)
 Rot-trans (krof p₀ p₁) (krof q₀ q₁) = fork (Rot-trans p₀ q₁) (Rot-trans p₁ q₀)
+-- -}
