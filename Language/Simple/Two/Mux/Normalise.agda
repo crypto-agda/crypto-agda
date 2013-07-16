@@ -1,13 +1,14 @@
 open import Type
 open import Function
-open import Data.Two
+open import Data.Two    renaming (mux to mux₂)
 open import Data.Nat.NP using (_+_)
 open import Data.Fin.NP using (Fin; inject+; raise)
 open import Data.Vec.NP using (Vec; []; _∷_; lookup)
 open import Data.Bits   using (Bits)
-open import FunUniverse.TwoLang
 
-module FunUniverse.TwoLang.Normalise where
+open import Language.Simple.Two.Mux
+
+module Language.Simple.Two.Mux.Normalise where
 
 -- Normal forms
 data No (I : ★) : ★
@@ -19,20 +20,20 @@ data No I where
   ne    : Ne I → No I
 
 data Ne I where
-  input : I → Ne I
-  fork  : (c : Ne I) (e₀ e₁ : No I) → Ne I
+  var : I → Ne I
+  mux : (c : Ne I) (e₀ e₁ : No I) → Ne I
 
 module _ {I} where
-    forkNo : (c e₀ e₁ : No I) → No I
-    forkNo 0₂     e₀ e₁ = e₀
-    forkNo 1₂     e₀ e₁ = e₁
-    forkNo (ne c) e₀ e₁ = ne (fork c e₀ e₁)
+    muxNo : (c e₀ e₁ : No I) → No I
+    muxNo 0₂     e₀ e₁ = e₀
+    muxNo 1₂     e₀ e₁ = e₁
+    muxNo (ne c) e₀ e₁ = ne (mux c e₀ e₁)
 
     normalise : E I → No I
-    normalise (input x) = ne (input x)
-    normalise (fork c e₀ e₁) = forkNo (normalise c) (normalise e₀) (normalise e₁)
-    normalise 0₂ = 0₂
-    normalise 1₂ = 1₂
+    normalise (var x)       = ne (var x)
+    normalise (mux c e₀ e₁) = muxNo (normalise c) (normalise e₀) (normalise e₁)
+    normalise 0₂            = 0₂
+    normalise 1₂            = 1₂
 
 module _ {I J} (f : I → J) where
     mapNo : No I → No J
@@ -42,8 +43,8 @@ module _ {I J} (f : I → J) where
     mapNo 1₂     = 1₂
     mapNo (ne x) = ne (mapNe x)
 
-    mapNe (input x)      = input (f x)
-    mapNe (fork e e₀ e₁) = fork (mapNe e) (mapNo e₀) (mapNo e₁)
+    mapNe (var x)       = var (f x)
+    mapNe (mux e e₀ e₁) = mux (mapNe e) (mapNo e₀) (mapNo e₁)
 
 module _ {I J} (f : I → No J) where
     bindNo : No I → No J
@@ -53,5 +54,5 @@ module _ {I J} (f : I → No J) where
     bindNo 1₂     = 1₂
     bindNo (ne x) = bindNe x
 
-    bindNe (input x)      = f x
-    bindNe (fork e e₀ e₁) = forkNo (bindNe e) (bindNo e₀) (bindNo e₁)
+    bindNe (var x)       = f x
+    bindNe (mux e e₀ e₁) = muxNo (bindNe e) (bindNo e₀) (bindNo e₁)
