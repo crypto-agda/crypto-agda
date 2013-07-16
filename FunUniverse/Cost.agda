@@ -52,7 +52,7 @@ private
 seqTimeOpsD : FunOps (constFuns Diffℕ)
 seqTimeOpsD = record {
             id = 0#; _∘_ = _∘′_;
-            <0b> = 0#; <1b> = 0#; cond = 1#; fork = 1+_+_D; tt = 0#;
+            <0₂> = 0#; <1₂> = 0#; cond = 1#; fork = 1+_+_D; tt = 0#;
             <_,_> = _∘′_; fst = 0#; snd = 0#;
             dup = 0#; first = F.id; swap = 0#; assoc = 0#;
             <tt,id> = 0#; snd<tt,> = 0#;
@@ -78,8 +78,8 @@ module SeqTimeOpsD where
   replicate≡0 (suc n) = replicate≡0 n
 
   constBit≡0 : ∀ b → constBit b ≗ 0#
-  constBit≡0 true  {-1b-} _ = ≡.refl
-  constBit≡0 false {-0b-} _ = ≡.refl
+  constBit≡0 true  {-1₂-} _ = ≡.refl
+  constBit≡0 false {-0₂-} _ = ≡.refl
 
   sum′ : ∀ {n} → Vec Diffℕ n → Diffℕ
   sum′ = V.foldr (const Diffℕ) _∘′_ id
@@ -154,7 +154,7 @@ seqTimeFork = record { cond = 1; fork = 1+_+_ }
 
 seqTimeOps : FunOps TimeCost
 seqTimeOps = record { rewiring = seqTimeRewiring; hasFork = seqTimeFork;
-                      <0b> = 0; <1b> = 0 }
+                      <0₂> = 0; <1₂> = 0 }
 
 seqTimeBij : Bijective TimeCost
 seqTimeBij = FunOps.bijective seqTimeOps
@@ -196,7 +196,7 @@ timeFork = record { cond = 1; fork = 1+_⊔_ }
 
 timeOps : FunOps TimeCost
 timeOps = record { rewiring = timeRewiring; hasFork = timeFork;
-                   <0b> = 0; <1b> = 0 }
+                   <0₂> = 0; <1₂> = 0 }
 
 {-
 timeOps≡seqTimeOps : timeOps ≡ record seqTimeOps {
@@ -217,7 +217,7 @@ open ⊔-+-SemiringSolver
 timeOps' : ∀ n → FunOps (constFuns (Polynomial n))
 timeOps' n = record {
             id = con 0; _∘_ = _:*_;
-            <0b> = con 0; <1b> = con 0; cond = con 1; fork = 1+_+_; tt = con 0;
+            <0₂> = con 0; <1₂> = con 0; cond = con 1; fork = 1+_+_; tt = con 0;
             <_,_> = _:*_; fst = con 0; snd = con 0;
             dup = con 0; <_×_> = _:+_; swap = con 0; assoc = con 0;
             <tt,id> = con 0; snd<tt,> = con 0;
@@ -321,12 +321,12 @@ spaceFork = record { cond = 1; fork = 1+_+_ }
 
 spaceOps : FunOps SpaceCost
 spaceOps = record { rewiring = spaceRewiring; hasFork = spaceFork;
-                    <0b> = 1; <1b> = 1 }
+                    <0₂> = 1; <1₂> = 1 }
 
              {-
--- So far the space cost model is like the sequential time cost model but makes <0b>,<1b>,dup
+-- So far the space cost model is like the sequential time cost model but makes <0₂>,<1₂>,dup
 -- cost one unit of space.
-spaceOps≡seqTimeOps : spaceOps ≡ record seqTimeOps { <0b> = 1; <1b> = 1; dup = 1; <_,_> = 1+_+_
+spaceOps≡seqTimeOps : spaceOps ≡ record seqTimeOps { <0₂> = 1; <1₂> = 1; dup = 1; <_,_> = 1+_+_
                                                     ; <∷> = 0; uncons = 0 } -- same bug here
 spaceOps≡seqTimeOps = ≡.refl
 -}
