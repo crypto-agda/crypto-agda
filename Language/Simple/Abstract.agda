@@ -1,10 +1,11 @@
+{-# OPTIONS --without-K #-}
 open import Type
 open import Function
 open import Data.Nat.NP using (ℕ)
 open import Data.Fin.NP using (Fin)
 open import Data.Vec.NP using (Vec; []; _∷_; lookup) renaming (map to vmap)
 open import Data.Vec.Properties using (lookup∘tabulate)
-open import Relation.Binary.PropositionalEquality using (_≡_; _≗_; refl)
+open import Relation.Binary.PropositionalEquality.NP using (_≡_; _≗_; refl; ap; cong₂)
 open import Category.Monad.NP
 
 open import Language.Simple.Interface
@@ -38,11 +39,11 @@ isMonadic = record { return->>= = return->>=; >>=-return = >>=-return; >>=-assoc
     >>=-return  : ∀ {i} (e : E i) → (e >>= var) ≡ e
     >>=*-return : ∀ {n i} (es : Vec (E i) n) → (es >>=* var) ≡ es
 
-    >>=-return (var x) = refl
-    >>=-return (op o es) rewrite >>=*-return es = refl
+    >>=-return (var x)   = refl
+    >>=-return (op o es) = ap (op o) (>>=*-return es)
 
-    >>=*-return [] = refl
-    >>=*-return (x ∷ es) rewrite >>=-return x | >>=*-return es = refl
+    >>=*-return []       = refl
+    >>=*-return (x ∷ es) = cong₂ _∷_ (>>=-return x) (>>=*-return es)
 
     >>=-assoc : ∀ {A B C} (mx : E A) (my : A → E B) (k : B → E C)
                 → (mx >>= λ x → my x >>= k) ≡ ((mx >>= my) >>= k)
@@ -50,19 +51,21 @@ isMonadic = record { return->>= = return->>=; >>=-return = >>=-return; >>=-assoc
                  → (mxs >>=* λ x → my x >>= k) ≡ ((mxs >>=* my) >>=* k)
 
     >>=-assoc (var x)    my k = refl
-    >>=-assoc (op o mxs) my k rewrite >>=*-assoc mxs my k = refl
+    >>=-assoc (op o mxs) my k = ap (op o) (>>=*-assoc mxs my k)
 
     >>=*-assoc []         my k = refl
-    >>=*-assoc (mx ∷ mxs) my k rewrite >>=-assoc mx my k | >>=*-assoc mxs my k = refl
+    >>=*-assoc (mx ∷ mxs) my k = cong₂ _∷_ (>>=-assoc mx my k) (>>=*-assoc mxs my k)
 
 monad : Monad E
 monad = _ , isMonadic
 
-module _ {A : ★} (evalOp : ∀ {n} → Op n → Vec A n → A) where
-  module _ {I} (f : I → A) where
+open Monad monad
 
-    eval  : E I → A
-    eval* : ∀ {n} → Vec (E I) n → Vec A n
+module WithEvalOp {R : ★} (evalOp : ∀ {n} → Op n → Vec R n → R) where
+  module _ {I} (f : I → R) where
+
+    eval  : E I → R
+    eval* : ∀ {n} → Vec (E I) n → Vec R n
 
     eval (var x)   = f x
     eval (op o es) = evalOp o (eval* es)
@@ -70,25 +73,43 @@ module _ {A : ★} (evalOp : ∀ {n} → Op n → Vec A n → A) where
     eval* []       = []
     eval* (x ∷ es) = eval x ∷ eval* es
 
+    eval*-vmap-eval : ∀ {n} (es : Vec _ n)
+                      → eval* es ≡ vmap eval es
+    eval*-vmap-eval []       = refl
+    eval*-vmap-eval (e ∷ es) = ap (_∷_ (eval e)) (eval*-vmap-eval es)
+
   open EvalSupport monad eval
   open MonadInternals using (_>>=*_)
 
-  evalˢ* : ∀ {n} → Vec (E A) n → Vec A n
-  evalˢ* = eval* id
+  eval-return : ∀ {A} (f : A → R) → eval f ∘ return ≗ f
+  eval-return _ _ = refl
 
-  evalᶠ* : ∀ {n i} → Vec (E (Fin i)) n → Vec A i → Vec A n
-  evalᶠ* e vs = eval* (λ x → lookup x vs) e
+  module _ {A B} (f : B → R) (g : A → E B) where
+    eval->>= : ∀ e → eval (eval f ∘ g) e ≡ eval f (e >>= g)
+    eval->>=* : ∀ {n} (e : Vec _ n) → eval* (eval f ∘ g) e ≡ eval* f (e >>=* g)
+    eval->>=  (var x)   = refl
+    eval->>=  (op o es) = ap (evalOp o) (eval->>=* es)
+    eval->>=* []        = refl
+    eval->>=* (x ∷ xs)  = cong₂ _∷_ (eval->>= x) (eval->>=* xs)
 
-  module _ {i j} (f : i →ᵉ j) where
+  module _ {A} {f g : A → R} (pf : f ≗ g) where
+    eval-ext : eval f ≗ eval g
+    eval-ext* : ∀ {n} → eval* f {n} ≗ eval* g
+    eval-ext  (var x)   = pf x
+    eval-ext  (op o es) = ap (evalOp o) (eval-ext* es)
+    eval-ext* []        = refl
+    eval-ext* (x ∷ xs)  = cong₂ _∷_ (eval-ext x) (eval-ext* xs)
 
-    eval1-∘  :       (e  :      E (Fin j))    → evalᶠ  (e  >>=  f) ≗ evalᶠ  e  ∘ evalᵛ f
-    eval1-∘* : ∀ {n} (es : Vec (E (Fin j)) n) → evalᶠ* (es >>=* f) ≗ evalᶠ* es ∘ evalᵛ f
+  has-eval : Eval R monad
+  has-eval = mk eval eval-return eval->>= eval-ext
 
-    eval1-∘ (var v)   x rewrite lookup∘tabulate (λ y → evalᶠ (f y) x) v = refl
-    eval1-∘ (op o es) x rewrite eval1-∘* es x = refl
+  eval-op : ∀ {A} (f : A → R) {n} (o : Op n) es
+            → eval f (op o es) ≡ evalOp o (vmap (eval f) es)
+  eval-op _ _ _ = ap (evalOp _) (eval*-vmap-eval _ _)
 
-    eval1-∘* []       x = refl
-    eval1-∘* (e ∷ es) x rewrite eval1-∘ e x | eval1-∘* es x = refl
-
-  has-eval : Eval A monad
-  has-eval = eval , eval1-∘
+  lang : Lang Op R E
+  lang = record { monad = monad
+                ; op = op
+                ; evalOp = evalOp
+                ; has-eval = has-eval
+                ; eval-op = eval-op }

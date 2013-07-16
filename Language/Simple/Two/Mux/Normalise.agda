@@ -1,10 +1,6 @@
 open import Type
-open import Function
 open import Data.Two    renaming (mux to mux₂)
-open import Data.Nat.NP using (_+_)
-open import Data.Fin.NP using (Fin; inject+; raise)
-open import Data.Vec.NP using (Vec; []; _∷_; lookup)
-open import Data.Bits   using (Bits)
+open import Data.Vec.NP using ([]; _∷_)
 
 open import Language.Simple.Two.Mux
 
@@ -30,10 +26,11 @@ module _ {I} where
     muxNo (ne c) e₀ e₁ = ne (mux c e₀ e₁)
 
     normalise : E I → No I
-    normalise (var x)       = ne (var x)
-    normalise (mux c e₀ e₁) = muxNo (normalise c) (normalise e₀) (normalise e₁)
-    normalise 0₂            = 0₂
-    normalise 1₂            = 1₂
+    normalise (var x)    = ne (var x)
+    normalise (op 0₂ []) = 0₂
+    normalise (op 1₂ []) = 1₂
+    normalise (op mux (c ∷ e₀ ∷ e₁ ∷ []))
+      = muxNo (normalise c) (normalise e₀) (normalise e₁)
 
 module _ {I J} (f : I → J) where
     mapNo : No I → No J

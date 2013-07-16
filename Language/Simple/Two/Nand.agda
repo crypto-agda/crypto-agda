@@ -5,7 +5,7 @@ open import Data.Product
 open import Data.Nat.NP using (ℕ; _+_)
 open import Data.Fin.NP using (Fin; inject+; raise)
 open import Data.Bits   using (Bits)
-open import Data.Vec.NP using (Vec; []; _∷_; lookup; tabulate)
+open import Data.Vec.NP using (Vec; []; _∷_; lookup; tabulate) renaming (map to vmap)
 open import Data.Vec.Properties using (lookup∘tabulate)
 open import Relation.Binary.PropositionalEquality
 open import Category.Monad.NP
@@ -59,29 +59,60 @@ data Op : ℕ → ★ where
   nand  : Op 2
   0₂ 1₂ : Op 0
 
+open Monad monad
+
 has-eval : Eval 𝟚 monad
-has-eval = eval , eval1-∘
+has-eval = mk eval eval-return eval->>= eval-ext
   where
-    module _ {I} (f : I → 𝟚) where
-        eval : E I → 𝟚
+    R = 𝟚
+
+    module _ {I} (f : I → R) where
+        eval : E I → R
         eval (var x)      = f x
-        eval (nand e₀ e₁) = nand₂ (eval e₀) (eval e₁)
         eval 0₂           = 0₂
         eval 1₂           = 1₂
+        eval (nand e₀ e₁) = nand₂ (eval e₀) (eval e₁)
 
-    open EvalSupport monad eval
+    eval-return : ∀ {A} (f : A → R) → eval f ∘ return ≗ f
+    eval-return _ _ = refl
 
-    module _ {i j} (f : i →ᵉ j) where
-        eval1-∘ : (e : E (Fin j)) → evalᶠ (e >>= f) ≗ evalᶠ e ∘ evalᵛ f
-        eval1-∘ (var v)      x rewrite lookup∘tabulate (λ y → evalᶠ (f y) x) v = refl
-        eval1-∘ (nand e₀ e₁) x rewrite eval1-∘ e₀ x | eval1-∘ e₁ x = refl
-        eval1-∘ 0₂ _ = refl
-        eval1-∘ 1₂ _ = refl
+    module _ {A B} (f : B → R) (g : A → E B) where
+        eval->>= : ∀ e → eval (eval f ∘ g) e ≡ eval f (e >>= g)
+        eval->>= (var x) = refl
+        eval->>= (nand e₀ e₁) = cong₂ nand₂ (eval->>= e₀)
+                                            (eval->>= e₁)
+        eval->>= 0₂ = refl
+        eval->>= 1₂ = refl
+
+    module _ {A} {f g : A → R} (pf : f ≗ g) where
+        eval-ext : eval f ≗ eval g
+        eval-ext (var x) = pf x
+        eval-ext (nand e₀ e₁) = cong₂ nand₂ (eval-ext e₀)
+                                            (eval-ext e₁)
+        eval-ext 0₂ = refl
+        eval-ext 1₂ = refl
+
+open Eval has-eval
 
 lang : Lang Op 𝟚 E
-lang = record { monad = monad; has-eval = has-eval; op = op }
+lang = record { monad = monad; evalOp = evalOp
+              ; has-eval = has-eval; op = op
+              ; eval-op = eval-op }
   where
-    op : ∀ {V a} (o : Op a) (es : Vec (E V) a) → E V
+    evalOp : EvalOp Op 𝟚
+    evalOp nand (x ∷ y ∷ []) = nand₂ x y
+    evalOp 0₂   []           = 0₂
+    evalOp 1₂   []           = 1₂
+
+    op : ∀ {A} → EvalOp Op (E A)
     op nand (x ∷ y ∷ []) = nand x y
     op 0₂   []           = 0₂
     op 1₂   []           = 1₂
+
+    R = 𝟚
+    module _ {A} (f : A → R) where
+      eval-op : ∀ {n} (o : Op n) es
+                → eval f (op o es) ≡ evalOp o (vmap (eval f) es)
+      eval-op nand (x ∷ y ∷ []) = refl
+      eval-op 0₂   []           = refl
+      eval-op 1₂   []           = refl
