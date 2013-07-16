@@ -49,29 +49,29 @@ module Test22 where
   module UnOp where
     open T 𝟚′
 
-    pf-not : N.not ≗ not
-    pf-not = check! 
+    not-ok : N.not ≗ not
+    not-ok = check!
 
   module BinOp where
     open T (𝟚′ ×′ 𝟚′)
 
-    pf-nand : nand ≗ nand'
-    pf-nand = check!
+    nand-ok : nand ≗ nand'
+    nand-ok = check!
 
-    pf-and : N.and ≗ uncurry _∧_
-    pf-and = check!
+    and-ok : N.and ≗ uncurry _∧_
+    and-ok = check!
 
-    pf-or : N.or ≗ uncurry _∨_
-    pf-or = check!
+    or-ok : N.or ≗ uncurry _∨_
+    or-ok = check!
 
-    pf-nor : N.nor ≗ (not ∘ uncurry _∨_)
-    pf-nor = check!
+    nor-ok : N.nor ≗ (not ∘ uncurry _∨_)
+    nor-ok = check!
 
-    pf-xor : N.xor ≗ uncurry _xor_
-    pf-xor = check!
+    xor-ok : N.xor ≗ uncurry _xor_
+    xor-ok = check!
 
-    pf-xnor : N.xnor ≗ uncurry _==_
-    pf-xnor = check!
+    xnor-ok : N.xnor ≗ uncurry _==_
+    xnor-ok = check!
 
   module TriOp where
     open T (𝟚′ ×′ (𝟚′ ×′ 𝟚′))
@@ -79,5 +79,5 @@ module Test22 where
     fork : 𝟚 × 𝟚 × 𝟚 → 𝟚
     fork (c , eᵢ) = proj eᵢ c
 
-    pf-fork : N.fork ≗ fork
-    pf-fork = check!
+    fork-ok : N.fork ≗ fork
+    fork-ok = check!
