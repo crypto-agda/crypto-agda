@@ -174,6 +174,12 @@ record LinRewiring {t} {T : ★_ t} (funU : FunUniverse T) : ★_ t where
   map : ∀ {n A B} → (A `→ B) → (`Vec A n `→ `Vec B n)
   map f = < V.replicate f ⊛>
 
+  mapAccum : ∀ {n A B S} → (S `× A `→ S `× B) → S `× `Vec A n `→ S `× `Vec B n
+  mapAccum {zero}  F = second []→[]
+  mapAccum {suc n} F = second uncons
+                     ⁏ assoc-first F ⁏ around (mapAccum F)
+                     ⁏ second <∷>
+
   zipWith : ∀ {n A B C} → ((A `× B) `→ C)
                         → (`Vec A n `× `Vec B n) `→ `Vec C n
   zipWith {zero}  f = <[],[]>→[]
