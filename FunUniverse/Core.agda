@@ -4,7 +4,6 @@ module FunUniverse.Core where
 open import Type
 open import Data.Nat.NP using (ℕ; zero; suc; _+_; _*_; 2^_)
 import Data.Bool.NP as B
-open B using (if_then_else_; true; false)
 open import Data.Unit using (⊤)
 open import Data.Fin using (Fin)
 open import Function using (_∘′_; flip)
@@ -12,7 +11,7 @@ import Data.Vec.NP as V
 import Level as L
 open V using (Vec; []; _∷_)
 
-open import Data.Bit using (Bit; 0b; 1b)
+open import Data.Two  using (𝟚; 0₂; 1₂; [0:_1:_])
 open import Data.Bits using (Bits; _→ᵇ_; RewireTbl; 0ⁿ; 1ⁿ)
 
 import FunUniverse.BinTree as Tree
@@ -33,8 +32,8 @@ record HasBijFork {t} {T : Set t} (funU : FunUniverse T) : Set t where
 
   -- bijFork′ f₀ f₁ (0₂ , x) = 0₂ , f₀ 0₂ x
   -- bijFork′ f₀ f₁ (1₂ , x) = 1₂ , f₁ 1₂ x
-  bijFork′ : ∀ {A B} → (Bit → A `→ B) → `Bit `× A `→ `Bit `× B
-  bijFork′ f = bijFork (f 0b) (f 1b)
+  bijFork′ : ∀ {A B} → (𝟚 → A `→ B) → `Bit `× A `→ `Bit `× B
+  bijFork′ f = bijFork (f 0₂) (f 1₂)
 
 record HasFork {t} {T : Set t} (funU : FunUniverse T) : Set t where
   constructor _,_
@@ -50,8 +49,8 @@ record HasFork {t} {T : Set t} (funU : FunUniverse T) : Set t where
     -- See Defaults.DefaultFork
     fork : ∀ {A B} (f g : A `→ B) → `Bit `× A `→ B
 
-  fork′ : ∀ {A B} → (Bit → A `→ B) → `Bit `× A `→ B
-  fork′ f = fork (f 0b) (f 1b)
+  fork′ : ∀ {A B} → (𝟚 → A `→ B) → `Bit `× A `→ B
+  fork′ f = fork (f 0₂) (f 1₂)
 
 record HasXor {t} {T : Set t} (funU : FunUniverse T) : Set t where
   constructor mk
@@ -100,9 +99,8 @@ record Rewiring {t} {T : Set t} (funU : FunUniverse T) : Set t where
 
   open LinRewiring linRewiring public
 
-  proj : ∀ {A} → Bit → (A `× A) `→ A
-  proj true  = fst
-  proj false = snd
+  proj : ∀ {A} → 𝟚 → (A `× A) `→ A
+  proj = [0: fst 1: snd ]
 
   head : ∀ {n A} → `Vec A (1 + n) `→ A
   head = uncons ⁏ fst
@@ -140,7 +138,7 @@ record Rewiring {t} {T : Set t} (funU : FunUniverse T) : Set t where
   replicate {suc n} = < id , replicate > ⁏ <∷>
 
   constBits′ : ∀ {n A} → Bits n → (A `× A) `→ `Vec A n
-  constBits′ [] = <[]>
+  constBits′ []       = <[]>
   constBits′ (b ∷ xs) = dup ⁏ < proj b ∷′ constBits′ xs >
 
 record FunOps {t} {T : Set t} (funU : FunUniverse T) : Set t where
@@ -152,7 +150,7 @@ record FunOps {t} {T : Set t} (funU : FunUniverse T) : Set t where
     hasFork  : HasFork  funU
 
     -- Bit
-    <0b> <1b> : ∀ {_⊤} → _⊤ `→ `Bit
+    <0₂> <1₂> : ∀ {_⊤} → _⊤ `→ `Bit
 
     -- Products
     -- * <_×_>; first; second; swap; assoc; <tt,id>; snd<tt,> come from LinRewiring
@@ -170,7 +168,7 @@ record FunOps {t} {T : Set t} (funU : FunUniverse T) : Set t where
   <if b then if-1 else if-0 > = < b , id > ⁏ fork if-0 if-1
 
   not : `Bit `→ `Bit
-  not = <id,tt> ⁏ fork <1b> <0b>
+  not = <id,tt> ⁏ fork <1₂> <0₂>
 
   -- We might want it to be part of the interface
   hasXor : HasXor funU
@@ -189,8 +187,8 @@ record FunOps {t} {T : Set t} (funU : FunUniverse T) : Set t where
   _&&&_ : ∀ {A B C} → (A `→ B) → (A `→ C) → A `→ B `× C
   f &&& g = < f , g >
 
-  constBit : ∀ {_⊤} → Bit → _⊤ `→ `Bit
-  constBit b = if b then <1b> else <0b>
+  constBit : ∀ {_⊤} → 𝟚 → _⊤ `→ `Bit
+  constBit = [0: <0₂> 1: <1₂> ]
 
   -- Notice that this one costs 1 unit of space.
   dup⁏<_∷′_> : ∀ {n A B} → (A `→ B) → (A `→ `Vec B n)
@@ -198,10 +196,10 @@ record FunOps {t} {T : Set t} (funU : FunUniverse T) : Set t where
   dup⁏< f ∷′ g > = dup ⁏ < f ∷′ g >
 
   <0,_> : ∀ {A B} → (A `→ B) → A `→ `Bit `× B
-  <0, f > = <tt⁏ <0b> , f >
+  <0, f > = <tt⁏ <0₂> , f >
 
   <1,_> : ∀ {A B} → (A `→ B) → A `→ `Bit `× B
-  <1, f > = <tt⁏ <1b> , f >
+  <1, f > = <tt⁏ <1₂> , f >
 
   <0,> : ∀ {A} → A `→ `Bit `× A
   <0,> = <0, id >
@@ -210,13 +208,13 @@ record FunOps {t} {T : Set t} (funU : FunUniverse T) : Set t where
   <1,> = <1, id >
 
   <0,1> : ∀ {_⊤} → _⊤ `→ `Bit `× `Bit
-  <0,1> = <0, <1b> >
+  <0,1> = <0, <1₂> >
 
   <0∷_> : ∀ {n A} → (A `→ `Bits n) → A `→ `Bits (1 + n)
-  <0∷ f > = <tt⁏ <0b> ∷′ f >
+  <0∷ f > = <tt⁏ <0₂> ∷′ f >
 
   <1∷_> : ∀ {n A} → (A `→ `Bits n) → A `→ `Bits (1 + n)
-  <1∷ f > = <tt⁏ <1b> ∷′ f >
+  <1∷ f > = <tt⁏ <1₂> ∷′ f >
 
   <0∷> : ∀ {n} → n `→ᵇ (1 + n)
   <0∷> = <0∷ id >
@@ -278,16 +276,16 @@ record FunOps {t} {T : Set t} (funU : FunUniverse T) : Set t where
   <xor> = fork id not
 
   <or> : `Bit `× `Bit `→ `Bit
-  <or> = fork id <1b>
+  <or> = fork id <1₂>
 
   <and> : `Bit `× `Bit `→ `Bit
-  <and> = fork <0b> id
+  <and> = fork <0₂> id
 
   <==ᵇ> : `Bit `× `Bit `→ `Bit
   <==ᵇ> = <xor> ⁏ not
 
   <==> : ∀ {n} → `Bits n `× `Bits n `→ `Bit
-  <==> {zero}  = <1b>
+  <==> {zero}  = <1₂>
   <==> {suc n} = < uncons × uncons > ⁏ < <==ᵇ> `zip` <==> {n} > ⁏ <or>
 
   <⊕> : ∀ {n} → `Bits n `× `Bits n `→ `Bits n
@@ -302,7 +300,7 @@ record FunOps {t} {T : Set t} (funU : FunUniverse T) : Set t where
     where bs = allBits n
 
   sucBCarry : ∀ {n} → `Bits n `→ `Bits (1 + n)
-  sucBCarry {zero}  = < <0b> ∷[]>
+  sucBCarry {zero}  = < <0₂> ∷[]>
   sucBCarry {suc n} = uncons
                     ⁏ fork <0∷ sucBCarry >
                           (sucBCarry ⁏ uncons ⁏ fork <0∷ <1∷> > <1∷ <0∷> >)
