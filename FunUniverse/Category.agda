@@ -4,10 +4,7 @@ open import Type hiding (★)
 open import Function.NP using (Endo)
 open import Data.Nat using (ℕ; zero; suc)
 
-module FunUniverse.Category
-  {t ℓ} {T : ★ t}
-  (_`→_ : T → T → ★ ℓ)
-  where
+module FunUniverse.Category {t ℓ} {T : ★ t} (_`→_ : T → T → ★ ℓ) where
 
 module CompositionNotations
   (_∘_ : ∀ {A B C} → (B `→ C) → (A `→ B) → (A `→ C))
