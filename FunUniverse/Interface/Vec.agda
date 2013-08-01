@@ -1,14 +1,18 @@
 {-# OPTIONS --without-K #-}
+open import Level.NP using (ₛ)
 open import FunUniverse.Core
 open import Data.Nat.NP
+open import Data.Bits using (Bits)
+open import Data.Vec using (Vec; []; _∷_)
+
 module FunUniverse.Interface.Vec
          {t} {T : Set t} (funU : FunUniverse T) where
 open FunUniverse funU
 
-record FunVec : Set where
+record FunVec : Set (ₛ t) where
   field
-    tt→[]  : ∀ {A} → `⊤ `→ `Vec A 0
-    []→tt  : ∀ {A} → `Vec A 0 `→ `⊤
+    tt→[]  : ∀ {A} → `𝟙 `→ `Vec A 0
+    []→tt  : ∀ {A} → `Vec A 0 `→ `𝟙
     <∷>    : ∀ {n A} → (A `× `Vec A n) `→ `Vec A (1 + n)
     uncons : ∀ {n A} → `Vec A (1 + n) `→ (A `× `Vec A n)
 
@@ -19,10 +23,10 @@ record FunVec : Set where
     <_∷_> : ∀ {m n A B} → (A `→ B) → (`Vec A m `→ `Vec B n)
                     → `Vec A (1 + m) `→ `Vec B (1 + n)
 
-    <tt⁏_∷′_> : ∀ {n A B} → (`⊤ `→ B) → (A `→ `Vec B n)
+    <tt⁏_∷′_> : ∀ {n A B} → (`𝟙 `→ B) → (A `→ `Vec B n)
                         → A `→ `Vec B (1 + n)
 
-    <_∷′tt⁏_> : ∀ {n A B} → (A `→ B) → (`⊤ `→ `Vec B n)
+    <_∷′tt⁏_> : ∀ {n A B} → (A `→ B) → (`𝟙 `→ `Vec B n)
                           → A `→ `Vec B (1 + n)
 
     <_∷[]> : ∀ {A B} → (A `→ B) → A `→ `Vec B 1
@@ -35,7 +39,8 @@ record FunVec : Set where
 
     head<∷> : ∀ {A} → `Vec A 1 `→ A
 
-    constVec⊤ : ∀ {n a} {A : Set a} {B} → (A → `⊤ `→ B) → Vec A n → `⊤ `→ `Vec B n
+    -- was universe-polymorphic
+    constVec𝟙 : ∀ {n} {A : Set} {B} → (A → `𝟙 `→ B) → Vec A n → `𝟙 `→ `Vec B n
 
     []→[] : ∀ {A B} → `Vec A 0 `→ `Vec B 0
 
@@ -64,8 +69,8 @@ record FunVec : Set where
 
     append : ∀ {m n A} → (`Vec A m `× `Vec A n) `→ `Vec A (m + n)
 
-    <_++_> : ∀ {m n A} → (`⊤ `→ `Vec A m) → (`⊤ `→ `Vec A n) →
-                          `⊤ `→ `Vec A (m + n)
+    <_++_> : ∀ {m n A} → (`𝟙 `→ `Vec A m) → (`𝟙 `→ `Vec A n) →
+                          `𝟙 `→ `Vec A (m + n)
 
     splitAt : ∀ m {n A} → `Vec A (m + n) `→ (`Vec A m `× `Vec A n)
 
@@ -81,17 +86,18 @@ record FunVec : Set where
 
     bind : ∀ {m n A B} → (A `→ `Vec B m) → `Vec A n `→ `Vec B (n * m)
 
-    replicate⊤ : ∀ n → `⊤ `→ `Vec `⊤ n
+    replicate𝟙 : ∀ n → `𝟙 `→ `Vec `𝟙 n
 
     -- Vectors
-    <[]> : ∀ {_⊤ A} → _⊤ `→ `Vec A 0
+    <[]> : ∀ {_𝟙 A} → _𝟙 `→ `Vec A 0
     -- * <∷> and uncons come from LinRewiring
 
     head : ∀ {n A} → `Vec A (1 + n) `→ A
 
     tail : ∀ {n A} → `Vec A (1 + n) `→ `Vec A n
 
-    constVec : ∀ {n a _⊤} {A : Set a} {B} → (A → `⊤ `→ B) → Vec A n → _⊤ `→ `Vec B n
+    -- was universe-polymorphic
+    constVec : ∀ {n _𝟙} {A : Set} {B} → (A → `𝟙 `→ B) → Vec A n → _𝟙 `→ `Vec B n
 
     take : ∀ m {n A} → `Vec A (m + n) `→ `Vec A m
 
@@ -113,12 +119,12 @@ record FunVec : Set where
     dup⁏<_∷′_> : ∀ {n A B} → (A `→ B) → (A `→ `Vec B n)
                           → A `→ `Vec B (1 + n)
 
-    allBits : ∀ n → `⊤ `→ `Vec (`Bits n) (2^ n)
+    allBits : ∀ n → `𝟙 `→ `Vec (`Bits n) (2^ n)
 
     lookupTbl : ∀ {n A} → `Bits n `× `Vec A (2^ n) `→ A
 
-    funFromTbl : ∀ {n A} → Vec (`⊤ `→ A) (2^ n) → (`Bits n `→ A)
+    funFromTbl : ∀ {n A} → Vec (`𝟙 `→ A) (2^ n) → (`Bits n `→ A)
 
-    tblFromFun : ∀ {n A} → (`Bits n `→ A) → `⊤ `→ `Vec A (2^ n)
+    tblFromFun : ∀ {n A} → (`Bits n `→ A) → `𝟙 `→ `Vec A (2^ n)
 
 -- -}

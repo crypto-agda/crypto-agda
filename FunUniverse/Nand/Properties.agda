@@ -1,6 +1,6 @@
 open import Level.NP
 open import Type
-open import Data.Two
+open import Data.Two hiding (nand)
 open import Data.Product
 open import Function.NP
 open import Relation.Binary
@@ -17,7 +17,7 @@ open import FunUniverse.Agda
 module FunUniverse.Nand.Properties where
 
 module Test {B : ★} (_≟_ : Decidable {A = B} _≡_)
-            (A : Ty)
+            (A : U)
             {f g : El A → B} where
   module _ {ℓ} where
     Aᵉ : Explore ℓ (El A)
@@ -76,8 +76,5 @@ module Test22 where
   module TriOp where
     open T (𝟚′ ×′ (𝟚′ ×′ 𝟚′))
 
-    fork : 𝟚 × 𝟚 × 𝟚 → 𝟚
-    fork (c , eᵢ) = proj eᵢ c
-
-    fork-ok : N.fork ≗ fork
-    fork-ok = check!
+    mux-ok : N.mux ≗ mux
+    mux-ok = check!

@@ -1,37 +1,38 @@
 {-# OPTIONS --without-K #-}
 open import FunUniverse.Core
+open import Data.Two
 module FunUniverse.Interface.Two
          {t} {T : Set t} (funU : FunUniverse T) where
 open FunUniverse funU
 
-record FunTwo where
+record FunTwo : Set t where
 
   field
     -- already part of a record
-    <0b> <1b> : ∀ {_⊤} → _⊤ `→ `Bit
+    <0₂> <1₁> : ∀ {_𝟙} → _𝟙 `→ `𝟚
 
-    not : `Bit `→ `Bit
+    <not> : `𝟚 `→ `𝟚
 
-    constBit : ∀ {_⊤} → Bit → _⊤ `→ `Bit
+    const𝟚 : ∀ {_𝟙} → 𝟚 → _𝟙 `→ `𝟚
 
-    <0,_> : ∀ {A B} → (A `→ B) → A `→ `Bit `× B
+    <0,_> : ∀ {A B} → (A `→ B) → A `→ `𝟚 `× B
 
-    <1,_> : ∀ {A B} → (A `→ B) → A `→ `Bit `× B
+    <1,_> : ∀ {A B} → (A `→ B) → A `→ `𝟚 `× B
 
-    <0,> : ∀ {A} → A `→ `Bit `× A
+    <0,> : ∀ {A} → A `→ `𝟚 `× A
 
-    <1,> : ∀ {A} → A `→ `Bit `× A
+    <1,> : ∀ {A} → A `→ `𝟚 `× A
 
-    <0,1> : ∀ {_⊤} → _⊤ `→ `Bit `× `Bit
+    <0,1> : ∀ {_𝟙} → _𝟙 `→ `𝟚 `× `𝟚
 
-    <xor> : `Bit `× `Bit `→ `Bit
+    <xor> : `𝟚 `× `𝟚 `→ `𝟚
 
-    <or> : `Bit `× `Bit `→ `Bit
+    <or> : `𝟚 `× `𝟚 `→ `𝟚
 
-    <and> : `Bit `× `Bit `→ `Bit
+    <and> : `𝟚 `× `𝟚 `→ `𝟚
 
-    <==ᵇ> : `Bit `× `Bit `→ `Bit
+    <==ᵇ> : `𝟚 `× `𝟚 `→ `𝟚
 
-    half-adder : `Bit `× `Bit `→ `Bit `× `Bit
+    half-adder : `𝟚 `× `𝟚 `→ `𝟚 `× `𝟚
 
-    full-adder : `Bit `× `Bit `× `Bit `→ `Bit `× `Bit
+    full-adder : `𝟚 `× `𝟚 `× `𝟚 `→ `𝟚 `× `𝟚
