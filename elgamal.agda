@@ -16,9 +16,9 @@ import Game.IND-CPA
 import Cipher.ElGamal.Generic
 open import Explore.Type
 open import Explore.Explorable
-open import Explore.Explorable.Sum renaming (μBit to μ𝟚)
-open import Explore.Explorable.Product
-open import Explore.Explorable.Fin
+open import Explore.Sum -- renaming (μBit to μ𝟚)
+open import Explore.Product
+--open import Explore.Fin
 open import Relation.Binary.NP
 
 module elgamal where

@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K #-}
+-- NOTE with-K
 open import Data.Sum using (_⊎_ ; inj₁ ; inj₂ )
 open import Data.Unit
 open import Data.Empty

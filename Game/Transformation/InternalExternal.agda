@@ -11,6 +11,7 @@ open import Explore.Type
 open import Explore.Summable
 open import Explore.Sum
 open import Explore.Product
+open import Explore.Two
 
 open import Relation.Binary.PropositionalEquality.NP
 
@@ -21,7 +22,7 @@ module GameFlipping (R : Set)(sum : Sum R)(sum-ind : SumInd sum)(⅁ : 𝟚 → 
   Y = ⅁ 1₂
   R' = 𝟚 × R
   sum' : Sum R'
-  sum' = exploreBit _+_ ×ˢ sum
+  sum' = explore𝟚 _+_ ×ˢ sum
 
   open FromSum    sum'    renaming (count to #'_)
   open FromSumInd sum-ind renaming (count to #_)

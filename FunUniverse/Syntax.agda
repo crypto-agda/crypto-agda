@@ -6,6 +6,8 @@ open import Data.Bits using (Bits; RewireTbl)
 open import Data.Fin using (Fin)
 open import FunUniverse.Data
 open import FunUniverse.Core
+open import FunUniverse.Category
+open import FunUniverse.Rewiring.Linear
 
 module FunUniverse.Syntax {T : ★} (dataU : Universe T) where
 
@@ -26,9 +28,9 @@ data _`→_ : T → T → ★ where
     <_,_>     : ∀ {A B C} → (A `→ B) → (A `→ C) → A `→ B `× C
     dup       : ∀ {A} → A `→ A `× A
 
-    tt        : ∀ {_⊤} → _⊤ `→ `⊤
+    tt        : ∀ {_𝟙} → _𝟙 `→ `𝟙
 
-    <[]>      : ∀ {_⊤ A} → _⊤ `→ `Vec A 0
+    <[]>      : ∀ {_𝟙 A} → _𝟙 `→ `Vec A 0
     <∷>       : ∀ {n A} → (A `× `Vec A n) `→ `Vec A (1 + n)
     uncons    : ∀ {n A} → `Vec A (1 + n) `→ (A `× `Vec A n)
 
@@ -36,22 +38,25 @@ data _`→_ : T → T → ★ where
     cond      : ∀ {A} → `Bit `× A `× A `→ A
     fork      : ∀ {A B} (f g : A `→ B) → `Bit `× A `→ B
 
-    <0b> <1b> : ∀ {_⊤} → _⊤ `→ `Bit
+    <0b> <1b> : ∀ {_𝟙} → _𝟙 `→ `Bit
 
     xor       : ∀ {n} → Bits n → `Bits n `→ `Bits n
     rewire    : ∀ {i o} → (Fin o → Fin i) → `Bits i `→ `Bits o
     rewireTbl : ∀ {i o} → RewireTbl i o   → `Bits i `→ `Bits o
 
-    <tt,id>   : ∀ {A} → A `→ `⊤ `× A
-    snd<tt,>  : ∀ {A} → `⊤ `× A `→ A
-    tt→[]     : ∀ {A} → `⊤ `→ `Vec A 0
-    []→tt     : ∀ {A} → `Vec A 0 `→ `⊤
+    <tt,id>   : ∀ {A} → A `→ `𝟙 `× A
+    snd<tt,>  : ∀ {A} → `𝟙 `× A `→ A
+    tt→[]     : ∀ {A} → `𝟙 `→ `Vec A 0
+    []→tt     : ∀ {A} → `Vec A 0 `→ `𝟙
 
 synU : FunUniverse T
 synU = dataU , _`→_
 
+synCat : Category _`→_
+synCat = id , _∘_
+
 synLin : LinRewiring synU
-synLin = mk id _∘_ first swap assoc <tt,id> snd<tt,> <_×_>
+synLin = mk synCat first swap assoc <tt,id> snd<tt,> <_×_>
             second tt→[] []→tt <∷> uncons
 
 synRewiring : Rewiring synU

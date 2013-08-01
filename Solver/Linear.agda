@@ -34,7 +34,7 @@ module Syntax
 
   eval : Syn → A
   eval (var x) = Γ x
-  eval tt = `⊤
+  eval tt = `𝟙
   eval (s , s₁) = eval s `× eval s₁
 
   EvalEq : Eq → Set

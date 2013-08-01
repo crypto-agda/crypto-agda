@@ -1,11 +1,13 @@
 {-# OPTIONS --without-K #-}
 open import FunUniverse.Core
+import      FunUniverse.Category.Op as CatOp
+open import FunUniverse.Rewiring.Linear
 
 open import Data.Nat
 
 module FunUniverse.Inverse {t} {T : Set t}
-                            (funU : FunUniverse T)
-                            (bijU : Bijective funU) where
+                           (funU : FunUniverse T)
+                           (bijU : Bijective funU) where
 
 opU : FunUniverse T
 opU = OpFunU.opFunU funU
@@ -13,7 +15,8 @@ opU = OpFunU.opFunU funU
 open FunUniverse opU
 
 invLinRewiring : LinRewiring funU → LinRewiring opU
-invLinRewiring linRewiring = mk id _∘_ first swap assoc <tt,id> snd<tt,>
+invLinRewiring linRewiring = mk (CatOp.op L.cat)
+                                first swap assoc <tt,id> snd<tt,>
                                 <_×_> second tt→[] []→tt <∷> uncons
   where
     module L = LinRewiring linRewiring
@@ -34,10 +37,10 @@ invLinRewiring linRewiring = mk id _∘_ first swap assoc <tt,id> snd<tt,>
     assoc : ∀ {A B C} → ((A `× B) `× C) `→ (A `× (B `× C))
     assoc = L.assoc′
 
-    <tt,id> : ∀ {A} → A `→ `⊤ `× A
+    <tt,id> : ∀ {A} → A `→ `𝟙 `× A
     <tt,id> = L.snd<tt,>
 
-    snd<tt,> : ∀ {A} → `⊤ `× A `→ A
+    snd<tt,> : ∀ {A} → `𝟙 `× A `→ A
     snd<tt,> = L.<tt,id>
 
     -- Products (derived from group 1 or 2)
@@ -48,10 +51,10 @@ invLinRewiring linRewiring = mk id _∘_ first swap assoc <tt,id> snd<tt,>
     second f = L.second f
 
     -- Vectors
-    tt→[] : ∀ {A} → `⊤ `→ `Vec A 0
+    tt→[] : ∀ {A} → `𝟙 `→ `Vec A 0
     tt→[] = L.[]→tt
 
-    []→tt : ∀ {A} → `Vec A 0 `→ `⊤
+    []→tt : ∀ {A} → `Vec A 0 `→ `𝟙
     []→tt = L.tt→[]
 
     <∷> : ∀ {n A} → (A `× `Vec A n) `→ `Vec A (1 + n)

@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K #-}
+-- NOTE with-K
 module bijection-syntax.Bijection-Fin where
 
   open import Type
@@ -9,6 +9,7 @@ module bijection-syntax.Bijection-Fin where
 
   open import Data.Empty
   open import Data.Nat.NP
+  open import Data.Two
   open import Data.Fin using (Fin ; zero ; suc ; fromℕ ; inject₁)
   open import Data.Vec hiding ([_])
 
@@ -462,8 +463,6 @@ module bijection-syntax.Bijection-Fin where
     ; mono-inj→id   = `mono-inj→id
     }
 
-  open import Data.Bool.NP
-
   count : ∀ {n} → (Fin n → ℕ) → ℕ
   count {n} f = sum (tabulate f)
 
@@ -471,11 +470,11 @@ module bijection-syntax.Bijection-Fin where
   count-ext {zero} f g f≗g = refl
   count-ext {suc n} f g f≗g rewrite f≗g zero | count-ext (f ∘ suc) (g ∘ suc) (f≗g ∘ suc) = refl
 
-  #⟨_⟩ : ∀ {n} → (Fin n → Bool) → ℕ
-  #⟨ f ⟩ = count (λ x → if f x then 1 else 0)
+  #⟨_⟩ : ∀ {n} → (Fin n → 𝟚) → ℕ
+  #⟨ f ⟩ = count (𝟚▹ℕ ∘ f)
 
-  #-ext : ∀ {n} → (f g : Fin n → Bool) → f ≗ g → #⟨ f ⟩ ≡ #⟨ g ⟩
-  #-ext f g f≗g = count-ext (toℕ ∘ f) (toℕ ∘ g) (cong toℕ ∘ f≗g)
+  #-ext : ∀ {n} → (f g : Fin n → 𝟚) → f ≗ g → #⟨ f ⟩ ≡ #⟨ g ⟩
+  #-ext f g f≗g = count-ext (𝟚▹ℕ ∘ f) (𝟚▹ℕ ∘ g) (cong 𝟚▹ℕ ∘ f≗g)
 
   com-assoc : ∀ x y z → x + (y + z) ≡ y + (x + z)
   com-assoc x y z rewrite 
@@ -499,9 +498,9 @@ module bijection-syntax.Bijection-Fin where
      f∘eval≗f∘p x rewrite thm p p-inj x = refl
 
 
-  #-perm : ∀ {n}(f : Fin n → Bool)(p : Endo (Fin n)) → Is-Inj p
+  #-perm : ∀ {n}(f : Fin n → 𝟚)(p : Endo (Fin n)) → Is-Inj p
          → #⟨ f ⟩ ≡ #⟨ f ∘ p ⟩
-  #-perm f p p-inj = count-perm (toℕ ∘ f) p p-inj
+  #-perm f p p-inj = count-perm (𝟚▹ℕ ∘ f) p p-inj
 
   test : `Syn 8
   test = abs.sort-bij interface (λ x → `evalArg (`tail `swap) x)
