@@ -25,13 +25,15 @@ module Game.CCA-CPA
   
 where
 
-module CCA = Game.IND-CCA PubKey SecKey Message CipherText Rₑ Rₖ Rₐ Rₐ KeyGen Enc Dec 
+open import Game.CCA-Common
+
+module CCA = Game.IND-CCA PubKey SecKey Message CipherText Rₑ Rₖ Rₐ    KeyGen Enc Dec 
 module CPA = Game.IND-CPA PubKey SecKey Message CipherText Rₑ Rₖ Rₐ ⊤  KeyGen Enc 
 
 A-transform : CPA.Adv → CCA.Adv
-A-transform (m , d) = m' , d where
+A-transform (m , d) = m' where
   m' : _ → _ → _
-  m' rₐ pk = CCA.Pick (mb 0b) (mb 1b) rₐ
+  m' rₐ pk = Pick ((mb 0b , mb 1b) , d rₐ pk) -- (mb 0b) (mb 1b) rₐ
     where
       mb = m rₐ pk
       

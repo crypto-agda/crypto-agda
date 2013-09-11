@@ -14,40 +14,34 @@ module Game.IND-CCA
   (CipherText : ★)
 
   -- randomness supply for, encryption, key-generation, adversary, adversary state
-  (Rₑ Rₖ Rₐ Rₐ' Rₓ : ★)
+  (Rₑ Rₖ Rₐ : ★)
   (KeyGen : Rₖ → PubKey × SecKey)
   (Enc    : PubKey → Message → Rₑ → CipherText)
   (Dec    : SecKey → CipherText → Message)
 
 where
 
-open Com Message CipherText Rₓ
-
-AdvStep₀ : ★
-AdvStep₀ = Rₐ → PubKey → MessageStrategy
-
-AdvStep₁ : ★
-AdvStep₁ = Rₐ' → Rₓ → PubKey → CipherText → Bit
+open Com Message CipherText
 
 Adv : ★
-Adv = AdvStep₀ × AdvStep₁
+Adv = Rₐ → PubKey → Strategy ((Message × Message) × (CipherText → Bit))
 
 R : ★
-R = Rₐ × Rₐ' × Rₖ × Rₑ
+R = Rₐ × Rₖ × Rₑ
 
 Game : ★
 Game = Adv → R → Bit
 
 ⅁ : Bit → Game
-⅁ b (m , d) (rₐ , rₐ' , rₖ , rₑ) with KeyGen rₖ
+⅁ b adv (rₐ , rₖ , rₑ) with KeyGen rₖ
 ... | pk , sk = b′ where
   open Eval Dec sk
-  ev = evalM (m rₐ pk)
+  ev = eval (adv rₐ pk)
   mb = proj (proj₁ ev) b
-  rₓ = proj₂ ev
+  d = proj₂ ev
 
   c  = Enc pk mb rₑ
-  b′ = d rₐ' rₓ pk c
+  b′ = d c
 
 
 

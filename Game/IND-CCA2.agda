@@ -17,45 +17,40 @@ module Game.IND-CCA2
   (CipherText : ★)
 
   -- randomness supply for, encryption, key-generation, adversary, adversary state
-  (Rₑ Rₖ Rₐ Rₐ' Rₓ : ★)
+  (Rₑ Rₖ Rₐ : ★)
   (KeyGen : Rₖ → PubKey × SecKey)
   (Enc    : PubKey → Message → Rₑ → CipherText)
   (Dec    : SecKey → CipherText → Message)
 
 where
-open import Game.CCA-Common Message CipherText Rₓ 
+open import Game.CCA-Common Message CipherText
                          
-AdvStep₀ : ★
-AdvStep₀ = Rₐ → PubKey → MessageStrategy
-    
-    
-AdvStep₁ : ★
-AdvStep₁ = Rₐ' → Rₓ → PubKey → (c : CipherText) → CipherStrategy
-
 Adv : ★
-Adv = AdvStep₀ × AdvStep₁
+Adv = Rₐ → PubKey → Strategy ((Message × Message) × (CipherText → Strategy Bit))
 
+{-
 Valid-Adv : Adv → Set
-Valid-Adv (m , d) = ∀ {rₐ rₓ pk c} → Valid (λ x → x ≢ c) (d rₐ rₓ pk c)
+Valid-Adv adv = ∀ {rₐ rₓ pk c} → Valid (λ x → x ≢ c) {!!}
+-}
 
 R : ★
-R = Rₐ × Rₐ' × Rₖ × Rₑ
+R = Rₐ × Rₖ × Rₑ
 
 Game : ★
 Game = Adv → R → Bit
 
 
 ⅁ : Bit → Game
-⅁ b (m , d) (rₐ , rₐ' , rₖ , rₑ) with KeyGen rₖ
+⅁ b m (rₐ , rₖ , rₑ) with KeyGen rₖ
 ... | pk , sk = b′ where
   open Eval Dec sk
   
-  ev = evalM (m rₐ pk)
+  ev = eval (m rₐ pk)
   mb = proj (proj₁ ev) b
-  rₓ = proj₂ ev
+  d = proj₂ ev
 
   c  = Enc pk mb rₑ
-  b′ = evalC (d rₐ' rₓ pk c)
+  b′ = eval (d c)
 
 -- -}
 -- -}

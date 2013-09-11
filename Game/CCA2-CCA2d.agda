@@ -22,7 +22,7 @@ module Game.CCA2-CCA2d
   (CipherText : ★)
 
   -- randomness supply for, encryption, key-generation, adversary, adversary state
-  (Rₑ Rₖ Rₐ Rₐ' Rₓ : ★)
+  (Rₑ Rₖ Rₐ : ★)
   (KeyGen : Rₖ → PubKey × SecKey)
   (Enc    : PubKey → Message → Rₑ → CipherText)
   (Dec    : SecKey → CipherText → Message)
@@ -30,24 +30,30 @@ module Game.CCA2-CCA2d
 where
 
 module CCA2d = Game.IND-CCA2-dagger PubKey SecKey Message CipherText
-    Rₑ Rₖ Rₐ Rₐ' Rₓ KeyGen Enc Dec 
+    Rₑ Rₖ Rₐ KeyGen Enc Dec 
 module CCA2 X = Game.IND-CCA2  PubKey SecKey Message CipherText
-    Rₑ Rₖ Rₐ (X × Rₐ') Rₓ KeyGen Enc Dec
-open import Game.CCA-Common
-open Eval
+    Rₑ Rₖ (X × Rₐ) KeyGen Enc Dec
+open import Game.CCA-Common Message CipherText
+open Eval Dec
 
-A-transform : (adv : CCA2d.Adv) → CCA2.Adv Bit
-A-transform (m , d) = m' , d' where
-  m' : _ → _ → _
-  m' rₐ pk = m rₐ pk
+X = Bit × Rₑ
 
-  d' : _ → _ → _ → (_ : _) → _
-  d' (rₜ , rₐ) rₓ pk c = d rₐ rₓ pk c {!!}
+f : PubKey → Bit → Rₑ
+  → (Message × Message) × (CipherText → CipherText → Strategy Bit)
+  → (Message × Message) × (CipherText → Strategy Bit)
+f pk b rₑ (m , g) = (m , λ c → g c (Enc pk (proj m b) rₑ))
 
-correct : ∀ {rₑ rₖ rₐ rₐ' rb} b adv
-        → CCA2d.⅁  b adv             (rₐ , rₐ' , rₖ , rₑ , rₑ)
-        ≡ CCA2.⅁ Bit b (A-transform adv) (rₐ , (rb , rₐ') , rₖ , rₑ)
-correct {rₑ} {rₖ} {rₐ} b (m , d) = {!!}
+A-transform : (adv : CCA2d.Adv) → CCA2.Adv X
+A-transform adv ((b , rₑ) , rₐ) pk = Follow (f pk b rₑ) (adv rₐ pk)
+
+correct : ∀ {rₑ rₑ' rₐₑ rₖ rₐ} b adv
+        → CCA2d.⅁  b adv               (rₐ , rₖ , rₑ , rₑ')
+        ≡ CCA2.⅁ X b (A-transform adv) (((b , rₐₑ) , rₐ) , rₖ , rₑ)
+correct {rₑ}{rₐₑ = ra}{rₖ = r}{rₐ} 1b adv with KeyGen r
+... | pk , sk  =  trans {!refl!} (cong (λ x → eval sk (proj₂ x (Enc pk (proj₂ (proj₁ x)) rₑ)))
+                      (sym (eval-Follow sk (f pk 1b ra) (adv rₐ pk))) )
+correct {rₑ}{rₐₑ = ra}{rₖ = r}{rₐ} 0b adv with KeyGen r
+... | pk , sk = trans {!refl!} (cong (λ x → eval sk (proj₂ x (Enc pk (proj₁ (proj₁ x)) rₑ))) (sym (eval-Follow sk (f pk 0b ra) (adv rₐ pk))))
 
 {-
 
@@ -55,8 +61,11 @@ Need to show that they are valid aswell
 
 -}
 
+{-
 valid : ∀ adv → CCA2d.Valid-Adv adv → CCA2.Valid-Adv Bit (A-transform adv)
 valid adv valid = {!!}
+-}
+
 
 -- -}
 -- -}
