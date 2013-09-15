@@ -7,7 +7,13 @@ open import Data.Maybe
 open import Data.Product
 open import Data.Unit
 
+open import Data.Nat.NP
+open import Rat
 
+open import Explore.Type
+open import Explore.Explorable
+open import Explore.Product
+open Operators
 open import Relation.Binary.PropositionalEquality
 
 module Game.IND-CCA2
@@ -52,6 +58,26 @@ Game = Adv → R → Bit
   c  = Enc pk mb rₑ
   b′ = eval (d c)
 
+  
+module Advantage
+  (μₑ : Explore₀ Rₑ)
+  (μₖ : Explore₀ Rₖ)
+  (μₐ : Explore₀ Rₐ)
+  where
+  μR : Explore₀ R
+  μR = μₐ ×ᵉ μₖ ×ᵉ μₑ
+  
+  module μR = FromExplore₀ μR
+  
+  run : Bit → Adv → ℕ
+  run b adv = μR.count (⅁ b adv)
+  
+  Advantage : Adv → ℕ
+  Advantage adv = dist (run 0b adv) (run 1b adv)
+    
+  Advantageℚ : Adv → ℚ
+  Advantageℚ adv = Advantage adv / μR.Card
+  
 -- -}
 -- -}
 -- -}

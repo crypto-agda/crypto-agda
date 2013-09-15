@@ -42,20 +42,35 @@ f (m , g) = m , λ c _ → g c
 A-transform : (adv : CCA2.Adv) → CCA2d.Adv
 A-transform adv rₐ pk = Follow f (adv rₐ pk)
   
-correct : ∀ {rₑ rₖ rₐ } b adv
+{-
+
+If we are able to do the transformation, then we get the same advantage
+
+-}
+
+correct : ∀ {rₑ rₑ' rₖ rₐ } b adv
         → CCA2.⅁  b adv               (rₐ , rₖ , rₑ)
-        ≡ CCA2d.⅁ b (A-transform adv) (rₐ , rₖ , rₑ , rₑ)
-correct {rₑ} {rₖ} {rₐ} 0b m with KeyGen rₖ
+        ≡ CCA2d.⅁ b (A-transform adv) (rₐ , rₖ , rₑ , rₑ')
+correct {rₑ} {rₑ'} {rₖ} {rₐ} 0b m with KeyGen rₖ
 ... | pk , sk = cong (λ x → eval sk (proj₂ x (Enc pk (proj₁ (proj₁ x)) rₑ)
-                                             (Enc pk (proj₂ (proj₁ x)) rₑ)))
+                                             (Enc pk (proj₂ (proj₁ x)) rₑ')))
                      (sym (eval-Follow sk f (m rₐ pk)))
-correct {rₑ} {rₖ} {rₐ} 1b m with KeyGen rₖ
+correct {rₑ}{rₑ'}{rₖ} {rₐ} 1b m with KeyGen rₖ
 ... | pk , sk = cong (λ x → eval sk (proj₂ x (Enc pk (proj₂ (proj₁ x)) rₑ)
-                                             (Enc pk (proj₁ (proj₁ x)) rₑ)))
+                                             (Enc pk (proj₁ (proj₁ x)) rₑ')))
                      (sym (eval-Follow sk f (m rₐ pk)))
 {-
 
-Need to show that they are valid aswell
+Need to show that they are valid transformation aswell:
+
+  This is not obvious that it will always work since the original adversary might
+  ask for the ciphertext from the rₑ' supply.
+
+  The argument why this is unlikely (in the paper) is that the construction is
+  IND-CPA secure and therefor it is hard to predict a ciphertext.
+  suppose that A could predict the ciphertext, then it could use this power to
+  win the game. Since he can predict what Enc(m(not b)) is he could just check what the
+  ciphertext was and that he received and thereby know if he received b or not b.
 
 -}
 

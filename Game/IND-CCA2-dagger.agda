@@ -4,6 +4,13 @@ open import Data.Bit
 open import Data.Maybe
 open import Data.Product
 
+open import Data.Nat.NP
+open import Rat
+
+open import Explore.Type
+open import Explore.Explorable
+open import Explore.Product
+open Operators
 
 open import Relation.Binary.PropositionalEquality
 
@@ -50,3 +57,19 @@ Game = Adv → R → Bit
   c₁  = Enc pk (mb (not b)) rₑ₁
   b′ = eval (d c₀ c₁)
 
+
+module Advantage
+  (μₑ : Explore₀ Rₑ)
+  (μₖ : Explore₀ Rₖ)
+  (μₐ : Explore₀ Rₐ)
+  where
+  μR : Explore₀ R
+  μR = μₐ ×ᵉ μₖ ×ᵉ μₑ ×ᵉ μₑ
+  
+  module μR = FromExplore₀ μR
+  
+  run : Bit → Adv → ℕ
+  run b adv = μR.count (⅁ b adv)
+    
+  Advantage : Adv → ℚ
+  Advantage adv = dist (run 0b adv) (run 1b adv) / μR.Card
