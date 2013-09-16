@@ -29,7 +29,7 @@ module Game.IND-CCA2
   (Dec    : SecKey → CipherText → Message)
 
 where
-open import Game.CCA-Common Message CipherText
+open import Game.CCA-Common Message CipherText public
                          
 Adv : ★
 Adv = Rₐ → PubKey → Strategy ((Message × Message) × (CipherText → Strategy Bit))
