@@ -10,6 +10,8 @@ open import Game.EntropySmoothing.WithKey
 open import Game.Transformation.InternalExternal
 
 open import Attack.Compression
+open import Attack.Reencryption
+open import Attack.Reencryption.OneBitMessage
 
 open import Crypto.Schemes
 open import Cipher.ElGamal.Generic
