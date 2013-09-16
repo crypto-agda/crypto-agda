@@ -8,7 +8,7 @@ open import Data.Product
 open import Data.Unit
 
 open import Data.Nat.NP
-open import Rat
+--open import Rat
 
 open import Explore.Type
 open import Explore.Explorable
@@ -75,8 +75,8 @@ module Advantage
   Advantage : Adv → ℕ
   Advantage adv = dist (run 0b adv) (run 1b adv)
     
-  Advantageℚ : Adv → ℚ
-  Advantageℚ adv = Advantage adv / μR.Card
+  --Advantageℚ : Adv → ℚ
+  --Advantageℚ adv = Advantage adv / μR.Card
   
 -- -}
 -- -}
