@@ -54,9 +54,9 @@ module M
   (compress : Message → CompressedMessage)
 
   -- 2 messages which have different size after compression
-  (m : 𝟚 → Message)
+  (m₀ m₁ : Message)
   (different-compression
-     : size (compress (m 0₂)) ≢ size (compress (m 1₂)))
+     : size (compress m₀) ≢ size (compress m₁))
 
   (PubKey     : ★)
   (SecKey     : ★)
@@ -79,8 +79,8 @@ module M
                                 Rₑ Rₖ Rₐ Rₓ KeyGen Enc₁
 
   adv : IND-CPA.Adv
-  adv = (λ { _  _    → m })
-      , (λ { rₑ pk c → c ==ˢ Enc₁ pk (m 1₂) rₑ })
+  adv = (λ { _  _    → [0: m₀ 1: m₁ ] })
+      , (λ { rₑ pk c → c ==ˢ Enc₁ pk m₁ rₑ })
 
   -- The adversary adv is always winning.
   adv-win : ∀ {r} b → IND-CPA.⅁ b adv r ≡ b
