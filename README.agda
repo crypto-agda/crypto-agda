@@ -9,6 +9,8 @@ open import Game.EntropySmoothing
 open import Game.EntropySmoothing.WithKey
 open import Game.Transformation.InternalExternal
 
+open import Attack.Compression
+
 open import Crypto.Schemes
 open import Cipher.ElGamal.Generic
 
