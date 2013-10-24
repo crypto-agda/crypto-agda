@@ -1,12 +1,14 @@
 {-# OPTIONS --without-K #-}
 -- This module is an example of the use of the circuit building library.
 -- The point is to start with a tiny bytecode evaluator for bit operations.
-module bytecode where
+module circuits.bytecode where
 
 open import Function
+open import Type
 open import Data.Nat
 open import Data.Vec
 open import Data.Product.NP
+open import Data.Bit
 open import Data.Bits
 open import Data.Bool
 open import Algebra.FunctionProperties
@@ -26,7 +28,7 @@ eval (`op₂ op₂ is) (b₀ ∷ b₁ ∷ st) = eval is (op₂ b₀ b₁ ∷ st)
 eval₀ : I 0 → Bit
 eval₀ i₀ = eval i₀ []
 
-open import circuit
+open import circuits.circuit
 
 module Ck {C} (cb : CircuitBuilder C) where
   open CircuitBuilder cb

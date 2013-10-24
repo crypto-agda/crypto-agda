@@ -1,5 +1,6 @@
 open import Level.NP
 open import Type
+open import Data.One
 open import Data.Two hiding (nand)
 open import Data.Product
 open import Function.NP
@@ -7,7 +8,8 @@ open import Relation.Binary
 open import Relation.Nullary.Decidable
 open import Relation.Binary.PropositionalEquality
 
-open import Explore.Type
+open import Explore.Core
+open import Explore.Properties
 import Explore.Explorable
 open import Explore.Universe
 
@@ -27,7 +29,7 @@ module Test {B : ★} (_≟_ : Decidable {A = B} _≡_)
   Aˡ : Lookup {₀} Aᵉ
   Aˡ = lookupU A
 
-  Check! = Aᵉ _×_ λ x → ✓ ⌊ f x ≟ g x ⌋
+  Check! = Aᵉ (Lift 𝟙) _×_ λ x → ✓ ⌊ f x ≟ g x ⌋
 
   check! : {p✓ : Check!} → f ≗ g
   check! {p✓} x = toWitness (Aˡ p✓ x)

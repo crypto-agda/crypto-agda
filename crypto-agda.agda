@@ -20,11 +20,11 @@ import FunUniverse.Core
 import FunUniverse.Cost
 import FunUniverse.Data
 import FunUniverse.Defaults.FirstPart
-import FunUniverse.ExnArrow
+--import FunUniverse.ExnArrow
 import FunUniverse.Fin
 import FunUniverse.Fin.Op
 import FunUniverse.Fin.Op.Abstract
-import FunUniverse.FlatFunsProd
+--import FunUniverse.FlatFunsProd
 import FunUniverse.Interface.Bits
 import FunUniverse.Interface.Two
 import FunUniverse.Interface.Vec
@@ -35,7 +35,7 @@ import FunUniverse.Nand.Function
 import FunUniverse.Nand.Properties
 import FunUniverse.README
 import FunUniverse.Rewiring.Linear
-import FunUniverse.State
+--import FunUniverse.State
 import FunUniverse.Syntax
 import FunUniverse.Types
 import Game.DDH
@@ -68,5 +68,5 @@ import bijection-syntax.Bijection
 import bijection-syntax.README
 import circuits.bytecode
 import circuits.circuit
-import elgamal
-import sha1
+--import elgamal
+--import sha1

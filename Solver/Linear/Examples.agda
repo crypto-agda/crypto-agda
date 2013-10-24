@@ -28,11 +28,13 @@ module #Vars {a} {A : Set a}
   vars (var x) = _∷_ x
   vars (t , u) = vars t ∘ vars u
 
+  {-
   lookupVar : ∀ {b} {B : Set b} (t : Syn A) → Vec B (#vars t)
                                  → A → B → B
   lookupVar (var x) bs a₁ = {!!}
-  lookupVar tt bs a₁ = {!!}
+  lookupVar tt [] a = id
   lookupVar (t , t₁) bs a₁ = {!lookupVar t bs!}
+  -}
 
 module Syntaxˢ' {a} {A : Set a} {funU} linRewiring where
   open Syntax (λ x y → ⌊ String≤._<?_ x y ⌋) String._≟_ {a} {A} {funU} linRewiring public
@@ -45,10 +47,12 @@ module Syntaxˢ' {a} {A : Set a} {funU} linRewiring where
     t = LHS _ e
     v = vars t
     module _ {Γ : Vec A (#vars t)} where
+    {-
       ℓ = lookupVar v Γ
       module _ {e-ok : EqOk? ℓ e} where
         rewireˢ : EvalEq ℓ e
         rewireˢ = rewire ℓ e {e-ok}
+        -}
 
 {-
 (Vec A n → B) → N-ary n A B
