@@ -4,7 +4,7 @@ open import Type
 open import Data.Bit
 open import Data.Maybe
 open import Data.Product
-open import Data.Unit
+open import Control.Strategy renaming (run to runStrategy; map to mapStrategy)
 
 open import Function
 
@@ -14,7 +14,7 @@ import Game.IND-CCA2-dagger
 import Game.IND-CCA2
 import Game.IND-CCA
 
-module Game.CCA2d-CCA2
+module Game.Transformation.CCA2d-CCA2
   (PubKey    : ★)
   (SecKey    : ★)
   (Message   : ★)
@@ -30,17 +30,14 @@ where
 
 module CCA2d = Game.IND-CCA2-dagger PubKey SecKey Message CipherText Rₑ Rₖ Rₐ KeyGen Enc Dec 
 module CCA2  = Game.IND-CCA2        PubKey SecKey Message CipherText Rₑ Rₖ Rₐ KeyGen Enc Dec
+open CCA2d using (DecRound)
 
-open import Game.CCA-Common Message CipherText
-
-open Eval Dec
-
-f : (Message × Message) × (CipherText → Strategy Bit)
-  → (Message × Message) × (CipherText → CipherText → Strategy Bit)
+f : (Message × Message) × (CipherText → DecRound Bit)
+  → (Message × Message) × (CipherText → CipherText → DecRound Bit)
 f (m , g) = m , λ c _ → g c
 
 A-transform : (adv : CCA2.Adv) → CCA2d.Adv
-A-transform adv rₐ pk = Follow f (adv rₐ pk)
+A-transform adv rₐ pk = mapStrategy f (adv rₐ pk)
   
 {-
 
@@ -48,17 +45,19 @@ If we are able to do the transformation, then we get the same advantage
 
 -}
 
+decRound = runStrategy ∘ Dec
+
 correct : ∀ {rₑ rₑ' rₖ rₐ } b adv
         → CCA2.⅁  b adv               (rₐ , rₖ , rₑ)
         ≡ CCA2d.⅁ b (A-transform adv) (rₐ , rₖ , rₑ , rₑ')
 correct {rₑ} {rₑ'} {rₖ} {rₐ} 0b m with KeyGen rₖ
-... | pk , sk = cong (λ x → eval sk (proj₂ x (Enc pk (proj₁ (proj₁ x)) rₑ)
+... | pk , sk = cong (λ x → decRound sk (proj₂ x (Enc pk (proj₁ (proj₁ x)) rₑ)
                                              (Enc pk (proj₂ (proj₁ x)) rₑ')))
-                     (sym (eval-Follow sk f (m rₐ pk)))
+                     (sym (run-map (Dec sk) f (m rₐ pk)))
 correct {rₑ}{rₑ'}{rₖ} {rₐ} 1b m with KeyGen rₖ
-... | pk , sk = cong (λ x → eval sk (proj₂ x (Enc pk (proj₂ (proj₁ x)) rₑ)
+... | pk , sk = cong (λ x → decRound sk (proj₂ x (Enc pk (proj₂ (proj₁ x)) rₑ)
                                              (Enc pk (proj₁ (proj₁ x)) rₑ')))
-                     (sym (eval-Follow sk f (m rₐ pk)))
+                     (sym (run-map (Dec sk) f (m rₐ pk)))
 {-
 
 Need to show that they are valid transformation aswell:

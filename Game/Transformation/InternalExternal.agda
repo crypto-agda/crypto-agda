@@ -7,7 +7,8 @@ open import Data.Product
 
 open import Function
 
-open import Explore.Type
+open import Explore.Core
+open import Explore.Properties
 open import Explore.Summable
 open import Explore.Sum
 open import Explore.Product
@@ -22,7 +23,7 @@ module GameFlipping (R : Set)(sum : Sum R)(sum-ind : SumInd sum)(⅁ : 𝟚 → 
   Y = ⅁ 1₂
   R' = 𝟚 × R
   sum' : Sum R'
-  sum' = explore𝟚 _+_ ×ˢ sum
+  sum' = 𝟚ˢ ×ˢ sum
 
   open FromSum    sum'    renaming (count to #'_)
   open FromSumInd sum-ind renaming (count to #_)
@@ -37,7 +38,7 @@ module GameFlipping (R : Set)(sum : Sum R)(sum-ind : SumInd sum)(⅁ : 𝟚 → 
 
   -- TODO use the library
   lemma : ∀ X → sum (const 1) ≡ #(not ∘ X) + # X
-  lemma X = sum-ind P (λ {a}{b} → part1 {a}{b}) part2
+  lemma X = sum-ind P refl (λ {a}{b} → part1 {a}{b}) part2
     where
       count = FromSum.count
 

@@ -6,6 +6,7 @@ open import Type using (★)
 open import Data.Product
 open import Data.Two
 open import Relation.Binary.PropositionalEquality.NP
+open import Control.Strategy
 
 import Game.IND-CCA2
 
@@ -45,7 +46,7 @@ module IND-CCA2 = Game.IND-CCA2 PubKey SecKey Message CipherText Rₑ Rₖ Rₑ 
 open IND-CCA2
 
 adv : IND-CCA2.Adv
-adv rₐ pk = Pick ((m₀ , m₁) , λ c → Ask-Oracle (Reenc pk c rₐ) λ m′ → Pick (m′ == m₁))
+adv rₐ pk = done ((m₀ , m₁) , λ c → ask (Reenc pk c rₐ) λ m′ → done (m′ == m₁))
 
 adv-always-win : ∀ b r → IND-CCA2.⅁ b adv r ≡ b
 adv-always-win b (rₐ , rₖ , rₑ) rewrite Reenc-correct rₖ (m b) rₑ rₐ = m-diff b

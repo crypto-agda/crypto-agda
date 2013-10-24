@@ -10,11 +10,12 @@ open import Data.Unit
 open import Data.Nat.NP
 --open import Rat
 
-open import Explore.Type
+open import Explore.Core
 open import Explore.Explorable
 open import Explore.Product
 open Operators
 open import Relation.Binary.PropositionalEquality
+open import Control.Strategy renaming (run to runStrategy)
 
 module Game.IND-CCA2
   (PubKey    : ★)
@@ -29,12 +30,22 @@ module Game.IND-CCA2
   (Dec    : SecKey → CipherText → Message)
 
 where
-open import Game.CCA-Common Message CipherText public
+
+-- This describes a "round" of decryption queries
+DecRound : ★ → ★
+DecRound = Strategy CipherText Message
+
+-- This describes the CPA part of CCA
+CPAAdv : ★ → ★
+CPAAdv Next = (Message × Message) × (CipherText → Next)
                          
 Adv : ★
-Adv = Rₐ → PubKey → Strategy ((Message × Message) × (CipherText → Strategy Bit))
+Adv = Rₐ → PubKey → DecRound           -- first round of decryption queries
+                     (CPAAdv           -- choosen plaintext attack
+                       (DecRound Bit)) -- second round of decryption queries
 
 {-
+TODO
 Valid-Adv : Adv → Set
 Valid-Adv adv = ∀ {rₐ rₓ pk c} → Valid (λ x → x ≢ c) {!!}
 -}
@@ -45,11 +56,10 @@ R = Rₐ × Rₖ × Rₑ
 Game : ★
 Game = Adv → R → Bit
 
-
 ⅁ : Bit → Game
 ⅁ b m (rₐ , rₖ , rₑ) with KeyGen rₖ
 ... | pk , sk = b′ where
-  open Eval Dec sk
+  eval = runStrategy (Dec sk)
   
   ev = eval (m rₐ pk)
   mb = proj (proj₁ ev) b

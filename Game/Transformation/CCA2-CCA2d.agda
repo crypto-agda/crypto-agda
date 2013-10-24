@@ -7,13 +7,14 @@ open import Data.Maybe
 open import Data.Nat.NP hiding (_==_)
 open import Data.Nat.Properties
 open import Data.Product
--- open import Data.Unit
+open import Control.Strategy renaming (run to runStrategy; map to mapStrategy)
 
 open import Function
 
 open import Relation.Binary.PropositionalEquality
 
-open import Explore.Type
+open import Explore.Core
+open import Explore.Properties
 open import Explore.Explorable renaming (module Explorable₀ to Exp
                                         ; module FromExplore₀ to FE)
 open import Explore.Product
@@ -23,7 +24,7 @@ import Game.IND-CCA2-dagger
 import Game.IND-CCA2
 import Game.IND-CCA
 
-module Game.CCA2-CCA2d
+module Game.Transformation.CCA2-CCA2d
   (PubKey    : ★)
   (SecKey    : ★)
   (Message   : ★)
@@ -41,18 +42,16 @@ module CCA2d = Game.IND-CCA2-dagger PubKey SecKey Message CipherText
     Rₑ Rₖ Rₐ KeyGen Enc Dec 
 module CCA2 X = Game.IND-CCA2  PubKey SecKey Message CipherText
     Rₑ Rₖ (X × Rₐ) KeyGen Enc Dec
-open import Game.CCA-Common Message CipherText
-open Eval Dec
 
 X = Bit × Rₑ
 
 f : PubKey → X
-  → (Message × Message) × (CipherText → CipherText → Strategy Bit)
-  → (Message × Message) × (CipherText → Strategy Bit)
+  → (Message × Message) × (CipherText → CipherText → CCA2d.DecRound Bit)
+  → (Message × Message) × (CipherText → CCA2d.DecRound Bit)
 f pk (t  , rₑ) m = (proj₁ m , λ c → proj₂ m c (Enc pk (proj (proj₁ m) t) rₑ))
 
 A-transform : (adv : CCA2d.Adv) → CCA2.Adv X
-A-transform adv (x , rₐ) pk = Follow (f pk x) (adv rₐ pk)
+A-transform adv (x , rₐ) pk = mapStrategy (f pk x) (adv rₐ pk)
 
 
 {-
@@ -84,10 +83,11 @@ correct : ∀ {rₑ rₑ' rₖ rₐ} b adv
         → CCA2d.⅁  b adv               (rₐ , rₖ , rₑ , rₑ')
         ≡ CCA2.⅁ X b (A-transform adv) (((not b , rₑ') , rₐ) , rₖ , rₑ)
 correct {rₑ}{rₑ' = ra}{rₖ = r}{rₐ} 1b adv with KeyGen r
-... | pk , sk =  (cong (λ x → eval sk (proj₂ x (Enc pk (proj₂ (proj₁ x)) rₑ)))
-                      (sym (eval-Follow sk (f pk (0b , ra)) (adv rₐ pk))))
+... | pk , sk = cong (λ x → runStrategy (Dec sk) (proj₂ x (Enc pk (proj₂ (proj₁ x)) rₑ)))
+                     (sym (run-map (Dec sk) (f pk (0b , ra)) (adv rₐ pk)))
 correct {rₑ}{rₑ' = ra}{rₖ = r}{rₐ} 0b adv with KeyGen r
-... | pk , sk =  cong (λ x → eval sk (proj₂ x (Enc pk (proj₁ (proj₁ x)) rₑ))) (sym (eval-Follow sk (f pk (1b , ra)) (adv rₐ pk)))
+... | pk , sk = cong (λ x → runStrategy (Dec sk) (proj₂ x (Enc pk (proj₁ (proj₁ x)) rₑ)))
+                     (sym (run-map (Dec sk) (f pk (1b , ra)) (adv rₐ pk)))
 
 
 module Theorem
@@ -100,7 +100,7 @@ module Theorem
   where
 
   open import Explore.Two
-  open import Rat
+  --open import Rat
   
   μₓ : Explore₀ X
   μₓ = 𝟚ᵉ ×ᵉ μₑ
@@ -126,8 +126,8 @@ module Theorem
   module μR' = Exp μR'ⁱ
   module μR2 = FE μR2
   
-  Adv : ∀ {Y : Set} → Bit → (Bit → Y → R2 → Bit) → Y → ℕ 
-  Adv b F adv = μR2.count (F b adv)
+  # : ∀ {Y : Set} → Bit → (Bit → Y → R2 → Bit) → Y → ℕ
+  # b F adv = μR2.count (F b adv)
 
   lift-CCA2 : Bit → CCA2.Adv X → R2 → Bit
   lift-CCA2 b adv (rt , re , _ , rea , rk , ra) = 
@@ -138,7 +138,7 @@ module Theorem
   dbl-thm : ∀ {n} → n + n ≡ 2 * n
   dbl-thm {n} rewrite ℕ°.+-comm n 0 = refl
   
-  lemma : ∀ b A+ → Adv b lift-CCA2d A+ ≤ 2 * Adv b lift-CCA2 (A-transform A+)
+  lemma : ∀ b A+ → # b lift-CCA2d A+ ≤ 2 * # b lift-CCA2 (A-transform A+)
   lemma b A+ = μR2.sum (λ { (_ , re , re' , _ , rk , ra)
                           → ⟦ CCA2d.⅁ b A+ ((ra , rk , re , re')) ⟧  })
              ≡⟨ dbl-thm {μR'.sum _} ⟩ 2 *
@@ -155,7 +155,7 @@ module Theorem
 
       lem1 : ∀ (f : Rₑ → ℕ) → FE.sum μₑ (λ x → FE.sum μₑ (λ y → f x))
                  ≡ FE.sum μₑ (λ x → FE.sum μₑ (λ y → f y))
-      lem1 f = Exp.sum-swap' μₑⁱ {_}{FE.sum μₑ} (Exp.sum-hom μₑⁱ) (λ x y → f x)
+      lem1 f = Exp.sum-swap' μₑⁱ {_} {FE.sum μₑ} (Exp.sum-zero μₑⁱ) (Exp.sum-hom μₑⁱ) (λ x y → f x)
       
       lem4 : ∀ b (f : Bit → R' → ℕ) → μR'.sum (f b) + μR'.sum (f (not b)) ≡ μR2.sum (λ { (t , r) → f t r})
       lem4 1b f = ℕ°.+-comm (μR'.sum (f 1b)) (μR'.sum (f 0b))

@@ -5,12 +5,13 @@ open import Data.Maybe
 open import Data.Product
 
 open import Data.Nat.NP
-open import Rat
+--open import Rat
 
-open import Explore.Type
+open import Explore.Core
 open import Explore.Explorable
 open import Explore.Product
 open Operators
+open import Control.Strategy renaming (run to runStrategy)
 
 open import Relation.Binary.PropositionalEquality
 
@@ -27,11 +28,19 @@ module Game.IND-CCA2-dagger
   (Dec    : SecKey → CipherText → Message)
 
 where
-open import Game.CCA-Common Message CipherText 
+
+-- This describes a "round" of decryption queries
+DecRound : ★ → ★
+DecRound = Strategy CipherText Message
+
+-- This describes the CPA(dagger) part of CCA
+CPAAdv : ★ → ★
+CPAAdv Next = (Message × Message) × (CipherText → CipherText → Next)
                          
 Adv : ★
-Adv = Rₐ → PubKey → Strategy ((Message × Message)
-                             × (CipherText → CipherText → Strategy Bit))
+Adv = Rₐ → PubKey → DecRound           -- first round of decryption queries
+                     (CPAAdv           -- choosen plaintext attack
+                       (DecRound Bit)) -- second round of decryption queries
 
 {-
 Valid-Adv : Adv → Set
@@ -47,7 +56,7 @@ Game = Adv → R → Bit
 ⅁ : Bit → Game
 ⅁ b m (rₐ , rₖ , rₑ₀ , rₑ₁) with KeyGen rₖ
 ... | pk , sk = b′ where
-  open Eval Dec sk
+  eval = runStrategy (Dec sk)
   
   ev = eval (m rₐ pk)
   mb = proj (proj₁ ev)
@@ -71,5 +80,7 @@ module Advantage
   run : Bit → Adv → ℕ
   run b adv = μR.count (⅁ b adv)
     
+  {-
   Advantage : Adv → ℚ
   Advantage adv = dist (run 0b adv) (run 1b adv) / μR.Card
+  -}

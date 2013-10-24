@@ -4,7 +4,7 @@ open import Type
 open import Data.Bit
 open import Data.Maybe
 open import Data.Product
-import Game.CCA-Common as Com
+open import Control.Strategy renaming (run to runStrategy)
 
   
 module Game.IND-CCA
@@ -21,10 +21,16 @@ module Game.IND-CCA
 
 where
 
-open Com Message CipherText
+-- This describes a "round" of decryption queries
+DecRound : ★ → ★
+DecRound = Strategy CipherText Message
+
+-- This describes the CPA part of CCA
+CPAAdv : ★
+CPAAdv = (Message × Message) × (CipherText → Bit)
 
 Adv : ★
-Adv = Rₐ → PubKey → Strategy ((Message × Message) × (CipherText → Bit))
+Adv = Rₐ → PubKey → DecRound CPAAdv
 
 R : ★
 R = Rₐ × Rₖ × Rₑ
@@ -35,13 +41,9 @@ Game = Adv → R → Bit
 ⅁ : Bit → Game
 ⅁ b adv (rₐ , rₖ , rₑ) with KeyGen rₖ
 ... | pk , sk = b′ where
-  open Eval Dec sk
-  ev = eval (adv rₐ pk)
+  ev = runStrategy (Dec sk) (adv rₐ pk)
   mb = proj (proj₁ ev) b
   d = proj₂ ev
 
   c  = Enc pk mb rₑ
   b′ = d c
-
-
-
