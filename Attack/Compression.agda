@@ -78,11 +78,11 @@ module M
   module IND-CPA = Game.IND-CPA PubKey SecKey Message CipherText
                                 Rₑ Rₖ Rₐ Rₓ KeyGen Enc₁
 
-  adv : IND-CPA.Adv
+  adv : IND-CPA.Adversary
   adv = (λ { _  _    → [0: m₀ 1: m₁ ] })
       , (λ { rₑ pk c → c ==ˢ Enc₁ pk m₁ rₑ })
 
   -- The adversary adv is always winning.
-  adv-win : ∀ {r} b → IND-CPA.⅁ b adv r ≡ b
+  adv-win : ∀ {r} b → IND-CPA.EXP b adv r ≡ b
   adv-win 0₂ = ≢1→≡0 (different-compression ∘ Enc₀LeakSize ∘ ==ˢ→≡ˢ)
   adv-win 1₂ = ≡ˢ→==ˢ Enc₀SizeRndInd

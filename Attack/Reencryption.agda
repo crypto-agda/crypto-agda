@@ -48,5 +48,5 @@ open IND-CCA2
 adv : IND-CCA2.Adv
 adv rₐ pk = done ((m₀ , m₁) , λ c → ask (Reenc pk c rₐ) λ m′ → done (m′ == m₁))
 
-adv-always-win : ∀ b r → IND-CCA2.⅁ b adv r ≡ b
+adv-always-win : ∀ b r → IND-CCA2.EXP b adv r ≡ b
 adv-always-win b (rₐ , rₖ , rₑ) rewrite Reenc-correct rₖ (m b) rₑ rₐ = m-diff b

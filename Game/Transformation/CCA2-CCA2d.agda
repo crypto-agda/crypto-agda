@@ -81,7 +81,7 @@ Informal proof:
 
 correct : ∀ {rₑ rₑ' rₖ rₐ} b adv
         → CCA2d.⅁  b adv               (rₐ , rₖ , rₑ , rₑ')
-        ≡ CCA2.⅁ X b (A-transform adv) (((not b , rₑ') , rₐ) , rₖ , rₑ)
+        ≡ CCA2.EXP X b (A-transform adv) (((not b , rₑ') , rₐ) , rₖ , rₑ)
 correct {rₑ}{rₑ' = ra}{rₖ = r}{rₐ} 1b adv with KeyGen r
 ... | pk , sk = cong (λ x → runStrategy (Dec sk) (proj₂ x (Enc pk (proj₂ (proj₁ x)) rₑ)))
                      (sym (run-map (Dec sk) (f pk (0b , ra)) (adv rₐ pk)))
@@ -131,7 +131,7 @@ module Theorem
 
   lift-CCA2 : Bit → CCA2.Adv X → R2 → Bit
   lift-CCA2 b adv (rt , re , _ , rea , rk , ra) = 
-     CCA2.⅁ X b adv (((rt , rea) , ra) , (rk , re)) == b
+     CCA2.EXP X b adv (((rt , rea) , ra) , (rk , re)) == b
   lift-CCA2d : Bit → CCA2d.Adv → R2 → Bit
   lift-CCA2d b adv (_ , re , re' , _ , rk , ra) = CCA2d.⅁ b adv (ra , rk , re , re') == b
   
@@ -146,7 +146,7 @@ module Theorem
                           → ⟦ CCA2d.⅁ b A+ ((ra , rk , re , re')) ⟧  }))
              ≤⟨ s≤s (s≤s (z≤n {0})) *-mono lem ⟩ 2 *
                 μR2.sum (λ { (t , re , _ , rea , rk , ra)
-                           → ⟦ CCA2.⅁ X b (A-transform A+) (((t , rea) , ra) , rk , re) ⟧})
+                           → ⟦ CCA2.EXP X b (A-transform A+) (((t , rea) , ra) , rk , re) ⟧})
                 ∎
     where
       open ≤-Reasoning
@@ -164,7 +164,7 @@ module Theorem
       lem : μR'.sum (λ { (re , re' , _ , rk , ra)
                        → ⟦ CCA2d.⅁ b A+ ((ra , rk , re , re')) ⟧  })
           ≤ μR2.sum (λ { (t , re , _ , rea , rk , ra)
-                       → ⟦ CCA2.⅁ X b (A-transform A+) (((t , rea) , ra) , rk , re) ⟧})
+                       → ⟦ CCA2.EXP X b (A-transform A+) (((t , rea) , ra) , rk , re) ⟧})
       lem = (μR'.sum (λ { (re , re' , _ , rk , ra)
                           → ⟦ CCA2d.⅁ b A+ ((ra , rk , re , re')) ⟧  }))
              ≡⟨ Exp.sum-ext μₑⁱ (λ re →  lem1 (λ re' → _)) ⟩ 
@@ -172,16 +172,16 @@ module Theorem
                           → ⟦ CCA2d.⅁ b A+ ((ra , rk , re , re')) ⟧  }))
              ≡⟨ μR'.sum-ext (λ _ → cong ⟦_⟧ (correct b A+) )⟩
                 μR'.sum (λ { (re , _ , rea , rk , ra)
-                           → ⟦ CCA2.⅁ X b (A-transform A+) (((not b , rea) , ra) , rk , re) ⟧})
+                           → ⟦ CCA2.EXP X b (A-transform A+) (((not b , rea) , ra) , rk , re) ⟧})
              ≤⟨ n≤m+n (μR'.sum (λ { (re , _ , rea , rk , ra)
-                     → ⟦ CCA2.⅁ X b (A-transform A+) (((b , rea) , ra) , rk , re) ⟧})) _ ⟩ (
+                     → ⟦ CCA2.EXP X b (A-transform A+) (((b , rea) , ra) , rk , re) ⟧})) _ ⟩ (
                 μR'.sum (λ { (re , _ , rea , rk , ra)
-                           → ⟦ CCA2.⅁ X b (A-transform A+) (((b , rea) , ra) , rk , re) ⟧})
+                           → ⟦ CCA2.EXP X b (A-transform A+) (((b , rea) , ra) , rk , re) ⟧})
              +  μR'.sum (λ { (re , _ , rea , rk , ra)
-                           → ⟦ CCA2.⅁ X b (A-transform A+) (((not b , rea) , ra) , rk , re) ⟧}))
-             ≡⟨ lem4 b (λ { t (re , _ , rea , rk , ra) → ⟦ CCA2.⅁ X b (A-transform A+) (((t , rea) , ra) , rk , re) ⟧ }) ⟩ 
+                           → ⟦ CCA2.EXP X b (A-transform A+) (((not b , rea) , ra) , rk , re) ⟧}))
+             ≡⟨ lem4 b (λ { t (re , _ , rea , rk , ra) → ⟦ CCA2.EXP X b (A-transform A+) (((t , rea) , ra) , rk , re) ⟧ }) ⟩
                 μR2.sum (λ { (t , re , _ , rea , rk , ra)
-                           → ⟦ CCA2.⅁ X b (A-transform A+) (((t , rea) , ra) , rk , re) ⟧})
+                           → ⟦ CCA2.EXP X b (A-transform A+) (((t , rea) , ra) , rk , re) ⟧})
                 ∎
 
 {-

@@ -48,7 +48,7 @@ If we are able to do the transformation, then we get the same advantage
 decRound = runStrategy ∘ Dec
 
 correct : ∀ {rₑ rₑ' rₖ rₐ } b adv
-        → CCA2.⅁  b adv               (rₐ , rₖ , rₑ)
+        → CCA2.EXP b adv               (rₐ , rₖ , rₑ)
         ≡ CCA2d.⅁ b (A-transform adv) (rₐ , rₖ , rₑ , rₑ')
 correct {rₑ} {rₑ'} {rₖ} {rₐ} 0b m with KeyGen rₖ
 ... | pk , sk = cong (λ x → decRound sk (proj₂ x (Enc pk (proj₁ (proj₁ x)) rₑ)

@@ -82,9 +82,11 @@ module Cheating
     (m⁻¹-m : ∀ x → m⁻¹ (m x) ≡ x)
     where
 
+    {-
     cheatingA-always-wins : ∀ r → game cheatingA r ≡ 1b
     cheatingA-always-wins (b , rₐ , rₖ , rₑ) =
       ap (_==_ b ∘ m⁻¹) (DecEnc rₖ rₑ (proj (tabulate₂ m) b) ∙ proj-tabulate₂ m b) ∙ ==-reflexive (!(✓→≡(m⁻¹-m b)))
+      -}
   
 module Advantage
   (μₑ : Explore₀ Rₑ)

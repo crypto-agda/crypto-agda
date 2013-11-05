@@ -29,5 +29,5 @@ open IND-CCA2
 adv : IND-CCA2.Adv
 adv rₐ pk = done ((0₂ , 1₂) , λ c → ask (Reenc pk c rₐ) λ m′ → done m′)
 
-adv-always-win : ∀ b r → IND-CCA2.⅁ b adv r ≡ b
+adv-always-win : ∀ b r → IND-CCA2.EXP b adv r ≡ b
 adv-always-win b (rₐ , rₖ , rₑ) rewrite η-[0:1:] id b = Reenc-correct rₖ b rₑ rₐ

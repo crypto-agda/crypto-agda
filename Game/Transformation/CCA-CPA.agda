@@ -29,14 +29,14 @@ where
 module CCA = Game.IND-CCA PubKey SecKey Message CipherText Rₑ Rₖ Rₐ    KeyGen Enc Dec 
 module CPA = Game.IND-CPA PubKey SecKey Message CipherText Rₑ Rₖ Rₐ 𝟙  KeyGen Enc
 
-A-transform : CPA.Adv → CCA.Adv
+A-transform : CPA.Adversary → CCA.Adv
 A-transform (m , d) = m' where
   m' : _ → _ → _
   m' rₐ pk = done ((mb 0b , mb 1b) , d rₐ pk) -- (mb 0b) (mb 1b) rₐ
     where
       mb = m rₐ pk
       
-correct : ∀ {rₑ rₖ rₐ} b adv → CPA.⅁ b adv               (rₐ , rₖ , rₑ , 0₁)
+correct : ∀ {rₑ rₖ rₐ} b adv → CPA.EXP b adv               (rₐ , rₖ , rₑ , 0₁)
                              ≡ CCA.⅁ b (A-transform adv) (rₐ , rₖ , rₑ)
 correct 1b adv = refl
 correct 0b adv = refl

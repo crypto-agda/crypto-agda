@@ -8,6 +8,7 @@ open import Game.IND-CPA
 open import Game.IND-CCA
 open import Game.IND-CCA2
 open import Game.IND-CCA2-dagger
+open import Game.IND-CPA-dagger
 open import Game.EntropySmoothing
 open import Game.EntropySmoothing.WithKey
 
@@ -16,6 +17,8 @@ open import Game.Transformation.CCA-CPA
 open import Game.Transformation.CCA2-CCA
 open import Game.Transformation.CCA2-CCA2d
 open import Game.Transformation.CCA2d-CCA2
+open import Game.Transformation.CPA-CPAd
+open import Game.Transformation.CPAd-CPA
 
 open import Attack.Compression
 open import Attack.Reencryption

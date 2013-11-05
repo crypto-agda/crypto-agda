@@ -54,7 +54,7 @@ valid-transform adv = tt
 
 
 correct : ∀ {rₐ rₑ rₖ} b adv → CCA.⅁  b adv               (rₐ , rₖ , rₑ)
-                             ≡ CCA2.⅁ b (A-transform adv) (rₐ , rₖ , rₑ)
+                             ≡ CCA2.EXP b (A-transform adv) (rₐ , rₖ , rₑ)
 correct {rₐ}{rₑ}{rₖ} b adv with KeyGen rₖ
 ... | pk , sk 
  =  cong (λ x → runStrategy (Dec sk) (proj₂ x (Enc pk (proj (proj₁ x) b) rₑ)))
