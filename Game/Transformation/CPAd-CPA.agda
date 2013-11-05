@@ -40,7 +40,7 @@ f (m , g) = m , λ c _ → g c
 -}
 
 
-A-transform : (adv : CPA.Adv) → CPAd.Adv
+A-transform : (adv : CPA.Adversary) → CPAd.Adversary
 A-transform (adv₁ , adv₂) = adv₁ , adv₂'
   where
     adv₂' : ∀ _ _ _ _ → _
@@ -55,8 +55,8 @@ If we are able to do the transformation, then we get the same advantage
 
 
 correct : ∀ {rₑ rₑ' rₖ rₐ } b adv
-        → CPA.⅁  b adv               (rₐ , rₖ , rₑ , _)
-        ≡ CPAd.⅁ b (A-transform adv) (rₐ , rₖ , rₑ , rₑ' , _)
+        → CPA.EXP  b adv               (rₐ , rₖ , rₑ , _)
+        ≡ CPAd.EXP b (not b) (A-transform adv) (rₐ , rₖ , rₑ , rₑ' , _)
 correct b adv = refl
 
 {-

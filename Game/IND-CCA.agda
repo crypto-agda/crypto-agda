@@ -41,9 +41,9 @@ Game = Adv → R → Bit
 ⅁ : Bit → Game
 ⅁ b adv (rₐ , rₖ , rₑ) with KeyGen rₖ
 ... | pk , sk = b′ where
-  ev = runStrategy (Dec sk) (adv rₐ pk)
-  mb = proj (proj₁ ev) b
-  d = proj₂ ev
+  advCPA = runStrategy (Dec sk) (adv rₐ pk)
+  mb = proj (proj₁ advCPA) b
+  d = proj₂ advCPA
 
   c  = Enc pk mb rₑ
   b′ = d c
