@@ -27,7 +27,7 @@ open import FunUniverse.Defaults.FirstPart
 open import FunUniverse.Interface.Bits
 open import FunUniverse.Interface.Two
 open import FunUniverse.Interface.Vec
-open import FunUniverse.Loop
+--open import FunUniverse.Loop
 
 {-
 broken
