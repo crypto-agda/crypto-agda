@@ -4,11 +4,13 @@
 open import Type
 open import Function
 open import Data.Bit
+open import Data.Two.Equality
 open import Data.Maybe
 open import Data.Product
 open import Data.Unit
 
 open import Data.Nat.NP hiding (_==_)
+open import Data.Nat.Distance
 --open import Rat
 
 open import Explore.Core
@@ -37,12 +39,13 @@ DecRound : ★ → ★
 DecRound = Strategy CipherText Message
 
 -- This describes the CPA part of CCA
-CPAAdv : ★ → ★
-CPAAdv Next = (Message × Message) × (CipherText → Next)
+CPAAdversary : ★ → ★
+CPAAdversary Next = (Message × Message) × (CipherText → Next)
                          
-Adv : ★
-Adv = Rₐ → PubKey → DecRound           -- first round of decryption queries
-                     (CPAAdv           -- choosen plaintext attack
+Adversary : ★
+Adversary = Rₐ → PubKey →
+                   DecRound           -- first round of decryption queries
+                     (CPAAdversary     -- choosen plaintext attack
                        (DecRound Bit)) -- second round of decryption queries
 
 {-
@@ -54,7 +57,7 @@ Valid-Adv adv = ∀ {rₐ rₓ pk c} → Valid (λ x → x ≢ c) {!!}
 R : ★
 R = Rₐ × Rₖ × Rₑ
 
-EXP : Bit → Adv → R → Bit
+EXP : Bit → Adversary → R → Bit
 EXP b m (rₐ , rₖ , rₑ) with KeyGen rₖ
 ... | pk , sk = b′ where
   eval = runStrategy (Dec sk)
@@ -66,14 +69,14 @@ EXP b m (rₐ , rₖ , rₑ) with KeyGen rₖ
   c  = Enc pk mb rₑ
   b′ = eval (d c)
 
-game : Adv → (Bit × R) → Bit
+game : Adversary → (Bit × R) → Bit
 game A (b , r) = b == EXP b A r
 
 module Cheating
    (m : Bit → Message)
    (m⁻¹ : Message → Bit)
    where
-  cheatingA : Adv
+  cheatingA : Adversary
   cheatingA rₐ pk = done (tabulate₂ m , λ c → ask c (done ∘ m⁻¹))
 
   module _
@@ -82,11 +85,9 @@ module Cheating
     (m⁻¹-m : ∀ x → m⁻¹ (m x) ≡ x)
     where
 
-    {-
     cheatingA-always-wins : ∀ r → game cheatingA r ≡ 1b
     cheatingA-always-wins (b , rₐ , rₖ , rₑ) =
-      ap (_==_ b ∘ m⁻¹) (DecEnc rₖ rₑ (proj (tabulate₂ m) b) ∙ proj-tabulate₂ m b) ∙ ==-reflexive (!(✓→≡(m⁻¹-m b)))
-      -}
+      ap (_==_ b ∘ m⁻¹) (DecEnc rₖ rₑ (proj (tabulate₂ m) b) ∙ proj-tabulate₂ m b) ∙ ==-≡1₂.reflexive (!(m⁻¹-m b))
   
 module Advantage
   (μₑ : Explore₀ Rₑ)
@@ -98,10 +99,10 @@ module Advantage
   
   module μR = FromExplore₀ μR
   
-  run : Bit → Adv → ℕ
+  run : Bit → Adversary → ℕ
   run b adv = μR.count (EXP b adv)
   
-  Advantage : Adv → ℕ
+  Advantage : Adversary → ℕ
   Advantage adv = dist (run 0b adv) (run 1b adv)
     
   --Advantageℚ : Adv → ℚ

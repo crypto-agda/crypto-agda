@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K #-}
+{-# OPTIONS --without-K --copatterns #-}
 open import Type
 open import Data.Two
 open import Data.Maybe
@@ -34,8 +34,8 @@ Rₐ = Rₑ × Rₐ†
 module CPA  = Game.IND-CPA        PubKey SecKey Message CipherText Rₑ Rₖ Rₐ  𝟙 KeyGen Enc
 module CPA† = Game.IND-CPA-dagger PubKey SecKey Message CipherText Rₑ Rₖ Rₐ† 𝟙 KeyGen Enc
 
-open CPA  using (EXP; R; Adversary)
-open CPA† using () renaming (EXP to EXP†; R to R†; Adversary to Adversary†)
+open CPA  using (EXP; R; Adversary; module Adversary)
+open CPA† using () renaming (EXP to EXP†; R to R†; Adversary to Adversary†; module Adversary to Adversary†)
 
 R→R† : R → R†
 R→R† ((rₑ′ , rₐ†) , rₖ , rₑ , _) = rₐ† , rₖ , rₑ , rₑ′ , _
@@ -56,21 +56,29 @@ R†→R (rₐ† , rₖ , rₑ , rₑ′ , _) = (rₑ′ , rₐ†) , rₖ , r�
 
 module Transformations (A† : Adversary†) where
 
-  m†  = proj₁ A†
-  b′† = proj₂ A†
+  --open Adversary
+  module A† = Adversary† A†
+  m†  = A†.m
+  b′† = A†.b′
 
   -- For these three transformations we just forward the messages
   m : Rₐ → PubKey → 𝟚 → Message
   m (_ , rₐ†) = m† rₐ†
 
+{-
   fix[t=_] : (t : 𝟚) → Adversary
-  fix[t= t ] = m , b′
+  m  fix[t= t ] = m′
+  b′ fix[t= t ] (rₑ , rₐ†) pk cb = b′† rₐ† pk cb (Enc pk (m† rₐ† pk t) rₑ)
+-}
+
+  fix[t=_] : (t : 𝟚) → Adversary
+  fix[t= t ] = record { m = m ; b′ = b′ }
    where
     b′ : ∀ _ _ _ → _
     b′ (rₑ , rₐ†) pk cb = b′† rₐ† pk cb (Enc pk (m† rₐ† pk t) rₑ)
 
   fix[b=_] : (b : 𝟚) → Adversary
-  fix[b= b ] = m , b′
+  fix[b= b ] = record { m = m ; b′ = b′ }
    where
     b′ : ∀ _ _ _ → _
     b′ (rₑ , rₐ†) pk ct = b′† rₐ† pk (Enc pk (m† rₐ† pk b) rₑ) ct

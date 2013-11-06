@@ -50,7 +50,7 @@ f : PubKey → X
   → (Message × Message) × (CipherText → CCA2d.DecRound Bit)
 f pk (t  , rₑ) m = (proj₁ m , λ c → proj₂ m c (Enc pk (proj (proj₁ m) t) rₑ))
 
-A-transform : (adv : CCA2d.Adv) → CCA2.Adv X
+A-transform : (adv : CCA2d.Adv) → CCA2.Adversary X
 A-transform adv (x , rₐ) pk = mapStrategy (f pk x) (adv rₐ pk)
 
 
@@ -129,7 +129,7 @@ module Theorem
   # : ∀ {Y : Set} → Bit → (Bit → Y → R2 → Bit) → Y → ℕ
   # b F adv = μR2.count (F b adv)
 
-  lift-CCA2 : Bit → CCA2.Adv X → R2 → Bit
+  lift-CCA2 : Bit → CCA2.Adversary X → R2 → Bit
   lift-CCA2 b adv (rt , re , _ , rea , rk , ra) = 
      CCA2.EXP X b adv (((rt , rea) , ra) , (rk , re)) == b
   lift-CCA2d : Bit → CCA2d.Adv → R2 → Bit

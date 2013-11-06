@@ -45,8 +45,8 @@ m-diff 0₂ = ¬m₀==m₁
 module IND-CCA2 = Game.IND-CCA2 PubKey SecKey Message CipherText Rₑ Rₖ Rₑ KeyGen Enc Dec
 open IND-CCA2
 
-adv : IND-CCA2.Adv
-adv rₐ pk = done ((m₀ , m₁) , λ c → ask (Reenc pk c rₐ) λ m′ → done (m′ == m₁))
+adversary : IND-CCA2.Adversary
+adversary rₐ pk = done ((m₀ , m₁) , λ c → ask (Reenc pk c rₐ) λ m′ → done (m′ == m₁))
 
-adv-always-win : ∀ b r → IND-CCA2.EXP b adv r ≡ b
-adv-always-win b (rₐ , rₖ , rₑ) rewrite Reenc-correct rₖ (m b) rₑ rₐ = m-diff b
+adversary-always-win : ∀ b r → IND-CCA2.EXP b adversary r ≡ b
+adversary-always-win b (rₐ , rₖ , rₑ) rewrite Reenc-correct rₖ (m b) rₑ rₐ = m-diff b

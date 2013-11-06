@@ -17,24 +17,21 @@ module Game.IND-CPA
 
 where
 
--- In the step 0, the adversary receives some randomness,
--- the public key, the message we want (m₀, m₁). The adversary
--- returns the message to encrypt. Remember that the adversary
--- is a pure and deterministic function, therefore 𝟚 → Message
--- is the same as Message × Message.
-AdvStep₀ : ★
-AdvStep₀ = Rₐ → PubKey → 𝟚 → Message
-
--- In the step 1 the adversary receives the same randomness
--- supply and public key as in step 0 and receives the ciphertext
--- computed by the challenger. The adversary has to guess which
--- message (m₀, m₁) has been encrypted.
-AdvStep₁ : ★
-AdvStep₁ = Rₐ → PubKey → CipherText → 𝟚
-
 -- IND-CPA adversary in two parts
-Adversary : ★
-Adversary = AdvStep₀ × AdvStep₁
+record Adversary : ★ where
+  field
+    -- In the step 'm', the adversary receives some randomness,
+    -- the public key, the message we want (m₀ or m₁). The adversary
+    -- returns the message to encrypt. Remember that the adversary
+    -- is a pure and deterministic function, therefore 𝟚 → Message
+    -- is the same as Message × Message.
+    m  : Rₐ → PubKey → 𝟚 → Message
+
+    -- In the step 'b′' the adversary receives the same randomness
+    -- supply and public key as in step 'm' and receives the ciphertext
+    -- computed by the challenger. The adversary has to guess which
+    -- message (m₀, m₁) has been encrypted.
+    b′ : Rₐ → PubKey → CipherText → 𝟚
 
 -- IND-CPA randomness supply
 R : ★
@@ -54,12 +51,13 @@ Experiment = Adversary → R → 𝟚
 -- (b′) send randomness, public-key and ciphertext
 --      receive the guess from the adversary
 EXP : 𝟚 → Experiment
-EXP b (m , b′) (rₐ , rₖ , rₑ , _rₓ) = res
+EXP b A (rₐ , rₖ , rₑ , _rₓ) = res
   where
+  module A = Adversary A
   pk  = proj₁ (KeyGen rₖ)
-  mb  = m rₐ pk b
+  mb  = A.m rₐ pk b
   c   = Enc pk mb rₑ
-  res = b′ rₐ pk c
+  res = A.b′ rₐ pk c
 
 EXP₀ EXP₁ : Experiment
 EXP₀ = EXP 0₂

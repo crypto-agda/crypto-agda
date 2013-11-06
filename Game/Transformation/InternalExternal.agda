@@ -3,6 +3,7 @@ module Game.Transformation.InternalExternal where
 
 open import Data.Two
 open import Data.Nat.NP hiding (_==_)
+open import Data.Nat.Distance
 open import Data.Product
 
 open import Function

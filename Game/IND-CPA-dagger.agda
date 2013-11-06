@@ -18,24 +18,24 @@ module Game.IND-CPA-dagger
 
 where
 
--- In the step 0, the adversary receives some randomness,
--- the public key, the message we want (m₀, m₁). The adversary
--- returns the message to encrypt. Remember that the adversary
--- is a pure and deterministic function, therefore 𝟚 → Message
--- is the same as Message × Message.
-AdvStep₀ : ★
-AdvStep₀ = Rₐ → PubKey → 𝟚 → Message
+-- IND-CPA† adversary in two parts
+record Adversary : ★ where
+  field
+    -- Same as in IND-CPA:
+    -- In the step 'm', the adversary receives some randomness,
+    -- the public key, the message we want (m₀ or m₁). The adversary
+    -- returns the message to encrypt. Remember that the adversary
+    -- is a pure and deterministic function, therefore 𝟚 → Message
+    -- is the same as Message × Message.
+    m  : Rₐ → PubKey → 𝟚 → Message
 
--- In the step 1 the adversary receives the same randomness
--- supply and public key as in step 0 and receives the ciphertext
--- computed by the challenger. The adversary has to guess which
--- message (m₀, m₁) has been encrypted.
-AdvStep₁ : ★
-AdvStep₁ = Rₐ → PubKey → CipherText → CipherText → 𝟚
-
--- IND-CPA adversary in two parts
-Adversary : ★
-Adversary = AdvStep₀ × AdvStep₁
+    -- In the step 'b′' the adversary receives the same randomness
+    -- supply and public key as in step 'm' and receives two ciphertexts
+    -- computed by the challenger. One of the ciphertext should be
+    -- the encryption of m₀ and the other of m₁.
+    -- The adversary has to guess in which order they are, namely
+    -- is the first ciphertext the encryption of m₀.
+    b′ : Rₐ → PubKey → CipherText → CipherText → 𝟚
 
 -- IND-CPA randomness supply
 R : ★
@@ -55,13 +55,14 @@ Experiment = Adversary → R → 𝟚
 -- (b′) send randomness, public-key and ciphertext
 --      receive the guess from the adversary
 EXP : (b t : 𝟚) → Experiment
-EXP b t (m , d) (rₐ , rₖ , rₑ , rₑ′ , _rₓ) = b′
+EXP b t A (rₐ , rₖ , rₑ , rₑ′ , _rₓ) = b′
   where
+  module A = Adversary A
   pk = proj₁ (KeyGen rₖ)
-  mb = m rₐ pk
+  mb = A.m rₐ pk
   c  = Enc pk (mb b) rₑ
   c′ = Enc pk (mb t) rₑ′
-  b′ = d rₐ pk c c′
+  b′ = A.b′ rₐ pk c c′
 
 EXP₀ EXP₁ : Experiment
 EXP₀ = EXP 0₂ 1₂

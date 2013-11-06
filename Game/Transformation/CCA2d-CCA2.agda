@@ -36,7 +36,7 @@ f : (Message × Message) × (CipherText → DecRound Bit)
   → (Message × Message) × (CipherText → CipherText → DecRound Bit)
 f (m , g) = m , λ c _ → g c
 
-A-transform : (adv : CCA2.Adv) → CCA2d.Adv
+A-transform : (adv : CCA2.Adversary) → CCA2d.Adv
 A-transform adv rₐ pk = mapStrategy f (adv rₐ pk)
   
 {-
