@@ -2,20 +2,26 @@
 {-# OPTIONS --without-K #-}
 
 open import Type
+open import Function
 open import Data.Bit
+open import Data.Two.Equality
 open import Data.Maybe
 open import Data.Product
 open import Data.Unit
 
-open import Data.Nat.NP
+open import Data.Nat.NP hiding (_==_)
+open import Data.Nat.Distance
 --open import Rat
 
 open import Explore.Core
 open import Explore.Explorable
 open import Explore.Product
 open Operators
-open import Relation.Binary.PropositionalEquality
+open import Relation.Binary.PropositionalEquality.NP
 open import Control.Strategy renaming (run to runStrategy)
+
+import Game.IND-CPA-utils
+import Game.IND-CCA
 
 module Game.IND-CCA2
   (PubKey    : ★)
@@ -31,17 +37,14 @@ module Game.IND-CCA2
 
 where
 
--- This describes a "round" of decryption queries
-DecRound : ★ → ★
-DecRound = Strategy CipherText Message
+module CCA = Game.IND-CCA  PubKey SecKey Message CipherText Rₑ Rₖ Rₐ KeyGen Enc Dec
+open Game.IND-CPA-utils Message CipherText public
+open CPAAdversary
 
--- This describes the CPA part of CCA
-CPAAdv : ★ → ★
-CPAAdv Next = (Message × Message) × (CipherText → Next)
-                         
-Adv : ★
-Adv = Rₐ → PubKey → DecRound           -- first round of decryption queries
-                     (CPAAdv           -- choosen plaintext attack
+Adversary : ★
+Adversary = Rₐ → PubKey →
+                   DecRound            -- first round of decryption queries
+                     (CPAAdversary     -- choosen plaintext attack
                        (DecRound Bit)) -- second round of decryption queries
 
 {-
@@ -53,21 +56,36 @@ Valid-Adv adv = ∀ {rₐ rₓ pk c} → Valid (λ x → x ≢ c) {!!}
 R : ★
 R = Rₐ × Rₖ × Rₑ
 
-Game : ★
-Game = Adv → R → Bit
-
-⅁ : Bit → Game
-⅁ b m (rₐ , rₖ , rₑ) with KeyGen rₖ
+EXP : Bit → Adversary → R → Bit
+EXP b m (rₐ , rₖ , rₑ) with KeyGen rₖ
 ... | pk , sk = b′ where
-  eval = runStrategy (Dec sk)
+  decRound = runStrategy (Dec sk)
   
-  ev = eval (m rₐ pk)
-  mb = proj (proj₁ ev) b
-  d = proj₂ ev
+  round1 = decRound (m rₐ pk)
+  mb     = proj (get-m round1) b
+  c      = Enc pk mb rₑ
+  round2 = put-c round1 c
+  b′     = decRound round2
 
-  c  = Enc pk mb rₑ
-  b′ = eval (d c)
+game : Adversary → (Bit × R) → Bit
+game A (b , r) = b == EXP b A r
 
+module Cheating
+   (m : Bit → Message)
+   (m⁻¹ : Message → Bit)
+   where
+  cheatingA : Adversary
+  cheatingA rₐ pk = done (mk (tabulate₂ m) (λ c → ask c (done ∘ m⁻¹)))
+
+  module _
+    (DecEnc : ∀ rₖ rₑ m → let (pk , sk) = KeyGen rₖ in
+                          Dec sk (Enc pk m rₑ) ≡ m)
+    (m⁻¹-m : ∀ x → m⁻¹ (m x) ≡ x)
+    where
+
+    cheatingA-always-wins : ∀ r → game cheatingA r ≡ 1b
+    cheatingA-always-wins (b , rₐ , rₖ , rₑ) =
+      ap (_==_ b ∘ m⁻¹) (DecEnc rₖ rₑ (proj (tabulate₂ m) b) ∙ proj-tabulate₂ m b) ∙ ==-≡1₂.reflexive (!(m⁻¹-m b))
   
 module Advantage
   (μₑ : Explore₀ Rₑ)
@@ -79,10 +97,10 @@ module Advantage
   
   module μR = FromExplore₀ μR
   
-  run : Bit → Adv → ℕ
-  run b adv = μR.count (⅁ b adv)
+  run : Bit → Adversary → ℕ
+  run b adv = μR.count (EXP b adv)
   
-  Advantage : Adv → ℕ
+  Advantage : Adversary → ℕ
   Advantage adv = dist (run 0b adv) (run 1b adv)
     
   --Advantageℚ : Adv → ℚ

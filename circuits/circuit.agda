@@ -5,7 +5,7 @@ open import Type
 open import Function
 open import Data.Nat.NP hiding (_≟_; compare)
 open import Data.Bit renaming (_==_ to _==ᵇ_)
-open import Data.Bits hiding (rewire; rewireTbl)
+open import Data.Bits hiding (rewire; rewireTbl; map)
 open import Data.Bits.Bits2
 open import Data.Bool hiding (_≟_)
 open import Data.Product hiding (swap; map)

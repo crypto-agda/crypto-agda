@@ -7,6 +7,8 @@ import Cipher.ElGamal.Homomorphic
 import Composition.Forkable
 import Composition.Horizontal
 import Composition.Vertical
+import Control.Beh
+import Control.Strategy
 import Crypto.Schemes
 import FiniteField.FinImplem
 import FunUniverse.Agda
@@ -44,11 +46,16 @@ import Game.EntropySmoothing.WithKey
 import Game.IND-CCA
 import Game.IND-CCA2-dagger
 import Game.IND-CCA2
+import Game.IND-CPA-dagger
 import Game.IND-CPA
+import Game.NCE
+import Game.ReceiptFreeness
 import Game.Transformation.CCA-CPA
 import Game.Transformation.CCA2-CCA
 import Game.Transformation.CCA2-CCA2d
 import Game.Transformation.CCA2d-CCA2
+import Game.Transformation.CPA-CPAd
+import Game.Transformation.CPAd-CPA
 import Game.Transformation.InternalExternal
 import Language.Simple.Abstract
 import Language.Simple.Interface

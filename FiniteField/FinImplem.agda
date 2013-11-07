@@ -11,8 +11,7 @@ open import Explore.Fin
 
 open Fin.Modulo renaming (sucmod to [suc]; sucmod-inj to [suc]-inj)
 
-module FiniteField.FinImplem (q-1 : ℕ) ([0]' [1]' : Fin (suc q-1))
-   {{_ : Postulate-Finˢ-ok}} where
+module FiniteField.FinImplem (q-1 : ℕ) ([0]' [1]' : Fin (suc q-1)) where
   -- open Sum
   q : ℕ
   q = suc q-1
@@ -34,7 +33,7 @@ module FiniteField.FinImplem (q-1 : ℕ) ([0]' [1]' : Fin (suc q-1))
 
   {-
   [suc]-stable : SumStableUnder (sum μℤq) [suc]
-  [suc]-stable = {!μFinSUI [suc] [suc]-inj!}
+  [suc]-stable = {!Finˢ-stableUnder q {[suc]} {![suc]-inj!}!}
   -}
 
   _ℕ⊞_ : ℕ → ℤq → ℤq

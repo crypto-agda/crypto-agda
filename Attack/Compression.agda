@@ -1,3 +1,4 @@
+{-# OPTIONS --copatterns #-}
 -- Compression can be used an an Oracle to defeat encryption.
 -- Here we show how compressing before encrypting lead to a
 -- NOT semantically secure construction (IND-CPA).
@@ -6,7 +7,7 @@ module Attack.Compression where
 open import Type using (★)
 open import Function
 open import Data.Nat.NP
-open import Data.Two hiding (_==_)
+open import Data.Two renaming (_==_ to _==ᵇ_)
 open import Data.Product
 open import Data.Zero
 open import Relation.Binary.PropositionalEquality.NP
@@ -77,12 +78,25 @@ module M
 
   module IND-CPA = Game.IND-CPA PubKey SecKey Message CipherText
                                 Rₑ Rₖ Rₐ Rₓ KeyGen Enc₁
+  open IND-CPA.Adversary
 
-  adv : IND-CPA.Adv
-  adv = (λ { _  _    → [0: m₀ 1: m₁ ] })
-      , (λ { rₑ pk c → c ==ˢ Enc₁ pk m₁ rₑ })
+  A : IND-CPA.Adversary
+  m  A = λ _ _ → [0: m₀ 1: m₁ ]
+  b′ A = λ rₑ pk c → c ==ˢ Enc₁ pk m₁ rₑ
 
-  -- The adversary adv is always winning.
-  adv-win : ∀ {r} b → IND-CPA.⅁ b adv r ≡ b
-  adv-win 0₂ = ≢1→≡0 (different-compression ∘ Enc₀LeakSize ∘ ==ˢ→≡ˢ)
-  adv-win 1₂ = ≡ˢ→==ˢ Enc₀SizeRndInd
+  -- The adversary A is always winning.
+  A-always-wins : ∀ b r → IND-CPA.EXP b A r ≡ b
+  A-always-wins 0₂ _ = ≢1→≡0 (different-compression ∘ Enc₀LeakSize ∘ ==ˢ→≡ˢ)
+  A-always-wins 1₂ _ = ≡ˢ→==ˢ Enc₀SizeRndInd
+
+  lem : ∀ x y → (x ==ᵇ y) ≡ 0₂ → not (x ==ᵇ y) ≡ 1₂
+  lem 1₂ 1₂ = λ ()
+  lem 1₂ 0₂ = λ _ → refl
+  lem 0₂ 1₂ = λ _ → refl
+  lem 0₂ 0₂ = λ ()
+
+  {-
+  A-always-wins' : ∀ r → IND-CPA.game A r ≡ 1₂
+  A-always-wins' (0₂ , r) = {!lem (not (IND-CPA.EXP 0₂ {!A!} r)) (IND-CPA.EXP 1₂ A r) (A-always-wins 0₂ r)!}
+  A-always-wins' (1₂ , r) = A-always-wins 1₂ r
+  -}

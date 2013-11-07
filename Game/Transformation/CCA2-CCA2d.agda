@@ -1,5 +1,4 @@
-
-{-# OPTIONS --without-K #-}
+{-# OPTIONS --without-K --copatterns #-}
 
 open import Type
 open import Data.Bit
@@ -23,6 +22,7 @@ open Operators
 import Game.IND-CCA2-dagger
 import Game.IND-CCA2
 import Game.IND-CCA
+import Game.IND-CPA-utils
 
 module Game.Transformation.CCA2-CCA2d
   (PubKey    : ★)
@@ -38,21 +38,26 @@ module Game.Transformation.CCA2-CCA2d
   
 where
 
+Rₐ† = Bit × Rₑ × Rₐ
+
 module CCA2d = Game.IND-CCA2-dagger PubKey SecKey Message CipherText
     Rₑ Rₖ Rₐ KeyGen Enc Dec 
-module CCA2 X = Game.IND-CCA2  PubKey SecKey Message CipherText
-    Rₑ Rₖ (X × Rₐ) KeyGen Enc Dec
+module CCA2 = Game.IND-CCA2  PubKey SecKey Message CipherText
+    Rₑ Rₖ Rₐ† KeyGen Enc Dec
+open Game.IND-CPA-utils Message CipherText
+open CPAAdversary
 
-X = Bit × Rₑ
+CPA-transform : PubKey → Bit → Rₑ
+              → CPAAdversary (CipherText → DecRound Bit)
+              → CPAAdversary (DecRound Bit)
+get-m (CPA-transform pk t rₑ A)   = get-m A
+put-c (CPA-transform pk t rₑ A) c = put-c A c (Enc pk (proj (get-m A) t) rₑ)
 
-f : PubKey → X
-  → (Message × Message) × (CipherText → CipherText → CCA2d.DecRound Bit)
-  → (Message × Message) × (CipherText → CCA2d.DecRound Bit)
-f pk (t  , rₑ) m = (proj₁ m , λ c → proj₂ m c (Enc pk (proj (proj₁ m) t) rₑ))
+--ERROR: panic unbound variable A:
+--put-c (CPA-transform pk t rₑ A) c = {!A!}
 
-A-transform : (adv : CCA2d.Adv) → CCA2.Adv X
-A-transform adv (x , rₐ) pk = mapStrategy (f pk x) (adv rₐ pk)
-
+A-transform : CCA2d.Adversary → CCA2.Adversary
+A-transform adv (t , rₑ , rₐ) pk = mapStrategy (CPA-transform pk t rₑ) (adv rₐ pk)
 
 {-
 
@@ -80,14 +85,14 @@ Informal proof:
 -}
 
 correct : ∀ {rₑ rₑ' rₖ rₐ} b adv
-        → CCA2d.⅁  b adv               (rₐ , rₖ , rₑ , rₑ')
-        ≡ CCA2.⅁ X b (A-transform adv) (((not b , rₑ') , rₐ) , rₖ , rₑ)
+        → CCA2d.EXP b adv               (rₐ , rₖ , rₑ , rₑ')
+        ≡ CCA2.EXP  b (A-transform adv) ((not b , rₑ' , rₐ) , rₖ , rₑ)
 correct {rₑ}{rₑ' = ra}{rₖ = r}{rₐ} 1b adv with KeyGen r
-... | pk , sk = cong (λ x → runStrategy (Dec sk) (proj₂ x (Enc pk (proj₂ (proj₁ x)) rₑ)))
-                     (sym (run-map (Dec sk) (f pk (0b , ra)) (adv rₐ pk)))
+... | pk , sk = cong (λ x → runStrategy (Dec sk) (put-c x (Enc pk (proj₂ (get-m x)) rₑ)))
+                     (sym (run-map (Dec sk) (CPA-transform pk 0b ra) (adv rₐ pk)))
 correct {rₑ}{rₑ' = ra}{rₖ = r}{rₐ} 0b adv with KeyGen r
-... | pk , sk = cong (λ x → runStrategy (Dec sk) (proj₂ x (Enc pk (proj₁ (proj₁ x)) rₑ)))
-                     (sym (run-map (Dec sk) (f pk (1b , ra)) (adv rₐ pk)))
+... | pk , sk = cong (λ x → runStrategy (Dec sk) (put-c x (Enc pk (proj₁ (get-m x)) rₑ)))
+                     (sym (run-map (Dec sk) (CPA-transform pk 1b ra) (adv rₐ pk)))
 
 
 module Theorem
@@ -102,11 +107,8 @@ module Theorem
   open import Explore.Two
   --open import Rat
   
-  μₓ : Explore₀ X
-  μₓ = 𝟚ᵉ ×ᵉ μₑ
-  
   module CCA2dA = CCA2d.Advantage μₑ μₖ μₐ
-  module CCA2A  =  CCA2.Advantage X μₑ μₖ (μₓ ×ᵉ μₐ)
+  module CCA2A  =  CCA2.Advantage μₑ μₖ (𝟚ᵉ ×ᵉ μₑ ×ᵉ μₐ)
 
   R' : Set
   R' = Rₑ × Rₑ × Rₑ × Rₖ × Rₐ
@@ -129,24 +131,24 @@ module Theorem
   # : ∀ {Y : Set} → Bit → (Bit → Y → R2 → Bit) → Y → ℕ
   # b F adv = μR2.count (F b adv)
 
-  lift-CCA2 : Bit → CCA2.Adv X → R2 → Bit
+  lift-CCA2 : Bit → CCA2.Adversary → R2 → Bit
   lift-CCA2 b adv (rt , re , _ , rea , rk , ra) = 
-     CCA2.⅁ X b adv (((rt , rea) , ra) , (rk , re)) == b
-  lift-CCA2d : Bit → CCA2d.Adv → R2 → Bit
-  lift-CCA2d b adv (_ , re , re' , _ , rk , ra) = CCA2d.⅁ b adv (ra , rk , re , re') == b
+     CCA2.EXP b adv ((rt , rea , ra) , (rk , re)) == b
+  lift-CCA2d : Bit → CCA2d.Adversary → R2 → Bit
+  lift-CCA2d b adv (_ , re , re' , _ , rk , ra) = CCA2d.EXP b adv (ra , rk , re , re') == b
   
   dbl-thm : ∀ {n} → n + n ≡ 2 * n
   dbl-thm {n} rewrite ℕ°.+-comm n 0 = refl
   
   lemma : ∀ b A+ → # b lift-CCA2d A+ ≤ 2 * # b lift-CCA2 (A-transform A+)
   lemma b A+ = μR2.sum (λ { (_ , re , re' , _ , rk , ra)
-                          → ⟦ CCA2d.⅁ b A+ ((ra , rk , re , re')) ⟧  })
+                          → ⟦ CCA2d.EXP b A+ ((ra , rk , re , re')) ⟧  })
              ≡⟨ dbl-thm {μR'.sum _} ⟩ 2 *
                (μR'.sum (λ { (re , re' , _ , rk , ra)
-                          → ⟦ CCA2d.⅁ b A+ ((ra , rk , re , re')) ⟧  }))
+                          → ⟦ CCA2d.EXP b A+ ((ra , rk , re , re')) ⟧  }))
              ≤⟨ s≤s (s≤s (z≤n {0})) *-mono lem ⟩ 2 *
                 μR2.sum (λ { (t , re , _ , rea , rk , ra)
-                           → ⟦ CCA2.⅁ X b (A-transform A+) (((t , rea) , ra) , rk , re) ⟧})
+                           → ⟦ CCA2.EXP b (A-transform A+) ((t , rea , ra) , rk , re) ⟧})
                 ∎
     where
       open ≤-Reasoning
@@ -162,26 +164,26 @@ module Theorem
       lem4 0b f = refl
 
       lem : μR'.sum (λ { (re , re' , _ , rk , ra)
-                       → ⟦ CCA2d.⅁ b A+ ((ra , rk , re , re')) ⟧  })
+                       → ⟦ CCA2d.EXP b A+ ((ra , rk , re , re')) ⟧  })
           ≤ μR2.sum (λ { (t , re , _ , rea , rk , ra)
-                       → ⟦ CCA2.⅁ X b (A-transform A+) (((t , rea) , ra) , rk , re) ⟧})
+                       → ⟦ CCA2.EXP b (A-transform A+) ((t , rea , ra) , rk , re) ⟧})
       lem = (μR'.sum (λ { (re , re' , _ , rk , ra)
-                          → ⟦ CCA2d.⅁ b A+ ((ra , rk , re , re')) ⟧  }))
+                          → ⟦ CCA2d.EXP b A+ ((ra , rk , re , re')) ⟧  }))
              ≡⟨ Exp.sum-ext μₑⁱ (λ re →  lem1 (λ re' → _)) ⟩ 
                (μR'.sum (λ { (re , _ , re' , rk , ra)
-                          → ⟦ CCA2d.⅁ b A+ ((ra , rk , re , re')) ⟧  }))
+                          → ⟦ CCA2d.EXP b A+ ((ra , rk , re , re')) ⟧  }))
              ≡⟨ μR'.sum-ext (λ _ → cong ⟦_⟧ (correct b A+) )⟩
                 μR'.sum (λ { (re , _ , rea , rk , ra)
-                           → ⟦ CCA2.⅁ X b (A-transform A+) (((not b , rea) , ra) , rk , re) ⟧})
+                           → ⟦ CCA2.EXP b (A-transform A+) ((not b , rea , ra) , rk , re) ⟧})
              ≤⟨ n≤m+n (μR'.sum (λ { (re , _ , rea , rk , ra)
-                     → ⟦ CCA2.⅁ X b (A-transform A+) (((b , rea) , ra) , rk , re) ⟧})) _ ⟩ (
+                     → ⟦ CCA2.EXP b (A-transform A+) ((b , rea , ra) , rk , re) ⟧})) _ ⟩ (
                 μR'.sum (λ { (re , _ , rea , rk , ra)
-                           → ⟦ CCA2.⅁ X b (A-transform A+) (((b , rea) , ra) , rk , re) ⟧})
+                           → ⟦ CCA2.EXP b (A-transform A+) ((b , rea , ra) , rk , re) ⟧})
              +  μR'.sum (λ { (re , _ , rea , rk , ra)
-                           → ⟦ CCA2.⅁ X b (A-transform A+) (((not b , rea) , ra) , rk , re) ⟧}))
-             ≡⟨ lem4 b (λ { t (re , _ , rea , rk , ra) → ⟦ CCA2.⅁ X b (A-transform A+) (((t , rea) , ra) , rk , re) ⟧ }) ⟩ 
+                           → ⟦ CCA2.EXP b (A-transform A+) ((not b , rea , ra) , rk , re) ⟧}))
+             ≡⟨ lem4 b (λ { t (re , _ , rea , rk , ra) → ⟦ CCA2.EXP b (A-transform A+) ((t , rea , ra) , rk , re) ⟧ }) ⟩
                 μR2.sum (λ { (t , re , _ , rea , rk , ra)
-                           → ⟦ CCA2.⅁ X b (A-transform A+) (((t , rea) , ra) , rk , re) ⟧})
+                           → ⟦ CCA2.EXP b (A-transform A+) ((t , rea , ra) , rk , re) ⟧})
                 ∎
 
 {-

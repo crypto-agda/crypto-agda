@@ -7,7 +7,7 @@ open import Data.Nat.NP using (ℕ; zero; suc; _≤_; s≤s; _+_; module ℕ≤;
 open import Data.Nat.Properties
 open import Data.Bool
 open import Data.Vec using (_++_)
-open import Data.Bits
+open import Data.Bits hiding (map)
 --import Data.Bits.Search as Search
 --open Search.SimpleSearch
 open import Relation.Binary

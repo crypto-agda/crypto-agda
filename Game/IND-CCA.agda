@@ -5,7 +5,7 @@ open import Data.Bit
 open import Data.Maybe
 open import Data.Product
 open import Control.Strategy renaming (run to runStrategy)
-
+import Game.IND-CPA-utils
   
 module Game.IND-CCA
   (PubKey    : ★)
@@ -21,29 +21,21 @@ module Game.IND-CCA
 
 where
 
--- This describes a "round" of decryption queries
-DecRound : ★ → ★
-DecRound = Strategy CipherText Message
+open Game.IND-CPA-utils Message CipherText
 
--- This describes the CPA part of CCA
-CPAAdv : ★
-CPAAdv = (Message × Message) × (CipherText → Bit)
-
-Adv : ★
-Adv = Rₐ → PubKey → DecRound CPAAdv
+Adversary : ★
+Adversary = Rₐ → PubKey → DecRound (CPAAdversary Bit)
 
 R : ★
 R = Rₐ × Rₖ × Rₑ
 
-Game : ★
-Game = Adv → R → Bit
+Experiment : ★
+Experiment = Adversary → R → Bit
 
-⅁ : Bit → Game
-⅁ b adv (rₐ , rₖ , rₑ) with KeyGen rₖ
+EXP : Bit → Experiment
+EXP b adv (rₐ , rₖ , rₑ) with KeyGen rₖ
 ... | pk , sk = b′ where
-  ev = runStrategy (Dec sk) (adv rₐ pk)
-  mb = proj (proj₁ ev) b
-  d = proj₂ ev
-
+  module AdvCPA = CPAAdversary (runStrategy (Dec sk) (adv rₐ pk))
+  mb = proj AdvCPA.get-m b
   c  = Enc pk mb rₑ
-  b′ = d c
+  b′ = AdvCPA.put-c c

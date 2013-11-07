@@ -1,7 +1,6 @@
 {-# OPTIONS --without-K #-}
 open import Type
-open import Data.Bit
-open import Data.Bits
+open import Data.Two
 open import Data.Product
 
 module Game.EntropySmoothing
@@ -12,28 +11,31 @@ module Game.EntropySmoothing
   where
 
 -- Entropy smoothing adversary
-Adv : ★
-Adv = Rₐ → Hash → Bit
+Adversary : ★
+Adversary = Rₐ → Hash → 𝟚
 
 -- The randomness supply needed for the entropy
 -- smoothing games
 R : ★
 R = M × Hash × Rₐ
 
--- Entropy smoothing game:
+-- Entropy smoothing experiment:
 --   * input: adversary and randomness supply
---   * output b: adversary claims we are in game ⅁ b
-Game : ★
-Game = Adv → R → Bit
+--   * output b: adversary claims we are in game EXP b
+Experiment : ★
+Experiment = Adversary → R → 𝟚
 
 -- In this game we always use ℋ on a random message
-⅁₀ : Game
-⅁₀ A (m , _ , rₐ) = A rₐ (ℋ m)
+EXP₀ : Experiment
+EXP₀ A (m , _ , rₐ) = A rₐ (ℋ m)
 
 -- In this game we just retrun a random Hash value
-⅁₁ : Game
-⅁₁ A (_ , h , rₐ) = A rₐ h
+EXP₁ : Experiment
+EXP₁ A (_ , h , rₐ) = A rₐ h
 
 -- Package the two previous games
-⅁ : Bit → Game
-⅁ = proj (⅁₀ , ⅁₁)
+EXP : 𝟚 → Experiment
+EXP = proj (EXP₀ , EXP₁)
+
+game : Adversary → 𝟚 × R → 𝟚
+game A (b , r) = EXP b A r
