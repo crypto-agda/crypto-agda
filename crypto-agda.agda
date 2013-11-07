@@ -49,7 +49,7 @@ import Game.IND-CCA2
 import Game.IND-CPA-dagger
 import Game.IND-CPA
 import Game.NCE
---import Game.ReceiptFreeness
+import Game.ReceiptFreeness
 import Game.Transformation.CCA-CPA
 import Game.Transformation.CCA2-CCA
 import Game.Transformation.CCA2-CCA2d
