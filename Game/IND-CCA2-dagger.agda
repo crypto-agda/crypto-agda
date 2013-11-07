@@ -12,6 +12,7 @@ open import Explore.Explorable
 open import Explore.Product
 open Operators
 open import Control.Strategy renaming (run to runStrategy)
+import Game.IND-CPA-utils
 
 open import Relation.Binary.PropositionalEquality
 
@@ -29,18 +30,15 @@ module Game.IND-CCA2-dagger
 
 where
 
--- This describes a "round" of decryption queries
-DecRound : ★ → ★
-DecRound = Strategy CipherText Message
+open Game.IND-CPA-utils Message CipherText
+open CPAAdversary
 
--- This describes the CPA(dagger) part of CCA
-CPAAdv : ★ → ★
-CPAAdv Next = (Message × Message) × (CipherText → CipherText → Next)
-                         
-Adv : ★
-Adv = Rₐ → PubKey → DecRound           -- first round of decryption queries
-                     (CPAAdv           -- choosen plaintext attack
-                       (DecRound Bit)) -- second round of decryption queries
+Adversary : ★
+Adversary = Rₐ → PubKey →
+                   DecRound              -- first round of decryption queries
+                     (CPAAdversary       -- choosen plaintext attack
+                       (CipherText →     -- in which a second ciphertext is provided
+                          DecRound Bit)) -- second round of decryption queries
 
 {-
 Valid-Adv : Adv → Set
@@ -50,22 +48,18 @@ Valid-Adv (m , d) = ∀ {rₐ rₓ pk c c'} → Valid (λ x → x ≢ c × x ≢
 R : ★
 R = Rₐ × Rₖ × Rₑ × Rₑ
 
-Game : ★
-Game = Adv → R → Bit
+Experiment : ★
+Experiment = Adversary → R → Bit
 
-⅁ : Bit → Game
-⅁ b m (rₐ , rₖ , rₑ₀ , rₑ₁) with KeyGen rₖ
+EXP : Bit → Experiment
+EXP b A (rₐ , rₖ , rₑ₀ , rₑ₁) with KeyGen rₖ
 ... | pk , sk = b′ where
-  eval = runStrategy (Dec sk)
-  
-  ev = eval (m rₐ pk)
-  mb = proj (proj₁ ev)
-  d = proj₂ ev
-
-  c₀  = Enc pk (mb b)       rₑ₀
-  c₁  = Enc pk (mb (not b)) rₑ₁
-  b′ = eval (d c₀ c₁)
-
+  decRound = runStrategy (Dec sk)
+  cpaA     = decRound (A rₐ pk)
+  mb       = proj (get-m cpaA)
+  c₀       = Enc pk (mb b)       rₑ₀
+  c₁       = Enc pk (mb (not b)) rₑ₁
+  b′       = decRound (put-c cpaA c₀ c₁)
 
 module Advantage
   (μₑ : Explore₀ Rₑ)
@@ -77,8 +71,8 @@ module Advantage
   
   module μR = FromExplore₀ μR
   
-  run : Bit → Adv → ℕ
-  run b adv = μR.count (⅁ b adv)
+  run : Bit → Adversary → ℕ
+  run b adv = μR.count (EXP b adv)
     
   {-
   Advantage : Adv → ℚ

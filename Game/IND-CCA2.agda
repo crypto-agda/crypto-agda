@@ -20,6 +20,9 @@ open Operators
 open import Relation.Binary.PropositionalEquality.NP
 open import Control.Strategy renaming (run to runStrategy)
 
+import Game.IND-CPA-utils
+import Game.IND-CCA
+
 module Game.IND-CCA2
   (PubKey    : ★)
   (SecKey    : ★)
@@ -34,17 +37,13 @@ module Game.IND-CCA2
 
 where
 
--- This describes a "round" of decryption queries
-DecRound : ★ → ★
-DecRound = Strategy CipherText Message
+module CCA = Game.IND-CCA  PubKey SecKey Message CipherText Rₑ Rₖ Rₐ KeyGen Enc Dec
+open Game.IND-CPA-utils Message CipherText public
+open CPAAdversary
 
--- This describes the CPA part of CCA
-CPAAdversary : ★ → ★
-CPAAdversary Next = (Message × Message) × (CipherText → Next)
-                         
 Adversary : ★
 Adversary = Rₐ → PubKey →
-                   DecRound           -- first round of decryption queries
+                   DecRound            -- first round of decryption queries
                      (CPAAdversary     -- choosen plaintext attack
                        (DecRound Bit)) -- second round of decryption queries
 
@@ -60,14 +59,13 @@ R = Rₐ × Rₖ × Rₑ
 EXP : Bit → Adversary → R → Bit
 EXP b m (rₐ , rₖ , rₑ) with KeyGen rₖ
 ... | pk , sk = b′ where
-  eval = runStrategy (Dec sk)
+  decRound = runStrategy (Dec sk)
   
-  ev = eval (m rₐ pk)
-  mb = proj (proj₁ ev) b
-  d = proj₂ ev
-
-  c  = Enc pk mb rₑ
-  b′ = eval (d c)
+  round1 = decRound (m rₐ pk)
+  mb     = proj (get-m round1) b
+  c      = Enc pk mb rₑ
+  round2 = put-c round1 c
+  b′     = decRound round2
 
 game : Adversary → (Bit × R) → Bit
 game A (b , r) = b == EXP b A r
@@ -77,7 +75,7 @@ module Cheating
    (m⁻¹ : Message → Bit)
    where
   cheatingA : Adversary
-  cheatingA rₐ pk = done (tabulate₂ m , λ c → ask c (done ∘ m⁻¹))
+  cheatingA rₐ pk = done (mk (tabulate₂ m) (λ c → ask c (done ∘ m⁻¹)))
 
   module _
     (DecEnc : ∀ rₖ rₑ m → let (pk , sk) = KeyGen rₖ in

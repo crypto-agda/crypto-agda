@@ -1,7 +1,7 @@
-
-{-# OPTIONS --without-K #-}
+{-# OPTIONS --without-K --copatterns #-}
 
 open import Type
+open import Function
 open import Data.Bit
 open import Data.Maybe
 open import Data.Product
@@ -10,6 +10,7 @@ open import Control.Strategy renaming (run to runStrategy; map to mapStrategy)
 
 open import Relation.Binary.PropositionalEquality
 
+import Game.IND-CPA-utils
 import Game.IND-CCA
 import Game.IND-CCA2
 
@@ -27,17 +28,19 @@ module Game.Transformation.CCA2-CCA
   
 where
 
+open Game.IND-CPA-utils Message CipherText
+
+CPA-A-transform : CPAAdversary Bit → CPAAdversary (DecRound Bit)
+get-m (CPA-A-transform A) = get-m A
+put-c (CPA-A-transform A) = done ∘ put-c A
+
 module CCA2 = Game.IND-CCA2 PubKey SecKey Message CipherText Rₑ Rₖ Rₐ KeyGen Enc Dec 
 module CCA  = Game.IND-CCA  PubKey SecKey Message CipherText Rₑ Rₖ Rₐ KeyGen Enc Dec
 
-f : ((Message × Message) × (CipherText → Bit))
-  → ((Message × Message) × (CipherText → CCA.DecRound Bit))
-f (m , g) = m , (λ c → done (g c))
-
-A-transform : CCA.Adv → CCA2.Adversary
+A-transform : CCA.Adversary → CCA2.Adversary
 A-transform adv = adv' where
     adv' : _ → _ → _ 
-    adv' rₐ pk = mapStrategy f (adv rₐ pk)
+    adv' rₐ pk = mapStrategy CPA-A-transform (adv rₐ pk)
   {-
   m' : _ → _ → _
   m' rₐ pk = m rₐ pk
@@ -46,19 +49,17 @@ A-transform adv = adv' where
   d' rₐ' rₓ pk c = Pick (d rₐ' rₓ pk c)
   -}
 
-  
 {-
 valid-transform : ∀ adv → CCA2.Valid-Adv (A-transform adv)
 valid-transform adv = tt
 -}
 
+correct : ∀ b adv r → CCA.EXP  b adv               r
+                    ≡ CCA2.EXP b (A-transform adv) r
+correct b adv (rₐ , rₖ , rₑ)
+ =  cong (λ A → runStrategy (Dec sk) (put-c A (Enc pk (proj (get-m A) b) rₑ)))
+         (sym (run-map (Dec sk) CPA-A-transform (adv rₐ pk)))
 
-correct : ∀ {rₐ rₑ rₖ} b adv → CCA.⅁  b adv               (rₐ , rₖ , rₑ)
-                             ≡ CCA2.EXP b (A-transform adv) (rₐ , rₖ , rₑ)
-correct {rₐ}{rₑ}{rₖ} b adv with KeyGen rₖ
-... | pk , sk 
- =  cong (λ x → runStrategy (Dec sk) (proj₂ x (Enc pk (proj (proj₁ x) b) rₑ)))
-         (sym (run-map (Dec sk) f (adv rₐ pk)))
-
-
-  
+         where k  = KeyGen rₖ
+               pk = proj₁ k
+               sk = proj₂ k

@@ -9,6 +9,7 @@ open import Control.Strategy
 
 open import Relation.Binary.PropositionalEquality
 
+import Game.IND-CPA-utils
 import Game.IND-CPA
 import Game.IND-CCA
 
@@ -26,18 +27,19 @@ module Game.Transformation.CCA-CPA
   
 where
 
+open Game.IND-CPA-utils Message CipherText
 module CCA = Game.IND-CCA PubKey SecKey Message CipherText Rₑ Rₖ Rₐ    KeyGen Enc Dec 
 module CPA = Game.IND-CPA PubKey SecKey Message CipherText Rₑ Rₖ Rₐ 𝟙 KeyGen Enc
 
-A-transform : CPA.Adversary → CCA.Adv
+A-transform : CPA.Adversary → CCA.Adversary
 A-transform A = m' where
   module A = CPA.Adversary A
   m' : _ → _ → _
-  m' rₐ pk = done ((mb 0b , mb 1b) , A.b′ rₐ pk) -- (mb 0b) (mb 1b) rₐ
+  m' rₐ pk = done (mk (mb 0b , mb 1b) (A.b′ rₐ pk)) -- (mb 0b) (mb 1b) rₐ
     where
       mb = A.m rₐ pk
 
 correct : ∀ {rₑ rₖ rₐ} b adv → CPA.EXP b adv               (rₐ , rₖ , rₑ , 0₁)
-                             ≡ CCA.⅁ b (A-transform adv) (rₐ , rₖ , rₑ)
+                             ≡ CCA.EXP b (A-transform adv) (rₐ , rₖ , rₑ)
 correct 1b adv = refl
 correct 0b adv = refl
