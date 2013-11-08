@@ -11,6 +11,7 @@ open import Game.IND-CCA2-dagger
 open import Game.IND-CPA-dagger
 open import Game.EntropySmoothing
 open import Game.EntropySmoothing.WithKey
+open import Game.ReceiptFreeness
 
 open import Game.Transformation.InternalExternal
 open import Game.Transformation.CCA-CPA
@@ -20,6 +21,9 @@ open import Game.Transformation.CCA2d-CCA2
 open import Game.Transformation.CPA-CPAd
 open import Game.Transformation.CPAd-CPA
 
+--TODO[or not] open import Attack.BruteForce.Keys
+--TODO open import Attack.BruteForce.Randomness
+--TODO[could be trivially based on Attack.BruteForce.Randomness] open import Attack.Deterministic
 open import Attack.Compression
 open import Attack.Reencryption
 open import Attack.Reencryption.OneBitMessage

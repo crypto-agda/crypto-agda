@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K --copatterns #-}
 {-
 Any cipher which does supports reencryption (exponential ElGamal, Pailler...) are vulnerable to a CCA2 attack.
 -}
@@ -46,7 +47,10 @@ module IND-CCA2 = Game.IND-CCA2 PubKey SecKey Message CipherText Rₑ Rₖ Rₑ 
 open IND-CCA2
 
 adversary : IND-CCA2.Adversary
-adversary rₐ pk = done (mk (m₀ , m₁) (λ c → ask (Reenc pk c rₐ) λ m′ → done (m′ == m₁)))
+adversary rₐ pk = done CPApart
+  where CPApart : CPAAdversary _
+        get-m CPApart   = m₀ , m₁
+        put-c CPApart c = ask (Reenc pk c rₐ) λ m′ → done (m′ == m₁)
 
 adversary-always-win : ∀ b r → IND-CCA2.EXP b adversary r ≡ b
-adversary-always-win b (rₐ , rₖ , rₑ) rewrite Reenc-correct rₖ (m b) rₑ rₐ = m-diff b
+adversary-always-win b (rₐ , rₖ , rₑ) = ap (flip _==_ m₁) (Reenc-correct rₖ (m b) rₑ rₐ) ∙ m-diff b
