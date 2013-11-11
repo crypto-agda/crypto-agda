@@ -1,5 +1,4 @@
-
-{-# OPTIONS --without-K #-}
+{-# OPTIONS --without-K --copatterns #-}
 
 open import Type
 open import Function
@@ -74,8 +73,12 @@ module Cheating
    (m : Bit → Message)
    (m⁻¹ : Message → Bit)
    where
+
   cheatingA : Adversary
-  cheatingA rₐ pk = done (mk (tabulate₂ m) (λ c → ask c (done ∘ m⁻¹)))
+  cheatingA rₐ pk = done CPApart
+    where CPApart : CPAAdversary _
+          get-m CPApart   = tabulate₂ m
+          put-c CPApart c = ask c (done ∘ m⁻¹)
 
   module _
     (DecEnc : ∀ rₖ rₑ m → let (pk , sk) = KeyGen rₖ in

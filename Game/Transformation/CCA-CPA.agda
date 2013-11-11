@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K #-}
+{-# OPTIONS --without-K --copatterns #-}
 
 open import Type
 open import Data.Maybe
@@ -28,18 +28,18 @@ module Game.Transformation.CCA-CPA
 where
 
 open Game.IND-CPA-utils Message CipherText
-module CCA = Game.IND-CCA PubKey SecKey Message CipherText Rₑ Rₖ Rₐ    KeyGen Enc Dec 
+module CCA = Game.IND-CCA PubKey SecKey Message CipherText Rₑ Rₖ Rₐ   KeyGen Enc Dec
 module CPA = Game.IND-CPA PubKey SecKey Message CipherText Rₑ Rₖ Rₐ 𝟙 KeyGen Enc
 
 A-transform : CPA.Adversary → CCA.Adversary
-A-transform A = m' where
-  module A = CPA.Adversary A
-  m' : _ → _ → _
-  m' rₐ pk = done (mk (mb 0b , mb 1b) (A.b′ rₐ pk)) -- (mb 0b) (mb 1b) rₐ
-    where
-      mb = A.m rₐ pk
+A-transform A rₐ pk = done CPApart where
+    module A = CPA.Adversary A
+    mb = A.m rₐ pk
+    CPApart : CPAAdversary _
+    get-m CPApart = mb 0b , mb 1b
+    put-c CPApart = A.b′ rₐ pk
 
-correct : ∀ {rₑ rₖ rₐ} b adv → CPA.EXP b adv               (rₐ , rₖ , rₑ , 0₁)
+correct : ∀ {rₑ rₖ rₐ} b adv → CPA.EXP b adv               (rₐ , rₖ , rₑ , _)
                              ≡ CCA.EXP b (A-transform adv) (rₐ , rₖ , rₑ)
 correct 1b adv = refl
 correct 0b adv = refl

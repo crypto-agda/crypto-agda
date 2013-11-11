@@ -10,6 +10,7 @@ open import Function
 
 open import Relation.Binary.PropositionalEquality
 
+import Game.IND-CPA-utils
 import Game.IND-CCA2-dagger
 import Game.IND-CCA2
 import Game.IND-CCA
@@ -30,13 +31,15 @@ where
 
 module CCA2d = Game.IND-CCA2-dagger PubKey SecKey Message CipherText Rₑ Rₖ Rₐ KeyGen Enc Dec 
 module CCA2  = Game.IND-CCA2        PubKey SecKey Message CipherText Rₑ Rₖ Rₐ KeyGen Enc Dec
-open CCA2d using (DecRound)
+open Game.IND-CPA-utils Message CipherText
 
-f : (Message × Message) × (CipherText → DecRound Bit)
-  → (Message × Message) × (CipherText → CipherText → DecRound Bit)
+f : CPAAdversary (DecRound Bit)
+  → CPAAdversary (CipherText → DecRound Bit)
+get-m (f A) = get-m A
+put-c (
 f (m , g) = m , λ c _ → g c
 
-A-transform : (adv : CCA2.Adversary) → CCA2d.Adv
+A-transform : (adv : CCA2.Adversary) → CCA2d.Adversary
 A-transform adv rₐ pk = mapStrategy f (adv rₐ pk)
   
 {-
@@ -49,7 +52,7 @@ decRound = runStrategy ∘ Dec
 
 correct : ∀ {rₑ rₑ' rₖ rₐ } b adv
         → CCA2.EXP b adv               (rₐ , rₖ , rₑ)
-        ≡ CCA2d.⅁ b (A-transform adv) (rₐ , rₖ , rₑ , rₑ')
+        ≡ CCA2d.EXP b (A-transform adv) (rₐ , rₖ , rₑ , rₑ')
 correct {rₑ} {rₑ'} {rₖ} {rₐ} 0b m with KeyGen rₖ
 ... | pk , sk = cong (λ x → decRound sk (proj₂ x (Enc pk (proj₁ (proj₁ x)) rₑ)
                                              (Enc pk (proj₂ (proj₁ x)) rₑ')))

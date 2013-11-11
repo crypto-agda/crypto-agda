@@ -46,16 +46,16 @@ module RunList {A I B O} (loop : Loop A I B O) where
 
   open Loop loop
 
-  runList₀ : List I × S → List O × S
-  runList₁ : List I × Exit? × O × S → List O × S
+  runList₀ : List I → S → List O × S
+  runList₁ : List I → (Exit? × O × S) → List O × S
 
-  runList₁ (is , 0₂ , o , s) = first (_∷_ o) (runList₀ (is , s))
-  runList₁ (is , 1₂ , o , s) = (o ∷ [] , s)
+  runList₁ is (0₂ , o , s) = first (_∷_ o) (runList₀ is s)
+  runList₁ is (1₂ , o , s) = (o ∷ [] , s)
 
-  runList₀ ([]     , s) = ([] , s)
-  runList₀ (i ∷ is , s) = runList₁ (is , body (i , s))
+  runList₀ []       s = ([] , s)
+  runList₀ (i ∷ is) s = runList₁ is (body (i , s))
 
   runList : List I × A → List O × B
-  runList = second init ⁏ runList₀ ⁏ second exit
+  runList = second init ⁏ uncurry runList₀ ⁏ second exit
 
 -- -}

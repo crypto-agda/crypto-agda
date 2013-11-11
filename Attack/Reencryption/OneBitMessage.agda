@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K --copatterns #-}
 -- Assuming the message space is only one bit the attack can be made even simpler.
 
 open import Function
@@ -26,8 +27,13 @@ module Attack.Reencryption.OneBitMessage
 module IND-CCA2 = Game.IND-CCA2 PubKey SecKey 𝟚 CipherText Rₑ Rₖ Rₑ KeyGen Enc Dec
 open IND-CCA2
 
+module _ (rₐ : Rₑ) (pk : PubKey) where
+    CPA-adversary : CPAAdversary (DecRound 𝟚)
+    get-m CPA-adversary   = 0₂ , 1₂
+    put-c CPA-adversary c = ask (Reenc pk c rₐ) done
+
 adversary : IND-CCA2.Adversary
-adversary rₐ pk = done ((0₂ , 1₂) , λ c → ask (Reenc pk c rₐ) λ m′ → done m′)
+adversary rₐ pk = done (CPA-adversary rₐ pk)
 
 adversary-always-win : ∀ b r → IND-CCA2.EXP b adversary r ≡ b
 adversary-always-win b (rₐ , rₖ , rₑ) rewrite η-[0:1:] id b = Reenc-correct rₖ b rₑ rₐ

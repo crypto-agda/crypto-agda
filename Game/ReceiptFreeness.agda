@@ -20,14 +20,14 @@ open import Explore.Product
 open Operators
 -}
 open import Relation.Binary.PropositionalEquality
---open import Control.Strategy renaming (run to runStrategy)
+open import Control.Strategy
 
 
 module Game.ReceiptFreeness
   (PubKey    : ★)
   (SecKey    : ★)
   -- Message = 𝟚
-  (CipherText : (checked? : 𝟚) → ★)
+  (CipherText : ★)
 
   (SerialNumber : ★)
 
@@ -36,46 +36,16 @@ module Game.ReceiptFreeness
   (#q : ℕ) (max#q : Fin #q)
   (KeyGen : Rₖ → PubKey × SecKey)
   (Enc    : let Message = 𝟚 in
-            PubKey → Message → Rₑ → CipherText 1₂)
-  (forget : CipherText 1₂ → CipherText 0₂)
-  (check  : CipherText 0₂ → Maybe (CipherText 1₂))
+            PubKey → Message → Rₑ → CipherText)
   (Dec    : let Message = 𝟚 in
-            SecKey → CipherText 1₂ → Message)
+            SecKey → CipherText → Message)
+  (Check : CipherText → 𝟚)
+  (CheckEnc : ∀ pk m rₑ → Check (Enc pk m rₑ) ≡ 1₂)
 
 where
 
-Checked? = 𝟚
-checked unchecked : Checked?
 unchecked = 0₂
 checked = 1₂
-
-
-data Strategy (Q : ★) (R : Q → ★) (A : ★) : ★ where
-  ask  : (q? : Q) (cont : R q? → Strategy Q R A) → Strategy Q R A
-  done : A → Strategy Q R A
-
-module _ {Q : ★} {R : Q → ★} (Oracle : (q : Q) → R q) where
-  private
-    M = Strategy Q R
-  run : ∀ {A} → M A → A
-  run (ask q? cont) = run (cont (Oracle q?))
-  run (done x)      = x
-
-State : (S A : ★) → ★
-State S A = S → A × S
-
-module _ {S Q : ★} {R : Q → ★} (Oracle : (q : Q) → State S (R q)) where
-  private
-    M = Strategy Q R
-  runS : ∀ {A} → M A → State S A
-  runS (ask q? cont) s = case Oracle q? s of λ { (x , s') → runS (cont x) s' }
-  runS (done x)      s = x , s
-
-  evalS : ∀ {A} → M A → S → A
-  evalS x s = proj₁ (runS x s)
-
-  execS : ∀ {A} → M A → S → S
-  execS x s = proj₂ (runS x s)
 
 Candidate : ★
 Candidate = 𝟚 -- as in the paper: "for simplicity"
@@ -117,16 +87,10 @@ data MarkedReceipt? : ★ where
 
 -- Receipt or also called RHS
 -- Made of a potential mark, a serial number, and an encrypted candidate order
-Receipt : (checked? : 𝟚) → ★
-Receipt checked? = MarkedReceipt? × SerialNumber × CipherText checked?
+Receipt : ★
+Receipt = MarkedReceipt? × SerialNumber × CipherText
 
-forgetReceipt : Receipt checked → Receipt unchecked
-forgetReceipt (m? , sn , enc-co) = m? , sn , forget enc-co
-
-checkReceipt : Receipt unchecked → Maybe (Receipt checked)
-checkReceipt (m? , sn , ck-enc-co) = map? (λ x → m? , sn , x) (check ck-enc-co)
-
-markedReceipt? : ∀ {checked?} → Receipt checked? → MarkedReceipt?
+markedReceipt? : Receipt → MarkedReceipt?
 markedReceipt? = proj₁
 
 -- Marked when there is a 1
@@ -142,26 +106,23 @@ marked-on-second-cell? : MarkedReceipt? → 𝟚
 marked-on-second-cell? not-marked = 0₂
 marked-on-second-cell? (marked x) = x == 1₂
 
-Ballot : (checked? : 𝟚) → ★
-Ballot checked? = CO × Receipt checked?
+Ballot : ★
+Ballot = CO × Receipt
 
 -- co or also called LHS
-co : ∀ {checked?} → Ballot checked? → CO
+co : Ballot → CO
 co = proj₁
 
 -- receipt or also called RHS
-receipt : ∀ {checked?} → Ballot checked? → Receipt checked?
+receipt : Ballot → Receipt
 receipt = proj₂
 
 -- randomness for genBallot
 Rgb : ★
 Rgb = CO × SerialNumber × Rₑ
 
-genBallot : PubKey → Rgb → Ballot checked
+genBallot : PubKey → Rgb → Ballot
 genBallot pk (r-co , sn , rₑ) = r-co , not-marked , sn , Enc pk r-co rₑ
-
-forgetBallot : Ballot checked → Ballot unchecked
-forgetBallot (co , m? , sn , enc-co) = co , m? , sn , forget enc-co
 
 mark : CO → Candidate → MarkedReceipt
 mark co c = co xor c
@@ -172,13 +133,13 @@ mark-ok 1₂ 0₂ = m4
 mark-ok 0₂ 1₂ = m2
 mark-ok 0₂ 0₂ = m1
 
-fillBallot : ∀ {checked?} → Candidate → Ballot checked? → Ballot checked?
+fillBallot : Candidate → Ballot → Ballot
 fillBallot c (co , _ , sn , enc-co) = co , marked (mark co c) , sn , enc-co
 
 -- TODO Ballot-spec c (fillBallot b)
 
 BB : ★
-BB = List (Receipt checked)
+BB = List Receipt
 
 Tally : ★
 Tally = ℕ × ℕ
@@ -219,7 +180,7 @@ tallyMarkedReceipt? : CO → MarkedReceipt? → Tally
 tallyMarkedReceipt? co not-marked    = 0 , 0
 tallyMarkedReceipt? co (marked mark) = tallyMarkedReceipt co mark
 
-tallyCheckedReceipt : SecKey → Receipt checked → Tally
+tallyCheckedReceipt : SecKey → Receipt → Tally
 tallyCheckedReceipt sk (marked? , _ , enc-co) = tallyMarkedReceipt? (Dec sk enc-co) marked?
 
 -- Not taking advantage of any homomorphic encryption
@@ -233,11 +194,11 @@ data Accept? : ★ where
 -- return the BB, here RTally is returning the Tally
 data Q : ★ where
   REB RBB RTally : Q
-  RCO            : Receipt checked → Q
-  Vote           : Receipt unchecked → Q
+  RCO            : Receipt → Q
+  Vote           : Receipt → Q
 
 Resp : Q → ★
-Resp REB = Ballot unchecked
+Resp REB = Ballot
 Resp (RCO x) = CO
 Resp (Vote x) = Accept?
 Resp RBB = BB
@@ -251,7 +212,7 @@ Phase = Strategy Q Resp
 -- A → B   receives A, then behave as B
 
 RFChallenge : ★ → ★
-RFChallenge Next = (𝟚 → Receipt checked) → Next
+RFChallenge Next = (𝟚 → Receipt) → Next
 
 Adversary : ★
 Adversary = Rₐ → PubKey → Phase -- Phase[I]
@@ -264,16 +225,21 @@ Adversary = Rₐ → PubKey → Phase -- Phase[I]
 
 module Oracle (sk : SecKey) (pk : PubKey) (rgb : Rgb) (bb : BB) where
     resp : (q : Q) → Resp q
-    resp REB = forgetBallot (genBallot pk rgb)
+    resp REB = genBallot pk rgb
     resp RBB = bb
     resp RTally = tally sk bb
     resp (RCO (_ , _ , receipt)) = Dec sk receipt
     -- do we check if the sn is already here?
-    resp (Vote (m? , sn , receipt)) = case check receipt of λ { (just x) → accept ; nothing → reject }
+    resp (Vote (m? , sn , receipt)) = [0: reject 1: accept ]′ (Check receipt)
 
     newBB : Q → BB
-    newBB (Vote (m? , sn , receipt)) = case check receipt of λ { (just x) → (m? , sn , x) ∷ bb ; nothing → bb }
+    newBB (Vote (m? , sn , receipt)) = [0: bb 1: (m? , sn , receipt) ∷ bb ]′ (Check receipt)
     newBB _ = bb
+
+private
+  State : (S A : ★) → ★
+  State S A = S → A × S
+open StatefulRun
 
 PhaseNumber = 𝟚
 module EXP (b : 𝟚) (A : Adversary) (pk : PubKey) (sk : SecKey)
@@ -303,16 +269,16 @@ module EXP (b : 𝟚) (A : Adversary) (pk : PubKey) (sk : SecKey)
   BBphase[I] : BB
   BBphase[I] = proj₁ (proj₂ phase[I])
 
-  ballots : Candidate → Ballot checked
+  ballots : Candidate → Ballot
   ballots c = fillBallot c (genBallot pk (rgb c))
 
   ballot-for-alice = ballots alice
   ballot-for-bob   = ballots bob
 
-  randomly-swapped-ballots : Candidate → Ballot checked
+  randomly-swapped-ballots : Candidate → Ballot
   randomly-swapped-ballots = ballots ∘ _xor_ b
 
-  randomly-swapped-receipts : Candidate → Receipt checked
+  randomly-swapped-receipts : Candidate → Receipt
   randomly-swapped-receipts = receipt ∘ randomly-swapped-ballots
 
   BBrfc : BB
@@ -346,7 +312,8 @@ Win A r = game A r ≡ 1₂
 {- Not all adversaries of the Adversary type are valid.
 
    First, we do not forbid the challenge in the 2nd step of the Oracle.
-   Second, no complexity analysis is done.
+   Second, there is no check preventing ballots to be resubmitted.
+   Last but not least, no complexity analysis is done.
 -}
 
 module Cheating1 where
@@ -369,33 +336,35 @@ module Cheating1 where
 
 module Cheating2 where
     cheatingA : Adversary
-    cheatingA rₐ pk = done λ m → ask (Vote (forgetReceipt (m 1₂)))
+    cheatingA rₐ pk = done λ m → ask (Vote (m 1₂))
                                      (λ { accept → ask RTally (λ { (x , y) →
                                      done (x ==ℕ 2) }) ; reject → done 1₂ })
 
     module _
      (DecEnc : ∀ rₖ rₑ m → let (pk , sk) = KeyGen rₖ in
-                           Dec sk (Enc pk m rₑ) ≡ m)
-     (check-forget : ∀ x → check (forget x) ≡ just x)
-                       where
+                           Dec sk (Enc pk m rₑ) ≡ m) where
+     --(check-forget : ∀ x → check (forget x) ≡ just x) where
 
         cheatingA-wins : ∀ r → game cheatingA r ≡ 1₂
         cheatingA-wins (rₖ , _ , 0₂ , ((co₀ , _ , rₑ₀) ∷ _) , ((co₁ , _ , rₑ₁) ∷ _))
-           rewrite check-forget (Enc (proj₁ (KeyGen rₖ)) co₁ rₑ₁)
+           rewrite CheckEnc (proj₁ (KeyGen rₖ)) co₁ rₑ₁
                  | DecEnc rₖ rₑ₀ co₀
                  | DecEnc rₖ rₑ₁ co₁ with co₀ | co₁
         ... | 0₂ | 0₂ = refl
         ... | 0₂ | 1₂ = refl
         ... | 1₂ | 0₂ = refl
         ... | 1₂ | 1₂ = refl
-        cheatingA-wins (rₖ , _ , 1₂ , ((co₀ , _ , rₑ₀) ∷ _) , ((co₁ , _ , rₑ₁) ∷ _)) -- = {!!}
-           rewrite check-forget (Enc (proj₁ (KeyGen rₖ)) co₀ rₑ₀)
+        cheatingA-wins (rₖ , _ , 1₂ , ((co₀ , _ , rₑ₀) ∷ _) , ((co₁ , _ , rₑ₁) ∷ _))
+           rewrite CheckEnc (proj₁ (KeyGen rₖ)) co₀ rₑ₀
                  | DecEnc rₖ rₑ₀ co₀
                  | DecEnc rₖ rₑ₁ co₁ with co₀ | co₁
         ... | 0₂ | 0₂ = refl
         ... | 0₂ | 1₂ = refl
         ... | 1₂ | 0₂ = refl
         ... | 1₂ | 1₂ = refl
+-- -}
+-- -}
+-- -}
 -- -}
 -- -}
 -- -}

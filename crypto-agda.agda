@@ -53,9 +53,9 @@ import Game.ReceiptFreeness
 import Game.Transformation.CCA-CPA
 import Game.Transformation.CCA2-CCA
 import Game.Transformation.CCA2-CCA2d
-import Game.Transformation.CCA2d-CCA2
+--import Game.Transformation.CCA2d-CCA2
 import Game.Transformation.CPA-CPAd
-import Game.Transformation.CPAd-CPA
+--import Game.Transformation.CPAd-CPA
 import Game.Transformation.InternalExternal
 import Language.Simple.Abstract
 import Language.Simple.Interface
