@@ -32,20 +32,13 @@ where
 module CCA2d = Game.IND-CCA2-dagger PubKey SecKey Message CipherText Rₑ Rₖ Rₐ KeyGen Enc Dec 
 module CCA2  = Game.IND-CCA2        PubKey SecKey Message CipherText Rₑ Rₖ Rₐ KeyGen Enc Dec
 open Game.IND-CPA-utils Message CipherText
-
-f : CPAAdversary (DecRound Bit)
-  → CPAAdversary (CipherText → DecRound Bit)
-get-m (f A) = get-m A
-put-c (
-f (m , g) = m , λ c _ → g c
+open TransformAdversaryResponse {DecRound Bit} {CipherText → DecRound Bit} (λ x _ → x)
 
 A-transform : (adv : CCA2.Adversary) → CCA2d.Adversary
-A-transform adv rₐ pk = mapStrategy f (adv rₐ pk)
-  
+A-transform adv rₐ pk = mapStrategy A* (adv rₐ pk)
+
 {-
-
 If we are able to do the transformation, then we get the same advantage
-
 -}
 
 decRound = runStrategy ∘ Dec
@@ -54,13 +47,13 @@ correct : ∀ {rₑ rₑ' rₖ rₐ } b adv
         → CCA2.EXP b adv               (rₐ , rₖ , rₑ)
         ≡ CCA2d.EXP b (A-transform adv) (rₐ , rₖ , rₑ , rₑ')
 correct {rₑ} {rₑ'} {rₖ} {rₐ} 0b m with KeyGen rₖ
-... | pk , sk = cong (λ x → decRound sk (proj₂ x (Enc pk (proj₁ (proj₁ x)) rₑ)
-                                             (Enc pk (proj₂ (proj₁ x)) rₑ')))
-                     (sym (run-map (Dec sk) f (m rₐ pk)))
+... | pk , sk = cong (λ x → decRound sk (put-c x (Enc pk (proj₁ (get-m x)) rₑ)
+                                                 (Enc pk (proj₂ (get-m x)) rₑ')))
+                     (sym (run-map (Dec sk) A* (m rₐ pk)))
 correct {rₑ}{rₑ'}{rₖ} {rₐ} 1b m with KeyGen rₖ
-... | pk , sk = cong (λ x → decRound sk (proj₂ x (Enc pk (proj₂ (proj₁ x)) rₑ)
-                                             (Enc pk (proj₁ (proj₁ x)) rₑ')))
-                     (sym (run-map (Dec sk) f (m rₐ pk)))
+... | pk , sk = cong (λ x → decRound sk (put-c x (Enc pk (proj₂ (get-m x)) rₑ)
+                                                 (Enc pk (proj₁ (get-m x)) rₑ')))
+                     (sym (run-map (Dec sk) A* (m rₐ pk)))
 {-
 
 Need to show that they are valid transformation aswell:
