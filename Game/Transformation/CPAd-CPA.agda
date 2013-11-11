@@ -32,21 +32,16 @@ where
 module CPA† = Game.IND-CPA-dagger PubKey SecKey Message CipherText Rₑ Rₖ Rₐ 𝟙 KeyGen Enc
 module CPA  = Game.IND-CPA        PubKey SecKey Message CipherText Rₑ Rₖ Rₐ 𝟙 KeyGen Enc
 
-{-
-f : (Message × Message) × (CipherText → DecRound Bit)
-  → (Message × Message) × (CipherText → CipherText → DecRound Bit)
-f (m , g) = m , λ c _ → g c
--}
-
 R-transform : CPA†.R → CPA.R
 R-transform (rₐ , rₖ , rₑ , _ , _) = rₐ , rₖ , rₑ , _
 
 module _ (A : CPA.Adversary) where
-  open CPA.Adversary
+  open CPA†.Adversary
+  module A = CPA.Adversary A
 
   A† : CPA†.Adversary
-  m  A† = m A
-  b′ A† rₐ pk c₀ c₁ = b′ A rₐ pk c₀
+  m  A† = A.m
+  b′ A† rₐ pk c₀ c₁ = A.b′ rₐ pk c₀
 
   lemma : ∀ b t r
           → CPA.EXP  b   A  (R-transform r)
