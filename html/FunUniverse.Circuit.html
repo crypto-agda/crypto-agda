@@ -1,0 +1,709 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >FunUniverse.Circuit</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Symbol"
+      >{-#</a
+      ><a name="4"
+      > </a
+      ><a name="5" class="Keyword"
+      >OPTIONS</a
+      ><a name="12"
+      > --without-K </a
+      ><a name="25" class="Symbol"
+      >#-}</a
+      ><a name="28"
+      >
+</a
+      ><a name="29" class="Keyword"
+      >open</a
+      ><a name="33"
+      > </a
+      ><a name="34" class="Keyword"
+      >import</a
+      ><a name="40"
+      > </a
+      ><a name="41" href="Type.html#1" class="Module"
+      >Type</a
+      ><a name="45"
+      >
+</a
+      ><a name="46" class="Keyword"
+      >open</a
+      ><a name="50"
+      > </a
+      ><a name="51" class="Keyword"
+      >import</a
+      ><a name="57"
+      > </a
+      ><a name="58" href="Data.Nat.html#1" class="Module"
+      >Data.Nat</a
+      ><a name="66"
+      >  </a
+      ><a name="68" class="Keyword"
+      >using</a
+      ><a name="73"
+      > </a
+      ><a name="74" class="Symbol"
+      >(</a
+      ><a name="75"
+      >&#8469;</a
+      ><a name="76" class="Symbol"
+      >;</a
+      ><a name="77"
+      > _+_</a
+      ><a name="81" class="Symbol"
+      >)</a
+      ><a name="82"
+      >
+</a
+      ><a name="83" class="Keyword"
+      >open</a
+      ><a name="87"
+      > </a
+      ><a name="88" class="Keyword"
+      >import</a
+      ><a name="94"
+      > </a
+      ><a name="95" href="Data.Bits.html#1" class="Module"
+      >Data.Bits</a
+      ><a name="104"
+      > </a
+      ><a name="105" class="Keyword"
+      >using</a
+      ><a name="110"
+      > </a
+      ><a name="111" class="Symbol"
+      >(</a
+      ><a name="112"
+      >Bits</a
+      ><a name="116" class="Symbol"
+      >)</a
+      ><a name="117"
+      >
+</a
+      ><a name="118" class="Keyword"
+      >open</a
+      ><a name="122"
+      > </a
+      ><a name="123" class="Keyword"
+      >import</a
+      ><a name="129"
+      > </a
+      ><a name="130" href="Data.Fin.html#1" class="Module"
+      >Data.Fin</a
+      ><a name="138"
+      >  </a
+      ><a name="140" class="Keyword"
+      >using</a
+      ><a name="145"
+      > </a
+      ><a name="146" class="Symbol"
+      >(</a
+      ><a name="147"
+      >Fin</a
+      ><a name="150" class="Symbol"
+      >)</a
+      ><a name="151"
+      >
+
+</a
+      ><a name="153" class="Keyword"
+      >open</a
+      ><a name="157"
+      > </a
+      ><a name="158" class="Keyword"
+      >import</a
+      ><a name="164"
+      > </a
+      ><a name="165" href="FunUniverse.Data.html#1" class="Module"
+      >FunUniverse.Data</a
+      ><a name="181"
+      >
+
+</a
+      ><a name="183" class="Keyword"
+      >module</a
+      ><a name="189"
+      > </a
+      ><a name="190" href="FunUniverse.Circuit.html#1" class="Module"
+      >FunUniverse.Circuit</a
+      ><a name="209"
+      > </a
+      ><a name="210" class="Keyword"
+      >where</a
+      ><a name="215"
+      >
+
+</a
+      ><a name="217" class="Keyword"
+      >infix</a
+      ><a name="222"
+      > </a
+      ><a name="223" class="Number"
+      >0</a
+      ><a name="224"
+      > _&#8997;_
+</a
+      ><a name="229" class="Keyword"
+      >data</a
+      ><a name="233"
+      > </a
+      ><a name="234" href="FunUniverse.Circuit.html#234" class="Datatype Operator"
+      >_&#8997;_</a
+      ><a name="237"
+      > </a
+      ><a name="238" class="Symbol"
+      >:</a
+      ><a name="239"
+      > </a
+      ><a name="240" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="241"
+      > </a
+      ><a name="242" class="Symbol"
+      >&#8594;</a
+      ><a name="243"
+      > </a
+      ><a name="244" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="245"
+      > </a
+      ><a name="246" class="Symbol"
+      >&#8594;</a
+      ><a name="247"
+      > </a
+      ><a name="248" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="249"
+      > </a
+      ><a name="250" class="Keyword"
+      >where</a
+      ><a name="255"
+      >
+  </a
+      ><a name="258" href="FunUniverse.Circuit.html#258" class="InductiveConstructor"
+      >rewire</a
+      ><a name="264"
+      > </a
+      ><a name="265" class="Symbol"
+      >:</a
+      ><a name="266"
+      > </a
+      ><a name="267" class="Symbol"
+      >&#8704;</a
+      ><a name="268"
+      > </a
+      ><a name="269" class="Symbol"
+      >{</a
+      ><a name="270" href="FunUniverse.Circuit.html#270" class="Bound"
+      >i</a
+      ><a name="271"
+      > </a
+      ><a name="272" href="FunUniverse.Circuit.html#272" class="Bound"
+      >o</a
+      ><a name="273" class="Symbol"
+      >}</a
+      ><a name="274"
+      > </a
+      ><a name="275" class="Symbol"
+      >&#8594;</a
+      ><a name="276"
+      > </a
+      ><a name="277" class="Symbol"
+      >(</a
+      ><a name="278" href="Data.Fin.html#775" class="Datatype"
+      >Fin</a
+      ><a name="281"
+      > </a
+      ><a name="282" href="FunUniverse.Circuit.html#272" class="Bound"
+      >o</a
+      ><a name="283"
+      > </a
+      ><a name="284" class="Symbol"
+      >&#8594;</a
+      ><a name="285"
+      > </a
+      ><a name="286" href="Data.Fin.html#775" class="Datatype"
+      >Fin</a
+      ><a name="289"
+      > </a
+      ><a name="290" href="FunUniverse.Circuit.html#270" class="Bound"
+      >i</a
+      ><a name="291" class="Symbol"
+      >)</a
+      ><a name="292"
+      > </a
+      ><a name="293" class="Symbol"
+      >&#8594;</a
+      ><a name="294"
+      > </a
+      ><a name="295" href="FunUniverse.Circuit.html#270" class="Bound"
+      >i</a
+      ><a name="296"
+      > </a
+      ><a name="297" href="FunUniverse.Circuit.html#234" class="Datatype Operator"
+      >&#8997;</a
+      ><a name="298"
+      > </a
+      ><a name="299" href="FunUniverse.Circuit.html#272" class="Bound"
+      >o</a
+      ><a name="300"
+      >
+    </a
+      ><a name="305" class="Comment"
+      >-- cost: 0 time, o space</a
+      ><a name="329"
+      >
+  </a
+      ><a name="332" href="FunUniverse.Circuit.html#332" class="InductiveConstructor Operator"
+      >_&#8728;_</a
+      ><a name="335"
+      >    </a
+      ><a name="339" class="Symbol"
+      >:</a
+      ><a name="340"
+      > </a
+      ><a name="341" class="Symbol"
+      >&#8704;</a
+      ><a name="342"
+      > </a
+      ><a name="343" class="Symbol"
+      >{</a
+      ><a name="344" href="FunUniverse.Circuit.html#344" class="Bound"
+      >m</a
+      ><a name="345"
+      > </a
+      ><a name="346" href="FunUniverse.Circuit.html#346" class="Bound"
+      >n</a
+      ><a name="347"
+      > </a
+      ><a name="348" href="FunUniverse.Circuit.html#348" class="Bound"
+      >o</a
+      ><a name="349" class="Symbol"
+      >}</a
+      ><a name="350"
+      > </a
+      ><a name="351" class="Symbol"
+      >&#8594;</a
+      ><a name="352"
+      > </a
+      ><a name="353" class="Symbol"
+      >(</a
+      ><a name="354" href="FunUniverse.Circuit.html#346" class="Bound"
+      >n</a
+      ><a name="355"
+      > </a
+      ><a name="356" href="FunUniverse.Circuit.html#234" class="Datatype Operator"
+      >&#8997;</a
+      ><a name="357"
+      > </a
+      ><a name="358" href="FunUniverse.Circuit.html#348" class="Bound"
+      >o</a
+      ><a name="359" class="Symbol"
+      >)</a
+      ><a name="360"
+      > </a
+      ><a name="361" class="Symbol"
+      >&#8594;</a
+      ><a name="362"
+      > </a
+      ><a name="363" class="Symbol"
+      >(</a
+      ><a name="364" href="FunUniverse.Circuit.html#344" class="Bound"
+      >m</a
+      ><a name="365"
+      > </a
+      ><a name="366" href="FunUniverse.Circuit.html#234" class="Datatype Operator"
+      >&#8997;</a
+      ><a name="367"
+      > </a
+      ><a name="368" href="FunUniverse.Circuit.html#346" class="Bound"
+      >n</a
+      ><a name="369" class="Symbol"
+      >)</a
+      ><a name="370"
+      > </a
+      ><a name="371" class="Symbol"
+      >&#8594;</a
+      ><a name="372"
+      > </a
+      ><a name="373" class="Symbol"
+      >(</a
+      ><a name="374" href="FunUniverse.Circuit.html#344" class="Bound"
+      >m</a
+      ><a name="375"
+      > </a
+      ><a name="376" href="FunUniverse.Circuit.html#234" class="Datatype Operator"
+      >&#8997;</a
+      ><a name="377"
+      > </a
+      ><a name="378" href="FunUniverse.Circuit.html#348" class="Bound"
+      >o</a
+      ><a name="379" class="Symbol"
+      >)</a
+      ><a name="380"
+      >
+    </a
+      ><a name="385" class="Comment"
+      >-- cost: sum time and space</a
+      ><a name="412"
+      >
+  </a
+      ><a name="415" href="FunUniverse.Circuit.html#415" class="InductiveConstructor Operator"
+      >&lt;_&#215;_&gt;</a
+      ><a name="420"
+      >  </a
+      ><a name="422" class="Symbol"
+      >:</a
+      ><a name="423"
+      > </a
+      ><a name="424" class="Symbol"
+      >&#8704;</a
+      ><a name="425"
+      > </a
+      ><a name="426" class="Symbol"
+      >{</a
+      ><a name="427" href="FunUniverse.Circuit.html#427" class="Bound"
+      >m</a
+      ><a name="428"
+      > </a
+      ><a name="429" href="FunUniverse.Circuit.html#429" class="Bound"
+      >n</a
+      ><a name="430"
+      > </a
+      ><a name="431" href="FunUniverse.Circuit.html#431" class="Bound"
+      >o</a
+      ><a name="432"
+      > </a
+      ><a name="433" href="FunUniverse.Circuit.html#433" class="Bound"
+      >p</a
+      ><a name="434" class="Symbol"
+      >}</a
+      ><a name="435"
+      > </a
+      ><a name="436" class="Symbol"
+      >&#8594;</a
+      ><a name="437"
+      > </a
+      ><a name="438" class="Symbol"
+      >(</a
+      ><a name="439" href="FunUniverse.Circuit.html#427" class="Bound"
+      >m</a
+      ><a name="440"
+      > </a
+      ><a name="441" href="FunUniverse.Circuit.html#234" class="Datatype Operator"
+      >&#8997;</a
+      ><a name="442"
+      > </a
+      ><a name="443" href="FunUniverse.Circuit.html#431" class="Bound"
+      >o</a
+      ><a name="444" class="Symbol"
+      >)</a
+      ><a name="445"
+      > </a
+      ><a name="446" class="Symbol"
+      >&#8594;</a
+      ><a name="447"
+      > </a
+      ><a name="448" class="Symbol"
+      >(</a
+      ><a name="449" href="FunUniverse.Circuit.html#429" class="Bound"
+      >n</a
+      ><a name="450"
+      > </a
+      ><a name="451" href="FunUniverse.Circuit.html#234" class="Datatype Operator"
+      >&#8997;</a
+      ><a name="452"
+      > </a
+      ><a name="453" href="FunUniverse.Circuit.html#433" class="Bound"
+      >p</a
+      ><a name="454" class="Symbol"
+      >)</a
+      ><a name="455"
+      > </a
+      ><a name="456" class="Symbol"
+      >&#8594;</a
+      ><a name="457"
+      > </a
+      ><a name="458" class="Symbol"
+      >(</a
+      ><a name="459" href="FunUniverse.Circuit.html#427" class="Bound"
+      >m</a
+      ><a name="460"
+      > </a
+      ><a name="461" href="Data.Nat.html#2239" class="Primitive Operator"
+      >+</a
+      ><a name="462"
+      > </a
+      ><a name="463" href="FunUniverse.Circuit.html#429" class="Bound"
+      >n</a
+      ><a name="464" class="Symbol"
+      >)</a
+      ><a name="465"
+      > </a
+      ><a name="466" href="FunUniverse.Circuit.html#234" class="Datatype Operator"
+      >&#8997;</a
+      ><a name="467"
+      > </a
+      ><a name="468" class="Symbol"
+      >(</a
+      ><a name="469" href="FunUniverse.Circuit.html#431" class="Bound"
+      >o</a
+      ><a name="470"
+      > </a
+      ><a name="471" href="Data.Nat.html#2239" class="Primitive Operator"
+      >+</a
+      ><a name="472"
+      > </a
+      ><a name="473" href="FunUniverse.Circuit.html#433" class="Bound"
+      >p</a
+      ><a name="474" class="Symbol"
+      >)</a
+      ><a name="475"
+      >
+    </a
+      ><a name="480" class="Comment"
+      >-- cost: max time and sum space</a
+      ><a name="511"
+      >
+  </a
+      ><a name="514" href="FunUniverse.Circuit.html#514" class="InductiveConstructor"
+      >cond</a
+      ><a name="518"
+      >   </a
+      ><a name="521" class="Symbol"
+      >:</a
+      ><a name="522"
+      > </a
+      ><a name="523" class="Symbol"
+      >&#8704;</a
+      ><a name="524"
+      > </a
+      ><a name="525" class="Symbol"
+      >{</a
+      ><a name="526" href="FunUniverse.Circuit.html#526" class="Bound"
+      >n</a
+      ><a name="527" class="Symbol"
+      >}</a
+      ><a name="528"
+      > </a
+      ><a name="529" class="Symbol"
+      >&#8594;</a
+      ><a name="530"
+      > </a
+      ><a name="531" class="Symbol"
+      >(</a
+      ><a name="532" class="Number"
+      >1</a
+      ><a name="533"
+      > </a
+      ><a name="534" href="Data.Nat.html#2239" class="Primitive Operator"
+      >+</a
+      ><a name="535"
+      > </a
+      ><a name="536" class="Symbol"
+      >(</a
+      ><a name="537" href="FunUniverse.Circuit.html#526" class="Bound"
+      >n</a
+      ><a name="538"
+      > </a
+      ><a name="539" href="Data.Nat.html#2239" class="Primitive Operator"
+      >+</a
+      ><a name="540"
+      > </a
+      ><a name="541" href="FunUniverse.Circuit.html#526" class="Bound"
+      >n</a
+      ><a name="542" class="Symbol"
+      >))</a
+      ><a name="544"
+      > </a
+      ><a name="545" href="FunUniverse.Circuit.html#234" class="Datatype Operator"
+      >&#8997;</a
+      ><a name="546"
+      > </a
+      ><a name="547" href="FunUniverse.Circuit.html#526" class="Bound"
+      >n</a
+      ><a name="548"
+      >
+    </a
+      ><a name="553" class="Comment"
+      >-- cost: 1 time, 1 space</a
+      ><a name="577"
+      >
+  </a
+      ><a name="580" href="FunUniverse.Circuit.html#580" class="InductiveConstructor"
+      >bits</a
+      ><a name="584"
+      >   </a
+      ><a name="587" class="Symbol"
+      >:</a
+      ><a name="588"
+      > </a
+      ><a name="589" class="Symbol"
+      >&#8704;</a
+      ><a name="590"
+      > </a
+      ><a name="591" class="Symbol"
+      >{</a
+      ><a name="592" href="FunUniverse.Circuit.html#592" class="Bound"
+      >n</a
+      ><a name="593"
+      > </a
+      ><a name="594" href="FunUniverse.Circuit.html#594" class="Bound Operator"
+      >_&#8868;</a
+      ><a name="596" class="Symbol"
+      >}</a
+      ><a name="597"
+      > </a
+      ><a name="598" class="Symbol"
+      >&#8594;</a
+      ><a name="599"
+      > </a
+      ><a name="600" href="Data.Bits.html#572" class="Function"
+      >Bits</a
+      ><a name="604"
+      > </a
+      ><a name="605" href="FunUniverse.Circuit.html#592" class="Bound"
+      >n</a
+      ><a name="606"
+      > </a
+      ><a name="607" class="Symbol"
+      >&#8594;</a
+      ><a name="608"
+      > </a
+      ><a name="609" href="FunUniverse.Circuit.html#594" class="Bound Operator"
+      >_&#8868;</a
+      ><a name="611"
+      > </a
+      ><a name="612" href="FunUniverse.Circuit.html#234" class="Datatype Operator"
+      >&#8997;</a
+      ><a name="613"
+      > </a
+      ><a name="614" href="FunUniverse.Circuit.html#592" class="Bound"
+      >n</a
+      ><a name="615"
+      >
+    </a
+      ><a name="620" class="Comment"
+      >-- cost: 0 time, n space</a
+      ><a name="644"
+      >
+  </a
+      ><a name="647" href="FunUniverse.Circuit.html#647" class="InductiveConstructor"
+      >xor</a
+      ><a name="650"
+      >    </a
+      ><a name="654" class="Symbol"
+      >:</a
+      ><a name="655"
+      > </a
+      ><a name="656" class="Symbol"
+      >&#8704;</a
+      ><a name="657"
+      > </a
+      ><a name="658" class="Symbol"
+      >{</a
+      ><a name="659" href="FunUniverse.Circuit.html#659" class="Bound"
+      >n</a
+      ><a name="660" class="Symbol"
+      >}</a
+      ><a name="661"
+      > </a
+      ><a name="662" class="Symbol"
+      >&#8594;</a
+      ><a name="663"
+      > </a
+      ><a name="664" href="Data.Bits.html#572" class="Function"
+      >Bits</a
+      ><a name="668"
+      > </a
+      ><a name="669" href="FunUniverse.Circuit.html#659" class="Bound"
+      >n</a
+      ><a name="670"
+      > </a
+      ><a name="671" class="Symbol"
+      >&#8594;</a
+      ><a name="672"
+      > </a
+      ><a name="673" href="FunUniverse.Circuit.html#659" class="Bound"
+      >n</a
+      ><a name="674"
+      > </a
+      ><a name="675" href="FunUniverse.Circuit.html#234" class="Datatype Operator"
+      >&#8997;</a
+      ><a name="676"
+      > </a
+      ><a name="677" href="FunUniverse.Circuit.html#659" class="Bound"
+      >n</a
+      ><a name="678"
+      >
+    </a
+      ><a name="683" class="Comment"
+      >-- cost: 1 time, n space</a
+      ><a name="707"
+      >
+
+  </a
+      ><a name="711" class="Comment"
+      >{- derived rewiring
+  id        : &#8704; {A} &#8594; A `&#8594; A
+  dup       : &#8704; {A} &#8594; A `&#8594; A `&#215; A
+  fst       : &#8704; {A B} &#8594; A `&#215; B `&#8594; A
+  snd       : &#8704; {A B} &#8594; A `&#215; B `&#8594; B
+  swap      : &#8704; {A B} &#8594; (A `&#215; B) `&#8594; (B `&#215; A)
+  assoc     : &#8704; {A B C} &#8594; ((A `&#215; B) `&#215; C) `&#8594; (A `&#215; (B `&#215; C))
+  tt        : &#8704; {_&#8868;} &#8594; _&#8868; `&#8594; `&#8868;
+  &lt;[]&gt;      : &#8704; {_&#8868; A} &#8594; _&#8868; `&#8594; `Vec A 0
+  &lt;&#8759;&gt;       : &#8704; {n A} &#8594; (A `&#215; `Vec A n) `&#8594; `Vec A (1 + n)
+  uncons    : &#8704; {n A} &#8594; `Vec A (1 + n) `&#8594; (A `&#215; `Vec A n)
+  &lt;tt,id&gt;   : &#8704; {A} &#8594; A `&#8594; `&#8868; `&#215; A
+  snd&lt;tt,&gt;  : &#8704; {A} &#8594; `&#8868; `&#215; A `&#8594; A
+  tt&#8594;[]     : &#8704; {A} &#8594; `&#8868; `&#8594; `Vec A 0
+  []&#8594;tt     : &#8704; {A} &#8594; `Vec A 0 `&#8594; `&#8868;
+  rewireTbl : &#8704; {i o} &#8594; RewireTbl i o   &#8594; `Bits i `&#8594; `Bits o
+  -}</a
+      ><a name="1369"
+      >
+  </a
+      ><a name="1372" class="Comment"
+      >{- derived from &lt;_&#215;_&gt; and id:
+  first     : &#8704; {A B C} &#8594; (A `&#8594; C) &#8594; (A `&#215; B) `&#8594; (C `&#215; B)
+  second    : &#8704; {A B C} &#8594; (B `&#8594; C) &#8594; (A `&#215; B) `&#8594; (A `&#215; C)
+  -}</a
+      ><a name="1522"
+      >
+  </a
+      ><a name="1525" class="Comment"
+      >{- derived from &lt;_&#215;_&gt; and dup:
+  &lt;_,_&gt;     : &#8704; {A B C} &#8594; (A `&#8594; B) &#8594; (A `&#8594; C) &#8594; A `&#8594; B `&#215; C
+  -}</a
+      ><a name="1620"
+      >
+  </a
+      ><a name="1623" class="Comment"
+      >{- derived from cond:
+  bijFork   : &#8704; {A B} (f g : A `&#8594; B) &#8594; `Bit `&#215; A `&#8594; `Bit `&#215; B
+  fork      : &#8704; {A B} (f g : A `&#8594; B) &#8594; `Bit `&#215; A `&#8594; B
+  -}</a
+      ><a name="1765"
+      >
+  </a
+      ><a name="1768" class="Comment"
+      >{- derived from bits
+  &lt;0b&gt; &lt;1b&gt; : &#8704; {_&#8868;} &#8594; _&#8868; `&#8594; `Bit
+  -}</a
+      ><a name="1827"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

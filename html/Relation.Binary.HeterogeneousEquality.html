@@ -1,0 +1,5662 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Relation.Binary.HeterogeneousEquality</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="73"
+      >
+</a
+      ><a name="74" class="Comment"
+      >-- The Agda standard library</a
+      ><a name="102"
+      >
+</a
+      ><a name="103" class="Comment"
+      >--</a
+      ><a name="105"
+      >
+</a
+      ><a name="106" class="Comment"
+      >-- Heterogeneous equality</a
+      ><a name="131"
+      >
+</a
+      ><a name="132" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="204"
+      >
+
+</a
+      ><a name="206" class="Keyword"
+      >module</a
+      ><a name="212"
+      > </a
+      ><a name="213" href="Relation.Binary.HeterogeneousEquality.html#1" class="Module"
+      >Relation.Binary.HeterogeneousEquality</a
+      ><a name="250"
+      > </a
+      ><a name="251" class="Keyword"
+      >where</a
+      ><a name="256"
+      >
+
+</a
+      ><a name="258" class="Keyword"
+      >open</a
+      ><a name="262"
+      > </a
+      ><a name="263" class="Keyword"
+      >import</a
+      ><a name="269"
+      > </a
+      ><a name="270" href="Data.Product.html#1" class="Module"
+      >Data.Product</a
+      ><a name="282"
+      >
+</a
+      ><a name="283" class="Keyword"
+      >open</a
+      ><a name="287"
+      > </a
+      ><a name="288" class="Keyword"
+      >import</a
+      ><a name="294"
+      > </a
+      ><a name="295" href="Function.html#1" class="Module"
+      >Function</a
+      ><a name="303"
+      >
+</a
+      ><a name="304" class="Keyword"
+      >open</a
+      ><a name="308"
+      > </a
+      ><a name="309" class="Keyword"
+      >import</a
+      ><a name="315"
+      > </a
+      ><a name="316" href="Function.Inverse.html#1" class="Module"
+      >Function.Inverse</a
+      ><a name="332"
+      > </a
+      ><a name="333" class="Keyword"
+      >using</a
+      ><a name="338"
+      > </a
+      ><a name="339" class="Symbol"
+      >(</a
+      ><a name="340"
+      >Inverse</a
+      ><a name="347" class="Symbol"
+      >)</a
+      ><a name="348"
+      >
+</a
+      ><a name="349" class="Keyword"
+      >open</a
+      ><a name="353"
+      > </a
+      ><a name="354" class="Keyword"
+      >import</a
+      ><a name="360"
+      > </a
+      ><a name="361" href="Level.html#1" class="Module"
+      >Level</a
+      ><a name="366"
+      >
+</a
+      ><a name="367" class="Keyword"
+      >open</a
+      ><a name="371"
+      > </a
+      ><a name="372" class="Keyword"
+      >import</a
+      ><a name="378"
+      > </a
+      ><a name="379" href="Relation.Nullary.html#1" class="Module"
+      >Relation.Nullary</a
+      ><a name="395"
+      >
+</a
+      ><a name="396" class="Keyword"
+      >open</a
+      ><a name="400"
+      > </a
+      ><a name="401" class="Keyword"
+      >import</a
+      ><a name="407"
+      > </a
+      ><a name="408" href="Relation.Binary.html#1" class="Module"
+      >Relation.Binary</a
+      ><a name="423"
+      >
+</a
+      ><a name="424" class="Keyword"
+      >open</a
+      ><a name="428"
+      > </a
+      ><a name="429" class="Keyword"
+      >import</a
+      ><a name="435"
+      > </a
+      ><a name="436" href="Relation.Binary.Consequences.html#1" class="Module"
+      >Relation.Binary.Consequences</a
+      ><a name="464"
+      >
+</a
+      ><a name="465" class="Keyword"
+      >open</a
+      ><a name="469"
+      > </a
+      ><a name="470" class="Keyword"
+      >import</a
+      ><a name="476"
+      > </a
+      ><a name="477" href="Relation.Binary.Indexed.html#1" class="Module"
+      >Relation.Binary.Indexed</a
+      ><a name="500"
+      > </a
+      ><a name="501" class="Symbol"
+      >as</a
+      ><a name="503"
+      > </a
+      ><a name="504" class="Module"
+      >I</a
+      ><a name="505"
+      > </a
+      ><a name="506" class="Keyword"
+      >using</a
+      ><a name="511"
+      > </a
+      ><a name="512" class="Symbol"
+      >(</a
+      ><a name="513"
+      >_at_</a
+      ><a name="517" class="Symbol"
+      >)</a
+      ><a name="518"
+      >
+</a
+      ><a name="519" class="Keyword"
+      >open</a
+      ><a name="523"
+      > </a
+      ><a name="524" class="Keyword"
+      >import</a
+      ><a name="530"
+      > </a
+      ><a name="531" href="Relation.Binary.PropositionalEquality.html#1" class="Module"
+      >Relation.Binary.PropositionalEquality</a
+      ><a name="568"
+      > </a
+      ><a name="569" class="Symbol"
+      >as</a
+      ><a name="571"
+      > </a
+      ><a name="572" class="Module"
+      >P</a
+      ><a name="573"
+      > </a
+      ><a name="574" class="Keyword"
+      >using</a
+      ><a name="579"
+      > </a
+      ><a name="580" class="Symbol"
+      >(</a
+      ><a name="581"
+      >_&#8801;_</a
+      ><a name="584" class="Symbol"
+      >;</a
+      ><a name="585"
+      > refl</a
+      ><a name="590" class="Symbol"
+      >)</a
+      ><a name="591"
+      >
+
+</a
+      ><a name="593" class="Keyword"
+      >import</a
+      ><a name="599"
+      > </a
+      ><a name="600" href="Relation.Binary.HeterogeneousEquality.Core.html#1" class="Module"
+      >Relation.Binary.HeterogeneousEquality.Core</a
+      ><a name="642"
+      > </a
+      ><a name="643" class="Symbol"
+      >as</a
+      ><a name="645"
+      > </a
+      ><a name="646" class="Module"
+      >Core</a
+      ><a name="650"
+      >
+
+</a
+      ><a name="652" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="724"
+      >
+</a
+      ><a name="725" class="Comment"
+      >-- Heterogeneous equality</a
+      ><a name="750"
+      >
+
+</a
+      ><a name="752" class="Keyword"
+      >infix</a
+      ><a name="757"
+      > </a
+      ><a name="758" class="Number"
+      >4</a
+      ><a name="759"
+      > _&#8775;_
+
+</a
+      ><a name="765" class="Keyword"
+      >open</a
+      ><a name="769"
+      > </a
+      ><a name="770" href="Relation.Binary.HeterogeneousEquality.Core.html#1" class="Module"
+      >Core</a
+      ><a name="774"
+      > </a
+      ><a name="775" class="Keyword"
+      >public</a
+      ><a name="781"
+      > </a
+      ><a name="782" class="Keyword"
+      >using</a
+      ><a name="787"
+      > </a
+      ><a name="788" class="Symbol"
+      >(</a
+      ><a name="789"
+      >_&#8773;_</a
+      ><a name="792" class="Symbol"
+      >;</a
+      ><a name="793"
+      > refl</a
+      ><a name="798" class="Symbol"
+      >)</a
+      ><a name="799"
+      >
+
+</a
+      ><a name="801" class="Comment"
+      >-- Nonequality.</a
+      ><a name="816"
+      >
+
+</a
+      ><a name="818" href="Relation.Binary.HeterogeneousEquality.html#818" class="Function Operator"
+      >_&#8775;_</a
+      ><a name="821"
+      > </a
+      ><a name="822" class="Symbol"
+      >:</a
+      ><a name="823"
+      > </a
+      ><a name="824" class="Symbol"
+      >&#8704;</a
+      ><a name="825"
+      > </a
+      ><a name="826" class="Symbol"
+      >{</a
+      ><a name="827" href="Relation.Binary.HeterogeneousEquality.html#827" class="Bound"
+      >&#8467;</a
+      ><a name="828" class="Symbol"
+      >}</a
+      ><a name="829"
+      > </a
+      ><a name="830" class="Symbol"
+      >{</a
+      ><a name="831" href="Relation.Binary.HeterogeneousEquality.html#831" class="Bound"
+      >A</a
+      ><a name="832"
+      > </a
+      ><a name="833" class="Symbol"
+      >:</a
+      ><a name="834"
+      > </a
+      ><a name="835" class="PrimitiveType"
+      >Set</a
+      ><a name="838"
+      > </a
+      ><a name="839" href="Relation.Binary.HeterogeneousEquality.html#827" class="Bound"
+      >&#8467;</a
+      ><a name="840" class="Symbol"
+      >}</a
+      ><a name="841"
+      > </a
+      ><a name="842" class="Symbol"
+      >&#8594;</a
+      ><a name="843"
+      > </a
+      ><a name="844" href="Relation.Binary.HeterogeneousEquality.html#831" class="Bound"
+      >A</a
+      ><a name="845"
+      > </a
+      ><a name="846" class="Symbol"
+      >&#8594;</a
+      ><a name="847"
+      > </a
+      ><a name="848" class="Symbol"
+      >{</a
+      ><a name="849" href="Relation.Binary.HeterogeneousEquality.html#849" class="Bound"
+      >B</a
+      ><a name="850"
+      > </a
+      ><a name="851" class="Symbol"
+      >:</a
+      ><a name="852"
+      > </a
+      ><a name="853" class="PrimitiveType"
+      >Set</a
+      ><a name="856"
+      > </a
+      ><a name="857" href="Relation.Binary.HeterogeneousEquality.html#827" class="Bound"
+      >&#8467;</a
+      ><a name="858" class="Symbol"
+      >}</a
+      ><a name="859"
+      > </a
+      ><a name="860" class="Symbol"
+      >&#8594;</a
+      ><a name="861"
+      > </a
+      ><a name="862" href="Relation.Binary.HeterogeneousEquality.html#849" class="Bound"
+      >B</a
+      ><a name="863"
+      > </a
+      ><a name="864" class="Symbol"
+      >&#8594;</a
+      ><a name="865"
+      > </a
+      ><a name="866" class="PrimitiveType"
+      >Set</a
+      ><a name="869"
+      > </a
+      ><a name="870" href="Relation.Binary.HeterogeneousEquality.html#827" class="Bound"
+      >&#8467;</a
+      ><a name="871"
+      >
+</a
+      ><a name="872" href="Relation.Binary.HeterogeneousEquality.html#872" class="Bound"
+      >x</a
+      ><a name="873"
+      > </a
+      ><a name="874" href="Relation.Binary.HeterogeneousEquality.html#818" class="Function Operator"
+      >&#8775;</a
+      ><a name="875"
+      > </a
+      ><a name="876" href="Relation.Binary.HeterogeneousEquality.html#876" class="Bound"
+      >y</a
+      ><a name="877"
+      > </a
+      ><a name="878" class="Symbol"
+      >=</a
+      ><a name="879"
+      > </a
+      ><a name="880" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="881"
+      > </a
+      ><a name="882" href="Relation.Binary.HeterogeneousEquality.html#872" class="Bound"
+      >x</a
+      ><a name="883"
+      > </a
+      ><a name="884" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="885"
+      > </a
+      ><a name="886" href="Relation.Binary.HeterogeneousEquality.html#876" class="Bound"
+      >y</a
+      ><a name="887"
+      >
+
+</a
+      ><a name="889" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="961"
+      >
+</a
+      ><a name="962" class="Comment"
+      >-- Conversion</a
+      ><a name="975"
+      >
+
+</a
+      ><a name="977" href="Relation.Binary.HeterogeneousEquality.html#977" class="Function"
+      >&#8801;-to-&#8773;</a
+      ><a name="983"
+      > </a
+      ><a name="984" class="Symbol"
+      >:</a
+      ><a name="985"
+      > </a
+      ><a name="986" class="Symbol"
+      >&#8704;</a
+      ><a name="987"
+      > </a
+      ><a name="988" class="Symbol"
+      >{</a
+      ><a name="989" href="Relation.Binary.HeterogeneousEquality.html#989" class="Bound"
+      >a</a
+      ><a name="990" class="Symbol"
+      >}</a
+      ><a name="991"
+      > </a
+      ><a name="992" class="Symbol"
+      >{</a
+      ><a name="993" href="Relation.Binary.HeterogeneousEquality.html#993" class="Bound"
+      >A</a
+      ><a name="994"
+      > </a
+      ><a name="995" class="Symbol"
+      >:</a
+      ><a name="996"
+      > </a
+      ><a name="997" class="PrimitiveType"
+      >Set</a
+      ><a name="1000"
+      > </a
+      ><a name="1001" href="Relation.Binary.HeterogeneousEquality.html#989" class="Bound"
+      >a</a
+      ><a name="1002" class="Symbol"
+      >}</a
+      ><a name="1003"
+      > </a
+      ><a name="1004" class="Symbol"
+      >{</a
+      ><a name="1005" href="Relation.Binary.HeterogeneousEquality.html#1005" class="Bound"
+      >x</a
+      ><a name="1006"
+      > </a
+      ><a name="1007" href="Relation.Binary.HeterogeneousEquality.html#1007" class="Bound"
+      >y</a
+      ><a name="1008"
+      > </a
+      ><a name="1009" class="Symbol"
+      >:</a
+      ><a name="1010"
+      > </a
+      ><a name="1011" href="Relation.Binary.HeterogeneousEquality.html#993" class="Bound"
+      >A</a
+      ><a name="1012" class="Symbol"
+      >}</a
+      ><a name="1013"
+      > </a
+      ><a name="1014" class="Symbol"
+      >&#8594;</a
+      ><a name="1015"
+      > </a
+      ><a name="1016" href="Relation.Binary.HeterogeneousEquality.html#1005" class="Bound"
+      >x</a
+      ><a name="1017"
+      > </a
+      ><a name="1018" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="1019"
+      > </a
+      ><a name="1020" href="Relation.Binary.HeterogeneousEquality.html#1007" class="Bound"
+      >y</a
+      ><a name="1021"
+      > </a
+      ><a name="1022" class="Symbol"
+      >&#8594;</a
+      ><a name="1023"
+      > </a
+      ><a name="1024" href="Relation.Binary.HeterogeneousEquality.html#1005" class="Bound"
+      >x</a
+      ><a name="1025"
+      > </a
+      ><a name="1026" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="1027"
+      > </a
+      ><a name="1028" href="Relation.Binary.HeterogeneousEquality.html#1007" class="Bound"
+      >y</a
+      ><a name="1029"
+      >
+</a
+      ><a name="1030" href="Relation.Binary.HeterogeneousEquality.html#977" class="Function"
+      >&#8801;-to-&#8773;</a
+      ><a name="1036"
+      > </a
+      ><a name="1037" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="1041"
+      > </a
+      ><a name="1042" class="Symbol"
+      >=</a
+      ><a name="1043"
+      > </a
+      ><a name="1044" href="Relation.Binary.HeterogeneousEquality.Core.html#607" class="InductiveConstructor"
+      >refl</a
+      ><a name="1048"
+      >
+
+</a
+      ><a name="1050" class="Keyword"
+      >open</a
+      ><a name="1054"
+      > </a
+      ><a name="1055" href="Relation.Binary.HeterogeneousEquality.Core.html#1" class="Module"
+      >Core</a
+      ><a name="1059"
+      > </a
+      ><a name="1060" class="Keyword"
+      >public</a
+      ><a name="1066"
+      > </a
+      ><a name="1067" class="Keyword"
+      >using</a
+      ><a name="1072"
+      > </a
+      ><a name="1073" class="Symbol"
+      >(</a
+      ><a name="1074"
+      >&#8773;-to-&#8801;</a
+      ><a name="1080" class="Symbol"
+      >)</a
+      ><a name="1081"
+      >
+
+</a
+      ><a name="1083" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="1155"
+      >
+</a
+      ><a name="1156" class="Comment"
+      >-- Some properties</a
+      ><a name="1174"
+      >
+
+</a
+      ><a name="1176" href="Relation.Binary.HeterogeneousEquality.html#1176" class="Function"
+      >reflexive</a
+      ><a name="1185"
+      > </a
+      ><a name="1186" class="Symbol"
+      >:</a
+      ><a name="1187"
+      > </a
+      ><a name="1188" class="Symbol"
+      >&#8704;</a
+      ><a name="1189"
+      > </a
+      ><a name="1190" class="Symbol"
+      >{</a
+      ><a name="1191" href="Relation.Binary.HeterogeneousEquality.html#1191" class="Bound"
+      >a</a
+      ><a name="1192" class="Symbol"
+      >}</a
+      ><a name="1193"
+      > </a
+      ><a name="1194" class="Symbol"
+      >{</a
+      ><a name="1195" href="Relation.Binary.HeterogeneousEquality.html#1195" class="Bound"
+      >A</a
+      ><a name="1196"
+      > </a
+      ><a name="1197" class="Symbol"
+      >:</a
+      ><a name="1198"
+      > </a
+      ><a name="1199" class="PrimitiveType"
+      >Set</a
+      ><a name="1202"
+      > </a
+      ><a name="1203" href="Relation.Binary.HeterogeneousEquality.html#1191" class="Bound"
+      >a</a
+      ><a name="1204" class="Symbol"
+      >}</a
+      ><a name="1205"
+      > </a
+      ><a name="1206" class="Symbol"
+      >&#8594;</a
+      ><a name="1207"
+      > </a
+      ><a name="1208" href="Relation.Binary.Core.html#1025" class="Function Operator"
+      >_&#8658;_</a
+      ><a name="1211"
+      > </a
+      ><a name="1212" class="Symbol"
+      >{</a
+      ><a name="1213"
+      >A </a
+      ><a name="1215" class="Symbol"
+      >=</a
+      ><a name="1216"
+      > </a
+      ><a name="1217" href="Relation.Binary.HeterogeneousEquality.html#1195" class="Bound"
+      >A</a
+      ><a name="1218" class="Symbol"
+      >}</a
+      ><a name="1219"
+      > </a
+      ><a name="1220" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >_&#8801;_</a
+      ><a name="1223"
+      > </a
+      ><a name="1224" class="Symbol"
+      >(&#955;</a
+      ><a name="1226"
+      > </a
+      ><a name="1227" href="Relation.Binary.HeterogeneousEquality.html#1227" class="Bound"
+      >x</a
+      ><a name="1228"
+      > </a
+      ><a name="1229" href="Relation.Binary.HeterogeneousEquality.html#1229" class="Bound"
+      >y</a
+      ><a name="1230"
+      > </a
+      ><a name="1231" class="Symbol"
+      >&#8594;</a
+      ><a name="1232"
+      > </a
+      ><a name="1233" href="Relation.Binary.HeterogeneousEquality.html#1227" class="Bound"
+      >x</a
+      ><a name="1234"
+      > </a
+      ><a name="1235" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="1236"
+      > </a
+      ><a name="1237" href="Relation.Binary.HeterogeneousEquality.html#1229" class="Bound"
+      >y</a
+      ><a name="1238" class="Symbol"
+      >)</a
+      ><a name="1239"
+      >
+</a
+      ><a name="1240" href="Relation.Binary.HeterogeneousEquality.html#1176" class="Function"
+      >reflexive</a
+      ><a name="1249"
+      > </a
+      ><a name="1250" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="1254"
+      > </a
+      ><a name="1255" class="Symbol"
+      >=</a
+      ><a name="1256"
+      > </a
+      ><a name="1257" href="Relation.Binary.HeterogeneousEquality.Core.html#607" class="InductiveConstructor"
+      >refl</a
+      ><a name="1261"
+      >
+
+</a
+      ><a name="1263" href="Relation.Binary.HeterogeneousEquality.html#1263" class="Function"
+      >sym</a
+      ><a name="1266"
+      > </a
+      ><a name="1267" class="Symbol"
+      >:</a
+      ><a name="1268"
+      > </a
+      ><a name="1269" class="Symbol"
+      >&#8704;</a
+      ><a name="1270"
+      > </a
+      ><a name="1271" class="Symbol"
+      >{</a
+      ><a name="1272" href="Relation.Binary.HeterogeneousEquality.html#1272" class="Bound"
+      >&#8467;</a
+      ><a name="1273" class="Symbol"
+      >}</a
+      ><a name="1274"
+      > </a
+      ><a name="1275" class="Symbol"
+      >{</a
+      ><a name="1276" href="Relation.Binary.HeterogeneousEquality.html#1276" class="Bound"
+      >A</a
+      ><a name="1277"
+      > </a
+      ><a name="1278" href="Relation.Binary.HeterogeneousEquality.html#1278" class="Bound"
+      >B</a
+      ><a name="1279"
+      > </a
+      ><a name="1280" class="Symbol"
+      >:</a
+      ><a name="1281"
+      > </a
+      ><a name="1282" class="PrimitiveType"
+      >Set</a
+      ><a name="1285"
+      > </a
+      ><a name="1286" href="Relation.Binary.HeterogeneousEquality.html#1272" class="Bound"
+      >&#8467;</a
+      ><a name="1287" class="Symbol"
+      >}</a
+      ><a name="1288"
+      > </a
+      ><a name="1289" class="Symbol"
+      >{</a
+      ><a name="1290" href="Relation.Binary.HeterogeneousEquality.html#1290" class="Bound"
+      >x</a
+      ><a name="1291"
+      > </a
+      ><a name="1292" class="Symbol"
+      >:</a
+      ><a name="1293"
+      > </a
+      ><a name="1294" href="Relation.Binary.HeterogeneousEquality.html#1276" class="Bound"
+      >A</a
+      ><a name="1295" class="Symbol"
+      >}</a
+      ><a name="1296"
+      > </a
+      ><a name="1297" class="Symbol"
+      >{</a
+      ><a name="1298" href="Relation.Binary.HeterogeneousEquality.html#1298" class="Bound"
+      >y</a
+      ><a name="1299"
+      > </a
+      ><a name="1300" class="Symbol"
+      >:</a
+      ><a name="1301"
+      > </a
+      ><a name="1302" href="Relation.Binary.HeterogeneousEquality.html#1278" class="Bound"
+      >B</a
+      ><a name="1303" class="Symbol"
+      >}</a
+      ><a name="1304"
+      > </a
+      ><a name="1305" class="Symbol"
+      >&#8594;</a
+      ><a name="1306"
+      > </a
+      ><a name="1307" href="Relation.Binary.HeterogeneousEquality.html#1290" class="Bound"
+      >x</a
+      ><a name="1308"
+      > </a
+      ><a name="1309" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="1310"
+      > </a
+      ><a name="1311" href="Relation.Binary.HeterogeneousEquality.html#1298" class="Bound"
+      >y</a
+      ><a name="1312"
+      > </a
+      ><a name="1313" class="Symbol"
+      >&#8594;</a
+      ><a name="1314"
+      > </a
+      ><a name="1315" href="Relation.Binary.HeterogeneousEquality.html#1298" class="Bound"
+      >y</a
+      ><a name="1316"
+      > </a
+      ><a name="1317" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="1318"
+      > </a
+      ><a name="1319" href="Relation.Binary.HeterogeneousEquality.html#1290" class="Bound"
+      >x</a
+      ><a name="1320"
+      >
+</a
+      ><a name="1321" href="Relation.Binary.HeterogeneousEquality.html#1263" class="Function"
+      >sym</a
+      ><a name="1324"
+      > </a
+      ><a name="1325" href="Relation.Binary.HeterogeneousEquality.Core.html#607" class="InductiveConstructor"
+      >refl</a
+      ><a name="1329"
+      > </a
+      ><a name="1330" class="Symbol"
+      >=</a
+      ><a name="1331"
+      > </a
+      ><a name="1332" href="Relation.Binary.HeterogeneousEquality.Core.html#607" class="InductiveConstructor"
+      >refl</a
+      ><a name="1336"
+      >
+
+</a
+      ><a name="1338" href="Relation.Binary.HeterogeneousEquality.html#1338" class="Function"
+      >trans</a
+      ><a name="1343"
+      > </a
+      ><a name="1344" class="Symbol"
+      >:</a
+      ><a name="1345"
+      > </a
+      ><a name="1346" class="Symbol"
+      >&#8704;</a
+      ><a name="1347"
+      > </a
+      ><a name="1348" class="Symbol"
+      >{</a
+      ><a name="1349" href="Relation.Binary.HeterogeneousEquality.html#1349" class="Bound"
+      >&#8467;</a
+      ><a name="1350" class="Symbol"
+      >}</a
+      ><a name="1351"
+      > </a
+      ><a name="1352" class="Symbol"
+      >{</a
+      ><a name="1353" href="Relation.Binary.HeterogeneousEquality.html#1353" class="Bound"
+      >A</a
+      ><a name="1354"
+      > </a
+      ><a name="1355" href="Relation.Binary.HeterogeneousEquality.html#1355" class="Bound"
+      >B</a
+      ><a name="1356"
+      > </a
+      ><a name="1357" href="Relation.Binary.HeterogeneousEquality.html#1357" class="Bound"
+      >C</a
+      ><a name="1358"
+      > </a
+      ><a name="1359" class="Symbol"
+      >:</a
+      ><a name="1360"
+      > </a
+      ><a name="1361" class="PrimitiveType"
+      >Set</a
+      ><a name="1364"
+      > </a
+      ><a name="1365" href="Relation.Binary.HeterogeneousEquality.html#1349" class="Bound"
+      >&#8467;</a
+      ><a name="1366" class="Symbol"
+      >}</a
+      ><a name="1367"
+      > </a
+      ><a name="1368" class="Symbol"
+      >{</a
+      ><a name="1369" href="Relation.Binary.HeterogeneousEquality.html#1369" class="Bound"
+      >x</a
+      ><a name="1370"
+      > </a
+      ><a name="1371" class="Symbol"
+      >:</a
+      ><a name="1372"
+      > </a
+      ><a name="1373" href="Relation.Binary.HeterogeneousEquality.html#1353" class="Bound"
+      >A</a
+      ><a name="1374" class="Symbol"
+      >}</a
+      ><a name="1375"
+      > </a
+      ><a name="1376" class="Symbol"
+      >{</a
+      ><a name="1377" href="Relation.Binary.HeterogeneousEquality.html#1377" class="Bound"
+      >y</a
+      ><a name="1378"
+      > </a
+      ><a name="1379" class="Symbol"
+      >:</a
+      ><a name="1380"
+      > </a
+      ><a name="1381" href="Relation.Binary.HeterogeneousEquality.html#1355" class="Bound"
+      >B</a
+      ><a name="1382" class="Symbol"
+      >}</a
+      ><a name="1383"
+      > </a
+      ><a name="1384" class="Symbol"
+      >{</a
+      ><a name="1385" href="Relation.Binary.HeterogeneousEquality.html#1385" class="Bound"
+      >z</a
+      ><a name="1386"
+      > </a
+      ><a name="1387" class="Symbol"
+      >:</a
+      ><a name="1388"
+      > </a
+      ><a name="1389" href="Relation.Binary.HeterogeneousEquality.html#1357" class="Bound"
+      >C</a
+      ><a name="1390" class="Symbol"
+      >}</a
+      ><a name="1391"
+      > </a
+      ><a name="1392" class="Symbol"
+      >&#8594;</a
+      ><a name="1393"
+      >
+        </a
+      ><a name="1402" href="Relation.Binary.HeterogeneousEquality.html#1369" class="Bound"
+      >x</a
+      ><a name="1403"
+      > </a
+      ><a name="1404" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="1405"
+      > </a
+      ><a name="1406" href="Relation.Binary.HeterogeneousEquality.html#1377" class="Bound"
+      >y</a
+      ><a name="1407"
+      > </a
+      ><a name="1408" class="Symbol"
+      >&#8594;</a
+      ><a name="1409"
+      > </a
+      ><a name="1410" href="Relation.Binary.HeterogeneousEquality.html#1377" class="Bound"
+      >y</a
+      ><a name="1411"
+      > </a
+      ><a name="1412" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="1413"
+      > </a
+      ><a name="1414" href="Relation.Binary.HeterogeneousEquality.html#1385" class="Bound"
+      >z</a
+      ><a name="1415"
+      > </a
+      ><a name="1416" class="Symbol"
+      >&#8594;</a
+      ><a name="1417"
+      > </a
+      ><a name="1418" href="Relation.Binary.HeterogeneousEquality.html#1369" class="Bound"
+      >x</a
+      ><a name="1419"
+      > </a
+      ><a name="1420" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="1421"
+      > </a
+      ><a name="1422" href="Relation.Binary.HeterogeneousEquality.html#1385" class="Bound"
+      >z</a
+      ><a name="1423"
+      >
+</a
+      ><a name="1424" href="Relation.Binary.HeterogeneousEquality.html#1338" class="Function"
+      >trans</a
+      ><a name="1429"
+      > </a
+      ><a name="1430" href="Relation.Binary.HeterogeneousEquality.Core.html#607" class="InductiveConstructor"
+      >refl</a
+      ><a name="1434"
+      > </a
+      ><a name="1435" href="Relation.Binary.HeterogeneousEquality.html#1435" class="Bound"
+      >eq</a
+      ><a name="1437"
+      > </a
+      ><a name="1438" class="Symbol"
+      >=</a
+      ><a name="1439"
+      > </a
+      ><a name="1440" href="Relation.Binary.HeterogeneousEquality.html#1435" class="Bound"
+      >eq</a
+      ><a name="1442"
+      >
+
+</a
+      ><a name="1444" href="Relation.Binary.HeterogeneousEquality.html#1444" class="Function"
+      >subst</a
+      ><a name="1449"
+      > </a
+      ><a name="1450" class="Symbol"
+      >:</a
+      ><a name="1451"
+      > </a
+      ><a name="1452" class="Symbol"
+      >&#8704;</a
+      ><a name="1453"
+      > </a
+      ><a name="1454" class="Symbol"
+      >{</a
+      ><a name="1455" href="Relation.Binary.HeterogeneousEquality.html#1455" class="Bound"
+      >a</a
+      ><a name="1456" class="Symbol"
+      >}</a
+      ><a name="1457"
+      > </a
+      ><a name="1458" class="Symbol"
+      >{</a
+      ><a name="1459" href="Relation.Binary.HeterogeneousEquality.html#1459" class="Bound"
+      >A</a
+      ><a name="1460"
+      > </a
+      ><a name="1461" class="Symbol"
+      >:</a
+      ><a name="1462"
+      > </a
+      ><a name="1463" class="PrimitiveType"
+      >Set</a
+      ><a name="1466"
+      > </a
+      ><a name="1467" href="Relation.Binary.HeterogeneousEquality.html#1455" class="Bound"
+      >a</a
+      ><a name="1468" class="Symbol"
+      >}</a
+      ><a name="1469"
+      > </a
+      ><a name="1470" class="Symbol"
+      >{</a
+      ><a name="1471" href="Relation.Binary.HeterogeneousEquality.html#1471" class="Bound"
+      >p</a
+      ><a name="1472" class="Symbol"
+      >}</a
+      ><a name="1473"
+      > </a
+      ><a name="1474" class="Symbol"
+      >&#8594;</a
+      ><a name="1475"
+      > </a
+      ><a name="1476" href="Relation.Binary.Core.html#3378" class="Function"
+      >Substitutive</a
+      ><a name="1488"
+      > </a
+      ><a name="1489" class="Symbol"
+      >{</a
+      ><a name="1490"
+      >A </a
+      ><a name="1492" class="Symbol"
+      >=</a
+      ><a name="1493"
+      > </a
+      ><a name="1494" href="Relation.Binary.HeterogeneousEquality.html#1459" class="Bound"
+      >A</a
+      ><a name="1495" class="Symbol"
+      >}</a
+      ><a name="1496"
+      > </a
+      ><a name="1497" class="Symbol"
+      >(&#955;</a
+      ><a name="1499"
+      > </a
+      ><a name="1500" href="Relation.Binary.HeterogeneousEquality.html#1500" class="Bound"
+      >x</a
+      ><a name="1501"
+      > </a
+      ><a name="1502" href="Relation.Binary.HeterogeneousEquality.html#1502" class="Bound"
+      >y</a
+      ><a name="1503"
+      > </a
+      ><a name="1504" class="Symbol"
+      >&#8594;</a
+      ><a name="1505"
+      > </a
+      ><a name="1506" href="Relation.Binary.HeterogeneousEquality.html#1500" class="Bound"
+      >x</a
+      ><a name="1507"
+      > </a
+      ><a name="1508" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="1509"
+      > </a
+      ><a name="1510" href="Relation.Binary.HeterogeneousEquality.html#1502" class="Bound"
+      >y</a
+      ><a name="1511" class="Symbol"
+      >)</a
+      ><a name="1512"
+      > </a
+      ><a name="1513" href="Relation.Binary.HeterogeneousEquality.html#1471" class="Bound"
+      >p</a
+      ><a name="1514"
+      >
+</a
+      ><a name="1515" href="Relation.Binary.HeterogeneousEquality.html#1444" class="Function"
+      >subst</a
+      ><a name="1520"
+      > </a
+      ><a name="1521" href="Relation.Binary.HeterogeneousEquality.html#1521" class="Bound"
+      >P</a
+      ><a name="1522"
+      > </a
+      ><a name="1523" href="Relation.Binary.HeterogeneousEquality.Core.html#607" class="InductiveConstructor"
+      >refl</a
+      ><a name="1527"
+      > </a
+      ><a name="1528" href="Relation.Binary.HeterogeneousEquality.html#1528" class="Bound"
+      >p</a
+      ><a name="1529"
+      > </a
+      ><a name="1530" class="Symbol"
+      >=</a
+      ><a name="1531"
+      > </a
+      ><a name="1532" href="Relation.Binary.HeterogeneousEquality.html#1528" class="Bound"
+      >p</a
+      ><a name="1533"
+      >
+
+</a
+      ><a name="1535" href="Relation.Binary.HeterogeneousEquality.html#1535" class="Function"
+      >subst&#8322;</a
+      ><a name="1541"
+      > </a
+      ><a name="1542" class="Symbol"
+      >:</a
+      ><a name="1543"
+      > </a
+      ><a name="1544" class="Symbol"
+      >&#8704;</a
+      ><a name="1545"
+      > </a
+      ><a name="1546" class="Symbol"
+      >{</a
+      ><a name="1547" href="Relation.Binary.HeterogeneousEquality.html#1547" class="Bound"
+      >a</a
+      ><a name="1548"
+      > </a
+      ><a name="1549" href="Relation.Binary.HeterogeneousEquality.html#1549" class="Bound"
+      >b</a
+      ><a name="1550"
+      > </a
+      ><a name="1551" href="Relation.Binary.HeterogeneousEquality.html#1551" class="Bound"
+      >p</a
+      ><a name="1552" class="Symbol"
+      >}</a
+      ><a name="1553"
+      > </a
+      ><a name="1554" class="Symbol"
+      >{</a
+      ><a name="1555" href="Relation.Binary.HeterogeneousEquality.html#1555" class="Bound"
+      >A</a
+      ><a name="1556"
+      > </a
+      ><a name="1557" class="Symbol"
+      >:</a
+      ><a name="1558"
+      > </a
+      ><a name="1559" class="PrimitiveType"
+      >Set</a
+      ><a name="1562"
+      > </a
+      ><a name="1563" href="Relation.Binary.HeterogeneousEquality.html#1547" class="Bound"
+      >a</a
+      ><a name="1564" class="Symbol"
+      >}</a
+      ><a name="1565"
+      > </a
+      ><a name="1566" class="Symbol"
+      >{</a
+      ><a name="1567" href="Relation.Binary.HeterogeneousEquality.html#1567" class="Bound"
+      >B</a
+      ><a name="1568"
+      > </a
+      ><a name="1569" class="Symbol"
+      >:</a
+      ><a name="1570"
+      > </a
+      ><a name="1571" class="PrimitiveType"
+      >Set</a
+      ><a name="1574"
+      > </a
+      ><a name="1575" href="Relation.Binary.HeterogeneousEquality.html#1549" class="Bound"
+      >b</a
+      ><a name="1576" class="Symbol"
+      >}</a
+      ><a name="1577"
+      > </a
+      ><a name="1578" class="Symbol"
+      >(</a
+      ><a name="1579" href="Relation.Binary.HeterogeneousEquality.html#1579" class="Bound"
+      >P</a
+      ><a name="1580"
+      > </a
+      ><a name="1581" class="Symbol"
+      >:</a
+      ><a name="1582"
+      > </a
+      ><a name="1583" href="Relation.Binary.HeterogeneousEquality.html#1555" class="Bound"
+      >A</a
+      ><a name="1584"
+      > </a
+      ><a name="1585" class="Symbol"
+      >&#8594;</a
+      ><a name="1586"
+      > </a
+      ><a name="1587" href="Relation.Binary.HeterogeneousEquality.html#1567" class="Bound"
+      >B</a
+      ><a name="1588"
+      > </a
+      ><a name="1589" class="Symbol"
+      >&#8594;</a
+      ><a name="1590"
+      > </a
+      ><a name="1591" class="PrimitiveType"
+      >Set</a
+      ><a name="1594"
+      > </a
+      ><a name="1595" href="Relation.Binary.HeterogeneousEquality.html#1551" class="Bound"
+      >p</a
+      ><a name="1596" class="Symbol"
+      >)</a
+      ><a name="1597"
+      > </a
+      ><a name="1598" class="Symbol"
+      >&#8594;</a
+      ><a name="1599"
+      >
+         </a
+      ><a name="1609" class="Symbol"
+      >&#8704;</a
+      ><a name="1610"
+      > </a
+      ><a name="1611" class="Symbol"
+      >{</a
+      ><a name="1612" href="Relation.Binary.HeterogeneousEquality.html#1612" class="Bound"
+      >x&#8321;</a
+      ><a name="1614"
+      > </a
+      ><a name="1615" href="Relation.Binary.HeterogeneousEquality.html#1615" class="Bound"
+      >x&#8322;</a
+      ><a name="1617"
+      > </a
+      ><a name="1618" href="Relation.Binary.HeterogeneousEquality.html#1618" class="Bound"
+      >y&#8321;</a
+      ><a name="1620"
+      > </a
+      ><a name="1621" href="Relation.Binary.HeterogeneousEquality.html#1621" class="Bound"
+      >y&#8322;</a
+      ><a name="1623" class="Symbol"
+      >}</a
+      ><a name="1624"
+      > </a
+      ><a name="1625" class="Symbol"
+      >&#8594;</a
+      ><a name="1626"
+      > </a
+      ><a name="1627" href="Relation.Binary.HeterogeneousEquality.html#1612" class="Bound"
+      >x&#8321;</a
+      ><a name="1629"
+      > </a
+      ><a name="1630" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="1631"
+      > </a
+      ><a name="1632" href="Relation.Binary.HeterogeneousEquality.html#1615" class="Bound"
+      >x&#8322;</a
+      ><a name="1634"
+      > </a
+      ><a name="1635" class="Symbol"
+      >&#8594;</a
+      ><a name="1636"
+      > </a
+      ><a name="1637" href="Relation.Binary.HeterogeneousEquality.html#1618" class="Bound"
+      >y&#8321;</a
+      ><a name="1639"
+      > </a
+      ><a name="1640" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="1641"
+      > </a
+      ><a name="1642" href="Relation.Binary.HeterogeneousEquality.html#1621" class="Bound"
+      >y&#8322;</a
+      ><a name="1644"
+      > </a
+      ><a name="1645" class="Symbol"
+      >&#8594;</a
+      ><a name="1646"
+      > </a
+      ><a name="1647" href="Relation.Binary.HeterogeneousEquality.html#1579" class="Bound"
+      >P</a
+      ><a name="1648"
+      > </a
+      ><a name="1649" href="Relation.Binary.HeterogeneousEquality.html#1612" class="Bound"
+      >x&#8321;</a
+      ><a name="1651"
+      > </a
+      ><a name="1652" href="Relation.Binary.HeterogeneousEquality.html#1618" class="Bound"
+      >y&#8321;</a
+      ><a name="1654"
+      > </a
+      ><a name="1655" class="Symbol"
+      >&#8594;</a
+      ><a name="1656"
+      > </a
+      ><a name="1657" href="Relation.Binary.HeterogeneousEquality.html#1579" class="Bound"
+      >P</a
+      ><a name="1658"
+      > </a
+      ><a name="1659" href="Relation.Binary.HeterogeneousEquality.html#1615" class="Bound"
+      >x&#8322;</a
+      ><a name="1661"
+      > </a
+      ><a name="1662" href="Relation.Binary.HeterogeneousEquality.html#1621" class="Bound"
+      >y&#8322;</a
+      ><a name="1664"
+      >
+</a
+      ><a name="1665" href="Relation.Binary.HeterogeneousEquality.html#1535" class="Function"
+      >subst&#8322;</a
+      ><a name="1671"
+      > </a
+      ><a name="1672" href="Relation.Binary.HeterogeneousEquality.html#1672" class="Bound"
+      >P</a
+      ><a name="1673"
+      > </a
+      ><a name="1674" href="Relation.Binary.HeterogeneousEquality.Core.html#607" class="InductiveConstructor"
+      >refl</a
+      ><a name="1678"
+      > </a
+      ><a name="1679" href="Relation.Binary.HeterogeneousEquality.Core.html#607" class="InductiveConstructor"
+      >refl</a
+      ><a name="1683"
+      > </a
+      ><a name="1684" href="Relation.Binary.HeterogeneousEquality.html#1684" class="Bound"
+      >p</a
+      ><a name="1685"
+      > </a
+      ><a name="1686" class="Symbol"
+      >=</a
+      ><a name="1687"
+      > </a
+      ><a name="1688" href="Relation.Binary.HeterogeneousEquality.html#1684" class="Bound"
+      >p</a
+      ><a name="1689"
+      >
+
+</a
+      ><a name="1691" href="Relation.Binary.HeterogeneousEquality.html#1691" class="Function"
+      >subst-removable</a
+      ><a name="1706"
+      > </a
+      ><a name="1707" class="Symbol"
+      >:</a
+      ><a name="1708"
+      > </a
+      ><a name="1709" class="Symbol"
+      >&#8704;</a
+      ><a name="1710"
+      > </a
+      ><a name="1711" class="Symbol"
+      >{</a
+      ><a name="1712" href="Relation.Binary.HeterogeneousEquality.html#1712" class="Bound"
+      >a</a
+      ><a name="1713"
+      > </a
+      ><a name="1714" href="Relation.Binary.HeterogeneousEquality.html#1714" class="Bound"
+      >p</a
+      ><a name="1715" class="Symbol"
+      >}</a
+      ><a name="1716"
+      > </a
+      ><a name="1717" class="Symbol"
+      >{</a
+      ><a name="1718" href="Relation.Binary.HeterogeneousEquality.html#1718" class="Bound"
+      >A</a
+      ><a name="1719"
+      > </a
+      ><a name="1720" class="Symbol"
+      >:</a
+      ><a name="1721"
+      > </a
+      ><a name="1722" class="PrimitiveType"
+      >Set</a
+      ><a name="1725"
+      > </a
+      ><a name="1726" href="Relation.Binary.HeterogeneousEquality.html#1712" class="Bound"
+      >a</a
+      ><a name="1727" class="Symbol"
+      >}</a
+      ><a name="1728"
+      >
+                  </a
+      ><a name="1747" class="Symbol"
+      >(</a
+      ><a name="1748" href="Relation.Binary.HeterogeneousEquality.html#1748" class="Bound"
+      >P</a
+      ><a name="1749"
+      > </a
+      ><a name="1750" class="Symbol"
+      >:</a
+      ><a name="1751"
+      > </a
+      ><a name="1752" href="Relation.Binary.HeterogeneousEquality.html#1718" class="Bound"
+      >A</a
+      ><a name="1753"
+      > </a
+      ><a name="1754" class="Symbol"
+      >&#8594;</a
+      ><a name="1755"
+      > </a
+      ><a name="1756" class="PrimitiveType"
+      >Set</a
+      ><a name="1759"
+      > </a
+      ><a name="1760" href="Relation.Binary.HeterogeneousEquality.html#1714" class="Bound"
+      >p</a
+      ><a name="1761" class="Symbol"
+      >)</a
+      ><a name="1762"
+      > </a
+      ><a name="1763" class="Symbol"
+      >{</a
+      ><a name="1764" href="Relation.Binary.HeterogeneousEquality.html#1764" class="Bound"
+      >x</a
+      ><a name="1765"
+      > </a
+      ><a name="1766" href="Relation.Binary.HeterogeneousEquality.html#1766" class="Bound"
+      >y</a
+      ><a name="1767" class="Symbol"
+      >}</a
+      ><a name="1768"
+      > </a
+      ><a name="1769" class="Symbol"
+      >(</a
+      ><a name="1770" href="Relation.Binary.HeterogeneousEquality.html#1770" class="Bound"
+      >eq</a
+      ><a name="1772"
+      > </a
+      ><a name="1773" class="Symbol"
+      >:</a
+      ><a name="1774"
+      > </a
+      ><a name="1775" href="Relation.Binary.HeterogeneousEquality.html#1764" class="Bound"
+      >x</a
+      ><a name="1776"
+      > </a
+      ><a name="1777" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="1778"
+      > </a
+      ><a name="1779" href="Relation.Binary.HeterogeneousEquality.html#1766" class="Bound"
+      >y</a
+      ><a name="1780" class="Symbol"
+      >)</a
+      ><a name="1781"
+      > </a
+      ><a name="1782" href="Relation.Binary.HeterogeneousEquality.html#1782" class="Bound"
+      >z</a
+      ><a name="1783"
+      > </a
+      ><a name="1784" class="Symbol"
+      >&#8594;</a
+      ><a name="1785"
+      >
+                  </a
+      ><a name="1804" href="Relation.Binary.HeterogeneousEquality.html#1444" class="Function"
+      >subst</a
+      ><a name="1809"
+      > </a
+      ><a name="1810" href="Relation.Binary.HeterogeneousEquality.html#1748" class="Bound"
+      >P</a
+      ><a name="1811"
+      > </a
+      ><a name="1812" href="Relation.Binary.HeterogeneousEquality.html#1770" class="Bound"
+      >eq</a
+      ><a name="1814"
+      > </a
+      ><a name="1815" href="Relation.Binary.HeterogeneousEquality.html#1782" class="Bound"
+      >z</a
+      ><a name="1816"
+      > </a
+      ><a name="1817" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="1818"
+      > </a
+      ><a name="1819" href="Relation.Binary.HeterogeneousEquality.html#1782" class="Bound"
+      >z</a
+      ><a name="1820"
+      >
+</a
+      ><a name="1821" href="Relation.Binary.HeterogeneousEquality.html#1691" class="Function"
+      >subst-removable</a
+      ><a name="1836"
+      > </a
+      ><a name="1837" href="Relation.Binary.HeterogeneousEquality.html#1837" class="Bound"
+      >P</a
+      ><a name="1838"
+      > </a
+      ><a name="1839" href="Relation.Binary.HeterogeneousEquality.Core.html#607" class="InductiveConstructor"
+      >refl</a
+      ><a name="1843"
+      > </a
+      ><a name="1844" href="Relation.Binary.HeterogeneousEquality.html#1844" class="Bound"
+      >z</a
+      ><a name="1845"
+      > </a
+      ><a name="1846" class="Symbol"
+      >=</a
+      ><a name="1847"
+      > </a
+      ><a name="1848" href="Relation.Binary.HeterogeneousEquality.Core.html#607" class="InductiveConstructor"
+      >refl</a
+      ><a name="1852"
+      >
+
+</a
+      ><a name="1854" href="Relation.Binary.HeterogeneousEquality.html#1854" class="Function"
+      >&#8801;-subst-removable</a
+      ><a name="1871"
+      > </a
+      ><a name="1872" class="Symbol"
+      >:</a
+      ><a name="1873"
+      > </a
+      ><a name="1874" class="Symbol"
+      >&#8704;</a
+      ><a name="1875"
+      > </a
+      ><a name="1876" class="Symbol"
+      >{</a
+      ><a name="1877" href="Relation.Binary.HeterogeneousEquality.html#1877" class="Bound"
+      >a</a
+      ><a name="1878"
+      > </a
+      ><a name="1879" href="Relation.Binary.HeterogeneousEquality.html#1879" class="Bound"
+      >p</a
+      ><a name="1880" class="Symbol"
+      >}</a
+      ><a name="1881"
+      > </a
+      ><a name="1882" class="Symbol"
+      >{</a
+      ><a name="1883" href="Relation.Binary.HeterogeneousEquality.html#1883" class="Bound"
+      >A</a
+      ><a name="1884"
+      > </a
+      ><a name="1885" class="Symbol"
+      >:</a
+      ><a name="1886"
+      > </a
+      ><a name="1887" class="PrimitiveType"
+      >Set</a
+      ><a name="1890"
+      > </a
+      ><a name="1891" href="Relation.Binary.HeterogeneousEquality.html#1877" class="Bound"
+      >a</a
+      ><a name="1892" class="Symbol"
+      >}</a
+      ><a name="1893"
+      >
+                    </a
+      ><a name="1914" class="Symbol"
+      >(</a
+      ><a name="1915" href="Relation.Binary.HeterogeneousEquality.html#1915" class="Bound"
+      >P</a
+      ><a name="1916"
+      > </a
+      ><a name="1917" class="Symbol"
+      >:</a
+      ><a name="1918"
+      > </a
+      ><a name="1919" href="Relation.Binary.HeterogeneousEquality.html#1883" class="Bound"
+      >A</a
+      ><a name="1920"
+      > </a
+      ><a name="1921" class="Symbol"
+      >&#8594;</a
+      ><a name="1922"
+      > </a
+      ><a name="1923" class="PrimitiveType"
+      >Set</a
+      ><a name="1926"
+      > </a
+      ><a name="1927" href="Relation.Binary.HeterogeneousEquality.html#1879" class="Bound"
+      >p</a
+      ><a name="1928" class="Symbol"
+      >)</a
+      ><a name="1929"
+      > </a
+      ><a name="1930" class="Symbol"
+      >{</a
+      ><a name="1931" href="Relation.Binary.HeterogeneousEquality.html#1931" class="Bound"
+      >x</a
+      ><a name="1932"
+      > </a
+      ><a name="1933" href="Relation.Binary.HeterogeneousEquality.html#1933" class="Bound"
+      >y</a
+      ><a name="1934" class="Symbol"
+      >}</a
+      ><a name="1935"
+      > </a
+      ><a name="1936" class="Symbol"
+      >(</a
+      ><a name="1937" href="Relation.Binary.HeterogeneousEquality.html#1937" class="Bound"
+      >eq</a
+      ><a name="1939"
+      > </a
+      ><a name="1940" class="Symbol"
+      >:</a
+      ><a name="1941"
+      > </a
+      ><a name="1942" href="Relation.Binary.HeterogeneousEquality.html#1931" class="Bound"
+      >x</a
+      ><a name="1943"
+      > </a
+      ><a name="1944" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="1945"
+      > </a
+      ><a name="1946" href="Relation.Binary.HeterogeneousEquality.html#1933" class="Bound"
+      >y</a
+      ><a name="1947" class="Symbol"
+      >)</a
+      ><a name="1948"
+      > </a
+      ><a name="1949" href="Relation.Binary.HeterogeneousEquality.html#1949" class="Bound"
+      >z</a
+      ><a name="1950"
+      > </a
+      ><a name="1951" class="Symbol"
+      >&#8594;</a
+      ><a name="1952"
+      >
+                    </a
+      ><a name="1973" href="Relation.Binary.PropositionalEquality.Core.html#705" class="Function"
+      >P.subst</a
+      ><a name="1980"
+      > </a
+      ><a name="1981" href="Relation.Binary.HeterogeneousEquality.html#1915" class="Bound"
+      >P</a
+      ><a name="1982"
+      > </a
+      ><a name="1983" href="Relation.Binary.HeterogeneousEquality.html#1937" class="Bound"
+      >eq</a
+      ><a name="1985"
+      > </a
+      ><a name="1986" href="Relation.Binary.HeterogeneousEquality.html#1949" class="Bound"
+      >z</a
+      ><a name="1987"
+      > </a
+      ><a name="1988" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="1989"
+      > </a
+      ><a name="1990" href="Relation.Binary.HeterogeneousEquality.html#1949" class="Bound"
+      >z</a
+      ><a name="1991"
+      >
+</a
+      ><a name="1992" href="Relation.Binary.HeterogeneousEquality.html#1854" class="Function"
+      >&#8801;-subst-removable</a
+      ><a name="2009"
+      > </a
+      ><a name="2010" href="Relation.Binary.HeterogeneousEquality.html#2010" class="Bound"
+      >P</a
+      ><a name="2011"
+      > </a
+      ><a name="2012" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="2016"
+      > </a
+      ><a name="2017" href="Relation.Binary.HeterogeneousEquality.html#2017" class="Bound"
+      >z</a
+      ><a name="2018"
+      > </a
+      ><a name="2019" class="Symbol"
+      >=</a
+      ><a name="2020"
+      > </a
+      ><a name="2021" href="Relation.Binary.HeterogeneousEquality.Core.html#607" class="InductiveConstructor"
+      >refl</a
+      ><a name="2025"
+      >
+
+</a
+      ><a name="2027" href="Relation.Binary.HeterogeneousEquality.html#2027" class="Function"
+      >cong</a
+      ><a name="2031"
+      > </a
+      ><a name="2032" class="Symbol"
+      >:</a
+      ><a name="2033"
+      > </a
+      ><a name="2034" class="Symbol"
+      >&#8704;</a
+      ><a name="2035"
+      > </a
+      ><a name="2036" class="Symbol"
+      >{</a
+      ><a name="2037" href="Relation.Binary.HeterogeneousEquality.html#2037" class="Bound"
+      >a</a
+      ><a name="2038"
+      > </a
+      ><a name="2039" href="Relation.Binary.HeterogeneousEquality.html#2039" class="Bound"
+      >b</a
+      ><a name="2040" class="Symbol"
+      >}</a
+      ><a name="2041"
+      > </a
+      ><a name="2042" class="Symbol"
+      >{</a
+      ><a name="2043" href="Relation.Binary.HeterogeneousEquality.html#2043" class="Bound"
+      >A</a
+      ><a name="2044"
+      > </a
+      ><a name="2045" class="Symbol"
+      >:</a
+      ><a name="2046"
+      > </a
+      ><a name="2047" class="PrimitiveType"
+      >Set</a
+      ><a name="2050"
+      > </a
+      ><a name="2051" href="Relation.Binary.HeterogeneousEquality.html#2037" class="Bound"
+      >a</a
+      ><a name="2052" class="Symbol"
+      >}</a
+      ><a name="2053"
+      > </a
+      ><a name="2054" class="Symbol"
+      >{</a
+      ><a name="2055" href="Relation.Binary.HeterogeneousEquality.html#2055" class="Bound"
+      >B</a
+      ><a name="2056"
+      > </a
+      ><a name="2057" class="Symbol"
+      >:</a
+      ><a name="2058"
+      > </a
+      ><a name="2059" href="Relation.Binary.HeterogeneousEquality.html#2043" class="Bound"
+      >A</a
+      ><a name="2060"
+      > </a
+      ><a name="2061" class="Symbol"
+      >&#8594;</a
+      ><a name="2062"
+      > </a
+      ><a name="2063" class="PrimitiveType"
+      >Set</a
+      ><a name="2066"
+      > </a
+      ><a name="2067" href="Relation.Binary.HeterogeneousEquality.html#2039" class="Bound"
+      >b</a
+      ><a name="2068" class="Symbol"
+      >}</a
+      ><a name="2069"
+      > </a
+      ><a name="2070" class="Symbol"
+      >{</a
+      ><a name="2071" href="Relation.Binary.HeterogeneousEquality.html#2071" class="Bound"
+      >x</a
+      ><a name="2072"
+      > </a
+      ><a name="2073" href="Relation.Binary.HeterogeneousEquality.html#2073" class="Bound"
+      >y</a
+      ><a name="2074" class="Symbol"
+      >}</a
+      ><a name="2075"
+      >
+       </a
+      ><a name="2083" class="Symbol"
+      >(</a
+      ><a name="2084" href="Relation.Binary.HeterogeneousEquality.html#2084" class="Bound"
+      >f</a
+      ><a name="2085"
+      > </a
+      ><a name="2086" class="Symbol"
+      >:</a
+      ><a name="2087"
+      > </a
+      ><a name="2088" class="Symbol"
+      >(</a
+      ><a name="2089" href="Relation.Binary.HeterogeneousEquality.html#2089" class="Bound"
+      >x</a
+      ><a name="2090"
+      > </a
+      ><a name="2091" class="Symbol"
+      >:</a
+      ><a name="2092"
+      > </a
+      ><a name="2093" href="Relation.Binary.HeterogeneousEquality.html#2043" class="Bound"
+      >A</a
+      ><a name="2094" class="Symbol"
+      >)</a
+      ><a name="2095"
+      > </a
+      ><a name="2096" class="Symbol"
+      >&#8594;</a
+      ><a name="2097"
+      > </a
+      ><a name="2098" href="Relation.Binary.HeterogeneousEquality.html#2055" class="Bound"
+      >B</a
+      ><a name="2099"
+      > </a
+      ><a name="2100" href="Relation.Binary.HeterogeneousEquality.html#2089" class="Bound"
+      >x</a
+      ><a name="2101" class="Symbol"
+      >)</a
+      ><a name="2102"
+      > </a
+      ><a name="2103" class="Symbol"
+      >&#8594;</a
+      ><a name="2104"
+      > </a
+      ><a name="2105" href="Relation.Binary.HeterogeneousEquality.html#2071" class="Bound"
+      >x</a
+      ><a name="2106"
+      > </a
+      ><a name="2107" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="2108"
+      > </a
+      ><a name="2109" href="Relation.Binary.HeterogeneousEquality.html#2073" class="Bound"
+      >y</a
+      ><a name="2110"
+      > </a
+      ><a name="2111" class="Symbol"
+      >&#8594;</a
+      ><a name="2112"
+      > </a
+      ><a name="2113" href="Relation.Binary.HeterogeneousEquality.html#2084" class="Bound"
+      >f</a
+      ><a name="2114"
+      > </a
+      ><a name="2115" href="Relation.Binary.HeterogeneousEquality.html#2071" class="Bound"
+      >x</a
+      ><a name="2116"
+      > </a
+      ><a name="2117" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="2118"
+      > </a
+      ><a name="2119" href="Relation.Binary.HeterogeneousEquality.html#2084" class="Bound"
+      >f</a
+      ><a name="2120"
+      > </a
+      ><a name="2121" href="Relation.Binary.HeterogeneousEquality.html#2073" class="Bound"
+      >y</a
+      ><a name="2122"
+      >
+</a
+      ><a name="2123" href="Relation.Binary.HeterogeneousEquality.html#2027" class="Function"
+      >cong</a
+      ><a name="2127"
+      > </a
+      ><a name="2128" href="Relation.Binary.HeterogeneousEquality.html#2128" class="Bound"
+      >f</a
+      ><a name="2129"
+      > </a
+      ><a name="2130" href="Relation.Binary.HeterogeneousEquality.Core.html#607" class="InductiveConstructor"
+      >refl</a
+      ><a name="2134"
+      > </a
+      ><a name="2135" class="Symbol"
+      >=</a
+      ><a name="2136"
+      > </a
+      ><a name="2137" href="Relation.Binary.HeterogeneousEquality.Core.html#607" class="InductiveConstructor"
+      >refl</a
+      ><a name="2141"
+      >
+
+</a
+      ><a name="2143" href="Relation.Binary.HeterogeneousEquality.html#2143" class="Function"
+      >cong&#8322;</a
+      ><a name="2148"
+      > </a
+      ><a name="2149" class="Symbol"
+      >:</a
+      ><a name="2150"
+      > </a
+      ><a name="2151" class="Symbol"
+      >&#8704;</a
+      ><a name="2152"
+      > </a
+      ><a name="2153" class="Symbol"
+      >{</a
+      ><a name="2154" href="Relation.Binary.HeterogeneousEquality.html#2154" class="Bound"
+      >a</a
+      ><a name="2155"
+      > </a
+      ><a name="2156" href="Relation.Binary.HeterogeneousEquality.html#2156" class="Bound"
+      >b</a
+      ><a name="2157"
+      > </a
+      ><a name="2158" href="Relation.Binary.HeterogeneousEquality.html#2158" class="Bound"
+      >c</a
+      ><a name="2159" class="Symbol"
+      >}</a
+      ><a name="2160"
+      > </a
+      ><a name="2161" class="Symbol"
+      >{</a
+      ><a name="2162" href="Relation.Binary.HeterogeneousEquality.html#2162" class="Bound"
+      >A</a
+      ><a name="2163"
+      > </a
+      ><a name="2164" class="Symbol"
+      >:</a
+      ><a name="2165"
+      > </a
+      ><a name="2166" class="PrimitiveType"
+      >Set</a
+      ><a name="2169"
+      > </a
+      ><a name="2170" href="Relation.Binary.HeterogeneousEquality.html#2154" class="Bound"
+      >a</a
+      ><a name="2171" class="Symbol"
+      >}</a
+      ><a name="2172"
+      > </a
+      ><a name="2173" class="Symbol"
+      >{</a
+      ><a name="2174" href="Relation.Binary.HeterogeneousEquality.html#2174" class="Bound"
+      >B</a
+      ><a name="2175"
+      > </a
+      ><a name="2176" class="Symbol"
+      >:</a
+      ><a name="2177"
+      > </a
+      ><a name="2178" href="Relation.Binary.HeterogeneousEquality.html#2162" class="Bound"
+      >A</a
+      ><a name="2179"
+      > </a
+      ><a name="2180" class="Symbol"
+      >&#8594;</a
+      ><a name="2181"
+      > </a
+      ><a name="2182" class="PrimitiveType"
+      >Set</a
+      ><a name="2185"
+      > </a
+      ><a name="2186" href="Relation.Binary.HeterogeneousEquality.html#2156" class="Bound"
+      >b</a
+      ><a name="2187" class="Symbol"
+      >}</a
+      ><a name="2188"
+      > </a
+      ><a name="2189" class="Symbol"
+      >{</a
+      ><a name="2190" href="Relation.Binary.HeterogeneousEquality.html#2190" class="Bound"
+      >C</a
+      ><a name="2191"
+      > </a
+      ><a name="2192" class="Symbol"
+      >:</a
+      ><a name="2193"
+      > </a
+      ><a name="2194" class="Symbol"
+      >&#8704;</a
+      ><a name="2195"
+      > </a
+      ><a name="2196" href="Relation.Binary.HeterogeneousEquality.html#2196" class="Bound"
+      >x</a
+      ><a name="2197"
+      > </a
+      ><a name="2198" class="Symbol"
+      >&#8594;</a
+      ><a name="2199"
+      > </a
+      ><a name="2200" href="Relation.Binary.HeterogeneousEquality.html#2174" class="Bound"
+      >B</a
+      ><a name="2201"
+      > </a
+      ><a name="2202" href="Relation.Binary.HeterogeneousEquality.html#2196" class="Bound"
+      >x</a
+      ><a name="2203"
+      > </a
+      ><a name="2204" class="Symbol"
+      >&#8594;</a
+      ><a name="2205"
+      > </a
+      ><a name="2206" class="PrimitiveType"
+      >Set</a
+      ><a name="2209"
+      > </a
+      ><a name="2210" href="Relation.Binary.HeterogeneousEquality.html#2158" class="Bound"
+      >c</a
+      ><a name="2211" class="Symbol"
+      >}</a
+      ><a name="2212"
+      >
+          </a
+      ><a name="2223" class="Symbol"
+      >{</a
+      ><a name="2224" href="Relation.Binary.HeterogeneousEquality.html#2224" class="Bound"
+      >x</a
+      ><a name="2225"
+      > </a
+      ><a name="2226" href="Relation.Binary.HeterogeneousEquality.html#2226" class="Bound"
+      >y</a
+      ><a name="2227"
+      > </a
+      ><a name="2228" href="Relation.Binary.HeterogeneousEquality.html#2228" class="Bound"
+      >u</a
+      ><a name="2229"
+      > </a
+      ><a name="2230" href="Relation.Binary.HeterogeneousEquality.html#2230" class="Bound"
+      >v</a
+      ><a name="2231" class="Symbol"
+      >}</a
+      ><a name="2232"
+      >
+        </a
+      ><a name="2241" class="Symbol"
+      >(</a
+      ><a name="2242" href="Relation.Binary.HeterogeneousEquality.html#2242" class="Bound"
+      >f</a
+      ><a name="2243"
+      > </a
+      ><a name="2244" class="Symbol"
+      >:</a
+      ><a name="2245"
+      > </a
+      ><a name="2246" class="Symbol"
+      >(</a
+      ><a name="2247" href="Relation.Binary.HeterogeneousEquality.html#2247" class="Bound"
+      >x</a
+      ><a name="2248"
+      > </a
+      ><a name="2249" class="Symbol"
+      >:</a
+      ><a name="2250"
+      > </a
+      ><a name="2251" href="Relation.Binary.HeterogeneousEquality.html#2162" class="Bound"
+      >A</a
+      ><a name="2252" class="Symbol"
+      >)</a
+      ><a name="2253"
+      > </a
+      ><a name="2254" class="Symbol"
+      >(</a
+      ><a name="2255" href="Relation.Binary.HeterogeneousEquality.html#2255" class="Bound"
+      >y</a
+      ><a name="2256"
+      > </a
+      ><a name="2257" class="Symbol"
+      >:</a
+      ><a name="2258"
+      > </a
+      ><a name="2259" href="Relation.Binary.HeterogeneousEquality.html#2174" class="Bound"
+      >B</a
+      ><a name="2260"
+      > </a
+      ><a name="2261" href="Relation.Binary.HeterogeneousEquality.html#2247" class="Bound"
+      >x</a
+      ><a name="2262" class="Symbol"
+      >)</a
+      ><a name="2263"
+      > </a
+      ><a name="2264" class="Symbol"
+      >&#8594;</a
+      ><a name="2265"
+      > </a
+      ><a name="2266" href="Relation.Binary.HeterogeneousEquality.html#2190" class="Bound"
+      >C</a
+      ><a name="2267"
+      > </a
+      ><a name="2268" href="Relation.Binary.HeterogeneousEquality.html#2247" class="Bound"
+      >x</a
+      ><a name="2269"
+      > </a
+      ><a name="2270" href="Relation.Binary.HeterogeneousEquality.html#2255" class="Bound"
+      >y</a
+      ><a name="2271" class="Symbol"
+      >)</a
+      ><a name="2272"
+      > </a
+      ><a name="2273" class="Symbol"
+      >&#8594;</a
+      ><a name="2274"
+      > </a
+      ><a name="2275" href="Relation.Binary.HeterogeneousEquality.html#2224" class="Bound"
+      >x</a
+      ><a name="2276"
+      > </a
+      ><a name="2277" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="2278"
+      > </a
+      ><a name="2279" href="Relation.Binary.HeterogeneousEquality.html#2226" class="Bound"
+      >y</a
+      ><a name="2280"
+      > </a
+      ><a name="2281" class="Symbol"
+      >&#8594;</a
+      ><a name="2282"
+      > </a
+      ><a name="2283" href="Relation.Binary.HeterogeneousEquality.html#2228" class="Bound"
+      >u</a
+      ><a name="2284"
+      > </a
+      ><a name="2285" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="2286"
+      > </a
+      ><a name="2287" href="Relation.Binary.HeterogeneousEquality.html#2230" class="Bound"
+      >v</a
+      ><a name="2288"
+      > </a
+      ><a name="2289" class="Symbol"
+      >&#8594;</a
+      ><a name="2290"
+      > </a
+      ><a name="2291" href="Relation.Binary.HeterogeneousEquality.html#2242" class="Bound"
+      >f</a
+      ><a name="2292"
+      > </a
+      ><a name="2293" href="Relation.Binary.HeterogeneousEquality.html#2224" class="Bound"
+      >x</a
+      ><a name="2294"
+      > </a
+      ><a name="2295" href="Relation.Binary.HeterogeneousEquality.html#2228" class="Bound"
+      >u</a
+      ><a name="2296"
+      > </a
+      ><a name="2297" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="2298"
+      > </a
+      ><a name="2299" href="Relation.Binary.HeterogeneousEquality.html#2242" class="Bound"
+      >f</a
+      ><a name="2300"
+      > </a
+      ><a name="2301" href="Relation.Binary.HeterogeneousEquality.html#2226" class="Bound"
+      >y</a
+      ><a name="2302"
+      > </a
+      ><a name="2303" href="Relation.Binary.HeterogeneousEquality.html#2230" class="Bound"
+      >v</a
+      ><a name="2304"
+      >
+</a
+      ><a name="2305" href="Relation.Binary.HeterogeneousEquality.html#2143" class="Function"
+      >cong&#8322;</a
+      ><a name="2310"
+      > </a
+      ><a name="2311" href="Relation.Binary.HeterogeneousEquality.html#2311" class="Bound"
+      >f</a
+      ><a name="2312"
+      > </a
+      ><a name="2313" href="Relation.Binary.HeterogeneousEquality.Core.html#607" class="InductiveConstructor"
+      >refl</a
+      ><a name="2317"
+      > </a
+      ><a name="2318" href="Relation.Binary.HeterogeneousEquality.Core.html#607" class="InductiveConstructor"
+      >refl</a
+      ><a name="2322"
+      > </a
+      ><a name="2323" class="Symbol"
+      >=</a
+      ><a name="2324"
+      > </a
+      ><a name="2325" href="Relation.Binary.HeterogeneousEquality.Core.html#607" class="InductiveConstructor"
+      >refl</a
+      ><a name="2329"
+      >
+
+</a
+      ><a name="2331" href="Relation.Binary.HeterogeneousEquality.html#2331" class="Function"
+      >resp&#8322;</a
+      ><a name="2336"
+      > </a
+      ><a name="2337" class="Symbol"
+      >:</a
+      ><a name="2338"
+      > </a
+      ><a name="2339" class="Symbol"
+      >&#8704;</a
+      ><a name="2340"
+      > </a
+      ><a name="2341" class="Symbol"
+      >{</a
+      ><a name="2342" href="Relation.Binary.HeterogeneousEquality.html#2342" class="Bound"
+      >a</a
+      ><a name="2343"
+      > </a
+      ><a name="2344" href="Relation.Binary.HeterogeneousEquality.html#2344" class="Bound"
+      >&#8467;</a
+      ><a name="2345" class="Symbol"
+      >}</a
+      ><a name="2346"
+      > </a
+      ><a name="2347" class="Symbol"
+      >{</a
+      ><a name="2348" href="Relation.Binary.HeterogeneousEquality.html#2348" class="Bound"
+      >A</a
+      ><a name="2349"
+      > </a
+      ><a name="2350" class="Symbol"
+      >:</a
+      ><a name="2351"
+      > </a
+      ><a name="2352" class="PrimitiveType"
+      >Set</a
+      ><a name="2355"
+      > </a
+      ><a name="2356" href="Relation.Binary.HeterogeneousEquality.html#2342" class="Bound"
+      >a</a
+      ><a name="2357" class="Symbol"
+      >}</a
+      ><a name="2358"
+      > </a
+      ><a name="2359" class="Symbol"
+      >(</a
+      ><a name="2360" href="Relation.Binary.HeterogeneousEquality.html#2360" class="Bound"
+      >&#8764;</a
+      ><a name="2361"
+      > </a
+      ><a name="2362" class="Symbol"
+      >:</a
+      ><a name="2363"
+      > </a
+      ><a name="2364" href="Relation.Binary.Core.html#761" class="Function"
+      >Rel</a
+      ><a name="2367"
+      > </a
+      ><a name="2368" href="Relation.Binary.HeterogeneousEquality.html#2348" class="Bound"
+      >A</a
+      ><a name="2369"
+      > </a
+      ><a name="2370" href="Relation.Binary.HeterogeneousEquality.html#2344" class="Bound"
+      >&#8467;</a
+      ><a name="2371" class="Symbol"
+      >)</a
+      ><a name="2372"
+      > </a
+      ><a name="2373" class="Symbol"
+      >&#8594;</a
+      ><a name="2374"
+      > </a
+      ><a name="2375" href="Relation.Binary.HeterogeneousEquality.html#2360" class="Bound"
+      >&#8764;</a
+      ><a name="2376"
+      > </a
+      ><a name="2377" href="Relation.Binary.Core.html#3221" class="Function Operator"
+      >Respects&#8322;</a
+      ><a name="2386"
+      > </a
+      ><a name="2387" class="Symbol"
+      >(&#955;</a
+      ><a name="2389"
+      > </a
+      ><a name="2390" href="Relation.Binary.HeterogeneousEquality.html#2390" class="Bound"
+      >x</a
+      ><a name="2391"
+      > </a
+      ><a name="2392" href="Relation.Binary.HeterogeneousEquality.html#2392" class="Bound"
+      >y</a
+      ><a name="2393"
+      > </a
+      ><a name="2394" class="Symbol"
+      >&#8594;</a
+      ><a name="2395"
+      > </a
+      ><a name="2396" href="Relation.Binary.HeterogeneousEquality.html#2390" class="Bound"
+      >x</a
+      ><a name="2397"
+      > </a
+      ><a name="2398" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="2399"
+      > </a
+      ><a name="2400" href="Relation.Binary.HeterogeneousEquality.html#2392" class="Bound"
+      >y</a
+      ><a name="2401" class="Symbol"
+      >)</a
+      ><a name="2402"
+      >
+</a
+      ><a name="2403" href="Relation.Binary.HeterogeneousEquality.html#2331" class="Function"
+      >resp&#8322;</a
+      ><a name="2408"
+      > </a
+      ><a name="2409" href="Relation.Binary.HeterogeneousEquality.html#2409" class="Bound Operator"
+      >_&#8764;_</a
+      ><a name="2412"
+      > </a
+      ><a name="2413" class="Symbol"
+      >=</a
+      ><a name="2414"
+      > </a
+      ><a name="2415" href="Relation.Binary.Consequences.Core.html#421" class="Function"
+      >subst&#10230;resp&#8322;</a
+      ><a name="2426"
+      > </a
+      ><a name="2427" href="Relation.Binary.HeterogeneousEquality.html#2409" class="Bound Operator"
+      >_&#8764;_</a
+      ><a name="2430"
+      > </a
+      ><a name="2431" href="Relation.Binary.HeterogeneousEquality.html#1444" class="Function"
+      >subst</a
+      ><a name="2436"
+      >
+
+</a
+      ><a name="2438" href="Relation.Binary.HeterogeneousEquality.html#2438" class="Function"
+      >proof-irrelevance</a
+      ><a name="2455"
+      > </a
+      ><a name="2456" class="Symbol"
+      >:</a
+      ><a name="2457"
+      > </a
+      ><a name="2458" class="Symbol"
+      >&#8704;</a
+      ><a name="2459"
+      > </a
+      ><a name="2460" class="Symbol"
+      >{</a
+      ><a name="2461" href="Relation.Binary.HeterogeneousEquality.html#2461" class="Bound"
+      >&#8467;</a
+      ><a name="2462" class="Symbol"
+      >}</a
+      ><a name="2463"
+      > </a
+      ><a name="2464" class="Symbol"
+      >{</a
+      ><a name="2465" href="Relation.Binary.HeterogeneousEquality.html#2465" class="Bound"
+      >A</a
+      ><a name="2466"
+      > </a
+      ><a name="2467" href="Relation.Binary.HeterogeneousEquality.html#2467" class="Bound"
+      >B</a
+      ><a name="2468"
+      > </a
+      ><a name="2469" class="Symbol"
+      >:</a
+      ><a name="2470"
+      > </a
+      ><a name="2471" class="PrimitiveType"
+      >Set</a
+      ><a name="2474"
+      > </a
+      ><a name="2475" href="Relation.Binary.HeterogeneousEquality.html#2461" class="Bound"
+      >&#8467;</a
+      ><a name="2476" class="Symbol"
+      >}</a
+      ><a name="2477"
+      > </a
+      ><a name="2478" class="Symbol"
+      >{</a
+      ><a name="2479" href="Relation.Binary.HeterogeneousEquality.html#2479" class="Bound"
+      >x</a
+      ><a name="2480"
+      > </a
+      ><a name="2481" class="Symbol"
+      >:</a
+      ><a name="2482"
+      > </a
+      ><a name="2483" href="Relation.Binary.HeterogeneousEquality.html#2465" class="Bound"
+      >A</a
+      ><a name="2484" class="Symbol"
+      >}</a
+      ><a name="2485"
+      > </a
+      ><a name="2486" class="Symbol"
+      >{</a
+      ><a name="2487" href="Relation.Binary.HeterogeneousEquality.html#2487" class="Bound"
+      >y</a
+      ><a name="2488"
+      > </a
+      ><a name="2489" class="Symbol"
+      >:</a
+      ><a name="2490"
+      > </a
+      ><a name="2491" href="Relation.Binary.HeterogeneousEquality.html#2467" class="Bound"
+      >B</a
+      ><a name="2492" class="Symbol"
+      >}</a
+      ><a name="2493"
+      >
+                    </a
+      ><a name="2514" class="Symbol"
+      >(</a
+      ><a name="2515" href="Relation.Binary.HeterogeneousEquality.html#2515" class="Bound"
+      >p</a
+      ><a name="2516"
+      > </a
+      ><a name="2517" href="Relation.Binary.HeterogeneousEquality.html#2517" class="Bound"
+      >q</a
+      ><a name="2518"
+      > </a
+      ><a name="2519" class="Symbol"
+      >:</a
+      ><a name="2520"
+      > </a
+      ><a name="2521" href="Relation.Binary.HeterogeneousEquality.html#2479" class="Bound"
+      >x</a
+      ><a name="2522"
+      > </a
+      ><a name="2523" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="2524"
+      > </a
+      ><a name="2525" href="Relation.Binary.HeterogeneousEquality.html#2487" class="Bound"
+      >y</a
+      ><a name="2526" class="Symbol"
+      >)</a
+      ><a name="2527"
+      > </a
+      ><a name="2528" class="Symbol"
+      >&#8594;</a
+      ><a name="2529"
+      > </a
+      ><a name="2530" href="Relation.Binary.HeterogeneousEquality.html#2515" class="Bound"
+      >p</a
+      ><a name="2531"
+      > </a
+      ><a name="2532" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="2533"
+      > </a
+      ><a name="2534" href="Relation.Binary.HeterogeneousEquality.html#2517" class="Bound"
+      >q</a
+      ><a name="2535"
+      >
+</a
+      ><a name="2536" href="Relation.Binary.HeterogeneousEquality.html#2438" class="Function"
+      >proof-irrelevance</a
+      ><a name="2553"
+      > </a
+      ><a name="2554" href="Relation.Binary.HeterogeneousEquality.Core.html#607" class="InductiveConstructor"
+      >refl</a
+      ><a name="2558"
+      > </a
+      ><a name="2559" href="Relation.Binary.HeterogeneousEquality.Core.html#607" class="InductiveConstructor"
+      >refl</a
+      ><a name="2563"
+      > </a
+      ><a name="2564" class="Symbol"
+      >=</a
+      ><a name="2565"
+      > </a
+      ><a name="2566" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="2570"
+      >
+
+</a
+      ><a name="2572" href="Relation.Binary.HeterogeneousEquality.html#2572" class="Function"
+      >isEquivalence</a
+      ><a name="2585"
+      > </a
+      ><a name="2586" class="Symbol"
+      >:</a
+      ><a name="2587"
+      > </a
+      ><a name="2588" class="Symbol"
+      >&#8704;</a
+      ><a name="2589"
+      > </a
+      ><a name="2590" class="Symbol"
+      >{</a
+      ><a name="2591" href="Relation.Binary.HeterogeneousEquality.html#2591" class="Bound"
+      >a</a
+      ><a name="2592" class="Symbol"
+      >}</a
+      ><a name="2593"
+      > </a
+      ><a name="2594" class="Symbol"
+      >{</a
+      ><a name="2595" href="Relation.Binary.HeterogeneousEquality.html#2595" class="Bound"
+      >A</a
+      ><a name="2596"
+      > </a
+      ><a name="2597" class="Symbol"
+      >:</a
+      ><a name="2598"
+      > </a
+      ><a name="2599" class="PrimitiveType"
+      >Set</a
+      ><a name="2602"
+      > </a
+      ><a name="2603" href="Relation.Binary.HeterogeneousEquality.html#2591" class="Bound"
+      >a</a
+      ><a name="2604" class="Symbol"
+      >}</a
+      ><a name="2605"
+      > </a
+      ><a name="2606" class="Symbol"
+      >&#8594;</a
+      ><a name="2607"
+      >
+                </a
+      ><a name="2624" href="Relation.Binary.Core.html#5090" class="Record"
+      >IsEquivalence</a
+      ><a name="2637"
+      > </a
+      ><a name="2638" class="Symbol"
+      >{</a
+      ><a name="2639"
+      >A </a
+      ><a name="2641" class="Symbol"
+      >=</a
+      ><a name="2642"
+      > </a
+      ><a name="2643" href="Relation.Binary.HeterogeneousEquality.html#2595" class="Bound"
+      >A</a
+      ><a name="2644" class="Symbol"
+      >}</a
+      ><a name="2645"
+      > </a
+      ><a name="2646" class="Symbol"
+      >(&#955;</a
+      ><a name="2648"
+      > </a
+      ><a name="2649" href="Relation.Binary.HeterogeneousEquality.html#2649" class="Bound"
+      >x</a
+      ><a name="2650"
+      > </a
+      ><a name="2651" href="Relation.Binary.HeterogeneousEquality.html#2651" class="Bound"
+      >y</a
+      ><a name="2652"
+      > </a
+      ><a name="2653" class="Symbol"
+      >&#8594;</a
+      ><a name="2654"
+      > </a
+      ><a name="2655" href="Relation.Binary.HeterogeneousEquality.html#2649" class="Bound"
+      >x</a
+      ><a name="2656"
+      > </a
+      ><a name="2657" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="2658"
+      > </a
+      ><a name="2659" href="Relation.Binary.HeterogeneousEquality.html#2651" class="Bound"
+      >y</a
+      ><a name="2660" class="Symbol"
+      >)</a
+      ><a name="2661"
+      >
+</a
+      ><a name="2662" href="Relation.Binary.HeterogeneousEquality.html#2572" class="Function"
+      >isEquivalence</a
+      ><a name="2675"
+      > </a
+      ><a name="2676" class="Symbol"
+      >=</a
+      ><a name="2677"
+      > </a
+      ><a name="2678" class="Keyword"
+      >record</a
+      ><a name="2684"
+      >
+  </a
+      ><a name="2687" class="Symbol"
+      >{</a
+      ><a name="2688"
+      > </a
+      ><a name="2689" class="Field"
+      >refl</a
+      ><a name="2693"
+      >  </a
+      ><a name="2695" class="Symbol"
+      >=</a
+      ><a name="2696"
+      > </a
+      ><a name="2697" href="Relation.Binary.HeterogeneousEquality.Core.html#607" class="InductiveConstructor"
+      >refl</a
+      ><a name="2701"
+      >
+  </a
+      ><a name="2704" class="Symbol"
+      >;</a
+      ><a name="2705"
+      > </a
+      ><a name="2706" class="Field"
+      >sym</a
+      ><a name="2709"
+      >   </a
+      ><a name="2712" class="Symbol"
+      >=</a
+      ><a name="2713"
+      > </a
+      ><a name="2714" href="Relation.Binary.HeterogeneousEquality.html#1263" class="Function"
+      >sym</a
+      ><a name="2717"
+      >
+  </a
+      ><a name="2720" class="Symbol"
+      >;</a
+      ><a name="2721"
+      > </a
+      ><a name="2722" class="Field"
+      >trans</a
+      ><a name="2727"
+      > </a
+      ><a name="2728" class="Symbol"
+      >=</a
+      ><a name="2729"
+      > </a
+      ><a name="2730" href="Relation.Binary.HeterogeneousEquality.html#1338" class="Function"
+      >trans</a
+      ><a name="2735"
+      >
+  </a
+      ><a name="2738" class="Symbol"
+      >}</a
+      ><a name="2739"
+      >
+
+</a
+      ><a name="2741" href="Relation.Binary.HeterogeneousEquality.html#2741" class="Function"
+      >setoid</a
+      ><a name="2747"
+      > </a
+      ><a name="2748" class="Symbol"
+      >:</a
+      ><a name="2749"
+      > </a
+      ><a name="2750" class="Symbol"
+      >&#8704;</a
+      ><a name="2751"
+      > </a
+      ><a name="2752" class="Symbol"
+      >{</a
+      ><a name="2753" href="Relation.Binary.HeterogeneousEquality.html#2753" class="Bound"
+      >a</a
+      ><a name="2754" class="Symbol"
+      >}</a
+      ><a name="2755"
+      > </a
+      ><a name="2756" class="Symbol"
+      >&#8594;</a
+      ><a name="2757"
+      > </a
+      ><a name="2758" class="PrimitiveType"
+      >Set</a
+      ><a name="2761"
+      > </a
+      ><a name="2762" href="Relation.Binary.HeterogeneousEquality.html#2753" class="Bound"
+      >a</a
+      ><a name="2763"
+      > </a
+      ><a name="2764" class="Symbol"
+      >&#8594;</a
+      ><a name="2765"
+      > </a
+      ><a name="2766" href="Relation.Binary.html#1852" class="Record"
+      >Setoid</a
+      ><a name="2772"
+      > </a
+      ><a name="2773" class="Symbol"
+      >_</a
+      ><a name="2774"
+      > </a
+      ><a name="2775" class="Symbol"
+      >_</a
+      ><a name="2776"
+      >
+</a
+      ><a name="2777" href="Relation.Binary.HeterogeneousEquality.html#2741" class="Function"
+      >setoid</a
+      ><a name="2783"
+      > </a
+      ><a name="2784" href="Relation.Binary.HeterogeneousEquality.html#2784" class="Bound"
+      >A</a
+      ><a name="2785"
+      > </a
+      ><a name="2786" class="Symbol"
+      >=</a
+      ><a name="2787"
+      > </a
+      ><a name="2788" class="Keyword"
+      >record</a
+      ><a name="2794"
+      >
+  </a
+      ><a name="2797" class="Symbol"
+      >{</a
+      ><a name="2798"
+      > </a
+      ><a name="2799" class="Field"
+      >Carrier</a
+      ><a name="2806"
+      >       </a
+      ><a name="2813" class="Symbol"
+      >=</a
+      ><a name="2814"
+      > </a
+      ><a name="2815" href="Relation.Binary.HeterogeneousEquality.html#2784" class="Bound"
+      >A</a
+      ><a name="2816"
+      >
+  </a
+      ><a name="2819" class="Symbol"
+      >;</a
+      ><a name="2820"
+      > </a
+      ><a name="2821" class="Field Operator"
+      >_&#8776;_</a
+      ><a name="2824"
+      >           </a
+      ><a name="2835" class="Symbol"
+      >=</a
+      ><a name="2836"
+      > </a
+      ><a name="2837" class="Symbol"
+      >&#955;</a
+      ><a name="2838"
+      > </a
+      ><a name="2839" href="Relation.Binary.HeterogeneousEquality.html#2839" class="Bound"
+      >x</a
+      ><a name="2840"
+      > </a
+      ><a name="2841" href="Relation.Binary.HeterogeneousEquality.html#2841" class="Bound"
+      >y</a
+      ><a name="2842"
+      > </a
+      ><a name="2843" class="Symbol"
+      >&#8594;</a
+      ><a name="2844"
+      > </a
+      ><a name="2845" href="Relation.Binary.HeterogeneousEquality.html#2839" class="Bound"
+      >x</a
+      ><a name="2846"
+      > </a
+      ><a name="2847" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="2848"
+      > </a
+      ><a name="2849" href="Relation.Binary.HeterogeneousEquality.html#2841" class="Bound"
+      >y</a
+      ><a name="2850"
+      >
+  </a
+      ><a name="2853" class="Symbol"
+      >;</a
+      ><a name="2854"
+      > </a
+      ><a name="2855" class="Field"
+      >isEquivalence</a
+      ><a name="2868"
+      > </a
+      ><a name="2869" class="Symbol"
+      >=</a
+      ><a name="2870"
+      > </a
+      ><a name="2871" href="Relation.Binary.HeterogeneousEquality.html#2572" class="Function"
+      >isEquivalence</a
+      ><a name="2884"
+      >
+  </a
+      ><a name="2887" class="Symbol"
+      >}</a
+      ><a name="2888"
+      >
+
+</a
+      ><a name="2890" href="Relation.Binary.HeterogeneousEquality.html#2890" class="Function"
+      >indexedSetoid</a
+      ><a name="2903"
+      > </a
+      ><a name="2904" class="Symbol"
+      >:</a
+      ><a name="2905"
+      > </a
+      ><a name="2906" class="Symbol"
+      >&#8704;</a
+      ><a name="2907"
+      > </a
+      ><a name="2908" class="Symbol"
+      >{</a
+      ><a name="2909" href="Relation.Binary.HeterogeneousEquality.html#2909" class="Bound"
+      >a</a
+      ><a name="2910"
+      > </a
+      ><a name="2911" href="Relation.Binary.HeterogeneousEquality.html#2911" class="Bound"
+      >b</a
+      ><a name="2912" class="Symbol"
+      >}</a
+      ><a name="2913"
+      > </a
+      ><a name="2914" class="Symbol"
+      >{</a
+      ><a name="2915" href="Relation.Binary.HeterogeneousEquality.html#2915" class="Bound"
+      >A</a
+      ><a name="2916"
+      > </a
+      ><a name="2917" class="Symbol"
+      >:</a
+      ><a name="2918"
+      > </a
+      ><a name="2919" class="PrimitiveType"
+      >Set</a
+      ><a name="2922"
+      > </a
+      ><a name="2923" href="Relation.Binary.HeterogeneousEquality.html#2909" class="Bound"
+      >a</a
+      ><a name="2924" class="Symbol"
+      >}</a
+      ><a name="2925"
+      > </a
+      ><a name="2926" class="Symbol"
+      >&#8594;</a
+      ><a name="2927"
+      > </a
+      ><a name="2928" class="Symbol"
+      >(</a
+      ><a name="2929" href="Relation.Binary.HeterogeneousEquality.html#2915" class="Bound"
+      >A</a
+      ><a name="2930"
+      > </a
+      ><a name="2931" class="Symbol"
+      >&#8594;</a
+      ><a name="2932"
+      > </a
+      ><a name="2933" class="PrimitiveType"
+      >Set</a
+      ><a name="2936"
+      > </a
+      ><a name="2937" href="Relation.Binary.HeterogeneousEquality.html#2911" class="Bound"
+      >b</a
+      ><a name="2938" class="Symbol"
+      >)</a
+      ><a name="2939"
+      > </a
+      ><a name="2940" class="Symbol"
+      >&#8594;</a
+      ><a name="2941"
+      > </a
+      ><a name="2942" href="Relation.Binary.Indexed.Core.html#1758" class="Record"
+      >I.Setoid</a
+      ><a name="2950"
+      > </a
+      ><a name="2951" href="Relation.Binary.HeterogeneousEquality.html#2915" class="Bound"
+      >A</a
+      ><a name="2952"
+      > </a
+      ><a name="2953" class="Symbol"
+      >_</a
+      ><a name="2954"
+      > </a
+      ><a name="2955" class="Symbol"
+      >_</a
+      ><a name="2956"
+      >
+</a
+      ><a name="2957" href="Relation.Binary.HeterogeneousEquality.html#2890" class="Function"
+      >indexedSetoid</a
+      ><a name="2970"
+      > </a
+      ><a name="2971" href="Relation.Binary.HeterogeneousEquality.html#2971" class="Bound"
+      >B</a
+      ><a name="2972"
+      > </a
+      ><a name="2973" class="Symbol"
+      >=</a
+      ><a name="2974"
+      > </a
+      ><a name="2975" class="Keyword"
+      >record</a
+      ><a name="2981"
+      >
+  </a
+      ><a name="2984" class="Symbol"
+      >{</a
+      ><a name="2985"
+      > </a
+      ><a name="2986" class="Field"
+      >Carrier</a
+      ><a name="2993"
+      >       </a
+      ><a name="3000" class="Symbol"
+      >=</a
+      ><a name="3001"
+      > </a
+      ><a name="3002" href="Relation.Binary.HeterogeneousEquality.html#2971" class="Bound"
+      >B</a
+      ><a name="3003"
+      >
+  </a
+      ><a name="3006" class="Symbol"
+      >;</a
+      ><a name="3007"
+      > </a
+      ><a name="3008" class="Field Operator"
+      >_&#8776;_</a
+      ><a name="3011"
+      >           </a
+      ><a name="3022" class="Symbol"
+      >=</a
+      ><a name="3023"
+      > </a
+      ><a name="3024" class="Symbol"
+      >&#955;</a
+      ><a name="3025"
+      > </a
+      ><a name="3026" href="Relation.Binary.HeterogeneousEquality.html#3026" class="Bound"
+      >x</a
+      ><a name="3027"
+      > </a
+      ><a name="3028" href="Relation.Binary.HeterogeneousEquality.html#3028" class="Bound"
+      >y</a
+      ><a name="3029"
+      > </a
+      ><a name="3030" class="Symbol"
+      >&#8594;</a
+      ><a name="3031"
+      > </a
+      ><a name="3032" href="Relation.Binary.HeterogeneousEquality.html#3026" class="Bound"
+      >x</a
+      ><a name="3033"
+      > </a
+      ><a name="3034" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="3035"
+      > </a
+      ><a name="3036" href="Relation.Binary.HeterogeneousEquality.html#3028" class="Bound"
+      >y</a
+      ><a name="3037"
+      >
+  </a
+      ><a name="3040" class="Symbol"
+      >;</a
+      ><a name="3041"
+      > </a
+      ><a name="3042" class="Field"
+      >isEquivalence</a
+      ><a name="3055"
+      > </a
+      ><a name="3056" class="Symbol"
+      >=</a
+      ><a name="3057"
+      > </a
+      ><a name="3058" class="Keyword"
+      >record</a
+      ><a name="3064"
+      >
+    </a
+      ><a name="3069" class="Symbol"
+      >{</a
+      ><a name="3070"
+      > </a
+      ><a name="3071" class="Field"
+      >refl</a
+      ><a name="3075"
+      >  </a
+      ><a name="3077" class="Symbol"
+      >=</a
+      ><a name="3078"
+      > </a
+      ><a name="3079" href="Relation.Binary.HeterogeneousEquality.Core.html#607" class="InductiveConstructor"
+      >refl</a
+      ><a name="3083"
+      >
+    </a
+      ><a name="3088" class="Symbol"
+      >;</a
+      ><a name="3089"
+      > </a
+      ><a name="3090" class="Field"
+      >sym</a
+      ><a name="3093"
+      >   </a
+      ><a name="3096" class="Symbol"
+      >=</a
+      ><a name="3097"
+      > </a
+      ><a name="3098" href="Relation.Binary.HeterogeneousEquality.html#1263" class="Function"
+      >sym</a
+      ><a name="3101"
+      >
+    </a
+      ><a name="3106" class="Symbol"
+      >;</a
+      ><a name="3107"
+      > </a
+      ><a name="3108" class="Field"
+      >trans</a
+      ><a name="3113"
+      > </a
+      ><a name="3114" class="Symbol"
+      >=</a
+      ><a name="3115"
+      > </a
+      ><a name="3116" href="Relation.Binary.HeterogeneousEquality.html#1338" class="Function"
+      >trans</a
+      ><a name="3121"
+      >
+    </a
+      ><a name="3126" class="Symbol"
+      >}</a
+      ><a name="3127"
+      >
+  </a
+      ><a name="3130" class="Symbol"
+      >}</a
+      ><a name="3131"
+      >
+
+</a
+      ><a name="3133" href="Relation.Binary.HeterogeneousEquality.html#3133" class="Function"
+      >&#8801;&#8596;&#8773;</a
+      ><a name="3136"
+      > </a
+      ><a name="3137" class="Symbol"
+      >:</a
+      ><a name="3138"
+      > </a
+      ><a name="3139" class="Symbol"
+      >&#8704;</a
+      ><a name="3140"
+      > </a
+      ><a name="3141" class="Symbol"
+      >{</a
+      ><a name="3142" href="Relation.Binary.HeterogeneousEquality.html#3142" class="Bound"
+      >a</a
+      ><a name="3143"
+      > </a
+      ><a name="3144" href="Relation.Binary.HeterogeneousEquality.html#3144" class="Bound"
+      >b</a
+      ><a name="3145" class="Symbol"
+      >}</a
+      ><a name="3146"
+      > </a
+      ><a name="3147" class="Symbol"
+      >{</a
+      ><a name="3148" href="Relation.Binary.HeterogeneousEquality.html#3148" class="Bound"
+      >A</a
+      ><a name="3149"
+      > </a
+      ><a name="3150" class="Symbol"
+      >:</a
+      ><a name="3151"
+      > </a
+      ><a name="3152" class="PrimitiveType"
+      >Set</a
+      ><a name="3155"
+      > </a
+      ><a name="3156" href="Relation.Binary.HeterogeneousEquality.html#3142" class="Bound"
+      >a</a
+      ><a name="3157" class="Symbol"
+      >}</a
+      ><a name="3158"
+      > </a
+      ><a name="3159" class="Symbol"
+      >(</a
+      ><a name="3160" href="Relation.Binary.HeterogeneousEquality.html#3160" class="Bound"
+      >B</a
+      ><a name="3161"
+      > </a
+      ><a name="3162" class="Symbol"
+      >:</a
+      ><a name="3163"
+      > </a
+      ><a name="3164" href="Relation.Binary.HeterogeneousEquality.html#3148" class="Bound"
+      >A</a
+      ><a name="3165"
+      > </a
+      ><a name="3166" class="Symbol"
+      >&#8594;</a
+      ><a name="3167"
+      > </a
+      ><a name="3168" class="PrimitiveType"
+      >Set</a
+      ><a name="3171"
+      > </a
+      ><a name="3172" href="Relation.Binary.HeterogeneousEquality.html#3144" class="Bound"
+      >b</a
+      ><a name="3173" class="Symbol"
+      >)</a
+      ><a name="3174"
+      > </a
+      ><a name="3175" class="Symbol"
+      >{</a
+      ><a name="3176" href="Relation.Binary.HeterogeneousEquality.html#3176" class="Bound"
+      >x</a
+      ><a name="3177"
+      > </a
+      ><a name="3178" class="Symbol"
+      >:</a
+      ><a name="3179"
+      > </a
+      ><a name="3180" href="Relation.Binary.HeterogeneousEquality.html#3148" class="Bound"
+      >A</a
+      ><a name="3181" class="Symbol"
+      >}</a
+      ><a name="3182"
+      > </a
+      ><a name="3183" class="Symbol"
+      >&#8594;</a
+      ><a name="3184"
+      >
+      </a
+      ><a name="3191" href="Function.Inverse.html#904" class="Record"
+      >Inverse</a
+      ><a name="3198"
+      > </a
+      ><a name="3199" class="Symbol"
+      >(</a
+      ><a name="3200" href="Relation.Binary.PropositionalEquality.html#1390" class="Function"
+      >P.setoid</a
+      ><a name="3208"
+      > </a
+      ><a name="3209" class="Symbol"
+      >(</a
+      ><a name="3210" href="Relation.Binary.HeterogeneousEquality.html#3160" class="Bound"
+      >B</a
+      ><a name="3211"
+      > </a
+      ><a name="3212" href="Relation.Binary.HeterogeneousEquality.html#3176" class="Bound"
+      >x</a
+      ><a name="3213" class="Symbol"
+      >))</a
+      ><a name="3215"
+      > </a
+      ><a name="3216" class="Symbol"
+      >(</a
+      ><a name="3217" href="Relation.Binary.HeterogeneousEquality.html#2890" class="Function"
+      >indexedSetoid</a
+      ><a name="3230"
+      > </a
+      ><a name="3231" href="Relation.Binary.HeterogeneousEquality.html#3160" class="Bound"
+      >B</a
+      ><a name="3232"
+      > </a
+      ><a name="3233" href="Relation.Binary.Indexed.html#394" class="Function Operator"
+      >at</a
+      ><a name="3235"
+      > </a
+      ><a name="3236" href="Relation.Binary.HeterogeneousEquality.html#3176" class="Bound"
+      >x</a
+      ><a name="3237" class="Symbol"
+      >)</a
+      ><a name="3238"
+      >
+</a
+      ><a name="3239" href="Relation.Binary.HeterogeneousEquality.html#3133" class="Function"
+      >&#8801;&#8596;&#8773;</a
+      ><a name="3242"
+      > </a
+      ><a name="3243" href="Relation.Binary.HeterogeneousEquality.html#3243" class="Bound"
+      >B</a
+      ><a name="3244"
+      > </a
+      ><a name="3245" class="Symbol"
+      >=</a
+      ><a name="3246"
+      > </a
+      ><a name="3247" class="Keyword"
+      >record</a
+      ><a name="3253"
+      >
+  </a
+      ><a name="3256" class="Symbol"
+      >{</a
+      ><a name="3257"
+      > </a
+      ><a name="3258" class="Field"
+      >to</a
+      ><a name="3260"
+      >         </a
+      ><a name="3269" class="Symbol"
+      >=</a
+      ><a name="3270"
+      > </a
+      ><a name="3271" class="Keyword"
+      >record</a
+      ><a name="3277"
+      > </a
+      ><a name="3278" class="Symbol"
+      >{</a
+      ><a name="3279"
+      > </a
+      ><a name="3280" class="Field Operator"
+      >_&#10216;$&#10217;_</a
+      ><a name="3285"
+      > </a
+      ><a name="3286" class="Symbol"
+      >=</a
+      ><a name="3287"
+      > </a
+      ><a name="3288" href="Function.html#1006" class="Function"
+      >id</a
+      ><a name="3290" class="Symbol"
+      >;</a
+      ><a name="3291"
+      > </a
+      ><a name="3292" class="Field"
+      >cong</a
+      ><a name="3296"
+      > </a
+      ><a name="3297" class="Symbol"
+      >=</a
+      ><a name="3298"
+      > </a
+      ><a name="3299" href="Relation.Binary.HeterogeneousEquality.html#977" class="Function"
+      >&#8801;-to-&#8773;</a
+      ><a name="3305"
+      > </a
+      ><a name="3306" class="Symbol"
+      >}</a
+      ><a name="3307"
+      >
+  </a
+      ><a name="3310" class="Symbol"
+      >;</a
+      ><a name="3311"
+      > </a
+      ><a name="3312" class="Field"
+      >from</a
+      ><a name="3316"
+      >       </a
+      ><a name="3323" class="Symbol"
+      >=</a
+      ><a name="3324"
+      > </a
+      ><a name="3325" class="Keyword"
+      >record</a
+      ><a name="3331"
+      > </a
+      ><a name="3332" class="Symbol"
+      >{</a
+      ><a name="3333"
+      > </a
+      ><a name="3334" class="Field Operator"
+      >_&#10216;$&#10217;_</a
+      ><a name="3339"
+      > </a
+      ><a name="3340" class="Symbol"
+      >=</a
+      ><a name="3341"
+      > </a
+      ><a name="3342" href="Function.html#1006" class="Function"
+      >id</a
+      ><a name="3344" class="Symbol"
+      >;</a
+      ><a name="3345"
+      > </a
+      ><a name="3346" class="Field"
+      >cong</a
+      ><a name="3350"
+      > </a
+      ><a name="3351" class="Symbol"
+      >=</a
+      ><a name="3352"
+      > </a
+      ><a name="3353" href="Relation.Binary.HeterogeneousEquality.Core.html#709" class="Function"
+      >&#8773;-to-&#8801;</a
+      ><a name="3359"
+      > </a
+      ><a name="3360" class="Symbol"
+      >}</a
+      ><a name="3361"
+      >
+  </a
+      ><a name="3364" class="Symbol"
+      >;</a
+      ><a name="3365"
+      > </a
+      ><a name="3366" class="Field"
+      >inverse-of</a
+      ><a name="3376"
+      > </a
+      ><a name="3377" class="Symbol"
+      >=</a
+      ><a name="3378"
+      > </a
+      ><a name="3379" class="Keyword"
+      >record</a
+      ><a name="3385"
+      >
+    </a
+      ><a name="3390" class="Symbol"
+      >{</a
+      ><a name="3391"
+      > </a
+      ><a name="3392" class="Field"
+      >left-inverse-of</a
+      ><a name="3407"
+      >  </a
+      ><a name="3409" class="Symbol"
+      >=</a
+      ><a name="3410"
+      > </a
+      ><a name="3411" class="Symbol"
+      >&#955;</a
+      ><a name="3412"
+      > </a
+      ><a name="3413" href="Relation.Binary.HeterogeneousEquality.html#3413" class="Bound"
+      >_</a
+      ><a name="3414"
+      > </a
+      ><a name="3415" class="Symbol"
+      >&#8594;</a
+      ><a name="3416"
+      > </a
+      ><a name="3417" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="3421"
+      >
+    </a
+      ><a name="3426" class="Symbol"
+      >;</a
+      ><a name="3427"
+      > </a
+      ><a name="3428" class="Field"
+      >right-inverse-of</a
+      ><a name="3444"
+      > </a
+      ><a name="3445" class="Symbol"
+      >=</a
+      ><a name="3446"
+      > </a
+      ><a name="3447" class="Symbol"
+      >&#955;</a
+      ><a name="3448"
+      > </a
+      ><a name="3449" href="Relation.Binary.HeterogeneousEquality.html#3449" class="Bound"
+      >_</a
+      ><a name="3450"
+      > </a
+      ><a name="3451" class="Symbol"
+      >&#8594;</a
+      ><a name="3452"
+      > </a
+      ><a name="3453" href="Relation.Binary.HeterogeneousEquality.Core.html#607" class="InductiveConstructor"
+      >refl</a
+      ><a name="3457"
+      >
+    </a
+      ><a name="3462" class="Symbol"
+      >}</a
+      ><a name="3463"
+      >
+  </a
+      ><a name="3466" class="Symbol"
+      >}</a
+      ><a name="3467"
+      >
+
+</a
+      ><a name="3469" href="Relation.Binary.HeterogeneousEquality.html#3469" class="Function"
+      >decSetoid</a
+      ><a name="3478"
+      > </a
+      ><a name="3479" class="Symbol"
+      >:</a
+      ><a name="3480"
+      > </a
+      ><a name="3481" class="Symbol"
+      >&#8704;</a
+      ><a name="3482"
+      > </a
+      ><a name="3483" class="Symbol"
+      >{</a
+      ><a name="3484" href="Relation.Binary.HeterogeneousEquality.html#3484" class="Bound"
+      >a</a
+      ><a name="3485" class="Symbol"
+      >}</a
+      ><a name="3486"
+      > </a
+      ><a name="3487" class="Symbol"
+      >{</a
+      ><a name="3488" href="Relation.Binary.HeterogeneousEquality.html#3488" class="Bound"
+      >A</a
+      ><a name="3489"
+      > </a
+      ><a name="3490" class="Symbol"
+      >:</a
+      ><a name="3491"
+      > </a
+      ><a name="3492" class="PrimitiveType"
+      >Set</a
+      ><a name="3495"
+      > </a
+      ><a name="3496" href="Relation.Binary.HeterogeneousEquality.html#3484" class="Bound"
+      >a</a
+      ><a name="3497" class="Symbol"
+      >}</a
+      ><a name="3498"
+      > </a
+      ><a name="3499" class="Symbol"
+      >&#8594;</a
+      ><a name="3500"
+      >
+            </a
+      ><a name="3513" href="Relation.Binary.Core.html#3511" class="Function"
+      >Decidable</a
+      ><a name="3522"
+      > </a
+      ><a name="3523" class="Symbol"
+      >{</a
+      ><a name="3524"
+      >A </a
+      ><a name="3526" class="Symbol"
+      >=</a
+      ><a name="3527"
+      > </a
+      ><a name="3528" href="Relation.Binary.HeterogeneousEquality.html#3488" class="Bound"
+      >A</a
+      ><a name="3529" class="Symbol"
+      >}</a
+      ><a name="3530"
+      > </a
+      ><a name="3531" class="Symbol"
+      >{</a
+      ><a name="3532"
+      >B </a
+      ><a name="3534" class="Symbol"
+      >=</a
+      ><a name="3535"
+      > </a
+      ><a name="3536" href="Relation.Binary.HeterogeneousEquality.html#3488" class="Bound"
+      >A</a
+      ><a name="3537" class="Symbol"
+      >}</a
+      ><a name="3538"
+      > </a
+      ><a name="3539" class="Symbol"
+      >(&#955;</a
+      ><a name="3541"
+      > </a
+      ><a name="3542" href="Relation.Binary.HeterogeneousEquality.html#3542" class="Bound"
+      >x</a
+      ><a name="3543"
+      > </a
+      ><a name="3544" href="Relation.Binary.HeterogeneousEquality.html#3544" class="Bound"
+      >y</a
+      ><a name="3545"
+      > </a
+      ><a name="3546" class="Symbol"
+      >&#8594;</a
+      ><a name="3547"
+      > </a
+      ><a name="3548" href="Relation.Binary.HeterogeneousEquality.html#3542" class="Bound"
+      >x</a
+      ><a name="3549"
+      > </a
+      ><a name="3550" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="3551"
+      > </a
+      ><a name="3552" href="Relation.Binary.HeterogeneousEquality.html#3544" class="Bound"
+      >y</a
+      ><a name="3553" class="Symbol"
+      >)</a
+      ><a name="3554"
+      > </a
+      ><a name="3555" class="Symbol"
+      >&#8594;</a
+      ><a name="3556"
+      >
+            </a
+      ><a name="3569" href="Relation.Binary.html#2921" class="Record"
+      >DecSetoid</a
+      ><a name="3578"
+      > </a
+      ><a name="3579" class="Symbol"
+      >_</a
+      ><a name="3580"
+      > </a
+      ><a name="3581" class="Symbol"
+      >_</a
+      ><a name="3582"
+      >
+</a
+      ><a name="3583" href="Relation.Binary.HeterogeneousEquality.html#3469" class="Function"
+      >decSetoid</a
+      ><a name="3592"
+      > </a
+      ><a name="3593" href="Relation.Binary.HeterogeneousEquality.html#3593" class="Bound"
+      >dec</a
+      ><a name="3596"
+      > </a
+      ><a name="3597" class="Symbol"
+      >=</a
+      ><a name="3598"
+      > </a
+      ><a name="3599" class="Keyword"
+      >record</a
+      ><a name="3605"
+      >
+  </a
+      ><a name="3608" class="Symbol"
+      >{</a
+      ><a name="3609"
+      > </a
+      ><a name="3610" class="Field Operator"
+      >_&#8776;_</a
+      ><a name="3613"
+      >              </a
+      ><a name="3627" class="Symbol"
+      >=</a
+      ><a name="3628"
+      > </a
+      ><a name="3629" class="Symbol"
+      >&#955;</a
+      ><a name="3630"
+      > </a
+      ><a name="3631" href="Relation.Binary.HeterogeneousEquality.html#3631" class="Bound"
+      >x</a
+      ><a name="3632"
+      > </a
+      ><a name="3633" href="Relation.Binary.HeterogeneousEquality.html#3633" class="Bound"
+      >y</a
+      ><a name="3634"
+      > </a
+      ><a name="3635" class="Symbol"
+      >&#8594;</a
+      ><a name="3636"
+      > </a
+      ><a name="3637" href="Relation.Binary.HeterogeneousEquality.html#3631" class="Bound"
+      >x</a
+      ><a name="3638"
+      > </a
+      ><a name="3639" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="3640"
+      > </a
+      ><a name="3641" href="Relation.Binary.HeterogeneousEquality.html#3633" class="Bound"
+      >y</a
+      ><a name="3642"
+      >
+  </a
+      ><a name="3645" class="Symbol"
+      >;</a
+      ><a name="3646"
+      > </a
+      ><a name="3647" class="Field"
+      >isDecEquivalence</a
+      ><a name="3663"
+      > </a
+      ><a name="3664" class="Symbol"
+      >=</a
+      ><a name="3665"
+      > </a
+      ><a name="3666" class="Keyword"
+      >record</a
+      ><a name="3672"
+      >
+      </a
+      ><a name="3679" class="Symbol"
+      >{</a
+      ><a name="3680"
+      > </a
+      ><a name="3681" class="Field"
+      >isEquivalence</a
+      ><a name="3694"
+      > </a
+      ><a name="3695" class="Symbol"
+      >=</a
+      ><a name="3696"
+      > </a
+      ><a name="3697" href="Relation.Binary.HeterogeneousEquality.html#2572" class="Function"
+      >isEquivalence</a
+      ><a name="3710"
+      >
+      </a
+      ><a name="3717" class="Symbol"
+      >;</a
+      ><a name="3718"
+      > </a
+      ><a name="3719" class="Field Operator"
+      >_&#8799;_</a
+      ><a name="3722"
+      >           </a
+      ><a name="3733" class="Symbol"
+      >=</a
+      ><a name="3734"
+      > </a
+      ><a name="3735" href="Relation.Binary.HeterogeneousEquality.html#3593" class="Bound"
+      >dec</a
+      ><a name="3738"
+      >
+      </a
+      ><a name="3745" class="Symbol"
+      >}</a
+      ><a name="3746"
+      >
+  </a
+      ><a name="3749" class="Symbol"
+      >}</a
+      ><a name="3750"
+      >
+
+</a
+      ><a name="3752" href="Relation.Binary.HeterogeneousEquality.html#3752" class="Function"
+      >isPreorder</a
+      ><a name="3762"
+      > </a
+      ><a name="3763" class="Symbol"
+      >:</a
+      ><a name="3764"
+      > </a
+      ><a name="3765" class="Symbol"
+      >&#8704;</a
+      ><a name="3766"
+      > </a
+      ><a name="3767" class="Symbol"
+      >{</a
+      ><a name="3768" href="Relation.Binary.HeterogeneousEquality.html#3768" class="Bound"
+      >a</a
+      ><a name="3769" class="Symbol"
+      >}</a
+      ><a name="3770"
+      > </a
+      ><a name="3771" class="Symbol"
+      >{</a
+      ><a name="3772" href="Relation.Binary.HeterogeneousEquality.html#3772" class="Bound"
+      >A</a
+      ><a name="3773"
+      > </a
+      ><a name="3774" class="Symbol"
+      >:</a
+      ><a name="3775"
+      > </a
+      ><a name="3776" class="PrimitiveType"
+      >Set</a
+      ><a name="3779"
+      > </a
+      ><a name="3780" href="Relation.Binary.HeterogeneousEquality.html#3768" class="Bound"
+      >a</a
+      ><a name="3781" class="Symbol"
+      >}</a
+      ><a name="3782"
+      > </a
+      ><a name="3783" class="Symbol"
+      >&#8594;</a
+      ><a name="3784"
+      >
+             </a
+      ><a name="3798" href="Relation.Binary.html#794" class="Record"
+      >IsPreorder</a
+      ><a name="3808"
+      > </a
+      ><a name="3809" class="Symbol"
+      >{</a
+      ><a name="3810"
+      >A </a
+      ><a name="3812" class="Symbol"
+      >=</a
+      ><a name="3813"
+      > </a
+      ><a name="3814" href="Relation.Binary.HeterogeneousEquality.html#3772" class="Bound"
+      >A</a
+      ><a name="3815" class="Symbol"
+      >}</a
+      ><a name="3816"
+      > </a
+      ><a name="3817" class="Symbol"
+      >(&#955;</a
+      ><a name="3819"
+      > </a
+      ><a name="3820" href="Relation.Binary.HeterogeneousEquality.html#3820" class="Bound"
+      >x</a
+      ><a name="3821"
+      > </a
+      ><a name="3822" href="Relation.Binary.HeterogeneousEquality.html#3822" class="Bound"
+      >y</a
+      ><a name="3823"
+      > </a
+      ><a name="3824" class="Symbol"
+      >&#8594;</a
+      ><a name="3825"
+      > </a
+      ><a name="3826" href="Relation.Binary.HeterogeneousEquality.html#3820" class="Bound"
+      >x</a
+      ><a name="3827"
+      > </a
+      ><a name="3828" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="3829"
+      > </a
+      ><a name="3830" href="Relation.Binary.HeterogeneousEquality.html#3822" class="Bound"
+      >y</a
+      ><a name="3831" class="Symbol"
+      >)</a
+      ><a name="3832"
+      > </a
+      ><a name="3833" class="Symbol"
+      >(&#955;</a
+      ><a name="3835"
+      > </a
+      ><a name="3836" href="Relation.Binary.HeterogeneousEquality.html#3836" class="Bound"
+      >x</a
+      ><a name="3837"
+      > </a
+      ><a name="3838" href="Relation.Binary.HeterogeneousEquality.html#3838" class="Bound"
+      >y</a
+      ><a name="3839"
+      > </a
+      ><a name="3840" class="Symbol"
+      >&#8594;</a
+      ><a name="3841"
+      > </a
+      ><a name="3842" href="Relation.Binary.HeterogeneousEquality.html#3836" class="Bound"
+      >x</a
+      ><a name="3843"
+      > </a
+      ><a name="3844" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="3845"
+      > </a
+      ><a name="3846" href="Relation.Binary.HeterogeneousEquality.html#3838" class="Bound"
+      >y</a
+      ><a name="3847" class="Symbol"
+      >)</a
+      ><a name="3848"
+      >
+</a
+      ><a name="3849" href="Relation.Binary.HeterogeneousEquality.html#3752" class="Function"
+      >isPreorder</a
+      ><a name="3859"
+      > </a
+      ><a name="3860" class="Symbol"
+      >=</a
+      ><a name="3861"
+      > </a
+      ><a name="3862" class="Keyword"
+      >record</a
+      ><a name="3868"
+      >
+  </a
+      ><a name="3871" class="Symbol"
+      >{</a
+      ><a name="3872"
+      > </a
+      ><a name="3873" class="Field"
+      >isEquivalence</a
+      ><a name="3886"
+      > </a
+      ><a name="3887" class="Symbol"
+      >=</a
+      ><a name="3888"
+      > </a
+      ><a name="3889" href="Relation.Binary.HeterogeneousEquality.html#2572" class="Function"
+      >isEquivalence</a
+      ><a name="3902"
+      >
+  </a
+      ><a name="3905" class="Symbol"
+      >;</a
+      ><a name="3906"
+      > </a
+      ><a name="3907" class="Field"
+      >reflexive</a
+      ><a name="3916"
+      >     </a
+      ><a name="3921" class="Symbol"
+      >=</a
+      ><a name="3922"
+      > </a
+      ><a name="3923" href="Function.html#1006" class="Function"
+      >id</a
+      ><a name="3925"
+      >
+  </a
+      ><a name="3928" class="Symbol"
+      >;</a
+      ><a name="3929"
+      > </a
+      ><a name="3930" class="Field"
+      >trans</a
+      ><a name="3935"
+      >         </a
+      ><a name="3944" class="Symbol"
+      >=</a
+      ><a name="3945"
+      > </a
+      ><a name="3946" href="Relation.Binary.HeterogeneousEquality.html#1338" class="Function"
+      >trans</a
+      ><a name="3951"
+      >
+  </a
+      ><a name="3954" class="Symbol"
+      >}</a
+      ><a name="3955"
+      >
+
+</a
+      ><a name="3957" href="Relation.Binary.HeterogeneousEquality.html#3957" class="Function"
+      >isPreorder-&#8801;</a
+      ><a name="3969"
+      > </a
+      ><a name="3970" class="Symbol"
+      >:</a
+      ><a name="3971"
+      > </a
+      ><a name="3972" class="Symbol"
+      >&#8704;</a
+      ><a name="3973"
+      > </a
+      ><a name="3974" class="Symbol"
+      >{</a
+      ><a name="3975" href="Relation.Binary.HeterogeneousEquality.html#3975" class="Bound"
+      >a</a
+      ><a name="3976" class="Symbol"
+      >}</a
+      ><a name="3977"
+      > </a
+      ><a name="3978" class="Symbol"
+      >{</a
+      ><a name="3979" href="Relation.Binary.HeterogeneousEquality.html#3979" class="Bound"
+      >A</a
+      ><a name="3980"
+      > </a
+      ><a name="3981" class="Symbol"
+      >:</a
+      ><a name="3982"
+      > </a
+      ><a name="3983" class="PrimitiveType"
+      >Set</a
+      ><a name="3986"
+      > </a
+      ><a name="3987" href="Relation.Binary.HeterogeneousEquality.html#3975" class="Bound"
+      >a</a
+      ><a name="3988" class="Symbol"
+      >}</a
+      ><a name="3989"
+      > </a
+      ><a name="3990" class="Symbol"
+      >&#8594;</a
+      ><a name="3991"
+      >
+               </a
+      ><a name="4007" href="Relation.Binary.html#794" class="Record"
+      >IsPreorder</a
+      ><a name="4017"
+      > </a
+      ><a name="4018" class="Symbol"
+      >{</a
+      ><a name="4019"
+      >A </a
+      ><a name="4021" class="Symbol"
+      >=</a
+      ><a name="4022"
+      > </a
+      ><a name="4023" href="Relation.Binary.HeterogeneousEquality.html#3979" class="Bound"
+      >A</a
+      ><a name="4024" class="Symbol"
+      >}</a
+      ><a name="4025"
+      > </a
+      ><a name="4026" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >_&#8801;_</a
+      ><a name="4029"
+      > </a
+      ><a name="4030" class="Symbol"
+      >(&#955;</a
+      ><a name="4032"
+      > </a
+      ><a name="4033" href="Relation.Binary.HeterogeneousEquality.html#4033" class="Bound"
+      >x</a
+      ><a name="4034"
+      > </a
+      ><a name="4035" href="Relation.Binary.HeterogeneousEquality.html#4035" class="Bound"
+      >y</a
+      ><a name="4036"
+      > </a
+      ><a name="4037" class="Symbol"
+      >&#8594;</a
+      ><a name="4038"
+      > </a
+      ><a name="4039" href="Relation.Binary.HeterogeneousEquality.html#4033" class="Bound"
+      >x</a
+      ><a name="4040"
+      > </a
+      ><a name="4041" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="4042"
+      > </a
+      ><a name="4043" href="Relation.Binary.HeterogeneousEquality.html#4035" class="Bound"
+      >y</a
+      ><a name="4044" class="Symbol"
+      >)</a
+      ><a name="4045"
+      >
+</a
+      ><a name="4046" href="Relation.Binary.HeterogeneousEquality.html#3957" class="Function"
+      >isPreorder-&#8801;</a
+      ><a name="4058"
+      > </a
+      ><a name="4059" class="Symbol"
+      >=</a
+      ><a name="4060"
+      > </a
+      ><a name="4061" class="Keyword"
+      >record</a
+      ><a name="4067"
+      >
+  </a
+      ><a name="4070" class="Symbol"
+      >{</a
+      ><a name="4071"
+      > </a
+      ><a name="4072" class="Field"
+      >isEquivalence</a
+      ><a name="4085"
+      > </a
+      ><a name="4086" class="Symbol"
+      >=</a
+      ><a name="4087"
+      > </a
+      ><a name="4088" href="Relation.Binary.PropositionalEquality.Core.html#879" class="Function"
+      >P.isEquivalence</a
+      ><a name="4103"
+      >
+  </a
+      ><a name="4106" class="Symbol"
+      >;</a
+      ><a name="4107"
+      > </a
+      ><a name="4108" class="Field"
+      >reflexive</a
+      ><a name="4117"
+      >     </a
+      ><a name="4122" class="Symbol"
+      >=</a
+      ><a name="4123"
+      > </a
+      ><a name="4124" href="Relation.Binary.HeterogeneousEquality.html#1176" class="Function"
+      >reflexive</a
+      ><a name="4133"
+      >
+  </a
+      ><a name="4136" class="Symbol"
+      >;</a
+      ><a name="4137"
+      > </a
+      ><a name="4138" class="Field"
+      >trans</a
+      ><a name="4143"
+      >         </a
+      ><a name="4152" class="Symbol"
+      >=</a
+      ><a name="4153"
+      > </a
+      ><a name="4154" href="Relation.Binary.HeterogeneousEquality.html#1338" class="Function"
+      >trans</a
+      ><a name="4159"
+      >
+  </a
+      ><a name="4162" class="Symbol"
+      >}</a
+      ><a name="4163"
+      >
+
+</a
+      ><a name="4165" href="Relation.Binary.HeterogeneousEquality.html#4165" class="Function"
+      >preorder</a
+      ><a name="4173"
+      > </a
+      ><a name="4174" class="Symbol"
+      >:</a
+      ><a name="4175"
+      > </a
+      ><a name="4176" class="Symbol"
+      >&#8704;</a
+      ><a name="4177"
+      > </a
+      ><a name="4178" class="Symbol"
+      >{</a
+      ><a name="4179" href="Relation.Binary.HeterogeneousEquality.html#4179" class="Bound"
+      >a</a
+      ><a name="4180" class="Symbol"
+      >}</a
+      ><a name="4181"
+      > </a
+      ><a name="4182" class="Symbol"
+      >&#8594;</a
+      ><a name="4183"
+      > </a
+      ><a name="4184" class="PrimitiveType"
+      >Set</a
+      ><a name="4187"
+      > </a
+      ><a name="4188" href="Relation.Binary.HeterogeneousEquality.html#4179" class="Bound"
+      >a</a
+      ><a name="4189"
+      > </a
+      ><a name="4190" class="Symbol"
+      >&#8594;</a
+      ><a name="4191"
+      > </a
+      ><a name="4192" href="Relation.Binary.html#1414" class="Record"
+      >Preorder</a
+      ><a name="4200"
+      > </a
+      ><a name="4201" class="Symbol"
+      >_</a
+      ><a name="4202"
+      > </a
+      ><a name="4203" class="Symbol"
+      >_</a
+      ><a name="4204"
+      > </a
+      ><a name="4205" class="Symbol"
+      >_</a
+      ><a name="4206"
+      >
+</a
+      ><a name="4207" href="Relation.Binary.HeterogeneousEquality.html#4165" class="Function"
+      >preorder</a
+      ><a name="4215"
+      > </a
+      ><a name="4216" href="Relation.Binary.HeterogeneousEquality.html#4216" class="Bound"
+      >A</a
+      ><a name="4217"
+      > </a
+      ><a name="4218" class="Symbol"
+      >=</a
+      ><a name="4219"
+      > </a
+      ><a name="4220" class="Keyword"
+      >record</a
+      ><a name="4226"
+      >
+  </a
+      ><a name="4229" class="Symbol"
+      >{</a
+      ><a name="4230"
+      > </a
+      ><a name="4231" class="Field"
+      >Carrier</a
+      ><a name="4238"
+      >    </a
+      ><a name="4242" class="Symbol"
+      >=</a
+      ><a name="4243"
+      > </a
+      ><a name="4244" href="Relation.Binary.HeterogeneousEquality.html#4216" class="Bound"
+      >A</a
+      ><a name="4245"
+      >
+  </a
+      ><a name="4248" class="Symbol"
+      >;</a
+      ><a name="4249"
+      > </a
+      ><a name="4250" class="Field Operator"
+      >_&#8776;_</a
+      ><a name="4253"
+      >        </a
+      ><a name="4261" class="Symbol"
+      >=</a
+      ><a name="4262"
+      > </a
+      ><a name="4263" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >_&#8801;_</a
+      ><a name="4266"
+      >
+  </a
+      ><a name="4269" class="Symbol"
+      >;</a
+      ><a name="4270"
+      > </a
+      ><a name="4271" class="Field Operator"
+      >_&#8764;_</a
+      ><a name="4274"
+      >        </a
+      ><a name="4282" class="Symbol"
+      >=</a
+      ><a name="4283"
+      > </a
+      ><a name="4284" class="Symbol"
+      >&#955;</a
+      ><a name="4285"
+      > </a
+      ><a name="4286" href="Relation.Binary.HeterogeneousEquality.html#4286" class="Bound"
+      >x</a
+      ><a name="4287"
+      > </a
+      ><a name="4288" href="Relation.Binary.HeterogeneousEquality.html#4288" class="Bound"
+      >y</a
+      ><a name="4289"
+      > </a
+      ><a name="4290" class="Symbol"
+      >&#8594;</a
+      ><a name="4291"
+      > </a
+      ><a name="4292" href="Relation.Binary.HeterogeneousEquality.html#4286" class="Bound"
+      >x</a
+      ><a name="4293"
+      > </a
+      ><a name="4294" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="4295"
+      > </a
+      ><a name="4296" href="Relation.Binary.HeterogeneousEquality.html#4288" class="Bound"
+      >y</a
+      ><a name="4297"
+      >
+  </a
+      ><a name="4300" class="Symbol"
+      >;</a
+      ><a name="4301"
+      > </a
+      ><a name="4302" class="Field"
+      >isPreorder</a
+      ><a name="4312"
+      > </a
+      ><a name="4313" class="Symbol"
+      >=</a
+      ><a name="4314"
+      > </a
+      ><a name="4315" href="Relation.Binary.HeterogeneousEquality.html#3957" class="Function"
+      >isPreorder-&#8801;</a
+      ><a name="4327"
+      >
+  </a
+      ><a name="4330" class="Symbol"
+      >}</a
+      ><a name="4331"
+      >
+
+</a
+      ><a name="4333" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="4405"
+      >
+</a
+      ><a name="4406" class="Comment"
+      >-- Convenient syntax for equational reasoning</a
+      ><a name="4451"
+      >
+
+</a
+      ><a name="4453" class="Keyword"
+      >module</a
+      ><a name="4459"
+      > </a
+      ><a name="4460" href="Relation.Binary.HeterogeneousEquality.html#4460" class="Module"
+      >&#8773;-Reasoning</a
+      ><a name="4471"
+      > </a
+      ><a name="4472" class="Keyword"
+      >where</a
+      ><a name="4477"
+      >
+
+  </a
+      ><a name="4481" class="Comment"
+      >-- The code in Relation.Binary.EqReasoning cannot handle</a
+      ><a name="4537"
+      >
+  </a
+      ><a name="4540" class="Comment"
+      >-- heterogeneous equalities, hence the code duplication here.</a
+      ><a name="4601"
+      >
+
+  </a
+      ><a name="4605" class="Keyword"
+      >infix</a
+      ><a name="4610"
+      >  </a
+      ><a name="4612" class="Number"
+      >4</a
+      ><a name="4613"
+      > _IsRelatedTo_
+  </a
+      ><a name="4630" class="Keyword"
+      >infix</a
+      ><a name="4635"
+      >  </a
+      ><a name="4637" class="Number"
+      >2</a
+      ><a name="4638"
+      > _&#8718;
+  </a
+      ><a name="4644" class="Keyword"
+      >infixr</a
+      ><a name="4650"
+      > </a
+      ><a name="4651" class="Number"
+      >2</a
+      ><a name="4652"
+      > _&#8773;&#10216;_&#10217;_ _&#8801;&#10216;_&#10217;_ _&#8801;&#10216;&#10217;_
+  </a
+      ><a name="4675" class="Keyword"
+      >infix</a
+      ><a name="4680"
+      >  </a
+      ><a name="4682" class="Number"
+      >1</a
+      ><a name="4683"
+      > begin_
+
+  </a
+      ><a name="4694" class="Keyword"
+      >data</a
+      ><a name="4698"
+      > </a
+      ><a name="4699" href="Relation.Binary.HeterogeneousEquality.html#4699" class="Datatype Operator"
+      >_IsRelatedTo_</a
+      ><a name="4712"
+      > </a
+      ><a name="4713" class="Symbol"
+      >{</a
+      ><a name="4714" href="Relation.Binary.HeterogeneousEquality.html#4714" class="Bound"
+      >&#8467;</a
+      ><a name="4715" class="Symbol"
+      >}</a
+      ><a name="4716"
+      > </a
+      ><a name="4717" class="Symbol"
+      >{</a
+      ><a name="4718" href="Relation.Binary.HeterogeneousEquality.html#4718" class="Bound"
+      >A</a
+      ><a name="4719"
+      > </a
+      ><a name="4720" class="Symbol"
+      >:</a
+      ><a name="4721"
+      > </a
+      ><a name="4722" class="PrimitiveType"
+      >Set</a
+      ><a name="4725"
+      > </a
+      ><a name="4726" href="Relation.Binary.HeterogeneousEquality.html#4714" class="Bound"
+      >&#8467;</a
+      ><a name="4727" class="Symbol"
+      >}</a
+      ><a name="4728"
+      > </a
+      ><a name="4729" class="Symbol"
+      >(</a
+      ><a name="4730" href="Relation.Binary.HeterogeneousEquality.html#4730" class="Bound"
+      >x</a
+      ><a name="4731"
+      > </a
+      ><a name="4732" class="Symbol"
+      >:</a
+      ><a name="4733"
+      > </a
+      ><a name="4734" href="Relation.Binary.HeterogeneousEquality.html#4718" class="Bound"
+      >A</a
+      ><a name="4735" class="Symbol"
+      >)</a
+      ><a name="4736"
+      > </a
+      ><a name="4737" class="Symbol"
+      >{</a
+      ><a name="4738" href="Relation.Binary.HeterogeneousEquality.html#4738" class="Bound"
+      >B</a
+      ><a name="4739"
+      > </a
+      ><a name="4740" class="Symbol"
+      >:</a
+      ><a name="4741"
+      > </a
+      ><a name="4742" class="PrimitiveType"
+      >Set</a
+      ><a name="4745"
+      > </a
+      ><a name="4746" href="Relation.Binary.HeterogeneousEquality.html#4714" class="Bound"
+      >&#8467;</a
+      ><a name="4747" class="Symbol"
+      >}</a
+      ><a name="4748"
+      > </a
+      ><a name="4749" class="Symbol"
+      >(</a
+      ><a name="4750" href="Relation.Binary.HeterogeneousEquality.html#4750" class="Bound"
+      >y</a
+      ><a name="4751"
+      > </a
+      ><a name="4752" class="Symbol"
+      >:</a
+      ><a name="4753"
+      > </a
+      ><a name="4754" href="Relation.Binary.HeterogeneousEquality.html#4738" class="Bound"
+      >B</a
+      ><a name="4755" class="Symbol"
+      >)</a
+      ><a name="4756"
+      > </a
+      ><a name="4757" class="Symbol"
+      >:</a
+      ><a name="4758"
+      >
+                     </a
+      ><a name="4780" class="PrimitiveType"
+      >Set</a
+      ><a name="4783"
+      > </a
+      ><a name="4784" href="Relation.Binary.HeterogeneousEquality.html#4714" class="Bound"
+      >&#8467;</a
+      ><a name="4785"
+      > </a
+      ><a name="4786" class="Keyword"
+      >where</a
+      ><a name="4791"
+      >
+    </a
+      ><a name="4796" href="Relation.Binary.HeterogeneousEquality.html#4796" class="InductiveConstructor"
+      >relTo</a
+      ><a name="4801"
+      > </a
+      ><a name="4802" class="Symbol"
+      >:</a
+      ><a name="4803"
+      > </a
+      ><a name="4804" class="Symbol"
+      >(</a
+      ><a name="4805" href="Relation.Binary.HeterogeneousEquality.html#4805" class="Bound"
+      >x&#8773;y</a
+      ><a name="4808"
+      > </a
+      ><a name="4809" class="Symbol"
+      >:</a
+      ><a name="4810"
+      > </a
+      ><a name="4811" href="Relation.Binary.HeterogeneousEquality.html#4730" class="Bound"
+      >x</a
+      ><a name="4812"
+      > </a
+      ><a name="4813" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="4814"
+      > </a
+      ><a name="4815" href="Relation.Binary.HeterogeneousEquality.html#4750" class="Bound"
+      >y</a
+      ><a name="4816" class="Symbol"
+      >)</a
+      ><a name="4817"
+      > </a
+      ><a name="4818" class="Symbol"
+      >&#8594;</a
+      ><a name="4819"
+      > </a
+      ><a name="4820" href="Relation.Binary.HeterogeneousEquality.html#4730" class="Bound"
+      >x</a
+      ><a name="4821"
+      > </a
+      ><a name="4822" href="Relation.Binary.HeterogeneousEquality.html#4699" class="Datatype Operator"
+      >IsRelatedTo</a
+      ><a name="4833"
+      > </a
+      ><a name="4834" href="Relation.Binary.HeterogeneousEquality.html#4750" class="Bound"
+      >y</a
+      ><a name="4835"
+      >
+
+  </a
+      ><a name="4839" href="Relation.Binary.HeterogeneousEquality.html#4839" class="Function Operator"
+      >begin_</a
+      ><a name="4845"
+      > </a
+      ><a name="4846" class="Symbol"
+      >:</a
+      ><a name="4847"
+      > </a
+      ><a name="4848" class="Symbol"
+      >&#8704;</a
+      ><a name="4849"
+      > </a
+      ><a name="4850" class="Symbol"
+      >{</a
+      ><a name="4851" href="Relation.Binary.HeterogeneousEquality.html#4851" class="Bound"
+      >&#8467;</a
+      ><a name="4852" class="Symbol"
+      >}</a
+      ><a name="4853"
+      > </a
+      ><a name="4854" class="Symbol"
+      >{</a
+      ><a name="4855" href="Relation.Binary.HeterogeneousEquality.html#4855" class="Bound"
+      >A</a
+      ><a name="4856"
+      > </a
+      ><a name="4857" class="Symbol"
+      >:</a
+      ><a name="4858"
+      > </a
+      ><a name="4859" class="PrimitiveType"
+      >Set</a
+      ><a name="4862"
+      > </a
+      ><a name="4863" href="Relation.Binary.HeterogeneousEquality.html#4851" class="Bound"
+      >&#8467;</a
+      ><a name="4864" class="Symbol"
+      >}</a
+      ><a name="4865"
+      > </a
+      ><a name="4866" class="Symbol"
+      >{</a
+      ><a name="4867" href="Relation.Binary.HeterogeneousEquality.html#4867" class="Bound"
+      >x</a
+      ><a name="4868"
+      > </a
+      ><a name="4869" class="Symbol"
+      >:</a
+      ><a name="4870"
+      > </a
+      ><a name="4871" href="Relation.Binary.HeterogeneousEquality.html#4855" class="Bound"
+      >A</a
+      ><a name="4872" class="Symbol"
+      >}</a
+      ><a name="4873"
+      > </a
+      ><a name="4874" class="Symbol"
+      >{</a
+      ><a name="4875" href="Relation.Binary.HeterogeneousEquality.html#4875" class="Bound"
+      >B</a
+      ><a name="4876" class="Symbol"
+      >}</a
+      ><a name="4877"
+      > </a
+      ><a name="4878" class="Symbol"
+      >{</a
+      ><a name="4879" href="Relation.Binary.HeterogeneousEquality.html#4879" class="Bound"
+      >y</a
+      ><a name="4880"
+      > </a
+      ><a name="4881" class="Symbol"
+      >:</a
+      ><a name="4882"
+      > </a
+      ><a name="4883" href="Relation.Binary.HeterogeneousEquality.html#4875" class="Bound"
+      >B</a
+      ><a name="4884" class="Symbol"
+      >}</a
+      ><a name="4885"
+      > </a
+      ><a name="4886" class="Symbol"
+      >&#8594;</a
+      ><a name="4887"
+      >
+           </a
+      ><a name="4899" href="Relation.Binary.HeterogeneousEquality.html#4867" class="Bound"
+      >x</a
+      ><a name="4900"
+      > </a
+      ><a name="4901" href="Relation.Binary.HeterogeneousEquality.html#4699" class="Datatype Operator"
+      >IsRelatedTo</a
+      ><a name="4912"
+      > </a
+      ><a name="4913" href="Relation.Binary.HeterogeneousEquality.html#4879" class="Bound"
+      >y</a
+      ><a name="4914"
+      > </a
+      ><a name="4915" class="Symbol"
+      >&#8594;</a
+      ><a name="4916"
+      > </a
+      ><a name="4917" href="Relation.Binary.HeterogeneousEquality.html#4867" class="Bound"
+      >x</a
+      ><a name="4918"
+      > </a
+      ><a name="4919" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="4920"
+      > </a
+      ><a name="4921" href="Relation.Binary.HeterogeneousEquality.html#4879" class="Bound"
+      >y</a
+      ><a name="4922"
+      >
+  </a
+      ><a name="4925" href="Relation.Binary.HeterogeneousEquality.html#4839" class="Function Operator"
+      >begin</a
+      ><a name="4930"
+      > </a
+      ><a name="4931" href="Relation.Binary.HeterogeneousEquality.html#4796" class="InductiveConstructor"
+      >relTo</a
+      ><a name="4936"
+      > </a
+      ><a name="4937" href="Relation.Binary.HeterogeneousEquality.html#4937" class="Bound"
+      >x&#8773;y</a
+      ><a name="4940"
+      > </a
+      ><a name="4941" class="Symbol"
+      >=</a
+      ><a name="4942"
+      > </a
+      ><a name="4943" href="Relation.Binary.HeterogeneousEquality.html#4937" class="Bound"
+      >x&#8773;y</a
+      ><a name="4946"
+      >
+
+  </a
+      ><a name="4950" href="Relation.Binary.HeterogeneousEquality.html#4950" class="Function Operator"
+      >_&#8773;&#10216;_&#10217;_</a
+      ><a name="4956"
+      > </a
+      ><a name="4957" class="Symbol"
+      >:</a
+      ><a name="4958"
+      > </a
+      ><a name="4959" class="Symbol"
+      >&#8704;</a
+      ><a name="4960"
+      > </a
+      ><a name="4961" class="Symbol"
+      >{</a
+      ><a name="4962" href="Relation.Binary.HeterogeneousEquality.html#4962" class="Bound"
+      >&#8467;</a
+      ><a name="4963" class="Symbol"
+      >}</a
+      ><a name="4964"
+      > </a
+      ><a name="4965" class="Symbol"
+      >{</a
+      ><a name="4966" href="Relation.Binary.HeterogeneousEquality.html#4966" class="Bound"
+      >A</a
+      ><a name="4967"
+      > </a
+      ><a name="4968" class="Symbol"
+      >:</a
+      ><a name="4969"
+      > </a
+      ><a name="4970" class="PrimitiveType"
+      >Set</a
+      ><a name="4973"
+      > </a
+      ><a name="4974" href="Relation.Binary.HeterogeneousEquality.html#4962" class="Bound"
+      >&#8467;</a
+      ><a name="4975" class="Symbol"
+      >}</a
+      ><a name="4976"
+      > </a
+      ><a name="4977" class="Symbol"
+      >(</a
+      ><a name="4978" href="Relation.Binary.HeterogeneousEquality.html#4978" class="Bound"
+      >x</a
+      ><a name="4979"
+      > </a
+      ><a name="4980" class="Symbol"
+      >:</a
+      ><a name="4981"
+      > </a
+      ><a name="4982" href="Relation.Binary.HeterogeneousEquality.html#4966" class="Bound"
+      >A</a
+      ><a name="4983" class="Symbol"
+      >)</a
+      ><a name="4984"
+      > </a
+      ><a name="4985" class="Symbol"
+      >{</a
+      ><a name="4986" href="Relation.Binary.HeterogeneousEquality.html#4986" class="Bound"
+      >B</a
+      ><a name="4987" class="Symbol"
+      >}</a
+      ><a name="4988"
+      > </a
+      ><a name="4989" class="Symbol"
+      >{</a
+      ><a name="4990" href="Relation.Binary.HeterogeneousEquality.html#4990" class="Bound"
+      >y</a
+      ><a name="4991"
+      > </a
+      ><a name="4992" class="Symbol"
+      >:</a
+      ><a name="4993"
+      > </a
+      ><a name="4994" href="Relation.Binary.HeterogeneousEquality.html#4986" class="Bound"
+      >B</a
+      ><a name="4995" class="Symbol"
+      >}</a
+      ><a name="4996"
+      > </a
+      ><a name="4997" class="Symbol"
+      >{</a
+      ><a name="4998" href="Relation.Binary.HeterogeneousEquality.html#4998" class="Bound"
+      >C</a
+      ><a name="4999" class="Symbol"
+      >}</a
+      ><a name="5000"
+      > </a
+      ><a name="5001" class="Symbol"
+      >{</a
+      ><a name="5002" href="Relation.Binary.HeterogeneousEquality.html#5002" class="Bound"
+      >z</a
+      ><a name="5003"
+      > </a
+      ><a name="5004" class="Symbol"
+      >:</a
+      ><a name="5005"
+      > </a
+      ><a name="5006" href="Relation.Binary.HeterogeneousEquality.html#4998" class="Bound"
+      >C</a
+      ><a name="5007" class="Symbol"
+      >}</a
+      ><a name="5008"
+      > </a
+      ><a name="5009" class="Symbol"
+      >&#8594;</a
+      ><a name="5010"
+      >
+           </a
+      ><a name="5022" href="Relation.Binary.HeterogeneousEquality.html#4978" class="Bound"
+      >x</a
+      ><a name="5023"
+      > </a
+      ><a name="5024" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="5025"
+      > </a
+      ><a name="5026" href="Relation.Binary.HeterogeneousEquality.html#4990" class="Bound"
+      >y</a
+      ><a name="5027"
+      > </a
+      ><a name="5028" class="Symbol"
+      >&#8594;</a
+      ><a name="5029"
+      > </a
+      ><a name="5030" href="Relation.Binary.HeterogeneousEquality.html#4990" class="Bound"
+      >y</a
+      ><a name="5031"
+      > </a
+      ><a name="5032" href="Relation.Binary.HeterogeneousEquality.html#4699" class="Datatype Operator"
+      >IsRelatedTo</a
+      ><a name="5043"
+      > </a
+      ><a name="5044" href="Relation.Binary.HeterogeneousEquality.html#5002" class="Bound"
+      >z</a
+      ><a name="5045"
+      > </a
+      ><a name="5046" class="Symbol"
+      >&#8594;</a
+      ><a name="5047"
+      > </a
+      ><a name="5048" href="Relation.Binary.HeterogeneousEquality.html#4978" class="Bound"
+      >x</a
+      ><a name="5049"
+      > </a
+      ><a name="5050" href="Relation.Binary.HeterogeneousEquality.html#4699" class="Datatype Operator"
+      >IsRelatedTo</a
+      ><a name="5061"
+      > </a
+      ><a name="5062" href="Relation.Binary.HeterogeneousEquality.html#5002" class="Bound"
+      >z</a
+      ><a name="5063"
+      >
+  </a
+      ><a name="5066" class="Symbol"
+      >_</a
+      ><a name="5067"
+      > </a
+      ><a name="5068" href="Relation.Binary.HeterogeneousEquality.html#4950" class="Function Operator"
+      >&#8773;&#10216;</a
+      ><a name="5070"
+      > </a
+      ><a name="5071" href="Relation.Binary.HeterogeneousEquality.html#5071" class="Bound"
+      >x&#8773;y</a
+      ><a name="5074"
+      > </a
+      ><a name="5075" href="Relation.Binary.HeterogeneousEquality.html#4950" class="Function Operator"
+      >&#10217;</a
+      ><a name="5076"
+      > </a
+      ><a name="5077" href="Relation.Binary.HeterogeneousEquality.html#4796" class="InductiveConstructor"
+      >relTo</a
+      ><a name="5082"
+      > </a
+      ><a name="5083" href="Relation.Binary.HeterogeneousEquality.html#5083" class="Bound"
+      >y&#8773;z</a
+      ><a name="5086"
+      > </a
+      ><a name="5087" class="Symbol"
+      >=</a
+      ><a name="5088"
+      > </a
+      ><a name="5089" href="Relation.Binary.HeterogeneousEquality.html#4796" class="InductiveConstructor"
+      >relTo</a
+      ><a name="5094"
+      > </a
+      ><a name="5095" class="Symbol"
+      >(</a
+      ><a name="5096" href="Relation.Binary.HeterogeneousEquality.html#1338" class="Function"
+      >trans</a
+      ><a name="5101"
+      > </a
+      ><a name="5102" href="Relation.Binary.HeterogeneousEquality.html#5071" class="Bound"
+      >x&#8773;y</a
+      ><a name="5105"
+      > </a
+      ><a name="5106" href="Relation.Binary.HeterogeneousEquality.html#5083" class="Bound"
+      >y&#8773;z</a
+      ><a name="5109" class="Symbol"
+      >)</a
+      ><a name="5110"
+      >
+
+  </a
+      ><a name="5114" href="Relation.Binary.HeterogeneousEquality.html#5114" class="Function Operator"
+      >_&#8801;&#10216;_&#10217;_</a
+      ><a name="5120"
+      > </a
+      ><a name="5121" class="Symbol"
+      >:</a
+      ><a name="5122"
+      > </a
+      ><a name="5123" class="Symbol"
+      >&#8704;</a
+      ><a name="5124"
+      > </a
+      ><a name="5125" class="Symbol"
+      >{</a
+      ><a name="5126" href="Relation.Binary.HeterogeneousEquality.html#5126" class="Bound"
+      >&#8467;</a
+      ><a name="5127" class="Symbol"
+      >}</a
+      ><a name="5128"
+      > </a
+      ><a name="5129" class="Symbol"
+      >{</a
+      ><a name="5130" href="Relation.Binary.HeterogeneousEquality.html#5130" class="Bound"
+      >A</a
+      ><a name="5131"
+      > </a
+      ><a name="5132" class="Symbol"
+      >:</a
+      ><a name="5133"
+      > </a
+      ><a name="5134" class="PrimitiveType"
+      >Set</a
+      ><a name="5137"
+      > </a
+      ><a name="5138" href="Relation.Binary.HeterogeneousEquality.html#5126" class="Bound"
+      >&#8467;</a
+      ><a name="5139" class="Symbol"
+      >}</a
+      ><a name="5140"
+      > </a
+      ><a name="5141" class="Symbol"
+      >(</a
+      ><a name="5142" href="Relation.Binary.HeterogeneousEquality.html#5142" class="Bound"
+      >x</a
+      ><a name="5143"
+      > </a
+      ><a name="5144" class="Symbol"
+      >:</a
+      ><a name="5145"
+      > </a
+      ><a name="5146" href="Relation.Binary.HeterogeneousEquality.html#5130" class="Bound"
+      >A</a
+      ><a name="5147" class="Symbol"
+      >)</a
+      ><a name="5148"
+      > </a
+      ><a name="5149" class="Symbol"
+      >{</a
+      ><a name="5150" href="Relation.Binary.HeterogeneousEquality.html#5150" class="Bound"
+      >y</a
+      ><a name="5151"
+      > </a
+      ><a name="5152" href="Relation.Binary.HeterogeneousEquality.html#5152" class="Bound"
+      >C</a
+      ><a name="5153" class="Symbol"
+      >}</a
+      ><a name="5154"
+      > </a
+      ><a name="5155" class="Symbol"
+      >{</a
+      ><a name="5156" href="Relation.Binary.HeterogeneousEquality.html#5156" class="Bound"
+      >z</a
+      ><a name="5157"
+      > </a
+      ><a name="5158" class="Symbol"
+      >:</a
+      ><a name="5159"
+      > </a
+      ><a name="5160" href="Relation.Binary.HeterogeneousEquality.html#5152" class="Bound"
+      >C</a
+      ><a name="5161" class="Symbol"
+      >}</a
+      ><a name="5162"
+      > </a
+      ><a name="5163" class="Symbol"
+      >&#8594;</a
+      ><a name="5164"
+      >
+           </a
+      ><a name="5176" href="Relation.Binary.HeterogeneousEquality.html#5142" class="Bound"
+      >x</a
+      ><a name="5177"
+      > </a
+      ><a name="5178" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="5179"
+      > </a
+      ><a name="5180" href="Relation.Binary.HeterogeneousEquality.html#5150" class="Bound"
+      >y</a
+      ><a name="5181"
+      > </a
+      ><a name="5182" class="Symbol"
+      >&#8594;</a
+      ><a name="5183"
+      > </a
+      ><a name="5184" href="Relation.Binary.HeterogeneousEquality.html#5150" class="Bound"
+      >y</a
+      ><a name="5185"
+      > </a
+      ><a name="5186" href="Relation.Binary.HeterogeneousEquality.html#4699" class="Datatype Operator"
+      >IsRelatedTo</a
+      ><a name="5197"
+      > </a
+      ><a name="5198" href="Relation.Binary.HeterogeneousEquality.html#5156" class="Bound"
+      >z</a
+      ><a name="5199"
+      > </a
+      ><a name="5200" class="Symbol"
+      >&#8594;</a
+      ><a name="5201"
+      > </a
+      ><a name="5202" href="Relation.Binary.HeterogeneousEquality.html#5142" class="Bound"
+      >x</a
+      ><a name="5203"
+      > </a
+      ><a name="5204" href="Relation.Binary.HeterogeneousEquality.html#4699" class="Datatype Operator"
+      >IsRelatedTo</a
+      ><a name="5215"
+      > </a
+      ><a name="5216" href="Relation.Binary.HeterogeneousEquality.html#5156" class="Bound"
+      >z</a
+      ><a name="5217"
+      >
+  </a
+      ><a name="5220" class="Symbol"
+      >_</a
+      ><a name="5221"
+      > </a
+      ><a name="5222" href="Relation.Binary.HeterogeneousEquality.html#5114" class="Function Operator"
+      >&#8801;&#10216;</a
+      ><a name="5224"
+      > </a
+      ><a name="5225" href="Relation.Binary.HeterogeneousEquality.html#5225" class="Bound"
+      >x&#8801;y</a
+      ><a name="5228"
+      > </a
+      ><a name="5229" href="Relation.Binary.HeterogeneousEquality.html#5114" class="Function Operator"
+      >&#10217;</a
+      ><a name="5230"
+      > </a
+      ><a name="5231" href="Relation.Binary.HeterogeneousEquality.html#4796" class="InductiveConstructor"
+      >relTo</a
+      ><a name="5236"
+      > </a
+      ><a name="5237" href="Relation.Binary.HeterogeneousEquality.html#5237" class="Bound"
+      >y&#8773;z</a
+      ><a name="5240"
+      > </a
+      ><a name="5241" class="Symbol"
+      >=</a
+      ><a name="5242"
+      > </a
+      ><a name="5243" href="Relation.Binary.HeterogeneousEquality.html#4796" class="InductiveConstructor"
+      >relTo</a
+      ><a name="5248"
+      > </a
+      ><a name="5249" class="Symbol"
+      >(</a
+      ><a name="5250" href="Relation.Binary.HeterogeneousEquality.html#1338" class="Function"
+      >trans</a
+      ><a name="5255"
+      > </a
+      ><a name="5256" class="Symbol"
+      >(</a
+      ><a name="5257" href="Relation.Binary.HeterogeneousEquality.html#1176" class="Function"
+      >reflexive</a
+      ><a name="5266"
+      > </a
+      ><a name="5267" href="Relation.Binary.HeterogeneousEquality.html#5225" class="Bound"
+      >x&#8801;y</a
+      ><a name="5270" class="Symbol"
+      >)</a
+      ><a name="5271"
+      > </a
+      ><a name="5272" href="Relation.Binary.HeterogeneousEquality.html#5237" class="Bound"
+      >y&#8773;z</a
+      ><a name="5275" class="Symbol"
+      >)</a
+      ><a name="5276"
+      >
+
+  </a
+      ><a name="5280" href="Relation.Binary.HeterogeneousEquality.html#5280" class="Function Operator"
+      >_&#8801;&#10216;&#10217;_</a
+      ><a name="5285"
+      > </a
+      ><a name="5286" class="Symbol"
+      >:</a
+      ><a name="5287"
+      > </a
+      ><a name="5288" class="Symbol"
+      >&#8704;</a
+      ><a name="5289"
+      > </a
+      ><a name="5290" class="Symbol"
+      >{</a
+      ><a name="5291" href="Relation.Binary.HeterogeneousEquality.html#5291" class="Bound"
+      >&#8467;</a
+      ><a name="5292" class="Symbol"
+      >}</a
+      ><a name="5293"
+      > </a
+      ><a name="5294" class="Symbol"
+      >{</a
+      ><a name="5295" href="Relation.Binary.HeterogeneousEquality.html#5295" class="Bound"
+      >A</a
+      ><a name="5296"
+      > </a
+      ><a name="5297" class="Symbol"
+      >:</a
+      ><a name="5298"
+      > </a
+      ><a name="5299" class="PrimitiveType"
+      >Set</a
+      ><a name="5302"
+      > </a
+      ><a name="5303" href="Relation.Binary.HeterogeneousEquality.html#5291" class="Bound"
+      >&#8467;</a
+      ><a name="5304" class="Symbol"
+      >}</a
+      ><a name="5305"
+      > </a
+      ><a name="5306" class="Symbol"
+      >(</a
+      ><a name="5307" href="Relation.Binary.HeterogeneousEquality.html#5307" class="Bound"
+      >x</a
+      ><a name="5308"
+      > </a
+      ><a name="5309" class="Symbol"
+      >:</a
+      ><a name="5310"
+      > </a
+      ><a name="5311" href="Relation.Binary.HeterogeneousEquality.html#5295" class="Bound"
+      >A</a
+      ><a name="5312" class="Symbol"
+      >)</a
+      ><a name="5313"
+      > </a
+      ><a name="5314" class="Symbol"
+      >{</a
+      ><a name="5315" href="Relation.Binary.HeterogeneousEquality.html#5315" class="Bound"
+      >B</a
+      ><a name="5316" class="Symbol"
+      >}</a
+      ><a name="5317"
+      > </a
+      ><a name="5318" class="Symbol"
+      >{</a
+      ><a name="5319" href="Relation.Binary.HeterogeneousEquality.html#5319" class="Bound"
+      >y</a
+      ><a name="5320"
+      > </a
+      ><a name="5321" class="Symbol"
+      >:</a
+      ><a name="5322"
+      > </a
+      ><a name="5323" href="Relation.Binary.HeterogeneousEquality.html#5315" class="Bound"
+      >B</a
+      ><a name="5324" class="Symbol"
+      >}</a
+      ><a name="5325"
+      > </a
+      ><a name="5326" class="Symbol"
+      >&#8594;</a
+      ><a name="5327"
+      >
+          </a
+      ><a name="5338" href="Relation.Binary.HeterogeneousEquality.html#5307" class="Bound"
+      >x</a
+      ><a name="5339"
+      > </a
+      ><a name="5340" href="Relation.Binary.HeterogeneousEquality.html#4699" class="Datatype Operator"
+      >IsRelatedTo</a
+      ><a name="5351"
+      > </a
+      ><a name="5352" href="Relation.Binary.HeterogeneousEquality.html#5319" class="Bound"
+      >y</a
+      ><a name="5353"
+      > </a
+      ><a name="5354" class="Symbol"
+      >&#8594;</a
+      ><a name="5355"
+      > </a
+      ><a name="5356" href="Relation.Binary.HeterogeneousEquality.html#5307" class="Bound"
+      >x</a
+      ><a name="5357"
+      > </a
+      ><a name="5358" href="Relation.Binary.HeterogeneousEquality.html#4699" class="Datatype Operator"
+      >IsRelatedTo</a
+      ><a name="5369"
+      > </a
+      ><a name="5370" href="Relation.Binary.HeterogeneousEquality.html#5319" class="Bound"
+      >y</a
+      ><a name="5371"
+      >
+  </a
+      ><a name="5374" class="Symbol"
+      >_</a
+      ><a name="5375"
+      > </a
+      ><a name="5376" href="Relation.Binary.HeterogeneousEquality.html#5280" class="Function Operator"
+      >&#8801;&#10216;&#10217;</a
+      ><a name="5379"
+      > </a
+      ><a name="5380" href="Relation.Binary.HeterogeneousEquality.html#5380" class="Bound"
+      >x&#8773;y</a
+      ><a name="5383"
+      > </a
+      ><a name="5384" class="Symbol"
+      >=</a
+      ><a name="5385"
+      > </a
+      ><a name="5386" href="Relation.Binary.HeterogeneousEquality.html#5380" class="Bound"
+      >x&#8773;y</a
+      ><a name="5389"
+      >
+
+  </a
+      ><a name="5393" href="Relation.Binary.HeterogeneousEquality.html#5393" class="Function Operator"
+      >_&#8718;</a
+      ><a name="5395"
+      > </a
+      ><a name="5396" class="Symbol"
+      >:</a
+      ><a name="5397"
+      > </a
+      ><a name="5398" class="Symbol"
+      >&#8704;</a
+      ><a name="5399"
+      > </a
+      ><a name="5400" class="Symbol"
+      >{</a
+      ><a name="5401" href="Relation.Binary.HeterogeneousEquality.html#5401" class="Bound"
+      >a</a
+      ><a name="5402" class="Symbol"
+      >}</a
+      ><a name="5403"
+      > </a
+      ><a name="5404" class="Symbol"
+      >{</a
+      ><a name="5405" href="Relation.Binary.HeterogeneousEquality.html#5405" class="Bound"
+      >A</a
+      ><a name="5406"
+      > </a
+      ><a name="5407" class="Symbol"
+      >:</a
+      ><a name="5408"
+      > </a
+      ><a name="5409" class="PrimitiveType"
+      >Set</a
+      ><a name="5412"
+      > </a
+      ><a name="5413" href="Relation.Binary.HeterogeneousEquality.html#5401" class="Bound"
+      >a</a
+      ><a name="5414" class="Symbol"
+      >}</a
+      ><a name="5415"
+      > </a
+      ><a name="5416" class="Symbol"
+      >(</a
+      ><a name="5417" href="Relation.Binary.HeterogeneousEquality.html#5417" class="Bound"
+      >x</a
+      ><a name="5418"
+      > </a
+      ><a name="5419" class="Symbol"
+      >:</a
+      ><a name="5420"
+      > </a
+      ><a name="5421" href="Relation.Binary.HeterogeneousEquality.html#5405" class="Bound"
+      >A</a
+      ><a name="5422" class="Symbol"
+      >)</a
+      ><a name="5423"
+      > </a
+      ><a name="5424" class="Symbol"
+      >&#8594;</a
+      ><a name="5425"
+      > </a
+      ><a name="5426" href="Relation.Binary.HeterogeneousEquality.html#5417" class="Bound"
+      >x</a
+      ><a name="5427"
+      > </a
+      ><a name="5428" href="Relation.Binary.HeterogeneousEquality.html#4699" class="Datatype Operator"
+      >IsRelatedTo</a
+      ><a name="5439"
+      > </a
+      ><a name="5440" href="Relation.Binary.HeterogeneousEquality.html#5417" class="Bound"
+      >x</a
+      ><a name="5441"
+      >
+  </a
+      ><a name="5444" href="Relation.Binary.HeterogeneousEquality.html#5393" class="Function Operator"
+      >_&#8718;</a
+      ><a name="5446"
+      > </a
+      ><a name="5447" class="Symbol"
+      >_</a
+      ><a name="5448"
+      > </a
+      ><a name="5449" class="Symbol"
+      >=</a
+      ><a name="5450"
+      > </a
+      ><a name="5451" href="Relation.Binary.HeterogeneousEquality.html#4796" class="InductiveConstructor"
+      >relTo</a
+      ><a name="5456"
+      > </a
+      ><a name="5457" href="Relation.Binary.HeterogeneousEquality.Core.html#607" class="InductiveConstructor"
+      >refl</a
+      ><a name="5461"
+      >
+
+</a
+      ><a name="5463" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="5535"
+      >
+</a
+      ><a name="5536" class="Comment"
+      >-- Functional extensionality</a
+      ><a name="5564"
+      >
+
+</a
+      ><a name="5566" class="Comment"
+      >-- A form of functional extensionality for _&#8773;_.</a
+      ><a name="5613"
+      >
+
+</a
+      ><a name="5615" href="Relation.Binary.HeterogeneousEquality.html#5615" class="Function"
+      >Extensionality</a
+      ><a name="5629"
+      > </a
+      ><a name="5630" class="Symbol"
+      >:</a
+      ><a name="5631"
+      > </a
+      ><a name="5632" class="Symbol"
+      >(</a
+      ><a name="5633" href="Relation.Binary.HeterogeneousEquality.html#5633" class="Bound"
+      >a</a
+      ><a name="5634"
+      > </a
+      ><a name="5635" href="Relation.Binary.HeterogeneousEquality.html#5635" class="Bound"
+      >b</a
+      ><a name="5636"
+      > </a
+      ><a name="5637" class="Symbol"
+      >:</a
+      ><a name="5638"
+      > </a
+      ><a name="5639" href="Agda.Prim.html#254" class="Postulate"
+      >Level</a
+      ><a name="5644" class="Symbol"
+      >)</a
+      ><a name="5645"
+      > </a
+      ><a name="5646" class="Symbol"
+      >&#8594;</a
+      ><a name="5647"
+      > </a
+      ><a name="5648" class="PrimitiveType"
+      >Set</a
+      ><a name="5651"
+      > </a
+      ><a name="5652" class="Symbol"
+      >_</a
+      ><a name="5653"
+      >
+</a
+      ><a name="5654" href="Relation.Binary.HeterogeneousEquality.html#5615" class="Function"
+      >Extensionality</a
+      ><a name="5668"
+      > </a
+      ><a name="5669" href="Relation.Binary.HeterogeneousEquality.html#5669" class="Bound"
+      >a</a
+      ><a name="5670"
+      > </a
+      ><a name="5671" href="Relation.Binary.HeterogeneousEquality.html#5671" class="Bound"
+      >b</a
+      ><a name="5672"
+      > </a
+      ><a name="5673" class="Symbol"
+      >=</a
+      ><a name="5674"
+      >
+  </a
+      ><a name="5677" class="Symbol"
+      >{</a
+      ><a name="5678" href="Relation.Binary.HeterogeneousEquality.html#5678" class="Bound"
+      >A</a
+      ><a name="5679"
+      > </a
+      ><a name="5680" class="Symbol"
+      >:</a
+      ><a name="5681"
+      > </a
+      ><a name="5682" class="PrimitiveType"
+      >Set</a
+      ><a name="5685"
+      > </a
+      ><a name="5686" href="Relation.Binary.HeterogeneousEquality.html#5669" class="Bound"
+      >a</a
+      ><a name="5687" class="Symbol"
+      >}</a
+      ><a name="5688"
+      > </a
+      ><a name="5689" class="Symbol"
+      >{</a
+      ><a name="5690" href="Relation.Binary.HeterogeneousEquality.html#5690" class="Bound"
+      >B&#8321;</a
+      ><a name="5692"
+      > </a
+      ><a name="5693" href="Relation.Binary.HeterogeneousEquality.html#5693" class="Bound"
+      >B&#8322;</a
+      ><a name="5695"
+      > </a
+      ><a name="5696" class="Symbol"
+      >:</a
+      ><a name="5697"
+      > </a
+      ><a name="5698" href="Relation.Binary.HeterogeneousEquality.html#5678" class="Bound"
+      >A</a
+      ><a name="5699"
+      > </a
+      ><a name="5700" class="Symbol"
+      >&#8594;</a
+      ><a name="5701"
+      > </a
+      ><a name="5702" class="PrimitiveType"
+      >Set</a
+      ><a name="5705"
+      > </a
+      ><a name="5706" href="Relation.Binary.HeterogeneousEquality.html#5671" class="Bound"
+      >b</a
+      ><a name="5707" class="Symbol"
+      >}</a
+      ><a name="5708"
+      >
+  </a
+      ><a name="5711" class="Symbol"
+      >{</a
+      ><a name="5712" href="Relation.Binary.HeterogeneousEquality.html#5712" class="Bound"
+      >f&#8321;</a
+      ><a name="5714"
+      > </a
+      ><a name="5715" class="Symbol"
+      >:</a
+      ><a name="5716"
+      > </a
+      ><a name="5717" class="Symbol"
+      >(</a
+      ><a name="5718" href="Relation.Binary.HeterogeneousEquality.html#5718" class="Bound"
+      >x</a
+      ><a name="5719"
+      > </a
+      ><a name="5720" class="Symbol"
+      >:</a
+      ><a name="5721"
+      > </a
+      ><a name="5722" href="Relation.Binary.HeterogeneousEquality.html#5678" class="Bound"
+      >A</a
+      ><a name="5723" class="Symbol"
+      >)</a
+      ><a name="5724"
+      > </a
+      ><a name="5725" class="Symbol"
+      >&#8594;</a
+      ><a name="5726"
+      > </a
+      ><a name="5727" href="Relation.Binary.HeterogeneousEquality.html#5690" class="Bound"
+      >B&#8321;</a
+      ><a name="5729"
+      > </a
+      ><a name="5730" href="Relation.Binary.HeterogeneousEquality.html#5718" class="Bound"
+      >x</a
+      ><a name="5731" class="Symbol"
+      >}</a
+      ><a name="5732"
+      > </a
+      ><a name="5733" class="Symbol"
+      >{</a
+      ><a name="5734" href="Relation.Binary.HeterogeneousEquality.html#5734" class="Bound"
+      >f&#8322;</a
+      ><a name="5736"
+      > </a
+      ><a name="5737" class="Symbol"
+      >:</a
+      ><a name="5738"
+      > </a
+      ><a name="5739" class="Symbol"
+      >(</a
+      ><a name="5740" href="Relation.Binary.HeterogeneousEquality.html#5740" class="Bound"
+      >x</a
+      ><a name="5741"
+      > </a
+      ><a name="5742" class="Symbol"
+      >:</a
+      ><a name="5743"
+      > </a
+      ><a name="5744" href="Relation.Binary.HeterogeneousEquality.html#5678" class="Bound"
+      >A</a
+      ><a name="5745" class="Symbol"
+      >)</a
+      ><a name="5746"
+      > </a
+      ><a name="5747" class="Symbol"
+      >&#8594;</a
+      ><a name="5748"
+      > </a
+      ><a name="5749" href="Relation.Binary.HeterogeneousEquality.html#5693" class="Bound"
+      >B&#8322;</a
+      ><a name="5751"
+      > </a
+      ><a name="5752" href="Relation.Binary.HeterogeneousEquality.html#5740" class="Bound"
+      >x</a
+      ><a name="5753" class="Symbol"
+      >}</a
+      ><a name="5754"
+      > </a
+      ><a name="5755" class="Symbol"
+      >&#8594;</a
+      ><a name="5756"
+      >
+  </a
+      ><a name="5759" class="Symbol"
+      >(&#8704;</a
+      ><a name="5761"
+      > </a
+      ><a name="5762" href="Relation.Binary.HeterogeneousEquality.html#5762" class="Bound"
+      >x</a
+      ><a name="5763"
+      > </a
+      ><a name="5764" class="Symbol"
+      >&#8594;</a
+      ><a name="5765"
+      > </a
+      ><a name="5766" href="Relation.Binary.HeterogeneousEquality.html#5690" class="Bound"
+      >B&#8321;</a
+      ><a name="5768"
+      > </a
+      ><a name="5769" href="Relation.Binary.HeterogeneousEquality.html#5762" class="Bound"
+      >x</a
+      ><a name="5770"
+      > </a
+      ><a name="5771" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="5772"
+      > </a
+      ><a name="5773" href="Relation.Binary.HeterogeneousEquality.html#5693" class="Bound"
+      >B&#8322;</a
+      ><a name="5775"
+      > </a
+      ><a name="5776" href="Relation.Binary.HeterogeneousEquality.html#5762" class="Bound"
+      >x</a
+      ><a name="5777" class="Symbol"
+      >)</a
+      ><a name="5778"
+      > </a
+      ><a name="5779" class="Symbol"
+      >&#8594;</a
+      ><a name="5780"
+      > </a
+      ><a name="5781" class="Symbol"
+      >(&#8704;</a
+      ><a name="5783"
+      > </a
+      ><a name="5784" href="Relation.Binary.HeterogeneousEquality.html#5784" class="Bound"
+      >x</a
+      ><a name="5785"
+      > </a
+      ><a name="5786" class="Symbol"
+      >&#8594;</a
+      ><a name="5787"
+      > </a
+      ><a name="5788" href="Relation.Binary.HeterogeneousEquality.html#5712" class="Bound"
+      >f&#8321;</a
+      ><a name="5790"
+      > </a
+      ><a name="5791" href="Relation.Binary.HeterogeneousEquality.html#5784" class="Bound"
+      >x</a
+      ><a name="5792"
+      > </a
+      ><a name="5793" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="5794"
+      > </a
+      ><a name="5795" href="Relation.Binary.HeterogeneousEquality.html#5734" class="Bound"
+      >f&#8322;</a
+      ><a name="5797"
+      > </a
+      ><a name="5798" href="Relation.Binary.HeterogeneousEquality.html#5784" class="Bound"
+      >x</a
+      ><a name="5799" class="Symbol"
+      >)</a
+      ><a name="5800"
+      > </a
+      ><a name="5801" class="Symbol"
+      >&#8594;</a
+      ><a name="5802"
+      > </a
+      ><a name="5803" href="Relation.Binary.HeterogeneousEquality.html#5712" class="Bound"
+      >f&#8321;</a
+      ><a name="5805"
+      > </a
+      ><a name="5806" href="Relation.Binary.HeterogeneousEquality.Core.html#544" class="Datatype Operator"
+      >&#8773;</a
+      ><a name="5807"
+      > </a
+      ><a name="5808" href="Relation.Binary.HeterogeneousEquality.html#5734" class="Bound"
+      >f&#8322;</a
+      ><a name="5810"
+      >
+
+</a
+      ><a name="5812" class="Comment"
+      >-- This form of extensionality follows from extensionality for _&#8801;_.</a
+      ><a name="5879"
+      >
+
+</a
+      ><a name="5881" href="Relation.Binary.HeterogeneousEquality.html#5881" class="Function"
+      >&#8801;-ext-to-&#8773;-ext</a
+      ><a name="5895"
+      > </a
+      ><a name="5896" class="Symbol"
+      >:</a
+      ><a name="5897"
+      > </a
+      ><a name="5898" class="Symbol"
+      >&#8704;</a
+      ><a name="5899"
+      > </a
+      ><a name="5900" class="Symbol"
+      >{</a
+      ><a name="5901" href="Relation.Binary.HeterogeneousEquality.html#5901" class="Bound"
+      >&#8467;&#8321;</a
+      ><a name="5903"
+      > </a
+      ><a name="5904" href="Relation.Binary.HeterogeneousEquality.html#5904" class="Bound"
+      >&#8467;&#8322;</a
+      ><a name="5906" class="Symbol"
+      >}</a
+      ><a name="5907"
+      > </a
+      ><a name="5908" class="Symbol"
+      >&#8594;</a
+      ><a name="5909"
+      >
+  </a
+      ><a name="5912" href="Relation.Binary.PropositionalEquality.html#5196" class="Function"
+      >P.Extensionality</a
+      ><a name="5928"
+      > </a
+      ><a name="5929" href="Relation.Binary.HeterogeneousEquality.html#5901" class="Bound"
+      >&#8467;&#8321;</a
+      ><a name="5931"
+      > </a
+      ><a name="5932" class="Symbol"
+      >(</a
+      ><a name="5933" href="Agda.Prim.html#284" class="Primitive"
+      >suc</a
+      ><a name="5936"
+      > </a
+      ><a name="5937" href="Relation.Binary.HeterogeneousEquality.html#5904" class="Bound"
+      >&#8467;&#8322;</a
+      ><a name="5939" class="Symbol"
+      >)</a
+      ><a name="5940"
+      > </a
+      ><a name="5941" class="Symbol"
+      >&#8594;</a
+      ><a name="5942"
+      > </a
+      ><a name="5943" href="Relation.Binary.HeterogeneousEquality.html#5615" class="Function"
+      >Extensionality</a
+      ><a name="5957"
+      > </a
+      ><a name="5958" href="Relation.Binary.HeterogeneousEquality.html#5901" class="Bound"
+      >&#8467;&#8321;</a
+      ><a name="5960"
+      > </a
+      ><a name="5961" href="Relation.Binary.HeterogeneousEquality.html#5904" class="Bound"
+      >&#8467;&#8322;</a
+      ><a name="5963"
+      >
+</a
+      ><a name="5964" href="Relation.Binary.HeterogeneousEquality.html#5881" class="Function"
+      >&#8801;-ext-to-&#8773;-ext</a
+      ><a name="5978"
+      >           </a
+      ><a name="5989" href="Relation.Binary.HeterogeneousEquality.html#5989" class="Bound"
+      >ext</a
+      ><a name="5992"
+      > </a
+      ><a name="5993" href="Relation.Binary.HeterogeneousEquality.html#5993" class="Bound"
+      >B&#8321;&#8801;B&#8322;</a
+      ><a name="5998"
+      > </a
+      ><a name="5999" href="Relation.Binary.HeterogeneousEquality.html#5999" class="Bound"
+      >f&#8321;&#8773;f&#8322;</a
+      ><a name="6004"
+      > </a
+      ><a name="6005" class="Keyword"
+      >with</a
+      ><a name="6009"
+      > </a
+      ><a name="6010" href="Relation.Binary.HeterogeneousEquality.html#5989" class="Bound"
+      >ext</a
+      ><a name="6013"
+      > </a
+      ><a name="6014" href="Relation.Binary.HeterogeneousEquality.html#5993" class="Bound"
+      >B&#8321;&#8801;B&#8322;</a
+      ><a name="6019"
+      >
+</a
+      ><a name="6020" href="Relation.Binary.HeterogeneousEquality.html#5881" class="Function"
+      >&#8801;-ext-to-&#8773;-ext</a
+      ><a name="6034"
+      > </a
+      ><a name="6035" class="Symbol"
+      >{</a
+      ><a name="6036" href="Relation.Binary.HeterogeneousEquality.html#6036" class="Bound"
+      >&#8467;&#8321;</a
+      ><a name="6038" class="Symbol"
+      >}</a
+      ><a name="6039"
+      > </a
+      ><a name="6040" class="Symbol"
+      >{</a
+      ><a name="6041" href="Relation.Binary.HeterogeneousEquality.html#6041" class="Bound"
+      >&#8467;&#8322;</a
+      ><a name="6043" class="Symbol"
+      >}</a
+      ><a name="6044"
+      > </a
+      ><a name="6045" href="Relation.Binary.HeterogeneousEquality.html#6045" class="Bound"
+      >ext</a
+      ><a name="6048"
+      > </a
+      ><a name="6049" href="Relation.Binary.HeterogeneousEquality.html#6049" class="Bound"
+      >B&#8321;&#8801;B&#8322;</a
+      ><a name="6054"
+      > </a
+      ><a name="6055" href="Relation.Binary.HeterogeneousEquality.html#6055" class="Bound"
+      >f&#8321;&#8773;f&#8322;</a
+      ><a name="6060"
+      > </a
+      ><a name="6061" class="Symbol"
+      >|</a
+      ><a name="6062"
+      > </a
+      ><a name="6063" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >P.refl</a
+      ><a name="6069"
+      > </a
+      ><a name="6070" class="Symbol"
+      >=</a
+      ><a name="6071"
+      >
+  </a
+      ><a name="6074" href="Relation.Binary.HeterogeneousEquality.html#977" class="Function"
+      >&#8801;-to-&#8773;</a
+      ><a name="6080"
+      > </a
+      ><a name="6081" href="Function.html#1829" class="Function Operator"
+      >$</a
+      ><a name="6082"
+      > </a
+      ><a name="6083" href="Relation.Binary.HeterogeneousEquality.html#6115" class="Function"
+      >ext&#8242;</a
+      ><a name="6087"
+      > </a
+      ><a name="6088" class="Symbol"
+      >(</a
+      ><a name="6089" href="Relation.Binary.HeterogeneousEquality.Core.html#709" class="Function"
+      >&#8773;-to-&#8801;</a
+      ><a name="6095"
+      > </a
+      ><a name="6096" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="6097"
+      > </a
+      ><a name="6098" href="Relation.Binary.HeterogeneousEquality.html#6055" class="Bound"
+      >f&#8321;&#8773;f&#8322;</a
+      ><a name="6103" class="Symbol"
+      >)</a
+      ><a name="6104"
+      >
+  </a
+      ><a name="6107" class="Keyword"
+      >where</a
+      ><a name="6112"
+      >
+  </a
+      ><a name="6115" href="Relation.Binary.HeterogeneousEquality.html#6115" class="Function"
+      >ext&#8242;</a
+      ><a name="6119"
+      > </a
+      ><a name="6120" class="Symbol"
+      >:</a
+      ><a name="6121"
+      > </a
+      ><a name="6122" href="Relation.Binary.PropositionalEquality.html#5196" class="Function"
+      >P.Extensionality</a
+      ><a name="6138"
+      > </a
+      ><a name="6139" href="Relation.Binary.HeterogeneousEquality.html#6036" class="Bound"
+      >&#8467;&#8321;</a
+      ><a name="6141"
+      > </a
+      ><a name="6142" href="Relation.Binary.HeterogeneousEquality.html#6041" class="Bound"
+      >&#8467;&#8322;</a
+      ><a name="6144"
+      >
+  </a
+      ><a name="6147" href="Relation.Binary.HeterogeneousEquality.html#6115" class="Function"
+      >ext&#8242;</a
+      ><a name="6151"
+      > </a
+      ><a name="6152" class="Symbol"
+      >=</a
+      ><a name="6153"
+      > </a
+      ><a name="6154" href="Relation.Binary.PropositionalEquality.html#5433" class="Function"
+      >P.extensionality-for-lower-levels</a
+      ><a name="6187"
+      > </a
+      ><a name="6188" href="Relation.Binary.HeterogeneousEquality.html#6036" class="Bound"
+      >&#8467;&#8321;</a
+      ><a name="6190"
+      > </a
+      ><a name="6191" class="Symbol"
+      >(</a
+      ><a name="6192" href="Agda.Prim.html#284" class="Primitive"
+      >suc</a
+      ><a name="6195"
+      > </a
+      ><a name="6196" href="Relation.Binary.HeterogeneousEquality.html#6041" class="Bound"
+      >&#8467;&#8322;</a
+      ><a name="6198" class="Symbol"
+      >)</a
+      ><a name="6199"
+      > </a
+      ><a name="6200" href="Relation.Binary.HeterogeneousEquality.html#6045" class="Bound"
+      >ext</a
+      ><a name="6203"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

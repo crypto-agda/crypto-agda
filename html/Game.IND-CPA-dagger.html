@@ -1,0 +1,1430 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Game.IND-CPA-dagger</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1"
+      >
+</a
+      ><a name="2" class="Symbol"
+      >{-#</a
+      ><a name="5"
+      > </a
+      ><a name="6" class="Keyword"
+      >OPTIONS</a
+      ><a name="13"
+      > --without-K </a
+      ><a name="26" class="Symbol"
+      >#-}</a
+      ><a name="29"
+      >
+</a
+      ><a name="30" class="Keyword"
+      >open</a
+      ><a name="34"
+      > </a
+      ><a name="35" class="Keyword"
+      >import</a
+      ><a name="41"
+      > </a
+      ><a name="42" href="Type.html#1" class="Module"
+      >Type</a
+      ><a name="46"
+      >
+</a
+      ><a name="47" class="Keyword"
+      >open</a
+      ><a name="51"
+      > </a
+      ><a name="52" class="Keyword"
+      >import</a
+      ><a name="58"
+      > </a
+      ><a name="59" href="Data.Product.html#1" class="Module"
+      >Data.Product</a
+      ><a name="71"
+      >
+</a
+      ><a name="72" class="Keyword"
+      >open</a
+      ><a name="76"
+      > </a
+      ><a name="77" class="Keyword"
+      >import</a
+      ><a name="83"
+      > </a
+      ><a name="84" href="Data.Two.html#1" class="Module"
+      >Data.Two</a
+      ><a name="92"
+      >
+
+</a
+      ><a name="94" class="Keyword"
+      >module</a
+      ><a name="100"
+      > </a
+      ><a name="101" href="Game.IND-CPA-dagger.html#1" class="Module"
+      >Game.IND-CPA-dagger</a
+      ><a name="120"
+      >
+  </a
+      ><a name="123" class="Symbol"
+      >(</a
+      ><a name="124" href="Game.IND-CPA-dagger.html#124" class="Bound"
+      >PubKey</a
+      ><a name="130"
+      >     </a
+      ><a name="135" class="Symbol"
+      >:</a
+      ><a name="136"
+      > </a
+      ><a name="137" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="138" class="Symbol"
+      >)</a
+      ><a name="139"
+      >
+  </a
+      ><a name="142" class="Symbol"
+      >(</a
+      ><a name="143" href="Game.IND-CPA-dagger.html#143" class="Bound"
+      >SecKey</a
+      ><a name="149"
+      >     </a
+      ><a name="154" class="Symbol"
+      >:</a
+      ><a name="155"
+      > </a
+      ><a name="156" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="157" class="Symbol"
+      >)</a
+      ><a name="158"
+      >
+  </a
+      ><a name="161" class="Symbol"
+      >(</a
+      ><a name="162" href="Game.IND-CPA-dagger.html#162" class="Bound"
+      >Message</a
+      ><a name="169"
+      >    </a
+      ><a name="173" class="Symbol"
+      >:</a
+      ><a name="174"
+      > </a
+      ><a name="175" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="176" class="Symbol"
+      >)</a
+      ><a name="177"
+      >
+  </a
+      ><a name="180" class="Symbol"
+      >(</a
+      ><a name="181" href="Game.IND-CPA-dagger.html#181" class="Bound"
+      >CipherText</a
+      ><a name="191"
+      > </a
+      ><a name="192" class="Symbol"
+      >:</a
+      ><a name="193"
+      > </a
+      ><a name="194" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="195" class="Symbol"
+      >)</a
+      ><a name="196"
+      >
+
+  </a
+      ><a name="200" class="Comment"
+      >-- randomness supply for: encryption, key-generation, adversary, extensions</a
+      ><a name="275"
+      >
+  </a
+      ><a name="278" class="Symbol"
+      >(</a
+      ><a name="279" href="Game.IND-CPA-dagger.html#279" class="Bound"
+      >R&#8337;</a
+      ><a name="281"
+      > </a
+      ><a name="282" href="Game.IND-CPA-dagger.html#282" class="Bound"
+      >R&#8342;</a
+      ><a name="284"
+      > </a
+      ><a name="285" href="Game.IND-CPA-dagger.html#285" class="Bound"
+      >R&#8336;</a
+      ><a name="287"
+      > </a
+      ><a name="288" href="Game.IND-CPA-dagger.html#288" class="Bound"
+      >R&#8339;</a
+      ><a name="290"
+      > </a
+      ><a name="291" class="Symbol"
+      >:</a
+      ><a name="292"
+      > </a
+      ><a name="293" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="294" class="Symbol"
+      >)</a
+      ><a name="295"
+      >
+
+  </a
+      ><a name="299" class="Symbol"
+      >(</a
+      ><a name="300" href="Game.IND-CPA-dagger.html#300" class="Bound"
+      >KeyGen</a
+      ><a name="306"
+      > </a
+      ><a name="307" class="Symbol"
+      >:</a
+      ><a name="308"
+      > </a
+      ><a name="309" href="Game.IND-CPA-dagger.html#282" class="Bound"
+      >R&#8342;</a
+      ><a name="311"
+      > </a
+      ><a name="312" class="Symbol"
+      >&#8594;</a
+      ><a name="313"
+      > </a
+      ><a name="314" href="Game.IND-CPA-dagger.html#124" class="Bound"
+      >PubKey</a
+      ><a name="320"
+      > </a
+      ><a name="321" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="322"
+      > </a
+      ><a name="323" href="Game.IND-CPA-dagger.html#143" class="Bound"
+      >SecKey</a
+      ><a name="329" class="Symbol"
+      >)</a
+      ><a name="330"
+      >
+  </a
+      ><a name="333" class="Symbol"
+      >(</a
+      ><a name="334" href="Game.IND-CPA-dagger.html#334" class="Bound"
+      >Enc</a
+      ><a name="337"
+      >    </a
+      ><a name="341" class="Symbol"
+      >:</a
+      ><a name="342"
+      > </a
+      ><a name="343" href="Game.IND-CPA-dagger.html#124" class="Bound"
+      >PubKey</a
+      ><a name="349"
+      > </a
+      ><a name="350" class="Symbol"
+      >&#8594;</a
+      ><a name="351"
+      > </a
+      ><a name="352" href="Game.IND-CPA-dagger.html#162" class="Bound"
+      >Message</a
+      ><a name="359"
+      > </a
+      ><a name="360" class="Symbol"
+      >&#8594;</a
+      ><a name="361"
+      > </a
+      ><a name="362" href="Game.IND-CPA-dagger.html#279" class="Bound"
+      >R&#8337;</a
+      ><a name="364"
+      > </a
+      ><a name="365" class="Symbol"
+      >&#8594;</a
+      ><a name="366"
+      > </a
+      ><a name="367" href="Game.IND-CPA-dagger.html#181" class="Bound"
+      >CipherText</a
+      ><a name="377" class="Symbol"
+      >)</a
+      ><a name="378"
+      >
+
+</a
+      ><a name="380" class="Keyword"
+      >where</a
+      ><a name="385"
+      >
+
+</a
+      ><a name="387" class="Comment"
+      >-- IND-CPA&#8224; adversary in two parts</a
+      ><a name="421"
+      >
+</a
+      ><a name="422" class="Keyword"
+      >record</a
+      ><a name="428"
+      > </a
+      ><a name="429" href="Game.IND-CPA-dagger.html#429" class="Record"
+      >Adversary</a
+      ><a name="438"
+      > </a
+      ><a name="439" class="Symbol"
+      >:</a
+      ><a name="440"
+      > </a
+      ><a name="441" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="442"
+      > </a
+      ><a name="443" class="Keyword"
+      >where</a
+      ><a name="448"
+      >
+  </a
+      ><a name="451" class="Keyword"
+      >field</a
+      ><a name="456"
+      >
+    </a
+      ><a name="461" class="Comment"
+      >-- Same as in IND-CPA:</a
+      ><a name="483"
+      >
+    </a
+      ><a name="488" class="Comment"
+      >-- In the step 'm', the adversary receives some randomness,</a
+      ><a name="547"
+      >
+    </a
+      ><a name="552" class="Comment"
+      >-- the public key, the message we want (m&#8320; or m&#8321;). The adversary</a
+      ><a name="616"
+      >
+    </a
+      ><a name="621" class="Comment"
+      >-- returns the message to encrypt. Remember that the adversary</a
+      ><a name="683"
+      >
+    </a
+      ><a name="688" class="Comment"
+      >-- is a pure and deterministic function, therefore &#120794; &#8594; Message</a
+      ><a name="750"
+      >
+    </a
+      ><a name="755" class="Comment"
+      >-- is the same as Message &#215; Message.</a
+      ><a name="791"
+      >
+    </a
+      ><a name="796" href="Game.IND-CPA-dagger.html#796" class="Field"
+      >m</a
+      ><a name="797"
+      >  </a
+      ><a name="799" class="Symbol"
+      >:</a
+      ><a name="800"
+      > </a
+      ><a name="801" href="Game.IND-CPA-dagger.html#285" class="Bound"
+      >R&#8336;</a
+      ><a name="803"
+      > </a
+      ><a name="804" class="Symbol"
+      >&#8594;</a
+      ><a name="805"
+      > </a
+      ><a name="806" href="Game.IND-CPA-dagger.html#124" class="Bound"
+      >PubKey</a
+      ><a name="812"
+      > </a
+      ><a name="813" class="Symbol"
+      >&#8594;</a
+      ><a name="814"
+      > </a
+      ><a name="815" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="816"
+      > </a
+      ><a name="817" class="Symbol"
+      >&#8594;</a
+      ><a name="818"
+      > </a
+      ><a name="819" href="Game.IND-CPA-dagger.html#162" class="Bound"
+      >Message</a
+      ><a name="826"
+      >
+
+    </a
+      ><a name="832" class="Comment"
+      >-- In the step 'b&#8242;' the adversary receives the same randomness</a
+      ><a name="894"
+      >
+    </a
+      ><a name="899" class="Comment"
+      >-- supply and public key as in step 'm' and receives two ciphertexts</a
+      ><a name="967"
+      >
+    </a
+      ><a name="972" class="Comment"
+      >-- computed by the challenger. One of the ciphertext should be</a
+      ><a name="1034"
+      >
+    </a
+      ><a name="1039" class="Comment"
+      >-- the encryption of m&#8320; and the other of m&#8321;.</a
+      ><a name="1083"
+      >
+    </a
+      ><a name="1088" class="Comment"
+      >-- The adversary has to guess in which order they are, namely</a
+      ><a name="1149"
+      >
+    </a
+      ><a name="1154" class="Comment"
+      >-- is the first ciphertext the encryption of m&#8320;.</a
+      ><a name="1202"
+      >
+    </a
+      ><a name="1207" href="Game.IND-CPA-dagger.html#1207" class="Field"
+      >b&#8242;</a
+      ><a name="1209"
+      > </a
+      ><a name="1210" class="Symbol"
+      >:</a
+      ><a name="1211"
+      > </a
+      ><a name="1212" href="Game.IND-CPA-dagger.html#285" class="Bound"
+      >R&#8336;</a
+      ><a name="1214"
+      > </a
+      ><a name="1215" class="Symbol"
+      >&#8594;</a
+      ><a name="1216"
+      > </a
+      ><a name="1217" href="Game.IND-CPA-dagger.html#124" class="Bound"
+      >PubKey</a
+      ><a name="1223"
+      > </a
+      ><a name="1224" class="Symbol"
+      >&#8594;</a
+      ><a name="1225"
+      > </a
+      ><a name="1226" href="Game.IND-CPA-dagger.html#181" class="Bound"
+      >CipherText</a
+      ><a name="1236"
+      > </a
+      ><a name="1237" class="Symbol"
+      >&#8594;</a
+      ><a name="1238"
+      > </a
+      ><a name="1239" href="Game.IND-CPA-dagger.html#181" class="Bound"
+      >CipherText</a
+      ><a name="1249"
+      > </a
+      ><a name="1250" class="Symbol"
+      >&#8594;</a
+      ><a name="1251"
+      > </a
+      ><a name="1252" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="1253"
+      >
+
+</a
+      ><a name="1255" class="Comment"
+      >-- IND-CPA randomness supply</a
+      ><a name="1283"
+      >
+</a
+      ><a name="1284" href="Game.IND-CPA-dagger.html#1284" class="Function"
+      >R</a
+      ><a name="1285"
+      > </a
+      ><a name="1286" class="Symbol"
+      >:</a
+      ><a name="1287"
+      > </a
+      ><a name="1288" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="1289"
+      >
+</a
+      ><a name="1290" href="Game.IND-CPA-dagger.html#1284" class="Function"
+      >R</a
+      ><a name="1291"
+      > </a
+      ><a name="1292" class="Symbol"
+      >=</a
+      ><a name="1293"
+      > </a
+      ><a name="1294" class="Symbol"
+      >(</a
+      ><a name="1295" href="Game.IND-CPA-dagger.html#285" class="Bound"
+      >R&#8336;</a
+      ><a name="1297"
+      > </a
+      ><a name="1298" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="1299"
+      > </a
+      ><a name="1300" href="Game.IND-CPA-dagger.html#282" class="Bound"
+      >R&#8342;</a
+      ><a name="1302"
+      > </a
+      ><a name="1303" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="1304"
+      > </a
+      ><a name="1305" href="Game.IND-CPA-dagger.html#279" class="Bound"
+      >R&#8337;</a
+      ><a name="1307"
+      > </a
+      ><a name="1308" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="1309"
+      > </a
+      ><a name="1310" href="Game.IND-CPA-dagger.html#279" class="Bound"
+      >R&#8337;</a
+      ><a name="1312"
+      > </a
+      ><a name="1313" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="1314"
+      > </a
+      ><a name="1315" href="Game.IND-CPA-dagger.html#288" class="Bound"
+      >R&#8339;</a
+      ><a name="1317" class="Symbol"
+      >)</a
+      ><a name="1318"
+      >
+
+</a
+      ><a name="1320" class="Comment"
+      >-- IND-CPA experiments:</a
+      ><a name="1343"
+      >
+</a
+      ><a name="1344" class="Comment"
+      >--   * input: adversary and randomness supply</a
+      ><a name="1389"
+      >
+</a
+      ><a name="1390" class="Comment"
+      >--   * output b: adversary claims we are in experiment EXP b</a
+      ><a name="1450"
+      >
+</a
+      ><a name="1451" href="Game.IND-CPA-dagger.html#1451" class="Function"
+      >Experiment</a
+      ><a name="1461"
+      > </a
+      ><a name="1462" class="Symbol"
+      >:</a
+      ><a name="1463"
+      > </a
+      ><a name="1464" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="1465"
+      >
+</a
+      ><a name="1466" href="Game.IND-CPA-dagger.html#1451" class="Function"
+      >Experiment</a
+      ><a name="1476"
+      > </a
+      ><a name="1477" class="Symbol"
+      >=</a
+      ><a name="1478"
+      > </a
+      ><a name="1479" href="Game.IND-CPA-dagger.html#429" class="Record"
+      >Adversary</a
+      ><a name="1488"
+      > </a
+      ><a name="1489" class="Symbol"
+      >&#8594;</a
+      ><a name="1490"
+      > </a
+      ><a name="1491" href="Game.IND-CPA-dagger.html#1284" class="Function"
+      >R</a
+      ><a name="1492"
+      > </a
+      ><a name="1493" class="Symbol"
+      >&#8594;</a
+      ><a name="1494"
+      > </a
+      ><a name="1495" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="1496"
+      >
+
+</a
+      ><a name="1498" class="Comment"
+      >-- The game step by step:</a
+      ><a name="1523"
+      >
+</a
+      ><a name="1524" class="Comment"
+      >-- (pk) key-generation, only the public-key is needed</a
+      ><a name="1577"
+      >
+</a
+      ><a name="1578" class="Comment"
+      >-- (mb) send randomness, public-key and bit</a
+      ><a name="1621"
+      >
+</a
+      ><a name="1622" class="Comment"
+      >--      receive which message to encrypt</a
+      ><a name="1662"
+      >
+</a
+      ><a name="1663" class="Comment"
+      >-- (c)  encrypt the message</a
+      ><a name="1690"
+      >
+</a
+      ><a name="1691" class="Comment"
+      >-- (b&#8242;) send randomness, public-key and ciphertext</a
+      ><a name="1741"
+      >
+</a
+      ><a name="1742" class="Comment"
+      >--      receive the guess from the adversary</a
+      ><a name="1786"
+      >
+</a
+      ><a name="1787" href="Game.IND-CPA-dagger.html#1787" class="Function"
+      >EXP</a
+      ><a name="1790"
+      > </a
+      ><a name="1791" class="Symbol"
+      >:</a
+      ><a name="1792"
+      > </a
+      ><a name="1793" class="Symbol"
+      >(</a
+      ><a name="1794" href="Game.IND-CPA-dagger.html#1794" class="Bound"
+      >b</a
+      ><a name="1795"
+      > </a
+      ><a name="1796" href="Game.IND-CPA-dagger.html#1796" class="Bound"
+      >t</a
+      ><a name="1797"
+      > </a
+      ><a name="1798" class="Symbol"
+      >:</a
+      ><a name="1799"
+      > </a
+      ><a name="1800" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="1801" class="Symbol"
+      >)</a
+      ><a name="1802"
+      > </a
+      ><a name="1803" class="Symbol"
+      >&#8594;</a
+      ><a name="1804"
+      > </a
+      ><a name="1805" href="Game.IND-CPA-dagger.html#1451" class="Function"
+      >Experiment</a
+      ><a name="1815"
+      >
+</a
+      ><a name="1816" href="Game.IND-CPA-dagger.html#1787" class="Function"
+      >EXP</a
+      ><a name="1819"
+      > </a
+      ><a name="1820" href="Game.IND-CPA-dagger.html#1820" class="Bound"
+      >b</a
+      ><a name="1821"
+      > </a
+      ><a name="1822" href="Game.IND-CPA-dagger.html#1822" class="Bound"
+      >t</a
+      ><a name="1823"
+      > </a
+      ><a name="1824" href="Game.IND-CPA-dagger.html#1824" class="Bound"
+      >A</a
+      ><a name="1825"
+      > </a
+      ><a name="1826" class="Symbol"
+      >(</a
+      ><a name="1827" href="Game.IND-CPA-dagger.html#1827" class="Bound"
+      >r&#8336;</a
+      ><a name="1829"
+      > </a
+      ><a name="1830" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1831"
+      > </a
+      ><a name="1832" href="Game.IND-CPA-dagger.html#1832" class="Bound"
+      >r&#8342;</a
+      ><a name="1834"
+      > </a
+      ><a name="1835" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1836"
+      > </a
+      ><a name="1837" href="Game.IND-CPA-dagger.html#1837" class="Bound"
+      >r&#8337;</a
+      ><a name="1839"
+      > </a
+      ><a name="1840" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1841"
+      > </a
+      ><a name="1842" href="Game.IND-CPA-dagger.html#1842" class="Bound"
+      >r&#8337;&#8242;</a
+      ><a name="1845"
+      > </a
+      ><a name="1846" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1847"
+      > </a
+      ><a name="1848" href="Game.IND-CPA-dagger.html#1848" class="Bound Operator"
+      >_r&#8339;</a
+      ><a name="1851" class="Symbol"
+      >)</a
+      ><a name="1852"
+      > </a
+      ><a name="1853" class="Symbol"
+      >=</a
+      ><a name="1854"
+      > </a
+      ><a name="1855" href="Game.IND-CPA-dagger.html#1984" class="Function"
+      >b&#8242;</a
+      ><a name="1857"
+      >
+  </a
+      ><a name="1860" class="Keyword"
+      >where</a
+      ><a name="1865"
+      >
+  </a
+      ><a name="1868" class="Keyword"
+      >module</a
+      ><a name="1874"
+      > </a
+      ><a name="1875" href="Game.IND-CPA-dagger.html#1875" class="Module"
+      >A</a
+      ><a name="1876"
+      > </a
+      ><a name="1877" class="Symbol"
+      >=</a
+      ><a name="1878"
+      > </a
+      ><a name="1879" href="Game.IND-CPA-dagger.html#429" class="Module"
+      >Adversary</a
+      ><a name="1888"
+      > </a
+      ><a name="1889" href="Game.IND-CPA-dagger.html#1824" class="Bound"
+      >A</a
+      ><a name="1890"
+      >
+  </a
+      ><a name="1893" href="Game.IND-CPA-dagger.html#1893" class="Function"
+      >pk</a
+      ><a name="1895"
+      > </a
+      ><a name="1896" class="Symbol"
+      >=</a
+      ><a name="1897"
+      > </a
+      ><a name="1898" href="Data.Product.html#525" class="Field"
+      >proj&#8321;</a
+      ><a name="1903"
+      > </a
+      ><a name="1904" class="Symbol"
+      >(</a
+      ><a name="1905" href="Game.IND-CPA-dagger.html#300" class="Bound"
+      >KeyGen</a
+      ><a name="1911"
+      > </a
+      ><a name="1912" href="Game.IND-CPA-dagger.html#1832" class="Bound"
+      >r&#8342;</a
+      ><a name="1914" class="Symbol"
+      >)</a
+      ><a name="1915"
+      >
+  </a
+      ><a name="1918" href="Game.IND-CPA-dagger.html#1918" class="Function"
+      >mb</a
+      ><a name="1920"
+      > </a
+      ><a name="1921" class="Symbol"
+      >=</a
+      ><a name="1922"
+      > </a
+      ><a name="1923" href="Game.IND-CPA-dagger.html#796" class="Function"
+      >A.m</a
+      ><a name="1926"
+      > </a
+      ><a name="1927" href="Game.IND-CPA-dagger.html#1827" class="Bound"
+      >r&#8336;</a
+      ><a name="1929"
+      > </a
+      ><a name="1930" href="Game.IND-CPA-dagger.html#1893" class="Function"
+      >pk</a
+      ><a name="1932"
+      >
+  </a
+      ><a name="1935" href="Game.IND-CPA-dagger.html#1935" class="Function"
+      >c</a
+      ><a name="1936"
+      >  </a
+      ><a name="1938" class="Symbol"
+      >=</a
+      ><a name="1939"
+      > </a
+      ><a name="1940" href="Game.IND-CPA-dagger.html#334" class="Bound"
+      >Enc</a
+      ><a name="1943"
+      > </a
+      ><a name="1944" href="Game.IND-CPA-dagger.html#1893" class="Function"
+      >pk</a
+      ><a name="1946"
+      > </a
+      ><a name="1947" class="Symbol"
+      >(</a
+      ><a name="1948" href="Game.IND-CPA-dagger.html#1918" class="Function"
+      >mb</a
+      ><a name="1950"
+      > </a
+      ><a name="1951" href="Game.IND-CPA-dagger.html#1820" class="Bound"
+      >b</a
+      ><a name="1952" class="Symbol"
+      >)</a
+      ><a name="1953"
+      > </a
+      ><a name="1954" href="Game.IND-CPA-dagger.html#1837" class="Bound"
+      >r&#8337;</a
+      ><a name="1956"
+      >
+  </a
+      ><a name="1959" href="Game.IND-CPA-dagger.html#1959" class="Function"
+      >c&#8242;</a
+      ><a name="1961"
+      > </a
+      ><a name="1962" class="Symbol"
+      >=</a
+      ><a name="1963"
+      > </a
+      ><a name="1964" href="Game.IND-CPA-dagger.html#334" class="Bound"
+      >Enc</a
+      ><a name="1967"
+      > </a
+      ><a name="1968" href="Game.IND-CPA-dagger.html#1893" class="Function"
+      >pk</a
+      ><a name="1970"
+      > </a
+      ><a name="1971" class="Symbol"
+      >(</a
+      ><a name="1972" href="Game.IND-CPA-dagger.html#1918" class="Function"
+      >mb</a
+      ><a name="1974"
+      > </a
+      ><a name="1975" href="Game.IND-CPA-dagger.html#1822" class="Bound"
+      >t</a
+      ><a name="1976" class="Symbol"
+      >)</a
+      ><a name="1977"
+      > </a
+      ><a name="1978" href="Game.IND-CPA-dagger.html#1842" class="Bound"
+      >r&#8337;&#8242;</a
+      ><a name="1981"
+      >
+  </a
+      ><a name="1984" href="Game.IND-CPA-dagger.html#1984" class="Function"
+      >b&#8242;</a
+      ><a name="1986"
+      > </a
+      ><a name="1987" class="Symbol"
+      >=</a
+      ><a name="1988"
+      > </a
+      ><a name="1989" href="Game.IND-CPA-dagger.html#1207" class="Function"
+      >A.b&#8242;</a
+      ><a name="1993"
+      > </a
+      ><a name="1994" href="Game.IND-CPA-dagger.html#1827" class="Bound"
+      >r&#8336;</a
+      ><a name="1996"
+      > </a
+      ><a name="1997" href="Game.IND-CPA-dagger.html#1893" class="Function"
+      >pk</a
+      ><a name="1999"
+      > </a
+      ><a name="2000" href="Game.IND-CPA-dagger.html#1935" class="Function"
+      >c</a
+      ><a name="2001"
+      > </a
+      ><a name="2002" href="Game.IND-CPA-dagger.html#1959" class="Function"
+      >c&#8242;</a
+      ><a name="2004"
+      >
+
+</a
+      ><a name="2006" href="Game.IND-CPA-dagger.html#2006" class="Function"
+      >EXP&#8320;</a
+      ><a name="2010"
+      > </a
+      ><a name="2011" href="Game.IND-CPA-dagger.html#2011" class="Function"
+      >EXP&#8321;</a
+      ><a name="2015"
+      > </a
+      ><a name="2016" class="Symbol"
+      >:</a
+      ><a name="2017"
+      > </a
+      ><a name="2018" href="Game.IND-CPA-dagger.html#1451" class="Function"
+      >Experiment</a
+      ><a name="2028"
+      >
+</a
+      ><a name="2029" href="Game.IND-CPA-dagger.html#2006" class="Function"
+      >EXP&#8320;</a
+      ><a name="2033"
+      > </a
+      ><a name="2034" class="Symbol"
+      >=</a
+      ><a name="2035"
+      > </a
+      ><a name="2036" href="Game.IND-CPA-dagger.html#1787" class="Function"
+      >EXP</a
+      ><a name="2039"
+      > </a
+      ><a name="2040" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="2042"
+      > </a
+      ><a name="2043" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="2045"
+      >
+</a
+      ><a name="2046" href="Game.IND-CPA-dagger.html#2011" class="Function"
+      >EXP&#8321;</a
+      ><a name="2050"
+      > </a
+      ><a name="2051" class="Symbol"
+      >=</a
+      ><a name="2052"
+      > </a
+      ><a name="2053" href="Game.IND-CPA-dagger.html#1787" class="Function"
+      >EXP</a
+      ><a name="2056"
+      > </a
+      ><a name="2057" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="2059"
+      > </a
+      ><a name="2060" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="2062"
+      >
+
+</a
+      ><a name="2064" href="Game.IND-CPA-dagger.html#2064" class="Function"
+      >game</a
+      ><a name="2068"
+      > </a
+      ><a name="2069" class="Symbol"
+      >:</a
+      ><a name="2070"
+      > </a
+      ><a name="2071" href="Game.IND-CPA-dagger.html#429" class="Record"
+      >Adversary</a
+      ><a name="2080"
+      > </a
+      ><a name="2081" class="Symbol"
+      >&#8594;</a
+      ><a name="2082"
+      > </a
+      ><a name="2083" class="Symbol"
+      >(</a
+      ><a name="2084" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="2085"
+      > </a
+      ><a name="2086" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="2087"
+      > </a
+      ><a name="2088" href="Game.IND-CPA-dagger.html#1284" class="Function"
+      >R</a
+      ><a name="2089" class="Symbol"
+      >)</a
+      ><a name="2090"
+      > </a
+      ><a name="2091" class="Symbol"
+      >&#8594;</a
+      ><a name="2092"
+      > </a
+      ><a name="2093" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="2094"
+      >
+</a
+      ><a name="2095" href="Game.IND-CPA-dagger.html#2064" class="Function"
+      >game</a
+      ><a name="2099"
+      > </a
+      ><a name="2100" href="Game.IND-CPA-dagger.html#2100" class="Bound"
+      >A</a
+      ><a name="2101"
+      > </a
+      ><a name="2102" class="Symbol"
+      >(</a
+      ><a name="2103" href="Game.IND-CPA-dagger.html#2103" class="Bound"
+      >b</a
+      ><a name="2104"
+      > </a
+      ><a name="2105" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="2106"
+      > </a
+      ><a name="2107" href="Game.IND-CPA-dagger.html#2107" class="Bound"
+      >r</a
+      ><a name="2108" class="Symbol"
+      >)</a
+      ><a name="2109"
+      > </a
+      ><a name="2110" class="Symbol"
+      >=</a
+      ><a name="2111"
+      > </a
+      ><a name="2112" href="Game.IND-CPA-dagger.html#2103" class="Bound"
+      >b</a
+      ><a name="2113"
+      > </a
+      ><a name="2114" href="Data.Two.html#2568" class="Function Operator"
+      >==</a
+      ><a name="2116"
+      > </a
+      ><a name="2117" href="Game.IND-CPA-dagger.html#1787" class="Function"
+      >EXP</a
+      ><a name="2120"
+      > </a
+      ><a name="2121" href="Game.IND-CPA-dagger.html#2103" class="Bound"
+      >b</a
+      ><a name="2122"
+      > </a
+      ><a name="2123" class="Symbol"
+      >(</a
+      ><a name="2124" href="Data.Bool.html#873" class="Function"
+      >not</a
+      ><a name="2127"
+      > </a
+      ><a name="2128" href="Game.IND-CPA-dagger.html#2103" class="Bound"
+      >b</a
+      ><a name="2129" class="Symbol"
+      >)</a
+      ><a name="2130"
+      > </a
+      ><a name="2131" href="Game.IND-CPA-dagger.html#2100" class="Bound"
+      >A</a
+      ><a name="2132"
+      > </a
+      ><a name="2133" href="Game.IND-CPA-dagger.html#2107" class="Bound"
+      >r</a
+      ><a name="2134"
+      >
+
+</a
+      ><a name="2136" class="Keyword"
+      >open</a
+      ><a name="2140"
+      > </a
+      ><a name="2141" class="Keyword"
+      >import</a
+      ><a name="2147"
+      > </a
+      ><a name="2148" href="Relation.Binary.PropositionalEquality.html#1" class="Module"
+      >Relation.Binary.PropositionalEquality</a
+      ><a name="2185"
+      >
+</a
+      ><a name="2186" class="Keyword"
+      >module</a
+      ><a name="2192"
+      > </a
+      ><a name="2193" href="Game.IND-CPA-dagger.html#2193" class="Module"
+      >_</a
+      ><a name="2194"
+      >
+  </a
+      ><a name="2197" class="Symbol"
+      >(</a
+      ><a name="2198" href="Game.IND-CPA-dagger.html#2198" class="Bound"
+      >Dist</a
+      ><a name="2202"
+      > </a
+      ><a name="2203" class="Symbol"
+      >:</a
+      ><a name="2204"
+      > </a
+      ><a name="2205" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="2206" class="Symbol"
+      >)</a
+      ><a name="2207"
+      >
+  </a
+      ><a name="2210" class="Symbol"
+      >(</a
+      ><a name="2211" href="Game.IND-CPA-dagger.html#2211" class="Bound Operator"
+      >|Pr[_&#8801;1]-Pr[_&#8801;1]|</a
+      ><a name="2228"
+      > </a
+      ><a name="2229" class="Symbol"
+      >:</a
+      ><a name="2230"
+      > </a
+      ><a name="2231" class="Symbol"
+      >(</a
+      ><a name="2232" href="Game.IND-CPA-dagger.html#2232" class="Bound"
+      >f</a
+      ><a name="2233"
+      > </a
+      ><a name="2234" href="Game.IND-CPA-dagger.html#2234" class="Bound"
+      >g</a
+      ><a name="2235"
+      > </a
+      ><a name="2236" class="Symbol"
+      >:</a
+      ><a name="2237"
+      > </a
+      ><a name="2238" href="Game.IND-CPA-dagger.html#1284" class="Function"
+      >R</a
+      ><a name="2239"
+      > </a
+      ><a name="2240" class="Symbol"
+      >&#8594;</a
+      ><a name="2241"
+      > </a
+      ><a name="2242" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="2243" class="Symbol"
+      >)</a
+      ><a name="2244"
+      > </a
+      ><a name="2245" class="Symbol"
+      >&#8594;</a
+      ><a name="2246"
+      > </a
+      ><a name="2247" href="Game.IND-CPA-dagger.html#2198" class="Bound"
+      >Dist</a
+      ><a name="2251" class="Symbol"
+      >)</a
+      ><a name="2252"
+      >
+  </a
+      ><a name="2255" class="Symbol"
+      >(</a
+      ><a name="2256" href="Game.IND-CPA-dagger.html#2256" class="Bound"
+      >dist-comm</a
+      ><a name="2265"
+      > </a
+      ><a name="2266" class="Symbol"
+      >:</a
+      ><a name="2267"
+      > </a
+      ><a name="2268" class="Symbol"
+      >&#8704;</a
+      ><a name="2269"
+      > </a
+      ><a name="2270" href="Game.IND-CPA-dagger.html#2270" class="Bound"
+      >f</a
+      ><a name="2271"
+      > </a
+      ><a name="2272" href="Game.IND-CPA-dagger.html#2272" class="Bound"
+      >g</a
+      ><a name="2273"
+      > </a
+      ><a name="2274" class="Symbol"
+      >&#8594;</a
+      ><a name="2275"
+      > </a
+      ><a name="2276" href="Game.IND-CPA-dagger.html#2211" class="Bound Operator"
+      >|Pr[</a
+      ><a name="2280"
+      > </a
+      ><a name="2281" href="Game.IND-CPA-dagger.html#2270" class="Bound"
+      >f</a
+      ><a name="2282"
+      > </a
+      ><a name="2283" href="Game.IND-CPA-dagger.html#2211" class="Bound Operator"
+      >&#8801;1]-Pr[</a
+      ><a name="2290"
+      > </a
+      ><a name="2291" href="Game.IND-CPA-dagger.html#2272" class="Bound"
+      >g</a
+      ><a name="2292"
+      > </a
+      ><a name="2293" href="Game.IND-CPA-dagger.html#2211" class="Bound Operator"
+      >&#8801;1]|</a
+      ><a name="2297"
+      > </a
+      ><a name="2298" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="2299"
+      > </a
+      ><a name="2300" href="Game.IND-CPA-dagger.html#2211" class="Bound Operator"
+      >|Pr[</a
+      ><a name="2304"
+      > </a
+      ><a name="2305" href="Game.IND-CPA-dagger.html#2272" class="Bound"
+      >g</a
+      ><a name="2306"
+      > </a
+      ><a name="2307" href="Game.IND-CPA-dagger.html#2211" class="Bound Operator"
+      >&#8801;1]-Pr[</a
+      ><a name="2314"
+      > </a
+      ><a name="2315" href="Game.IND-CPA-dagger.html#2270" class="Bound"
+      >f</a
+      ><a name="2316"
+      > </a
+      ><a name="2317" href="Game.IND-CPA-dagger.html#2211" class="Bound Operator"
+      >&#8801;1]|</a
+      ><a name="2321" class="Symbol"
+      >)</a
+      ><a name="2322"
+      >
+  </a
+      ><a name="2325" class="Keyword"
+      >where</a
+      ><a name="2330"
+      >
+
+    </a
+      ><a name="2336" href="Game.IND-CPA-dagger.html#2336" class="Function"
+      >Advantage</a
+      ><a name="2345"
+      > </a
+      ><a name="2346" class="Symbol"
+      >:</a
+      ><a name="2347"
+      > </a
+      ><a name="2348" href="Game.IND-CPA-dagger.html#429" class="Record"
+      >Adversary</a
+      ><a name="2357"
+      > </a
+      ><a name="2358" class="Symbol"
+      >&#8594;</a
+      ><a name="2359"
+      > </a
+      ><a name="2360" href="Game.IND-CPA-dagger.html#2198" class="Bound"
+      >Dist</a
+      ><a name="2364"
+      >
+    </a
+      ><a name="2369" href="Game.IND-CPA-dagger.html#2336" class="Function"
+      >Advantage</a
+      ><a name="2378"
+      > </a
+      ><a name="2379" href="Game.IND-CPA-dagger.html#2379" class="Bound"
+      >A</a
+      ><a name="2380"
+      > </a
+      ><a name="2381" class="Symbol"
+      >=</a
+      ><a name="2382"
+      > </a
+      ><a name="2383" href="Game.IND-CPA-dagger.html#2211" class="Bound Operator"
+      >|Pr[</a
+      ><a name="2387"
+      > </a
+      ><a name="2388" href="Game.IND-CPA-dagger.html#2006" class="Function"
+      >EXP&#8320;</a
+      ><a name="2392"
+      > </a
+      ><a name="2393" href="Game.IND-CPA-dagger.html#2379" class="Bound"
+      >A</a
+      ><a name="2394"
+      > </a
+      ><a name="2395" href="Game.IND-CPA-dagger.html#2211" class="Bound Operator"
+      >&#8801;1]-Pr[</a
+      ><a name="2402"
+      > </a
+      ><a name="2403" href="Game.IND-CPA-dagger.html#2011" class="Function"
+      >EXP&#8321;</a
+      ><a name="2407"
+      > </a
+      ><a name="2408" href="Game.IND-CPA-dagger.html#2379" class="Bound"
+      >A</a
+      ><a name="2409"
+      > </a
+      ><a name="2410" href="Game.IND-CPA-dagger.html#2211" class="Bound Operator"
+      >&#8801;1]|</a
+      ><a name="2414"
+      >
+
+    </a
+      ><a name="2420" href="Game.IND-CPA-dagger.html#2420" class="Function"
+      >Advantage-unordered</a
+      ><a name="2439"
+      > </a
+      ><a name="2440" class="Symbol"
+      >:</a
+      ><a name="2441"
+      > </a
+      ><a name="2442" class="Symbol"
+      >&#8704;</a
+      ><a name="2443"
+      > </a
+      ><a name="2444" href="Game.IND-CPA-dagger.html#2444" class="Bound"
+      >A</a
+      ><a name="2445"
+      > </a
+      ><a name="2446" href="Game.IND-CPA-dagger.html#2446" class="Bound"
+      >b</a
+      ><a name="2447"
+      > </a
+      ><a name="2448" class="Symbol"
+      >&#8594;</a
+      ><a name="2449"
+      > </a
+      ><a name="2450" href="Game.IND-CPA-dagger.html#2336" class="Function"
+      >Advantage</a
+      ><a name="2459"
+      > </a
+      ><a name="2460" href="Game.IND-CPA-dagger.html#2444" class="Bound"
+      >A</a
+      ><a name="2461"
+      > </a
+      ><a name="2462" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="2463"
+      > </a
+      ><a name="2464" href="Game.IND-CPA-dagger.html#2211" class="Bound Operator"
+      >|Pr[</a
+      ><a name="2468"
+      > </a
+      ><a name="2469" href="Game.IND-CPA-dagger.html#1787" class="Function"
+      >EXP</a
+      ><a name="2472"
+      > </a
+      ><a name="2473" href="Game.IND-CPA-dagger.html#2446" class="Bound"
+      >b</a
+      ><a name="2474"
+      > </a
+      ><a name="2475" class="Symbol"
+      >(</a
+      ><a name="2476" href="Data.Bool.html#873" class="Function"
+      >not</a
+      ><a name="2479"
+      > </a
+      ><a name="2480" href="Game.IND-CPA-dagger.html#2446" class="Bound"
+      >b</a
+      ><a name="2481" class="Symbol"
+      >)</a
+      ><a name="2482"
+      > </a
+      ><a name="2483" href="Game.IND-CPA-dagger.html#2444" class="Bound"
+      >A</a
+      ><a name="2484"
+      > </a
+      ><a name="2485" href="Game.IND-CPA-dagger.html#2211" class="Bound Operator"
+      >&#8801;1]-Pr[</a
+      ><a name="2492"
+      > </a
+      ><a name="2493" href="Game.IND-CPA-dagger.html#1787" class="Function"
+      >EXP</a
+      ><a name="2496"
+      > </a
+      ><a name="2497" class="Symbol"
+      >(</a
+      ><a name="2498" href="Data.Bool.html#873" class="Function"
+      >not</a
+      ><a name="2501"
+      > </a
+      ><a name="2502" href="Game.IND-CPA-dagger.html#2446" class="Bound"
+      >b</a
+      ><a name="2503" class="Symbol"
+      >)</a
+      ><a name="2504"
+      > </a
+      ><a name="2505" href="Game.IND-CPA-dagger.html#2446" class="Bound"
+      >b</a
+      ><a name="2506"
+      > </a
+      ><a name="2507" href="Game.IND-CPA-dagger.html#2444" class="Bound"
+      >A</a
+      ><a name="2508"
+      > </a
+      ><a name="2509" href="Game.IND-CPA-dagger.html#2211" class="Bound Operator"
+      >&#8801;1]|</a
+      ><a name="2513"
+      >
+    </a
+      ><a name="2518" href="Game.IND-CPA-dagger.html#2420" class="Function"
+      >Advantage-unordered</a
+      ><a name="2537"
+      > </a
+      ><a name="2538" href="Game.IND-CPA-dagger.html#2538" class="Bound"
+      >A</a
+      ><a name="2539"
+      > </a
+      ><a name="2540" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="2542"
+      > </a
+      ><a name="2543" class="Symbol"
+      >=</a
+      ><a name="2544"
+      > </a
+      ><a name="2545" href="Game.IND-CPA-dagger.html#2256" class="Bound"
+      >dist-comm</a
+      ><a name="2554"
+      > </a
+      ><a name="2555" class="Symbol"
+      >_</a
+      ><a name="2556"
+      > </a
+      ><a name="2557" class="Symbol"
+      >_</a
+      ><a name="2558"
+      >
+    </a
+      ><a name="2563" href="Game.IND-CPA-dagger.html#2420" class="Function"
+      >Advantage-unordered</a
+      ><a name="2582"
+      > </a
+      ><a name="2583" href="Game.IND-CPA-dagger.html#2583" class="Bound"
+      >A</a
+      ><a name="2584"
+      > </a
+      ><a name="2585" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="2587"
+      > </a
+      ><a name="2588" class="Symbol"
+      >=</a
+      ><a name="2589"
+      > </a
+      ><a name="2590" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="2594"
+      >
+</a
+      ><a name="2595" class="Comment"
+      >-- -}</a
+      ><a name="2600"
+      >
+</a
+      ><a name="2601" class="Comment"
+      >-- -}</a
+      ><a name="2606"
+      >
+</a
+      ><a name="2607" class="Comment"
+      >-- -}</a
+      ><a name="2612"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

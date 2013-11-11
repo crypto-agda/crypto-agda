@@ -1,0 +1,1389 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Solver.Linear.Parser</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Symbol"
+      >{-#</a
+      ><a name="4"
+      > </a
+      ><a name="5" class="Keyword"
+      >OPTIONS</a
+      ><a name="12"
+      > --without-K </a
+      ><a name="25" class="Symbol"
+      >#-}</a
+      ><a name="28"
+      >
+</a
+      ><a name="29" class="Keyword"
+      >open</a
+      ><a name="33"
+      > </a
+      ><a name="34" class="Keyword"
+      >import</a
+      ><a name="40"
+      > </a
+      ><a name="41" href="Data.Vec.html#1" class="Module"
+      >Data.Vec</a
+      ><a name="49"
+      > </a
+      ><a name="50" class="Symbol"
+      >as</a
+      ><a name="52"
+      > </a
+      ><a name="53" class="Module"
+      >Vec</a
+      ><a name="56"
+      > </a
+      ><a name="57" class="Keyword"
+      >using</a
+      ><a name="62"
+      > </a
+      ><a name="63" class="Symbol"
+      >(</a
+      ><a name="64"
+      >[]</a
+      ><a name="66" class="Symbol"
+      >;</a
+      ><a name="67"
+      > _&#8759;_</a
+      ><a name="71" class="Symbol"
+      >)</a
+      ><a name="72"
+      >
+</a
+      ><a name="73" class="Keyword"
+      >open</a
+      ><a name="77"
+      > </a
+      ><a name="78" class="Keyword"
+      >import</a
+      ><a name="84"
+      > </a
+      ><a name="85" href="Text.Parser.html#1" class="Module"
+      >Text.Parser</a
+      ><a name="96"
+      >
+</a
+      ><a name="97" class="Keyword"
+      >open</a
+      ><a name="101"
+      > </a
+      ><a name="102" class="Keyword"
+      >import</a
+      ><a name="108"
+      > </a
+      ><a name="109" href="Data.One.html#1" class="Module"
+      >Data.One</a
+      ><a name="117"
+      >
+</a
+      ><a name="118" class="Keyword"
+      >open</a
+      ><a name="122"
+      > </a
+      ><a name="123" class="Keyword"
+      >import</a
+      ><a name="129"
+      > </a
+      ><a name="130" href="Data.Char.html#1" class="Module"
+      >Data.Char</a
+      ><a name="139"
+      >
+</a
+      ><a name="140" class="Keyword"
+      >open</a
+      ><a name="144"
+      > </a
+      ><a name="145" class="Keyword"
+      >import</a
+      ><a name="151"
+      > </a
+      ><a name="152" href="Data.Nat.html#1" class="Module"
+      >Data.Nat</a
+      ><a name="160"
+      >
+</a
+      ><a name="161" class="Keyword"
+      >open</a
+      ><a name="165"
+      > </a
+      ><a name="166" class="Keyword"
+      >import</a
+      ><a name="172"
+      > </a
+      ><a name="173" href="Data.List.html#1" class="Module"
+      >Data.List</a
+      ><a name="182"
+      >
+</a
+      ><a name="183" class="Keyword"
+      >open</a
+      ><a name="187"
+      > </a
+      ><a name="188" class="Keyword"
+      >import</a
+      ><a name="194"
+      > </a
+      ><a name="195" href="Data.Product.html#1" class="Module"
+      >Data.Product</a
+      ><a name="207"
+      > </a
+      ><a name="208" class="Keyword"
+      >hiding</a
+      ><a name="214"
+      > </a
+      ><a name="215" class="Symbol"
+      >(</a
+      ><a name="216"
+      >map</a
+      ><a name="219" class="Symbol"
+      >)</a
+      ><a name="220"
+      >
+</a
+      ><a name="221" class="Keyword"
+      >open</a
+      ><a name="225"
+      > </a
+      ><a name="226" class="Keyword"
+      >import</a
+      ><a name="232"
+      > </a
+      ><a name="233" href="Data.String.html#1" class="Module"
+      >Data.String</a
+      ><a name="244"
+      > </a
+      ><a name="245" class="Symbol"
+      >as</a
+      ><a name="247"
+      > </a
+      ><a name="248" class="Module"
+      >String</a
+      ><a name="254"
+      > </a
+      ><a name="255" class="Keyword"
+      >renaming</a
+      ><a name="263"
+      > </a
+      ><a name="264" class="Symbol"
+      >(</a
+      ><a name="265"
+      >toList </a
+      ><a name="272" class="Symbol"
+      >to</a
+      ><a name="274"
+      > S&#9657;L</a
+      ><a name="278" class="Symbol"
+      >;</a
+      ><a name="279"
+      > fromList </a
+      ><a name="289" class="Symbol"
+      >to</a
+      ><a name="291"
+      > L&#9657;S</a
+      ><a name="295" class="Symbol"
+      >)</a
+      ><a name="296"
+      >
+</a
+      ><a name="297" class="Keyword"
+      >open</a
+      ><a name="301"
+      > </a
+      ><a name="302" class="Keyword"
+      >import</a
+      ><a name="308"
+      > </a
+      ><a name="309" href="Solver.Linear.Syntax.html#1" class="Module"
+      >Solver.Linear.Syntax</a
+      ><a name="329"
+      >
+</a
+      ><a name="330" class="Keyword"
+      >open</a
+      ><a name="334"
+      > </a
+      ><a name="335" class="Keyword"
+      >import</a
+      ><a name="341"
+      > </a
+      ><a name="342" href="Data.Maybe.NP.html#1" class="Module"
+      >Data.Maybe.NP</a
+      ><a name="355"
+      > </a
+      ><a name="356" class="Keyword"
+      >hiding</a
+      ><a name="362"
+      > </a
+      ><a name="363" class="Symbol"
+      >(</a
+      ><a name="364"
+      >Eq</a
+      ><a name="366" class="Symbol"
+      >)</a
+      ><a name="367"
+      >
+</a
+      ><a name="368" class="Keyword"
+      >open</a
+      ><a name="372"
+      > </a
+      ><a name="373" class="Keyword"
+      >import</a
+      ><a name="379"
+      > </a
+      ><a name="380" href="Relation.Binary.PropositionalEquality.html#1" class="Module"
+      >Relation.Binary.PropositionalEquality</a
+      ><a name="417"
+      >
+
+</a
+      ><a name="419" class="Keyword"
+      >module</a
+      ><a name="425"
+      > </a
+      ><a name="426" href="Solver.Linear.Parser.html#1" class="Module"
+      >Solver.Linear.Parser</a
+      ><a name="446"
+      > </a
+      ><a name="447" class="Keyword"
+      >where</a
+      ><a name="452"
+      >
+
+</a
+      ><a name="454" href="Solver.Linear.Parser.html#454" class="Function"
+      >spaces</a
+      ><a name="460"
+      > </a
+      ><a name="461" class="Symbol"
+      >:</a
+      ><a name="462"
+      > </a
+      ><a name="463" href="Text.Parser.html#773" class="Function"
+      >Parser</a
+      ><a name="469"
+      > </a
+      ><a name="470" href="Data.Unit.html#653" class="Record"
+      >&#120793;</a
+      ><a name="471"
+      >
+</a
+      ><a name="472" href="Solver.Linear.Parser.html#454" class="Function"
+      >spaces</a
+      ><a name="478"
+      > </a
+      ><a name="479" class="Symbol"
+      >=</a
+      ><a name="480"
+      > </a
+      ><a name="481" href="Text.Parser.html#4551" class="Function"
+      >manyOneOf&#738;</a
+      ><a name="491"
+      > </a
+      ><a name="492" class="String"
+      >&quot; \t\n\r&quot;</a
+      ><a name="501"
+      > </a
+      ><a name="502" href="Text.Parser.html#2254" class="Function Operator"
+      >*&gt;</a
+      ><a name="504"
+      > </a
+      ><a name="505" href="Text.Parser.html#829" class="Function"
+      >pure</a
+      ><a name="509"
+      > </a
+      ><a name="510" class="Symbol"
+      >_</a
+      ><a name="511"
+      >
+
+</a
+      ><a name="513" href="Solver.Linear.Parser.html#513" class="Function"
+      >pIdent</a
+      ><a name="519"
+      > </a
+      ><a name="520" class="Symbol"
+      >:</a
+      ><a name="521"
+      > </a
+      ><a name="522" href="Text.Parser.html#773" class="Function"
+      >Parser</a
+      ><a name="528"
+      > </a
+      ><a name="529" href="Data.String.html#900" class="Postulate"
+      >String</a
+      ><a name="535"
+      >
+</a
+      ><a name="536" href="Solver.Linear.Parser.html#513" class="Function"
+      >pIdent</a
+      ><a name="542"
+      > </a
+      ><a name="543" class="Symbol"
+      >=</a
+      ><a name="544"
+      > </a
+      ><a name="545" href="Text.Parser.html#4385" class="Function"
+      >someNoneOf&#738;</a
+      ><a name="556"
+      > </a
+      ><a name="557" class="String"
+      >&quot;(,)&#8614;_ \t\n\r&quot;</a
+      ><a name="571"
+      > </a
+      ><a name="572" href="Text.Parser.html#2330" class="Function Operator"
+      >&lt;*</a
+      ><a name="574"
+      > </a
+      ><a name="575" href="Solver.Linear.Parser.html#454" class="Function"
+      >spaces</a
+      ><a name="581"
+      >
+
+</a
+      ><a name="583" href="Solver.Linear.Parser.html#583" class="Function"
+      >tok&#7580;</a
+      ><a name="587"
+      > </a
+      ><a name="588" class="Symbol"
+      >:</a
+      ><a name="589"
+      > </a
+      ><a name="590" href="Data.Char.html#692" class="Postulate"
+      >Char</a
+      ><a name="594"
+      > </a
+      ><a name="595" class="Symbol"
+      >&#8594;</a
+      ><a name="596"
+      > </a
+      ><a name="597" href="Text.Parser.html#773" class="Function"
+      >Parser</a
+      ><a name="603"
+      > </a
+      ><a name="604" href="Data.Unit.html#653" class="Record"
+      >&#120793;</a
+      ><a name="605"
+      >
+</a
+      ><a name="606" href="Solver.Linear.Parser.html#583" class="Function"
+      >tok&#7580;</a
+      ><a name="610"
+      > </a
+      ><a name="611" href="Solver.Linear.Parser.html#611" class="Bound"
+      >c</a
+      ><a name="612"
+      > </a
+      ><a name="613" class="Symbol"
+      >=</a
+      ><a name="614"
+      > </a
+      ><a name="615" href="Text.Parser.html#3768" class="Function"
+      >char</a
+      ><a name="619"
+      > </a
+      ><a name="620" href="Solver.Linear.Parser.html#611" class="Bound"
+      >c</a
+      ><a name="621"
+      > </a
+      ><a name="622" href="Text.Parser.html#2330" class="Function Operator"
+      >&lt;*</a
+      ><a name="624"
+      > </a
+      ><a name="625" href="Solver.Linear.Parser.html#454" class="Function"
+      >spaces</a
+      ><a name="631"
+      >
+
+</a
+      ><a name="633" href="Solver.Linear.Parser.html#633" class="Function"
+      >tok&#738;</a
+      ><a name="637"
+      > </a
+      ><a name="638" class="Symbol"
+      >:</a
+      ><a name="639"
+      > </a
+      ><a name="640" href="Data.String.html#900" class="Postulate"
+      >String</a
+      ><a name="646"
+      > </a
+      ><a name="647" class="Symbol"
+      >&#8594;</a
+      ><a name="648"
+      > </a
+      ><a name="649" href="Text.Parser.html#773" class="Function"
+      >Parser</a
+      ><a name="655"
+      > </a
+      ><a name="656" href="Data.Unit.html#653" class="Record"
+      >&#120793;</a
+      ><a name="657"
+      >
+</a
+      ><a name="658" href="Solver.Linear.Parser.html#633" class="Function"
+      >tok&#738;</a
+      ><a name="662"
+      > </a
+      ><a name="663" href="Solver.Linear.Parser.html#663" class="Bound"
+      >s</a
+      ><a name="664"
+      > </a
+      ><a name="665" class="Symbol"
+      >=</a
+      ><a name="666"
+      > </a
+      ><a name="667" href="Text.Parser.html#3825" class="Function"
+      >string</a
+      ><a name="673"
+      > </a
+      ><a name="674" href="Solver.Linear.Parser.html#663" class="Bound"
+      >s</a
+      ><a name="675"
+      > </a
+      ><a name="676" href="Text.Parser.html#2330" class="Function Operator"
+      >&lt;*</a
+      ><a name="678"
+      > </a
+      ><a name="679" href="Solver.Linear.Parser.html#454" class="Function"
+      >spaces</a
+      ><a name="685"
+      >
+
+</a
+      ><a name="687" class="Comment"
+      >--pPair : &#8704; {A B} &#8594; Parser A &#8594; Parser B &#8594; Parser (A &#215; B)</a
+      ><a name="743"
+      >
+</a
+      ><a name="744" class="Comment"
+      >--pPair pA pB = tok&#7580; '(' *&gt; &#10218; _,_ &#183; pA &lt;* tok&#7580; ',' &#183; pB &#10219; &lt;* tok&#7580; ')'</a
+      ><a name="813"
+      >
+
+</a
+      ><a name="815" class="Keyword"
+      >module</a
+      ><a name="821"
+      > </a
+      ><a name="822" href="Solver.Linear.Parser.html#822" class="Module"
+      >_</a
+      ><a name="823"
+      > </a
+      ><a name="824" class="Symbol"
+      >{</a
+      ><a name="825" href="Solver.Linear.Parser.html#825" class="Bound"
+      >A</a
+      ><a name="826" class="Symbol"
+      >}</a
+      ><a name="827"
+      > </a
+      ><a name="828" class="Symbol"
+      >(</a
+      ><a name="829" href="Solver.Linear.Parser.html#829" class="Bound"
+      >pA</a
+      ><a name="831"
+      > </a
+      ><a name="832" class="Symbol"
+      >:</a
+      ><a name="833"
+      > </a
+      ><a name="834" href="Text.Parser.html#773" class="Function"
+      >Parser</a
+      ><a name="840"
+      > </a
+      ><a name="841" href="Solver.Linear.Parser.html#825" class="Bound"
+      >A</a
+      ><a name="842" class="Symbol"
+      >)</a
+      ><a name="843"
+      > </a
+      ><a name="844" class="Keyword"
+      >where</a
+      ><a name="849"
+      >
+
+    </a
+      ><a name="855" href="Solver.Linear.Parser.html#855" class="Function"
+      >pSimpleSyn</a
+      ><a name="865"
+      > </a
+      ><a name="866" href="Solver.Linear.Parser.html#866" class="Function"
+      >pSyn</a
+      ><a name="870"
+      > </a
+      ><a name="871" class="Symbol"
+      >:</a
+      ><a name="872"
+      > </a
+      ><a name="873" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="874"
+      > </a
+      ><a name="875" class="Symbol"
+      >&#8594;</a
+      ><a name="876"
+      > </a
+      ><a name="877" href="Text.Parser.html#773" class="Function"
+      >Parser</a
+      ><a name="883"
+      > </a
+      ><a name="884" class="Symbol"
+      >(</a
+      ><a name="885" href="Solver.Linear.Syntax.html#143" class="Datatype"
+      >Syn</a
+      ><a name="888"
+      > </a
+      ><a name="889" href="Solver.Linear.Parser.html#825" class="Bound"
+      >A</a
+      ><a name="890" class="Symbol"
+      >)</a
+      ><a name="891"
+      >
+
+    </a
+      ><a name="897" href="Solver.Linear.Parser.html#855" class="Function"
+      >pSimpleSyn</a
+      ><a name="907"
+      > </a
+      ><a name="908" href="Solver.Linear.Parser.html#908" class="Bound"
+      >n</a
+      ><a name="909"
+      > </a
+      ><a name="910" class="Symbol"
+      >=</a
+      ><a name="911"
+      >  </a
+      ><a name="913" href="Text.Parser.html#829" class="Function"
+      >pure</a
+      ><a name="917"
+      > </a
+      ><a name="918" href="Solver.Linear.Syntax.html#183" class="InductiveConstructor"
+      >tt</a
+      ><a name="920"
+      > </a
+      ><a name="921" href="Text.Parser.html#2330" class="Function Operator"
+      >&lt;*</a
+      ><a name="923"
+      > </a
+      ><a name="924" href="Text.Parser.html#3950" class="Function"
+      >oneOf&#738;</a
+      ><a name="930"
+      > </a
+      ><a name="931" class="String"
+      >&quot;_&#120793;&quot;</a
+      ><a name="935"
+      >
+                </a
+      ><a name="952" href="Text.Parser.html#897" class="Function Operator"
+      >&#10216;|&#10217;</a
+      ><a name="955"
+      > </a
+      ><a name="956" href="Solver.Linear.Parser.html#583" class="Function"
+      >tok&#7580;</a
+      ><a name="960"
+      > </a
+      ><a name="961" class="String"
+      >'('</a
+      ><a name="964"
+      > </a
+      ><a name="965" href="Text.Parser.html#2254" class="Function Operator"
+      >*&gt;</a
+      ><a name="967"
+      > </a
+      ><a name="968" href="Solver.Linear.Parser.html#866" class="Function"
+      >pSyn</a
+      ><a name="972"
+      > </a
+      ><a name="973" href="Solver.Linear.Parser.html#908" class="Bound"
+      >n</a
+      ><a name="974"
+      > </a
+      ><a name="975" href="Text.Parser.html#2330" class="Function Operator"
+      >&lt;*</a
+      ><a name="977"
+      > </a
+      ><a name="978" href="Solver.Linear.Parser.html#583" class="Function"
+      >tok&#7580;</a
+      ><a name="982"
+      > </a
+      ><a name="983" class="String"
+      >')'</a
+      ><a name="986"
+      >
+                </a
+      ><a name="1003" href="Text.Parser.html#897" class="Function Operator"
+      >&#10216;|&#10217;</a
+      ><a name="1006"
+      > </a
+      ><a name="1007" href="Text.Parser.html#1942" class="Function Operator"
+      >&#10218;</a
+      ><a name="1008"
+      > </a
+      ><a name="1009" href="Solver.Linear.Syntax.html#164" class="InductiveConstructor"
+      >var</a
+      ><a name="1012"
+      > </a
+      ><a name="1013" href="Text.Parser.html#1942" class="Function Operator"
+      >&#183;</a
+      ><a name="1014"
+      > </a
+      ><a name="1015" href="Solver.Linear.Parser.html#829" class="Bound"
+      >pA</a
+      ><a name="1017"
+      > </a
+      ><a name="1018" href="Text.Parser.html#1942" class="Function Operator"
+      >&#10219;</a
+      ><a name="1019"
+      >
+
+    </a
+      ><a name="1025" href="Solver.Linear.Parser.html#866" class="Function"
+      >pSyn</a
+      ><a name="1029"
+      > </a
+      ><a name="1030" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="1034"
+      >    </a
+      ><a name="1038" class="Symbol"
+      >=</a
+      ><a name="1039"
+      > </a
+      ><a name="1040" href="Text.Parser.html#980" class="Function"
+      >empty</a
+      ><a name="1045"
+      >
+    </a
+      ><a name="1050" href="Solver.Linear.Parser.html#866" class="Function"
+      >pSyn</a
+      ><a name="1054"
+      > </a
+      ><a name="1055" class="Symbol"
+      >(</a
+      ><a name="1056" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="1059"
+      > </a
+      ><a name="1060" href="Solver.Linear.Parser.html#1060" class="Bound"
+      >n</a
+      ><a name="1061" class="Symbol"
+      >)</a
+      ><a name="1062"
+      > </a
+      ><a name="1063" class="Symbol"
+      >=</a
+      ><a name="1064"
+      > </a
+      ><a name="1065" href="Text.Parser.html#2011" class="Function Operator"
+      >&#10218;</a
+      ><a name="1066"
+      > </a
+      ><a name="1067" href="Solver.Linear.Syntax.html#330" class="Function"
+      >tuple</a
+      ><a name="1072"
+      > </a
+      ><a name="1073" class="Symbol"
+      >_</a
+      ><a name="1074"
+      > </a
+      ><a name="1075" href="Text.Parser.html#2011" class="Function Operator"
+      >&#183;</a
+      ><a name="1076"
+      > </a
+      ><a name="1077" href="Solver.Linear.Parser.html#855" class="Function"
+      >pSimpleSyn</a
+      ><a name="1087"
+      > </a
+      ><a name="1088" href="Solver.Linear.Parser.html#1060" class="Bound"
+      >n</a
+      ><a name="1089"
+      > </a
+      ><a name="1090" href="Text.Parser.html#2011" class="Function Operator"
+      >&#183;</a
+      ><a name="1091"
+      > </a
+      ><a name="1092" href="Text.Parser.html#3184" class="Function"
+      >many</a
+      ><a name="1096"
+      > </a
+      ><a name="1097" href="Solver.Linear.Parser.html#1060" class="Bound"
+      >n</a
+      ><a name="1098"
+      > </a
+      ><a name="1099" class="Symbol"
+      >(</a
+      ><a name="1100" href="Solver.Linear.Parser.html#583" class="Function"
+      >tok&#7580;</a
+      ><a name="1104"
+      > </a
+      ><a name="1105" class="String"
+      >','</a
+      ><a name="1108"
+      > </a
+      ><a name="1109" href="Text.Parser.html#2254" class="Function Operator"
+      >*&gt;</a
+      ><a name="1111"
+      > </a
+      ><a name="1112" href="Solver.Linear.Parser.html#866" class="Function"
+      >pSyn</a
+      ><a name="1116"
+      > </a
+      ><a name="1117" href="Solver.Linear.Parser.html#1060" class="Bound"
+      >n</a
+      ><a name="1118" class="Symbol"
+      >)</a
+      ><a name="1119"
+      > </a
+      ><a name="1120" href="Text.Parser.html#2011" class="Function Operator"
+      >&#10219;</a
+      ><a name="1121"
+      >
+
+    </a
+      ><a name="1127" href="Solver.Linear.Parser.html#1127" class="Function"
+      >pEq</a
+      ><a name="1130"
+      > </a
+      ><a name="1131" class="Symbol"
+      >:</a
+      ><a name="1132"
+      > </a
+      ><a name="1133" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="1134"
+      > </a
+      ><a name="1135" class="Symbol"
+      >&#8594;</a
+      ><a name="1136"
+      > </a
+      ><a name="1137" href="Text.Parser.html#773" class="Function"
+      >Parser</a
+      ><a name="1143"
+      > </a
+      ><a name="1144" class="Symbol"
+      >(</a
+      ><a name="1145" href="Solver.Linear.Syntax.html#243" class="Record"
+      >Eq</a
+      ><a name="1147"
+      > </a
+      ><a name="1148" href="Solver.Linear.Parser.html#825" class="Bound"
+      >A</a
+      ><a name="1149" class="Symbol"
+      >)</a
+      ><a name="1150"
+      >
+    </a
+      ><a name="1155" href="Solver.Linear.Parser.html#1127" class="Function"
+      >pEq</a
+      ><a name="1158"
+      > </a
+      ><a name="1159" href="Solver.Linear.Parser.html#1159" class="Bound"
+      >n</a
+      ><a name="1160"
+      > </a
+      ><a name="1161" class="Symbol"
+      >=</a
+      ><a name="1162"
+      > </a
+      ><a name="1163" href="Text.Parser.html#2011" class="Function Operator"
+      >&#10218;</a
+      ><a name="1164"
+      > </a
+      ><a name="1165" href="Solver.Linear.Syntax.html#276" class="InductiveConstructor Operator"
+      >_&#8614;_</a
+      ><a name="1168"
+      > </a
+      ><a name="1169" href="Text.Parser.html#2011" class="Function Operator"
+      >&#183;</a
+      ><a name="1170"
+      > </a
+      ><a name="1171" href="Solver.Linear.Parser.html#866" class="Function"
+      >pSyn</a
+      ><a name="1175"
+      > </a
+      ><a name="1176" href="Solver.Linear.Parser.html#1159" class="Bound"
+      >n</a
+      ><a name="1177"
+      > </a
+      ><a name="1178" href="Text.Parser.html#2330" class="Function Operator"
+      >&lt;*</a
+      ><a name="1180"
+      > </a
+      ><a name="1181" href="Solver.Linear.Parser.html#583" class="Function"
+      >tok&#7580;</a
+      ><a name="1185"
+      > </a
+      ><a name="1186" class="String"
+      >'&#8614;'</a
+      ><a name="1189"
+      > </a
+      ><a name="1190" href="Text.Parser.html#2011" class="Function Operator"
+      >&#183;</a
+      ><a name="1191"
+      > </a
+      ><a name="1192" href="Solver.Linear.Parser.html#866" class="Function"
+      >pSyn</a
+      ><a name="1196"
+      > </a
+      ><a name="1197" href="Solver.Linear.Parser.html#1159" class="Bound"
+      >n</a
+      ><a name="1198"
+      > </a
+      ><a name="1199" href="Text.Parser.html#2011" class="Function Operator"
+      >&#10219;</a
+      ><a name="1200"
+      >
+
+</a
+      ><a name="1202" href="Solver.Linear.Parser.html#1202" class="Function"
+      >pSyn&#738;</a
+      ><a name="1207"
+      > </a
+      ><a name="1208" class="Symbol"
+      >:</a
+      ><a name="1209"
+      > </a
+      ><a name="1210" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="1211"
+      > </a
+      ><a name="1212" class="Symbol"
+      >&#8594;</a
+      ><a name="1213"
+      > </a
+      ><a name="1214" href="Text.Parser.html#773" class="Function"
+      >Parser</a
+      ><a name="1220"
+      > </a
+      ><a name="1221" class="Symbol"
+      >(</a
+      ><a name="1222" href="Solver.Linear.Syntax.html#143" class="Datatype"
+      >Syn</a
+      ><a name="1225"
+      > </a
+      ><a name="1226" href="Data.String.html#900" class="Postulate"
+      >String</a
+      ><a name="1232" class="Symbol"
+      >)</a
+      ><a name="1233"
+      >
+</a
+      ><a name="1234" href="Solver.Linear.Parser.html#1202" class="Function"
+      >pSyn&#738;</a
+      ><a name="1239"
+      > </a
+      ><a name="1240" class="Symbol"
+      >=</a
+      ><a name="1241"
+      > </a
+      ><a name="1242" href="Solver.Linear.Parser.html#866" class="Function"
+      >pSyn</a
+      ><a name="1246"
+      > </a
+      ><a name="1247" href="Solver.Linear.Parser.html#513" class="Function"
+      >pIdent</a
+      ><a name="1253"
+      >
+
+</a
+      ><a name="1255" href="Solver.Linear.Parser.html#1255" class="Function"
+      >pEq&#738;</a
+      ><a name="1259"
+      > </a
+      ><a name="1260" class="Symbol"
+      >:</a
+      ><a name="1261"
+      > </a
+      ><a name="1262" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="1263"
+      > </a
+      ><a name="1264" class="Symbol"
+      >&#8594;</a
+      ><a name="1265"
+      > </a
+      ><a name="1266" href="Text.Parser.html#773" class="Function"
+      >Parser</a
+      ><a name="1272"
+      > </a
+      ><a name="1273" class="Symbol"
+      >(</a
+      ><a name="1274" href="Solver.Linear.Syntax.html#243" class="Record"
+      >Eq</a
+      ><a name="1276"
+      > </a
+      ><a name="1277" href="Data.String.html#900" class="Postulate"
+      >String</a
+      ><a name="1283" class="Symbol"
+      >)</a
+      ><a name="1284"
+      >
+</a
+      ><a name="1285" href="Solver.Linear.Parser.html#1255" class="Function"
+      >pEq&#738;</a
+      ><a name="1289"
+      > </a
+      ><a name="1290" class="Symbol"
+      >=</a
+      ><a name="1291"
+      > </a
+      ><a name="1292" href="Solver.Linear.Parser.html#1127" class="Function"
+      >pEq</a
+      ><a name="1295"
+      > </a
+      ><a name="1296" href="Solver.Linear.Parser.html#513" class="Function"
+      >pIdent</a
+      ><a name="1302"
+      >
+
+</a
+      ><a name="1304" href="Solver.Linear.Parser.html#1304" class="Function"
+      >parseSyn&#738;?</a
+      ><a name="1314"
+      > </a
+      ><a name="1315" class="Symbol"
+      >:</a
+      ><a name="1316"
+      > </a
+      ><a name="1317" href="Data.String.html#900" class="Postulate"
+      >String</a
+      ><a name="1323"
+      > </a
+      ><a name="1324" href="Data.Maybe.NP.html#802" class="Function Operator"
+      >&#8594;?</a
+      ><a name="1326"
+      > </a
+      ><a name="1327" href="Solver.Linear.Syntax.html#143" class="Datatype"
+      >Syn</a
+      ><a name="1330"
+      > </a
+      ><a name="1331" href="Data.String.html#900" class="Postulate"
+      >String</a
+      ><a name="1337"
+      >
+</a
+      ><a name="1338" href="Solver.Linear.Parser.html#1304" class="Function"
+      >parseSyn&#738;?</a
+      ><a name="1348"
+      > </a
+      ><a name="1349" href="Solver.Linear.Parser.html#1349" class="Bound"
+      >s</a
+      ><a name="1350"
+      > </a
+      ><a name="1351" class="Symbol"
+      >=</a
+      ><a name="1352"
+      > </a
+      ><a name="1353" href="Text.Parser.html#1314" class="Function"
+      >runParser</a
+      ><a name="1362"
+      > </a
+      ><a name="1363" class="Symbol"
+      >(</a
+      ><a name="1364" href="Solver.Linear.Parser.html#1202" class="Function"
+      >pSyn&#738;</a
+      ><a name="1369"
+      > </a
+      ><a name="1370" href="Solver.Linear.Parser.html#1408" class="Function"
+      >n</a
+      ><a name="1371"
+      > </a
+      ><a name="1372" href="Text.Parser.html#2330" class="Function Operator"
+      >&lt;*</a
+      ><a name="1374"
+      > </a
+      ><a name="1375" href="Text.Parser.html#1145" class="Function"
+      >eof</a
+      ><a name="1378" class="Symbol"
+      >)</a
+      ><a name="1379"
+      > </a
+      ><a name="1380" href="Solver.Linear.Parser.html#1390" class="Function"
+      >&#8467;</a
+      ><a name="1381"
+      >
+  </a
+      ><a name="1384" class="Keyword"
+      >where</a
+      ><a name="1389"
+      > </a
+      ><a name="1390" href="Solver.Linear.Parser.html#1390" class="Function"
+      >&#8467;</a
+      ><a name="1391"
+      > </a
+      ><a name="1392" class="Symbol"
+      >=</a
+      ><a name="1393"
+      > </a
+      ><a name="1394" href="Data.String.html#1409" class="Function"
+      >S&#9657;L</a
+      ><a name="1397"
+      > </a
+      ><a name="1398" href="Solver.Linear.Parser.html#1349" class="Bound"
+      >s</a
+      ><a name="1399"
+      >
+        </a
+      ><a name="1408" href="Solver.Linear.Parser.html#1408" class="Function"
+      >n</a
+      ><a name="1409"
+      > </a
+      ><a name="1410" class="Symbol"
+      >=</a
+      ><a name="1411"
+      > </a
+      ><a name="1412" href="Data.List.html#2923" class="Function"
+      >length</a
+      ><a name="1418"
+      > </a
+      ><a name="1419" href="Solver.Linear.Parser.html#1390" class="Function"
+      >&#8467;</a
+      ><a name="1420"
+      >
+
+</a
+      ><a name="1422" href="Solver.Linear.Parser.html#1422" class="Function"
+      >parseSyn&#738;</a
+      ><a name="1431"
+      > </a
+      ><a name="1432" class="Symbol"
+      >:</a
+      ><a name="1433"
+      > </a
+      ><a name="1434" href="Data.Maybe.NP.html#6910" class="Function Operator"
+      >T[</a
+      ><a name="1436"
+      > </a
+      ><a name="1437" href="Solver.Linear.Parser.html#1304" class="Function"
+      >parseSyn&#738;?</a
+      ><a name="1447"
+      > </a
+      ><a name="1448" href="Data.Maybe.NP.html#6910" class="Function Operator"
+      >]</a
+      ><a name="1449"
+      >
+</a
+      ><a name="1450" href="Solver.Linear.Parser.html#1422" class="Function"
+      >parseSyn&#738;</a
+      ><a name="1459"
+      > </a
+      ><a name="1460" class="Symbol"
+      >=</a
+      ><a name="1461"
+      > </a
+      ><a name="1462" href="Data.Maybe.NP.html#7031" class="Function Operator"
+      >F[</a
+      ><a name="1464"
+      > </a
+      ><a name="1465" href="Solver.Linear.Parser.html#1304" class="Function"
+      >parseSyn&#738;?</a
+      ><a name="1475"
+      > </a
+      ><a name="1476" href="Data.Maybe.NP.html#7031" class="Function Operator"
+      >]</a
+      ><a name="1477"
+      >
+
+</a
+      ><a name="1479" href="Solver.Linear.Parser.html#1479" class="Function"
+      >parseEq&#738;?</a
+      ><a name="1488"
+      > </a
+      ><a name="1489" class="Symbol"
+      >:</a
+      ><a name="1490"
+      > </a
+      ><a name="1491" href="Data.String.html#900" class="Postulate"
+      >String</a
+      ><a name="1497"
+      > </a
+      ><a name="1498" href="Data.Maybe.NP.html#802" class="Function Operator"
+      >&#8594;?</a
+      ><a name="1500"
+      > </a
+      ><a name="1501" href="Solver.Linear.Syntax.html#243" class="Record"
+      >Eq</a
+      ><a name="1503"
+      > </a
+      ><a name="1504" href="Data.String.html#900" class="Postulate"
+      >String</a
+      ><a name="1510"
+      >
+</a
+      ><a name="1511" href="Solver.Linear.Parser.html#1479" class="Function"
+      >parseEq&#738;?</a
+      ><a name="1520"
+      > </a
+      ><a name="1521" href="Solver.Linear.Parser.html#1521" class="Bound"
+      >s</a
+      ><a name="1522"
+      > </a
+      ><a name="1523" class="Symbol"
+      >=</a
+      ><a name="1524"
+      > </a
+      ><a name="1525" href="Text.Parser.html#1314" class="Function"
+      >runParser</a
+      ><a name="1534"
+      > </a
+      ><a name="1535" class="Symbol"
+      >(</a
+      ><a name="1536" href="Solver.Linear.Parser.html#454" class="Function"
+      >spaces</a
+      ><a name="1542"
+      > </a
+      ><a name="1543" href="Text.Parser.html#2254" class="Function Operator"
+      >*&gt;</a
+      ><a name="1545"
+      > </a
+      ><a name="1546" href="Solver.Linear.Parser.html#1255" class="Function"
+      >pEq&#738;</a
+      ><a name="1550"
+      > </a
+      ><a name="1551" class="Symbol"
+      >(</a
+      ><a name="1552" class="Number"
+      >2</a
+      ><a name="1553"
+      > </a
+      ><a name="1554" href="Data.Nat.html#2544" class="Primitive Operator"
+      >*</a
+      ><a name="1555"
+      > </a
+      ><a name="1556" href="Solver.Linear.Parser.html#1595" class="Function"
+      >n</a
+      ><a name="1557" class="Symbol"
+      >)</a
+      ><a name="1558"
+      > </a
+      ><a name="1559" href="Text.Parser.html#2330" class="Function Operator"
+      >&lt;*</a
+      ><a name="1561"
+      > </a
+      ><a name="1562" href="Text.Parser.html#1145" class="Function"
+      >eof</a
+      ><a name="1565" class="Symbol"
+      >)</a
+      ><a name="1566"
+      > </a
+      ><a name="1567" href="Solver.Linear.Parser.html#1577" class="Function"
+      >&#8467;</a
+      ><a name="1568"
+      >
+  </a
+      ><a name="1571" class="Keyword"
+      >where</a
+      ><a name="1576"
+      > </a
+      ><a name="1577" href="Solver.Linear.Parser.html#1577" class="Function"
+      >&#8467;</a
+      ><a name="1578"
+      > </a
+      ><a name="1579" class="Symbol"
+      >=</a
+      ><a name="1580"
+      > </a
+      ><a name="1581" href="Data.String.html#1409" class="Function"
+      >S&#9657;L</a
+      ><a name="1584"
+      > </a
+      ><a name="1585" href="Solver.Linear.Parser.html#1521" class="Bound"
+      >s</a
+      ><a name="1586"
+      >
+        </a
+      ><a name="1595" href="Solver.Linear.Parser.html#1595" class="Function"
+      >n</a
+      ><a name="1596"
+      > </a
+      ><a name="1597" class="Symbol"
+      >=</a
+      ><a name="1598"
+      > </a
+      ><a name="1599" href="Data.List.html#2923" class="Function"
+      >length</a
+      ><a name="1605"
+      > </a
+      ><a name="1606" href="Solver.Linear.Parser.html#1577" class="Function"
+      >&#8467;</a
+      ><a name="1607"
+      >
+
+</a
+      ><a name="1609" href="Solver.Linear.Parser.html#1609" class="Function"
+      >parseEq&#738;</a
+      ><a name="1617"
+      > </a
+      ><a name="1618" class="Symbol"
+      >:</a
+      ><a name="1619"
+      > </a
+      ><a name="1620" href="Data.Maybe.NP.html#6910" class="Function Operator"
+      >T[</a
+      ><a name="1622"
+      > </a
+      ><a name="1623" href="Solver.Linear.Parser.html#1479" class="Function"
+      >parseEq&#738;?</a
+      ><a name="1632"
+      > </a
+      ><a name="1633" href="Data.Maybe.NP.html#6910" class="Function Operator"
+      >]</a
+      ><a name="1634"
+      >
+</a
+      ><a name="1635" href="Solver.Linear.Parser.html#1609" class="Function"
+      >parseEq&#738;</a
+      ><a name="1643"
+      > </a
+      ><a name="1644" class="Symbol"
+      >=</a
+      ><a name="1645"
+      > </a
+      ><a name="1646" href="Data.Maybe.NP.html#7031" class="Function Operator"
+      >F[</a
+      ><a name="1648"
+      > </a
+      ><a name="1649" href="Solver.Linear.Parser.html#1479" class="Function"
+      >parseEq&#738;?</a
+      ><a name="1658"
+      > </a
+      ><a name="1659" href="Data.Maybe.NP.html#7031" class="Function Operator"
+      >]</a
+      ><a name="1660"
+      >
+
+</a
+      ><a name="1662" href="Solver.Linear.Parser.html#1662" class="Function"
+      >ex-A&#8658;B</a
+      ><a name="1668"
+      > </a
+      ><a name="1669" class="Symbol"
+      >:</a
+      ><a name="1670"
+      > </a
+      ><a name="1671" href="Solver.Linear.Syntax.html#243" class="Record"
+      >Eq</a
+      ><a name="1673"
+      > </a
+      ><a name="1674" href="Data.String.html#900" class="Postulate"
+      >String</a
+      ><a name="1680"
+      >
+</a
+      ><a name="1681" href="Solver.Linear.Parser.html#1662" class="Function"
+      >ex-A&#8658;B</a
+      ><a name="1687"
+      > </a
+      ><a name="1688" class="Symbol"
+      >=</a
+      ><a name="1689"
+      > </a
+      ><a name="1690" href="Solver.Linear.Parser.html#1609" class="Function"
+      >parseEq&#738;</a
+      ><a name="1698"
+      > </a
+      ><a name="1699" class="String"
+      >&quot;A&#8614;B&quot;</a
+      ><a name="1704"
+      >
+
+</a
+      ><a name="1706" href="Solver.Linear.Parser.html#1706" class="Function"
+      >ex-&#120793;&#8658;&#120793;</a
+      ><a name="1712"
+      > </a
+      ><a name="1713" class="Symbol"
+      >:</a
+      ><a name="1714"
+      > </a
+      ><a name="1715" href="Solver.Linear.Syntax.html#243" class="Record"
+      >Eq</a
+      ><a name="1717"
+      > </a
+      ><a name="1718" href="Data.String.html#900" class="Postulate"
+      >String</a
+      ><a name="1724"
+      >
+</a
+      ><a name="1725" href="Solver.Linear.Parser.html#1706" class="Function"
+      >ex-&#120793;&#8658;&#120793;</a
+      ><a name="1731"
+      > </a
+      ><a name="1732" class="Symbol"
+      >=</a
+      ><a name="1733"
+      > </a
+      ><a name="1734" href="Solver.Linear.Parser.html#1609" class="Function"
+      >parseEq&#738;</a
+      ><a name="1742"
+      > </a
+      ><a name="1743" class="String"
+      >&quot;&#120793;&#8614;&#120793;&quot;</a
+      ><a name="1748"
+      >
+
+</a
+      ><a name="1750" href="Solver.Linear.Parser.html#1750" class="Function"
+      >ex&#8321;</a
+      ><a name="1753"
+      > </a
+      ><a name="1754" class="Symbol"
+      >:</a
+      ><a name="1755"
+      > </a
+      ><a name="1756" href="Solver.Linear.Syntax.html#243" class="Record"
+      >Eq</a
+      ><a name="1758"
+      > </a
+      ><a name="1759" href="Data.String.html#900" class="Postulate"
+      >String</a
+      ><a name="1765"
+      >
+</a
+      ><a name="1766" href="Solver.Linear.Parser.html#1750" class="Function"
+      >ex&#8321;</a
+      ><a name="1769"
+      > </a
+      ><a name="1770" class="Symbol"
+      >=</a
+      ><a name="1771"
+      > </a
+      ><a name="1772" href="Solver.Linear.Parser.html#1609" class="Function"
+      >parseEq&#738;</a
+      ><a name="1780"
+      > </a
+      ><a name="1781" class="String"
+      >&quot; ( A , B,(&#120793;,C),(D))&#8614; B,C , A&quot;</a
+      ><a name="1811"
+      >
+
+</a
+      ><a name="1813" class="Comment"
+      >{-
+test-ex&#8321; : ex&#8321; &#8801; ((var&quot;A&quot; , (var&quot;B&quot;, (tt , var&quot;C&quot;) , var&quot;D&quot;))
+                &#8614; (var&quot;B&quot; , var&quot;C&quot; , var&quot;A&quot;))
+test-ex&#8321; = refl
+-}</a
+      ><a name="1942"
+      >
+
+</a
+      ><a name="1944" class="Comment"
+      >-- -}</a
+      ><a name="1949"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

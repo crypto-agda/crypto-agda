@@ -1,0 +1,928 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Data.Char</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="73"
+      >
+</a
+      ><a name="74" class="Comment"
+      >-- The Agda standard library</a
+      ><a name="102"
+      >
+</a
+      ><a name="103" class="Comment"
+      >--</a
+      ><a name="105"
+      >
+</a
+      ><a name="106" class="Comment"
+      >-- Characters</a
+      ><a name="119"
+      >
+</a
+      ><a name="120" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="192"
+      >
+
+</a
+      ><a name="194" class="Keyword"
+      >module</a
+      ><a name="200"
+      > </a
+      ><a name="201" href="Data.Char.html#1" class="Module"
+      >Data.Char</a
+      ><a name="210"
+      > </a
+      ><a name="211" class="Keyword"
+      >where</a
+      ><a name="216"
+      >
+
+</a
+      ><a name="218" class="Keyword"
+      >open</a
+      ><a name="222"
+      > </a
+      ><a name="223" class="Keyword"
+      >import</a
+      ><a name="229"
+      > </a
+      ><a name="230" href="Data.Nat.html#1" class="Module"
+      >Data.Nat</a
+      ><a name="238"
+      > </a
+      ><a name="239" class="Keyword"
+      >using</a
+      ><a name="244"
+      > </a
+      ><a name="245" class="Symbol"
+      >(</a
+      ><a name="246"
+      >&#8469;</a
+      ><a name="247" class="Symbol"
+      >)</a
+      ><a name="248"
+      >
+</a
+      ><a name="249" class="Keyword"
+      >import</a
+      ><a name="255"
+      > </a
+      ><a name="256" href="Data.Nat.Properties.html#1" class="Module"
+      >Data.Nat.Properties</a
+      ><a name="275"
+      > </a
+      ><a name="276" class="Symbol"
+      >as</a
+      ><a name="278"
+      > </a
+      ><a name="279" class="Module"
+      >NatProp</a
+      ><a name="286"
+      >
+</a
+      ><a name="287" class="Keyword"
+      >open</a
+      ><a name="291"
+      > </a
+      ><a name="292" class="Keyword"
+      >import</a
+      ><a name="298"
+      > </a
+      ><a name="299" href="Data.Bool.html#1" class="Module"
+      >Data.Bool</a
+      ><a name="308"
+      > </a
+      ><a name="309" class="Keyword"
+      >using</a
+      ><a name="314"
+      > </a
+      ><a name="315" class="Symbol"
+      >(</a
+      ><a name="316"
+      >Bool</a
+      ><a name="320" class="Symbol"
+      >;</a
+      ><a name="321"
+      > true</a
+      ><a name="326" class="Symbol"
+      >;</a
+      ><a name="327"
+      > false</a
+      ><a name="333" class="Symbol"
+      >)</a
+      ><a name="334"
+      >
+</a
+      ><a name="335" class="Keyword"
+      >open</a
+      ><a name="339"
+      > </a
+      ><a name="340" class="Keyword"
+      >import</a
+      ><a name="346"
+      > </a
+      ><a name="347" href="Relation.Nullary.html#1" class="Module"
+      >Relation.Nullary</a
+      ><a name="363"
+      >
+</a
+      ><a name="364" class="Keyword"
+      >open</a
+      ><a name="368"
+      > </a
+      ><a name="369" class="Keyword"
+      >import</a
+      ><a name="375"
+      > </a
+      ><a name="376" href="Relation.Nullary.Decidable.html#1" class="Module"
+      >Relation.Nullary.Decidable</a
+      ><a name="402"
+      >
+</a
+      ><a name="403" class="Keyword"
+      >open</a
+      ><a name="407"
+      > </a
+      ><a name="408" class="Keyword"
+      >import</a
+      ><a name="414"
+      > </a
+      ><a name="415" href="Relation.Binary.html#1" class="Module"
+      >Relation.Binary</a
+      ><a name="430"
+      >
+</a
+      ><a name="431" class="Keyword"
+      >import</a
+      ><a name="437"
+      > </a
+      ><a name="438" href="Relation.Binary.On.html#1" class="Module"
+      >Relation.Binary.On</a
+      ><a name="456"
+      > </a
+      ><a name="457" class="Symbol"
+      >as</a
+      ><a name="459"
+      > </a
+      ><a name="460" class="Module"
+      >On</a
+      ><a name="462"
+      >
+</a
+      ><a name="463" class="Keyword"
+      >open</a
+      ><a name="467"
+      > </a
+      ><a name="468" class="Keyword"
+      >import</a
+      ><a name="474"
+      > </a
+      ><a name="475" href="Relation.Binary.PropositionalEquality.html#1" class="Module"
+      >Relation.Binary.PropositionalEquality</a
+      ><a name="512"
+      > </a
+      ><a name="513" class="Symbol"
+      >as</a
+      ><a name="515"
+      > </a
+      ><a name="516" class="Module"
+      >PropEq</a
+      ><a name="522"
+      > </a
+      ><a name="523" class="Keyword"
+      >using</a
+      ><a name="528"
+      > </a
+      ><a name="529" class="Symbol"
+      >(</a
+      ><a name="530"
+      >_&#8801;_</a
+      ><a name="533" class="Symbol"
+      >)</a
+      ><a name="534"
+      >
+</a
+      ><a name="535" class="Keyword"
+      >open</a
+      ><a name="539"
+      > </a
+      ><a name="540" class="Keyword"
+      >import</a
+      ><a name="546"
+      > </a
+      ><a name="547" href="Relation.Binary.PropositionalEquality.TrustMe.html#1" class="Module"
+      >Relation.Binary.PropositionalEquality.TrustMe</a
+      ><a name="592"
+      >
+
+</a
+      ><a name="594" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="666"
+      >
+</a
+      ><a name="667" class="Comment"
+      >-- The type</a
+      ><a name="678"
+      >
+
+</a
+      ><a name="680" class="Keyword"
+      >postulate</a
+      ><a name="689"
+      >
+  </a
+      ><a name="692" href="Data.Char.html#692" class="Postulate"
+      >Char</a
+      ><a name="696"
+      > </a
+      ><a name="697" class="Symbol"
+      >:</a
+      ><a name="698"
+      > </a
+      ><a name="699" class="PrimitiveType"
+      >Set</a
+      ><a name="702"
+      >
+
+</a
+      ><a name="704" class="Symbol"
+      >{-#</a
+      ><a name="707"
+      > </a
+      ><a name="708" class="Keyword"
+      >BUILTIN</a
+      ><a name="715"
+      > CHAR </a
+      ><a name="721" href="Data.Char.html#692" class="Postulate"
+      >Char</a
+      ><a name="725"
+      > </a
+      ><a name="726" class="Symbol"
+      >#-}</a
+      ><a name="729"
+      >
+</a
+      ><a name="730" class="Symbol"
+      >{-#</a
+      ><a name="733"
+      > </a
+      ><a name="734" class="Keyword"
+      >COMPILED_TYPE</a
+      ><a name="747"
+      > </a
+      ><a name="748" href="Data.Char.html#692" class="Postulate"
+      >Char</a
+      ><a name="752"
+      > Char </a
+      ><a name="758" class="Symbol"
+      >#-}</a
+      ><a name="761"
+      >
+
+</a
+      ><a name="763" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="835"
+      >
+</a
+      ><a name="836" class="Comment"
+      >-- Operations</a
+      ><a name="849"
+      >
+
+</a
+      ><a name="851" class="Keyword"
+      >private</a
+      ><a name="858"
+      >
+ </a
+      ><a name="860" class="Keyword"
+      >primitive</a
+      ><a name="869"
+      >
+  </a
+      ><a name="872" href="Data.Char.html#872" class="Primitive"
+      >primCharToNat</a
+      ><a name="885"
+      >    </a
+      ><a name="889" class="Symbol"
+      >:</a
+      ><a name="890"
+      > </a
+      ><a name="891" href="Data.Char.html#692" class="Postulate"
+      >Char</a
+      ><a name="895"
+      > </a
+      ><a name="896" class="Symbol"
+      >&#8594;</a
+      ><a name="897"
+      > </a
+      ><a name="898" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="899"
+      >
+  </a
+      ><a name="902" href="Data.Char.html#902" class="Primitive"
+      >primCharEquality</a
+      ><a name="918"
+      > </a
+      ><a name="919" class="Symbol"
+      >:</a
+      ><a name="920"
+      > </a
+      ><a name="921" href="Data.Char.html#692" class="Postulate"
+      >Char</a
+      ><a name="925"
+      > </a
+      ><a name="926" class="Symbol"
+      >&#8594;</a
+      ><a name="927"
+      > </a
+      ><a name="928" href="Data.Char.html#692" class="Postulate"
+      >Char</a
+      ><a name="932"
+      > </a
+      ><a name="933" class="Symbol"
+      >&#8594;</a
+      ><a name="934"
+      > </a
+      ><a name="935" href="Data.Bool.html#603" class="Datatype"
+      >Bool</a
+      ><a name="939"
+      >
+
+</a
+      ><a name="941" href="Data.Char.html#941" class="Function"
+      >toNat</a
+      ><a name="946"
+      > </a
+      ><a name="947" class="Symbol"
+      >:</a
+      ><a name="948"
+      > </a
+      ><a name="949" href="Data.Char.html#692" class="Postulate"
+      >Char</a
+      ><a name="953"
+      > </a
+      ><a name="954" class="Symbol"
+      >&#8594;</a
+      ><a name="955"
+      > </a
+      ><a name="956" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="957"
+      >
+</a
+      ><a name="958" href="Data.Char.html#941" class="Function"
+      >toNat</a
+      ><a name="963"
+      > </a
+      ><a name="964" class="Symbol"
+      >=</a
+      ><a name="965"
+      > </a
+      ><a name="966" href="Data.Char.html#872" class="Primitive"
+      >primCharToNat</a
+      ><a name="979"
+      >
+
+</a
+      ><a name="981" class="Comment"
+      >-- Informative equality test.</a
+      ><a name="1010"
+      >
+
+</a
+      ><a name="1012" href="Data.Char.html#1012" class="Function Operator"
+      >_&#8799;_</a
+      ><a name="1015"
+      > </a
+      ><a name="1016" class="Symbol"
+      >:</a
+      ><a name="1017"
+      > </a
+      ><a name="1018" href="Relation.Binary.Core.html#3511" class="Function"
+      >Decidable</a
+      ><a name="1027"
+      > </a
+      ><a name="1028" class="Symbol"
+      >{</a
+      ><a name="1029"
+      >A </a
+      ><a name="1031" class="Symbol"
+      >=</a
+      ><a name="1032"
+      > </a
+      ><a name="1033" href="Data.Char.html#692" class="Postulate"
+      >Char</a
+      ><a name="1037" class="Symbol"
+      >}</a
+      ><a name="1038"
+      > </a
+      ><a name="1039" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >_&#8801;_</a
+      ><a name="1042"
+      >
+</a
+      ><a name="1043" href="Data.Char.html#1043" class="Bound"
+      >s&#8321;</a
+      ><a name="1045"
+      > </a
+      ><a name="1046" href="Data.Char.html#1012" class="Function Operator"
+      >&#8799;</a
+      ><a name="1047"
+      > </a
+      ><a name="1048" href="Data.Char.html#1048" class="Bound"
+      >s&#8322;</a
+      ><a name="1050"
+      > </a
+      ><a name="1051" class="Keyword"
+      >with</a
+      ><a name="1055"
+      > </a
+      ><a name="1056" href="Data.Char.html#902" class="Primitive"
+      >primCharEquality</a
+      ><a name="1072"
+      > </a
+      ><a name="1073" href="Data.Char.html#1043" class="Bound"
+      >s&#8321;</a
+      ><a name="1075"
+      > </a
+      ><a name="1076" href="Data.Char.html#1048" class="Bound"
+      >s&#8322;</a
+      ><a name="1078"
+      >
+</a
+      ><a name="1079" class="Symbol"
+      >...</a
+      ><a name="1082"
+      > </a
+      ><a name="1083" class="Symbol"
+      >|</a
+      ><a name="1084"
+      > </a
+      ><a name="1085" href="Data.Bool.html#622" class="InductiveConstructor"
+      >true</a
+      ><a name="1089"
+      >  </a
+      ><a name="1091" class="Symbol"
+      >=</a
+      ><a name="1092"
+      > </a
+      ><a name="1093" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="1096"
+      > </a
+      ><a name="1097" href="Relation.Binary.PropositionalEquality.TrustMe.html#556" class="Function"
+      >trustMe</a
+      ><a name="1104"
+      >
+</a
+      ><a name="1105" class="Symbol"
+      >...</a
+      ><a name="1108"
+      > </a
+      ><a name="1109" class="Symbol"
+      >|</a
+      ><a name="1110"
+      > </a
+      ><a name="1111" href="Data.Bool.html#637" class="InductiveConstructor"
+      >false</a
+      ><a name="1116"
+      > </a
+      ><a name="1117" class="Symbol"
+      >=</a
+      ><a name="1118"
+      > </a
+      ><a name="1119" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="1121"
+      > </a
+      ><a name="1122" href="Data.Char.html#1149" class="Postulate"
+      >whatever</a
+      ><a name="1130"
+      >
+  </a
+      ><a name="1133" class="Keyword"
+      >where</a
+      ><a name="1138"
+      > </a
+      ><a name="1139" class="Keyword"
+      >postulate</a
+      ><a name="1148"
+      > </a
+      ><a name="1149" href="Data.Char.html#1149" class="Postulate"
+      >whatever</a
+      ><a name="1157"
+      > </a
+      ><a name="1158" class="Symbol"
+      >:</a
+      ><a name="1159"
+      > </a
+      ><a name="1160" class="Symbol"
+      >_</a
+      ><a name="1161"
+      >
+
+</a
+      ><a name="1163" class="Comment"
+      >-- Boolean equality test.</a
+      ><a name="1188"
+      >
+</a
+      ><a name="1189" class="Comment"
+      >--</a
+      ><a name="1191"
+      >
+</a
+      ><a name="1192" class="Comment"
+      >-- Why is the definition _==_&#160;=&#160;primCharEquality not used? One reason</a
+      ><a name="1261"
+      >
+</a
+      ><a name="1262" class="Comment"
+      >-- is that the present definition can sometimes improve type</a
+      ><a name="1322"
+      >
+</a
+      ><a name="1323" class="Comment"
+      >-- inference, at least with the version of Agda that is current at the</a
+      ><a name="1393"
+      >
+</a
+      ><a name="1394" class="Comment"
+      >-- time of writing: see unit-test below.</a
+      ><a name="1434"
+      >
+
+</a
+      ><a name="1436" class="Keyword"
+      >infix</a
+      ><a name="1441"
+      > </a
+      ><a name="1442" class="Number"
+      >4</a
+      ><a name="1443"
+      > _==_
+
+</a
+      ><a name="1450" href="Data.Char.html#1450" class="Function Operator"
+      >_==_</a
+      ><a name="1454"
+      > </a
+      ><a name="1455" class="Symbol"
+      >:</a
+      ><a name="1456"
+      > </a
+      ><a name="1457" href="Data.Char.html#692" class="Postulate"
+      >Char</a
+      ><a name="1461"
+      > </a
+      ><a name="1462" class="Symbol"
+      >&#8594;</a
+      ><a name="1463"
+      > </a
+      ><a name="1464" href="Data.Char.html#692" class="Postulate"
+      >Char</a
+      ><a name="1468"
+      > </a
+      ><a name="1469" class="Symbol"
+      >&#8594;</a
+      ><a name="1470"
+      > </a
+      ><a name="1471" href="Data.Bool.html#603" class="Datatype"
+      >Bool</a
+      ><a name="1475"
+      >
+</a
+      ><a name="1476" href="Data.Char.html#1476" class="Bound"
+      >c&#8321;</a
+      ><a name="1478"
+      > </a
+      ><a name="1479" href="Data.Char.html#1450" class="Function Operator"
+      >==</a
+      ><a name="1481"
+      > </a
+      ><a name="1482" href="Data.Char.html#1482" class="Bound"
+      >c&#8322;</a
+      ><a name="1484"
+      > </a
+      ><a name="1485" class="Symbol"
+      >=</a
+      ><a name="1486"
+      > </a
+      ><a name="1487" href="Relation.Nullary.Decidable.html#783" class="Function Operator"
+      >&#8970;</a
+      ><a name="1488"
+      > </a
+      ><a name="1489" href="Data.Char.html#1476" class="Bound"
+      >c&#8321;</a
+      ><a name="1491"
+      > </a
+      ><a name="1492" href="Data.Char.html#1012" class="Function Operator"
+      >&#8799;</a
+      ><a name="1493"
+      > </a
+      ><a name="1494" href="Data.Char.html#1482" class="Bound"
+      >c&#8322;</a
+      ><a name="1496"
+      > </a
+      ><a name="1497" href="Relation.Nullary.Decidable.html#783" class="Function Operator"
+      >&#8971;</a
+      ><a name="1498"
+      >
+
+</a
+      ><a name="1500" class="Keyword"
+      >private</a
+      ><a name="1507"
+      >
+
+  </a
+      ><a name="1511" class="Comment"
+      >-- The following unit test does not type-check (at the time of</a
+      ><a name="1573"
+      >
+  </a
+      ><a name="1576" class="Comment"
+      >-- writing) if _==_ is replaced by primCharEquality.</a
+      ><a name="1628"
+      >
+
+  </a
+      ><a name="1632" class="Keyword"
+      >data</a
+      ><a name="1636"
+      > </a
+      ><a name="1637" href="Data.Char.html#1637" class="Datatype"
+      >P</a
+      ><a name="1638"
+      > </a
+      ><a name="1639" class="Symbol"
+      >:</a
+      ><a name="1640"
+      > </a
+      ><a name="1641" class="Symbol"
+      >(</a
+      ><a name="1642" href="Data.Char.html#692" class="Postulate"
+      >Char</a
+      ><a name="1646"
+      > </a
+      ><a name="1647" class="Symbol"
+      >&#8594;</a
+      ><a name="1648"
+      > </a
+      ><a name="1649" href="Data.Bool.html#603" class="Datatype"
+      >Bool</a
+      ><a name="1653" class="Symbol"
+      >)</a
+      ><a name="1654"
+      > </a
+      ><a name="1655" class="Symbol"
+      >&#8594;</a
+      ><a name="1656"
+      > </a
+      ><a name="1657" class="PrimitiveType"
+      >Set</a
+      ><a name="1660"
+      > </a
+      ><a name="1661" class="Keyword"
+      >where</a
+      ><a name="1666"
+      >
+    </a
+      ><a name="1671" href="Data.Char.html#1671" class="InductiveConstructor"
+      >p</a
+      ><a name="1672"
+      > </a
+      ><a name="1673" class="Symbol"
+      >:</a
+      ><a name="1674"
+      > </a
+      ><a name="1675" class="Symbol"
+      >(</a
+      ><a name="1676" href="Data.Char.html#1676" class="Bound"
+      >c</a
+      ><a name="1677"
+      > </a
+      ><a name="1678" class="Symbol"
+      >:</a
+      ><a name="1679"
+      > </a
+      ><a name="1680" href="Data.Char.html#692" class="Postulate"
+      >Char</a
+      ><a name="1684" class="Symbol"
+      >)</a
+      ><a name="1685"
+      > </a
+      ><a name="1686" class="Symbol"
+      >&#8594;</a
+      ><a name="1687"
+      > </a
+      ><a name="1688" href="Data.Char.html#1637" class="Datatype"
+      >P</a
+      ><a name="1689"
+      > </a
+      ><a name="1690" class="Symbol"
+      >(</a
+      ><a name="1691" href="Data.Char.html#1450" class="Function Operator"
+      >_==_</a
+      ><a name="1695"
+      > </a
+      ><a name="1696" href="Data.Char.html#1676" class="Bound"
+      >c</a
+      ><a name="1697" class="Symbol"
+      >)</a
+      ><a name="1698"
+      >
+
+  </a
+      ><a name="1702" href="Data.Char.html#1702" class="Function"
+      >unit-test</a
+      ><a name="1711"
+      > </a
+      ><a name="1712" class="Symbol"
+      >:</a
+      ><a name="1713"
+      > </a
+      ><a name="1714" href="Data.Char.html#1637" class="Datatype"
+      >P</a
+      ><a name="1715"
+      > </a
+      ><a name="1716" class="Symbol"
+      >(</a
+      ><a name="1717" href="Data.Char.html#1450" class="Function Operator"
+      >_==_</a
+      ><a name="1721"
+      > </a
+      ><a name="1722" class="String"
+      >'x'</a
+      ><a name="1725" class="Symbol"
+      >)</a
+      ><a name="1726"
+      >
+  </a
+      ><a name="1729" href="Data.Char.html#1702" class="Function"
+      >unit-test</a
+      ><a name="1738"
+      > </a
+      ><a name="1739" class="Symbol"
+      >=</a
+      ><a name="1740"
+      > </a
+      ><a name="1741" href="Data.Char.html#1671" class="InductiveConstructor"
+      >p</a
+      ><a name="1742"
+      > </a
+      ><a name="1743" class="Symbol"
+      >_</a
+      ><a name="1744"
+      >
+
+</a
+      ><a name="1746" href="Data.Char.html#1746" class="Function"
+      >setoid</a
+      ><a name="1752"
+      > </a
+      ><a name="1753" class="Symbol"
+      >:</a
+      ><a name="1754"
+      > </a
+      ><a name="1755" href="Relation.Binary.html#1852" class="Record"
+      >Setoid</a
+      ><a name="1761"
+      > </a
+      ><a name="1762" class="Symbol"
+      >_</a
+      ><a name="1763"
+      > </a
+      ><a name="1764" class="Symbol"
+      >_</a
+      ><a name="1765"
+      >
+</a
+      ><a name="1766" href="Data.Char.html#1746" class="Function"
+      >setoid</a
+      ><a name="1772"
+      > </a
+      ><a name="1773" class="Symbol"
+      >=</a
+      ><a name="1774"
+      > </a
+      ><a name="1775" href="Relation.Binary.PropositionalEquality.html#1390" class="Function"
+      >PropEq.setoid</a
+      ><a name="1788"
+      > </a
+      ><a name="1789" href="Data.Char.html#692" class="Postulate"
+      >Char</a
+      ><a name="1793"
+      >
+
+</a
+      ><a name="1795" href="Data.Char.html#1795" class="Function"
+      >decSetoid</a
+      ><a name="1804"
+      > </a
+      ><a name="1805" class="Symbol"
+      >:</a
+      ><a name="1806"
+      > </a
+      ><a name="1807" href="Relation.Binary.html#2921" class="Record"
+      >DecSetoid</a
+      ><a name="1816"
+      > </a
+      ><a name="1817" class="Symbol"
+      >_</a
+      ><a name="1818"
+      > </a
+      ><a name="1819" class="Symbol"
+      >_</a
+      ><a name="1820"
+      >
+</a
+      ><a name="1821" href="Data.Char.html#1795" class="Function"
+      >decSetoid</a
+      ><a name="1830"
+      > </a
+      ><a name="1831" class="Symbol"
+      >=</a
+      ><a name="1832"
+      > </a
+      ><a name="1833" href="Relation.Binary.PropositionalEquality.html#1529" class="Function"
+      >PropEq.decSetoid</a
+      ><a name="1849"
+      > </a
+      ><a name="1850" href="Data.Char.html#1012" class="Function Operator"
+      >_&#8799;_</a
+      ><a name="1853"
+      >
+
+</a
+      ><a name="1855" class="Comment"
+      >-- An ordering induced by the toNat function.</a
+      ><a name="1900"
+      >
+
+</a
+      ><a name="1902" href="Data.Char.html#1902" class="Function"
+      >strictTotalOrder</a
+      ><a name="1918"
+      > </a
+      ><a name="1919" class="Symbol"
+      >:</a
+      ><a name="1920"
+      > </a
+      ><a name="1921" href="Relation.Binary.html#9322" class="Record"
+      >StrictTotalOrder</a
+      ><a name="1937"
+      > </a
+      ><a name="1938" class="Symbol"
+      >_</a
+      ><a name="1939"
+      > </a
+      ><a name="1940" class="Symbol"
+      >_</a
+      ><a name="1941"
+      > </a
+      ><a name="1942" class="Symbol"
+      >_</a
+      ><a name="1943"
+      >
+</a
+      ><a name="1944" href="Data.Char.html#1902" class="Function"
+      >strictTotalOrder</a
+      ><a name="1960"
+      > </a
+      ><a name="1961" class="Symbol"
+      >=</a
+      ><a name="1962"
+      > </a
+      ><a name="1963" href="Relation.Binary.On.html#7064" class="Function"
+      >On.strictTotalOrder</a
+      ><a name="1982"
+      > </a
+      ><a name="1983" href="Data.Nat.Properties.html#12012" class="Function"
+      >NatProp.strictTotalOrder</a
+      ><a name="2007"
+      > </a
+      ><a name="2008" href="Data.Char.html#941" class="Function"
+      >toNat</a
+      ><a name="2013"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

@@ -1,0 +1,7098 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Game.ReceiptFreeness</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Comment"
+      >-- {-# OPTIONS --without-K #-}</a
+      ><a name="31"
+      >
+
+
+</a
+      ><a name="34" class="Keyword"
+      >open</a
+      ><a name="38"
+      > </a
+      ><a name="39" class="Keyword"
+      >import</a
+      ><a name="45"
+      > </a
+      ><a name="46" href="Function.html#1" class="Module"
+      >Function</a
+      ><a name="54"
+      >
+</a
+      ><a name="55" class="Keyword"
+      >open</a
+      ><a name="59"
+      > </a
+      ><a name="60" class="Keyword"
+      >import</a
+      ><a name="66"
+      > </a
+      ><a name="67" href="Type.html#1" class="Module"
+      >Type</a
+      ><a name="71"
+      >
+</a
+      ><a name="72" class="Keyword"
+      >open</a
+      ><a name="76"
+      > </a
+      ><a name="77" class="Keyword"
+      >import</a
+      ><a name="83"
+      > </a
+      ><a name="84" href="Data.Maybe.NP.html#1" class="Module"
+      >Data.Maybe.NP</a
+      ><a name="97"
+      >
+</a
+      ><a name="98" class="Keyword"
+      >open</a
+      ><a name="102"
+      > </a
+      ><a name="103" class="Keyword"
+      >import</a
+      ><a name="109"
+      > </a
+      ><a name="110" href="Data.Fin.NP.html#1" class="Module"
+      >Data.Fin.NP</a
+      ><a name="121"
+      > </a
+      ><a name="122" class="Symbol"
+      >as</a
+      ><a name="124"
+      > </a
+      ><a name="125" class="Module"
+      >Fin</a
+      ><a name="128"
+      > </a
+      ><a name="129" class="Keyword"
+      >hiding</a
+      ><a name="135"
+      > </a
+      ><a name="136" class="Symbol"
+      >(</a
+      ><a name="137"
+      >_+_</a
+      ><a name="140" class="Symbol"
+      >;</a
+      ><a name="141"
+      > _==_</a
+      ><a name="146" class="Symbol"
+      >)</a
+      ><a name="147"
+      >
+</a
+      ><a name="148" class="Keyword"
+      >open</a
+      ><a name="152"
+      > </a
+      ><a name="153" class="Keyword"
+      >import</a
+      ><a name="159"
+      > </a
+      ><a name="160" href="Data.Product.html#1" class="Module"
+      >Data.Product</a
+      ><a name="172"
+      > </a
+      ><a name="173" class="Keyword"
+      >renaming</a
+      ><a name="181"
+      > </a
+      ><a name="182" class="Symbol"
+      >(</a
+      ><a name="183"
+      >zip </a
+      ><a name="187" class="Symbol"
+      >to</a
+      ><a name="189"
+      > zip-&#215;</a
+      ><a name="195" class="Symbol"
+      >)</a
+      ><a name="196"
+      >
+</a
+      ><a name="197" class="Keyword"
+      >open</a
+      ><a name="201"
+      > </a
+      ><a name="202" class="Keyword"
+      >import</a
+      ><a name="208"
+      > </a
+      ><a name="209" href="Data.One.html#1" class="Module"
+      >Data.One</a
+      ><a name="217"
+      >
+</a
+      ><a name="218" class="Keyword"
+      >open</a
+      ><a name="222"
+      > </a
+      ><a name="223" class="Keyword"
+      >import</a
+      ><a name="229"
+      > </a
+      ><a name="230" href="Data.Two.html#1" class="Module"
+      >Data.Two</a
+      ><a name="238"
+      >
+</a
+      ><a name="239" class="Keyword"
+      >open</a
+      ><a name="243"
+      > </a
+      ><a name="244" class="Keyword"
+      >import</a
+      ><a name="250"
+      > </a
+      ><a name="251" href="Data.Vec.html#1" class="Module"
+      >Data.Vec</a
+      ><a name="259"
+      >
+</a
+      ><a name="260" class="Keyword"
+      >open</a
+      ><a name="264"
+      > </a
+      ><a name="265" class="Keyword"
+      >import</a
+      ><a name="271"
+      > </a
+      ><a name="272" href="Data.List.html#1" class="Module"
+      >Data.List</a
+      ><a name="281"
+      > </a
+      ><a name="282" class="Symbol"
+      >as</a
+      ><a name="284"
+      > </a
+      ><a name="285" class="Module"
+      >L</a
+      ><a name="286"
+      >
+
+</a
+      ><a name="288" class="Keyword"
+      >open</a
+      ><a name="292"
+      > </a
+      ><a name="293" class="Keyword"
+      >import</a
+      ><a name="299"
+      > </a
+      ><a name="300" href="Data.Nat.NP.html#1" class="Module"
+      >Data.Nat.NP</a
+      ><a name="311"
+      > </a
+      ><a name="312" class="Keyword"
+      >renaming</a
+      ><a name="320"
+      > </a
+      ><a name="321" class="Symbol"
+      >(</a
+      ><a name="322"
+      >_==_ </a
+      ><a name="327" class="Symbol"
+      >to</a
+      ><a name="329"
+      > _==&#8469;_</a
+      ><a name="335" class="Symbol"
+      >)</a
+      ><a name="336"
+      >
+
+</a
+      ><a name="338" class="Comment"
+      >{-
+open import Explore.Core
+open import Explore.Explorable
+open import Explore.Product
+open Operators
+-}</a
+      ><a name="442"
+      >
+</a
+      ><a name="443" class="Keyword"
+      >open</a
+      ><a name="447"
+      > </a
+      ><a name="448" class="Keyword"
+      >import</a
+      ><a name="454"
+      > </a
+      ><a name="455" href="Relation.Binary.PropositionalEquality.html#1" class="Module"
+      >Relation.Binary.PropositionalEquality</a
+      ><a name="492"
+      >
+</a
+      ><a name="493" class="Keyword"
+      >open</a
+      ><a name="497"
+      > </a
+      ><a name="498" class="Keyword"
+      >import</a
+      ><a name="504"
+      > </a
+      ><a name="505" href="Control.Strategy.html#1" class="Module"
+      >Control.Strategy</a
+      ><a name="521"
+      >
+
+
+</a
+      ><a name="524" class="Keyword"
+      >module</a
+      ><a name="530"
+      > </a
+      ><a name="531" href="Game.ReceiptFreeness.html#1" class="Module"
+      >Game.ReceiptFreeness</a
+      ><a name="551"
+      >
+  </a
+      ><a name="554" class="Symbol"
+      >(</a
+      ><a name="555" href="Game.ReceiptFreeness.html#555" class="Bound"
+      >PubKey</a
+      ><a name="561"
+      >    </a
+      ><a name="565" class="Symbol"
+      >:</a
+      ><a name="566"
+      > </a
+      ><a name="567" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="568" class="Symbol"
+      >)</a
+      ><a name="569"
+      >
+  </a
+      ><a name="572" class="Symbol"
+      >(</a
+      ><a name="573" href="Game.ReceiptFreeness.html#573" class="Bound"
+      >SecKey</a
+      ><a name="579"
+      >    </a
+      ><a name="583" class="Symbol"
+      >:</a
+      ><a name="584"
+      > </a
+      ><a name="585" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="586" class="Symbol"
+      >)</a
+      ><a name="587"
+      >
+  </a
+      ><a name="590" class="Comment"
+      >-- Message = &#120794;</a
+      ><a name="604"
+      >
+  </a
+      ><a name="607" class="Symbol"
+      >(</a
+      ><a name="608" href="Game.ReceiptFreeness.html#608" class="Bound"
+      >CipherText</a
+      ><a name="618"
+      > </a
+      ><a name="619" class="Symbol"
+      >:</a
+      ><a name="620"
+      > </a
+      ><a name="621" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="622" class="Symbol"
+      >)</a
+      ><a name="623"
+      >
+
+  </a
+      ><a name="627" class="Symbol"
+      >(</a
+      ><a name="628" href="Game.ReceiptFreeness.html#628" class="Bound"
+      >SerialNumber</a
+      ><a name="640"
+      > </a
+      ><a name="641" class="Symbol"
+      >:</a
+      ><a name="642"
+      > </a
+      ><a name="643" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="644" class="Symbol"
+      >)</a
+      ><a name="645"
+      >
+
+  </a
+      ><a name="649" class="Comment"
+      >-- randomness supply for, encryption, key-generation, adversary, adversary state</a
+      ><a name="729"
+      >
+  </a
+      ><a name="732" class="Symbol"
+      >(</a
+      ><a name="733" href="Game.ReceiptFreeness.html#733" class="Bound"
+      >R&#8337;</a
+      ><a name="735"
+      > </a
+      ><a name="736" href="Game.ReceiptFreeness.html#736" class="Bound"
+      >R&#8342;</a
+      ><a name="738"
+      > </a
+      ><a name="739" href="Game.ReceiptFreeness.html#739" class="Bound"
+      >R&#8336;</a
+      ><a name="741"
+      > </a
+      ><a name="742" class="Symbol"
+      >:</a
+      ><a name="743"
+      > </a
+      ><a name="744" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="745" class="Symbol"
+      >)</a
+      ><a name="746"
+      >
+  </a
+      ><a name="749" class="Symbol"
+      >(</a
+      ><a name="750" href="Game.ReceiptFreeness.html#750" class="Bound"
+      >#q</a
+      ><a name="752"
+      > </a
+      ><a name="753" class="Symbol"
+      >:</a
+      ><a name="754"
+      > </a
+      ><a name="755" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="756" class="Symbol"
+      >)</a
+      ><a name="757"
+      > </a
+      ><a name="758" class="Symbol"
+      >(</a
+      ><a name="759" href="Game.ReceiptFreeness.html#759" class="Bound"
+      >max#q</a
+      ><a name="764"
+      > </a
+      ><a name="765" class="Symbol"
+      >:</a
+      ><a name="766"
+      > </a
+      ><a name="767" href="Data.Fin.html#775" class="Datatype"
+      >Fin</a
+      ><a name="770"
+      > </a
+      ><a name="771" href="Game.ReceiptFreeness.html#750" class="Bound"
+      >#q</a
+      ><a name="773" class="Symbol"
+      >)</a
+      ><a name="774"
+      >
+  </a
+      ><a name="777" class="Symbol"
+      >(</a
+      ><a name="778" href="Game.ReceiptFreeness.html#778" class="Bound"
+      >KeyGen</a
+      ><a name="784"
+      > </a
+      ><a name="785" class="Symbol"
+      >:</a
+      ><a name="786"
+      > </a
+      ><a name="787" href="Game.ReceiptFreeness.html#736" class="Bound"
+      >R&#8342;</a
+      ><a name="789"
+      > </a
+      ><a name="790" class="Symbol"
+      >&#8594;</a
+      ><a name="791"
+      > </a
+      ><a name="792" href="Game.ReceiptFreeness.html#555" class="Bound"
+      >PubKey</a
+      ><a name="798"
+      > </a
+      ><a name="799" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="800"
+      > </a
+      ><a name="801" href="Game.ReceiptFreeness.html#573" class="Bound"
+      >SecKey</a
+      ><a name="807" class="Symbol"
+      >)</a
+      ><a name="808"
+      >
+  </a
+      ><a name="811" class="Symbol"
+      >(</a
+      ><a name="812" href="Game.ReceiptFreeness.html#812" class="Bound"
+      >Enc</a
+      ><a name="815"
+      >    </a
+      ><a name="819" class="Symbol"
+      >:</a
+      ><a name="820"
+      > </a
+      ><a name="821" class="Keyword"
+      >let</a
+      ><a name="824"
+      > </a
+      ><a name="825" href="Game.ReceiptFreeness.html#825" class="Bound"
+      >Message</a
+      ><a name="832"
+      > </a
+      ><a name="833" class="Symbol"
+      >=</a
+      ><a name="834"
+      > </a
+      ><a name="835" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="836"
+      > </a
+      ><a name="837" class="Keyword"
+      >in</a
+      ><a name="839"
+      >
+            </a
+      ><a name="852" href="Game.ReceiptFreeness.html#555" class="Bound"
+      >PubKey</a
+      ><a name="858"
+      > </a
+      ><a name="859" class="Symbol"
+      >&#8594;</a
+      ><a name="860"
+      > </a
+      ><a name="861" href="Game.ReceiptFreeness.html#825" class="Bound"
+      >Message</a
+      ><a name="868"
+      > </a
+      ><a name="869" class="Symbol"
+      >&#8594;</a
+      ><a name="870"
+      > </a
+      ><a name="871" href="Game.ReceiptFreeness.html#733" class="Bound"
+      >R&#8337;</a
+      ><a name="873"
+      > </a
+      ><a name="874" class="Symbol"
+      >&#8594;</a
+      ><a name="875"
+      > </a
+      ><a name="876" href="Game.ReceiptFreeness.html#608" class="Bound"
+      >CipherText</a
+      ><a name="886" class="Symbol"
+      >)</a
+      ><a name="887"
+      >
+  </a
+      ><a name="890" class="Symbol"
+      >(</a
+      ><a name="891" href="Game.ReceiptFreeness.html#891" class="Bound"
+      >Dec</a
+      ><a name="894"
+      >    </a
+      ><a name="898" class="Symbol"
+      >:</a
+      ><a name="899"
+      > </a
+      ><a name="900" class="Keyword"
+      >let</a
+      ><a name="903"
+      > </a
+      ><a name="904" href="Game.ReceiptFreeness.html#904" class="Bound"
+      >Message</a
+      ><a name="911"
+      > </a
+      ><a name="912" class="Symbol"
+      >=</a
+      ><a name="913"
+      > </a
+      ><a name="914" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="915"
+      > </a
+      ><a name="916" class="Keyword"
+      >in</a
+      ><a name="918"
+      >
+            </a
+      ><a name="931" href="Game.ReceiptFreeness.html#573" class="Bound"
+      >SecKey</a
+      ><a name="937"
+      > </a
+      ><a name="938" class="Symbol"
+      >&#8594;</a
+      ><a name="939"
+      > </a
+      ><a name="940" href="Game.ReceiptFreeness.html#608" class="Bound"
+      >CipherText</a
+      ><a name="950"
+      > </a
+      ><a name="951" class="Symbol"
+      >&#8594;</a
+      ><a name="952"
+      > </a
+      ><a name="953" href="Game.ReceiptFreeness.html#904" class="Bound"
+      >Message</a
+      ><a name="960" class="Symbol"
+      >)</a
+      ><a name="961"
+      >
+  </a
+      ><a name="964" class="Symbol"
+      >(</a
+      ><a name="965" href="Game.ReceiptFreeness.html#965" class="Bound"
+      >Check</a
+      ><a name="970"
+      > </a
+      ><a name="971" class="Symbol"
+      >:</a
+      ><a name="972"
+      > </a
+      ><a name="973" href="Game.ReceiptFreeness.html#608" class="Bound"
+      >CipherText</a
+      ><a name="983"
+      > </a
+      ><a name="984" class="Symbol"
+      >&#8594;</a
+      ><a name="985"
+      > </a
+      ><a name="986" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="987" class="Symbol"
+      >)</a
+      ><a name="988"
+      >
+  </a
+      ><a name="991" class="Symbol"
+      >(</a
+      ><a name="992" href="Game.ReceiptFreeness.html#992" class="Bound"
+      >CheckEnc</a
+      ><a name="1000"
+      > </a
+      ><a name="1001" class="Symbol"
+      >:</a
+      ><a name="1002"
+      > </a
+      ><a name="1003" class="Symbol"
+      >&#8704;</a
+      ><a name="1004"
+      > </a
+      ><a name="1005" href="Game.ReceiptFreeness.html#1005" class="Bound"
+      >pk</a
+      ><a name="1007"
+      > </a
+      ><a name="1008" href="Game.ReceiptFreeness.html#1008" class="Bound"
+      >m</a
+      ><a name="1009"
+      > </a
+      ><a name="1010" href="Game.ReceiptFreeness.html#1010" class="Bound"
+      >r&#8337;</a
+      ><a name="1012"
+      > </a
+      ><a name="1013" class="Symbol"
+      >&#8594;</a
+      ><a name="1014"
+      > </a
+      ><a name="1015" href="Game.ReceiptFreeness.html#965" class="Bound"
+      >Check</a
+      ><a name="1020"
+      > </a
+      ><a name="1021" class="Symbol"
+      >(</a
+      ><a name="1022" href="Game.ReceiptFreeness.html#812" class="Bound"
+      >Enc</a
+      ><a name="1025"
+      > </a
+      ><a name="1026" href="Game.ReceiptFreeness.html#1005" class="Bound"
+      >pk</a
+      ><a name="1028"
+      > </a
+      ><a name="1029" href="Game.ReceiptFreeness.html#1008" class="Bound"
+      >m</a
+      ><a name="1030"
+      > </a
+      ><a name="1031" href="Game.ReceiptFreeness.html#1010" class="Bound"
+      >r&#8337;</a
+      ><a name="1033" class="Symbol"
+      >)</a
+      ><a name="1034"
+      > </a
+      ><a name="1035" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="1036"
+      > </a
+      ><a name="1037" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="1039" class="Symbol"
+      >)</a
+      ><a name="1040"
+      >
+
+</a
+      ><a name="1042" class="Keyword"
+      >where</a
+      ><a name="1047"
+      >
+
+</a
+      ><a name="1049" href="Game.ReceiptFreeness.html#1049" class="Function"
+      >unchecked</a
+      ><a name="1058"
+      > </a
+      ><a name="1059" class="Symbol"
+      >=</a
+      ><a name="1060"
+      > </a
+      ><a name="1061" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="1063"
+      >
+</a
+      ><a name="1064" href="Game.ReceiptFreeness.html#1064" class="Function"
+      >checked</a
+      ><a name="1071"
+      > </a
+      ><a name="1072" class="Symbol"
+      >=</a
+      ><a name="1073"
+      > </a
+      ><a name="1074" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="1076"
+      >
+
+</a
+      ><a name="1078" href="Game.ReceiptFreeness.html#1078" class="Function"
+      >Candidate</a
+      ><a name="1087"
+      > </a
+      ><a name="1088" class="Symbol"
+      >:</a
+      ><a name="1089"
+      > </a
+      ><a name="1090" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="1091"
+      >
+</a
+      ><a name="1092" href="Game.ReceiptFreeness.html#1078" class="Function"
+      >Candidate</a
+      ><a name="1101"
+      > </a
+      ><a name="1102" class="Symbol"
+      >=</a
+      ><a name="1103"
+      > </a
+      ><a name="1104" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="1105"
+      > </a
+      ><a name="1106" class="Comment"
+      >-- as in the paper: &quot;for simplicity&quot;</a
+      ><a name="1142"
+      >
+
+</a
+      ><a name="1144" href="Game.ReceiptFreeness.html#1144" class="Function"
+      >alice</a
+      ><a name="1149"
+      > </a
+      ><a name="1150" href="Game.ReceiptFreeness.html#1150" class="Function"
+      >bob</a
+      ><a name="1153"
+      > </a
+      ><a name="1154" class="Symbol"
+      >:</a
+      ><a name="1155"
+      > </a
+      ><a name="1156" href="Game.ReceiptFreeness.html#1078" class="Function"
+      >Candidate</a
+      ><a name="1165"
+      >
+</a
+      ><a name="1166" href="Game.ReceiptFreeness.html#1144" class="Function"
+      >alice</a
+      ><a name="1171"
+      > </a
+      ><a name="1172" class="Symbol"
+      >=</a
+      ><a name="1173"
+      > </a
+      ><a name="1174" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="1176"
+      >
+</a
+      ><a name="1177" href="Game.ReceiptFreeness.html#1150" class="Function"
+      >bob</a
+      ><a name="1180"
+      >   </a
+      ><a name="1183" class="Symbol"
+      >=</a
+      ><a name="1184"
+      > </a
+      ><a name="1185" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="1187"
+      >
+
+</a
+      ><a name="1189" class="Comment"
+      >-- candidate order</a
+      ><a name="1207"
+      >
+</a
+      ><a name="1208" class="Comment"
+      >-- also known as LHS or Message</a
+      ><a name="1239"
+      >
+</a
+      ><a name="1240" class="Comment"
+      >-- represented by who is the first candidate</a
+      ><a name="1284"
+      >
+</a
+      ><a name="1285" href="Game.ReceiptFreeness.html#1285" class="Function"
+      >CO</a
+      ><a name="1287"
+      > </a
+      ><a name="1288" class="Symbol"
+      >:</a
+      ><a name="1289"
+      > </a
+      ><a name="1290" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="1291"
+      >
+</a
+      ><a name="1292" href="Game.ReceiptFreeness.html#1285" class="Function"
+      >CO</a
+      ><a name="1294"
+      > </a
+      ><a name="1295" class="Symbol"
+      >=</a
+      ><a name="1296"
+      > </a
+      ><a name="1297" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="1298"
+      >
+
+</a
+      ><a name="1300" href="Game.ReceiptFreeness.html#1300" class="Function"
+      >alice-then-bob</a
+      ><a name="1314"
+      > </a
+      ><a name="1315" href="Game.ReceiptFreeness.html#1315" class="Function"
+      >bob-then-alice</a
+      ><a name="1329"
+      > </a
+      ><a name="1330" class="Symbol"
+      >:</a
+      ><a name="1331"
+      > </a
+      ><a name="1332" href="Game.ReceiptFreeness.html#1285" class="Function"
+      >CO</a
+      ><a name="1334"
+      >
+</a
+      ><a name="1335" href="Game.ReceiptFreeness.html#1300" class="Function"
+      >alice-then-bob</a
+      ><a name="1349"
+      > </a
+      ><a name="1350" class="Symbol"
+      >=</a
+      ><a name="1351"
+      > </a
+      ><a name="1352" href="Game.ReceiptFreeness.html#1144" class="Function"
+      >alice</a
+      ><a name="1357"
+      >
+</a
+      ><a name="1358" href="Game.ReceiptFreeness.html#1315" class="Function"
+      >bob-then-alice</a
+      ><a name="1372"
+      > </a
+      ><a name="1373" class="Symbol"
+      >=</a
+      ><a name="1374"
+      > </a
+      ><a name="1375" href="Game.ReceiptFreeness.html#1150" class="Function"
+      >bob</a
+      ><a name="1378"
+      >
+
+</a
+      ><a name="1380" class="Keyword"
+      >data</a
+      ><a name="1384"
+      > </a
+      ><a name="1385" href="Game.ReceiptFreeness.html#1385" class="Datatype"
+      >CO-spec</a
+      ><a name="1392"
+      > </a
+      ><a name="1393" class="Symbol"
+      >:</a
+      ><a name="1394"
+      > </a
+      ><a name="1395" href="Game.ReceiptFreeness.html#1285" class="Function"
+      >CO</a
+      ><a name="1397"
+      > </a
+      ><a name="1398" class="Symbol"
+      >&#8594;</a
+      ><a name="1399"
+      > </a
+      ><a name="1400" href="Game.ReceiptFreeness.html#1078" class="Function"
+      >Candidate</a
+      ><a name="1409"
+      > </a
+      ><a name="1410" class="Symbol"
+      >&#8594;</a
+      ><a name="1411"
+      > </a
+      ><a name="1412" href="Game.ReceiptFreeness.html#1078" class="Function"
+      >Candidate</a
+      ><a name="1421"
+      > </a
+      ><a name="1422" class="Symbol"
+      >&#8594;</a
+      ><a name="1423"
+      > </a
+      ><a name="1424" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="1425"
+      > </a
+      ><a name="1426" class="Keyword"
+      >where</a
+      ><a name="1431"
+      >
+  </a
+      ><a name="1434" href="Game.ReceiptFreeness.html#1434" class="InductiveConstructor"
+      >alice-then-bob-spec</a
+      ><a name="1453"
+      > </a
+      ><a name="1454" class="Symbol"
+      >:</a
+      ><a name="1455"
+      > </a
+      ><a name="1456" href="Game.ReceiptFreeness.html#1385" class="Datatype"
+      >CO-spec</a
+      ><a name="1463"
+      > </a
+      ><a name="1464" href="Game.ReceiptFreeness.html#1300" class="Function"
+      >alice-then-bob</a
+      ><a name="1478"
+      > </a
+      ><a name="1479" href="Game.ReceiptFreeness.html#1144" class="Function"
+      >alice</a
+      ><a name="1484"
+      > </a
+      ><a name="1485" href="Game.ReceiptFreeness.html#1150" class="Function"
+      >bob</a
+      ><a name="1488"
+      >
+  </a
+      ><a name="1491" href="Game.ReceiptFreeness.html#1491" class="InductiveConstructor"
+      >bob-then-alice-spec</a
+      ><a name="1510"
+      > </a
+      ><a name="1511" class="Symbol"
+      >:</a
+      ><a name="1512"
+      > </a
+      ><a name="1513" href="Game.ReceiptFreeness.html#1385" class="Datatype"
+      >CO-spec</a
+      ><a name="1520"
+      > </a
+      ><a name="1521" href="Game.ReceiptFreeness.html#1315" class="Function"
+      >bob-then-alice</a
+      ><a name="1535"
+      > </a
+      ><a name="1536" href="Game.ReceiptFreeness.html#1150" class="Function"
+      >bob</a
+      ><a name="1539"
+      > </a
+      ><a name="1540" href="Game.ReceiptFreeness.html#1144" class="Function"
+      >alice</a
+      ><a name="1545"
+      >
+
+</a
+      ><a name="1547" href="Game.ReceiptFreeness.html#1547" class="Function"
+      >MarkedReceipt</a
+      ><a name="1560"
+      > </a
+      ><a name="1561" class="Symbol"
+      >:</a
+      ><a name="1562"
+      > </a
+      ><a name="1563" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="1564"
+      >
+</a
+      ><a name="1565" href="Game.ReceiptFreeness.html#1547" class="Function"
+      >MarkedReceipt</a
+      ><a name="1578"
+      > </a
+      ><a name="1579" class="Symbol"
+      >=</a
+      ><a name="1580"
+      > </a
+      ><a name="1581" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="1582"
+      >
+
+</a
+      ><a name="1584" href="Game.ReceiptFreeness.html#1584" class="Function"
+      >marked-on-first-cell</a
+      ><a name="1604"
+      > </a
+      ><a name="1605" href="Game.ReceiptFreeness.html#1605" class="Function"
+      >marked-on-second-cell</a
+      ><a name="1626"
+      > </a
+      ><a name="1627" class="Symbol"
+      >:</a
+      ><a name="1628"
+      > </a
+      ><a name="1629" href="Game.ReceiptFreeness.html#1547" class="Function"
+      >MarkedReceipt</a
+      ><a name="1642"
+      >
+</a
+      ><a name="1643" href="Game.ReceiptFreeness.html#1584" class="Function"
+      >marked-on-first-cell</a
+      ><a name="1663"
+      >  </a
+      ><a name="1665" class="Symbol"
+      >=</a
+      ><a name="1666"
+      > </a
+      ><a name="1667" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="1669"
+      >
+</a
+      ><a name="1670" href="Game.ReceiptFreeness.html#1605" class="Function"
+      >marked-on-second-cell</a
+      ><a name="1691"
+      > </a
+      ><a name="1692" class="Symbol"
+      >=</a
+      ><a name="1693"
+      > </a
+      ><a name="1694" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="1696"
+      >
+
+</a
+      ><a name="1698" class="Keyword"
+      >data</a
+      ><a name="1702"
+      > </a
+      ><a name="1703" href="Game.ReceiptFreeness.html#1703" class="Datatype"
+      >MarkedReceipt-spec</a
+      ><a name="1721"
+      > </a
+      ><a name="1722" class="Symbol"
+      >:</a
+      ><a name="1723"
+      > </a
+      ><a name="1724" href="Game.ReceiptFreeness.html#1285" class="Function"
+      >CO</a
+      ><a name="1726"
+      > </a
+      ><a name="1727" class="Symbol"
+      >&#8594;</a
+      ><a name="1728"
+      > </a
+      ><a name="1729" href="Game.ReceiptFreeness.html#1547" class="Function"
+      >MarkedReceipt</a
+      ><a name="1742"
+      > </a
+      ><a name="1743" class="Symbol"
+      >&#8594;</a
+      ><a name="1744"
+      > </a
+      ><a name="1745" href="Game.ReceiptFreeness.html#1078" class="Function"
+      >Candidate</a
+      ><a name="1754"
+      > </a
+      ><a name="1755" class="Symbol"
+      >&#8594;</a
+      ><a name="1756"
+      > </a
+      ><a name="1757" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="1758"
+      > </a
+      ><a name="1759" class="Keyword"
+      >where</a
+      ><a name="1764"
+      >
+  </a
+      ><a name="1767" href="Game.ReceiptFreeness.html#1767" class="InductiveConstructor"
+      >m1</a
+      ><a name="1769"
+      > </a
+      ><a name="1770" class="Symbol"
+      >:</a
+      ><a name="1771"
+      > </a
+      ><a name="1772" href="Game.ReceiptFreeness.html#1703" class="Datatype"
+      >MarkedReceipt-spec</a
+      ><a name="1790"
+      > </a
+      ><a name="1791" href="Game.ReceiptFreeness.html#1300" class="Function"
+      >alice-then-bob</a
+      ><a name="1805"
+      > </a
+      ><a name="1806" href="Game.ReceiptFreeness.html#1584" class="Function"
+      >marked-on-first-cell</a
+      ><a name="1826"
+      >  </a
+      ><a name="1828" href="Game.ReceiptFreeness.html#1144" class="Function"
+      >alice</a
+      ><a name="1833"
+      >
+  </a
+      ><a name="1836" href="Game.ReceiptFreeness.html#1836" class="InductiveConstructor"
+      >m2</a
+      ><a name="1838"
+      > </a
+      ><a name="1839" class="Symbol"
+      >:</a
+      ><a name="1840"
+      > </a
+      ><a name="1841" href="Game.ReceiptFreeness.html#1703" class="Datatype"
+      >MarkedReceipt-spec</a
+      ><a name="1859"
+      > </a
+      ><a name="1860" href="Game.ReceiptFreeness.html#1300" class="Function"
+      >alice-then-bob</a
+      ><a name="1874"
+      > </a
+      ><a name="1875" href="Game.ReceiptFreeness.html#1605" class="Function"
+      >marked-on-second-cell</a
+      ><a name="1896"
+      > </a
+      ><a name="1897" href="Game.ReceiptFreeness.html#1150" class="Function"
+      >bob</a
+      ><a name="1900"
+      >
+  </a
+      ><a name="1903" href="Game.ReceiptFreeness.html#1903" class="InductiveConstructor"
+      >m3</a
+      ><a name="1905"
+      > </a
+      ><a name="1906" class="Symbol"
+      >:</a
+      ><a name="1907"
+      > </a
+      ><a name="1908" href="Game.ReceiptFreeness.html#1703" class="Datatype"
+      >MarkedReceipt-spec</a
+      ><a name="1926"
+      > </a
+      ><a name="1927" href="Game.ReceiptFreeness.html#1315" class="Function"
+      >bob-then-alice</a
+      ><a name="1941"
+      > </a
+      ><a name="1942" href="Game.ReceiptFreeness.html#1584" class="Function"
+      >marked-on-first-cell</a
+      ><a name="1962"
+      >  </a
+      ><a name="1964" href="Game.ReceiptFreeness.html#1150" class="Function"
+      >bob</a
+      ><a name="1967"
+      >
+  </a
+      ><a name="1970" href="Game.ReceiptFreeness.html#1970" class="InductiveConstructor"
+      >m4</a
+      ><a name="1972"
+      > </a
+      ><a name="1973" class="Symbol"
+      >:</a
+      ><a name="1974"
+      > </a
+      ><a name="1975" href="Game.ReceiptFreeness.html#1703" class="Datatype"
+      >MarkedReceipt-spec</a
+      ><a name="1993"
+      > </a
+      ><a name="1994" href="Game.ReceiptFreeness.html#1315" class="Function"
+      >bob-then-alice</a
+      ><a name="2008"
+      > </a
+      ><a name="2009" href="Game.ReceiptFreeness.html#1605" class="Function"
+      >marked-on-second-cell</a
+      ><a name="2030"
+      > </a
+      ><a name="2031" href="Game.ReceiptFreeness.html#1144" class="Function"
+      >alice</a
+      ><a name="2036"
+      >
+
+</a
+      ><a name="2038" class="Keyword"
+      >data</a
+      ><a name="2042"
+      > </a
+      ><a name="2043" href="Game.ReceiptFreeness.html#2043" class="Datatype"
+      >MarkedReceipt?</a
+      ><a name="2057"
+      > </a
+      ><a name="2058" class="Symbol"
+      >:</a
+      ><a name="2059"
+      > </a
+      ><a name="2060" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="2061"
+      > </a
+      ><a name="2062" class="Keyword"
+      >where</a
+      ><a name="2067"
+      >
+  </a
+      ><a name="2070" href="Game.ReceiptFreeness.html#2070" class="InductiveConstructor"
+      >not-marked</a
+      ><a name="2080"
+      > </a
+      ><a name="2081" class="Symbol"
+      >:</a
+      ><a name="2082"
+      > </a
+      ><a name="2083" href="Game.ReceiptFreeness.html#2043" class="Datatype"
+      >MarkedReceipt?</a
+      ><a name="2097"
+      >
+  </a
+      ><a name="2100" href="Game.ReceiptFreeness.html#2100" class="InductiveConstructor"
+      >marked</a
+      ><a name="2106"
+      >     </a
+      ><a name="2111" class="Symbol"
+      >:</a
+      ><a name="2112"
+      > </a
+      ><a name="2113" href="Game.ReceiptFreeness.html#1547" class="Function"
+      >MarkedReceipt</a
+      ><a name="2126"
+      > </a
+      ><a name="2127" class="Symbol"
+      >&#8594;</a
+      ><a name="2128"
+      > </a
+      ><a name="2129" href="Game.ReceiptFreeness.html#2043" class="Datatype"
+      >MarkedReceipt?</a
+      ><a name="2143"
+      >
+
+</a
+      ><a name="2145" class="Comment"
+      >-- Receipt or also called RHS</a
+      ><a name="2174"
+      >
+</a
+      ><a name="2175" class="Comment"
+      >-- Made of a potential mark, a serial number, and an encrypted candidate order</a
+      ><a name="2253"
+      >
+</a
+      ><a name="2254" href="Game.ReceiptFreeness.html#2254" class="Function"
+      >Receipt</a
+      ><a name="2261"
+      > </a
+      ><a name="2262" class="Symbol"
+      >:</a
+      ><a name="2263"
+      > </a
+      ><a name="2264" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="2265"
+      >
+</a
+      ><a name="2266" href="Game.ReceiptFreeness.html#2254" class="Function"
+      >Receipt</a
+      ><a name="2273"
+      > </a
+      ><a name="2274" class="Symbol"
+      >=</a
+      ><a name="2275"
+      > </a
+      ><a name="2276" href="Game.ReceiptFreeness.html#2043" class="Datatype"
+      >MarkedReceipt?</a
+      ><a name="2290"
+      > </a
+      ><a name="2291" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="2292"
+      > </a
+      ><a name="2293" href="Game.ReceiptFreeness.html#628" class="Bound"
+      >SerialNumber</a
+      ><a name="2305"
+      > </a
+      ><a name="2306" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="2307"
+      > </a
+      ><a name="2308" href="Game.ReceiptFreeness.html#608" class="Bound"
+      >CipherText</a
+      ><a name="2318"
+      >
+
+</a
+      ><a name="2320" href="Game.ReceiptFreeness.html#2320" class="Function"
+      >markedReceipt?</a
+      ><a name="2334"
+      > </a
+      ><a name="2335" class="Symbol"
+      >:</a
+      ><a name="2336"
+      > </a
+      ><a name="2337" href="Game.ReceiptFreeness.html#2254" class="Function"
+      >Receipt</a
+      ><a name="2344"
+      > </a
+      ><a name="2345" class="Symbol"
+      >&#8594;</a
+      ><a name="2346"
+      > </a
+      ><a name="2347" href="Game.ReceiptFreeness.html#2043" class="Datatype"
+      >MarkedReceipt?</a
+      ><a name="2361"
+      >
+</a
+      ><a name="2362" href="Game.ReceiptFreeness.html#2320" class="Function"
+      >markedReceipt?</a
+      ><a name="2376"
+      > </a
+      ><a name="2377" class="Symbol"
+      >=</a
+      ><a name="2378"
+      > </a
+      ><a name="2379" href="Data.Product.html#525" class="Field"
+      >proj&#8321;</a
+      ><a name="2384"
+      >
+
+</a
+      ><a name="2386" class="Comment"
+      >-- Marked when there is a 1</a
+      ><a name="2413"
+      >
+</a
+      ><a name="2414" href="Game.ReceiptFreeness.html#2414" class="Function"
+      >marked?</a
+      ><a name="2421"
+      > </a
+      ><a name="2422" class="Symbol"
+      >:</a
+      ><a name="2423"
+      > </a
+      ><a name="2424" href="Game.ReceiptFreeness.html#2043" class="Datatype"
+      >MarkedReceipt?</a
+      ><a name="2438"
+      > </a
+      ><a name="2439" class="Symbol"
+      >&#8594;</a
+      ><a name="2440"
+      > </a
+      ><a name="2441" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="2442"
+      >
+</a
+      ><a name="2443" href="Game.ReceiptFreeness.html#2414" class="Function"
+      >marked?</a
+      ><a name="2450"
+      > </a
+      ><a name="2451" href="Game.ReceiptFreeness.html#2070" class="InductiveConstructor"
+      >not-marked</a
+      ><a name="2461"
+      > </a
+      ><a name="2462" class="Symbol"
+      >=</a
+      ><a name="2463"
+      > </a
+      ><a name="2464" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="2466"
+      >
+</a
+      ><a name="2467" href="Game.ReceiptFreeness.html#2414" class="Function"
+      >marked?</a
+      ><a name="2474"
+      > </a
+      ><a name="2475" class="Symbol"
+      >(</a
+      ><a name="2476" href="Game.ReceiptFreeness.html#2100" class="InductiveConstructor"
+      >marked</a
+      ><a name="2482"
+      > </a
+      ><a name="2483" class="Symbol"
+      >_)</a
+      ><a name="2485"
+      > </a
+      ><a name="2486" class="Symbol"
+      >=</a
+      ><a name="2487"
+      > </a
+      ><a name="2488" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="2490"
+      >
+
+</a
+      ><a name="2492" href="Game.ReceiptFreeness.html#2492" class="Function"
+      >marked-on-first-cell?</a
+      ><a name="2513"
+      > </a
+      ><a name="2514" class="Symbol"
+      >:</a
+      ><a name="2515"
+      > </a
+      ><a name="2516" href="Game.ReceiptFreeness.html#2043" class="Datatype"
+      >MarkedReceipt?</a
+      ><a name="2530"
+      > </a
+      ><a name="2531" class="Symbol"
+      >&#8594;</a
+      ><a name="2532"
+      > </a
+      ><a name="2533" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="2534"
+      >
+</a
+      ><a name="2535" href="Game.ReceiptFreeness.html#2492" class="Function"
+      >marked-on-first-cell?</a
+      ><a name="2556"
+      > </a
+      ><a name="2557" href="Game.ReceiptFreeness.html#2070" class="InductiveConstructor"
+      >not-marked</a
+      ><a name="2567"
+      > </a
+      ><a name="2568" class="Symbol"
+      >=</a
+      ><a name="2569"
+      > </a
+      ><a name="2570" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="2572"
+      >
+</a
+      ><a name="2573" href="Game.ReceiptFreeness.html#2492" class="Function"
+      >marked-on-first-cell?</a
+      ><a name="2594"
+      > </a
+      ><a name="2595" class="Symbol"
+      >(</a
+      ><a name="2596" href="Game.ReceiptFreeness.html#2100" class="InductiveConstructor"
+      >marked</a
+      ><a name="2602"
+      > </a
+      ><a name="2603" href="Game.ReceiptFreeness.html#2603" class="Bound"
+      >x</a
+      ><a name="2604" class="Symbol"
+      >)</a
+      ><a name="2605"
+      > </a
+      ><a name="2606" class="Symbol"
+      >=</a
+      ><a name="2607"
+      > </a
+      ><a name="2608" href="Game.ReceiptFreeness.html#2603" class="Bound"
+      >x</a
+      ><a name="2609"
+      > </a
+      ><a name="2610" href="Data.Two.html#2568" class="Function Operator"
+      >==</a
+      ><a name="2612"
+      > </a
+      ><a name="2613" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="2615"
+      >
+
+</a
+      ><a name="2617" href="Game.ReceiptFreeness.html#2617" class="Function"
+      >marked-on-second-cell?</a
+      ><a name="2639"
+      > </a
+      ><a name="2640" class="Symbol"
+      >:</a
+      ><a name="2641"
+      > </a
+      ><a name="2642" href="Game.ReceiptFreeness.html#2043" class="Datatype"
+      >MarkedReceipt?</a
+      ><a name="2656"
+      > </a
+      ><a name="2657" class="Symbol"
+      >&#8594;</a
+      ><a name="2658"
+      > </a
+      ><a name="2659" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="2660"
+      >
+</a
+      ><a name="2661" href="Game.ReceiptFreeness.html#2617" class="Function"
+      >marked-on-second-cell?</a
+      ><a name="2683"
+      > </a
+      ><a name="2684" href="Game.ReceiptFreeness.html#2070" class="InductiveConstructor"
+      >not-marked</a
+      ><a name="2694"
+      > </a
+      ><a name="2695" class="Symbol"
+      >=</a
+      ><a name="2696"
+      > </a
+      ><a name="2697" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="2699"
+      >
+</a
+      ><a name="2700" href="Game.ReceiptFreeness.html#2617" class="Function"
+      >marked-on-second-cell?</a
+      ><a name="2722"
+      > </a
+      ><a name="2723" class="Symbol"
+      >(</a
+      ><a name="2724" href="Game.ReceiptFreeness.html#2100" class="InductiveConstructor"
+      >marked</a
+      ><a name="2730"
+      > </a
+      ><a name="2731" href="Game.ReceiptFreeness.html#2731" class="Bound"
+      >x</a
+      ><a name="2732" class="Symbol"
+      >)</a
+      ><a name="2733"
+      > </a
+      ><a name="2734" class="Symbol"
+      >=</a
+      ><a name="2735"
+      > </a
+      ><a name="2736" href="Game.ReceiptFreeness.html#2731" class="Bound"
+      >x</a
+      ><a name="2737"
+      > </a
+      ><a name="2738" href="Data.Two.html#2568" class="Function Operator"
+      >==</a
+      ><a name="2740"
+      > </a
+      ><a name="2741" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="2743"
+      >
+
+</a
+      ><a name="2745" href="Game.ReceiptFreeness.html#2745" class="Function"
+      >Ballot</a
+      ><a name="2751"
+      > </a
+      ><a name="2752" class="Symbol"
+      >:</a
+      ><a name="2753"
+      > </a
+      ><a name="2754" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="2755"
+      >
+</a
+      ><a name="2756" href="Game.ReceiptFreeness.html#2745" class="Function"
+      >Ballot</a
+      ><a name="2762"
+      > </a
+      ><a name="2763" class="Symbol"
+      >=</a
+      ><a name="2764"
+      > </a
+      ><a name="2765" href="Game.ReceiptFreeness.html#1285" class="Function"
+      >CO</a
+      ><a name="2767"
+      > </a
+      ><a name="2768" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="2769"
+      > </a
+      ><a name="2770" href="Game.ReceiptFreeness.html#2254" class="Function"
+      >Receipt</a
+      ><a name="2777"
+      >
+
+</a
+      ><a name="2779" class="Comment"
+      >-- co or also called LHS</a
+      ><a name="2803"
+      >
+</a
+      ><a name="2804" href="Game.ReceiptFreeness.html#2804" class="Function"
+      >co</a
+      ><a name="2806"
+      > </a
+      ><a name="2807" class="Symbol"
+      >:</a
+      ><a name="2808"
+      > </a
+      ><a name="2809" href="Game.ReceiptFreeness.html#2745" class="Function"
+      >Ballot</a
+      ><a name="2815"
+      > </a
+      ><a name="2816" class="Symbol"
+      >&#8594;</a
+      ><a name="2817"
+      > </a
+      ><a name="2818" href="Game.ReceiptFreeness.html#1285" class="Function"
+      >CO</a
+      ><a name="2820"
+      >
+</a
+      ><a name="2821" href="Game.ReceiptFreeness.html#2804" class="Function"
+      >co</a
+      ><a name="2823"
+      > </a
+      ><a name="2824" class="Symbol"
+      >=</a
+      ><a name="2825"
+      > </a
+      ><a name="2826" href="Data.Product.html#525" class="Field"
+      >proj&#8321;</a
+      ><a name="2831"
+      >
+
+</a
+      ><a name="2833" class="Comment"
+      >-- receipt or also called RHS</a
+      ><a name="2862"
+      >
+</a
+      ><a name="2863" href="Game.ReceiptFreeness.html#2863" class="Function"
+      >receipt</a
+      ><a name="2870"
+      > </a
+      ><a name="2871" class="Symbol"
+      >:</a
+      ><a name="2872"
+      > </a
+      ><a name="2873" href="Game.ReceiptFreeness.html#2745" class="Function"
+      >Ballot</a
+      ><a name="2879"
+      > </a
+      ><a name="2880" class="Symbol"
+      >&#8594;</a
+      ><a name="2881"
+      > </a
+      ><a name="2882" href="Game.ReceiptFreeness.html#2254" class="Function"
+      >Receipt</a
+      ><a name="2889"
+      >
+</a
+      ><a name="2890" href="Game.ReceiptFreeness.html#2863" class="Function"
+      >receipt</a
+      ><a name="2897"
+      > </a
+      ><a name="2898" class="Symbol"
+      >=</a
+      ><a name="2899"
+      > </a
+      ><a name="2900" href="Data.Product.html#539" class="Field"
+      >proj&#8322;</a
+      ><a name="2905"
+      >
+
+</a
+      ><a name="2907" class="Comment"
+      >-- randomness for genBallot</a
+      ><a name="2934"
+      >
+</a
+      ><a name="2935" href="Game.ReceiptFreeness.html#2935" class="Function"
+      >Rgb</a
+      ><a name="2938"
+      > </a
+      ><a name="2939" class="Symbol"
+      >:</a
+      ><a name="2940"
+      > </a
+      ><a name="2941" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="2942"
+      >
+</a
+      ><a name="2943" href="Game.ReceiptFreeness.html#2935" class="Function"
+      >Rgb</a
+      ><a name="2946"
+      > </a
+      ><a name="2947" class="Symbol"
+      >=</a
+      ><a name="2948"
+      > </a
+      ><a name="2949" href="Game.ReceiptFreeness.html#1285" class="Function"
+      >CO</a
+      ><a name="2951"
+      > </a
+      ><a name="2952" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="2953"
+      > </a
+      ><a name="2954" href="Game.ReceiptFreeness.html#628" class="Bound"
+      >SerialNumber</a
+      ><a name="2966"
+      > </a
+      ><a name="2967" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="2968"
+      > </a
+      ><a name="2969" href="Game.ReceiptFreeness.html#733" class="Bound"
+      >R&#8337;</a
+      ><a name="2971"
+      >
+
+</a
+      ><a name="2973" href="Game.ReceiptFreeness.html#2973" class="Function"
+      >genBallot</a
+      ><a name="2982"
+      > </a
+      ><a name="2983" class="Symbol"
+      >:</a
+      ><a name="2984"
+      > </a
+      ><a name="2985" href="Game.ReceiptFreeness.html#555" class="Bound"
+      >PubKey</a
+      ><a name="2991"
+      > </a
+      ><a name="2992" class="Symbol"
+      >&#8594;</a
+      ><a name="2993"
+      > </a
+      ><a name="2994" href="Game.ReceiptFreeness.html#2935" class="Function"
+      >Rgb</a
+      ><a name="2997"
+      > </a
+      ><a name="2998" class="Symbol"
+      >&#8594;</a
+      ><a name="2999"
+      > </a
+      ><a name="3000" href="Game.ReceiptFreeness.html#2745" class="Function"
+      >Ballot</a
+      ><a name="3006"
+      >
+</a
+      ><a name="3007" href="Game.ReceiptFreeness.html#2973" class="Function"
+      >genBallot</a
+      ><a name="3016"
+      > </a
+      ><a name="3017" href="Game.ReceiptFreeness.html#3017" class="Bound"
+      >pk</a
+      ><a name="3019"
+      > </a
+      ><a name="3020" class="Symbol"
+      >(</a
+      ><a name="3021" href="Game.ReceiptFreeness.html#3021" class="Bound"
+      >r-co</a
+      ><a name="3025"
+      > </a
+      ><a name="3026" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="3027"
+      > </a
+      ><a name="3028" href="Game.ReceiptFreeness.html#3028" class="Bound"
+      >sn</a
+      ><a name="3030"
+      > </a
+      ><a name="3031" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="3032"
+      > </a
+      ><a name="3033" href="Game.ReceiptFreeness.html#3033" class="Bound"
+      >r&#8337;</a
+      ><a name="3035" class="Symbol"
+      >)</a
+      ><a name="3036"
+      > </a
+      ><a name="3037" class="Symbol"
+      >=</a
+      ><a name="3038"
+      > </a
+      ><a name="3039" href="Game.ReceiptFreeness.html#3021" class="Bound"
+      >r-co</a
+      ><a name="3043"
+      > </a
+      ><a name="3044" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="3045"
+      > </a
+      ><a name="3046" href="Game.ReceiptFreeness.html#2070" class="InductiveConstructor"
+      >not-marked</a
+      ><a name="3056"
+      > </a
+      ><a name="3057" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="3058"
+      > </a
+      ><a name="3059" href="Game.ReceiptFreeness.html#3028" class="Bound"
+      >sn</a
+      ><a name="3061"
+      > </a
+      ><a name="3062" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="3063"
+      > </a
+      ><a name="3064" href="Game.ReceiptFreeness.html#812" class="Bound"
+      >Enc</a
+      ><a name="3067"
+      > </a
+      ><a name="3068" href="Game.ReceiptFreeness.html#3017" class="Bound"
+      >pk</a
+      ><a name="3070"
+      > </a
+      ><a name="3071" href="Game.ReceiptFreeness.html#3021" class="Bound"
+      >r-co</a
+      ><a name="3075"
+      > </a
+      ><a name="3076" href="Game.ReceiptFreeness.html#3033" class="Bound"
+      >r&#8337;</a
+      ><a name="3078"
+      >
+
+</a
+      ><a name="3080" href="Game.ReceiptFreeness.html#3080" class="Function"
+      >mark</a
+      ><a name="3084"
+      > </a
+      ><a name="3085" class="Symbol"
+      >:</a
+      ><a name="3086"
+      > </a
+      ><a name="3087" href="Game.ReceiptFreeness.html#1285" class="Function"
+      >CO</a
+      ><a name="3089"
+      > </a
+      ><a name="3090" class="Symbol"
+      >&#8594;</a
+      ><a name="3091"
+      > </a
+      ><a name="3092" href="Game.ReceiptFreeness.html#1078" class="Function"
+      >Candidate</a
+      ><a name="3101"
+      > </a
+      ><a name="3102" class="Symbol"
+      >&#8594;</a
+      ><a name="3103"
+      > </a
+      ><a name="3104" href="Game.ReceiptFreeness.html#1547" class="Function"
+      >MarkedReceipt</a
+      ><a name="3117"
+      >
+</a
+      ><a name="3118" href="Game.ReceiptFreeness.html#3080" class="Function"
+      >mark</a
+      ><a name="3122"
+      > </a
+      ><a name="3123" href="Game.ReceiptFreeness.html#3123" class="Bound"
+      >co</a
+      ><a name="3125"
+      > </a
+      ><a name="3126" href="Game.ReceiptFreeness.html#3126" class="Bound"
+      >c</a
+      ><a name="3127"
+      > </a
+      ><a name="3128" class="Symbol"
+      >=</a
+      ><a name="3129"
+      > </a
+      ><a name="3130" href="Game.ReceiptFreeness.html#3123" class="Bound"
+      >co</a
+      ><a name="3132"
+      > </a
+      ><a name="3133" href="Data.Bool.html#1270" class="Function Operator"
+      >xor</a
+      ><a name="3136"
+      > </a
+      ><a name="3137" href="Game.ReceiptFreeness.html#3126" class="Bound"
+      >c</a
+      ><a name="3138"
+      >
+
+</a
+      ><a name="3140" href="Game.ReceiptFreeness.html#3140" class="Function"
+      >mark-ok</a
+      ><a name="3147"
+      > </a
+      ><a name="3148" class="Symbol"
+      >:</a
+      ><a name="3149"
+      > </a
+      ><a name="3150" class="Symbol"
+      >&#8704;</a
+      ><a name="3151"
+      > </a
+      ><a name="3152" href="Game.ReceiptFreeness.html#3152" class="Bound"
+      >co</a
+      ><a name="3154"
+      > </a
+      ><a name="3155" href="Game.ReceiptFreeness.html#3155" class="Bound"
+      >c</a
+      ><a name="3156"
+      > </a
+      ><a name="3157" class="Symbol"
+      >&#8594;</a
+      ><a name="3158"
+      > </a
+      ><a name="3159" href="Game.ReceiptFreeness.html#1703" class="Datatype"
+      >MarkedReceipt-spec</a
+      ><a name="3177"
+      > </a
+      ><a name="3178" href="Game.ReceiptFreeness.html#3152" class="Bound"
+      >co</a
+      ><a name="3180"
+      > </a
+      ><a name="3181" class="Symbol"
+      >(</a
+      ><a name="3182" href="Game.ReceiptFreeness.html#3080" class="Function"
+      >mark</a
+      ><a name="3186"
+      > </a
+      ><a name="3187" href="Game.ReceiptFreeness.html#3152" class="Bound"
+      >co</a
+      ><a name="3189"
+      > </a
+      ><a name="3190" href="Game.ReceiptFreeness.html#3155" class="Bound"
+      >c</a
+      ><a name="3191" class="Symbol"
+      >)</a
+      ><a name="3192"
+      > </a
+      ><a name="3193" href="Game.ReceiptFreeness.html#3155" class="Bound"
+      >c</a
+      ><a name="3194"
+      >
+</a
+      ><a name="3195" href="Game.ReceiptFreeness.html#3140" class="Function"
+      >mark-ok</a
+      ><a name="3202"
+      > </a
+      ><a name="3203" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="3205"
+      > </a
+      ><a name="3206" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="3208"
+      > </a
+      ><a name="3209" class="Symbol"
+      >=</a
+      ><a name="3210"
+      > </a
+      ><a name="3211" href="Game.ReceiptFreeness.html#1903" class="InductiveConstructor"
+      >m3</a
+      ><a name="3213"
+      >
+</a
+      ><a name="3214" href="Game.ReceiptFreeness.html#3140" class="Function"
+      >mark-ok</a
+      ><a name="3221"
+      > </a
+      ><a name="3222" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="3224"
+      > </a
+      ><a name="3225" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="3227"
+      > </a
+      ><a name="3228" class="Symbol"
+      >=</a
+      ><a name="3229"
+      > </a
+      ><a name="3230" href="Game.ReceiptFreeness.html#1970" class="InductiveConstructor"
+      >m4</a
+      ><a name="3232"
+      >
+</a
+      ><a name="3233" href="Game.ReceiptFreeness.html#3140" class="Function"
+      >mark-ok</a
+      ><a name="3240"
+      > </a
+      ><a name="3241" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="3243"
+      > </a
+      ><a name="3244" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="3246"
+      > </a
+      ><a name="3247" class="Symbol"
+      >=</a
+      ><a name="3248"
+      > </a
+      ><a name="3249" href="Game.ReceiptFreeness.html#1836" class="InductiveConstructor"
+      >m2</a
+      ><a name="3251"
+      >
+</a
+      ><a name="3252" href="Game.ReceiptFreeness.html#3140" class="Function"
+      >mark-ok</a
+      ><a name="3259"
+      > </a
+      ><a name="3260" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="3262"
+      > </a
+      ><a name="3263" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="3265"
+      > </a
+      ><a name="3266" class="Symbol"
+      >=</a
+      ><a name="3267"
+      > </a
+      ><a name="3268" href="Game.ReceiptFreeness.html#1767" class="InductiveConstructor"
+      >m1</a
+      ><a name="3270"
+      >
+
+</a
+      ><a name="3272" href="Game.ReceiptFreeness.html#3272" class="Function"
+      >fillBallot</a
+      ><a name="3282"
+      > </a
+      ><a name="3283" class="Symbol"
+      >:</a
+      ><a name="3284"
+      > </a
+      ><a name="3285" href="Game.ReceiptFreeness.html#1078" class="Function"
+      >Candidate</a
+      ><a name="3294"
+      > </a
+      ><a name="3295" class="Symbol"
+      >&#8594;</a
+      ><a name="3296"
+      > </a
+      ><a name="3297" href="Game.ReceiptFreeness.html#2745" class="Function"
+      >Ballot</a
+      ><a name="3303"
+      > </a
+      ><a name="3304" class="Symbol"
+      >&#8594;</a
+      ><a name="3305"
+      > </a
+      ><a name="3306" href="Game.ReceiptFreeness.html#2745" class="Function"
+      >Ballot</a
+      ><a name="3312"
+      >
+</a
+      ><a name="3313" href="Game.ReceiptFreeness.html#3272" class="Function"
+      >fillBallot</a
+      ><a name="3323"
+      > </a
+      ><a name="3324" href="Game.ReceiptFreeness.html#3324" class="Bound"
+      >c</a
+      ><a name="3325"
+      > </a
+      ><a name="3326" class="Symbol"
+      >(</a
+      ><a name="3327" href="Game.ReceiptFreeness.html#3327" class="Bound"
+      >co</a
+      ><a name="3329"
+      > </a
+      ><a name="3330" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="3331"
+      > </a
+      ><a name="3332" class="Symbol"
+      >_</a
+      ><a name="3333"
+      > </a
+      ><a name="3334" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="3335"
+      > </a
+      ><a name="3336" href="Game.ReceiptFreeness.html#3336" class="Bound"
+      >sn</a
+      ><a name="3338"
+      > </a
+      ><a name="3339" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="3340"
+      > </a
+      ><a name="3341" href="Game.ReceiptFreeness.html#3341" class="Bound"
+      >enc-co</a
+      ><a name="3347" class="Symbol"
+      >)</a
+      ><a name="3348"
+      > </a
+      ><a name="3349" class="Symbol"
+      >=</a
+      ><a name="3350"
+      > </a
+      ><a name="3351" href="Game.ReceiptFreeness.html#3327" class="Bound"
+      >co</a
+      ><a name="3353"
+      > </a
+      ><a name="3354" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="3355"
+      > </a
+      ><a name="3356" href="Game.ReceiptFreeness.html#2100" class="InductiveConstructor"
+      >marked</a
+      ><a name="3362"
+      > </a
+      ><a name="3363" class="Symbol"
+      >(</a
+      ><a name="3364" href="Game.ReceiptFreeness.html#3080" class="Function"
+      >mark</a
+      ><a name="3368"
+      > </a
+      ><a name="3369" href="Game.ReceiptFreeness.html#3327" class="Bound"
+      >co</a
+      ><a name="3371"
+      > </a
+      ><a name="3372" href="Game.ReceiptFreeness.html#3324" class="Bound"
+      >c</a
+      ><a name="3373" class="Symbol"
+      >)</a
+      ><a name="3374"
+      > </a
+      ><a name="3375" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="3376"
+      > </a
+      ><a name="3377" href="Game.ReceiptFreeness.html#3336" class="Bound"
+      >sn</a
+      ><a name="3379"
+      > </a
+      ><a name="3380" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="3381"
+      > </a
+      ><a name="3382" href="Game.ReceiptFreeness.html#3341" class="Bound"
+      >enc-co</a
+      ><a name="3388"
+      >
+
+</a
+      ><a name="3390" class="Comment"
+      >-- TODO Ballot-spec c (fillBallot b)</a
+      ><a name="3426"
+      >
+
+</a
+      ><a name="3428" href="Game.ReceiptFreeness.html#3428" class="Function"
+      >BB</a
+      ><a name="3430"
+      > </a
+      ><a name="3431" class="Symbol"
+      >:</a
+      ><a name="3432"
+      > </a
+      ><a name="3433" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="3434"
+      >
+</a
+      ><a name="3435" href="Game.ReceiptFreeness.html#3428" class="Function"
+      >BB</a
+      ><a name="3437"
+      > </a
+      ><a name="3438" class="Symbol"
+      >=</a
+      ><a name="3439"
+      > </a
+      ><a name="3440" href="Data.List.html#659" class="Datatype"
+      >List</a
+      ><a name="3444"
+      > </a
+      ><a name="3445" href="Game.ReceiptFreeness.html#2254" class="Function"
+      >Receipt</a
+      ><a name="3452"
+      >
+
+</a
+      ><a name="3454" href="Game.ReceiptFreeness.html#3454" class="Function"
+      >Tally</a
+      ><a name="3459"
+      > </a
+      ><a name="3460" class="Symbol"
+      >:</a
+      ><a name="3461"
+      > </a
+      ><a name="3462" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="3463"
+      >
+</a
+      ><a name="3464" href="Game.ReceiptFreeness.html#3454" class="Function"
+      >Tally</a
+      ><a name="3469"
+      > </a
+      ><a name="3470" class="Symbol"
+      >=</a
+      ><a name="3471"
+      > </a
+      ><a name="3472" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="3473"
+      > </a
+      ><a name="3474" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="3475"
+      > </a
+      ><a name="3476" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="3477"
+      >
+
+</a
+      ><a name="3479" href="Game.ReceiptFreeness.html#3479" class="Function"
+      >alice-score</a
+      ><a name="3490"
+      > </a
+      ><a name="3491" class="Symbol"
+      >:</a
+      ><a name="3492"
+      > </a
+      ><a name="3493" href="Game.ReceiptFreeness.html#3454" class="Function"
+      >Tally</a
+      ><a name="3498"
+      > </a
+      ><a name="3499" class="Symbol"
+      >&#8594;</a
+      ><a name="3500"
+      > </a
+      ><a name="3501" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="3502"
+      >
+</a
+      ><a name="3503" href="Game.ReceiptFreeness.html#3479" class="Function"
+      >alice-score</a
+      ><a name="3514"
+      > </a
+      ><a name="3515" class="Symbol"
+      >=</a
+      ><a name="3516"
+      > </a
+      ><a name="3517" href="Data.Product.html#525" class="Field"
+      >proj&#8321;</a
+      ><a name="3522"
+      >
+
+</a
+      ><a name="3524" href="Game.ReceiptFreeness.html#3524" class="Function"
+      >bob-score</a
+      ><a name="3533"
+      > </a
+      ><a name="3534" class="Symbol"
+      >:</a
+      ><a name="3535"
+      > </a
+      ><a name="3536" href="Game.ReceiptFreeness.html#3454" class="Function"
+      >Tally</a
+      ><a name="3541"
+      > </a
+      ><a name="3542" class="Symbol"
+      >&#8594;</a
+      ><a name="3543"
+      > </a
+      ><a name="3544" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="3545"
+      >
+</a
+      ><a name="3546" href="Game.ReceiptFreeness.html#3524" class="Function"
+      >bob-score</a
+      ><a name="3555"
+      > </a
+      ><a name="3556" class="Symbol"
+      >=</a
+      ><a name="3557"
+      > </a
+      ><a name="3558" href="Data.Product.html#539" class="Field"
+      >proj&#8322;</a
+      ><a name="3563"
+      >
+
+</a
+      ><a name="3565" href="Game.ReceiptFreeness.html#3565" class="Function"
+      >1:alice-0:bob</a
+      ><a name="3578"
+      > </a
+      ><a name="3579" href="Game.ReceiptFreeness.html#3579" class="Function"
+      >0:alice-1:bob</a
+      ><a name="3592"
+      > </a
+      ><a name="3593" class="Symbol"
+      >:</a
+      ><a name="3594"
+      > </a
+      ><a name="3595" href="Game.ReceiptFreeness.html#3454" class="Function"
+      >Tally</a
+      ><a name="3600"
+      >
+</a
+      ><a name="3601" href="Game.ReceiptFreeness.html#3565" class="Function"
+      >1:alice-0:bob</a
+      ><a name="3614"
+      > </a
+      ><a name="3615" class="Symbol"
+      >=</a
+      ><a name="3616"
+      > </a
+      ><a name="3617" class="Number"
+      >1</a
+      ><a name="3618"
+      > </a
+      ><a name="3619" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="3620"
+      > </a
+      ><a name="3621" class="Number"
+      >0</a
+      ><a name="3622"
+      >
+</a
+      ><a name="3623" href="Game.ReceiptFreeness.html#3579" class="Function"
+      >0:alice-1:bob</a
+      ><a name="3636"
+      > </a
+      ><a name="3637" class="Symbol"
+      >=</a
+      ><a name="3638"
+      > </a
+      ><a name="3639" class="Number"
+      >0</a
+      ><a name="3640"
+      > </a
+      ><a name="3641" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="3642"
+      > </a
+      ><a name="3643" class="Number"
+      >1</a
+      ><a name="3644"
+      >
+
+</a
+      ><a name="3646" class="Keyword"
+      >data</a
+      ><a name="3650"
+      > </a
+      ><a name="3651" href="Game.ReceiptFreeness.html#3651" class="Datatype"
+      >TallyMarkedReceipt-spec</a
+      ><a name="3674"
+      > </a
+      ><a name="3675" class="Symbol"
+      >:</a
+      ><a name="3676"
+      > </a
+      ><a name="3677" href="Game.ReceiptFreeness.html#1285" class="Function"
+      >CO</a
+      ><a name="3679"
+      > </a
+      ><a name="3680" class="Symbol"
+      >&#8594;</a
+      ><a name="3681"
+      > </a
+      ><a name="3682" href="Game.ReceiptFreeness.html#1547" class="Function"
+      >MarkedReceipt</a
+      ><a name="3695"
+      > </a
+      ><a name="3696" class="Symbol"
+      >&#8594;</a
+      ><a name="3697"
+      > </a
+      ><a name="3698" href="Game.ReceiptFreeness.html#3454" class="Function"
+      >Tally</a
+      ><a name="3703"
+      > </a
+      ><a name="3704" class="Symbol"
+      >&#8594;</a
+      ><a name="3705"
+      > </a
+      ><a name="3706" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="3707"
+      > </a
+      ><a name="3708" class="Keyword"
+      >where</a
+      ><a name="3713"
+      >
+  </a
+      ><a name="3716" href="Game.ReceiptFreeness.html#3716" class="InductiveConstructor"
+      >c1</a
+      ><a name="3718"
+      > </a
+      ><a name="3719" class="Symbol"
+      >:</a
+      ><a name="3720"
+      > </a
+      ><a name="3721" href="Game.ReceiptFreeness.html#3651" class="Datatype"
+      >TallyMarkedReceipt-spec</a
+      ><a name="3744"
+      > </a
+      ><a name="3745" href="Game.ReceiptFreeness.html#1300" class="Function"
+      >alice-then-bob</a
+      ><a name="3759"
+      > </a
+      ><a name="3760" href="Game.ReceiptFreeness.html#1584" class="Function"
+      >marked-on-first-cell</a
+      ><a name="3780"
+      >  </a
+      ><a name="3782" href="Game.ReceiptFreeness.html#3565" class="Function"
+      >1:alice-0:bob</a
+      ><a name="3795"
+      >
+  </a
+      ><a name="3798" href="Game.ReceiptFreeness.html#3798" class="InductiveConstructor"
+      >c2</a
+      ><a name="3800"
+      > </a
+      ><a name="3801" class="Symbol"
+      >:</a
+      ><a name="3802"
+      > </a
+      ><a name="3803" href="Game.ReceiptFreeness.html#3651" class="Datatype"
+      >TallyMarkedReceipt-spec</a
+      ><a name="3826"
+      > </a
+      ><a name="3827" href="Game.ReceiptFreeness.html#1300" class="Function"
+      >alice-then-bob</a
+      ><a name="3841"
+      > </a
+      ><a name="3842" href="Game.ReceiptFreeness.html#1605" class="Function"
+      >marked-on-second-cell</a
+      ><a name="3863"
+      > </a
+      ><a name="3864" href="Game.ReceiptFreeness.html#3579" class="Function"
+      >0:alice-1:bob</a
+      ><a name="3877"
+      >
+  </a
+      ><a name="3880" href="Game.ReceiptFreeness.html#3880" class="InductiveConstructor"
+      >c3</a
+      ><a name="3882"
+      > </a
+      ><a name="3883" class="Symbol"
+      >:</a
+      ><a name="3884"
+      > </a
+      ><a name="3885" href="Game.ReceiptFreeness.html#3651" class="Datatype"
+      >TallyMarkedReceipt-spec</a
+      ><a name="3908"
+      > </a
+      ><a name="3909" href="Game.ReceiptFreeness.html#1315" class="Function"
+      >bob-then-alice</a
+      ><a name="3923"
+      > </a
+      ><a name="3924" href="Game.ReceiptFreeness.html#1584" class="Function"
+      >marked-on-first-cell</a
+      ><a name="3944"
+      >  </a
+      ><a name="3946" href="Game.ReceiptFreeness.html#3579" class="Function"
+      >0:alice-1:bob</a
+      ><a name="3959"
+      >
+  </a
+      ><a name="3962" href="Game.ReceiptFreeness.html#3962" class="InductiveConstructor"
+      >c4</a
+      ><a name="3964"
+      > </a
+      ><a name="3965" class="Symbol"
+      >:</a
+      ><a name="3966"
+      > </a
+      ><a name="3967" href="Game.ReceiptFreeness.html#3651" class="Datatype"
+      >TallyMarkedReceipt-spec</a
+      ><a name="3990"
+      > </a
+      ><a name="3991" href="Game.ReceiptFreeness.html#1315" class="Function"
+      >bob-then-alice</a
+      ><a name="4005"
+      > </a
+      ><a name="4006" href="Game.ReceiptFreeness.html#1605" class="Function"
+      >marked-on-second-cell</a
+      ><a name="4027"
+      > </a
+      ><a name="4028" href="Game.ReceiptFreeness.html#3565" class="Function"
+      >1:alice-0:bob</a
+      ><a name="4041"
+      >
+
+</a
+      ><a name="4043" href="Game.ReceiptFreeness.html#4043" class="Function"
+      >marked-for-alice?</a
+      ><a name="4060"
+      > </a
+      ><a name="4061" class="Symbol"
+      >:</a
+      ><a name="4062"
+      > </a
+      ><a name="4063" href="Game.ReceiptFreeness.html#1285" class="Function"
+      >CO</a
+      ><a name="4065"
+      > </a
+      ><a name="4066" class="Symbol"
+      >&#8594;</a
+      ><a name="4067"
+      > </a
+      ><a name="4068" href="Game.ReceiptFreeness.html#1547" class="Function"
+      >MarkedReceipt</a
+      ><a name="4081"
+      > </a
+      ><a name="4082" class="Symbol"
+      >&#8594;</a
+      ><a name="4083"
+      > </a
+      ><a name="4084" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="4085"
+      >
+</a
+      ><a name="4086" href="Game.ReceiptFreeness.html#4043" class="Function"
+      >marked-for-alice?</a
+      ><a name="4103"
+      > </a
+      ><a name="4104" href="Game.ReceiptFreeness.html#4104" class="Bound"
+      >co</a
+      ><a name="4106"
+      > </a
+      ><a name="4107" href="Game.ReceiptFreeness.html#4107" class="Bound"
+      >m</a
+      ><a name="4108"
+      > </a
+      ><a name="4109" class="Symbol"
+      >=</a
+      ><a name="4110"
+      > </a
+      ><a name="4111" href="Game.ReceiptFreeness.html#4104" class="Bound"
+      >co</a
+      ><a name="4113"
+      > </a
+      ><a name="4114" href="Data.Two.html#2568" class="Function Operator"
+      >==</a
+      ><a name="4116"
+      > </a
+      ><a name="4117" href="Game.ReceiptFreeness.html#4107" class="Bound"
+      >m</a
+      ><a name="4118"
+      >
+
+</a
+      ><a name="4120" href="Game.ReceiptFreeness.html#4120" class="Function"
+      >marked-for-bob?</a
+      ><a name="4135"
+      > </a
+      ><a name="4136" class="Symbol"
+      >:</a
+      ><a name="4137"
+      > </a
+      ><a name="4138" href="Game.ReceiptFreeness.html#1285" class="Function"
+      >CO</a
+      ><a name="4140"
+      > </a
+      ><a name="4141" class="Symbol"
+      >&#8594;</a
+      ><a name="4142"
+      > </a
+      ><a name="4143" href="Game.ReceiptFreeness.html#1547" class="Function"
+      >MarkedReceipt</a
+      ><a name="4156"
+      > </a
+      ><a name="4157" class="Symbol"
+      >&#8594;</a
+      ><a name="4158"
+      > </a
+      ><a name="4159" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="4160"
+      >
+</a
+      ><a name="4161" href="Game.ReceiptFreeness.html#4120" class="Function"
+      >marked-for-bob?</a
+      ><a name="4176"
+      > </a
+      ><a name="4177" href="Game.ReceiptFreeness.html#4177" class="Bound"
+      >co</a
+      ><a name="4179"
+      > </a
+      ><a name="4180" href="Game.ReceiptFreeness.html#4180" class="Bound"
+      >m</a
+      ><a name="4181"
+      > </a
+      ><a name="4182" class="Symbol"
+      >=</a
+      ><a name="4183"
+      > </a
+      ><a name="4184" href="Data.Bool.html#873" class="Function"
+      >not</a
+      ><a name="4187"
+      > </a
+      ><a name="4188" class="Symbol"
+      >(</a
+      ><a name="4189" href="Game.ReceiptFreeness.html#4043" class="Function"
+      >marked-for-alice?</a
+      ><a name="4206"
+      > </a
+      ><a name="4207" href="Game.ReceiptFreeness.html#4177" class="Bound"
+      >co</a
+      ><a name="4209"
+      > </a
+      ><a name="4210" href="Game.ReceiptFreeness.html#4180" class="Bound"
+      >m</a
+      ><a name="4211" class="Symbol"
+      >)</a
+      ><a name="4212"
+      >
+
+</a
+      ><a name="4214" href="Game.ReceiptFreeness.html#4214" class="Function"
+      >tallyMarkedReceipt</a
+      ><a name="4232"
+      > </a
+      ><a name="4233" class="Symbol"
+      >:</a
+      ><a name="4234"
+      > </a
+      ><a name="4235" href="Game.ReceiptFreeness.html#1285" class="Function"
+      >CO</a
+      ><a name="4237"
+      > </a
+      ><a name="4238" class="Symbol"
+      >&#8594;</a
+      ><a name="4239"
+      > </a
+      ><a name="4240" href="Game.ReceiptFreeness.html#1547" class="Function"
+      >MarkedReceipt</a
+      ><a name="4253"
+      > </a
+      ><a name="4254" class="Symbol"
+      >&#8594;</a
+      ><a name="4255"
+      > </a
+      ><a name="4256" href="Game.ReceiptFreeness.html#3454" class="Function"
+      >Tally</a
+      ><a name="4261"
+      >
+</a
+      ><a name="4262" href="Game.ReceiptFreeness.html#4214" class="Function"
+      >tallyMarkedReceipt</a
+      ><a name="4280"
+      > </a
+      ><a name="4281" href="Game.ReceiptFreeness.html#4281" class="Bound"
+      >co</a
+      ><a name="4283"
+      > </a
+      ><a name="4284" href="Game.ReceiptFreeness.html#4284" class="Bound"
+      >m</a
+      ><a name="4285"
+      > </a
+      ><a name="4286" class="Symbol"
+      >=</a
+      ><a name="4287"
+      > </a
+      ><a name="4288" href="Data.Two.html#3864" class="Function"
+      >&#120794;&#9657;&#8469;</a
+      ><a name="4291"
+      > </a
+      ><a name="4292" href="Game.ReceiptFreeness.html#4332" class="Function"
+      >for-alice</a
+      ><a name="4301"
+      > </a
+      ><a name="4302" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="4303"
+      > </a
+      ><a name="4304" href="Data.Two.html#3864" class="Function"
+      >&#120794;&#9657;&#8469;</a
+      ><a name="4307"
+      > </a
+      ><a name="4308" class="Symbol"
+      >(</a
+      ><a name="4309" href="Data.Bool.html#873" class="Function"
+      >not</a
+      ><a name="4312"
+      > </a
+      ><a name="4313" href="Game.ReceiptFreeness.html#4332" class="Function"
+      >for-alice</a
+      ><a name="4322" class="Symbol"
+      >)</a
+      ><a name="4323"
+      >
+  </a
+      ><a name="4326" class="Keyword"
+      >where</a
+      ><a name="4331"
+      > </a
+      ><a name="4332" href="Game.ReceiptFreeness.html#4332" class="Function"
+      >for-alice</a
+      ><a name="4341"
+      > </a
+      ><a name="4342" class="Symbol"
+      >=</a
+      ><a name="4343"
+      > </a
+      ><a name="4344" href="Game.ReceiptFreeness.html#4043" class="Function"
+      >marked-for-alice?</a
+      ><a name="4361"
+      > </a
+      ><a name="4362" href="Game.ReceiptFreeness.html#4281" class="Bound"
+      >co</a
+      ><a name="4364"
+      > </a
+      ><a name="4365" href="Game.ReceiptFreeness.html#4284" class="Bound"
+      >m</a
+      ><a name="4366"
+      >
+
+</a
+      ><a name="4368" href="Game.ReceiptFreeness.html#4368" class="Function"
+      >tallyMarkedReceipt-ok</a
+      ><a name="4389"
+      > </a
+      ><a name="4390" class="Symbol"
+      >:</a
+      ><a name="4391"
+      > </a
+      ><a name="4392" class="Symbol"
+      >&#8704;</a
+      ><a name="4393"
+      > </a
+      ><a name="4394" href="Game.ReceiptFreeness.html#4394" class="Bound"
+      >co</a
+      ><a name="4396"
+      > </a
+      ><a name="4397" href="Game.ReceiptFreeness.html#4397" class="Bound"
+      >m</a
+      ><a name="4398"
+      > </a
+      ><a name="4399" class="Symbol"
+      >&#8594;</a
+      ><a name="4400"
+      > </a
+      ><a name="4401" href="Game.ReceiptFreeness.html#3651" class="Datatype"
+      >TallyMarkedReceipt-spec</a
+      ><a name="4424"
+      > </a
+      ><a name="4425" href="Game.ReceiptFreeness.html#4394" class="Bound"
+      >co</a
+      ><a name="4427"
+      > </a
+      ><a name="4428" href="Game.ReceiptFreeness.html#4397" class="Bound"
+      >m</a
+      ><a name="4429"
+      > </a
+      ><a name="4430" class="Symbol"
+      >(</a
+      ><a name="4431" href="Game.ReceiptFreeness.html#4214" class="Function"
+      >tallyMarkedReceipt</a
+      ><a name="4449"
+      > </a
+      ><a name="4450" href="Game.ReceiptFreeness.html#4394" class="Bound"
+      >co</a
+      ><a name="4452"
+      > </a
+      ><a name="4453" href="Game.ReceiptFreeness.html#4397" class="Bound"
+      >m</a
+      ><a name="4454" class="Symbol"
+      >)</a
+      ><a name="4455"
+      >
+</a
+      ><a name="4456" href="Game.ReceiptFreeness.html#4368" class="Function"
+      >tallyMarkedReceipt-ok</a
+      ><a name="4477"
+      > </a
+      ><a name="4478" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="4480"
+      > </a
+      ><a name="4481" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="4483"
+      > </a
+      ><a name="4484" class="Symbol"
+      >=</a
+      ><a name="4485"
+      > </a
+      ><a name="4486" href="Game.ReceiptFreeness.html#3962" class="InductiveConstructor"
+      >c4</a
+      ><a name="4488"
+      >
+</a
+      ><a name="4489" href="Game.ReceiptFreeness.html#4368" class="Function"
+      >tallyMarkedReceipt-ok</a
+      ><a name="4510"
+      > </a
+      ><a name="4511" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="4513"
+      > </a
+      ><a name="4514" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="4516"
+      > </a
+      ><a name="4517" class="Symbol"
+      >=</a
+      ><a name="4518"
+      > </a
+      ><a name="4519" href="Game.ReceiptFreeness.html#3880" class="InductiveConstructor"
+      >c3</a
+      ><a name="4521"
+      >
+</a
+      ><a name="4522" href="Game.ReceiptFreeness.html#4368" class="Function"
+      >tallyMarkedReceipt-ok</a
+      ><a name="4543"
+      > </a
+      ><a name="4544" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="4546"
+      > </a
+      ><a name="4547" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="4549"
+      > </a
+      ><a name="4550" class="Symbol"
+      >=</a
+      ><a name="4551"
+      > </a
+      ><a name="4552" href="Game.ReceiptFreeness.html#3798" class="InductiveConstructor"
+      >c2</a
+      ><a name="4554"
+      >
+</a
+      ><a name="4555" href="Game.ReceiptFreeness.html#4368" class="Function"
+      >tallyMarkedReceipt-ok</a
+      ><a name="4576"
+      > </a
+      ><a name="4577" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="4579"
+      > </a
+      ><a name="4580" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="4582"
+      > </a
+      ><a name="4583" class="Symbol"
+      >=</a
+      ><a name="4584"
+      > </a
+      ><a name="4585" href="Game.ReceiptFreeness.html#3716" class="InductiveConstructor"
+      >c1</a
+      ><a name="4587"
+      >
+
+</a
+      ><a name="4589" href="Game.ReceiptFreeness.html#4589" class="Function"
+      >tallyMarkedReceipt?</a
+      ><a name="4608"
+      > </a
+      ><a name="4609" class="Symbol"
+      >:</a
+      ><a name="4610"
+      > </a
+      ><a name="4611" href="Game.ReceiptFreeness.html#1285" class="Function"
+      >CO</a
+      ><a name="4613"
+      > </a
+      ><a name="4614" class="Symbol"
+      >&#8594;</a
+      ><a name="4615"
+      > </a
+      ><a name="4616" href="Game.ReceiptFreeness.html#2043" class="Datatype"
+      >MarkedReceipt?</a
+      ><a name="4630"
+      > </a
+      ><a name="4631" class="Symbol"
+      >&#8594;</a
+      ><a name="4632"
+      > </a
+      ><a name="4633" href="Game.ReceiptFreeness.html#3454" class="Function"
+      >Tally</a
+      ><a name="4638"
+      >
+</a
+      ><a name="4639" href="Game.ReceiptFreeness.html#4589" class="Function"
+      >tallyMarkedReceipt?</a
+      ><a name="4658"
+      > </a
+      ><a name="4659" href="Game.ReceiptFreeness.html#4659" class="Bound"
+      >co</a
+      ><a name="4661"
+      > </a
+      ><a name="4662" href="Game.ReceiptFreeness.html#2070" class="InductiveConstructor"
+      >not-marked</a
+      ><a name="4672"
+      >    </a
+      ><a name="4676" class="Symbol"
+      >=</a
+      ><a name="4677"
+      > </a
+      ><a name="4678" class="Number"
+      >0</a
+      ><a name="4679"
+      > </a
+      ><a name="4680" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="4681"
+      > </a
+      ><a name="4682" class="Number"
+      >0</a
+      ><a name="4683"
+      >
+</a
+      ><a name="4684" href="Game.ReceiptFreeness.html#4589" class="Function"
+      >tallyMarkedReceipt?</a
+      ><a name="4703"
+      > </a
+      ><a name="4704" href="Game.ReceiptFreeness.html#4704" class="Bound"
+      >co</a
+      ><a name="4706"
+      > </a
+      ><a name="4707" class="Symbol"
+      >(</a
+      ><a name="4708" href="Game.ReceiptFreeness.html#2100" class="InductiveConstructor"
+      >marked</a
+      ><a name="4714"
+      > </a
+      ><a name="4715" href="Game.ReceiptFreeness.html#4715" class="Bound"
+      >mark</a
+      ><a name="4719" class="Symbol"
+      >)</a
+      ><a name="4720"
+      > </a
+      ><a name="4721" class="Symbol"
+      >=</a
+      ><a name="4722"
+      > </a
+      ><a name="4723" href="Game.ReceiptFreeness.html#4214" class="Function"
+      >tallyMarkedReceipt</a
+      ><a name="4741"
+      > </a
+      ><a name="4742" href="Game.ReceiptFreeness.html#4704" class="Bound"
+      >co</a
+      ><a name="4744"
+      > </a
+      ><a name="4745" href="Game.ReceiptFreeness.html#4715" class="Bound"
+      >mark</a
+      ><a name="4749"
+      >
+
+</a
+      ><a name="4751" href="Game.ReceiptFreeness.html#4751" class="Function"
+      >tallyCheckedReceipt</a
+      ><a name="4770"
+      > </a
+      ><a name="4771" class="Symbol"
+      >:</a
+      ><a name="4772"
+      > </a
+      ><a name="4773" href="Game.ReceiptFreeness.html#573" class="Bound"
+      >SecKey</a
+      ><a name="4779"
+      > </a
+      ><a name="4780" class="Symbol"
+      >&#8594;</a
+      ><a name="4781"
+      > </a
+      ><a name="4782" href="Game.ReceiptFreeness.html#2254" class="Function"
+      >Receipt</a
+      ><a name="4789"
+      > </a
+      ><a name="4790" class="Symbol"
+      >&#8594;</a
+      ><a name="4791"
+      > </a
+      ><a name="4792" href="Game.ReceiptFreeness.html#3454" class="Function"
+      >Tally</a
+      ><a name="4797"
+      >
+</a
+      ><a name="4798" href="Game.ReceiptFreeness.html#4751" class="Function"
+      >tallyCheckedReceipt</a
+      ><a name="4817"
+      > </a
+      ><a name="4818" href="Game.ReceiptFreeness.html#4818" class="Bound"
+      >sk</a
+      ><a name="4820"
+      > </a
+      ><a name="4821" class="Symbol"
+      >(</a
+      ><a name="4822" href="Game.ReceiptFreeness.html#4822" class="Bound"
+      >marked?</a
+      ><a name="4829"
+      > </a
+      ><a name="4830" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="4831"
+      > </a
+      ><a name="4832" class="Symbol"
+      >_</a
+      ><a name="4833"
+      > </a
+      ><a name="4834" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="4835"
+      > </a
+      ><a name="4836" href="Game.ReceiptFreeness.html#4836" class="Bound"
+      >enc-co</a
+      ><a name="4842" class="Symbol"
+      >)</a
+      ><a name="4843"
+      > </a
+      ><a name="4844" class="Symbol"
+      >=</a
+      ><a name="4845"
+      > </a
+      ><a name="4846" href="Game.ReceiptFreeness.html#4589" class="Function"
+      >tallyMarkedReceipt?</a
+      ><a name="4865"
+      > </a
+      ><a name="4866" class="Symbol"
+      >(</a
+      ><a name="4867" href="Game.ReceiptFreeness.html#891" class="Bound"
+      >Dec</a
+      ><a name="4870"
+      > </a
+      ><a name="4871" href="Game.ReceiptFreeness.html#4818" class="Bound"
+      >sk</a
+      ><a name="4873"
+      > </a
+      ><a name="4874" href="Game.ReceiptFreeness.html#4836" class="Bound"
+      >enc-co</a
+      ><a name="4880" class="Symbol"
+      >)</a
+      ><a name="4881"
+      > </a
+      ><a name="4882" href="Game.ReceiptFreeness.html#4822" class="Bound"
+      >marked?</a
+      ><a name="4889"
+      >
+
+</a
+      ><a name="4891" class="Comment"
+      >-- Not taking advantage of any homomorphic encryption</a
+      ><a name="4944"
+      >
+</a
+      ><a name="4945" href="Game.ReceiptFreeness.html#4945" class="Function"
+      >tally</a
+      ><a name="4950"
+      > </a
+      ><a name="4951" class="Symbol"
+      >:</a
+      ><a name="4952"
+      > </a
+      ><a name="4953" href="Game.ReceiptFreeness.html#573" class="Bound"
+      >SecKey</a
+      ><a name="4959"
+      > </a
+      ><a name="4960" class="Symbol"
+      >&#8594;</a
+      ><a name="4961"
+      > </a
+      ><a name="4962" href="Game.ReceiptFreeness.html#3428" class="Function"
+      >BB</a
+      ><a name="4964"
+      > </a
+      ><a name="4965" class="Symbol"
+      >&#8594;</a
+      ><a name="4966"
+      > </a
+      ><a name="4967" href="Game.ReceiptFreeness.html#3454" class="Function"
+      >Tally</a
+      ><a name="4972"
+      >
+</a
+      ><a name="4973" href="Game.ReceiptFreeness.html#4945" class="Function"
+      >tally</a
+      ><a name="4978"
+      > </a
+      ><a name="4979" href="Game.ReceiptFreeness.html#4979" class="Bound"
+      >sk</a
+      ><a name="4981"
+      > </a
+      ><a name="4982" href="Game.ReceiptFreeness.html#4982" class="Bound"
+      >bb</a
+      ><a name="4984"
+      > </a
+      ><a name="4985" class="Symbol"
+      >=</a
+      ><a name="4986"
+      > </a
+      ><a name="4987" href="Data.List.html#2121" class="Function"
+      >L.foldr</a
+      ><a name="4994"
+      > </a
+      ><a name="4995" class="Symbol"
+      >(</a
+      ><a name="4996" href="Data.Product.html#2035" class="Function"
+      >zip-&#215;</a
+      ><a name="5001"
+      > </a
+      ><a name="5002" href="Data.Nat.html#2239" class="Primitive Operator"
+      >_+_</a
+      ><a name="5005"
+      > </a
+      ><a name="5006" href="Data.Nat.html#2239" class="Primitive Operator"
+      >_+_</a
+      ><a name="5009" class="Symbol"
+      >)</a
+      ><a name="5010"
+      > </a
+      ><a name="5011" class="Symbol"
+      >(</a
+      ><a name="5012" class="Number"
+      >0</a
+      ><a name="5013"
+      > </a
+      ><a name="5014" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="5015"
+      > </a
+      ><a name="5016" class="Number"
+      >0</a
+      ><a name="5017" class="Symbol"
+      >)</a
+      ><a name="5018"
+      > </a
+      ><a name="5019" class="Symbol"
+      >(</a
+      ><a name="5020" href="Data.List.html#1385" class="Function"
+      >L.map</a
+      ><a name="5025"
+      > </a
+      ><a name="5026" class="Symbol"
+      >(</a
+      ><a name="5027" href="Game.ReceiptFreeness.html#4751" class="Function"
+      >tallyCheckedReceipt</a
+      ><a name="5046"
+      > </a
+      ><a name="5047" href="Game.ReceiptFreeness.html#4979" class="Bound"
+      >sk</a
+      ><a name="5049" class="Symbol"
+      >)</a
+      ><a name="5050"
+      > </a
+      ><a name="5051" href="Game.ReceiptFreeness.html#4982" class="Bound"
+      >bb</a
+      ><a name="5053" class="Symbol"
+      >)</a
+      ><a name="5054"
+      >
+
+</a
+      ><a name="5056" class="Keyword"
+      >data</a
+      ><a name="5060"
+      > </a
+      ><a name="5061" href="Game.ReceiptFreeness.html#5061" class="Datatype"
+      >Accept?</a
+      ><a name="5068"
+      > </a
+      ><a name="5069" class="Symbol"
+      >:</a
+      ><a name="5070"
+      > </a
+      ><a name="5071" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="5072"
+      > </a
+      ><a name="5073" class="Keyword"
+      >where</a
+      ><a name="5078"
+      >
+  </a
+      ><a name="5081" href="Game.ReceiptFreeness.html#5081" class="InductiveConstructor"
+      >accept</a
+      ><a name="5087"
+      > </a
+      ><a name="5088" href="Game.ReceiptFreeness.html#5088" class="InductiveConstructor"
+      >reject</a
+      ><a name="5094"
+      > </a
+      ><a name="5095" class="Symbol"
+      >:</a
+      ><a name="5096"
+      > </a
+      ><a name="5097" href="Game.ReceiptFreeness.html#5061" class="Datatype"
+      >Accept?</a
+      ><a name="5104"
+      >
+
+</a
+      ><a name="5106" class="Comment"
+      >-- In the paper RBB is the returning the Tally and we</a
+      ><a name="5159"
+      >
+</a
+      ><a name="5160" class="Comment"
+      >-- return the BB, here RTally is returning the Tally</a
+      ><a name="5212"
+      >
+</a
+      ><a name="5213" class="Keyword"
+      >data</a
+      ><a name="5217"
+      > </a
+      ><a name="5218" href="Game.ReceiptFreeness.html#5218" class="Datatype"
+      >Q</a
+      ><a name="5219"
+      > </a
+      ><a name="5220" class="Symbol"
+      >:</a
+      ><a name="5221"
+      > </a
+      ><a name="5222" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="5223"
+      > </a
+      ><a name="5224" class="Keyword"
+      >where</a
+      ><a name="5229"
+      >
+  </a
+      ><a name="5232" href="Game.ReceiptFreeness.html#5232" class="InductiveConstructor"
+      >REB</a
+      ><a name="5235"
+      > </a
+      ><a name="5236" href="Game.ReceiptFreeness.html#5236" class="InductiveConstructor"
+      >RBB</a
+      ><a name="5239"
+      > </a
+      ><a name="5240" href="Game.ReceiptFreeness.html#5240" class="InductiveConstructor"
+      >RTally</a
+      ><a name="5246"
+      > </a
+      ><a name="5247" class="Symbol"
+      >:</a
+      ><a name="5248"
+      > </a
+      ><a name="5249" href="Game.ReceiptFreeness.html#5218" class="Datatype"
+      >Q</a
+      ><a name="5250"
+      >
+  </a
+      ><a name="5253" href="Game.ReceiptFreeness.html#5253" class="InductiveConstructor"
+      >RCO</a
+      ><a name="5256"
+      >            </a
+      ><a name="5268" class="Symbol"
+      >:</a
+      ><a name="5269"
+      > </a
+      ><a name="5270" href="Game.ReceiptFreeness.html#2254" class="Function"
+      >Receipt</a
+      ><a name="5277"
+      > </a
+      ><a name="5278" class="Symbol"
+      >&#8594;</a
+      ><a name="5279"
+      > </a
+      ><a name="5280" href="Game.ReceiptFreeness.html#5218" class="Datatype"
+      >Q</a
+      ><a name="5281"
+      >
+  </a
+      ><a name="5284" href="Game.ReceiptFreeness.html#5284" class="InductiveConstructor"
+      >Vote</a
+      ><a name="5288"
+      >           </a
+      ><a name="5299" class="Symbol"
+      >:</a
+      ><a name="5300"
+      > </a
+      ><a name="5301" href="Game.ReceiptFreeness.html#2254" class="Function"
+      >Receipt</a
+      ><a name="5308"
+      > </a
+      ><a name="5309" class="Symbol"
+      >&#8594;</a
+      ><a name="5310"
+      > </a
+      ><a name="5311" href="Game.ReceiptFreeness.html#5218" class="Datatype"
+      >Q</a
+      ><a name="5312"
+      >
+
+</a
+      ><a name="5314" href="Game.ReceiptFreeness.html#5314" class="Function"
+      >Resp</a
+      ><a name="5318"
+      > </a
+      ><a name="5319" class="Symbol"
+      >:</a
+      ><a name="5320"
+      > </a
+      ><a name="5321" href="Game.ReceiptFreeness.html#5218" class="Datatype"
+      >Q</a
+      ><a name="5322"
+      > </a
+      ><a name="5323" class="Symbol"
+      >&#8594;</a
+      ><a name="5324"
+      > </a
+      ><a name="5325" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="5326"
+      >
+</a
+      ><a name="5327" href="Game.ReceiptFreeness.html#5314" class="Function"
+      >Resp</a
+      ><a name="5331"
+      > </a
+      ><a name="5332" href="Game.ReceiptFreeness.html#5232" class="InductiveConstructor"
+      >REB</a
+      ><a name="5335"
+      > </a
+      ><a name="5336" class="Symbol"
+      >=</a
+      ><a name="5337"
+      > </a
+      ><a name="5338" href="Game.ReceiptFreeness.html#2745" class="Function"
+      >Ballot</a
+      ><a name="5344"
+      >
+</a
+      ><a name="5345" href="Game.ReceiptFreeness.html#5314" class="Function"
+      >Resp</a
+      ><a name="5349"
+      > </a
+      ><a name="5350" class="Symbol"
+      >(</a
+      ><a name="5351" href="Game.ReceiptFreeness.html#5253" class="InductiveConstructor"
+      >RCO</a
+      ><a name="5354"
+      > </a
+      ><a name="5355" href="Game.ReceiptFreeness.html#5355" class="Bound"
+      >x</a
+      ><a name="5356" class="Symbol"
+      >)</a
+      ><a name="5357"
+      > </a
+      ><a name="5358" class="Symbol"
+      >=</a
+      ><a name="5359"
+      > </a
+      ><a name="5360" href="Game.ReceiptFreeness.html#1285" class="Function"
+      >CO</a
+      ><a name="5362"
+      >
+</a
+      ><a name="5363" href="Game.ReceiptFreeness.html#5314" class="Function"
+      >Resp</a
+      ><a name="5367"
+      > </a
+      ><a name="5368" class="Symbol"
+      >(</a
+      ><a name="5369" href="Game.ReceiptFreeness.html#5284" class="InductiveConstructor"
+      >Vote</a
+      ><a name="5373"
+      > </a
+      ><a name="5374" href="Game.ReceiptFreeness.html#5374" class="Bound"
+      >x</a
+      ><a name="5375" class="Symbol"
+      >)</a
+      ><a name="5376"
+      > </a
+      ><a name="5377" class="Symbol"
+      >=</a
+      ><a name="5378"
+      > </a
+      ><a name="5379" href="Game.ReceiptFreeness.html#5061" class="Datatype"
+      >Accept?</a
+      ><a name="5386"
+      >
+</a
+      ><a name="5387" href="Game.ReceiptFreeness.html#5314" class="Function"
+      >Resp</a
+      ><a name="5391"
+      > </a
+      ><a name="5392" href="Game.ReceiptFreeness.html#5236" class="InductiveConstructor"
+      >RBB</a
+      ><a name="5395"
+      > </a
+      ><a name="5396" class="Symbol"
+      >=</a
+      ><a name="5397"
+      > </a
+      ><a name="5398" href="Game.ReceiptFreeness.html#3428" class="Function"
+      >BB</a
+      ><a name="5400"
+      >
+</a
+      ><a name="5401" href="Game.ReceiptFreeness.html#5314" class="Function"
+      >Resp</a
+      ><a name="5405"
+      > </a
+      ><a name="5406" href="Game.ReceiptFreeness.html#5240" class="InductiveConstructor"
+      >RTally</a
+      ><a name="5412"
+      > </a
+      ><a name="5413" class="Symbol"
+      >=</a
+      ><a name="5414"
+      > </a
+      ><a name="5415" href="Game.ReceiptFreeness.html#3454" class="Function"
+      >Tally</a
+      ><a name="5420"
+      >
+
+</a
+      ><a name="5422" href="Game.ReceiptFreeness.html#5422" class="Function"
+      >Phase</a
+      ><a name="5427"
+      > </a
+      ><a name="5428" class="Symbol"
+      >:</a
+      ><a name="5429"
+      > </a
+      ><a name="5430" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="5431"
+      > </a
+      ><a name="5432" class="Symbol"
+      >&#8594;</a
+      ><a name="5433"
+      > </a
+      ><a name="5434" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="5435"
+      >
+</a
+      ><a name="5436" href="Game.ReceiptFreeness.html#5422" class="Function"
+      >Phase</a
+      ><a name="5441"
+      > </a
+      ><a name="5442" class="Symbol"
+      >=</a
+      ><a name="5443"
+      > </a
+      ><a name="5444" href="Control.Strategy.html#204" class="Datatype"
+      >Strategy</a
+      ><a name="5452"
+      > </a
+      ><a name="5453" href="Game.ReceiptFreeness.html#5218" class="Datatype"
+      >Q</a
+      ><a name="5454"
+      > </a
+      ><a name="5455" href="Game.ReceiptFreeness.html#5314" class="Function"
+      >Resp</a
+      ><a name="5459"
+      >
+
+</a
+      ><a name="5461" class="Comment"
+      >-- How to read types as protocols:</a
+      ><a name="5495"
+      >
+</a
+      ><a name="5496" class="Comment"
+      >-- A &#215; B   sends A, then behave as B</a
+      ><a name="5532"
+      >
+</a
+      ><a name="5533" class="Comment"
+      >-- A &#8594; B   receives A, then behave as B</a
+      ><a name="5572"
+      >
+
+</a
+      ><a name="5574" href="Game.ReceiptFreeness.html#5574" class="Function"
+      >RFChallenge</a
+      ><a name="5585"
+      > </a
+      ><a name="5586" class="Symbol"
+      >:</a
+      ><a name="5587"
+      > </a
+      ><a name="5588" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="5589"
+      > </a
+      ><a name="5590" class="Symbol"
+      >&#8594;</a
+      ><a name="5591"
+      > </a
+      ><a name="5592" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="5593"
+      >
+</a
+      ><a name="5594" href="Game.ReceiptFreeness.html#5574" class="Function"
+      >RFChallenge</a
+      ><a name="5605"
+      > </a
+      ><a name="5606" href="Game.ReceiptFreeness.html#5606" class="Bound"
+      >Next</a
+      ><a name="5610"
+      > </a
+      ><a name="5611" class="Symbol"
+      >=</a
+      ><a name="5612"
+      > </a
+      ><a name="5613" class="Symbol"
+      >(</a
+      ><a name="5614" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="5615"
+      > </a
+      ><a name="5616" class="Symbol"
+      >&#8594;</a
+      ><a name="5617"
+      > </a
+      ><a name="5618" href="Game.ReceiptFreeness.html#2254" class="Function"
+      >Receipt</a
+      ><a name="5625" class="Symbol"
+      >)</a
+      ><a name="5626"
+      > </a
+      ><a name="5627" class="Symbol"
+      >&#8594;</a
+      ><a name="5628"
+      > </a
+      ><a name="5629" href="Game.ReceiptFreeness.html#5606" class="Bound"
+      >Next</a
+      ><a name="5633"
+      >
+
+</a
+      ><a name="5635" href="Game.ReceiptFreeness.html#5635" class="Function"
+      >Adversary</a
+      ><a name="5644"
+      > </a
+      ><a name="5645" class="Symbol"
+      >:</a
+      ><a name="5646"
+      > </a
+      ><a name="5647" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="5648"
+      >
+</a
+      ><a name="5649" href="Game.ReceiptFreeness.html#5635" class="Function"
+      >Adversary</a
+      ><a name="5658"
+      > </a
+      ><a name="5659" class="Symbol"
+      >=</a
+      ><a name="5660"
+      > </a
+      ><a name="5661" href="Game.ReceiptFreeness.html#739" class="Bound"
+      >R&#8336;</a
+      ><a name="5663"
+      > </a
+      ><a name="5664" class="Symbol"
+      >&#8594;</a
+      ><a name="5665"
+      > </a
+      ><a name="5666" href="Game.ReceiptFreeness.html#555" class="Bound"
+      >PubKey</a
+      ><a name="5672"
+      > </a
+      ><a name="5673" class="Symbol"
+      >&#8594;</a
+      ><a name="5674"
+      > </a
+      ><a name="5675" href="Game.ReceiptFreeness.html#5422" class="Function"
+      >Phase</a
+      ><a name="5680"
+      > </a
+      ><a name="5681" class="Comment"
+      >-- Phase[I]</a
+      ><a name="5692"
+      >
+                           </a
+      ><a name="5720" class="Symbol"
+      >(</a
+      ><a name="5721" href="Game.ReceiptFreeness.html#5574" class="Function"
+      >RFChallenge</a
+      ><a name="5732"
+      >
+                             </a
+      ><a name="5762" class="Symbol"
+      >(</a
+      ><a name="5763" href="Game.ReceiptFreeness.html#5422" class="Function"
+      >Phase</a
+      ><a name="5768"
+      > </a
+      ><a name="5769" class="Comment"
+      >-- Phase[II]</a
+      ><a name="5781"
+      >
+                               </a
+      ><a name="5813" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="5814" class="Symbol"
+      >))</a
+      ><a name="5816"
+      > </a
+      ><a name="5817" class="Comment"
+      >-- Adversary guess of whether the vote is for alice</a
+      ><a name="5868"
+      >
+
+</a
+      ><a name="5870" class="Comment"
+      >-- TODO adversary validity</a
+      ><a name="5896"
+      >
+</a
+      ><a name="5897" class="Comment"
+      >-- Valid-Adversary : Adversary &#8594; &#9733;</a
+      ><a name="5931"
+      >
+
+</a
+      ><a name="5933" class="Keyword"
+      >module</a
+      ><a name="5939"
+      > </a
+      ><a name="5940" href="Game.ReceiptFreeness.html#5940" class="Module"
+      >Oracle</a
+      ><a name="5946"
+      > </a
+      ><a name="5947" class="Symbol"
+      >(</a
+      ><a name="5948" href="Game.ReceiptFreeness.html#5948" class="Bound"
+      >sk</a
+      ><a name="5950"
+      > </a
+      ><a name="5951" class="Symbol"
+      >:</a
+      ><a name="5952"
+      > </a
+      ><a name="5953" href="Game.ReceiptFreeness.html#573" class="Bound"
+      >SecKey</a
+      ><a name="5959" class="Symbol"
+      >)</a
+      ><a name="5960"
+      > </a
+      ><a name="5961" class="Symbol"
+      >(</a
+      ><a name="5962" href="Game.ReceiptFreeness.html#5962" class="Bound"
+      >pk</a
+      ><a name="5964"
+      > </a
+      ><a name="5965" class="Symbol"
+      >:</a
+      ><a name="5966"
+      > </a
+      ><a name="5967" href="Game.ReceiptFreeness.html#555" class="Bound"
+      >PubKey</a
+      ><a name="5973" class="Symbol"
+      >)</a
+      ><a name="5974"
+      > </a
+      ><a name="5975" class="Symbol"
+      >(</a
+      ><a name="5976" href="Game.ReceiptFreeness.html#5976" class="Bound"
+      >rgb</a
+      ><a name="5979"
+      > </a
+      ><a name="5980" class="Symbol"
+      >:</a
+      ><a name="5981"
+      > </a
+      ><a name="5982" href="Game.ReceiptFreeness.html#2935" class="Function"
+      >Rgb</a
+      ><a name="5985" class="Symbol"
+      >)</a
+      ><a name="5986"
+      > </a
+      ><a name="5987" class="Symbol"
+      >(</a
+      ><a name="5988" href="Game.ReceiptFreeness.html#5988" class="Bound"
+      >bb</a
+      ><a name="5990"
+      > </a
+      ><a name="5991" class="Symbol"
+      >:</a
+      ><a name="5992"
+      > </a
+      ><a name="5993" href="Game.ReceiptFreeness.html#3428" class="Function"
+      >BB</a
+      ><a name="5995" class="Symbol"
+      >)</a
+      ><a name="5996"
+      > </a
+      ><a name="5997" class="Keyword"
+      >where</a
+      ><a name="6002"
+      >
+    </a
+      ><a name="6007" href="Game.ReceiptFreeness.html#6007" class="Function"
+      >resp</a
+      ><a name="6011"
+      > </a
+      ><a name="6012" class="Symbol"
+      >:</a
+      ><a name="6013"
+      > </a
+      ><a name="6014" class="Symbol"
+      >(</a
+      ><a name="6015" href="Game.ReceiptFreeness.html#6015" class="Bound"
+      >q</a
+      ><a name="6016"
+      > </a
+      ><a name="6017" class="Symbol"
+      >:</a
+      ><a name="6018"
+      > </a
+      ><a name="6019" href="Game.ReceiptFreeness.html#5218" class="Datatype"
+      >Q</a
+      ><a name="6020" class="Symbol"
+      >)</a
+      ><a name="6021"
+      > </a
+      ><a name="6022" class="Symbol"
+      >&#8594;</a
+      ><a name="6023"
+      > </a
+      ><a name="6024" href="Game.ReceiptFreeness.html#5314" class="Function"
+      >Resp</a
+      ><a name="6028"
+      > </a
+      ><a name="6029" href="Game.ReceiptFreeness.html#6015" class="Bound"
+      >q</a
+      ><a name="6030"
+      >
+    </a
+      ><a name="6035" href="Game.ReceiptFreeness.html#6007" class="Function"
+      >resp</a
+      ><a name="6039"
+      > </a
+      ><a name="6040" href="Game.ReceiptFreeness.html#5232" class="InductiveConstructor"
+      >REB</a
+      ><a name="6043"
+      > </a
+      ><a name="6044" class="Symbol"
+      >=</a
+      ><a name="6045"
+      > </a
+      ><a name="6046" href="Game.ReceiptFreeness.html#2973" class="Function"
+      >genBallot</a
+      ><a name="6055"
+      > </a
+      ><a name="6056" href="Game.ReceiptFreeness.html#5962" class="Bound"
+      >pk</a
+      ><a name="6058"
+      > </a
+      ><a name="6059" href="Game.ReceiptFreeness.html#5976" class="Bound"
+      >rgb</a
+      ><a name="6062"
+      >
+    </a
+      ><a name="6067" href="Game.ReceiptFreeness.html#6007" class="Function"
+      >resp</a
+      ><a name="6071"
+      > </a
+      ><a name="6072" href="Game.ReceiptFreeness.html#5236" class="InductiveConstructor"
+      >RBB</a
+      ><a name="6075"
+      > </a
+      ><a name="6076" class="Symbol"
+      >=</a
+      ><a name="6077"
+      > </a
+      ><a name="6078" href="Game.ReceiptFreeness.html#5988" class="Bound"
+      >bb</a
+      ><a name="6080"
+      >
+    </a
+      ><a name="6085" href="Game.ReceiptFreeness.html#6007" class="Function"
+      >resp</a
+      ><a name="6089"
+      > </a
+      ><a name="6090" href="Game.ReceiptFreeness.html#5240" class="InductiveConstructor"
+      >RTally</a
+      ><a name="6096"
+      > </a
+      ><a name="6097" class="Symbol"
+      >=</a
+      ><a name="6098"
+      > </a
+      ><a name="6099" href="Game.ReceiptFreeness.html#4945" class="Function"
+      >tally</a
+      ><a name="6104"
+      > </a
+      ><a name="6105" href="Game.ReceiptFreeness.html#5948" class="Bound"
+      >sk</a
+      ><a name="6107"
+      > </a
+      ><a name="6108" href="Game.ReceiptFreeness.html#5988" class="Bound"
+      >bb</a
+      ><a name="6110"
+      >
+    </a
+      ><a name="6115" href="Game.ReceiptFreeness.html#6007" class="Function"
+      >resp</a
+      ><a name="6119"
+      > </a
+      ><a name="6120" class="Symbol"
+      >(</a
+      ><a name="6121" href="Game.ReceiptFreeness.html#5253" class="InductiveConstructor"
+      >RCO</a
+      ><a name="6124"
+      > </a
+      ><a name="6125" class="Symbol"
+      >(_</a
+      ><a name="6127"
+      > </a
+      ><a name="6128" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="6129"
+      > </a
+      ><a name="6130" class="Symbol"
+      >_</a
+      ><a name="6131"
+      > </a
+      ><a name="6132" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="6133"
+      > </a
+      ><a name="6134" href="Game.ReceiptFreeness.html#6134" class="Bound"
+      >receipt</a
+      ><a name="6141" class="Symbol"
+      >))</a
+      ><a name="6143"
+      > </a
+      ><a name="6144" class="Symbol"
+      >=</a
+      ><a name="6145"
+      > </a
+      ><a name="6146" href="Game.ReceiptFreeness.html#891" class="Bound"
+      >Dec</a
+      ><a name="6149"
+      > </a
+      ><a name="6150" href="Game.ReceiptFreeness.html#5948" class="Bound"
+      >sk</a
+      ><a name="6152"
+      > </a
+      ><a name="6153" href="Game.ReceiptFreeness.html#6134" class="Bound"
+      >receipt</a
+      ><a name="6160"
+      >
+    </a
+      ><a name="6165" class="Comment"
+      >-- do we check if the sn is already here?</a
+      ><a name="6206"
+      >
+    </a
+      ><a name="6211" href="Game.ReceiptFreeness.html#6007" class="Function"
+      >resp</a
+      ><a name="6215"
+      > </a
+      ><a name="6216" class="Symbol"
+      >(</a
+      ><a name="6217" href="Game.ReceiptFreeness.html#5284" class="InductiveConstructor"
+      >Vote</a
+      ><a name="6221"
+      > </a
+      ><a name="6222" class="Symbol"
+      >(</a
+      ><a name="6223" href="Game.ReceiptFreeness.html#6223" class="Bound"
+      >m?</a
+      ><a name="6225"
+      > </a
+      ><a name="6226" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="6227"
+      > </a
+      ><a name="6228" href="Game.ReceiptFreeness.html#6228" class="Bound"
+      >sn</a
+      ><a name="6230"
+      > </a
+      ><a name="6231" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="6232"
+      > </a
+      ><a name="6233" href="Game.ReceiptFreeness.html#6233" class="Bound"
+      >receipt</a
+      ><a name="6240" class="Symbol"
+      >))</a
+      ><a name="6242"
+      > </a
+      ><a name="6243" class="Symbol"
+      >=</a
+      ><a name="6244"
+      > </a
+      ><a name="6245" href="Data.Two.html#2100" class="Function Operator"
+      >[0:</a
+      ><a name="6248"
+      > </a
+      ><a name="6249" href="Game.ReceiptFreeness.html#5088" class="InductiveConstructor"
+      >reject</a
+      ><a name="6255"
+      > </a
+      ><a name="6256" href="Data.Two.html#2100" class="Function Operator"
+      >1:</a
+      ><a name="6258"
+      > </a
+      ><a name="6259" href="Game.ReceiptFreeness.html#5081" class="InductiveConstructor"
+      >accept</a
+      ><a name="6265"
+      > </a
+      ><a name="6266" href="Data.Two.html#2100" class="Function Operator"
+      >]&#8242;</a
+      ><a name="6268"
+      > </a
+      ><a name="6269" class="Symbol"
+      >(</a
+      ><a name="6270" href="Game.ReceiptFreeness.html#965" class="Bound"
+      >Check</a
+      ><a name="6275"
+      > </a
+      ><a name="6276" href="Game.ReceiptFreeness.html#6233" class="Bound"
+      >receipt</a
+      ><a name="6283" class="Symbol"
+      >)</a
+      ><a name="6284"
+      >
+
+    </a
+      ><a name="6290" href="Game.ReceiptFreeness.html#6290" class="Function"
+      >newBB</a
+      ><a name="6295"
+      > </a
+      ><a name="6296" class="Symbol"
+      >:</a
+      ><a name="6297"
+      > </a
+      ><a name="6298" href="Game.ReceiptFreeness.html#5218" class="Datatype"
+      >Q</a
+      ><a name="6299"
+      > </a
+      ><a name="6300" class="Symbol"
+      >&#8594;</a
+      ><a name="6301"
+      > </a
+      ><a name="6302" href="Game.ReceiptFreeness.html#3428" class="Function"
+      >BB</a
+      ><a name="6304"
+      >
+    </a
+      ><a name="6309" href="Game.ReceiptFreeness.html#6290" class="Function"
+      >newBB</a
+      ><a name="6314"
+      > </a
+      ><a name="6315" class="Symbol"
+      >(</a
+      ><a name="6316" href="Game.ReceiptFreeness.html#5284" class="InductiveConstructor"
+      >Vote</a
+      ><a name="6320"
+      > </a
+      ><a name="6321" class="Symbol"
+      >(</a
+      ><a name="6322" href="Game.ReceiptFreeness.html#6322" class="Bound"
+      >m?</a
+      ><a name="6324"
+      > </a
+      ><a name="6325" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="6326"
+      > </a
+      ><a name="6327" href="Game.ReceiptFreeness.html#6327" class="Bound"
+      >sn</a
+      ><a name="6329"
+      > </a
+      ><a name="6330" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="6331"
+      > </a
+      ><a name="6332" href="Game.ReceiptFreeness.html#6332" class="Bound"
+      >receipt</a
+      ><a name="6339" class="Symbol"
+      >))</a
+      ><a name="6341"
+      > </a
+      ><a name="6342" class="Symbol"
+      >=</a
+      ><a name="6343"
+      > </a
+      ><a name="6344" href="Data.Two.html#2100" class="Function Operator"
+      >[0:</a
+      ><a name="6347"
+      > </a
+      ><a name="6348" href="Game.ReceiptFreeness.html#5988" class="Bound"
+      >bb</a
+      ><a name="6350"
+      > </a
+      ><a name="6351" href="Data.Two.html#2100" class="Function Operator"
+      >1:</a
+      ><a name="6353"
+      > </a
+      ><a name="6354" class="Symbol"
+      >(</a
+      ><a name="6355" href="Game.ReceiptFreeness.html#6322" class="Bound"
+      >m?</a
+      ><a name="6357"
+      > </a
+      ><a name="6358" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="6359"
+      > </a
+      ><a name="6360" href="Game.ReceiptFreeness.html#6327" class="Bound"
+      >sn</a
+      ><a name="6362"
+      > </a
+      ><a name="6363" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="6364"
+      > </a
+      ><a name="6365" href="Game.ReceiptFreeness.html#6332" class="Bound"
+      >receipt</a
+      ><a name="6372" class="Symbol"
+      >)</a
+      ><a name="6373"
+      > </a
+      ><a name="6374" href="Data.List.html#711" class="InductiveConstructor Operator"
+      >&#8759;</a
+      ><a name="6375"
+      > </a
+      ><a name="6376" href="Game.ReceiptFreeness.html#5988" class="Bound"
+      >bb</a
+      ><a name="6378"
+      > </a
+      ><a name="6379" href="Data.Two.html#2100" class="Function Operator"
+      >]&#8242;</a
+      ><a name="6381"
+      > </a
+      ><a name="6382" class="Symbol"
+      >(</a
+      ><a name="6383" href="Game.ReceiptFreeness.html#965" class="Bound"
+      >Check</a
+      ><a name="6388"
+      > </a
+      ><a name="6389" href="Game.ReceiptFreeness.html#6332" class="Bound"
+      >receipt</a
+      ><a name="6396" class="Symbol"
+      >)</a
+      ><a name="6397"
+      >
+    </a
+      ><a name="6402" href="Game.ReceiptFreeness.html#6290" class="Function"
+      >newBB</a
+      ><a name="6407"
+      > </a
+      ><a name="6408" class="Symbol"
+      >_</a
+      ><a name="6409"
+      > </a
+      ><a name="6410" class="Symbol"
+      >=</a
+      ><a name="6411"
+      > </a
+      ><a name="6412" href="Game.ReceiptFreeness.html#5988" class="Bound"
+      >bb</a
+      ><a name="6414"
+      >
+
+</a
+      ><a name="6416" class="Keyword"
+      >private</a
+      ><a name="6423"
+      >
+  </a
+      ><a name="6426" href="Game.ReceiptFreeness.html#6426" class="Function"
+      >State</a
+      ><a name="6431"
+      > </a
+      ><a name="6432" class="Symbol"
+      >:</a
+      ><a name="6433"
+      > </a
+      ><a name="6434" class="Symbol"
+      >(</a
+      ><a name="6435" href="Game.ReceiptFreeness.html#6435" class="Bound"
+      >S</a
+      ><a name="6436"
+      > </a
+      ><a name="6437" href="Game.ReceiptFreeness.html#6437" class="Bound"
+      >A</a
+      ><a name="6438"
+      > </a
+      ><a name="6439" class="Symbol"
+      >:</a
+      ><a name="6440"
+      > </a
+      ><a name="6441" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="6442" class="Symbol"
+      >)</a
+      ><a name="6443"
+      > </a
+      ><a name="6444" class="Symbol"
+      >&#8594;</a
+      ><a name="6445"
+      > </a
+      ><a name="6446" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="6447"
+      >
+  </a
+      ><a name="6450" href="Game.ReceiptFreeness.html#6426" class="Function"
+      >State</a
+      ><a name="6455"
+      > </a
+      ><a name="6456" href="Game.ReceiptFreeness.html#6456" class="Bound"
+      >S</a
+      ><a name="6457"
+      > </a
+      ><a name="6458" href="Game.ReceiptFreeness.html#6458" class="Bound"
+      >A</a
+      ><a name="6459"
+      > </a
+      ><a name="6460" class="Symbol"
+      >=</a
+      ><a name="6461"
+      > </a
+      ><a name="6462" href="Game.ReceiptFreeness.html#6456" class="Bound"
+      >S</a
+      ><a name="6463"
+      > </a
+      ><a name="6464" class="Symbol"
+      >&#8594;</a
+      ><a name="6465"
+      > </a
+      ><a name="6466" href="Game.ReceiptFreeness.html#6458" class="Bound"
+      >A</a
+      ><a name="6467"
+      > </a
+      ><a name="6468" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="6469"
+      > </a
+      ><a name="6470" href="Game.ReceiptFreeness.html#6456" class="Bound"
+      >S</a
+      ><a name="6471"
+      >
+</a
+      ><a name="6472" class="Keyword"
+      >open</a
+      ><a name="6476"
+      > </a
+      ><a name="6477" href="Control.Strategy.html#2965" class="Module"
+      >StatefulRun</a
+      ><a name="6488"
+      >
+
+</a
+      ><a name="6490" href="Game.ReceiptFreeness.html#6490" class="Function"
+      >PhaseNumber</a
+      ><a name="6501"
+      > </a
+      ><a name="6502" class="Symbol"
+      >=</a
+      ><a name="6503"
+      > </a
+      ><a name="6504" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="6505"
+      >
+</a
+      ><a name="6506" class="Keyword"
+      >module</a
+      ><a name="6512"
+      > </a
+      ><a name="6513" href="Game.ReceiptFreeness.html#6513" class="Module"
+      >EXP</a
+      ><a name="6516"
+      > </a
+      ><a name="6517" class="Symbol"
+      >(</a
+      ><a name="6518" href="Game.ReceiptFreeness.html#6518" class="Bound"
+      >b</a
+      ><a name="6519"
+      > </a
+      ><a name="6520" class="Symbol"
+      >:</a
+      ><a name="6521"
+      > </a
+      ><a name="6522" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="6523" class="Symbol"
+      >)</a
+      ><a name="6524"
+      > </a
+      ><a name="6525" class="Symbol"
+      >(</a
+      ><a name="6526" href="Game.ReceiptFreeness.html#6526" class="Bound"
+      >A</a
+      ><a name="6527"
+      > </a
+      ><a name="6528" class="Symbol"
+      >:</a
+      ><a name="6529"
+      > </a
+      ><a name="6530" href="Game.ReceiptFreeness.html#5635" class="Function"
+      >Adversary</a
+      ><a name="6539" class="Symbol"
+      >)</a
+      ><a name="6540"
+      > </a
+      ><a name="6541" class="Symbol"
+      >(</a
+      ><a name="6542" href="Game.ReceiptFreeness.html#6542" class="Bound"
+      >pk</a
+      ><a name="6544"
+      > </a
+      ><a name="6545" class="Symbol"
+      >:</a
+      ><a name="6546"
+      > </a
+      ><a name="6547" href="Game.ReceiptFreeness.html#555" class="Bound"
+      >PubKey</a
+      ><a name="6553" class="Symbol"
+      >)</a
+      ><a name="6554"
+      > </a
+      ><a name="6555" class="Symbol"
+      >(</a
+      ><a name="6556" href="Game.ReceiptFreeness.html#6556" class="Bound"
+      >sk</a
+      ><a name="6558"
+      > </a
+      ><a name="6559" class="Symbol"
+      >:</a
+      ><a name="6560"
+      > </a
+      ><a name="6561" href="Game.ReceiptFreeness.html#573" class="Bound"
+      >SecKey</a
+      ><a name="6567" class="Symbol"
+      >)</a
+      ><a name="6568"
+      >
+           </a
+      ><a name="6580" class="Symbol"
+      >(</a
+      ><a name="6581" href="Game.ReceiptFreeness.html#6581" class="Bound"
+      >r&#8336;</a
+      ><a name="6583"
+      > </a
+      ><a name="6584" class="Symbol"
+      >:</a
+      ><a name="6585"
+      > </a
+      ><a name="6586" href="Game.ReceiptFreeness.html#739" class="Bound"
+      >R&#8336;</a
+      ><a name="6588" class="Symbol"
+      >)</a
+      ><a name="6589"
+      > </a
+      ><a name="6590" class="Symbol"
+      >(</a
+      ><a name="6591" href="Game.ReceiptFreeness.html#6591" class="Bound"
+      >rgb</a
+      ><a name="6594"
+      > </a
+      ><a name="6595" class="Symbol"
+      >:</a
+      ><a name="6596"
+      > </a
+      ><a name="6597" href="Game.ReceiptFreeness.html#1078" class="Function"
+      >Candidate</a
+      ><a name="6606"
+      > </a
+      ><a name="6607" class="Symbol"
+      >&#8594;</a
+      ><a name="6608"
+      > </a
+      ><a name="6609" href="Game.ReceiptFreeness.html#2935" class="Function"
+      >Rgb</a
+      ><a name="6612" class="Symbol"
+      >)</a
+      ><a name="6613"
+      >
+           </a
+      ><a name="6625" class="Symbol"
+      >(</a
+      ><a name="6626" href="Game.ReceiptFreeness.html#6626" class="Bound"
+      >v</a
+      ><a name="6627"
+      > </a
+      ><a name="6628" class="Symbol"
+      >:</a
+      ><a name="6629"
+      > </a
+      ><a name="6630" href="Game.ReceiptFreeness.html#6490" class="Function"
+      >PhaseNumber</a
+      ><a name="6641"
+      > </a
+      ><a name="6642" class="Symbol"
+      >&#8594;</a
+      ><a name="6643"
+      > </a
+      ><a name="6644" href="Data.Vec.html#604" class="Datatype"
+      >Vec</a
+      ><a name="6647"
+      > </a
+      ><a name="6648" href="Game.ReceiptFreeness.html#2935" class="Function"
+      >Rgb</a
+      ><a name="6651"
+      > </a
+      ><a name="6652" href="Game.ReceiptFreeness.html#750" class="Bound"
+      >#q</a
+      ><a name="6654" class="Symbol"
+      >)</a
+      ><a name="6655"
+      > </a
+      ><a name="6656" class="Keyword"
+      >where</a
+      ><a name="6661"
+      >
+  </a
+      ><a name="6664" href="Game.ReceiptFreeness.html#6664" class="Function"
+      >BBsetup</a
+      ><a name="6671"
+      > </a
+      ><a name="6672" class="Symbol"
+      >:</a
+      ><a name="6673"
+      > </a
+      ><a name="6674" href="Game.ReceiptFreeness.html#3428" class="Function"
+      >BB</a
+      ><a name="6676"
+      >
+  </a
+      ><a name="6679" href="Game.ReceiptFreeness.html#6664" class="Function"
+      >BBsetup</a
+      ><a name="6686"
+      > </a
+      ><a name="6687" class="Symbol"
+      >=</a
+      ><a name="6688"
+      > </a
+      ><a name="6689" href="Data.List.html#696" class="InductiveConstructor"
+      >[]</a
+      ><a name="6691"
+      >
+
+  </a
+      ><a name="6695" href="Game.ReceiptFreeness.html#6695" class="Function"
+      >Aphase[I]</a
+      ><a name="6704"
+      > </a
+      ><a name="6705" class="Symbol"
+      >:</a
+      ><a name="6706"
+      > </a
+      ><a name="6707" href="Game.ReceiptFreeness.html#5422" class="Function"
+      >Phase</a
+      ><a name="6712"
+      > </a
+      ><a name="6713" class="Symbol"
+      >_</a
+      ><a name="6714"
+      >
+  </a
+      ><a name="6717" href="Game.ReceiptFreeness.html#6695" class="Function"
+      >Aphase[I]</a
+      ><a name="6726"
+      > </a
+      ><a name="6727" class="Symbol"
+      >=</a
+      ><a name="6728"
+      > </a
+      ><a name="6729" href="Game.ReceiptFreeness.html#6526" class="Bound"
+      >A</a
+      ><a name="6730"
+      > </a
+      ><a name="6731" href="Game.ReceiptFreeness.html#6581" class="Bound"
+      >r&#8336;</a
+      ><a name="6733"
+      > </a
+      ><a name="6734" href="Game.ReceiptFreeness.html#6542" class="Bound"
+      >pk</a
+      ><a name="6736"
+      >
+
+  </a
+      ><a name="6740" href="Game.ReceiptFreeness.html#6740" class="Function"
+      >S</a
+      ><a name="6741"
+      > </a
+      ><a name="6742" class="Symbol"
+      >=</a
+      ><a name="6743"
+      > </a
+      ><a name="6744" href="Game.ReceiptFreeness.html#3428" class="Function"
+      >BB</a
+      ><a name="6746"
+      > </a
+      ><a name="6747" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="6748"
+      > </a
+      ><a name="6749" href="Data.Fin.html#775" class="Datatype"
+      >Fin</a
+      ><a name="6752"
+      > </a
+      ><a name="6753" href="Game.ReceiptFreeness.html#750" class="Bound"
+      >#q</a
+      ><a name="6755"
+      >
+
+  </a
+      ><a name="6759" class="Comment"
+      >-- When the adversary runs out of allowed queries (namely</a
+      ><a name="6816"
+      >
+  </a
+      ><a name="6819" class="Comment"
+      >-- when i becomes zero), then all successive queries will</a
+      ><a name="6876"
+      >
+  </a
+      ><a name="6879" class="Comment"
+      >-- be deterministic. The only case asking for randomness</a
+      ><a name="6935"
+      >
+  </a
+      ><a name="6938" class="Comment"
+      >-- is ballot creation.</a
+      ><a name="6960"
+      >
+  </a
+      ><a name="6963" href="Game.ReceiptFreeness.html#6963" class="Function"
+      >OracleS</a
+      ><a name="6970"
+      > </a
+      ><a name="6971" class="Symbol"
+      >:</a
+      ><a name="6972"
+      > </a
+      ><a name="6973" class="Symbol"
+      >(</a
+      ><a name="6974" href="Game.ReceiptFreeness.html#6974" class="Bound"
+      >phase#</a
+      ><a name="6980"
+      > </a
+      ><a name="6981" class="Symbol"
+      >:</a
+      ><a name="6982"
+      > </a
+      ><a name="6983" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="6984" class="Symbol"
+      >)</a
+      ><a name="6985"
+      > </a
+      ><a name="6986" class="Symbol"
+      >(</a
+      ><a name="6987" href="Game.ReceiptFreeness.html#6987" class="Bound"
+      >q</a
+      ><a name="6988"
+      > </a
+      ><a name="6989" class="Symbol"
+      >:</a
+      ><a name="6990"
+      > </a
+      ><a name="6991" href="Game.ReceiptFreeness.html#5218" class="Datatype"
+      >Q</a
+      ><a name="6992" class="Symbol"
+      >)</a
+      ><a name="6993"
+      > </a
+      ><a name="6994" class="Symbol"
+      >&#8594;</a
+      ><a name="6995"
+      > </a
+      ><a name="6996" href="Game.ReceiptFreeness.html#6426" class="Function"
+      >State</a
+      ><a name="7001"
+      > </a
+      ><a name="7002" href="Game.ReceiptFreeness.html#6740" class="Function"
+      >S</a
+      ><a name="7003"
+      > </a
+      ><a name="7004" class="Symbol"
+      >(</a
+      ><a name="7005" href="Game.ReceiptFreeness.html#5314" class="Function"
+      >Resp</a
+      ><a name="7009"
+      > </a
+      ><a name="7010" href="Game.ReceiptFreeness.html#6987" class="Bound"
+      >q</a
+      ><a name="7011" class="Symbol"
+      >)</a
+      ><a name="7012"
+      >
+  </a
+      ><a name="7015" href="Game.ReceiptFreeness.html#6963" class="Function"
+      >OracleS</a
+      ><a name="7022"
+      > </a
+      ><a name="7023" href="Game.ReceiptFreeness.html#7023" class="Bound"
+      >phase#</a
+      ><a name="7029"
+      > </a
+      ><a name="7030" href="Game.ReceiptFreeness.html#7030" class="Bound"
+      >q</a
+      ><a name="7031"
+      > </a
+      ><a name="7032" class="Symbol"
+      >(</a
+      ><a name="7033" href="Game.ReceiptFreeness.html#7033" class="Bound"
+      >bb</a
+      ><a name="7035"
+      > </a
+      ><a name="7036" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="7037"
+      > </a
+      ><a name="7038" href="Game.ReceiptFreeness.html#7038" class="Bound"
+      >i</a
+      ><a name="7039" class="Symbol"
+      >)</a
+      ><a name="7040"
+      > </a
+      ><a name="7041" class="Symbol"
+      >=</a
+      ><a name="7042"
+      > </a
+      ><a name="7043" href="Game.ReceiptFreeness.html#6007" class="Function"
+      >O.resp</a
+      ><a name="7049"
+      > </a
+      ><a name="7050" href="Game.ReceiptFreeness.html#7030" class="Bound"
+      >q</a
+      ><a name="7051"
+      > </a
+      ><a name="7052" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="7053"
+      > </a
+      ><a name="7054" href="Game.ReceiptFreeness.html#6290" class="Function"
+      >O.newBB</a
+      ><a name="7061"
+      > </a
+      ><a name="7062" href="Game.ReceiptFreeness.html#7030" class="Bound"
+      >q</a
+      ><a name="7063"
+      > </a
+      ><a name="7064" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="7065"
+      > </a
+      ><a name="7066" href="Data.Fin.html#3948" class="Function"
+      >Fin.pred</a
+      ><a name="7074"
+      > </a
+      ><a name="7075" href="Game.ReceiptFreeness.html#7038" class="Bound"
+      >i</a
+      ><a name="7076"
+      >
+    </a
+      ><a name="7081" class="Keyword"
+      >where</a
+      ><a name="7086"
+      > </a
+      ><a name="7087" class="Keyword"
+      >module</a
+      ><a name="7093"
+      > </a
+      ><a name="7094" href="Game.ReceiptFreeness.html#7094" class="Module"
+      >O</a
+      ><a name="7095"
+      > </a
+      ><a name="7096" class="Symbol"
+      >=</a
+      ><a name="7097"
+      > </a
+      ><a name="7098" href="Game.ReceiptFreeness.html#5940" class="Module"
+      >Oracle</a
+      ><a name="7104"
+      > </a
+      ><a name="7105" href="Game.ReceiptFreeness.html#6556" class="Bound"
+      >sk</a
+      ><a name="7107"
+      > </a
+      ><a name="7108" href="Game.ReceiptFreeness.html#6542" class="Bound"
+      >pk</a
+      ><a name="7110"
+      > </a
+      ><a name="7111" class="Symbol"
+      >(</a
+      ><a name="7112" href="Data.Vec.html#6126" class="Function"
+      >lookup</a
+      ><a name="7118"
+      > </a
+      ><a name="7119" href="Game.ReceiptFreeness.html#7038" class="Bound"
+      >i</a
+      ><a name="7120"
+      > </a
+      ><a name="7121" class="Symbol"
+      >(</a
+      ><a name="7122" href="Game.ReceiptFreeness.html#6626" class="Bound"
+      >v</a
+      ><a name="7123"
+      > </a
+      ><a name="7124" href="Game.ReceiptFreeness.html#7023" class="Bound"
+      >phase#</a
+      ><a name="7130" class="Symbol"
+      >))</a
+      ><a name="7132"
+      > </a
+      ><a name="7133" href="Game.ReceiptFreeness.html#7033" class="Bound"
+      >bb</a
+      ><a name="7135"
+      >
+
+  </a
+      ><a name="7139" href="Game.ReceiptFreeness.html#7139" class="Function"
+      >phase[I]</a
+      ><a name="7147"
+      > </a
+      ><a name="7148" class="Symbol"
+      >=</a
+      ><a name="7149"
+      > </a
+      ><a name="7150" href="Control.Strategy.html#3030" class="Function"
+      >runS</a
+      ><a name="7154"
+      > </a
+      ><a name="7155" class="Symbol"
+      >(</a
+      ><a name="7156" href="Game.ReceiptFreeness.html#6963" class="Function"
+      >OracleS</a
+      ><a name="7163"
+      > </a
+      ><a name="7164" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="7166" class="Symbol"
+      >)</a
+      ><a name="7167"
+      > </a
+      ><a name="7168" href="Game.ReceiptFreeness.html#6695" class="Function"
+      >Aphase[I]</a
+      ><a name="7177"
+      > </a
+      ><a name="7178" class="Symbol"
+      >(</a
+      ><a name="7179" href="Game.ReceiptFreeness.html#6664" class="Function"
+      >BBsetup</a
+      ><a name="7186"
+      > </a
+      ><a name="7187" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="7188"
+      > </a
+      ><a name="7189" href="Game.ReceiptFreeness.html#759" class="Bound"
+      >max#q</a
+      ><a name="7194" class="Symbol"
+      >)</a
+      ><a name="7195"
+      >
+
+  </a
+      ><a name="7199" href="Game.ReceiptFreeness.html#7199" class="Function"
+      >AdversaryRFChallenge</a
+      ><a name="7219"
+      > </a
+      ><a name="7220" class="Symbol"
+      >:</a
+      ><a name="7221"
+      > </a
+      ><a name="7222" href="Game.ReceiptFreeness.html#5574" class="Function"
+      >RFChallenge</a
+      ><a name="7233"
+      > </a
+      ><a name="7234" class="Symbol"
+      >_</a
+      ><a name="7235"
+      >
+  </a
+      ><a name="7238" href="Game.ReceiptFreeness.html#7199" class="Function"
+      >AdversaryRFChallenge</a
+      ><a name="7258"
+      > </a
+      ><a name="7259" class="Symbol"
+      >=</a
+      ><a name="7260"
+      > </a
+      ><a name="7261" href="Data.Product.html#525" class="Field"
+      >proj&#8321;</a
+      ><a name="7266"
+      > </a
+      ><a name="7267" href="Game.ReceiptFreeness.html#7139" class="Function"
+      >phase[I]</a
+      ><a name="7275"
+      >
+
+  </a
+      ><a name="7279" href="Game.ReceiptFreeness.html#7279" class="Function"
+      >BBphase[I]</a
+      ><a name="7289"
+      > </a
+      ><a name="7290" class="Symbol"
+      >:</a
+      ><a name="7291"
+      > </a
+      ><a name="7292" href="Game.ReceiptFreeness.html#3428" class="Function"
+      >BB</a
+      ><a name="7294"
+      >
+  </a
+      ><a name="7297" href="Game.ReceiptFreeness.html#7279" class="Function"
+      >BBphase[I]</a
+      ><a name="7307"
+      > </a
+      ><a name="7308" class="Symbol"
+      >=</a
+      ><a name="7309"
+      > </a
+      ><a name="7310" href="Data.Product.html#525" class="Field"
+      >proj&#8321;</a
+      ><a name="7315"
+      > </a
+      ><a name="7316" class="Symbol"
+      >(</a
+      ><a name="7317" href="Data.Product.html#539" class="Field"
+      >proj&#8322;</a
+      ><a name="7322"
+      > </a
+      ><a name="7323" href="Game.ReceiptFreeness.html#7139" class="Function"
+      >phase[I]</a
+      ><a name="7331" class="Symbol"
+      >)</a
+      ><a name="7332"
+      >
+
+  </a
+      ><a name="7336" href="Game.ReceiptFreeness.html#7336" class="Function"
+      >ballots</a
+      ><a name="7343"
+      > </a
+      ><a name="7344" class="Symbol"
+      >:</a
+      ><a name="7345"
+      > </a
+      ><a name="7346" href="Game.ReceiptFreeness.html#1078" class="Function"
+      >Candidate</a
+      ><a name="7355"
+      > </a
+      ><a name="7356" class="Symbol"
+      >&#8594;</a
+      ><a name="7357"
+      > </a
+      ><a name="7358" href="Game.ReceiptFreeness.html#2745" class="Function"
+      >Ballot</a
+      ><a name="7364"
+      >
+  </a
+      ><a name="7367" href="Game.ReceiptFreeness.html#7336" class="Function"
+      >ballots</a
+      ><a name="7374"
+      > </a
+      ><a name="7375" href="Game.ReceiptFreeness.html#7375" class="Bound"
+      >c</a
+      ><a name="7376"
+      > </a
+      ><a name="7377" class="Symbol"
+      >=</a
+      ><a name="7378"
+      > </a
+      ><a name="7379" href="Game.ReceiptFreeness.html#3272" class="Function"
+      >fillBallot</a
+      ><a name="7389"
+      > </a
+      ><a name="7390" href="Game.ReceiptFreeness.html#7375" class="Bound"
+      >c</a
+      ><a name="7391"
+      > </a
+      ><a name="7392" class="Symbol"
+      >(</a
+      ><a name="7393" href="Game.ReceiptFreeness.html#2973" class="Function"
+      >genBallot</a
+      ><a name="7402"
+      > </a
+      ><a name="7403" href="Game.ReceiptFreeness.html#6542" class="Bound"
+      >pk</a
+      ><a name="7405"
+      > </a
+      ><a name="7406" class="Symbol"
+      >(</a
+      ><a name="7407" href="Game.ReceiptFreeness.html#6591" class="Bound"
+      >rgb</a
+      ><a name="7410"
+      > </a
+      ><a name="7411" href="Game.ReceiptFreeness.html#7375" class="Bound"
+      >c</a
+      ><a name="7412" class="Symbol"
+      >))</a
+      ><a name="7414"
+      >
+
+  </a
+      ><a name="7418" href="Game.ReceiptFreeness.html#7418" class="Function"
+      >ballot-for-alice</a
+      ><a name="7434"
+      > </a
+      ><a name="7435" class="Symbol"
+      >=</a
+      ><a name="7436"
+      > </a
+      ><a name="7437" href="Game.ReceiptFreeness.html#7336" class="Function"
+      >ballots</a
+      ><a name="7444"
+      > </a
+      ><a name="7445" href="Game.ReceiptFreeness.html#1144" class="Function"
+      >alice</a
+      ><a name="7450"
+      >
+  </a
+      ><a name="7453" href="Game.ReceiptFreeness.html#7453" class="Function"
+      >ballot-for-bob</a
+      ><a name="7467"
+      >   </a
+      ><a name="7470" class="Symbol"
+      >=</a
+      ><a name="7471"
+      > </a
+      ><a name="7472" href="Game.ReceiptFreeness.html#7336" class="Function"
+      >ballots</a
+      ><a name="7479"
+      > </a
+      ><a name="7480" href="Game.ReceiptFreeness.html#1150" class="Function"
+      >bob</a
+      ><a name="7483"
+      >
+
+  </a
+      ><a name="7487" href="Game.ReceiptFreeness.html#7487" class="Function"
+      >randomly-swapped-ballots</a
+      ><a name="7511"
+      > </a
+      ><a name="7512" class="Symbol"
+      >:</a
+      ><a name="7513"
+      > </a
+      ><a name="7514" href="Game.ReceiptFreeness.html#1078" class="Function"
+      >Candidate</a
+      ><a name="7523"
+      > </a
+      ><a name="7524" class="Symbol"
+      >&#8594;</a
+      ><a name="7525"
+      > </a
+      ><a name="7526" href="Game.ReceiptFreeness.html#2745" class="Function"
+      >Ballot</a
+      ><a name="7532"
+      >
+  </a
+      ><a name="7535" href="Game.ReceiptFreeness.html#7487" class="Function"
+      >randomly-swapped-ballots</a
+      ><a name="7559"
+      > </a
+      ><a name="7560" class="Symbol"
+      >=</a
+      ><a name="7561"
+      > </a
+      ><a name="7562" href="Game.ReceiptFreeness.html#7336" class="Function"
+      >ballots</a
+      ><a name="7569"
+      > </a
+      ><a name="7570" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="7571"
+      > </a
+      ><a name="7572" href="Data.Bool.html#1270" class="Function Operator"
+      >_xor_</a
+      ><a name="7577"
+      > </a
+      ><a name="7578" href="Game.ReceiptFreeness.html#6518" class="Bound"
+      >b</a
+      ><a name="7579"
+      >
+
+  </a
+      ><a name="7583" href="Game.ReceiptFreeness.html#7583" class="Function"
+      >randomly-swapped-receipts</a
+      ><a name="7608"
+      > </a
+      ><a name="7609" class="Symbol"
+      >:</a
+      ><a name="7610"
+      > </a
+      ><a name="7611" href="Game.ReceiptFreeness.html#1078" class="Function"
+      >Candidate</a
+      ><a name="7620"
+      > </a
+      ><a name="7621" class="Symbol"
+      >&#8594;</a
+      ><a name="7622"
+      > </a
+      ><a name="7623" href="Game.ReceiptFreeness.html#2254" class="Function"
+      >Receipt</a
+      ><a name="7630"
+      >
+  </a
+      ><a name="7633" href="Game.ReceiptFreeness.html#7583" class="Function"
+      >randomly-swapped-receipts</a
+      ><a name="7658"
+      > </a
+      ><a name="7659" class="Symbol"
+      >=</a
+      ><a name="7660"
+      > </a
+      ><a name="7661" href="Game.ReceiptFreeness.html#2863" class="Function"
+      >receipt</a
+      ><a name="7668"
+      > </a
+      ><a name="7669" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="7670"
+      > </a
+      ><a name="7671" href="Game.ReceiptFreeness.html#7487" class="Function"
+      >randomly-swapped-ballots</a
+      ><a name="7695"
+      >
+
+  </a
+      ><a name="7699" href="Game.ReceiptFreeness.html#7699" class="Function"
+      >BBrfc</a
+      ><a name="7704"
+      > </a
+      ><a name="7705" class="Symbol"
+      >:</a
+      ><a name="7706"
+      > </a
+      ><a name="7707" href="Game.ReceiptFreeness.html#3428" class="Function"
+      >BB</a
+      ><a name="7709"
+      >
+  </a
+      ><a name="7712" href="Game.ReceiptFreeness.html#7699" class="Function"
+      >BBrfc</a
+      ><a name="7717"
+      > </a
+      ><a name="7718" class="Symbol"
+      >=</a
+      ><a name="7719"
+      > </a
+      ><a name="7720" href="Game.ReceiptFreeness.html#7583" class="Function"
+      >randomly-swapped-receipts</a
+      ><a name="7745"
+      > </a
+      ><a name="7746" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="7748"
+      > </a
+      ><a name="7749" href="Data.List.html#711" class="InductiveConstructor Operator"
+      >&#8759;</a
+      ><a name="7750"
+      > </a
+      ><a name="7751" href="Game.ReceiptFreeness.html#7583" class="Function"
+      >randomly-swapped-receipts</a
+      ><a name="7776"
+      > </a
+      ><a name="7777" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="7779"
+      > </a
+      ><a name="7780" href="Data.List.html#711" class="InductiveConstructor Operator"
+      >&#8759;</a
+      ><a name="7781"
+      > </a
+      ><a name="7782" href="Game.ReceiptFreeness.html#7279" class="Function"
+      >BBphase[I]</a
+      ><a name="7792"
+      >
+
+  </a
+      ><a name="7796" href="Game.ReceiptFreeness.html#7796" class="Function"
+      >Aphase[II]</a
+      ><a name="7806"
+      > </a
+      ><a name="7807" class="Symbol"
+      >:</a
+      ><a name="7808"
+      > </a
+      ><a name="7809" href="Game.ReceiptFreeness.html#5422" class="Function"
+      >Phase</a
+      ><a name="7814"
+      > </a
+      ><a name="7815" class="Symbol"
+      >_</a
+      ><a name="7816"
+      >
+  </a
+      ><a name="7819" href="Game.ReceiptFreeness.html#7796" class="Function"
+      >Aphase[II]</a
+      ><a name="7829"
+      > </a
+      ><a name="7830" class="Symbol"
+      >=</a
+      ><a name="7831"
+      > </a
+      ><a name="7832" href="Game.ReceiptFreeness.html#7199" class="Function"
+      >AdversaryRFChallenge</a
+      ><a name="7852"
+      > </a
+      ><a name="7853" href="Game.ReceiptFreeness.html#7583" class="Function"
+      >randomly-swapped-receipts</a
+      ><a name="7878"
+      >
+
+  </a
+      ><a name="7882" href="Game.ReceiptFreeness.html#7882" class="Function"
+      >phase[II]</a
+      ><a name="7891"
+      > </a
+      ><a name="7892" class="Symbol"
+      >=</a
+      ><a name="7893"
+      > </a
+      ><a name="7894" href="Control.Strategy.html#3030" class="Function"
+      >runS</a
+      ><a name="7898"
+      > </a
+      ><a name="7899" class="Symbol"
+      >(</a
+      ><a name="7900" href="Game.ReceiptFreeness.html#6963" class="Function"
+      >OracleS</a
+      ><a name="7907"
+      > </a
+      ><a name="7908" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="7910" class="Symbol"
+      >)</a
+      ><a name="7911"
+      > </a
+      ><a name="7912" href="Game.ReceiptFreeness.html#7796" class="Function"
+      >Aphase[II]</a
+      ><a name="7922"
+      > </a
+      ><a name="7923" class="Symbol"
+      >(</a
+      ><a name="7924" href="Game.ReceiptFreeness.html#7699" class="Function"
+      >BBrfc</a
+      ><a name="7929"
+      > </a
+      ><a name="7930" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="7931"
+      > </a
+      ><a name="7932" href="Game.ReceiptFreeness.html#759" class="Bound"
+      >max#q</a
+      ><a name="7937" class="Symbol"
+      >)</a
+      ><a name="7938"
+      >
+
+  </a
+      ><a name="7942" class="Comment"
+      >-- adversary guess</a
+      ><a name="7960"
+      >
+  </a
+      ><a name="7963" href="Game.ReceiptFreeness.html#7963" class="Function"
+      >b&#8242;</a
+      ><a name="7965"
+      > </a
+      ><a name="7966" class="Symbol"
+      >=</a
+      ><a name="7967"
+      > </a
+      ><a name="7968" href="Data.Product.html#525" class="Field"
+      >proj&#8321;</a
+      ><a name="7973"
+      > </a
+      ><a name="7974" href="Game.ReceiptFreeness.html#7882" class="Function"
+      >phase[II]</a
+      ><a name="7983"
+      >
+
+</a
+      ><a name="7985" href="Game.ReceiptFreeness.html#7985" class="Function Operator"
+      >_&#178;</a
+      ><a name="7987"
+      > </a
+      ><a name="7988" class="Symbol"
+      >:</a
+      ><a name="7989"
+      > </a
+      ><a name="7990" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="7991"
+      > </a
+      ><a name="7992" class="Symbol"
+      >&#8594;</a
+      ><a name="7993"
+      > </a
+      ><a name="7994" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="7995"
+      >
+</a
+      ><a name="7996" href="Game.ReceiptFreeness.html#7996" class="Bound"
+      >A</a
+      ><a name="7997"
+      > </a
+      ><a name="7998" href="Game.ReceiptFreeness.html#7985" class="Function Operator"
+      >&#178;</a
+      ><a name="7999"
+      > </a
+      ><a name="8000" class="Symbol"
+      >=</a
+      ><a name="8001"
+      > </a
+      ><a name="8002" href="Game.ReceiptFreeness.html#7996" class="Bound"
+      >A</a
+      ><a name="8003"
+      > </a
+      ><a name="8004" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="8005"
+      > </a
+      ><a name="8006" href="Game.ReceiptFreeness.html#7996" class="Bound"
+      >A</a
+      ><a name="8007"
+      >
+
+</a
+      ><a name="8009" href="Game.ReceiptFreeness.html#8009" class="Function"
+      >R</a
+      ><a name="8010"
+      > </a
+      ><a name="8011" class="Symbol"
+      >:</a
+      ><a name="8012"
+      > </a
+      ><a name="8013" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="8014"
+      >
+</a
+      ><a name="8015" href="Game.ReceiptFreeness.html#8009" class="Function"
+      >R</a
+      ><a name="8016"
+      > </a
+      ><a name="8017" class="Symbol"
+      >=</a
+      ><a name="8018"
+      > </a
+      ><a name="8019" href="Game.ReceiptFreeness.html#736" class="Bound"
+      >R&#8342;</a
+      ><a name="8021"
+      > </a
+      ><a name="8022" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="8023"
+      > </a
+      ><a name="8024" href="Game.ReceiptFreeness.html#739" class="Bound"
+      >R&#8336;</a
+      ><a name="8026"
+      > </a
+      ><a name="8027" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="8028"
+      > </a
+      ><a name="8029" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="8030"
+      > </a
+      ><a name="8031" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="8032"
+      > </a
+      ><a name="8033" class="Symbol"
+      >(</a
+      ><a name="8034" href="Data.Vec.html#604" class="Datatype"
+      >Vec</a
+      ><a name="8037"
+      > </a
+      ><a name="8038" href="Game.ReceiptFreeness.html#2935" class="Function"
+      >Rgb</a
+      ><a name="8041"
+      > </a
+      ><a name="8042" class="Symbol"
+      >(</a
+      ><a name="8043" class="Number"
+      >1</a
+      ><a name="8044" class="Comment"
+      >{-for the challenge-}</a
+      ><a name="8065"
+      > </a
+      ><a name="8066" href="Data.Nat.html#2239" class="Primitive Operator"
+      >+</a
+      ><a name="8067"
+      > </a
+      ><a name="8068" href="Game.ReceiptFreeness.html#750" class="Bound"
+      >#q</a
+      ><a name="8070" class="Symbol"
+      >))</a
+      ><a name="8072" href="Game.ReceiptFreeness.html#7985" class="Function Operator"
+      >&#178;</a
+      ><a name="8073"
+      >
+
+</a
+      ><a name="8075" href="Game.ReceiptFreeness.html#8075" class="Function"
+      >game</a
+      ><a name="8079"
+      > </a
+      ><a name="8080" class="Symbol"
+      >:</a
+      ><a name="8081"
+      > </a
+      ><a name="8082" href="Game.ReceiptFreeness.html#5635" class="Function"
+      >Adversary</a
+      ><a name="8091"
+      > </a
+      ><a name="8092" class="Symbol"
+      >&#8594;</a
+      ><a name="8093"
+      > </a
+      ><a name="8094" href="Game.ReceiptFreeness.html#8009" class="Function"
+      >R</a
+      ><a name="8095"
+      > </a
+      ><a name="8096" class="Symbol"
+      >&#8594;</a
+      ><a name="8097"
+      > </a
+      ><a name="8098" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="8099"
+      >
+</a
+      ><a name="8100" href="Game.ReceiptFreeness.html#8075" class="Function"
+      >game</a
+      ><a name="8104"
+      > </a
+      ><a name="8105" href="Game.ReceiptFreeness.html#8105" class="Bound"
+      >A</a
+      ><a name="8106"
+      > </a
+      ><a name="8107" class="Symbol"
+      >(</a
+      ><a name="8108" href="Game.ReceiptFreeness.html#8108" class="Bound"
+      >r&#8342;</a
+      ><a name="8110"
+      > </a
+      ><a name="8111" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="8112"
+      > </a
+      ><a name="8113" href="Game.ReceiptFreeness.html#8113" class="Bound"
+      >r&#8336;</a
+      ><a name="8115"
+      > </a
+      ><a name="8116" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="8117"
+      > </a
+      ><a name="8118" href="Game.ReceiptFreeness.html#8118" class="Bound"
+      >b</a
+      ><a name="8119"
+      > </a
+      ><a name="8120" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="8121"
+      > </a
+      ><a name="8122" class="Symbol"
+      >(</a
+      ><a name="8123" href="Game.ReceiptFreeness.html#8123" class="Bound"
+      >rgb&#8320;</a
+      ><a name="8127"
+      > </a
+      ><a name="8128" href="Data.Vec.html#663" class="InductiveConstructor Operator"
+      >&#8759;</a
+      ><a name="8129"
+      > </a
+      ><a name="8130" href="Game.ReceiptFreeness.html#8130" class="Bound"
+      >rgbs&#8320;</a
+      ><a name="8135" class="Symbol"
+      >)</a
+      ><a name="8136"
+      > </a
+      ><a name="8137" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="8138"
+      > </a
+      ><a name="8139" class="Symbol"
+      >(</a
+      ><a name="8140" href="Game.ReceiptFreeness.html#8140" class="Bound"
+      >rgb&#8321;</a
+      ><a name="8144"
+      > </a
+      ><a name="8145" href="Data.Vec.html#663" class="InductiveConstructor Operator"
+      >&#8759;</a
+      ><a name="8146"
+      > </a
+      ><a name="8147" href="Game.ReceiptFreeness.html#8147" class="Bound"
+      >rgbs&#8321;</a
+      ><a name="8152" class="Symbol"
+      >))</a
+      ><a name="8154"
+      > </a
+      ><a name="8155" class="Symbol"
+      >=</a
+      ><a name="8156"
+      >
+  </a
+      ><a name="8159" href="Function.html#2755" class="Function Operator"
+      >case</a
+      ><a name="8163"
+      > </a
+      ><a name="8164" href="Game.ReceiptFreeness.html#778" class="Bound"
+      >KeyGen</a
+      ><a name="8170"
+      > </a
+      ><a name="8171" href="Game.ReceiptFreeness.html#8108" class="Bound"
+      >r&#8342;</a
+      ><a name="8173"
+      > </a
+      ><a name="8174" href="Function.html#2755" class="Function Operator"
+      >of</a
+      ><a name="8176"
+      > </a
+      ><a name="8177" class="Symbol"
+      >&#955;</a
+      ><a name="8178"
+      >
+  </a
+      ><a name="8181" class="Symbol"
+      >{</a
+      ><a name="8182"
+      > </a
+      ><a name="8183" class="Symbol"
+      >(</a
+      ><a name="8184" href="Game.ReceiptFreeness.html#8184" class="Bound"
+      >pk</a
+      ><a name="8186"
+      > </a
+      ><a name="8187" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="8188"
+      > </a
+      ><a name="8189" href="Game.ReceiptFreeness.html#8189" class="Bound"
+      >sk</a
+      ><a name="8191" class="Symbol"
+      >)</a
+      ><a name="8192"
+      > </a
+      ><a name="8193" class="Symbol"
+      >&#8594;</a
+      ><a name="8194"
+      >
+    </a
+      ><a name="8199" href="Game.ReceiptFreeness.html#8118" class="Bound"
+      >b</a
+      ><a name="8200"
+      > </a
+      ><a name="8201" href="Data.Two.html#2568" class="Function Operator"
+      >==</a
+      ><a name="8203"
+      > </a
+      ><a name="8204" href="Game.ReceiptFreeness.html#7963" class="Function"
+      >EXP.b&#8242;</a
+      ><a name="8210"
+      > </a
+      ><a name="8211" href="Game.ReceiptFreeness.html#8118" class="Bound"
+      >b</a
+      ><a name="8212"
+      > </a
+      ><a name="8213" href="Game.ReceiptFreeness.html#8105" class="Bound"
+      >A</a
+      ><a name="8214"
+      > </a
+      ><a name="8215" href="Game.ReceiptFreeness.html#8184" class="Bound"
+      >pk</a
+      ><a name="8217"
+      > </a
+      ><a name="8218" href="Game.ReceiptFreeness.html#8189" class="Bound"
+      >sk</a
+      ><a name="8220"
+      > </a
+      ><a name="8221" href="Game.ReceiptFreeness.html#8113" class="Bound"
+      >r&#8336;</a
+      ><a name="8223"
+      > </a
+      ><a name="8224" href="Data.Two.html#1603" class="Function Operator"
+      >[0:</a
+      ><a name="8227"
+      > </a
+      ><a name="8228" href="Game.ReceiptFreeness.html#8123" class="Bound"
+      >rgb&#8320;</a
+      ><a name="8232"
+      > </a
+      ><a name="8233" href="Data.Two.html#1603" class="Function Operator"
+      >1:</a
+      ><a name="8235"
+      > </a
+      ><a name="8236" href="Game.ReceiptFreeness.html#8140" class="Bound"
+      >rgb&#8321;</a
+      ><a name="8240"
+      > </a
+      ><a name="8241" href="Data.Two.html#1603" class="Function Operator"
+      >]</a
+      ><a name="8242"
+      > </a
+      ><a name="8243" href="Data.Two.html#1603" class="Function Operator"
+      >[0:</a
+      ><a name="8246"
+      > </a
+      ><a name="8247" href="Game.ReceiptFreeness.html#8130" class="Bound"
+      >rgbs&#8320;</a
+      ><a name="8252"
+      > </a
+      ><a name="8253" href="Data.Two.html#1603" class="Function Operator"
+      >1:</a
+      ><a name="8255"
+      > </a
+      ><a name="8256" href="Game.ReceiptFreeness.html#8147" class="Bound"
+      >rgbs&#8321;</a
+      ><a name="8261"
+      > </a
+      ><a name="8262" href="Data.Two.html#1603" class="Function Operator"
+      >]</a
+      ><a name="8263"
+      >
+  </a
+      ><a name="8266" class="Symbol"
+      >}</a
+      ><a name="8267"
+      >
+
+</a
+      ><a name="8269" class="Comment"
+      >-- Winning condition</a
+      ><a name="8289"
+      >
+</a
+      ><a name="8290" href="Game.ReceiptFreeness.html#8290" class="Function"
+      >Win</a
+      ><a name="8293"
+      > </a
+      ><a name="8294" class="Symbol"
+      >:</a
+      ><a name="8295"
+      > </a
+      ><a name="8296" href="Game.ReceiptFreeness.html#5635" class="Function"
+      >Adversary</a
+      ><a name="8305"
+      > </a
+      ><a name="8306" class="Symbol"
+      >&#8594;</a
+      ><a name="8307"
+      > </a
+      ><a name="8308" href="Game.ReceiptFreeness.html#8009" class="Function"
+      >R</a
+      ><a name="8309"
+      > </a
+      ><a name="8310" class="Symbol"
+      >&#8594;</a
+      ><a name="8311"
+      > </a
+      ><a name="8312" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="8313"
+      >
+</a
+      ><a name="8314" href="Game.ReceiptFreeness.html#8290" class="Function"
+      >Win</a
+      ><a name="8317"
+      > </a
+      ><a name="8318" href="Game.ReceiptFreeness.html#8318" class="Bound"
+      >A</a
+      ><a name="8319"
+      > </a
+      ><a name="8320" href="Game.ReceiptFreeness.html#8320" class="Bound"
+      >r</a
+      ><a name="8321"
+      > </a
+      ><a name="8322" class="Symbol"
+      >=</a
+      ><a name="8323"
+      > </a
+      ><a name="8324" href="Game.ReceiptFreeness.html#8075" class="Function"
+      >game</a
+      ><a name="8328"
+      > </a
+      ><a name="8329" href="Game.ReceiptFreeness.html#8318" class="Bound"
+      >A</a
+      ><a name="8330"
+      > </a
+      ><a name="8331" href="Game.ReceiptFreeness.html#8320" class="Bound"
+      >r</a
+      ><a name="8332"
+      > </a
+      ><a name="8333" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="8334"
+      > </a
+      ><a name="8335" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="8337"
+      >
+
+</a
+      ><a name="8339" class="Comment"
+      >{- Not all adversaries of the Adversary type are valid.
+
+   First, we do not forbid the challenge in the 2nd step of the Oracle.
+   Second, there is no check preventing ballots to be resubmitted.
+   Last but not least, no complexity analysis is done.
+-}</a
+      ><a name="8592"
+      >
+
+</a
+      ><a name="8594" class="Keyword"
+      >module</a
+      ><a name="8600"
+      > </a
+      ><a name="8601" href="Game.ReceiptFreeness.html#8601" class="Module"
+      >Cheating1</a
+      ><a name="8610"
+      > </a
+      ><a name="8611" class="Keyword"
+      >where</a
+      ><a name="8616"
+      >
+    </a
+      ><a name="8621" href="Game.ReceiptFreeness.html#8621" class="Function"
+      >cheatingA</a
+      ><a name="8630"
+      > </a
+      ><a name="8631" class="Symbol"
+      >:</a
+      ><a name="8632"
+      > </a
+      ><a name="8633" href="Game.ReceiptFreeness.html#5635" class="Function"
+      >Adversary</a
+      ><a name="8642"
+      >
+    </a
+      ><a name="8647" href="Game.ReceiptFreeness.html#8621" class="Function"
+      >cheatingA</a
+      ><a name="8656"
+      > </a
+      ><a name="8657" href="Game.ReceiptFreeness.html#8657" class="Bound"
+      >r&#8336;</a
+      ><a name="8659"
+      > </a
+      ><a name="8660" href="Game.ReceiptFreeness.html#8660" class="Bound"
+      >pk</a
+      ><a name="8662"
+      > </a
+      ><a name="8663" class="Symbol"
+      >=</a
+      ><a name="8664"
+      > </a
+      ><a name="8665" href="Control.Strategy.html#319" class="InductiveConstructor"
+      >done</a
+      ><a name="8669"
+      > </a
+      ><a name="8670" class="Symbol"
+      >(&#955;</a
+      ><a name="8672"
+      > </a
+      ><a name="8673" href="Game.ReceiptFreeness.html#8673" class="Bound"
+      >m</a
+      ><a name="8674"
+      > </a
+      ><a name="8675" class="Symbol"
+      >&#8594;</a
+      ><a name="8676"
+      > </a
+      ><a name="8677" href="Control.Strategy.html#253" class="InductiveConstructor"
+      >ask</a
+      ><a name="8680"
+      > </a
+      ><a name="8681" class="Symbol"
+      >(</a
+      ><a name="8682" href="Game.ReceiptFreeness.html#5253" class="InductiveConstructor"
+      >RCO</a
+      ><a name="8685"
+      > </a
+      ><a name="8686" class="Symbol"
+      >(</a
+      ><a name="8687" href="Game.ReceiptFreeness.html#8673" class="Bound"
+      >m</a
+      ><a name="8688"
+      > </a
+      ><a name="8689" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="8691" class="Symbol"
+      >))</a
+      ><a name="8693"
+      > </a
+      ><a name="8694" class="Symbol"
+      >(&#955;</a
+      ><a name="8696"
+      > </a
+      ><a name="8697" href="Game.ReceiptFreeness.html#8697" class="Bound"
+      >co</a
+      ><a name="8699"
+      > </a
+      ><a name="8700" class="Symbol"
+      >&#8594;</a
+      ><a name="8701"
+      > </a
+      ><a name="8702" href="Control.Strategy.html#319" class="InductiveConstructor"
+      >done</a
+      ><a name="8706"
+      > </a
+      ><a name="8707" class="Symbol"
+      >(</a
+      ><a name="8708" href="Game.ReceiptFreeness.html#8697" class="Bound"
+      >co</a
+      ><a name="8710"
+      > </a
+      ><a name="8711" href="Data.Two.html#2568" class="Function Operator"
+      >==</a
+      ><a name="8713"
+      > </a
+      ><a name="8714" class="Symbol"
+      >(</a
+      ><a name="8715" href="Game.ReceiptFreeness.html#2617" class="Function"
+      >marked-on-second-cell?</a
+      ><a name="8737"
+      > </a
+      ><a name="8738" class="Symbol"
+      >(</a
+      ><a name="8739" href="Game.ReceiptFreeness.html#2320" class="Function"
+      >markedReceipt?</a
+      ><a name="8753"
+      > </a
+      ><a name="8754" class="Symbol"
+      >(</a
+      ><a name="8755" href="Game.ReceiptFreeness.html#8673" class="Bound"
+      >m</a
+      ><a name="8756"
+      > </a
+      ><a name="8757" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="8759" class="Symbol"
+      >))))))</a
+      ><a name="8765"
+      >
+
+    </a
+      ><a name="8771" class="Keyword"
+      >module</a
+      ><a name="8777"
+      > </a
+      ><a name="8778" href="Game.ReceiptFreeness.html#8778" class="Module"
+      >_</a
+      ><a name="8779"
+      >
+     </a
+      ><a name="8785" class="Symbol"
+      >(</a
+      ><a name="8786" href="Game.ReceiptFreeness.html#8786" class="Bound"
+      >DecEnc</a
+      ><a name="8792"
+      > </a
+      ><a name="8793" class="Symbol"
+      >:</a
+      ><a name="8794"
+      > </a
+      ><a name="8795" class="Symbol"
+      >&#8704;</a
+      ><a name="8796"
+      > </a
+      ><a name="8797" href="Game.ReceiptFreeness.html#8797" class="Bound"
+      >r&#8342;</a
+      ><a name="8799"
+      > </a
+      ><a name="8800" href="Game.ReceiptFreeness.html#8800" class="Bound"
+      >r&#8337;</a
+      ><a name="8802"
+      > </a
+      ><a name="8803" href="Game.ReceiptFreeness.html#8803" class="Bound"
+      >m</a
+      ><a name="8804"
+      > </a
+      ><a name="8805" class="Symbol"
+      >&#8594;</a
+      ><a name="8806"
+      > </a
+      ><a name="8807" class="Keyword"
+      >let</a
+      ><a name="8810"
+      > </a
+      ><a name="8811" class="Symbol"
+      >(</a
+      ><a name="8812" href="Game.ReceiptFreeness.html#8812" class="Bound"
+      >pk</a
+      ><a name="8814"
+      > </a
+      ><a name="8815" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="8816"
+      > </a
+      ><a name="8817" href="Game.ReceiptFreeness.html#8817" class="Bound"
+      >sk</a
+      ><a name="8819" class="Symbol"
+      >)</a
+      ><a name="8820"
+      > </a
+      ><a name="8821" class="Symbol"
+      >=</a
+      ><a name="8822"
+      > </a
+      ><a name="8823" href="Game.ReceiptFreeness.html#778" class="Bound"
+      >KeyGen</a
+      ><a name="8829"
+      > </a
+      ><a name="8830" href="Game.ReceiptFreeness.html#8797" class="Bound"
+      >r&#8342;</a
+      ><a name="8832"
+      > </a
+      ><a name="8833" class="Keyword"
+      >in</a
+      ><a name="8835"
+      >
+                           </a
+      ><a name="8863" href="Game.ReceiptFreeness.html#891" class="Bound"
+      >Dec</a
+      ><a name="8866"
+      > </a
+      ><a name="8867" href="Game.ReceiptFreeness.html#8817" class="Bound"
+      >sk</a
+      ><a name="8869"
+      > </a
+      ><a name="8870" class="Symbol"
+      >(</a
+      ><a name="8871" href="Game.ReceiptFreeness.html#812" class="Bound"
+      >Enc</a
+      ><a name="8874"
+      > </a
+      ><a name="8875" href="Game.ReceiptFreeness.html#8812" class="Bound"
+      >pk</a
+      ><a name="8877"
+      > </a
+      ><a name="8878" href="Game.ReceiptFreeness.html#8803" class="Bound"
+      >m</a
+      ><a name="8879"
+      > </a
+      ><a name="8880" href="Game.ReceiptFreeness.html#8800" class="Bound"
+      >r&#8337;</a
+      ><a name="8882" class="Symbol"
+      >)</a
+      ><a name="8883"
+      > </a
+      ><a name="8884" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="8885"
+      > </a
+      ><a name="8886" href="Game.ReceiptFreeness.html#8803" class="Bound"
+      >m</a
+      ><a name="8887" class="Symbol"
+      >)</a
+      ><a name="8888"
+      > </a
+      ><a name="8889" class="Keyword"
+      >where</a
+      ><a name="8894"
+      >
+
+        </a
+      ><a name="8904" href="Game.ReceiptFreeness.html#8904" class="Function"
+      >cheatingA-wins</a
+      ><a name="8918"
+      > </a
+      ><a name="8919" class="Symbol"
+      >:</a
+      ><a name="8920"
+      > </a
+      ><a name="8921" class="Symbol"
+      >&#8704;</a
+      ><a name="8922"
+      > </a
+      ><a name="8923" href="Game.ReceiptFreeness.html#8923" class="Bound"
+      >r</a
+      ><a name="8924"
+      > </a
+      ><a name="8925" class="Symbol"
+      >&#8594;</a
+      ><a name="8926"
+      > </a
+      ><a name="8927" href="Game.ReceiptFreeness.html#8075" class="Function"
+      >game</a
+      ><a name="8931"
+      > </a
+      ><a name="8932" href="Game.ReceiptFreeness.html#8621" class="Function"
+      >cheatingA</a
+      ><a name="8941"
+      > </a
+      ><a name="8942" href="Game.ReceiptFreeness.html#8923" class="Bound"
+      >r</a
+      ><a name="8943"
+      > </a
+      ><a name="8944" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="8945"
+      > </a
+      ><a name="8946" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="8948"
+      >
+        </a
+      ><a name="8957" href="Game.ReceiptFreeness.html#8904" class="Function"
+      >cheatingA-wins</a
+      ><a name="8971"
+      > </a
+      ><a name="8972" class="Symbol"
+      >(</a
+      ><a name="8973" href="Game.ReceiptFreeness.html#8973" class="Bound"
+      >r&#8342;</a
+      ><a name="8975"
+      > </a
+      ><a name="8976" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="8977"
+      > </a
+      ><a name="8978" class="Symbol"
+      >_</a
+      ><a name="8979"
+      > </a
+      ><a name="8980" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="8981"
+      > </a
+      ><a name="8982" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="8984"
+      > </a
+      ><a name="8985" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="8986"
+      > </a
+      ><a name="8987" class="Symbol"
+      >((</a
+      ><a name="8989" href="Game.ReceiptFreeness.html#8989" class="Bound"
+      >co&#8320;</a
+      ><a name="8992"
+      > </a
+      ><a name="8993" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="8994"
+      > </a
+      ><a name="8995" class="Symbol"
+      >_</a
+      ><a name="8996"
+      > </a
+      ><a name="8997" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="8998"
+      > </a
+      ><a name="8999" href="Game.ReceiptFreeness.html#8999" class="Bound"
+      >r&#8337;&#8320;</a
+      ><a name="9002" class="Symbol"
+      >)</a
+      ><a name="9003"
+      > </a
+      ><a name="9004" href="Data.Vec.html#663" class="InductiveConstructor Operator"
+      >&#8759;</a
+      ><a name="9005"
+      > </a
+      ><a name="9006" class="Symbol"
+      >_)</a
+      ><a name="9008"
+      > </a
+      ><a name="9009" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="9010"
+      > </a
+      ><a name="9011" class="Symbol"
+      >((</a
+      ><a name="9013" href="Game.ReceiptFreeness.html#9013" class="Bound"
+      >co&#8321;</a
+      ><a name="9016"
+      > </a
+      ><a name="9017" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="9018"
+      > </a
+      ><a name="9019" class="Symbol"
+      >_</a
+      ><a name="9020"
+      > </a
+      ><a name="9021" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="9022"
+      > </a
+      ><a name="9023" href="Game.ReceiptFreeness.html#9023" class="Bound"
+      >r&#8337;&#8321;</a
+      ><a name="9026" class="Symbol"
+      >)</a
+      ><a name="9027"
+      > </a
+      ><a name="9028" href="Data.Vec.html#663" class="InductiveConstructor Operator"
+      >&#8759;</a
+      ><a name="9029"
+      > </a
+      ><a name="9030" class="Symbol"
+      >_))</a
+      ><a name="9033"
+      >
+          </a
+      ><a name="9044" class="Keyword"
+      >rewrite</a
+      ><a name="9051"
+      > </a
+      ><a name="9052" href="Game.ReceiptFreeness.html#8786" class="Bound"
+      >DecEnc</a
+      ><a name="9058"
+      > </a
+      ><a name="9059" href="Game.ReceiptFreeness.html#8973" class="Bound"
+      >r&#8342;</a
+      ><a name="9061"
+      > </a
+      ><a name="9062" href="Game.ReceiptFreeness.html#9023" class="Bound"
+      >r&#8337;&#8321;</a
+      ><a name="9065"
+      > </a
+      ><a name="9066" href="Game.ReceiptFreeness.html#9013" class="Bound"
+      >co&#8321;</a
+      ><a name="9069"
+      > </a
+      ><a name="9070" class="Keyword"
+      >with</a
+      ><a name="9074"
+      > </a
+      ><a name="9075" href="Game.ReceiptFreeness.html#9013" class="Bound"
+      >co&#8321;</a
+      ><a name="9078"
+      >
+        </a
+      ><a name="9087" class="Symbol"
+      >...</a
+      ><a name="9090"
+      > </a
+      ><a name="9091" class="Symbol"
+      >|</a
+      ><a name="9092"
+      > </a
+      ><a name="9093" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="9095"
+      > </a
+      ><a name="9096" class="Symbol"
+      >=</a
+      ><a name="9097"
+      > </a
+      ><a name="9098" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="9102"
+      >
+        </a
+      ><a name="9111" class="Symbol"
+      >...</a
+      ><a name="9114"
+      > </a
+      ><a name="9115" class="Symbol"
+      >|</a
+      ><a name="9116"
+      > </a
+      ><a name="9117" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="9119"
+      > </a
+      ><a name="9120" class="Symbol"
+      >=</a
+      ><a name="9121"
+      > </a
+      ><a name="9122" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="9126"
+      >
+        </a
+      ><a name="9135" href="Game.ReceiptFreeness.html#8904" class="Function"
+      >cheatingA-wins</a
+      ><a name="9149"
+      > </a
+      ><a name="9150" class="Symbol"
+      >(</a
+      ><a name="9151" href="Game.ReceiptFreeness.html#9151" class="Bound"
+      >r&#8342;</a
+      ><a name="9153"
+      > </a
+      ><a name="9154" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="9155"
+      > </a
+      ><a name="9156" class="Symbol"
+      >_</a
+      ><a name="9157"
+      > </a
+      ><a name="9158" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="9159"
+      > </a
+      ><a name="9160" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="9162"
+      > </a
+      ><a name="9163" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="9164"
+      > </a
+      ><a name="9165" class="Symbol"
+      >((</a
+      ><a name="9167" href="Game.ReceiptFreeness.html#9167" class="Bound"
+      >co&#8320;</a
+      ><a name="9170"
+      > </a
+      ><a name="9171" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="9172"
+      > </a
+      ><a name="9173" class="Symbol"
+      >_</a
+      ><a name="9174"
+      > </a
+      ><a name="9175" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="9176"
+      > </a
+      ><a name="9177" href="Game.ReceiptFreeness.html#9177" class="Bound"
+      >r&#8337;&#8320;</a
+      ><a name="9180" class="Symbol"
+      >)</a
+      ><a name="9181"
+      > </a
+      ><a name="9182" href="Data.Vec.html#663" class="InductiveConstructor Operator"
+      >&#8759;</a
+      ><a name="9183"
+      > </a
+      ><a name="9184" class="Symbol"
+      >_)</a
+      ><a name="9186"
+      > </a
+      ><a name="9187" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="9188"
+      > </a
+      ><a name="9189" class="Symbol"
+      >((_</a
+      ><a name="9192"
+      > </a
+      ><a name="9193" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="9194"
+      > </a
+      ><a name="9195" class="Symbol"
+      >_</a
+      ><a name="9196"
+      > </a
+      ><a name="9197" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="9198"
+      > </a
+      ><a name="9199" href="Game.ReceiptFreeness.html#9199" class="Bound"
+      >r&#8337;&#8321;</a
+      ><a name="9202" class="Symbol"
+      >)</a
+      ><a name="9203"
+      > </a
+      ><a name="9204" href="Data.Vec.html#663" class="InductiveConstructor Operator"
+      >&#8759;</a
+      ><a name="9205"
+      > </a
+      ><a name="9206" class="Symbol"
+      >_))</a
+      ><a name="9209"
+      >
+          </a
+      ><a name="9220" class="Keyword"
+      >rewrite</a
+      ><a name="9227"
+      > </a
+      ><a name="9228" href="Game.ReceiptFreeness.html#8786" class="Bound"
+      >DecEnc</a
+      ><a name="9234"
+      > </a
+      ><a name="9235" href="Game.ReceiptFreeness.html#9151" class="Bound"
+      >r&#8342;</a
+      ><a name="9237"
+      > </a
+      ><a name="9238" href="Game.ReceiptFreeness.html#9177" class="Bound"
+      >r&#8337;&#8320;</a
+      ><a name="9241"
+      > </a
+      ><a name="9242" href="Game.ReceiptFreeness.html#9167" class="Bound"
+      >co&#8320;</a
+      ><a name="9245"
+      > </a
+      ><a name="9246" class="Keyword"
+      >with</a
+      ><a name="9250"
+      > </a
+      ><a name="9251" href="Game.ReceiptFreeness.html#9167" class="Bound"
+      >co&#8320;</a
+      ><a name="9254"
+      >
+        </a
+      ><a name="9263" class="Symbol"
+      >...</a
+      ><a name="9266"
+      > </a
+      ><a name="9267" class="Symbol"
+      >|</a
+      ><a name="9268"
+      > </a
+      ><a name="9269" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="9271"
+      > </a
+      ><a name="9272" class="Symbol"
+      >=</a
+      ><a name="9273"
+      > </a
+      ><a name="9274" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="9278"
+      >
+        </a
+      ><a name="9287" class="Symbol"
+      >...</a
+      ><a name="9290"
+      > </a
+      ><a name="9291" class="Symbol"
+      >|</a
+      ><a name="9292"
+      > </a
+      ><a name="9293" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="9295"
+      > </a
+      ><a name="9296" class="Symbol"
+      >=</a
+      ><a name="9297"
+      > </a
+      ><a name="9298" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="9302"
+      >
+
+</a
+      ><a name="9304" class="Keyword"
+      >module</a
+      ><a name="9310"
+      > </a
+      ><a name="9311" href="Game.ReceiptFreeness.html#9311" class="Module"
+      >Cheating2</a
+      ><a name="9320"
+      > </a
+      ><a name="9321" class="Keyword"
+      >where</a
+      ><a name="9326"
+      >
+    </a
+      ><a name="9331" href="Game.ReceiptFreeness.html#9331" class="Function"
+      >cheatingA</a
+      ><a name="9340"
+      > </a
+      ><a name="9341" class="Symbol"
+      >:</a
+      ><a name="9342"
+      > </a
+      ><a name="9343" href="Game.ReceiptFreeness.html#5635" class="Function"
+      >Adversary</a
+      ><a name="9352"
+      >
+    </a
+      ><a name="9357" href="Game.ReceiptFreeness.html#9331" class="Function"
+      >cheatingA</a
+      ><a name="9366"
+      > </a
+      ><a name="9367" href="Game.ReceiptFreeness.html#9367" class="Bound"
+      >r&#8336;</a
+      ><a name="9369"
+      > </a
+      ><a name="9370" href="Game.ReceiptFreeness.html#9370" class="Bound"
+      >pk</a
+      ><a name="9372"
+      > </a
+      ><a name="9373" class="Symbol"
+      >=</a
+      ><a name="9374"
+      > </a
+      ><a name="9375" href="Control.Strategy.html#319" class="InductiveConstructor"
+      >done</a
+      ><a name="9379"
+      > </a
+      ><a name="9380" class="Symbol"
+      >&#955;</a
+      ><a name="9381"
+      > </a
+      ><a name="9382" href="Game.ReceiptFreeness.html#9382" class="Bound"
+      >m</a
+      ><a name="9383"
+      > </a
+      ><a name="9384" class="Symbol"
+      >&#8594;</a
+      ><a name="9385"
+      > </a
+      ><a name="9386" href="Control.Strategy.html#253" class="InductiveConstructor"
+      >ask</a
+      ><a name="9389"
+      > </a
+      ><a name="9390" class="Symbol"
+      >(</a
+      ><a name="9391" href="Game.ReceiptFreeness.html#5284" class="InductiveConstructor"
+      >Vote</a
+      ><a name="9395"
+      > </a
+      ><a name="9396" class="Symbol"
+      >(</a
+      ><a name="9397" href="Game.ReceiptFreeness.html#9382" class="Bound"
+      >m</a
+      ><a name="9398"
+      > </a
+      ><a name="9399" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="9401" class="Symbol"
+      >))</a
+      ><a name="9403"
+      >
+                                     </a
+      ><a name="9441" class="Symbol"
+      >(&#955;</a
+      ><a name="9443"
+      > </a
+      ><a name="9444" class="Symbol"
+      >{</a
+      ><a name="9445"
+      > </a
+      ><a name="9446" href="Game.ReceiptFreeness.html#5081" class="InductiveConstructor"
+      >accept</a
+      ><a name="9452"
+      > </a
+      ><a name="9453" class="Symbol"
+      >&#8594;</a
+      ><a name="9454"
+      > </a
+      ><a name="9455" href="Control.Strategy.html#253" class="InductiveConstructor"
+      >ask</a
+      ><a name="9458"
+      > </a
+      ><a name="9459" href="Game.ReceiptFreeness.html#5240" class="InductiveConstructor"
+      >RTally</a
+      ><a name="9465"
+      > </a
+      ><a name="9466" class="Symbol"
+      >(&#955;</a
+      ><a name="9468"
+      > </a
+      ><a name="9469" class="Symbol"
+      >{</a
+      ><a name="9470"
+      > </a
+      ><a name="9471" class="Symbol"
+      >(</a
+      ><a name="9472" href="Game.ReceiptFreeness.html#9472" class="Bound"
+      >x</a
+      ><a name="9473"
+      > </a
+      ><a name="9474" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="9475"
+      > </a
+      ><a name="9476" href="Game.ReceiptFreeness.html#9476" class="Bound"
+      >y</a
+      ><a name="9477" class="Symbol"
+      >)</a
+      ><a name="9478"
+      > </a
+      ><a name="9479" class="Symbol"
+      >&#8594;</a
+      ><a name="9480"
+      >
+                                     </a
+      ><a name="9518" href="Control.Strategy.html#319" class="InductiveConstructor"
+      >done</a
+      ><a name="9522"
+      > </a
+      ><a name="9523" class="Symbol"
+      >(</a
+      ><a name="9524" href="Game.ReceiptFreeness.html#9472" class="Bound"
+      >x</a
+      ><a name="9525"
+      > </a
+      ><a name="9526" href="Data.Nat.NP.html#3397" class="Function Operator"
+      >==&#8469;</a
+      ><a name="9529"
+      > </a
+      ><a name="9530" class="Number"
+      >2</a
+      ><a name="9531" class="Symbol"
+      >)</a
+      ><a name="9532"
+      > </a
+      ><a name="9533" class="Symbol"
+      >})</a
+      ><a name="9535"
+      > </a
+      ><a name="9536" class="Symbol"
+      >;</a
+      ><a name="9537"
+      > </a
+      ><a name="9538" href="Game.ReceiptFreeness.html#5088" class="InductiveConstructor"
+      >reject</a
+      ><a name="9544"
+      > </a
+      ><a name="9545" class="Symbol"
+      >&#8594;</a
+      ><a name="9546"
+      > </a
+      ><a name="9547" href="Control.Strategy.html#319" class="InductiveConstructor"
+      >done</a
+      ><a name="9551"
+      > </a
+      ><a name="9552" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="9554"
+      > </a
+      ><a name="9555" class="Symbol"
+      >})</a
+      ><a name="9557"
+      >
+
+    </a
+      ><a name="9563" class="Keyword"
+      >module</a
+      ><a name="9569"
+      > </a
+      ><a name="9570" href="Game.ReceiptFreeness.html#9570" class="Module"
+      >_</a
+      ><a name="9571"
+      >
+     </a
+      ><a name="9577" class="Symbol"
+      >(</a
+      ><a name="9578" href="Game.ReceiptFreeness.html#9578" class="Bound"
+      >DecEnc</a
+      ><a name="9584"
+      > </a
+      ><a name="9585" class="Symbol"
+      >:</a
+      ><a name="9586"
+      > </a
+      ><a name="9587" class="Symbol"
+      >&#8704;</a
+      ><a name="9588"
+      > </a
+      ><a name="9589" href="Game.ReceiptFreeness.html#9589" class="Bound"
+      >r&#8342;</a
+      ><a name="9591"
+      > </a
+      ><a name="9592" href="Game.ReceiptFreeness.html#9592" class="Bound"
+      >r&#8337;</a
+      ><a name="9594"
+      > </a
+      ><a name="9595" href="Game.ReceiptFreeness.html#9595" class="Bound"
+      >m</a
+      ><a name="9596"
+      > </a
+      ><a name="9597" class="Symbol"
+      >&#8594;</a
+      ><a name="9598"
+      > </a
+      ><a name="9599" class="Keyword"
+      >let</a
+      ><a name="9602"
+      > </a
+      ><a name="9603" class="Symbol"
+      >(</a
+      ><a name="9604" href="Game.ReceiptFreeness.html#9604" class="Bound"
+      >pk</a
+      ><a name="9606"
+      > </a
+      ><a name="9607" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="9608"
+      > </a
+      ><a name="9609" href="Game.ReceiptFreeness.html#9609" class="Bound"
+      >sk</a
+      ><a name="9611" class="Symbol"
+      >)</a
+      ><a name="9612"
+      > </a
+      ><a name="9613" class="Symbol"
+      >=</a
+      ><a name="9614"
+      > </a
+      ><a name="9615" href="Game.ReceiptFreeness.html#778" class="Bound"
+      >KeyGen</a
+      ><a name="9621"
+      > </a
+      ><a name="9622" href="Game.ReceiptFreeness.html#9589" class="Bound"
+      >r&#8342;</a
+      ><a name="9624"
+      > </a
+      ><a name="9625" class="Keyword"
+      >in</a
+      ><a name="9627"
+      >
+                           </a
+      ><a name="9655" href="Game.ReceiptFreeness.html#891" class="Bound"
+      >Dec</a
+      ><a name="9658"
+      > </a
+      ><a name="9659" href="Game.ReceiptFreeness.html#9609" class="Bound"
+      >sk</a
+      ><a name="9661"
+      > </a
+      ><a name="9662" class="Symbol"
+      >(</a
+      ><a name="9663" href="Game.ReceiptFreeness.html#812" class="Bound"
+      >Enc</a
+      ><a name="9666"
+      > </a
+      ><a name="9667" href="Game.ReceiptFreeness.html#9604" class="Bound"
+      >pk</a
+      ><a name="9669"
+      > </a
+      ><a name="9670" href="Game.ReceiptFreeness.html#9595" class="Bound"
+      >m</a
+      ><a name="9671"
+      > </a
+      ><a name="9672" href="Game.ReceiptFreeness.html#9592" class="Bound"
+      >r&#8337;</a
+      ><a name="9674" class="Symbol"
+      >)</a
+      ><a name="9675"
+      > </a
+      ><a name="9676" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="9677"
+      > </a
+      ><a name="9678" href="Game.ReceiptFreeness.html#9595" class="Bound"
+      >m</a
+      ><a name="9679" class="Symbol"
+      >)</a
+      ><a name="9680"
+      > </a
+      ><a name="9681" class="Keyword"
+      >where</a
+      ><a name="9686"
+      >
+     </a
+      ><a name="9692" class="Comment"
+      >--(check-forget : &#8704; x &#8594; check (forget x) &#8801; just x) where</a
+      ><a name="9748"
+      >
+
+        </a
+      ><a name="9758" href="Game.ReceiptFreeness.html#9758" class="Function"
+      >cheatingA-wins</a
+      ><a name="9772"
+      > </a
+      ><a name="9773" class="Symbol"
+      >:</a
+      ><a name="9774"
+      > </a
+      ><a name="9775" class="Symbol"
+      >&#8704;</a
+      ><a name="9776"
+      > </a
+      ><a name="9777" href="Game.ReceiptFreeness.html#9777" class="Bound"
+      >r</a
+      ><a name="9778"
+      > </a
+      ><a name="9779" class="Symbol"
+      >&#8594;</a
+      ><a name="9780"
+      > </a
+      ><a name="9781" href="Game.ReceiptFreeness.html#8075" class="Function"
+      >game</a
+      ><a name="9785"
+      > </a
+      ><a name="9786" href="Game.ReceiptFreeness.html#9331" class="Function"
+      >cheatingA</a
+      ><a name="9795"
+      > </a
+      ><a name="9796" href="Game.ReceiptFreeness.html#9777" class="Bound"
+      >r</a
+      ><a name="9797"
+      > </a
+      ><a name="9798" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="9799"
+      > </a
+      ><a name="9800" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="9802"
+      >
+        </a
+      ><a name="9811" href="Game.ReceiptFreeness.html#9758" class="Function"
+      >cheatingA-wins</a
+      ><a name="9825"
+      > </a
+      ><a name="9826" class="Symbol"
+      >(</a
+      ><a name="9827" href="Game.ReceiptFreeness.html#9827" class="Bound"
+      >r&#8342;</a
+      ><a name="9829"
+      > </a
+      ><a name="9830" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="9831"
+      > </a
+      ><a name="9832" class="Symbol"
+      >_</a
+      ><a name="9833"
+      > </a
+      ><a name="9834" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="9835"
+      > </a
+      ><a name="9836" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="9838"
+      > </a
+      ><a name="9839" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="9840"
+      > </a
+      ><a name="9841" class="Symbol"
+      >((</a
+      ><a name="9843" href="Game.ReceiptFreeness.html#9843" class="Bound"
+      >co&#8320;</a
+      ><a name="9846"
+      > </a
+      ><a name="9847" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="9848"
+      > </a
+      ><a name="9849" class="Symbol"
+      >_</a
+      ><a name="9850"
+      > </a
+      ><a name="9851" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="9852"
+      > </a
+      ><a name="9853" href="Game.ReceiptFreeness.html#9853" class="Bound"
+      >r&#8337;&#8320;</a
+      ><a name="9856" class="Symbol"
+      >)</a
+      ><a name="9857"
+      > </a
+      ><a name="9858" href="Data.Vec.html#663" class="InductiveConstructor Operator"
+      >&#8759;</a
+      ><a name="9859"
+      > </a
+      ><a name="9860" class="Symbol"
+      >_)</a
+      ><a name="9862"
+      > </a
+      ><a name="9863" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="9864"
+      > </a
+      ><a name="9865" class="Symbol"
+      >((</a
+      ><a name="9867" href="Game.ReceiptFreeness.html#9867" class="Bound"
+      >co&#8321;</a
+      ><a name="9870"
+      > </a
+      ><a name="9871" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="9872"
+      > </a
+      ><a name="9873" class="Symbol"
+      >_</a
+      ><a name="9874"
+      > </a
+      ><a name="9875" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="9876"
+      > </a
+      ><a name="9877" href="Game.ReceiptFreeness.html#9877" class="Bound"
+      >r&#8337;&#8321;</a
+      ><a name="9880" class="Symbol"
+      >)</a
+      ><a name="9881"
+      > </a
+      ><a name="9882" href="Data.Vec.html#663" class="InductiveConstructor Operator"
+      >&#8759;</a
+      ><a name="9883"
+      > </a
+      ><a name="9884" class="Symbol"
+      >_))</a
+      ><a name="9887"
+      >
+           </a
+      ><a name="9899" class="Keyword"
+      >rewrite</a
+      ><a name="9906"
+      > </a
+      ><a name="9907" href="Game.ReceiptFreeness.html#992" class="Bound"
+      >CheckEnc</a
+      ><a name="9915"
+      > </a
+      ><a name="9916" class="Symbol"
+      >(</a
+      ><a name="9917" href="Data.Product.html#525" class="Field"
+      >proj&#8321;</a
+      ><a name="9922"
+      > </a
+      ><a name="9923" class="Symbol"
+      >(</a
+      ><a name="9924" href="Game.ReceiptFreeness.html#778" class="Bound"
+      >KeyGen</a
+      ><a name="9930"
+      > </a
+      ><a name="9931" href="Game.ReceiptFreeness.html#9827" class="Bound"
+      >r&#8342;</a
+      ><a name="9933" class="Symbol"
+      >))</a
+      ><a name="9935"
+      > </a
+      ><a name="9936" href="Game.ReceiptFreeness.html#9867" class="Bound"
+      >co&#8321;</a
+      ><a name="9939"
+      > </a
+      ><a name="9940" href="Game.ReceiptFreeness.html#9877" class="Bound"
+      >r&#8337;&#8321;</a
+      ><a name="9943"
+      >
+                 </a
+      ><a name="9961" class="Symbol"
+      >|</a
+      ><a name="9962"
+      > </a
+      ><a name="9963" href="Game.ReceiptFreeness.html#9578" class="Bound"
+      >DecEnc</a
+      ><a name="9969"
+      > </a
+      ><a name="9970" href="Game.ReceiptFreeness.html#9827" class="Bound"
+      >r&#8342;</a
+      ><a name="9972"
+      > </a
+      ><a name="9973" href="Game.ReceiptFreeness.html#9853" class="Bound"
+      >r&#8337;&#8320;</a
+      ><a name="9976"
+      > </a
+      ><a name="9977" href="Game.ReceiptFreeness.html#9843" class="Bound"
+      >co&#8320;</a
+      ><a name="9980"
+      >
+                 </a
+      ><a name="9998" class="Symbol"
+      >|</a
+      ><a name="9999"
+      > </a
+      ><a name="10000" href="Game.ReceiptFreeness.html#9578" class="Bound"
+      >DecEnc</a
+      ><a name="10006"
+      > </a
+      ><a name="10007" href="Game.ReceiptFreeness.html#9827" class="Bound"
+      >r&#8342;</a
+      ><a name="10009"
+      > </a
+      ><a name="10010" href="Game.ReceiptFreeness.html#9877" class="Bound"
+      >r&#8337;&#8321;</a
+      ><a name="10013"
+      > </a
+      ><a name="10014" href="Game.ReceiptFreeness.html#9867" class="Bound"
+      >co&#8321;</a
+      ><a name="10017"
+      > </a
+      ><a name="10018" class="Keyword"
+      >with</a
+      ><a name="10022"
+      > </a
+      ><a name="10023" href="Game.ReceiptFreeness.html#9843" class="Bound"
+      >co&#8320;</a
+      ><a name="10026"
+      > </a
+      ><a name="10027" class="Symbol"
+      >|</a
+      ><a name="10028"
+      > </a
+      ><a name="10029" href="Game.ReceiptFreeness.html#9867" class="Bound"
+      >co&#8321;</a
+      ><a name="10032"
+      >
+        </a
+      ><a name="10041" class="Symbol"
+      >...</a
+      ><a name="10044"
+      > </a
+      ><a name="10045" class="Symbol"
+      >|</a
+      ><a name="10046"
+      > </a
+      ><a name="10047" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="10049"
+      > </a
+      ><a name="10050" class="Symbol"
+      >|</a
+      ><a name="10051"
+      > </a
+      ><a name="10052" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="10054"
+      > </a
+      ><a name="10055" class="Symbol"
+      >=</a
+      ><a name="10056"
+      > </a
+      ><a name="10057" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="10061"
+      >
+        </a
+      ><a name="10070" class="Symbol"
+      >...</a
+      ><a name="10073"
+      > </a
+      ><a name="10074" class="Symbol"
+      >|</a
+      ><a name="10075"
+      > </a
+      ><a name="10076" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="10078"
+      > </a
+      ><a name="10079" class="Symbol"
+      >|</a
+      ><a name="10080"
+      > </a
+      ><a name="10081" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="10083"
+      > </a
+      ><a name="10084" class="Symbol"
+      >=</a
+      ><a name="10085"
+      > </a
+      ><a name="10086" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="10090"
+      >
+        </a
+      ><a name="10099" class="Symbol"
+      >...</a
+      ><a name="10102"
+      > </a
+      ><a name="10103" class="Symbol"
+      >|</a
+      ><a name="10104"
+      > </a
+      ><a name="10105" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="10107"
+      > </a
+      ><a name="10108" class="Symbol"
+      >|</a
+      ><a name="10109"
+      > </a
+      ><a name="10110" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="10112"
+      > </a
+      ><a name="10113" class="Symbol"
+      >=</a
+      ><a name="10114"
+      > </a
+      ><a name="10115" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="10119"
+      >
+        </a
+      ><a name="10128" class="Symbol"
+      >...</a
+      ><a name="10131"
+      > </a
+      ><a name="10132" class="Symbol"
+      >|</a
+      ><a name="10133"
+      > </a
+      ><a name="10134" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="10136"
+      > </a
+      ><a name="10137" class="Symbol"
+      >|</a
+      ><a name="10138"
+      > </a
+      ><a name="10139" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="10141"
+      > </a
+      ><a name="10142" class="Symbol"
+      >=</a
+      ><a name="10143"
+      > </a
+      ><a name="10144" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="10148"
+      >
+        </a
+      ><a name="10157" href="Game.ReceiptFreeness.html#9758" class="Function"
+      >cheatingA-wins</a
+      ><a name="10171"
+      > </a
+      ><a name="10172" class="Symbol"
+      >(</a
+      ><a name="10173" href="Game.ReceiptFreeness.html#10173" class="Bound"
+      >r&#8342;</a
+      ><a name="10175"
+      > </a
+      ><a name="10176" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="10177"
+      > </a
+      ><a name="10178" class="Symbol"
+      >_</a
+      ><a name="10179"
+      > </a
+      ><a name="10180" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="10181"
+      > </a
+      ><a name="10182" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="10184"
+      > </a
+      ><a name="10185" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="10186"
+      > </a
+      ><a name="10187" class="Symbol"
+      >((</a
+      ><a name="10189" href="Game.ReceiptFreeness.html#10189" class="Bound"
+      >co&#8320;</a
+      ><a name="10192"
+      > </a
+      ><a name="10193" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="10194"
+      > </a
+      ><a name="10195" class="Symbol"
+      >_</a
+      ><a name="10196"
+      > </a
+      ><a name="10197" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="10198"
+      > </a
+      ><a name="10199" href="Game.ReceiptFreeness.html#10199" class="Bound"
+      >r&#8337;&#8320;</a
+      ><a name="10202" class="Symbol"
+      >)</a
+      ><a name="10203"
+      > </a
+      ><a name="10204" href="Data.Vec.html#663" class="InductiveConstructor Operator"
+      >&#8759;</a
+      ><a name="10205"
+      > </a
+      ><a name="10206" class="Symbol"
+      >_)</a
+      ><a name="10208"
+      > </a
+      ><a name="10209" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="10210"
+      > </a
+      ><a name="10211" class="Symbol"
+      >((</a
+      ><a name="10213" href="Game.ReceiptFreeness.html#10213" class="Bound"
+      >co&#8321;</a
+      ><a name="10216"
+      > </a
+      ><a name="10217" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="10218"
+      > </a
+      ><a name="10219" class="Symbol"
+      >_</a
+      ><a name="10220"
+      > </a
+      ><a name="10221" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="10222"
+      > </a
+      ><a name="10223" href="Game.ReceiptFreeness.html#10223" class="Bound"
+      >r&#8337;&#8321;</a
+      ><a name="10226" class="Symbol"
+      >)</a
+      ><a name="10227"
+      > </a
+      ><a name="10228" href="Data.Vec.html#663" class="InductiveConstructor Operator"
+      >&#8759;</a
+      ><a name="10229"
+      > </a
+      ><a name="10230" class="Symbol"
+      >_))</a
+      ><a name="10233"
+      >
+           </a
+      ><a name="10245" class="Keyword"
+      >rewrite</a
+      ><a name="10252"
+      > </a
+      ><a name="10253" href="Game.ReceiptFreeness.html#992" class="Bound"
+      >CheckEnc</a
+      ><a name="10261"
+      > </a
+      ><a name="10262" class="Symbol"
+      >(</a
+      ><a name="10263" href="Data.Product.html#525" class="Field"
+      >proj&#8321;</a
+      ><a name="10268"
+      > </a
+      ><a name="10269" class="Symbol"
+      >(</a
+      ><a name="10270" href="Game.ReceiptFreeness.html#778" class="Bound"
+      >KeyGen</a
+      ><a name="10276"
+      > </a
+      ><a name="10277" href="Game.ReceiptFreeness.html#10173" class="Bound"
+      >r&#8342;</a
+      ><a name="10279" class="Symbol"
+      >))</a
+      ><a name="10281"
+      > </a
+      ><a name="10282" href="Game.ReceiptFreeness.html#10189" class="Bound"
+      >co&#8320;</a
+      ><a name="10285"
+      > </a
+      ><a name="10286" href="Game.ReceiptFreeness.html#10199" class="Bound"
+      >r&#8337;&#8320;</a
+      ><a name="10289"
+      >
+                 </a
+      ><a name="10307" class="Symbol"
+      >|</a
+      ><a name="10308"
+      > </a
+      ><a name="10309" href="Game.ReceiptFreeness.html#9578" class="Bound"
+      >DecEnc</a
+      ><a name="10315"
+      > </a
+      ><a name="10316" href="Game.ReceiptFreeness.html#10173" class="Bound"
+      >r&#8342;</a
+      ><a name="10318"
+      > </a
+      ><a name="10319" href="Game.ReceiptFreeness.html#10199" class="Bound"
+      >r&#8337;&#8320;</a
+      ><a name="10322"
+      > </a
+      ><a name="10323" href="Game.ReceiptFreeness.html#10189" class="Bound"
+      >co&#8320;</a
+      ><a name="10326"
+      >
+                 </a
+      ><a name="10344" class="Symbol"
+      >|</a
+      ><a name="10345"
+      > </a
+      ><a name="10346" href="Game.ReceiptFreeness.html#9578" class="Bound"
+      >DecEnc</a
+      ><a name="10352"
+      > </a
+      ><a name="10353" href="Game.ReceiptFreeness.html#10173" class="Bound"
+      >r&#8342;</a
+      ><a name="10355"
+      > </a
+      ><a name="10356" href="Game.ReceiptFreeness.html#10223" class="Bound"
+      >r&#8337;&#8321;</a
+      ><a name="10359"
+      > </a
+      ><a name="10360" href="Game.ReceiptFreeness.html#10213" class="Bound"
+      >co&#8321;</a
+      ><a name="10363"
+      > </a
+      ><a name="10364" class="Keyword"
+      >with</a
+      ><a name="10368"
+      > </a
+      ><a name="10369" href="Game.ReceiptFreeness.html#10189" class="Bound"
+      >co&#8320;</a
+      ><a name="10372"
+      > </a
+      ><a name="10373" class="Symbol"
+      >|</a
+      ><a name="10374"
+      > </a
+      ><a name="10375" href="Game.ReceiptFreeness.html#10213" class="Bound"
+      >co&#8321;</a
+      ><a name="10378"
+      >
+        </a
+      ><a name="10387" class="Symbol"
+      >...</a
+      ><a name="10390"
+      > </a
+      ><a name="10391" class="Symbol"
+      >|</a
+      ><a name="10392"
+      > </a
+      ><a name="10393" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="10395"
+      > </a
+      ><a name="10396" class="Symbol"
+      >|</a
+      ><a name="10397"
+      > </a
+      ><a name="10398" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="10400"
+      > </a
+      ><a name="10401" class="Symbol"
+      >=</a
+      ><a name="10402"
+      > </a
+      ><a name="10403" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="10407"
+      >
+        </a
+      ><a name="10416" class="Symbol"
+      >...</a
+      ><a name="10419"
+      > </a
+      ><a name="10420" class="Symbol"
+      >|</a
+      ><a name="10421"
+      > </a
+      ><a name="10422" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="10424"
+      > </a
+      ><a name="10425" class="Symbol"
+      >|</a
+      ><a name="10426"
+      > </a
+      ><a name="10427" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="10429"
+      > </a
+      ><a name="10430" class="Symbol"
+      >=</a
+      ><a name="10431"
+      > </a
+      ><a name="10432" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="10436"
+      >
+        </a
+      ><a name="10445" class="Symbol"
+      >...</a
+      ><a name="10448"
+      > </a
+      ><a name="10449" class="Symbol"
+      >|</a
+      ><a name="10450"
+      > </a
+      ><a name="10451" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="10453"
+      > </a
+      ><a name="10454" class="Symbol"
+      >|</a
+      ><a name="10455"
+      > </a
+      ><a name="10456" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="10458"
+      > </a
+      ><a name="10459" class="Symbol"
+      >=</a
+      ><a name="10460"
+      > </a
+      ><a name="10461" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="10465"
+      >
+        </a
+      ><a name="10474" class="Symbol"
+      >...</a
+      ><a name="10477"
+      > </a
+      ><a name="10478" class="Symbol"
+      >|</a
+      ><a name="10479"
+      > </a
+      ><a name="10480" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="10482"
+      > </a
+      ><a name="10483" class="Symbol"
+      >|</a
+      ><a name="10484"
+      > </a
+      ><a name="10485" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="10487"
+      > </a
+      ><a name="10488" class="Symbol"
+      >=</a
+      ><a name="10489"
+      > </a
+      ><a name="10490" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="10494"
+      >
+</a
+      ><a name="10495" class="Comment"
+      >-- -}</a
+      ><a name="10500"
+      >
+</a
+      ><a name="10501" class="Comment"
+      >-- -}</a
+      ><a name="10506"
+      >
+</a
+      ><a name="10507" class="Comment"
+      >-- -}</a
+      ><a name="10512"
+      >
+</a
+      ><a name="10513" class="Comment"
+      >-- -}</a
+      ><a name="10518"
+      >
+</a
+      ><a name="10519" class="Comment"
+      >-- -}</a
+      ><a name="10524"
+      >
+</a
+      ><a name="10525" class="Comment"
+      >-- -}</a
+      ><a name="10530"
+      >
+</a
+      ><a name="10531" class="Comment"
+      >-- -}</a
+      ><a name="10536"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

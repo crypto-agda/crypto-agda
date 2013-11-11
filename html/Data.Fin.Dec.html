@@ -1,0 +1,5192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Data.Fin.Dec</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="73"
+      >
+</a
+      ><a name="74" class="Comment"
+      >-- The Agda standard library</a
+      ><a name="102"
+      >
+</a
+      ><a name="103" class="Comment"
+      >--</a
+      ><a name="105"
+      >
+</a
+      ><a name="106" class="Comment"
+      >-- Decision procedures for finite sets and subsets of finite sets</a
+      ><a name="171"
+      >
+</a
+      ><a name="172" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="244"
+      >
+
+</a
+      ><a name="246" class="Keyword"
+      >module</a
+      ><a name="252"
+      > </a
+      ><a name="253" href="Data.Fin.Dec.html#1" class="Module"
+      >Data.Fin.Dec</a
+      ><a name="265"
+      > </a
+      ><a name="266" class="Keyword"
+      >where</a
+      ><a name="271"
+      >
+
+</a
+      ><a name="273" class="Keyword"
+      >open</a
+      ><a name="277"
+      > </a
+      ><a name="278" class="Keyword"
+      >import</a
+      ><a name="284"
+      > </a
+      ><a name="285" href="Function.html#1" class="Module"
+      >Function</a
+      ><a name="293"
+      >
+</a
+      ><a name="294" class="Keyword"
+      >import</a
+      ><a name="300"
+      > </a
+      ><a name="301" href="Data.Bool.html#1" class="Module"
+      >Data.Bool</a
+      ><a name="310"
+      > </a
+      ><a name="311" class="Symbol"
+      >as</a
+      ><a name="313"
+      > </a
+      ><a name="314" class="Module"
+      >Bool</a
+      ><a name="318"
+      >
+</a
+      ><a name="319" class="Keyword"
+      >open</a
+      ><a name="323"
+      > </a
+      ><a name="324" class="Keyword"
+      >import</a
+      ><a name="330"
+      > </a
+      ><a name="331" href="Data.Nat.html#1" class="Module"
+      >Data.Nat</a
+      ><a name="339"
+      > </a
+      ><a name="340" class="Keyword"
+      >hiding</a
+      ><a name="346"
+      > </a
+      ><a name="347" class="Symbol"
+      >(</a
+      ><a name="348"
+      >_&lt;_</a
+      ><a name="351" class="Symbol"
+      >)</a
+      ><a name="352"
+      >
+</a
+      ><a name="353" class="Keyword"
+      >open</a
+      ><a name="357"
+      > </a
+      ><a name="358" class="Keyword"
+      >import</a
+      ><a name="364"
+      > </a
+      ><a name="365" href="Data.Vec.html#1" class="Module"
+      >Data.Vec</a
+      ><a name="373"
+      > </a
+      ><a name="374" class="Keyword"
+      >hiding</a
+      ><a name="380"
+      > </a
+      ><a name="381" class="Symbol"
+      >(</a
+      ><a name="382"
+      >_&#8712;_</a
+      ><a name="385" class="Symbol"
+      >)</a
+      ><a name="386"
+      >
+</a
+      ><a name="387" class="Keyword"
+      >open</a
+      ><a name="391"
+      > </a
+      ><a name="392" class="Keyword"
+      >import</a
+      ><a name="398"
+      > </a
+      ><a name="399" href="Data.Vec.Equality.html#1" class="Module"
+      >Data.Vec.Equality</a
+      ><a name="416"
+      > </a
+      ><a name="417" class="Symbol"
+      >as</a
+      ><a name="419"
+      > </a
+      ><a name="420" class="Module"
+      >VecEq</a
+      ><a name="425"
+      >
+  </a
+      ><a name="428" class="Keyword"
+      >using</a
+      ><a name="433"
+      > </a
+      ><a name="434" class="Symbol"
+      >()</a
+      ><a name="436"
+      > </a
+      ><a name="437" class="Keyword"
+      >renaming</a
+      ><a name="445"
+      > </a
+      ><a name="446" class="Symbol"
+      >(</a
+      ><a name="447" class="Keyword"
+      >module</a
+      ><a name="453"
+      > PropositionalEquality </a
+      ><a name="476" class="Symbol"
+      >to</a
+      ><a name="478"
+      > PropVecEq</a
+      ><a name="488" class="Symbol"
+      >)</a
+      ><a name="489"
+      >
+</a
+      ><a name="490" class="Keyword"
+      >open</a
+      ><a name="494"
+      > </a
+      ><a name="495" class="Keyword"
+      >import</a
+      ><a name="501"
+      > </a
+      ><a name="502" href="Data.Fin.html#1" class="Module"
+      >Data.Fin</a
+      ><a name="510"
+      >
+</a
+      ><a name="511" class="Keyword"
+      >open</a
+      ><a name="515"
+      > </a
+      ><a name="516" class="Keyword"
+      >import</a
+      ><a name="522"
+      > </a
+      ><a name="523" href="Data.Fin.Subset.html#1" class="Module"
+      >Data.Fin.Subset</a
+      ><a name="538"
+      >
+</a
+      ><a name="539" class="Keyword"
+      >open</a
+      ><a name="543"
+      > </a
+      ><a name="544" class="Keyword"
+      >import</a
+      ><a name="550"
+      > </a
+      ><a name="551" href="Data.Fin.Subset.Props.html#1" class="Module"
+      >Data.Fin.Subset.Props</a
+      ><a name="572"
+      >
+</a
+      ><a name="573" class="Keyword"
+      >open</a
+      ><a name="577"
+      > </a
+      ><a name="578" class="Keyword"
+      >import</a
+      ><a name="584"
+      > </a
+      ><a name="585" href="Data.Product.html#1" class="Module"
+      >Data.Product</a
+      ><a name="597"
+      > </a
+      ><a name="598" class="Symbol"
+      >as</a
+      ><a name="600"
+      > </a
+      ><a name="601" class="Module"
+      >Prod</a
+      ><a name="605"
+      >
+</a
+      ><a name="606" class="Keyword"
+      >open</a
+      ><a name="610"
+      > </a
+      ><a name="611" class="Keyword"
+      >import</a
+      ><a name="617"
+      > </a
+      ><a name="618" href="Data.Empty.html#1" class="Module"
+      >Data.Empty</a
+      ><a name="628"
+      >
+</a
+      ><a name="629" class="Keyword"
+      >open</a
+      ><a name="633"
+      > </a
+      ><a name="634" class="Keyword"
+      >import</a
+      ><a name="640"
+      > </a
+      ><a name="641" href="Function.html#1" class="Module"
+      >Function</a
+      ><a name="649"
+      >
+</a
+      ><a name="650" class="Keyword"
+      >import</a
+      ><a name="656"
+      > </a
+      ><a name="657" href="Function.Equivalence.html#1" class="Module"
+      >Function.Equivalence</a
+      ><a name="677"
+      > </a
+      ><a name="678" class="Symbol"
+      >as</a
+      ><a name="680"
+      > </a
+      ><a name="681" class="Module"
+      >Eq</a
+      ><a name="683"
+      >
+</a
+      ><a name="684" class="Keyword"
+      >open</a
+      ><a name="688"
+      > </a
+      ><a name="689" class="Keyword"
+      >import</a
+      ><a name="695"
+      > </a
+      ><a name="696" href="Relation.Binary.html#1" class="Module"
+      >Relation.Binary</a
+      ><a name="711"
+      > </a
+      ><a name="712" class="Symbol"
+      >as</a
+      ><a name="714"
+      > </a
+      ><a name="715" class="Module"
+      >B</a
+      ><a name="716"
+      >
+</a
+      ><a name="717" class="Keyword"
+      >import</a
+      ><a name="723"
+      > </a
+      ><a name="724" href="Relation.Binary.HeterogeneousEquality.html#1" class="Module"
+      >Relation.Binary.HeterogeneousEquality</a
+      ><a name="761"
+      > </a
+      ><a name="762" class="Symbol"
+      >as</a
+      ><a name="764"
+      > </a
+      ><a name="765" class="Module"
+      >H</a
+      ><a name="766"
+      >
+</a
+      ><a name="767" class="Keyword"
+      >open</a
+      ><a name="771"
+      > </a
+      ><a name="772" class="Keyword"
+      >import</a
+      ><a name="778"
+      > </a
+      ><a name="779" href="Relation.Nullary.html#1" class="Module"
+      >Relation.Nullary</a
+      ><a name="795"
+      >
+</a
+      ><a name="796" class="Keyword"
+      >import</a
+      ><a name="802"
+      > </a
+      ><a name="803" href="Relation.Nullary.Decidable.html#1" class="Module"
+      >Relation.Nullary.Decidable</a
+      ><a name="829"
+      > </a
+      ><a name="830" class="Symbol"
+      >as</a
+      ><a name="832"
+      > </a
+      ><a name="833" class="Module"
+      >Dec</a
+      ><a name="836"
+      >
+</a
+      ><a name="837" class="Keyword"
+      >open</a
+      ><a name="841"
+      > </a
+      ><a name="842" class="Keyword"
+      >import</a
+      ><a name="848"
+      > </a
+      ><a name="849" href="Relation.Unary.html#1" class="Module"
+      >Relation.Unary</a
+      ><a name="863"
+      > </a
+      ><a name="864" class="Symbol"
+      >as</a
+      ><a name="866"
+      > </a
+      ><a name="867" class="Module"
+      >U</a
+      ><a name="868"
+      > </a
+      ><a name="869" class="Keyword"
+      >using</a
+      ><a name="874"
+      > </a
+      ><a name="875" class="Symbol"
+      >(</a
+      ><a name="876"
+      >Pred</a
+      ><a name="880" class="Symbol"
+      >)</a
+      ><a name="881"
+      >
+
+</a
+      ><a name="883" class="Keyword"
+      >infix</a
+      ><a name="888"
+      > </a
+      ><a name="889" class="Number"
+      >4</a
+      ><a name="890"
+      > _&#8712;?_
+
+</a
+      ><a name="897" href="Data.Fin.Dec.html#897" class="Function Operator"
+      >_&#8712;?_</a
+      ><a name="901"
+      > </a
+      ><a name="902" class="Symbol"
+      >:</a
+      ><a name="903"
+      > </a
+      ><a name="904" class="Symbol"
+      >&#8704;</a
+      ><a name="905"
+      > </a
+      ><a name="906" class="Symbol"
+      >{</a
+      ><a name="907" href="Data.Fin.Dec.html#907" class="Bound"
+      >n</a
+      ><a name="908" class="Symbol"
+      >}</a
+      ><a name="909"
+      > </a
+      ><a name="910" href="Data.Fin.Dec.html#910" class="Bound"
+      >x</a
+      ><a name="911"
+      > </a
+      ><a name="912" class="Symbol"
+      >(</a
+      ><a name="913" href="Data.Fin.Dec.html#913" class="Bound"
+      >p</a
+      ><a name="914"
+      > </a
+      ><a name="915" class="Symbol"
+      >:</a
+      ><a name="916"
+      > </a
+      ><a name="917" href="Data.Fin.Subset.html#936" class="Function"
+      >Subset</a
+      ><a name="923"
+      > </a
+      ><a name="924" href="Data.Fin.Dec.html#907" class="Bound"
+      >n</a
+      ><a name="925" class="Symbol"
+      >)</a
+      ><a name="926"
+      > </a
+      ><a name="927" class="Symbol"
+      >&#8594;</a
+      ><a name="928"
+      > </a
+      ><a name="929" href="Relation.Nullary.Core.html#468" class="Datatype"
+      >Dec</a
+      ><a name="932"
+      > </a
+      ><a name="933" class="Symbol"
+      >(</a
+      ><a name="934" href="Data.Fin.Dec.html#910" class="Bound"
+      >x</a
+      ><a name="935"
+      > </a
+      ><a name="936" href="Data.Fin.Subset.html#1082" class="Function Operator"
+      >&#8712;</a
+      ><a name="937"
+      > </a
+      ><a name="938" href="Data.Fin.Dec.html#913" class="Bound"
+      >p</a
+      ><a name="939" class="Symbol"
+      >)</a
+      ><a name="940"
+      >
+</a
+      ><a name="941" href="Data.Fin.html#797" class="InductiveConstructor"
+      >zero</a
+      ><a name="945"
+      >  </a
+      ><a name="947" href="Data.Fin.Dec.html#897" class="Function Operator"
+      >&#8712;?</a
+      ><a name="949"
+      > </a
+      ><a name="950" href="Data.Bool.html#622" class="InductiveConstructor"
+      >inside</a
+      ><a name="956"
+      >  </a
+      ><a name="958" href="Data.Vec.html#663" class="InductiveConstructor Operator"
+      >&#8759;</a
+      ><a name="959"
+      > </a
+      ><a name="960" href="Data.Fin.Dec.html#960" class="Bound"
+      >p</a
+      ><a name="961"
+      > </a
+      ><a name="962" class="Symbol"
+      >=</a
+      ><a name="963"
+      > </a
+      ><a name="964" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="967"
+      > </a
+      ><a name="968" href="Data.Vec.html#1012" class="InductiveConstructor"
+      >here</a
+      ><a name="972"
+      >
+</a
+      ><a name="973" href="Data.Fin.html#797" class="InductiveConstructor"
+      >zero</a
+      ><a name="977"
+      >  </a
+      ><a name="979" href="Data.Fin.Dec.html#897" class="Function Operator"
+      >&#8712;?</a
+      ><a name="981"
+      > </a
+      ><a name="982" href="Data.Bool.html#637" class="InductiveConstructor"
+      >outside</a
+      ><a name="989"
+      > </a
+      ><a name="990" href="Data.Vec.html#663" class="InductiveConstructor Operator"
+      >&#8759;</a
+      ><a name="991"
+      > </a
+      ><a name="992" href="Data.Fin.Dec.html#992" class="Bound"
+      >p</a
+      ><a name="993"
+      > </a
+      ><a name="994" class="Symbol"
+      >=</a
+      ><a name="995"
+      > </a
+      ><a name="996" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="998"
+      >  </a
+      ><a name="1000" class="Symbol"
+      >&#955;()</a
+      ><a name="1003"
+      >
+</a
+      ><a name="1004" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1007"
+      > </a
+      ><a name="1008" href="Data.Fin.Dec.html#1008" class="Bound"
+      >n</a
+      ><a name="1009"
+      > </a
+      ><a name="1010" href="Data.Fin.Dec.html#897" class="Function Operator"
+      >&#8712;?</a
+      ><a name="1012"
+      > </a
+      ><a name="1013" href="Data.Fin.Dec.html#1013" class="Bound"
+      >s</a
+      ><a name="1014"
+      > </a
+      ><a name="1015" href="Data.Vec.html#663" class="InductiveConstructor Operator"
+      >&#8759;</a
+      ><a name="1016"
+      > </a
+      ><a name="1017" href="Data.Fin.Dec.html#1017" class="Bound"
+      >p</a
+      ><a name="1018"
+      >       </a
+      ><a name="1025" class="Keyword"
+      >with</a
+      ><a name="1029"
+      > </a
+      ><a name="1030" href="Data.Fin.Dec.html#1008" class="Bound"
+      >n</a
+      ><a name="1031"
+      > </a
+      ><a name="1032" href="Data.Fin.Dec.html#897" class="Function Operator"
+      >&#8712;?</a
+      ><a name="1034"
+      > </a
+      ><a name="1035" href="Data.Fin.Dec.html#1017" class="Bound"
+      >p</a
+      ><a name="1036"
+      >
+</a
+      ><a name="1037" class="Symbol"
+      >...</a
+      ><a name="1040"
+      >                  </a
+      ><a name="1058" class="Symbol"
+      >|</a
+      ><a name="1059"
+      > </a
+      ><a name="1060" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="1063"
+      > </a
+      ><a name="1064" href="Data.Fin.Dec.html#1064" class="Bound"
+      >n&#8712;p</a
+      ><a name="1067"
+      > </a
+      ><a name="1068" class="Symbol"
+      >=</a
+      ><a name="1069"
+      > </a
+      ><a name="1070" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="1073"
+      > </a
+      ><a name="1074" class="Symbol"
+      >(</a
+      ><a name="1075" href="Data.Vec.html#1074" class="InductiveConstructor"
+      >there</a
+      ><a name="1080"
+      > </a
+      ><a name="1081" href="Data.Fin.Dec.html#1064" class="Bound"
+      >n&#8712;p</a
+      ><a name="1084" class="Symbol"
+      >)</a
+      ><a name="1085"
+      >
+</a
+      ><a name="1086" class="Symbol"
+      >...</a
+      ><a name="1089"
+      >                  </a
+      ><a name="1107" class="Symbol"
+      >|</a
+      ><a name="1108"
+      > </a
+      ><a name="1109" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="1111"
+      >  </a
+      ><a name="1113" href="Data.Fin.Dec.html#1113" class="Bound"
+      >n&#8713;p</a
+      ><a name="1116"
+      > </a
+      ><a name="1117" class="Symbol"
+      >=</a
+      ><a name="1118"
+      > </a
+      ><a name="1119" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="1121"
+      >  </a
+      ><a name="1123" class="Symbol"
+      >(</a
+      ><a name="1124" href="Data.Fin.Dec.html#1113" class="Bound"
+      >n&#8713;p</a
+      ><a name="1127"
+      > </a
+      ><a name="1128" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1129"
+      > </a
+      ><a name="1130" href="Data.Fin.Subset.Props.html#892" class="Function"
+      >drop-there</a
+      ><a name="1140" class="Symbol"
+      >)</a
+      ><a name="1141"
+      >
+
+</a
+      ><a name="1143" class="Keyword"
+      >private</a
+      ><a name="1150"
+      >
+
+  </a
+      ><a name="1154" href="Data.Fin.Dec.html#1154" class="Function"
+      >restrictP</a
+      ><a name="1163"
+      > </a
+      ><a name="1164" class="Symbol"
+      >:</a
+      ><a name="1165"
+      > </a
+      ><a name="1166" class="Symbol"
+      >&#8704;</a
+      ><a name="1167"
+      > </a
+      ><a name="1168" class="Symbol"
+      >{</a
+      ><a name="1169" href="Data.Fin.Dec.html#1169" class="Bound"
+      >p</a
+      ><a name="1170"
+      > </a
+      ><a name="1171" href="Data.Fin.Dec.html#1171" class="Bound"
+      >n</a
+      ><a name="1172" class="Symbol"
+      >}</a
+      ><a name="1173"
+      > </a
+      ><a name="1174" class="Symbol"
+      >&#8594;</a
+      ><a name="1175"
+      > </a
+      ><a name="1176" class="Symbol"
+      >(</a
+      ><a name="1177" href="Data.Fin.html#775" class="Datatype"
+      >Fin</a
+      ><a name="1180"
+      > </a
+      ><a name="1181" class="Symbol"
+      >(</a
+      ><a name="1182" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="1185"
+      > </a
+      ><a name="1186" href="Data.Fin.Dec.html#1171" class="Bound"
+      >n</a
+      ><a name="1187" class="Symbol"
+      >)</a
+      ><a name="1188"
+      > </a
+      ><a name="1189" class="Symbol"
+      >&#8594;</a
+      ><a name="1190"
+      > </a
+      ><a name="1191" class="PrimitiveType"
+      >Set</a
+      ><a name="1194"
+      > </a
+      ><a name="1195" href="Data.Fin.Dec.html#1169" class="Bound"
+      >p</a
+      ><a name="1196" class="Symbol"
+      >)</a
+      ><a name="1197"
+      > </a
+      ><a name="1198" class="Symbol"
+      >&#8594;</a
+      ><a name="1199"
+      > </a
+      ><a name="1200" class="Symbol"
+      >(</a
+      ><a name="1201" href="Data.Fin.html#775" class="Datatype"
+      >Fin</a
+      ><a name="1204"
+      > </a
+      ><a name="1205" href="Data.Fin.Dec.html#1171" class="Bound"
+      >n</a
+      ><a name="1206"
+      > </a
+      ><a name="1207" class="Symbol"
+      >&#8594;</a
+      ><a name="1208"
+      > </a
+      ><a name="1209" class="PrimitiveType"
+      >Set</a
+      ><a name="1212"
+      > </a
+      ><a name="1213" href="Data.Fin.Dec.html#1169" class="Bound"
+      >p</a
+      ><a name="1214" class="Symbol"
+      >)</a
+      ><a name="1215"
+      >
+  </a
+      ><a name="1218" href="Data.Fin.Dec.html#1154" class="Function"
+      >restrictP</a
+      ><a name="1227"
+      > </a
+      ><a name="1228" href="Data.Fin.Dec.html#1228" class="Bound"
+      >P</a
+      ><a name="1229"
+      > </a
+      ><a name="1230" href="Data.Fin.Dec.html#1230" class="Bound"
+      >f</a
+      ><a name="1231"
+      > </a
+      ><a name="1232" class="Symbol"
+      >=</a
+      ><a name="1233"
+      > </a
+      ><a name="1234" href="Data.Fin.Dec.html#1228" class="Bound"
+      >P</a
+      ><a name="1235"
+      > </a
+      ><a name="1236" class="Symbol"
+      >(</a
+      ><a name="1237" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1240"
+      > </a
+      ><a name="1241" href="Data.Fin.Dec.html#1230" class="Bound"
+      >f</a
+      ><a name="1242" class="Symbol"
+      >)</a
+      ><a name="1243"
+      >
+
+  </a
+      ><a name="1247" href="Data.Fin.Dec.html#1247" class="Function"
+      >restrict</a
+      ><a name="1255"
+      > </a
+      ><a name="1256" class="Symbol"
+      >:</a
+      ><a name="1257"
+      > </a
+      ><a name="1258" class="Symbol"
+      >&#8704;</a
+      ><a name="1259"
+      > </a
+      ><a name="1260" class="Symbol"
+      >{</a
+      ><a name="1261" href="Data.Fin.Dec.html#1261" class="Bound"
+      >p</a
+      ><a name="1262"
+      > </a
+      ><a name="1263" href="Data.Fin.Dec.html#1263" class="Bound"
+      >n</a
+      ><a name="1264" class="Symbol"
+      >}</a
+      ><a name="1265"
+      > </a
+      ><a name="1266" class="Symbol"
+      >{</a
+      ><a name="1267" href="Data.Fin.Dec.html#1267" class="Bound"
+      >P</a
+      ><a name="1268"
+      > </a
+      ><a name="1269" class="Symbol"
+      >:</a
+      ><a name="1270"
+      > </a
+      ><a name="1271" href="Data.Fin.html#775" class="Datatype"
+      >Fin</a
+      ><a name="1274"
+      > </a
+      ><a name="1275" class="Symbol"
+      >(</a
+      ><a name="1276" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="1279"
+      > </a
+      ><a name="1280" href="Data.Fin.Dec.html#1263" class="Bound"
+      >n</a
+      ><a name="1281" class="Symbol"
+      >)</a
+      ><a name="1282"
+      > </a
+      ><a name="1283" class="Symbol"
+      >&#8594;</a
+      ><a name="1284"
+      > </a
+      ><a name="1285" class="PrimitiveType"
+      >Set</a
+      ><a name="1288"
+      > </a
+      ><a name="1289" href="Data.Fin.Dec.html#1261" class="Bound"
+      >p</a
+      ><a name="1290" class="Symbol"
+      >}</a
+      ><a name="1291"
+      > </a
+      ><a name="1292" class="Symbol"
+      >&#8594;</a
+      ><a name="1293"
+      >
+             </a
+      ><a name="1307" href="Relation.Unary.html#2968" class="Function"
+      >U.Decidable</a
+      ><a name="1318"
+      > </a
+      ><a name="1319" href="Data.Fin.Dec.html#1267" class="Bound"
+      >P</a
+      ><a name="1320"
+      > </a
+      ><a name="1321" class="Symbol"
+      >&#8594;</a
+      ><a name="1322"
+      > </a
+      ><a name="1323" href="Relation.Unary.html#2968" class="Function"
+      >U.Decidable</a
+      ><a name="1334"
+      > </a
+      ><a name="1335" class="Symbol"
+      >(</a
+      ><a name="1336" href="Data.Fin.Dec.html#1154" class="Function"
+      >restrictP</a
+      ><a name="1345"
+      > </a
+      ><a name="1346" href="Data.Fin.Dec.html#1267" class="Bound"
+      >P</a
+      ><a name="1347" class="Symbol"
+      >)</a
+      ><a name="1348"
+      >
+  </a
+      ><a name="1351" href="Data.Fin.Dec.html#1247" class="Function"
+      >restrict</a
+      ><a name="1359"
+      > </a
+      ><a name="1360" href="Data.Fin.Dec.html#1360" class="Bound"
+      >dec</a
+      ><a name="1363"
+      > </a
+      ><a name="1364" href="Data.Fin.Dec.html#1364" class="Bound"
+      >f</a
+      ><a name="1365"
+      > </a
+      ><a name="1366" class="Symbol"
+      >=</a
+      ><a name="1367"
+      > </a
+      ><a name="1368" href="Data.Fin.Dec.html#1360" class="Bound"
+      >dec</a
+      ><a name="1371"
+      > </a
+      ><a name="1372" class="Symbol"
+      >(</a
+      ><a name="1373" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1376"
+      > </a
+      ><a name="1377" href="Data.Fin.Dec.html#1364" class="Bound"
+      >f</a
+      ><a name="1378" class="Symbol"
+      >)</a
+      ><a name="1379"
+      >
+
+</a
+      ><a name="1381" href="Data.Fin.Dec.html#1381" class="Function"
+      >any?</a
+      ><a name="1385"
+      > </a
+      ><a name="1386" class="Symbol"
+      >:</a
+      ><a name="1387"
+      > </a
+      ><a name="1388" class="Symbol"
+      >&#8704;</a
+      ><a name="1389"
+      > </a
+      ><a name="1390" class="Symbol"
+      >{</a
+      ><a name="1391" href="Data.Fin.Dec.html#1391" class="Bound"
+      >n</a
+      ><a name="1392" class="Symbol"
+      >}</a
+      ><a name="1393"
+      > </a
+      ><a name="1394" class="Symbol"
+      >{</a
+      ><a name="1395" href="Data.Fin.Dec.html#1395" class="Bound"
+      >P</a
+      ><a name="1396"
+      > </a
+      ><a name="1397" class="Symbol"
+      >:</a
+      ><a name="1398"
+      > </a
+      ><a name="1399" href="Data.Fin.html#775" class="Datatype"
+      >Fin</a
+      ><a name="1402"
+      > </a
+      ><a name="1403" href="Data.Fin.Dec.html#1391" class="Bound"
+      >n</a
+      ><a name="1404"
+      > </a
+      ><a name="1405" class="Symbol"
+      >&#8594;</a
+      ><a name="1406"
+      > </a
+      ><a name="1407" class="PrimitiveType"
+      >Set</a
+      ><a name="1410" class="Symbol"
+      >}</a
+      ><a name="1411"
+      > </a
+      ><a name="1412" class="Symbol"
+      >&#8594;</a
+      ><a name="1413"
+      >
+       </a
+      ><a name="1421" href="Relation.Unary.html#2968" class="Function"
+      >U.Decidable</a
+      ><a name="1432"
+      > </a
+      ><a name="1433" href="Data.Fin.Dec.html#1395" class="Bound"
+      >P</a
+      ><a name="1434"
+      > </a
+      ><a name="1435" class="Symbol"
+      >&#8594;</a
+      ><a name="1436"
+      > </a
+      ><a name="1437" href="Relation.Nullary.Core.html#468" class="Datatype"
+      >Dec</a
+      ><a name="1440"
+      > </a
+      ><a name="1441" class="Symbol"
+      >(</a
+      ><a name="1442" href="Data.Product.html#805" class="Function"
+      >&#8707;</a
+      ><a name="1443"
+      > </a
+      ><a name="1444" href="Data.Fin.Dec.html#1395" class="Bound"
+      >P</a
+      ><a name="1445" class="Symbol"
+      >)</a
+      ><a name="1446"
+      >
+</a
+      ><a name="1447" href="Data.Fin.Dec.html#1381" class="Function"
+      >any?</a
+      ><a name="1451"
+      > </a
+      ><a name="1452" class="Symbol"
+      >{</a
+      ><a name="1453" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="1457" class="Symbol"
+      >}</a
+      ><a name="1458"
+      >      </a
+      ><a name="1464" href="Data.Fin.Dec.html#1464" class="Bound"
+      >dec</a
+      ><a name="1467"
+      > </a
+      ><a name="1468" class="Symbol"
+      >=</a
+      ><a name="1469"
+      > </a
+      ><a name="1470" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="1472"
+      > </a
+      ><a name="1473" class="Symbol"
+      >&#955;</a
+      ><a name="1474"
+      > </a
+      ><a name="1475" class="Symbol"
+      >{</a
+      ><a name="1476"
+      > </a
+      ><a name="1477" class="Symbol"
+      >(()</a
+      ><a name="1480"
+      > </a
+      ><a name="1481" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1482"
+      > </a
+      ><a name="1483" class="Symbol"
+      >_)</a
+      ><a name="1485"
+      > </a
+      ><a name="1486" class="Symbol"
+      >}</a
+      ><a name="1487"
+      >
+</a
+      ><a name="1488" href="Data.Fin.Dec.html#1381" class="Function"
+      >any?</a
+      ><a name="1492"
+      > </a
+      ><a name="1493" class="Symbol"
+      >{</a
+      ><a name="1494" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="1497"
+      > </a
+      ><a name="1498" href="Data.Fin.Dec.html#1498" class="Bound"
+      >n</a
+      ><a name="1499" class="Symbol"
+      >}</a
+      ><a name="1500"
+      > </a
+      ><a name="1501" class="Symbol"
+      >{</a
+      ><a name="1502" href="Data.Fin.Dec.html#1502" class="Bound"
+      >P</a
+      ><a name="1503" class="Symbol"
+      >}</a
+      ><a name="1504"
+      > </a
+      ><a name="1505" href="Data.Fin.Dec.html#1505" class="Bound"
+      >dec</a
+      ><a name="1508"
+      > </a
+      ><a name="1509" class="Keyword"
+      >with</a
+      ><a name="1513"
+      > </a
+      ><a name="1514" href="Data.Fin.Dec.html#1505" class="Bound"
+      >dec</a
+      ><a name="1517"
+      > </a
+      ><a name="1518" href="Data.Fin.html#797" class="InductiveConstructor"
+      >zero</a
+      ><a name="1522"
+      > </a
+      ><a name="1523" class="Symbol"
+      >|</a
+      ><a name="1524"
+      > </a
+      ><a name="1525" href="Data.Fin.Dec.html#1381" class="Function"
+      >any?</a
+      ><a name="1529"
+      > </a
+      ><a name="1530" class="Symbol"
+      >(</a
+      ><a name="1531" href="Data.Fin.Dec.html#1247" class="Function"
+      >restrict</a
+      ><a name="1539"
+      > </a
+      ><a name="1540" href="Data.Fin.Dec.html#1505" class="Bound"
+      >dec</a
+      ><a name="1543" class="Symbol"
+      >)</a
+      ><a name="1544"
+      >
+</a
+      ><a name="1545" class="Symbol"
+      >...</a
+      ><a name="1548"
+      >                  </a
+      ><a name="1566" class="Symbol"
+      >|</a
+      ><a name="1567"
+      > </a
+      ><a name="1568" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="1571"
+      > </a
+      ><a name="1572" href="Data.Fin.Dec.html#1572" class="Bound"
+      >p</a
+      ><a name="1573"
+      > </a
+      ><a name="1574" class="Symbol"
+      >|</a
+      ><a name="1575"
+      > </a
+      ><a name="1576" class="Symbol"
+      >_</a
+      ><a name="1577"
+      >            </a
+      ><a name="1589" class="Symbol"
+      >=</a
+      ><a name="1590"
+      > </a
+      ><a name="1591" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="1594"
+      > </a
+      ><a name="1595" class="Symbol"
+      >(_</a
+      ><a name="1597"
+      > </a
+      ><a name="1598" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1599"
+      > </a
+      ><a name="1600" href="Data.Fin.Dec.html#1572" class="Bound"
+      >p</a
+      ><a name="1601" class="Symbol"
+      >)</a
+      ><a name="1602"
+      >
+</a
+      ><a name="1603" class="Symbol"
+      >...</a
+      ><a name="1606"
+      >                  </a
+      ><a name="1624" class="Symbol"
+      >|</a
+      ><a name="1625"
+      > </a
+      ><a name="1626" class="Symbol"
+      >_</a
+      ><a name="1627"
+      >     </a
+      ><a name="1632" class="Symbol"
+      >|</a
+      ><a name="1633"
+      > </a
+      ><a name="1634" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="1637"
+      > </a
+      ><a name="1638" class="Symbol"
+      >(_</a
+      ><a name="1640"
+      > </a
+      ><a name="1641" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1642"
+      > </a
+      ><a name="1643" href="Data.Fin.Dec.html#1643" class="Bound"
+      >p'</a
+      ><a name="1645" class="Symbol"
+      >)</a
+      ><a name="1646"
+      > </a
+      ><a name="1647" class="Symbol"
+      >=</a
+      ><a name="1648"
+      > </a
+      ><a name="1649" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="1652"
+      > </a
+      ><a name="1653" class="Symbol"
+      >(_</a
+      ><a name="1655"
+      > </a
+      ><a name="1656" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1657"
+      > </a
+      ><a name="1658" href="Data.Fin.Dec.html#1643" class="Bound"
+      >p'</a
+      ><a name="1660" class="Symbol"
+      >)</a
+      ><a name="1661"
+      >
+</a
+      ><a name="1662" class="Symbol"
+      >...</a
+      ><a name="1665"
+      >                  </a
+      ><a name="1683" class="Symbol"
+      >|</a
+      ><a name="1684"
+      > </a
+      ><a name="1685" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="1687"
+      > </a
+      ><a name="1688" href="Data.Fin.Dec.html#1688" class="Bound"
+      >&#172;p</a
+      ><a name="1690"
+      > </a
+      ><a name="1691" class="Symbol"
+      >|</a
+      ><a name="1692"
+      > </a
+      ><a name="1693" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="1695"
+      > </a
+      ><a name="1696" href="Data.Fin.Dec.html#1696" class="Bound"
+      >&#172;p'</a
+      ><a name="1699"
+      >       </a
+      ><a name="1706" class="Symbol"
+      >=</a
+      ><a name="1707"
+      > </a
+      ><a name="1708" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="1710"
+      > </a
+      ><a name="1711" href="Data.Fin.Dec.html#1728" class="Function"
+      >helper</a
+      ><a name="1717"
+      >
+  </a
+      ><a name="1720" class="Keyword"
+      >where</a
+      ><a name="1725"
+      >
+  </a
+      ><a name="1728" href="Data.Fin.Dec.html#1728" class="Function"
+      >helper</a
+      ><a name="1734"
+      > </a
+      ><a name="1735" class="Symbol"
+      >:</a
+      ><a name="1736"
+      > </a
+      ><a name="1737" href="Data.Product.html#866" class="Function"
+      >&#8708;</a
+      ><a name="1738"
+      > </a
+      ><a name="1739" href="Data.Fin.Dec.html#1502" class="Bound"
+      >P</a
+      ><a name="1740"
+      >
+  </a
+      ><a name="1743" href="Data.Fin.Dec.html#1728" class="Function"
+      >helper</a
+      ><a name="1749"
+      > </a
+      ><a name="1750" class="Symbol"
+      >(</a
+      ><a name="1751" href="Data.Fin.html#797" class="InductiveConstructor"
+      >zero</a
+      ><a name="1755"
+      >  </a
+      ><a name="1757" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1758"
+      > </a
+      ><a name="1759" href="Data.Fin.Dec.html#1759" class="Bound"
+      >p</a
+      ><a name="1760" class="Symbol"
+      >)</a
+      ><a name="1761"
+      >  </a
+      ><a name="1763" class="Symbol"
+      >=</a
+      ><a name="1764"
+      > </a
+      ><a name="1765" href="Data.Fin.Dec.html#1688" class="Bound"
+      >&#172;p</a
+      ><a name="1767"
+      > </a
+      ><a name="1768" href="Data.Fin.Dec.html#1759" class="Bound"
+      >p</a
+      ><a name="1769"
+      >
+  </a
+      ><a name="1772" href="Data.Fin.Dec.html#1728" class="Function"
+      >helper</a
+      ><a name="1778"
+      > </a
+      ><a name="1779" class="Symbol"
+      >(</a
+      ><a name="1780" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1783"
+      > </a
+      ><a name="1784" href="Data.Fin.Dec.html#1784" class="Bound"
+      >f</a
+      ><a name="1785"
+      > </a
+      ><a name="1786" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1787"
+      > </a
+      ><a name="1788" href="Data.Fin.Dec.html#1788" class="Bound"
+      >p'</a
+      ><a name="1790" class="Symbol"
+      >)</a
+      ><a name="1791"
+      > </a
+      ><a name="1792" class="Symbol"
+      >=</a
+      ><a name="1793"
+      > </a
+      ><a name="1794" href="Data.Fin.Dec.html#1696" class="Bound"
+      >&#172;p'</a
+      ><a name="1797"
+      > </a
+      ><a name="1798" class="Symbol"
+      >(_</a
+      ><a name="1800"
+      > </a
+      ><a name="1801" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1802"
+      > </a
+      ><a name="1803" href="Data.Fin.Dec.html#1788" class="Bound"
+      >p'</a
+      ><a name="1805" class="Symbol"
+      >)</a
+      ><a name="1806"
+      >
+
+</a
+      ><a name="1808" href="Data.Fin.Dec.html#1808" class="Function"
+      >nonempty?</a
+      ><a name="1817"
+      > </a
+      ><a name="1818" class="Symbol"
+      >:</a
+      ><a name="1819"
+      > </a
+      ><a name="1820" class="Symbol"
+      >&#8704;</a
+      ><a name="1821"
+      > </a
+      ><a name="1822" class="Symbol"
+      >{</a
+      ><a name="1823" href="Data.Fin.Dec.html#1823" class="Bound"
+      >n</a
+      ><a name="1824" class="Symbol"
+      >}</a
+      ><a name="1825"
+      > </a
+      ><a name="1826" class="Symbol"
+      >(</a
+      ><a name="1827" href="Data.Fin.Dec.html#1827" class="Bound"
+      >p</a
+      ><a name="1828"
+      > </a
+      ><a name="1829" class="Symbol"
+      >:</a
+      ><a name="1830"
+      > </a
+      ><a name="1831" href="Data.Fin.Subset.html#936" class="Function"
+      >Subset</a
+      ><a name="1837"
+      > </a
+      ><a name="1838" href="Data.Fin.Dec.html#1823" class="Bound"
+      >n</a
+      ><a name="1839" class="Symbol"
+      >)</a
+      ><a name="1840"
+      > </a
+      ><a name="1841" class="Symbol"
+      >&#8594;</a
+      ><a name="1842"
+      > </a
+      ><a name="1843" href="Relation.Nullary.Core.html#468" class="Datatype"
+      >Dec</a
+      ><a name="1846"
+      > </a
+      ><a name="1847" class="Symbol"
+      >(</a
+      ><a name="1848" href="Data.Fin.Subset.html#2494" class="Function"
+      >Nonempty</a
+      ><a name="1856"
+      > </a
+      ><a name="1857" href="Data.Fin.Dec.html#1827" class="Bound"
+      >p</a
+      ><a name="1858" class="Symbol"
+      >)</a
+      ><a name="1859"
+      >
+</a
+      ><a name="1860" href="Data.Fin.Dec.html#1808" class="Function"
+      >nonempty?</a
+      ><a name="1869"
+      > </a
+      ><a name="1870" href="Data.Fin.Dec.html#1870" class="Bound"
+      >p</a
+      ><a name="1871"
+      > </a
+      ><a name="1872" class="Symbol"
+      >=</a
+      ><a name="1873"
+      > </a
+      ><a name="1874" href="Data.Fin.Dec.html#1381" class="Function"
+      >any?</a
+      ><a name="1878"
+      > </a
+      ><a name="1879" class="Symbol"
+      >(&#955;</a
+      ><a name="1881"
+      > </a
+      ><a name="1882" href="Data.Fin.Dec.html#1882" class="Bound"
+      >x</a
+      ><a name="1883"
+      > </a
+      ><a name="1884" class="Symbol"
+      >&#8594;</a
+      ><a name="1885"
+      > </a
+      ><a name="1886" href="Data.Fin.Dec.html#1882" class="Bound"
+      >x</a
+      ><a name="1887"
+      > </a
+      ><a name="1888" href="Data.Fin.Dec.html#897" class="Function Operator"
+      >&#8712;?</a
+      ><a name="1890"
+      > </a
+      ><a name="1891" href="Data.Fin.Dec.html#1870" class="Bound"
+      >p</a
+      ><a name="1892" class="Symbol"
+      >)</a
+      ><a name="1893"
+      >
+
+</a
+      ><a name="1895" class="Keyword"
+      >private</a
+      ><a name="1902"
+      >
+
+  </a
+      ><a name="1906" href="Data.Fin.Dec.html#1906" class="Function"
+      >restrict&#8712;</a
+      ><a name="1915"
+      > </a
+      ><a name="1916" class="Symbol"
+      >:</a
+      ><a name="1917"
+      > </a
+      ><a name="1918" class="Symbol"
+      >&#8704;</a
+      ><a name="1919"
+      > </a
+      ><a name="1920" class="Symbol"
+      >{</a
+      ><a name="1921" href="Data.Fin.Dec.html#1921" class="Bound"
+      >p</a
+      ><a name="1922"
+      > </a
+      ><a name="1923" href="Data.Fin.Dec.html#1923" class="Bound"
+      >q</a
+      ><a name="1924"
+      > </a
+      ><a name="1925" href="Data.Fin.Dec.html#1925" class="Bound"
+      >n</a
+      ><a name="1926" class="Symbol"
+      >}</a
+      ><a name="1927"
+      >
+              </a
+      ><a name="1942" class="Symbol"
+      >(</a
+      ><a name="1943" href="Data.Fin.Dec.html#1943" class="Bound"
+      >P</a
+      ><a name="1944"
+      > </a
+      ><a name="1945" class="Symbol"
+      >:</a
+      ><a name="1946"
+      > </a
+      ><a name="1947" href="Data.Fin.html#775" class="Datatype"
+      >Fin</a
+      ><a name="1950"
+      > </a
+      ><a name="1951" class="Symbol"
+      >(</a
+      ><a name="1952" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="1955"
+      > </a
+      ><a name="1956" href="Data.Fin.Dec.html#1925" class="Bound"
+      >n</a
+      ><a name="1957" class="Symbol"
+      >)</a
+      ><a name="1958"
+      > </a
+      ><a name="1959" class="Symbol"
+      >&#8594;</a
+      ><a name="1960"
+      > </a
+      ><a name="1961" class="PrimitiveType"
+      >Set</a
+      ><a name="1964"
+      > </a
+      ><a name="1965" href="Data.Fin.Dec.html#1921" class="Bound"
+      >p</a
+      ><a name="1966" class="Symbol"
+      >)</a
+      ><a name="1967"
+      > </a
+      ><a name="1968" class="Symbol"
+      >{</a
+      ><a name="1969" href="Data.Fin.Dec.html#1969" class="Bound"
+      >Q</a
+      ><a name="1970"
+      > </a
+      ><a name="1971" class="Symbol"
+      >:</a
+      ><a name="1972"
+      > </a
+      ><a name="1973" href="Data.Fin.html#775" class="Datatype"
+      >Fin</a
+      ><a name="1976"
+      > </a
+      ><a name="1977" class="Symbol"
+      >(</a
+      ><a name="1978" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="1981"
+      > </a
+      ><a name="1982" href="Data.Fin.Dec.html#1925" class="Bound"
+      >n</a
+      ><a name="1983" class="Symbol"
+      >)</a
+      ><a name="1984"
+      > </a
+      ><a name="1985" class="Symbol"
+      >&#8594;</a
+      ><a name="1986"
+      > </a
+      ><a name="1987" class="PrimitiveType"
+      >Set</a
+      ><a name="1990"
+      > </a
+      ><a name="1991" href="Data.Fin.Dec.html#1923" class="Bound"
+      >q</a
+      ><a name="1992" class="Symbol"
+      >}</a
+      ><a name="1993"
+      > </a
+      ><a name="1994" class="Symbol"
+      >&#8594;</a
+      ><a name="1995"
+      >
+              </a
+      ><a name="2010" class="Symbol"
+      >(&#8704;</a
+      ><a name="2012"
+      > </a
+      ><a name="2013" class="Symbol"
+      >{</a
+      ><a name="2014" href="Data.Fin.Dec.html#2014" class="Bound"
+      >f</a
+      ><a name="2015" class="Symbol"
+      >}</a
+      ><a name="2016"
+      > </a
+      ><a name="2017" class="Symbol"
+      >&#8594;</a
+      ><a name="2018"
+      > </a
+      ><a name="2019" href="Data.Fin.Dec.html#1969" class="Bound"
+      >Q</a
+      ><a name="2020"
+      > </a
+      ><a name="2021" href="Data.Fin.Dec.html#2014" class="Bound"
+      >f</a
+      ><a name="2022"
+      > </a
+      ><a name="2023" class="Symbol"
+      >&#8594;</a
+      ><a name="2024"
+      > </a
+      ><a name="2025" href="Relation.Nullary.Core.html#468" class="Datatype"
+      >Dec</a
+      ><a name="2028"
+      > </a
+      ><a name="2029" class="Symbol"
+      >(</a
+      ><a name="2030" href="Data.Fin.Dec.html#1943" class="Bound"
+      >P</a
+      ><a name="2031"
+      > </a
+      ><a name="2032" href="Data.Fin.Dec.html#2014" class="Bound"
+      >f</a
+      ><a name="2033" class="Symbol"
+      >))</a
+      ><a name="2035"
+      > </a
+      ><a name="2036" class="Symbol"
+      >&#8594;</a
+      ><a name="2037"
+      >
+              </a
+      ><a name="2052" class="Symbol"
+      >(&#8704;</a
+      ><a name="2054"
+      > </a
+      ><a name="2055" class="Symbol"
+      >{</a
+      ><a name="2056" href="Data.Fin.Dec.html#2056" class="Bound"
+      >f</a
+      ><a name="2057" class="Symbol"
+      >}</a
+      ><a name="2058"
+      > </a
+      ><a name="2059" class="Symbol"
+      >&#8594;</a
+      ><a name="2060"
+      > </a
+      ><a name="2061" href="Data.Fin.Dec.html#1154" class="Function"
+      >restrictP</a
+      ><a name="2070"
+      > </a
+      ><a name="2071" href="Data.Fin.Dec.html#1969" class="Bound"
+      >Q</a
+      ><a name="2072"
+      > </a
+      ><a name="2073" href="Data.Fin.Dec.html#2056" class="Bound"
+      >f</a
+      ><a name="2074"
+      > </a
+      ><a name="2075" class="Symbol"
+      >&#8594;</a
+      ><a name="2076"
+      > </a
+      ><a name="2077" href="Relation.Nullary.Core.html#468" class="Datatype"
+      >Dec</a
+      ><a name="2080"
+      > </a
+      ><a name="2081" class="Symbol"
+      >(</a
+      ><a name="2082" href="Data.Fin.Dec.html#1154" class="Function"
+      >restrictP</a
+      ><a name="2091"
+      > </a
+      ><a name="2092" href="Data.Fin.Dec.html#1943" class="Bound"
+      >P</a
+      ><a name="2093"
+      > </a
+      ><a name="2094" href="Data.Fin.Dec.html#2056" class="Bound"
+      >f</a
+      ><a name="2095" class="Symbol"
+      >))</a
+      ><a name="2097"
+      >
+  </a
+      ><a name="2100" href="Data.Fin.Dec.html#1906" class="Function"
+      >restrict&#8712;</a
+      ><a name="2109"
+      > </a
+      ><a name="2110" class="Symbol"
+      >_</a
+      ><a name="2111"
+      > </a
+      ><a name="2112" href="Data.Fin.Dec.html#2112" class="Bound"
+      >dec</a
+      ><a name="2115"
+      > </a
+      ><a name="2116" class="Symbol"
+      >{</a
+      ><a name="2117" href="Data.Fin.Dec.html#2117" class="Bound"
+      >f</a
+      ><a name="2118" class="Symbol"
+      >}</a
+      ><a name="2119"
+      > </a
+      ><a name="2120" href="Data.Fin.Dec.html#2120" class="Bound"
+      >Qf</a
+      ><a name="2122"
+      > </a
+      ><a name="2123" class="Symbol"
+      >=</a
+      ><a name="2124"
+      > </a
+      ><a name="2125" href="Data.Fin.Dec.html#2112" class="Bound"
+      >dec</a
+      ><a name="2128"
+      > </a
+      ><a name="2129" class="Symbol"
+      >{</a
+      ><a name="2130" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="2133"
+      > </a
+      ><a name="2134" href="Data.Fin.Dec.html#2117" class="Bound"
+      >f</a
+      ><a name="2135" class="Symbol"
+      >}</a
+      ><a name="2136"
+      > </a
+      ><a name="2137" href="Data.Fin.Dec.html#2120" class="Bound"
+      >Qf</a
+      ><a name="2139"
+      >
+
+</a
+      ><a name="2141" href="Data.Fin.Dec.html#2141" class="Function"
+      >decFinSubset</a
+      ><a name="2153"
+      > </a
+      ><a name="2154" class="Symbol"
+      >:</a
+      ><a name="2155"
+      > </a
+      ><a name="2156" class="Symbol"
+      >&#8704;</a
+      ><a name="2157"
+      > </a
+      ><a name="2158" class="Symbol"
+      >{</a
+      ><a name="2159" href="Data.Fin.Dec.html#2159" class="Bound"
+      >p</a
+      ><a name="2160"
+      > </a
+      ><a name="2161" href="Data.Fin.Dec.html#2161" class="Bound"
+      >q</a
+      ><a name="2162"
+      > </a
+      ><a name="2163" href="Data.Fin.Dec.html#2163" class="Bound"
+      >n</a
+      ><a name="2164" class="Symbol"
+      >}</a
+      ><a name="2165"
+      > </a
+      ><a name="2166" class="Symbol"
+      >{</a
+      ><a name="2167" href="Data.Fin.Dec.html#2167" class="Bound"
+      >P</a
+      ><a name="2168"
+      > </a
+      ><a name="2169" class="Symbol"
+      >:</a
+      ><a name="2170"
+      > </a
+      ><a name="2171" href="Data.Fin.html#775" class="Datatype"
+      >Fin</a
+      ><a name="2174"
+      > </a
+      ><a name="2175" href="Data.Fin.Dec.html#2163" class="Bound"
+      >n</a
+      ><a name="2176"
+      > </a
+      ><a name="2177" class="Symbol"
+      >&#8594;</a
+      ><a name="2178"
+      > </a
+      ><a name="2179" class="PrimitiveType"
+      >Set</a
+      ><a name="2182"
+      > </a
+      ><a name="2183" href="Data.Fin.Dec.html#2159" class="Bound"
+      >p</a
+      ><a name="2184" class="Symbol"
+      >}</a
+      ><a name="2185"
+      > </a
+      ><a name="2186" class="Symbol"
+      >{</a
+      ><a name="2187" href="Data.Fin.Dec.html#2187" class="Bound"
+      >Q</a
+      ><a name="2188"
+      > </a
+      ><a name="2189" class="Symbol"
+      >:</a
+      ><a name="2190"
+      > </a
+      ><a name="2191" href="Data.Fin.html#775" class="Datatype"
+      >Fin</a
+      ><a name="2194"
+      > </a
+      ><a name="2195" href="Data.Fin.Dec.html#2163" class="Bound"
+      >n</a
+      ><a name="2196"
+      > </a
+      ><a name="2197" class="Symbol"
+      >&#8594;</a
+      ><a name="2198"
+      > </a
+      ><a name="2199" class="PrimitiveType"
+      >Set</a
+      ><a name="2202"
+      > </a
+      ><a name="2203" href="Data.Fin.Dec.html#2161" class="Bound"
+      >q</a
+      ><a name="2204" class="Symbol"
+      >}</a
+      ><a name="2205"
+      > </a
+      ><a name="2206" class="Symbol"
+      >&#8594;</a
+      ><a name="2207"
+      >
+               </a
+      ><a name="2223" href="Relation.Unary.html#2968" class="Function"
+      >U.Decidable</a
+      ><a name="2234"
+      > </a
+      ><a name="2235" href="Data.Fin.Dec.html#2187" class="Bound"
+      >Q</a
+      ><a name="2236"
+      > </a
+      ><a name="2237" class="Symbol"
+      >&#8594;</a
+      ><a name="2238"
+      >
+               </a
+      ><a name="2254" class="Symbol"
+      >(&#8704;</a
+      ><a name="2256"
+      > </a
+      ><a name="2257" class="Symbol"
+      >{</a
+      ><a name="2258" href="Data.Fin.Dec.html#2258" class="Bound"
+      >f</a
+      ><a name="2259" class="Symbol"
+      >}</a
+      ><a name="2260"
+      > </a
+      ><a name="2261" class="Symbol"
+      >&#8594;</a
+      ><a name="2262"
+      > </a
+      ><a name="2263" href="Data.Fin.Dec.html#2187" class="Bound"
+      >Q</a
+      ><a name="2264"
+      > </a
+      ><a name="2265" href="Data.Fin.Dec.html#2258" class="Bound"
+      >f</a
+      ><a name="2266"
+      > </a
+      ><a name="2267" class="Symbol"
+      >&#8594;</a
+      ><a name="2268"
+      > </a
+      ><a name="2269" href="Relation.Nullary.Core.html#468" class="Datatype"
+      >Dec</a
+      ><a name="2272"
+      > </a
+      ><a name="2273" class="Symbol"
+      >(</a
+      ><a name="2274" href="Data.Fin.Dec.html#2167" class="Bound"
+      >P</a
+      ><a name="2275"
+      > </a
+      ><a name="2276" href="Data.Fin.Dec.html#2258" class="Bound"
+      >f</a
+      ><a name="2277" class="Symbol"
+      >))</a
+      ><a name="2279"
+      > </a
+      ><a name="2280" class="Symbol"
+      >&#8594;</a
+      ><a name="2281"
+      >
+               </a
+      ><a name="2297" href="Relation.Nullary.Core.html#468" class="Datatype"
+      >Dec</a
+      ><a name="2300"
+      > </a
+      ><a name="2301" class="Symbol"
+      >(&#8704;</a
+      ><a name="2303"
+      > </a
+      ><a name="2304" class="Symbol"
+      >{</a
+      ><a name="2305" href="Data.Fin.Dec.html#2305" class="Bound"
+      >f</a
+      ><a name="2306" class="Symbol"
+      >}</a
+      ><a name="2307"
+      > </a
+      ><a name="2308" class="Symbol"
+      >&#8594;</a
+      ><a name="2309"
+      > </a
+      ><a name="2310" href="Data.Fin.Dec.html#2187" class="Bound"
+      >Q</a
+      ><a name="2311"
+      > </a
+      ><a name="2312" href="Data.Fin.Dec.html#2305" class="Bound"
+      >f</a
+      ><a name="2313"
+      > </a
+      ><a name="2314" class="Symbol"
+      >&#8594;</a
+      ><a name="2315"
+      > </a
+      ><a name="2316" href="Data.Fin.Dec.html#2167" class="Bound"
+      >P</a
+      ><a name="2317"
+      > </a
+      ><a name="2318" href="Data.Fin.Dec.html#2305" class="Bound"
+      >f</a
+      ><a name="2319" class="Symbol"
+      >)</a
+      ><a name="2320"
+      >
+</a
+      ><a name="2321" href="Data.Fin.Dec.html#2141" class="Function"
+      >decFinSubset</a
+      ><a name="2333"
+      > </a
+      ><a name="2334" class="Symbol"
+      >{</a
+      ><a name="2335"
+      >n </a
+      ><a name="2337" class="Symbol"
+      >=</a
+      ><a name="2338"
+      > </a
+      ><a name="2339" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="2343" class="Symbol"
+      >}</a
+      ><a name="2344"
+      >          </a
+      ><a name="2354" class="Symbol"
+      >_</a
+      ><a name="2355"
+      >    </a
+      ><a name="2359" class="Symbol"
+      >_</a
+      ><a name="2360"
+      >    </a
+      ><a name="2364" class="Symbol"
+      >=</a
+      ><a name="2365"
+      > </a
+      ><a name="2366" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="2369"
+      > </a
+      ><a name="2370" class="Symbol"
+      >&#955;{}</a
+      ><a name="2373"
+      >
+</a
+      ><a name="2374" href="Data.Fin.Dec.html#2141" class="Function"
+      >decFinSubset</a
+      ><a name="2386"
+      > </a
+      ><a name="2387" class="Symbol"
+      >{</a
+      ><a name="2388"
+      >n </a
+      ><a name="2390" class="Symbol"
+      >=</a
+      ><a name="2391"
+      > </a
+      ><a name="2392" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="2395"
+      > </a
+      ><a name="2396" href="Data.Fin.Dec.html#2396" class="Bound"
+      >n</a
+      ><a name="2397" class="Symbol"
+      >}</a
+      ><a name="2398"
+      > </a
+      ><a name="2399" class="Symbol"
+      >{</a
+      ><a name="2400" href="Data.Fin.Dec.html#2400" class="Bound"
+      >P</a
+      ><a name="2401" class="Symbol"
+      >}</a
+      ><a name="2402"
+      > </a
+      ><a name="2403" class="Symbol"
+      >{</a
+      ><a name="2404" href="Data.Fin.Dec.html#2404" class="Bound"
+      >Q</a
+      ><a name="2405" class="Symbol"
+      >}</a
+      ><a name="2406"
+      > </a
+      ><a name="2407" href="Data.Fin.Dec.html#2407" class="Bound"
+      >decQ</a
+      ><a name="2411"
+      > </a
+      ><a name="2412" href="Data.Fin.Dec.html#2412" class="Bound"
+      >decP</a
+      ><a name="2416"
+      > </a
+      ><a name="2417" class="Symbol"
+      >=</a
+      ><a name="2418"
+      > </a
+      ><a name="2419" href="Data.Fin.Dec.html#2436" class="Function"
+      >helper</a
+      ><a name="2425"
+      >
+  </a
+      ><a name="2428" class="Keyword"
+      >where</a
+      ><a name="2433"
+      >
+  </a
+      ><a name="2436" href="Data.Fin.Dec.html#2436" class="Function"
+      >helper</a
+      ><a name="2442"
+      > </a
+      ><a name="2443" class="Symbol"
+      >:</a
+      ><a name="2444"
+      > </a
+      ><a name="2445" href="Relation.Nullary.Core.html#468" class="Datatype"
+      >Dec</a
+      ><a name="2448"
+      > </a
+      ><a name="2449" class="Symbol"
+      >(&#8704;</a
+      ><a name="2451"
+      > </a
+      ><a name="2452" class="Symbol"
+      >{</a
+      ><a name="2453" href="Data.Fin.Dec.html#2453" class="Bound"
+      >f</a
+      ><a name="2454" class="Symbol"
+      >}</a
+      ><a name="2455"
+      > </a
+      ><a name="2456" class="Symbol"
+      >&#8594;</a
+      ><a name="2457"
+      > </a
+      ><a name="2458" href="Data.Fin.Dec.html#2404" class="Bound"
+      >Q</a
+      ><a name="2459"
+      > </a
+      ><a name="2460" href="Data.Fin.Dec.html#2453" class="Bound"
+      >f</a
+      ><a name="2461"
+      > </a
+      ><a name="2462" class="Symbol"
+      >&#8594;</a
+      ><a name="2463"
+      > </a
+      ><a name="2464" href="Data.Fin.Dec.html#2400" class="Bound"
+      >P</a
+      ><a name="2465"
+      > </a
+      ><a name="2466" href="Data.Fin.Dec.html#2453" class="Bound"
+      >f</a
+      ><a name="2467" class="Symbol"
+      >)</a
+      ><a name="2468"
+      >
+  </a
+      ><a name="2471" href="Data.Fin.Dec.html#2436" class="Function"
+      >helper</a
+      ><a name="2477"
+      > </a
+      ><a name="2478" class="Keyword"
+      >with</a
+      ><a name="2482"
+      > </a
+      ><a name="2483" href="Data.Fin.Dec.html#2141" class="Function"
+      >decFinSubset</a
+      ><a name="2495"
+      > </a
+      ><a name="2496" class="Symbol"
+      >(</a
+      ><a name="2497" href="Data.Fin.Dec.html#1247" class="Function"
+      >restrict</a
+      ><a name="2505"
+      > </a
+      ><a name="2506" href="Data.Fin.Dec.html#2407" class="Bound"
+      >decQ</a
+      ><a name="2510" class="Symbol"
+      >)</a
+      ><a name="2511"
+      > </a
+      ><a name="2512" class="Symbol"
+      >(</a
+      ><a name="2513" href="Data.Fin.Dec.html#1906" class="Function"
+      >restrict&#8712;</a
+      ><a name="2522"
+      > </a
+      ><a name="2523" href="Data.Fin.Dec.html#2400" class="Bound"
+      >P</a
+      ><a name="2524"
+      > </a
+      ><a name="2525" href="Data.Fin.Dec.html#2412" class="Bound"
+      >decP</a
+      ><a name="2529" class="Symbol"
+      >)</a
+      ><a name="2530"
+      >
+  </a
+      ><a name="2533" href="Data.Fin.Dec.html#2436" class="Function"
+      >helper</a
+      ><a name="2539"
+      > </a
+      ><a name="2540" class="Symbol"
+      >|</a
+      ><a name="2541"
+      > </a
+      ><a name="2542" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="2544"
+      > </a
+      ><a name="2545" href="Data.Fin.Dec.html#2545" class="Bound"
+      >&#172;q&#10230;p</a
+      ><a name="2549"
+      > </a
+      ><a name="2550" class="Symbol"
+      >=</a
+      ><a name="2551"
+      > </a
+      ><a name="2552" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="2554"
+      > </a
+      ><a name="2555" class="Symbol"
+      >(&#955;</a
+      ><a name="2557"
+      > </a
+      ><a name="2558" href="Data.Fin.Dec.html#2558" class="Bound"
+      >q&#10230;p</a
+      ><a name="2561"
+      > </a
+      ><a name="2562" class="Symbol"
+      >&#8594;</a
+      ><a name="2563"
+      > </a
+      ><a name="2564" href="Data.Fin.Dec.html#2545" class="Bound"
+      >&#172;q&#10230;p</a
+      ><a name="2568"
+      > </a
+      ><a name="2569" class="Symbol"
+      >(&#955;</a
+      ><a name="2571"
+      > </a
+      ><a name="2572" class="Symbol"
+      >{</a
+      ><a name="2573" href="Data.Fin.Dec.html#2573" class="Bound"
+      >f</a
+      ><a name="2574" class="Symbol"
+      >}</a
+      ><a name="2575"
+      > </a
+      ><a name="2576" href="Data.Fin.Dec.html#2576" class="Bound"
+      >q</a
+      ><a name="2577"
+      > </a
+      ><a name="2578" class="Symbol"
+      >&#8594;</a
+      ><a name="2579"
+      > </a
+      ><a name="2580" href="Data.Fin.Dec.html#2558" class="Bound"
+      >q&#10230;p</a
+      ><a name="2583"
+      > </a
+      ><a name="2584" class="Symbol"
+      >{</a
+      ><a name="2585" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="2588"
+      > </a
+      ><a name="2589" href="Data.Fin.Dec.html#2573" class="Bound"
+      >f</a
+      ><a name="2590" class="Symbol"
+      >}</a
+      ><a name="2591"
+      > </a
+      ><a name="2592" href="Data.Fin.Dec.html#2576" class="Bound"
+      >q</a
+      ><a name="2593" class="Symbol"
+      >))</a
+      ><a name="2595"
+      >
+  </a
+      ><a name="2598" href="Data.Fin.Dec.html#2436" class="Function"
+      >helper</a
+      ><a name="2604"
+      > </a
+      ><a name="2605" class="Symbol"
+      >|</a
+      ><a name="2606"
+      > </a
+      ><a name="2607" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="2610"
+      > </a
+      ><a name="2611" href="Data.Fin.Dec.html#2611" class="Bound"
+      >q&#10230;p</a
+      ><a name="2614"
+      > </a
+      ><a name="2615" class="Keyword"
+      >with</a
+      ><a name="2619"
+      > </a
+      ><a name="2620" href="Data.Fin.Dec.html#2407" class="Bound"
+      >decQ</a
+      ><a name="2624"
+      > </a
+      ><a name="2625" href="Data.Fin.html#797" class="InductiveConstructor"
+      >zero</a
+      ><a name="2629"
+      >
+  </a
+      ><a name="2632" href="Data.Fin.Dec.html#2436" class="Function"
+      >helper</a
+      ><a name="2638"
+      > </a
+      ><a name="2639" class="Symbol"
+      >|</a
+      ><a name="2640"
+      > </a
+      ><a name="2641" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="2644"
+      > </a
+      ><a name="2645" href="Data.Fin.Dec.html#2645" class="Bound"
+      >q&#10230;p</a
+      ><a name="2648"
+      > </a
+      ><a name="2649" class="Symbol"
+      >|</a
+      ><a name="2650"
+      > </a
+      ><a name="2651" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="2654"
+      > </a
+      ><a name="2655" href="Data.Fin.Dec.html#2655" class="Bound"
+      >q&#8320;</a
+      ><a name="2657"
+      > </a
+      ><a name="2658" class="Keyword"
+      >with</a
+      ><a name="2662"
+      > </a
+      ><a name="2663" href="Data.Fin.Dec.html#2412" class="Bound"
+      >decP</a
+      ><a name="2667"
+      > </a
+      ><a name="2668" href="Data.Fin.Dec.html#2655" class="Bound"
+      >q&#8320;</a
+      ><a name="2670"
+      >
+  </a
+      ><a name="2673" href="Data.Fin.Dec.html#2436" class="Function"
+      >helper</a
+      ><a name="2679"
+      > </a
+      ><a name="2680" class="Symbol"
+      >|</a
+      ><a name="2681"
+      > </a
+      ><a name="2682" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="2685"
+      > </a
+      ><a name="2686" href="Data.Fin.Dec.html#2686" class="Bound"
+      >q&#10230;p</a
+      ><a name="2689"
+      > </a
+      ><a name="2690" class="Symbol"
+      >|</a
+      ><a name="2691"
+      > </a
+      ><a name="2692" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="2695"
+      > </a
+      ><a name="2696" href="Data.Fin.Dec.html#2696" class="Bound"
+      >q&#8320;</a
+      ><a name="2698"
+      > </a
+      ><a name="2699" class="Symbol"
+      >|</a
+      ><a name="2700"
+      > </a
+      ><a name="2701" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="2703"
+      > </a
+      ><a name="2704" href="Data.Fin.Dec.html#2704" class="Bound"
+      >&#172;p&#8320;</a
+      ><a name="2707"
+      > </a
+      ><a name="2708" class="Symbol"
+      >=</a
+      ><a name="2709"
+      > </a
+      ><a name="2710" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="2712"
+      > </a
+      ><a name="2713" class="Symbol"
+      >(&#955;</a
+      ><a name="2715"
+      > </a
+      ><a name="2716" href="Data.Fin.Dec.html#2716" class="Bound"
+      >q&#10230;p</a
+      ><a name="2719"
+      > </a
+      ><a name="2720" class="Symbol"
+      >&#8594;</a
+      ><a name="2721"
+      > </a
+      ><a name="2722" href="Data.Fin.Dec.html#2704" class="Bound"
+      >&#172;p&#8320;</a
+      ><a name="2725"
+      > </a
+      ><a name="2726" class="Symbol"
+      >(</a
+      ><a name="2727" href="Data.Fin.Dec.html#2716" class="Bound"
+      >q&#10230;p</a
+      ><a name="2730"
+      > </a
+      ><a name="2731" class="Symbol"
+      >{</a
+      ><a name="2732" href="Data.Fin.html#797" class="InductiveConstructor"
+      >zero</a
+      ><a name="2736" class="Symbol"
+      >}</a
+      ><a name="2737"
+      > </a
+      ><a name="2738" href="Data.Fin.Dec.html#2696" class="Bound"
+      >q&#8320;</a
+      ><a name="2740" class="Symbol"
+      >))</a
+      ><a name="2742"
+      >
+  </a
+      ><a name="2745" href="Data.Fin.Dec.html#2436" class="Function"
+      >helper</a
+      ><a name="2751"
+      > </a
+      ><a name="2752" class="Symbol"
+      >|</a
+      ><a name="2753"
+      > </a
+      ><a name="2754" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="2757"
+      > </a
+      ><a name="2758" href="Data.Fin.Dec.html#2758" class="Bound"
+      >q&#10230;p</a
+      ><a name="2761"
+      > </a
+      ><a name="2762" class="Symbol"
+      >|</a
+      ><a name="2763"
+      > </a
+      ><a name="2764" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="2767"
+      > </a
+      ><a name="2768" href="Data.Fin.Dec.html#2768" class="Bound"
+      >q&#8320;</a
+      ><a name="2770"
+      > </a
+      ><a name="2771" class="Symbol"
+      >|</a
+      ><a name="2772"
+      > </a
+      ><a name="2773" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="2776"
+      > </a
+      ><a name="2777" href="Data.Fin.Dec.html#2777" class="Bound"
+      >p&#8320;</a
+      ><a name="2779"
+      > </a
+      ><a name="2780" class="Symbol"
+      >=</a
+      ><a name="2781"
+      > </a
+      ><a name="2782" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="2785"
+      > </a
+      ><a name="2786" class="Symbol"
+      >(&#955;</a
+      ><a name="2788"
+      > </a
+      ><a name="2789" class="Symbol"
+      >{</a
+      ><a name="2790" href="Data.Fin.Dec.html#2790" class="Bound"
+      >_</a
+      ><a name="2791" class="Symbol"
+      >}</a
+      ><a name="2792"
+      > </a
+      ><a name="2793" class="Symbol"
+      >&#8594;</a
+      ><a name="2794"
+      > </a
+      ><a name="2795" href="Data.Fin.Dec.html#2817" class="Function"
+      >hlpr</a
+      ><a name="2799"
+      > </a
+      ><a name="2800" class="Symbol"
+      >_)</a
+      ><a name="2802"
+      >
+    </a
+      ><a name="2807" class="Keyword"
+      >where</a
+      ><a name="2812"
+      >
+    </a
+      ><a name="2817" href="Data.Fin.Dec.html#2817" class="Function"
+      >hlpr</a
+      ><a name="2821"
+      > </a
+      ><a name="2822" class="Symbol"
+      >:</a
+      ><a name="2823"
+      > </a
+      ><a name="2824" class="Symbol"
+      >&#8704;</a
+      ><a name="2825"
+      > </a
+      ><a name="2826" href="Data.Fin.Dec.html#2826" class="Bound"
+      >f</a
+      ><a name="2827"
+      > </a
+      ><a name="2828" class="Symbol"
+      >&#8594;</a
+      ><a name="2829"
+      > </a
+      ><a name="2830" href="Data.Fin.Dec.html#2404" class="Bound"
+      >Q</a
+      ><a name="2831"
+      > </a
+      ><a name="2832" href="Data.Fin.Dec.html#2826" class="Bound"
+      >f</a
+      ><a name="2833"
+      > </a
+      ><a name="2834" class="Symbol"
+      >&#8594;</a
+      ><a name="2835"
+      > </a
+      ><a name="2836" href="Data.Fin.Dec.html#2400" class="Bound"
+      >P</a
+      ><a name="2837"
+      > </a
+      ><a name="2838" href="Data.Fin.Dec.html#2826" class="Bound"
+      >f</a
+      ><a name="2839"
+      >
+    </a
+      ><a name="2844" href="Data.Fin.Dec.html#2817" class="Function"
+      >hlpr</a
+      ><a name="2848"
+      > </a
+      ><a name="2849" href="Data.Fin.html#797" class="InductiveConstructor"
+      >zero</a
+      ><a name="2853"
+      >    </a
+      ><a name="2857" class="Symbol"
+      >_</a
+      ><a name="2858"
+      >  </a
+      ><a name="2860" class="Symbol"
+      >=</a
+      ><a name="2861"
+      > </a
+      ><a name="2862" href="Data.Fin.Dec.html#2777" class="Bound"
+      >p&#8320;</a
+      ><a name="2864"
+      >
+    </a
+      ><a name="2869" href="Data.Fin.Dec.html#2817" class="Function"
+      >hlpr</a
+      ><a name="2873"
+      > </a
+      ><a name="2874" class="Symbol"
+      >(</a
+      ><a name="2875" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="2878"
+      > </a
+      ><a name="2879" href="Data.Fin.Dec.html#2879" class="Bound"
+      >f</a
+      ><a name="2880" class="Symbol"
+      >)</a
+      ><a name="2881"
+      > </a
+      ><a name="2882" href="Data.Fin.Dec.html#2882" class="Bound"
+      >qf</a
+      ><a name="2884"
+      > </a
+      ><a name="2885" class="Symbol"
+      >=</a
+      ><a name="2886"
+      > </a
+      ><a name="2887" href="Data.Fin.Dec.html#2758" class="Bound"
+      >q&#10230;p</a
+      ><a name="2890"
+      > </a
+      ><a name="2891" href="Data.Fin.Dec.html#2882" class="Bound"
+      >qf</a
+      ><a name="2893"
+      >
+  </a
+      ><a name="2896" href="Data.Fin.Dec.html#2436" class="Function"
+      >helper</a
+      ><a name="2902"
+      > </a
+      ><a name="2903" class="Symbol"
+      >|</a
+      ><a name="2904"
+      > </a
+      ><a name="2905" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="2908"
+      > </a
+      ><a name="2909" href="Data.Fin.Dec.html#2909" class="Bound"
+      >q&#10230;p</a
+      ><a name="2912"
+      > </a
+      ><a name="2913" class="Symbol"
+      >|</a
+      ><a name="2914"
+      > </a
+      ><a name="2915" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="2917"
+      > </a
+      ><a name="2918" href="Data.Fin.Dec.html#2918" class="Bound"
+      >&#172;q&#8320;</a
+      ><a name="2921"
+      > </a
+      ><a name="2922" class="Symbol"
+      >=</a
+      ><a name="2923"
+      > </a
+      ><a name="2924" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="2927"
+      > </a
+      ><a name="2928" class="Symbol"
+      >(&#955;</a
+      ><a name="2930"
+      > </a
+      ><a name="2931" class="Symbol"
+      >{</a
+      ><a name="2932" href="Data.Fin.Dec.html#2932" class="Bound"
+      >_</a
+      ><a name="2933" class="Symbol"
+      >}</a
+      ><a name="2934"
+      > </a
+      ><a name="2935" class="Symbol"
+      >&#8594;</a
+      ><a name="2936"
+      > </a
+      ><a name="2937" href="Data.Fin.Dec.html#2959" class="Function"
+      >hlpr</a
+      ><a name="2941"
+      > </a
+      ><a name="2942" class="Symbol"
+      >_)</a
+      ><a name="2944"
+      >
+    </a
+      ><a name="2949" class="Keyword"
+      >where</a
+      ><a name="2954"
+      >
+    </a
+      ><a name="2959" href="Data.Fin.Dec.html#2959" class="Function"
+      >hlpr</a
+      ><a name="2963"
+      > </a
+      ><a name="2964" class="Symbol"
+      >:</a
+      ><a name="2965"
+      > </a
+      ><a name="2966" class="Symbol"
+      >&#8704;</a
+      ><a name="2967"
+      > </a
+      ><a name="2968" href="Data.Fin.Dec.html#2968" class="Bound"
+      >f</a
+      ><a name="2969"
+      > </a
+      ><a name="2970" class="Symbol"
+      >&#8594;</a
+      ><a name="2971"
+      > </a
+      ><a name="2972" href="Data.Fin.Dec.html#2404" class="Bound"
+      >Q</a
+      ><a name="2973"
+      > </a
+      ><a name="2974" href="Data.Fin.Dec.html#2968" class="Bound"
+      >f</a
+      ><a name="2975"
+      > </a
+      ><a name="2976" class="Symbol"
+      >&#8594;</a
+      ><a name="2977"
+      > </a
+      ><a name="2978" href="Data.Fin.Dec.html#2400" class="Bound"
+      >P</a
+      ><a name="2979"
+      > </a
+      ><a name="2980" href="Data.Fin.Dec.html#2968" class="Bound"
+      >f</a
+      ><a name="2981"
+      >
+    </a
+      ><a name="2986" href="Data.Fin.Dec.html#2959" class="Function"
+      >hlpr</a
+      ><a name="2990"
+      > </a
+      ><a name="2991" href="Data.Fin.html#797" class="InductiveConstructor"
+      >zero</a
+      ><a name="2995"
+      >    </a
+      ><a name="2999" href="Data.Fin.Dec.html#2999" class="Bound"
+      >q&#8320;</a
+      ><a name="3001"
+      > </a
+      ><a name="3002" class="Symbol"
+      >=</a
+      ><a name="3003"
+      > </a
+      ><a name="3004" href="Data.Empty.html#326" class="Function"
+      >&#8869;-elim</a
+      ><a name="3010"
+      > </a
+      ><a name="3011" class="Symbol"
+      >(</a
+      ><a name="3012" href="Data.Fin.Dec.html#2918" class="Bound"
+      >&#172;q&#8320;</a
+      ><a name="3015"
+      > </a
+      ><a name="3016" href="Data.Fin.Dec.html#2999" class="Bound"
+      >q&#8320;</a
+      ><a name="3018" class="Symbol"
+      >)</a
+      ><a name="3019"
+      >
+    </a
+      ><a name="3024" href="Data.Fin.Dec.html#2959" class="Function"
+      >hlpr</a
+      ><a name="3028"
+      > </a
+      ><a name="3029" class="Symbol"
+      >(</a
+      ><a name="3030" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="3033"
+      > </a
+      ><a name="3034" href="Data.Fin.Dec.html#3034" class="Bound"
+      >f</a
+      ><a name="3035" class="Symbol"
+      >)</a
+      ><a name="3036"
+      > </a
+      ><a name="3037" href="Data.Fin.Dec.html#3037" class="Bound"
+      >qf</a
+      ><a name="3039"
+      > </a
+      ><a name="3040" class="Symbol"
+      >=</a
+      ><a name="3041"
+      > </a
+      ><a name="3042" href="Data.Fin.Dec.html#2909" class="Bound"
+      >q&#10230;p</a
+      ><a name="3045"
+      > </a
+      ><a name="3046" href="Data.Fin.Dec.html#3037" class="Bound"
+      >qf</a
+      ><a name="3048"
+      >
+
+</a
+      ><a name="3050" href="Data.Fin.Dec.html#3050" class="Function"
+      >all&#8712;?</a
+      ><a name="3055"
+      > </a
+      ><a name="3056" class="Symbol"
+      >:</a
+      ><a name="3057"
+      > </a
+      ><a name="3058" class="Symbol"
+      >&#8704;</a
+      ><a name="3059"
+      > </a
+      ><a name="3060" class="Symbol"
+      >{</a
+      ><a name="3061" href="Data.Fin.Dec.html#3061" class="Bound"
+      >n</a
+      ><a name="3062"
+      > </a
+      ><a name="3063" href="Data.Fin.Dec.html#3063" class="Bound"
+      >p</a
+      ><a name="3064" class="Symbol"
+      >}</a
+      ><a name="3065"
+      > </a
+      ><a name="3066" class="Symbol"
+      >{</a
+      ><a name="3067" href="Data.Fin.Dec.html#3067" class="Bound"
+      >P</a
+      ><a name="3068"
+      > </a
+      ><a name="3069" class="Symbol"
+      >:</a
+      ><a name="3070"
+      > </a
+      ><a name="3071" href="Data.Fin.html#775" class="Datatype"
+      >Fin</a
+      ><a name="3074"
+      > </a
+      ><a name="3075" href="Data.Fin.Dec.html#3061" class="Bound"
+      >n</a
+      ><a name="3076"
+      > </a
+      ><a name="3077" class="Symbol"
+      >&#8594;</a
+      ><a name="3078"
+      > </a
+      ><a name="3079" class="PrimitiveType"
+      >Set</a
+      ><a name="3082"
+      > </a
+      ><a name="3083" href="Data.Fin.Dec.html#3063" class="Bound"
+      >p</a
+      ><a name="3084" class="Symbol"
+      >}</a
+      ><a name="3085"
+      > </a
+      ><a name="3086" class="Symbol"
+      >{</a
+      ><a name="3087" href="Data.Fin.Dec.html#3087" class="Bound"
+      >q</a
+      ><a name="3088" class="Symbol"
+      >}</a
+      ><a name="3089"
+      > </a
+      ><a name="3090" class="Symbol"
+      >&#8594;</a
+      ><a name="3091"
+      >
+        </a
+      ><a name="3100" class="Symbol"
+      >(&#8704;</a
+      ><a name="3102"
+      > </a
+      ><a name="3103" class="Symbol"
+      >{</a
+      ><a name="3104" href="Data.Fin.Dec.html#3104" class="Bound"
+      >f</a
+      ><a name="3105" class="Symbol"
+      >}</a
+      ><a name="3106"
+      > </a
+      ><a name="3107" class="Symbol"
+      >&#8594;</a
+      ><a name="3108"
+      > </a
+      ><a name="3109" href="Data.Fin.Dec.html#3104" class="Bound"
+      >f</a
+      ><a name="3110"
+      > </a
+      ><a name="3111" href="Data.Fin.Subset.html#1082" class="Function Operator"
+      >&#8712;</a
+      ><a name="3112"
+      > </a
+      ><a name="3113" href="Data.Fin.Dec.html#3087" class="Bound"
+      >q</a
+      ><a name="3114"
+      > </a
+      ><a name="3115" class="Symbol"
+      >&#8594;</a
+      ><a name="3116"
+      > </a
+      ><a name="3117" href="Relation.Nullary.Core.html#468" class="Datatype"
+      >Dec</a
+      ><a name="3120"
+      > </a
+      ><a name="3121" class="Symbol"
+      >(</a
+      ><a name="3122" href="Data.Fin.Dec.html#3067" class="Bound"
+      >P</a
+      ><a name="3123"
+      > </a
+      ><a name="3124" href="Data.Fin.Dec.html#3104" class="Bound"
+      >f</a
+      ><a name="3125" class="Symbol"
+      >))</a
+      ><a name="3127"
+      > </a
+      ><a name="3128" class="Symbol"
+      >&#8594;</a
+      ><a name="3129"
+      >
+        </a
+      ><a name="3138" href="Relation.Nullary.Core.html#468" class="Datatype"
+      >Dec</a
+      ><a name="3141"
+      > </a
+      ><a name="3142" class="Symbol"
+      >(&#8704;</a
+      ><a name="3144"
+      > </a
+      ><a name="3145" class="Symbol"
+      >{</a
+      ><a name="3146" href="Data.Fin.Dec.html#3146" class="Bound"
+      >f</a
+      ><a name="3147" class="Symbol"
+      >}</a
+      ><a name="3148"
+      > </a
+      ><a name="3149" class="Symbol"
+      >&#8594;</a
+      ><a name="3150"
+      > </a
+      ><a name="3151" href="Data.Fin.Dec.html#3146" class="Bound"
+      >f</a
+      ><a name="3152"
+      > </a
+      ><a name="3153" href="Data.Fin.Subset.html#1082" class="Function Operator"
+      >&#8712;</a
+      ><a name="3154"
+      > </a
+      ><a name="3155" href="Data.Fin.Dec.html#3087" class="Bound"
+      >q</a
+      ><a name="3156"
+      > </a
+      ><a name="3157" class="Symbol"
+      >&#8594;</a
+      ><a name="3158"
+      > </a
+      ><a name="3159" href="Data.Fin.Dec.html#3067" class="Bound"
+      >P</a
+      ><a name="3160"
+      > </a
+      ><a name="3161" href="Data.Fin.Dec.html#3146" class="Bound"
+      >f</a
+      ><a name="3162" class="Symbol"
+      >)</a
+      ><a name="3163"
+      >
+</a
+      ><a name="3164" href="Data.Fin.Dec.html#3050" class="Function"
+      >all&#8712;?</a
+      ><a name="3169"
+      > </a
+      ><a name="3170" class="Symbol"
+      >{</a
+      ><a name="3171"
+      >q </a
+      ><a name="3173" class="Symbol"
+      >=</a
+      ><a name="3174"
+      > </a
+      ><a name="3175" href="Data.Fin.Dec.html#3175" class="Bound"
+      >q</a
+      ><a name="3176" class="Symbol"
+      >}</a
+      ><a name="3177"
+      > </a
+      ><a name="3178" href="Data.Fin.Dec.html#3178" class="Bound"
+      >dec</a
+      ><a name="3181"
+      > </a
+      ><a name="3182" class="Symbol"
+      >=</a
+      ><a name="3183"
+      > </a
+      ><a name="3184" href="Data.Fin.Dec.html#2141" class="Function"
+      >decFinSubset</a
+      ><a name="3196"
+      > </a
+      ><a name="3197" class="Symbol"
+      >(&#955;</a
+      ><a name="3199"
+      > </a
+      ><a name="3200" href="Data.Fin.Dec.html#3200" class="Bound"
+      >f</a
+      ><a name="3201"
+      > </a
+      ><a name="3202" class="Symbol"
+      >&#8594;</a
+      ><a name="3203"
+      > </a
+      ><a name="3204" href="Data.Fin.Dec.html#3200" class="Bound"
+      >f</a
+      ><a name="3205"
+      > </a
+      ><a name="3206" href="Data.Fin.Dec.html#897" class="Function Operator"
+      >&#8712;?</a
+      ><a name="3208"
+      > </a
+      ><a name="3209" href="Data.Fin.Dec.html#3175" class="Bound"
+      >q</a
+      ><a name="3210" class="Symbol"
+      >)</a
+      ><a name="3211"
+      > </a
+      ><a name="3212" href="Data.Fin.Dec.html#3178" class="Bound"
+      >dec</a
+      ><a name="3215"
+      >
+
+</a
+      ><a name="3217" href="Data.Fin.Dec.html#3217" class="Function"
+      >all?</a
+      ><a name="3221"
+      > </a
+      ><a name="3222" class="Symbol"
+      >:</a
+      ><a name="3223"
+      > </a
+      ><a name="3224" class="Symbol"
+      >&#8704;</a
+      ><a name="3225"
+      > </a
+      ><a name="3226" class="Symbol"
+      >{</a
+      ><a name="3227" href="Data.Fin.Dec.html#3227" class="Bound"
+      >n</a
+      ><a name="3228"
+      > </a
+      ><a name="3229" href="Data.Fin.Dec.html#3229" class="Bound"
+      >p</a
+      ><a name="3230" class="Symbol"
+      >}</a
+      ><a name="3231"
+      > </a
+      ><a name="3232" class="Symbol"
+      >{</a
+      ><a name="3233" href="Data.Fin.Dec.html#3233" class="Bound"
+      >P</a
+      ><a name="3234"
+      > </a
+      ><a name="3235" class="Symbol"
+      >:</a
+      ><a name="3236"
+      > </a
+      ><a name="3237" href="Data.Fin.html#775" class="Datatype"
+      >Fin</a
+      ><a name="3240"
+      > </a
+      ><a name="3241" href="Data.Fin.Dec.html#3227" class="Bound"
+      >n</a
+      ><a name="3242"
+      > </a
+      ><a name="3243" class="Symbol"
+      >&#8594;</a
+      ><a name="3244"
+      > </a
+      ><a name="3245" class="PrimitiveType"
+      >Set</a
+      ><a name="3248"
+      > </a
+      ><a name="3249" href="Data.Fin.Dec.html#3229" class="Bound"
+      >p</a
+      ><a name="3250" class="Symbol"
+      >}</a
+      ><a name="3251"
+      > </a
+      ><a name="3252" class="Symbol"
+      >&#8594;</a
+      ><a name="3253"
+      >
+       </a
+      ><a name="3261" href="Relation.Unary.html#2968" class="Function"
+      >U.Decidable</a
+      ><a name="3272"
+      > </a
+      ><a name="3273" href="Data.Fin.Dec.html#3233" class="Bound"
+      >P</a
+      ><a name="3274"
+      > </a
+      ><a name="3275" class="Symbol"
+      >&#8594;</a
+      ><a name="3276"
+      > </a
+      ><a name="3277" href="Relation.Nullary.Core.html#468" class="Datatype"
+      >Dec</a
+      ><a name="3280"
+      > </a
+      ><a name="3281" class="Symbol"
+      >(&#8704;</a
+      ><a name="3283"
+      > </a
+      ><a name="3284" href="Data.Fin.Dec.html#3284" class="Bound"
+      >f</a
+      ><a name="3285"
+      > </a
+      ><a name="3286" class="Symbol"
+      >&#8594;</a
+      ><a name="3287"
+      > </a
+      ><a name="3288" href="Data.Fin.Dec.html#3233" class="Bound"
+      >P</a
+      ><a name="3289"
+      > </a
+      ><a name="3290" href="Data.Fin.Dec.html#3284" class="Bound"
+      >f</a
+      ><a name="3291" class="Symbol"
+      >)</a
+      ><a name="3292"
+      >
+</a
+      ><a name="3293" href="Data.Fin.Dec.html#3217" class="Function"
+      >all?</a
+      ><a name="3297"
+      > </a
+      ><a name="3298" href="Data.Fin.Dec.html#3298" class="Bound"
+      >dec</a
+      ><a name="3301"
+      > </a
+      ><a name="3302" class="Keyword"
+      >with</a
+      ><a name="3306"
+      > </a
+      ><a name="3307" href="Data.Fin.Dec.html#3050" class="Function"
+      >all&#8712;?</a
+      ><a name="3312"
+      > </a
+      ><a name="3313" class="Symbol"
+      >{</a
+      ><a name="3314"
+      >q </a
+      ><a name="3316" class="Symbol"
+      >=</a
+      ><a name="3317"
+      > </a
+      ><a name="3318" href="Algebra.html#12857" class="Function"
+      >&#8868;</a
+      ><a name="3319" class="Symbol"
+      >}</a
+      ><a name="3320"
+      > </a
+      ><a name="3321" class="Symbol"
+      >(&#955;</a
+      ><a name="3323"
+      > </a
+      ><a name="3324" class="Symbol"
+      >{</a
+      ><a name="3325" href="Data.Fin.Dec.html#3325" class="Bound"
+      >f</a
+      ><a name="3326" class="Symbol"
+      >}</a
+      ><a name="3327"
+      > </a
+      ><a name="3328" href="Data.Fin.Dec.html#3328" class="Bound"
+      >_</a
+      ><a name="3329"
+      > </a
+      ><a name="3330" class="Symbol"
+      >&#8594;</a
+      ><a name="3331"
+      > </a
+      ><a name="3332" href="Data.Fin.Dec.html#3298" class="Bound"
+      >dec</a
+      ><a name="3335"
+      > </a
+      ><a name="3336" href="Data.Fin.Dec.html#3325" class="Bound"
+      >f</a
+      ><a name="3337" class="Symbol"
+      >)</a
+      ><a name="3338"
+      >
+</a
+      ><a name="3339" class="Symbol"
+      >...</a
+      ><a name="3342"
+      >      </a
+      ><a name="3348" class="Symbol"
+      >|</a
+      ><a name="3349"
+      > </a
+      ><a name="3350" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="3353"
+      > </a
+      ><a name="3354" href="Data.Fin.Dec.html#3354" class="Bound"
+      >&#8704;p</a
+      ><a name="3356"
+      > </a
+      ><a name="3357" class="Symbol"
+      >=</a
+      ><a name="3358"
+      > </a
+      ><a name="3359" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="3362"
+      > </a
+      ><a name="3363" class="Symbol"
+      >(&#955;</a
+      ><a name="3365"
+      > </a
+      ><a name="3366" href="Data.Fin.Dec.html#3366" class="Bound"
+      >f</a
+      ><a name="3367"
+      > </a
+      ><a name="3368" class="Symbol"
+      >&#8594;</a
+      ><a name="3369"
+      > </a
+      ><a name="3370" href="Data.Fin.Dec.html#3354" class="Bound"
+      >&#8704;p</a
+      ><a name="3372"
+      > </a
+      ><a name="3373" href="Data.Fin.Subset.Props.html#1870" class="Function"
+      >&#8712;&#8868;</a
+      ><a name="3375" class="Symbol"
+      >)</a
+      ><a name="3376"
+      >
+</a
+      ><a name="3377" class="Symbol"
+      >...</a
+      ><a name="3380"
+      >      </a
+      ><a name="3386" class="Symbol"
+      >|</a
+      ><a name="3387"
+      > </a
+      ><a name="3388" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="3390"
+      > </a
+      ><a name="3391" href="Data.Fin.Dec.html#3391" class="Bound"
+      >&#172;&#8704;p</a
+      ><a name="3394"
+      > </a
+      ><a name="3395" class="Symbol"
+      >=</a
+      ><a name="3396"
+      > </a
+      ><a name="3397" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="3399"
+      >  </a
+      ><a name="3401" class="Symbol"
+      >(&#955;</a
+      ><a name="3403"
+      > </a
+      ><a name="3404" href="Data.Fin.Dec.html#3404" class="Bound"
+      >&#8704;p</a
+      ><a name="3406"
+      > </a
+      ><a name="3407" class="Symbol"
+      >&#8594;</a
+      ><a name="3408"
+      > </a
+      ><a name="3409" href="Data.Fin.Dec.html#3391" class="Bound"
+      >&#172;&#8704;p</a
+      ><a name="3412"
+      > </a
+      ><a name="3413" class="Symbol"
+      >(&#955;</a
+      ><a name="3415"
+      > </a
+      ><a name="3416" class="Symbol"
+      >{</a
+      ><a name="3417" href="Data.Fin.Dec.html#3417" class="Bound"
+      >f</a
+      ><a name="3418" class="Symbol"
+      >}</a
+      ><a name="3419"
+      > </a
+      ><a name="3420" href="Data.Fin.Dec.html#3420" class="Bound"
+      >_</a
+      ><a name="3421"
+      > </a
+      ><a name="3422" class="Symbol"
+      >&#8594;</a
+      ><a name="3423"
+      > </a
+      ><a name="3424" href="Data.Fin.Dec.html#3404" class="Bound"
+      >&#8704;p</a
+      ><a name="3426"
+      > </a
+      ><a name="3427" href="Data.Fin.Dec.html#3417" class="Bound"
+      >f</a
+      ><a name="3428" class="Symbol"
+      >))</a
+      ><a name="3430"
+      >
+
+</a
+      ><a name="3432" href="Data.Fin.Dec.html#3432" class="Function"
+      >decLift</a
+      ><a name="3439"
+      > </a
+      ><a name="3440" class="Symbol"
+      >:</a
+      ><a name="3441"
+      > </a
+      ><a name="3442" class="Symbol"
+      >&#8704;</a
+      ><a name="3443"
+      > </a
+      ><a name="3444" class="Symbol"
+      >{</a
+      ><a name="3445" href="Data.Fin.Dec.html#3445" class="Bound"
+      >n</a
+      ><a name="3446" class="Symbol"
+      >}</a
+      ><a name="3447"
+      > </a
+      ><a name="3448" class="Symbol"
+      >{</a
+      ><a name="3449" href="Data.Fin.Dec.html#3449" class="Bound"
+      >P</a
+      ><a name="3450"
+      > </a
+      ><a name="3451" class="Symbol"
+      >:</a
+      ><a name="3452"
+      > </a
+      ><a name="3453" href="Data.Fin.html#775" class="Datatype"
+      >Fin</a
+      ><a name="3456"
+      > </a
+      ><a name="3457" href="Data.Fin.Dec.html#3445" class="Bound"
+      >n</a
+      ><a name="3458"
+      > </a
+      ><a name="3459" class="Symbol"
+      >&#8594;</a
+      ><a name="3460"
+      > </a
+      ><a name="3461" class="PrimitiveType"
+      >Set</a
+      ><a name="3464" class="Symbol"
+      >}</a
+      ><a name="3465"
+      > </a
+      ><a name="3466" class="Symbol"
+      >&#8594;</a
+      ><a name="3467"
+      >
+          </a
+      ><a name="3478" href="Relation.Unary.html#2968" class="Function"
+      >U.Decidable</a
+      ><a name="3489"
+      > </a
+      ><a name="3490" href="Data.Fin.Dec.html#3449" class="Bound"
+      >P</a
+      ><a name="3491"
+      > </a
+      ><a name="3492" class="Symbol"
+      >&#8594;</a
+      ><a name="3493"
+      > </a
+      ><a name="3494" href="Relation.Unary.html#2968" class="Function"
+      >U.Decidable</a
+      ><a name="3505"
+      > </a
+      ><a name="3506" class="Symbol"
+      >(</a
+      ><a name="3507" href="Data.Fin.Subset.html#2657" class="Function"
+      >Lift</a
+      ><a name="3511"
+      > </a
+      ><a name="3512" href="Data.Fin.Dec.html#3449" class="Bound"
+      >P</a
+      ><a name="3513" class="Symbol"
+      >)</a
+      ><a name="3514"
+      >
+</a
+      ><a name="3515" href="Data.Fin.Dec.html#3432" class="Function"
+      >decLift</a
+      ><a name="3522"
+      > </a
+      ><a name="3523" href="Data.Fin.Dec.html#3523" class="Bound"
+      >dec</a
+      ><a name="3526"
+      > </a
+      ><a name="3527" href="Data.Fin.Dec.html#3527" class="Bound"
+      >p</a
+      ><a name="3528"
+      > </a
+      ><a name="3529" class="Symbol"
+      >=</a
+      ><a name="3530"
+      > </a
+      ><a name="3531" href="Data.Fin.Dec.html#3050" class="Function"
+      >all&#8712;?</a
+      ><a name="3536"
+      > </a
+      ><a name="3537" class="Symbol"
+      >(&#955;</a
+      ><a name="3539"
+      > </a
+      ><a name="3540" class="Symbol"
+      >{</a
+      ><a name="3541" href="Data.Fin.Dec.html#3541" class="Bound"
+      >x</a
+      ><a name="3542" class="Symbol"
+      >}</a
+      ><a name="3543"
+      > </a
+      ><a name="3544" href="Data.Fin.Dec.html#3544" class="Bound"
+      >_</a
+      ><a name="3545"
+      > </a
+      ><a name="3546" class="Symbol"
+      >&#8594;</a
+      ><a name="3547"
+      > </a
+      ><a name="3548" href="Data.Fin.Dec.html#3523" class="Bound"
+      >dec</a
+      ><a name="3551"
+      > </a
+      ><a name="3552" href="Data.Fin.Dec.html#3541" class="Bound"
+      >x</a
+      ><a name="3553" class="Symbol"
+      >)</a
+      ><a name="3554"
+      >
+
+</a
+      ><a name="3556" class="Keyword"
+      >private</a
+      ><a name="3563"
+      >
+
+  </a
+      ><a name="3567" href="Data.Fin.Dec.html#3567" class="Function"
+      >restrictSP</a
+      ><a name="3577"
+      > </a
+      ><a name="3578" class="Symbol"
+      >:</a
+      ><a name="3579"
+      > </a
+      ><a name="3580" class="Symbol"
+      >&#8704;</a
+      ><a name="3581"
+      > </a
+      ><a name="3582" class="Symbol"
+      >{</a
+      ><a name="3583" href="Data.Fin.Dec.html#3583" class="Bound"
+      >n</a
+      ><a name="3584" class="Symbol"
+      >}</a
+      ><a name="3585"
+      > </a
+      ><a name="3586" class="Symbol"
+      >&#8594;</a
+      ><a name="3587"
+      > </a
+      ><a name="3588" href="Data.Bool.html#603" class="Datatype"
+      >Side</a
+      ><a name="3592"
+      > </a
+      ><a name="3593" class="Symbol"
+      >&#8594;</a
+      ><a name="3594"
+      > </a
+      ><a name="3595" class="Symbol"
+      >(</a
+      ><a name="3596" href="Data.Fin.Subset.html#936" class="Function"
+      >Subset</a
+      ><a name="3602"
+      > </a
+      ><a name="3603" class="Symbol"
+      >(</a
+      ><a name="3604" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="3607"
+      > </a
+      ><a name="3608" href="Data.Fin.Dec.html#3583" class="Bound"
+      >n</a
+      ><a name="3609" class="Symbol"
+      >)</a
+      ><a name="3610"
+      > </a
+      ><a name="3611" class="Symbol"
+      >&#8594;</a
+      ><a name="3612"
+      > </a
+      ><a name="3613" class="PrimitiveType"
+      >Set</a
+      ><a name="3616" class="Symbol"
+      >)</a
+      ><a name="3617"
+      > </a
+      ><a name="3618" class="Symbol"
+      >&#8594;</a
+      ><a name="3619"
+      > </a
+      ><a name="3620" class="Symbol"
+      >(</a
+      ><a name="3621" href="Data.Fin.Subset.html#936" class="Function"
+      >Subset</a
+      ><a name="3627"
+      > </a
+      ><a name="3628" href="Data.Fin.Dec.html#3583" class="Bound"
+      >n</a
+      ><a name="3629"
+      > </a
+      ><a name="3630" class="Symbol"
+      >&#8594;</a
+      ><a name="3631"
+      > </a
+      ><a name="3632" class="PrimitiveType"
+      >Set</a
+      ><a name="3635" class="Symbol"
+      >)</a
+      ><a name="3636"
+      >
+  </a
+      ><a name="3639" href="Data.Fin.Dec.html#3567" class="Function"
+      >restrictSP</a
+      ><a name="3649"
+      > </a
+      ><a name="3650" href="Data.Fin.Dec.html#3650" class="Bound"
+      >s</a
+      ><a name="3651"
+      > </a
+      ><a name="3652" href="Data.Fin.Dec.html#3652" class="Bound"
+      >P</a
+      ><a name="3653"
+      > </a
+      ><a name="3654" href="Data.Fin.Dec.html#3654" class="Bound"
+      >p</a
+      ><a name="3655"
+      > </a
+      ><a name="3656" class="Symbol"
+      >=</a
+      ><a name="3657"
+      > </a
+      ><a name="3658" href="Data.Fin.Dec.html#3652" class="Bound"
+      >P</a
+      ><a name="3659"
+      > </a
+      ><a name="3660" class="Symbol"
+      >(</a
+      ><a name="3661" href="Data.Fin.Dec.html#3650" class="Bound"
+      >s</a
+      ><a name="3662"
+      > </a
+      ><a name="3663" href="Data.Vec.html#663" class="InductiveConstructor Operator"
+      >&#8759;</a
+      ><a name="3664"
+      > </a
+      ><a name="3665" href="Data.Fin.Dec.html#3654" class="Bound"
+      >p</a
+      ><a name="3666" class="Symbol"
+      >)</a
+      ><a name="3667"
+      >
+
+  </a
+      ><a name="3671" href="Data.Fin.Dec.html#3671" class="Function"
+      >restrictS</a
+      ><a name="3680"
+      > </a
+      ><a name="3681" class="Symbol"
+      >:</a
+      ><a name="3682"
+      > </a
+      ><a name="3683" class="Symbol"
+      >&#8704;</a
+      ><a name="3684"
+      > </a
+      ><a name="3685" class="Symbol"
+      >{</a
+      ><a name="3686" href="Data.Fin.Dec.html#3686" class="Bound"
+      >n</a
+      ><a name="3687" class="Symbol"
+      >}</a
+      ><a name="3688"
+      > </a
+      ><a name="3689" class="Symbol"
+      >{</a
+      ><a name="3690" href="Data.Fin.Dec.html#3690" class="Bound"
+      >P</a
+      ><a name="3691"
+      > </a
+      ><a name="3692" class="Symbol"
+      >:</a
+      ><a name="3693"
+      > </a
+      ><a name="3694" href="Data.Fin.Subset.html#936" class="Function"
+      >Subset</a
+      ><a name="3700"
+      > </a
+      ><a name="3701" class="Symbol"
+      >(</a
+      ><a name="3702" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="3705"
+      > </a
+      ><a name="3706" href="Data.Fin.Dec.html#3686" class="Bound"
+      >n</a
+      ><a name="3707" class="Symbol"
+      >)</a
+      ><a name="3708"
+      > </a
+      ><a name="3709" class="Symbol"
+      >&#8594;</a
+      ><a name="3710"
+      > </a
+      ><a name="3711" class="PrimitiveType"
+      >Set</a
+      ><a name="3714" class="Symbol"
+      >}</a
+      ><a name="3715"
+      > </a
+      ><a name="3716" class="Symbol"
+      >&#8594;</a
+      ><a name="3717"
+      >
+              </a
+      ><a name="3732" class="Symbol"
+      >(</a
+      ><a name="3733" href="Data.Fin.Dec.html#3733" class="Bound"
+      >s</a
+      ><a name="3734"
+      > </a
+      ><a name="3735" class="Symbol"
+      >:</a
+      ><a name="3736"
+      > </a
+      ><a name="3737" href="Data.Bool.html#603" class="Datatype"
+      >Side</a
+      ><a name="3741" class="Symbol"
+      >)</a
+      ><a name="3742"
+      > </a
+      ><a name="3743" class="Symbol"
+      >&#8594;</a
+      ><a name="3744"
+      > </a
+      ><a name="3745" href="Relation.Unary.html#2968" class="Function"
+      >U.Decidable</a
+      ><a name="3756"
+      > </a
+      ><a name="3757" href="Data.Fin.Dec.html#3690" class="Bound"
+      >P</a
+      ><a name="3758"
+      > </a
+      ><a name="3759" class="Symbol"
+      >&#8594;</a
+      ><a name="3760"
+      > </a
+      ><a name="3761" href="Relation.Unary.html#2968" class="Function"
+      >U.Decidable</a
+      ><a name="3772"
+      > </a
+      ><a name="3773" class="Symbol"
+      >(</a
+      ><a name="3774" href="Data.Fin.Dec.html#3567" class="Function"
+      >restrictSP</a
+      ><a name="3784"
+      > </a
+      ><a name="3785" href="Data.Fin.Dec.html#3733" class="Bound"
+      >s</a
+      ><a name="3786"
+      > </a
+      ><a name="3787" href="Data.Fin.Dec.html#3690" class="Bound"
+      >P</a
+      ><a name="3788" class="Symbol"
+      >)</a
+      ><a name="3789"
+      >
+  </a
+      ><a name="3792" href="Data.Fin.Dec.html#3671" class="Function"
+      >restrictS</a
+      ><a name="3801"
+      > </a
+      ><a name="3802" href="Data.Fin.Dec.html#3802" class="Bound"
+      >s</a
+      ><a name="3803"
+      > </a
+      ><a name="3804" href="Data.Fin.Dec.html#3804" class="Bound"
+      >dec</a
+      ><a name="3807"
+      > </a
+      ><a name="3808" href="Data.Fin.Dec.html#3808" class="Bound"
+      >p</a
+      ><a name="3809"
+      > </a
+      ><a name="3810" class="Symbol"
+      >=</a
+      ><a name="3811"
+      > </a
+      ><a name="3812" href="Data.Fin.Dec.html#3804" class="Bound"
+      >dec</a
+      ><a name="3815"
+      > </a
+      ><a name="3816" class="Symbol"
+      >(</a
+      ><a name="3817" href="Data.Fin.Dec.html#3802" class="Bound"
+      >s</a
+      ><a name="3818"
+      > </a
+      ><a name="3819" href="Data.Vec.html#663" class="InductiveConstructor Operator"
+      >&#8759;</a
+      ><a name="3820"
+      > </a
+      ><a name="3821" href="Data.Fin.Dec.html#3808" class="Bound"
+      >p</a
+      ><a name="3822" class="Symbol"
+      >)</a
+      ><a name="3823"
+      >
+
+</a
+      ><a name="3825" href="Data.Fin.Dec.html#3825" class="Function"
+      >anySubset?</a
+      ><a name="3835"
+      > </a
+      ><a name="3836" class="Symbol"
+      >:</a
+      ><a name="3837"
+      > </a
+      ><a name="3838" class="Symbol"
+      >&#8704;</a
+      ><a name="3839"
+      > </a
+      ><a name="3840" class="Symbol"
+      >{</a
+      ><a name="3841" href="Data.Fin.Dec.html#3841" class="Bound"
+      >n</a
+      ><a name="3842" class="Symbol"
+      >}</a
+      ><a name="3843"
+      > </a
+      ><a name="3844" class="Symbol"
+      >{</a
+      ><a name="3845" href="Data.Fin.Dec.html#3845" class="Bound"
+      >P</a
+      ><a name="3846"
+      > </a
+      ><a name="3847" class="Symbol"
+      >:</a
+      ><a name="3848"
+      > </a
+      ><a name="3849" href="Data.Fin.Subset.html#936" class="Function"
+      >Subset</a
+      ><a name="3855"
+      > </a
+      ><a name="3856" href="Data.Fin.Dec.html#3841" class="Bound"
+      >n</a
+      ><a name="3857"
+      > </a
+      ><a name="3858" class="Symbol"
+      >&#8594;</a
+      ><a name="3859"
+      > </a
+      ><a name="3860" class="PrimitiveType"
+      >Set</a
+      ><a name="3863" class="Symbol"
+      >}</a
+      ><a name="3864"
+      > </a
+      ><a name="3865" class="Symbol"
+      >&#8594;</a
+      ><a name="3866"
+      >
+             </a
+      ><a name="3880" href="Relation.Unary.html#2968" class="Function"
+      >U.Decidable</a
+      ><a name="3891"
+      > </a
+      ><a name="3892" href="Data.Fin.Dec.html#3845" class="Bound"
+      >P</a
+      ><a name="3893"
+      > </a
+      ><a name="3894" class="Symbol"
+      >&#8594;</a
+      ><a name="3895"
+      > </a
+      ><a name="3896" href="Relation.Nullary.Core.html#468" class="Datatype"
+      >Dec</a
+      ><a name="3899"
+      > </a
+      ><a name="3900" class="Symbol"
+      >(</a
+      ><a name="3901" href="Data.Product.html#805" class="Function"
+      >&#8707;</a
+      ><a name="3902"
+      > </a
+      ><a name="3903" href="Data.Fin.Dec.html#3845" class="Bound"
+      >P</a
+      ><a name="3904" class="Symbol"
+      >)</a
+      ><a name="3905"
+      >
+</a
+      ><a name="3906" href="Data.Fin.Dec.html#3825" class="Function"
+      >anySubset?</a
+      ><a name="3916"
+      > </a
+      ><a name="3917" class="Symbol"
+      >{</a
+      ><a name="3918" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="3922" class="Symbol"
+      >}</a
+      ><a name="3923"
+      > </a
+      ><a name="3924" class="Symbol"
+      >{</a
+      ><a name="3925" href="Data.Fin.Dec.html#3925" class="Bound"
+      >P</a
+      ><a name="3926" class="Symbol"
+      >}</a
+      ><a name="3927"
+      > </a
+      ><a name="3928" href="Data.Fin.Dec.html#3928" class="Bound"
+      >dec</a
+      ><a name="3931"
+      > </a
+      ><a name="3932" class="Keyword"
+      >with</a
+      ><a name="3936"
+      > </a
+      ><a name="3937" href="Data.Fin.Dec.html#3928" class="Bound"
+      >dec</a
+      ><a name="3940"
+      > </a
+      ><a name="3941" href="Data.Vec.html#644" class="InductiveConstructor"
+      >[]</a
+      ><a name="3943"
+      >
+</a
+      ><a name="3944" class="Symbol"
+      >...</a
+      ><a name="3947"
+      > </a
+      ><a name="3948" class="Symbol"
+      >|</a
+      ><a name="3949"
+      > </a
+      ><a name="3950" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="3953"
+      > </a
+      ><a name="3954" href="Data.Fin.Dec.html#3954" class="Bound"
+      >P[]</a
+      ><a name="3957"
+      > </a
+      ><a name="3958" class="Symbol"
+      >=</a
+      ><a name="3959"
+      > </a
+      ><a name="3960" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="3963"
+      > </a
+      ><a name="3964" class="Symbol"
+      >(_</a
+      ><a name="3966"
+      > </a
+      ><a name="3967" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="3968"
+      > </a
+      ><a name="3969" href="Data.Fin.Dec.html#3954" class="Bound"
+      >P[]</a
+      ><a name="3972" class="Symbol"
+      >)</a
+      ><a name="3973"
+      >
+</a
+      ><a name="3974" class="Symbol"
+      >...</a
+      ><a name="3977"
+      > </a
+      ><a name="3978" class="Symbol"
+      >|</a
+      ><a name="3979"
+      > </a
+      ><a name="3980" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="3982"
+      > </a
+      ><a name="3983" href="Data.Fin.Dec.html#3983" class="Bound"
+      >&#172;P[]</a
+      ><a name="3987"
+      > </a
+      ><a name="3988" class="Symbol"
+      >=</a
+      ><a name="3989"
+      > </a
+      ><a name="3990" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="3992"
+      > </a
+      ><a name="3993" href="Data.Fin.Dec.html#4010" class="Function"
+      >helper</a
+      ><a name="3999"
+      >
+  </a
+      ><a name="4002" class="Keyword"
+      >where</a
+      ><a name="4007"
+      >
+  </a
+      ><a name="4010" href="Data.Fin.Dec.html#4010" class="Function"
+      >helper</a
+      ><a name="4016"
+      > </a
+      ><a name="4017" class="Symbol"
+      >:</a
+      ><a name="4018"
+      > </a
+      ><a name="4019" href="Data.Product.html#866" class="Function"
+      >&#8708;</a
+      ><a name="4020"
+      > </a
+      ><a name="4021" href="Data.Fin.Dec.html#3925" class="Bound"
+      >P</a
+      ><a name="4022"
+      >
+  </a
+      ><a name="4025" href="Data.Fin.Dec.html#4010" class="Function"
+      >helper</a
+      ><a name="4031"
+      > </a
+      ><a name="4032" class="Symbol"
+      >(</a
+      ><a name="4033" href="Data.Vec.html#644" class="InductiveConstructor"
+      >[]</a
+      ><a name="4035"
+      > </a
+      ><a name="4036" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="4037"
+      > </a
+      ><a name="4038" href="Data.Fin.Dec.html#4038" class="Bound"
+      >P[]</a
+      ><a name="4041" class="Symbol"
+      >)</a
+      ><a name="4042"
+      > </a
+      ><a name="4043" class="Symbol"
+      >=</a
+      ><a name="4044"
+      > </a
+      ><a name="4045" href="Data.Fin.Dec.html#3983" class="Bound"
+      >&#172;P[]</a
+      ><a name="4049"
+      > </a
+      ><a name="4050" href="Data.Fin.Dec.html#4038" class="Bound"
+      >P[]</a
+      ><a name="4053"
+      >
+</a
+      ><a name="4054" href="Data.Fin.Dec.html#3825" class="Function"
+      >anySubset?</a
+      ><a name="4064"
+      > </a
+      ><a name="4065" class="Symbol"
+      >{</a
+      ><a name="4066" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="4069"
+      > </a
+      ><a name="4070" href="Data.Fin.Dec.html#4070" class="Bound"
+      >n</a
+      ><a name="4071" class="Symbol"
+      >}</a
+      ><a name="4072"
+      > </a
+      ><a name="4073" class="Symbol"
+      >{</a
+      ><a name="4074" href="Data.Fin.Dec.html#4074" class="Bound"
+      >P</a
+      ><a name="4075" class="Symbol"
+      >}</a
+      ><a name="4076"
+      > </a
+      ><a name="4077" href="Data.Fin.Dec.html#4077" class="Bound"
+      >dec</a
+      ><a name="4080"
+      > </a
+      ><a name="4081" class="Keyword"
+      >with</a
+      ><a name="4085"
+      > </a
+      ><a name="4086" href="Data.Fin.Dec.html#3825" class="Function"
+      >anySubset?</a
+      ><a name="4096"
+      > </a
+      ><a name="4097" class="Symbol"
+      >(</a
+      ><a name="4098" href="Data.Fin.Dec.html#3671" class="Function"
+      >restrictS</a
+      ><a name="4107"
+      > </a
+      ><a name="4108" href="Data.Bool.html#622" class="InductiveConstructor"
+      >inside</a
+      ><a name="4114"
+      >  </a
+      ><a name="4116" href="Data.Fin.Dec.html#4077" class="Bound"
+      >dec</a
+      ><a name="4119" class="Symbol"
+      >)</a
+      ><a name="4120"
+      >
+                              </a
+      ><a name="4151" class="Symbol"
+      >|</a
+      ><a name="4152"
+      > </a
+      ><a name="4153" href="Data.Fin.Dec.html#3825" class="Function"
+      >anySubset?</a
+      ><a name="4163"
+      > </a
+      ><a name="4164" class="Symbol"
+      >(</a
+      ><a name="4165" href="Data.Fin.Dec.html#3671" class="Function"
+      >restrictS</a
+      ><a name="4174"
+      > </a
+      ><a name="4175" href="Data.Bool.html#637" class="InductiveConstructor"
+      >outside</a
+      ><a name="4182"
+      > </a
+      ><a name="4183" href="Data.Fin.Dec.html#4077" class="Bound"
+      >dec</a
+      ><a name="4186" class="Symbol"
+      >)</a
+      ><a name="4187"
+      >
+</a
+      ><a name="4188" class="Symbol"
+      >...</a
+      ><a name="4191"
+      > </a
+      ><a name="4192" class="Symbol"
+      >|</a
+      ><a name="4193"
+      > </a
+      ><a name="4194" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="4197"
+      > </a
+      ><a name="4198" class="Symbol"
+      >(_</a
+      ><a name="4200"
+      > </a
+      ><a name="4201" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="4202"
+      > </a
+      ><a name="4203" href="Data.Fin.Dec.html#4203" class="Bound"
+      >Pp</a
+      ><a name="4205" class="Symbol"
+      >)</a
+      ><a name="4206"
+      > </a
+      ><a name="4207" class="Symbol"
+      >|</a
+      ><a name="4208"
+      > </a
+      ><a name="4209" class="Symbol"
+      >_</a
+      ><a name="4210"
+      >            </a
+      ><a name="4222" class="Symbol"
+      >=</a
+      ><a name="4223"
+      > </a
+      ><a name="4224" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="4227"
+      > </a
+      ><a name="4228" class="Symbol"
+      >(_</a
+      ><a name="4230"
+      > </a
+      ><a name="4231" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="4232"
+      > </a
+      ><a name="4233" href="Data.Fin.Dec.html#4203" class="Bound"
+      >Pp</a
+      ><a name="4235" class="Symbol"
+      >)</a
+      ><a name="4236"
+      >
+</a
+      ><a name="4237" class="Symbol"
+      >...</a
+      ><a name="4240"
+      > </a
+      ><a name="4241" class="Symbol"
+      >|</a
+      ><a name="4242"
+      > </a
+      ><a name="4243" class="Symbol"
+      >_</a
+      ><a name="4244"
+      >            </a
+      ><a name="4256" class="Symbol"
+      >|</a
+      ><a name="4257"
+      > </a
+      ><a name="4258" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="4261"
+      > </a
+      ><a name="4262" class="Symbol"
+      >(_</a
+      ><a name="4264"
+      > </a
+      ><a name="4265" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="4266"
+      > </a
+      ><a name="4267" href="Data.Fin.Dec.html#4267" class="Bound"
+      >Pp</a
+      ><a name="4269" class="Symbol"
+      >)</a
+      ><a name="4270"
+      > </a
+      ><a name="4271" class="Symbol"
+      >=</a
+      ><a name="4272"
+      > </a
+      ><a name="4273" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="4276"
+      > </a
+      ><a name="4277" class="Symbol"
+      >(_</a
+      ><a name="4279"
+      > </a
+      ><a name="4280" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="4281"
+      > </a
+      ><a name="4282" href="Data.Fin.Dec.html#4267" class="Bound"
+      >Pp</a
+      ><a name="4284" class="Symbol"
+      >)</a
+      ><a name="4285"
+      >
+</a
+      ><a name="4286" class="Symbol"
+      >...</a
+      ><a name="4289"
+      > </a
+      ><a name="4290" class="Symbol"
+      >|</a
+      ><a name="4291"
+      > </a
+      ><a name="4292" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="4294"
+      > </a
+      ><a name="4295" href="Data.Fin.Dec.html#4295" class="Bound"
+      >&#172;Pp</a
+      ><a name="4298"
+      >       </a
+      ><a name="4305" class="Symbol"
+      >|</a
+      ><a name="4306"
+      > </a
+      ><a name="4307" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="4309"
+      > </a
+      ><a name="4310" href="Data.Fin.Dec.html#4310" class="Bound"
+      >&#172;Pp'</a
+      ><a name="4314"
+      >      </a
+      ><a name="4320" class="Symbol"
+      >=</a
+      ><a name="4321"
+      > </a
+      ><a name="4322" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="4324"
+      > </a
+      ><a name="4325" href="Data.Fin.Dec.html#4346" class="Function"
+      >helper</a
+      ><a name="4331"
+      >
+    </a
+      ><a name="4336" class="Keyword"
+      >where</a
+      ><a name="4341"
+      >
+    </a
+      ><a name="4346" href="Data.Fin.Dec.html#4346" class="Function"
+      >helper</a
+      ><a name="4352"
+      > </a
+      ><a name="4353" class="Symbol"
+      >:</a
+      ><a name="4354"
+      > </a
+      ><a name="4355" href="Data.Product.html#866" class="Function"
+      >&#8708;</a
+      ><a name="4356"
+      > </a
+      ><a name="4357" href="Data.Fin.Dec.html#4074" class="Bound"
+      >P</a
+      ><a name="4358"
+      >
+    </a
+      ><a name="4363" href="Data.Fin.Dec.html#4346" class="Function"
+      >helper</a
+      ><a name="4369"
+      > </a
+      ><a name="4370" class="Symbol"
+      >(</a
+      ><a name="4371" href="Data.Bool.html#622" class="InductiveConstructor"
+      >inside</a
+      ><a name="4377"
+      >  </a
+      ><a name="4379" href="Data.Vec.html#663" class="InductiveConstructor Operator"
+      >&#8759;</a
+      ><a name="4380"
+      > </a
+      ><a name="4381" href="Data.Fin.Dec.html#4381" class="Bound"
+      >p</a
+      ><a name="4382"
+      > </a
+      ><a name="4383" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="4384"
+      > </a
+      ><a name="4385" href="Data.Fin.Dec.html#4385" class="Bound"
+      >Pp</a
+      ><a name="4387" class="Symbol"
+      >)</a
+      ><a name="4388"
+      >  </a
+      ><a name="4390" class="Symbol"
+      >=</a
+      ><a name="4391"
+      > </a
+      ><a name="4392" href="Data.Fin.Dec.html#4295" class="Bound"
+      >&#172;Pp</a
+      ><a name="4395"
+      >  </a
+      ><a name="4397" class="Symbol"
+      >(_</a
+      ><a name="4399"
+      > </a
+      ><a name="4400" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="4401"
+      > </a
+      ><a name="4402" href="Data.Fin.Dec.html#4385" class="Bound"
+      >Pp</a
+      ><a name="4404" class="Symbol"
+      >)</a
+      ><a name="4405"
+      >
+    </a
+      ><a name="4410" href="Data.Fin.Dec.html#4346" class="Function"
+      >helper</a
+      ><a name="4416"
+      > </a
+      ><a name="4417" class="Symbol"
+      >(</a
+      ><a name="4418" href="Data.Bool.html#637" class="InductiveConstructor"
+      >outside</a
+      ><a name="4425"
+      > </a
+      ><a name="4426" href="Data.Vec.html#663" class="InductiveConstructor Operator"
+      >&#8759;</a
+      ><a name="4427"
+      > </a
+      ><a name="4428" href="Data.Fin.Dec.html#4428" class="Bound"
+      >p</a
+      ><a name="4429"
+      > </a
+      ><a name="4430" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="4431"
+      > </a
+      ><a name="4432" href="Data.Fin.Dec.html#4432" class="Bound"
+      >Pp'</a
+      ><a name="4435" class="Symbol"
+      >)</a
+      ><a name="4436"
+      > </a
+      ><a name="4437" class="Symbol"
+      >=</a
+      ><a name="4438"
+      > </a
+      ><a name="4439" href="Data.Fin.Dec.html#4310" class="Bound"
+      >&#172;Pp'</a
+      ><a name="4443"
+      > </a
+      ><a name="4444" class="Symbol"
+      >(_</a
+      ><a name="4446"
+      > </a
+      ><a name="4447" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="4448"
+      > </a
+      ><a name="4449" href="Data.Fin.Dec.html#4432" class="Bound"
+      >Pp'</a
+      ><a name="4452" class="Symbol"
+      >)</a
+      ><a name="4453"
+      >
+
+</a
+      ><a name="4455" class="Comment"
+      >-- If a decidable predicate P over a finite set is sometimes false,</a
+      ><a name="4522"
+      >
+</a
+      ><a name="4523" class="Comment"
+      >-- then we can find the smallest value for which this is the case.</a
+      ><a name="4589"
+      >
+
+</a
+      ><a name="4591" href="Data.Fin.Dec.html#4591" class="Function"
+      >&#172;&#8704;&#10230;&#8707;&#172;-smallest</a
+      ><a name="4605"
+      > </a
+      ><a name="4606" class="Symbol"
+      >:</a
+      ><a name="4607"
+      >
+  </a
+      ><a name="4610" class="Symbol"
+      >&#8704;</a
+      ><a name="4611"
+      > </a
+      ><a name="4612" href="Data.Fin.Dec.html#4612" class="Bound"
+      >n</a
+      ><a name="4613"
+      > </a
+      ><a name="4614" class="Symbol"
+      >{</a
+      ><a name="4615" href="Data.Fin.Dec.html#4615" class="Bound"
+      >p</a
+      ><a name="4616" class="Symbol"
+      >}</a
+      ><a name="4617"
+      > </a
+      ><a name="4618" class="Symbol"
+      >(</a
+      ><a name="4619" href="Data.Fin.Dec.html#4619" class="Bound"
+      >P</a
+      ><a name="4620"
+      > </a
+      ><a name="4621" class="Symbol"
+      >:</a
+      ><a name="4622"
+      > </a
+      ><a name="4623" href="Data.Fin.html#775" class="Datatype"
+      >Fin</a
+      ><a name="4626"
+      > </a
+      ><a name="4627" href="Data.Fin.Dec.html#4612" class="Bound"
+      >n</a
+      ><a name="4628"
+      > </a
+      ><a name="4629" class="Symbol"
+      >&#8594;</a
+      ><a name="4630"
+      > </a
+      ><a name="4631" class="PrimitiveType"
+      >Set</a
+      ><a name="4634"
+      > </a
+      ><a name="4635" href="Data.Fin.Dec.html#4615" class="Bound"
+      >p</a
+      ><a name="4636" class="Symbol"
+      >)</a
+      ><a name="4637"
+      > </a
+      ><a name="4638" class="Symbol"
+      >&#8594;</a
+      ><a name="4639"
+      > </a
+      ><a name="4640" href="Relation.Unary.html#2968" class="Function"
+      >U.Decidable</a
+      ><a name="4651"
+      > </a
+      ><a name="4652" href="Data.Fin.Dec.html#4619" class="Bound"
+      >P</a
+      ><a name="4653"
+      > </a
+      ><a name="4654" class="Symbol"
+      >&#8594;</a
+      ><a name="4655"
+      >
+  </a
+      ><a name="4658" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="4659"
+      > </a
+      ><a name="4660" class="Symbol"
+      >(&#8704;</a
+      ><a name="4662"
+      > </a
+      ><a name="4663" href="Data.Fin.Dec.html#4663" class="Bound"
+      >i</a
+      ><a name="4664"
+      > </a
+      ><a name="4665" class="Symbol"
+      >&#8594;</a
+      ><a name="4666"
+      > </a
+      ><a name="4667" href="Data.Fin.Dec.html#4619" class="Bound"
+      >P</a
+      ><a name="4668"
+      > </a
+      ><a name="4669" href="Data.Fin.Dec.html#4663" class="Bound"
+      >i</a
+      ><a name="4670" class="Symbol"
+      >)</a
+      ><a name="4671"
+      > </a
+      ><a name="4672" class="Symbol"
+      >&#8594;</a
+      ><a name="4673"
+      > </a
+      ><a name="4674" href="Data.Product.html#805" class="Function"
+      >&#8707;</a
+      ><a name="4675"
+      > </a
+      ><a name="4676" class="Symbol"
+      >&#955;</a
+      ><a name="4677"
+      > </a
+      ><a name="4678" href="Data.Fin.Dec.html#4678" class="Bound"
+      >i</a
+      ><a name="4679"
+      > </a
+      ><a name="4680" class="Symbol"
+      >&#8594;</a
+      ><a name="4681"
+      > </a
+      ><a name="4682" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="4683"
+      > </a
+      ><a name="4684" href="Data.Fin.Dec.html#4619" class="Bound"
+      >P</a
+      ><a name="4685"
+      > </a
+      ><a name="4686" href="Data.Fin.Dec.html#4678" class="Bound"
+      >i</a
+      ><a name="4687"
+      > </a
+      ><a name="4688" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="4689"
+      > </a
+      ><a name="4690" class="Symbol"
+      >((</a
+      ><a name="4692" href="Data.Fin.Dec.html#4692" class="Bound"
+      >j</a
+      ><a name="4693"
+      > </a
+      ><a name="4694" class="Symbol"
+      >:</a
+      ><a name="4695"
+      > </a
+      ><a name="4696" href="Data.Fin.html#1002" class="Function"
+      >Fin&#8242;</a
+      ><a name="4700"
+      > </a
+      ><a name="4701" href="Data.Fin.Dec.html#4678" class="Bound"
+      >i</a
+      ><a name="4702" class="Symbol"
+      >)</a
+      ><a name="4703"
+      > </a
+      ><a name="4704" class="Symbol"
+      >&#8594;</a
+      ><a name="4705"
+      > </a
+      ><a name="4706" href="Data.Fin.Dec.html#4619" class="Bound"
+      >P</a
+      ><a name="4707"
+      > </a
+      ><a name="4708" class="Symbol"
+      >(</a
+      ><a name="4709" href="Data.Fin.html#1885" class="Function"
+      >inject</a
+      ><a name="4715"
+      > </a
+      ><a name="4716" href="Data.Fin.Dec.html#4692" class="Bound"
+      >j</a
+      ><a name="4717" class="Symbol"
+      >))</a
+      ><a name="4719"
+      >
+</a
+      ><a name="4720" href="Data.Fin.Dec.html#4591" class="Function"
+      >&#172;&#8704;&#10230;&#8707;&#172;-smallest</a
+      ><a name="4734"
+      > </a
+      ><a name="4735" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="4739"
+      >    </a
+      ><a name="4743" href="Data.Fin.Dec.html#4743" class="Bound"
+      >P</a
+      ><a name="4744"
+      > </a
+      ><a name="4745" href="Data.Fin.Dec.html#4745" class="Bound"
+      >dec</a
+      ><a name="4748"
+      > </a
+      ><a name="4749" href="Data.Fin.Dec.html#4749" class="Bound"
+      >&#172;&#8704;iPi</a
+      ><a name="4754"
+      > </a
+      ><a name="4755" class="Symbol"
+      >=</a
+      ><a name="4756"
+      > </a
+      ><a name="4757" href="Data.Empty.html#326" class="Function"
+      >&#8869;-elim</a
+      ><a name="4763"
+      > </a
+      ><a name="4764" class="Symbol"
+      >(</a
+      ><a name="4765" href="Data.Fin.Dec.html#4749" class="Bound"
+      >&#172;&#8704;iPi</a
+      ><a name="4770"
+      > </a
+      ><a name="4771" class="Symbol"
+      >(&#955;()))</a
+      ><a name="4777"
+      >
+</a
+      ><a name="4778" href="Data.Fin.Dec.html#4591" class="Function"
+      >&#172;&#8704;&#10230;&#8707;&#172;-smallest</a
+      ><a name="4792"
+      > </a
+      ><a name="4793" class="Symbol"
+      >(</a
+      ><a name="4794" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="4797"
+      > </a
+      ><a name="4798" href="Data.Fin.Dec.html#4798" class="Bound"
+      >n</a
+      ><a name="4799" class="Symbol"
+      >)</a
+      ><a name="4800"
+      > </a
+      ><a name="4801" href="Data.Fin.Dec.html#4801" class="Bound"
+      >P</a
+      ><a name="4802"
+      > </a
+      ><a name="4803" href="Data.Fin.Dec.html#4803" class="Bound"
+      >dec</a
+      ><a name="4806"
+      > </a
+      ><a name="4807" href="Data.Fin.Dec.html#4807" class="Bound"
+      >&#172;&#8704;iPi</a
+      ><a name="4812"
+      > </a
+      ><a name="4813" class="Keyword"
+      >with</a
+      ><a name="4817"
+      > </a
+      ><a name="4818" href="Data.Fin.Dec.html#4803" class="Bound"
+      >dec</a
+      ><a name="4821"
+      > </a
+      ><a name="4822" href="Data.Fin.html#797" class="InductiveConstructor"
+      >zero</a
+      ><a name="4826"
+      >
+</a
+      ><a name="4827" href="Data.Fin.Dec.html#4591" class="Function"
+      >&#172;&#8704;&#10230;&#8707;&#172;-smallest</a
+      ><a name="4841"
+      > </a
+      ><a name="4842" class="Symbol"
+      >(</a
+      ><a name="4843" class="InductiveConstructor"
+      >suc</a
+      ><a name="4846"
+      > </a
+      ><a name="4847" href="Data.Fin.Dec.html#4847" class="Bound"
+      >n</a
+      ><a name="4848" class="Symbol"
+      >)</a
+      ><a name="4849"
+      > </a
+      ><a name="4850" href="Data.Fin.Dec.html#4850" class="Bound"
+      >P</a
+      ><a name="4851"
+      > </a
+      ><a name="4852" href="Data.Fin.Dec.html#4852" class="Bound"
+      >dec</a
+      ><a name="4855"
+      > </a
+      ><a name="4856" href="Data.Fin.Dec.html#4856" class="Bound"
+      >&#172;&#8704;iPi</a
+      ><a name="4861"
+      > </a
+      ><a name="4862" class="Symbol"
+      >|</a
+      ><a name="4863"
+      > </a
+      ><a name="4864" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="4866"
+      > </a
+      ><a name="4867" href="Data.Fin.Dec.html#4867" class="Bound"
+      >&#172;P0</a
+      ><a name="4870"
+      > </a
+      ><a name="4871" class="Symbol"
+      >=</a
+      ><a name="4872"
+      > </a
+      ><a name="4873" class="Symbol"
+      >(</a
+      ><a name="4874" href="Data.Fin.html#797" class="InductiveConstructor"
+      >zero</a
+      ><a name="4878"
+      > </a
+      ><a name="4879" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="4880"
+      > </a
+      ><a name="4881" href="Data.Fin.Dec.html#4867" class="Bound"
+      >&#172;P0</a
+      ><a name="4884"
+      > </a
+      ><a name="4885" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="4886"
+      > </a
+      ><a name="4887" class="Symbol"
+      >&#955;</a
+      ><a name="4888"
+      > </a
+      ><a name="4889" class="Symbol"
+      >())</a
+      ><a name="4892"
+      >
+</a
+      ><a name="4893" href="Data.Fin.Dec.html#4591" class="Function"
+      >&#172;&#8704;&#10230;&#8707;&#172;-smallest</a
+      ><a name="4907"
+      > </a
+      ><a name="4908" class="Symbol"
+      >(</a
+      ><a name="4909" class="InductiveConstructor"
+      >suc</a
+      ><a name="4912"
+      > </a
+      ><a name="4913" href="Data.Fin.Dec.html#4913" class="Bound"
+      >n</a
+      ><a name="4914" class="Symbol"
+      >)</a
+      ><a name="4915"
+      > </a
+      ><a name="4916" href="Data.Fin.Dec.html#4916" class="Bound"
+      >P</a
+      ><a name="4917"
+      > </a
+      ><a name="4918" href="Data.Fin.Dec.html#4918" class="Bound"
+      >dec</a
+      ><a name="4921"
+      > </a
+      ><a name="4922" href="Data.Fin.Dec.html#4922" class="Bound"
+      >&#172;&#8704;iPi</a
+      ><a name="4927"
+      > </a
+      ><a name="4928" class="Symbol"
+      >|</a
+      ><a name="4929"
+      > </a
+      ><a name="4930" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="4933"
+      > </a
+      ><a name="4934" href="Data.Fin.Dec.html#4934" class="Bound"
+      >P0</a
+      ><a name="4936"
+      > </a
+      ><a name="4937" class="Symbol"
+      >=</a
+      ><a name="4938"
+      >
+  </a
+      ><a name="4941" href="Data.Product.html#1854" class="Function"
+      >Prod.map</a
+      ><a name="4949"
+      > </a
+      ><a name="4950" class="InductiveConstructor"
+      >suc</a
+      ><a name="4953"
+      > </a
+      ><a name="4954" class="Symbol"
+      >(</a
+      ><a name="4955" href="Data.Product.html#1854" class="Function"
+      >Prod.map</a
+      ><a name="4963"
+      > </a
+      ><a name="4964" href="Function.html#1006" class="Function"
+      >id</a
+      ><a name="4966"
+      > </a
+      ><a name="4967" href="Data.Fin.Dec.html#5170" class="Function"
+      >extend&#8242;</a
+      ><a name="4974" class="Symbol"
+      >)</a
+      ><a name="4975"
+      > </a
+      ><a name="4976" href="Function.html#1829" class="Function Operator"
+      >$</a
+      ><a name="4977"
+      >
+    </a
+      ><a name="4982" href="Data.Fin.Dec.html#4591" class="Function"
+      >&#172;&#8704;&#10230;&#8707;&#172;-smallest</a
+      ><a name="4996"
+      > </a
+      ><a name="4997" href="Data.Fin.Dec.html#4913" class="Bound"
+      >n</a
+      ><a name="4998"
+      > </a
+      ><a name="4999" class="Symbol"
+      >(&#955;</a
+      ><a name="5001"
+      > </a
+      ><a name="5002" href="Data.Fin.Dec.html#5002" class="Bound"
+      >n</a
+      ><a name="5003"
+      > </a
+      ><a name="5004" class="Symbol"
+      >&#8594;</a
+      ><a name="5005"
+      > </a
+      ><a name="5006" href="Data.Fin.Dec.html#4916" class="Bound"
+      >P</a
+      ><a name="5007"
+      > </a
+      ><a name="5008" class="Symbol"
+      >(</a
+      ><a name="5009" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="5012"
+      > </a
+      ><a name="5013" href="Data.Fin.Dec.html#5002" class="Bound"
+      >n</a
+      ><a name="5014" class="Symbol"
+      >))</a
+      ><a name="5016"
+      > </a
+      ><a name="5017" class="Symbol"
+      >(</a
+      ><a name="5018" href="Data.Fin.Dec.html#4918" class="Bound"
+      >dec</a
+      ><a name="5021"
+      > </a
+      ><a name="5022" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="5023"
+      > </a
+      ><a name="5024" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="5027" class="Symbol"
+      >)</a
+      ><a name="5028"
+      > </a
+      ><a name="5029" class="Symbol"
+      >(</a
+      ><a name="5030" href="Data.Fin.Dec.html#4922" class="Bound"
+      >&#172;&#8704;iPi</a
+      ><a name="5035"
+      > </a
+      ><a name="5036" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="5037"
+      > </a
+      ><a name="5038" href="Data.Fin.Dec.html#5056" class="Function"
+      >extend</a
+      ><a name="5044" class="Symbol"
+      >)</a
+      ><a name="5045"
+      >
+  </a
+      ><a name="5048" class="Keyword"
+      >where</a
+      ><a name="5053"
+      >
+  </a
+      ><a name="5056" href="Data.Fin.Dec.html#5056" class="Function"
+      >extend</a
+      ><a name="5062"
+      > </a
+      ><a name="5063" class="Symbol"
+      >:</a
+      ><a name="5064"
+      > </a
+      ><a name="5065" class="Symbol"
+      >(&#8704;</a
+      ><a name="5067"
+      > </a
+      ><a name="5068" href="Data.Fin.Dec.html#5068" class="Bound"
+      >i</a
+      ><a name="5069"
+      > </a
+      ><a name="5070" class="Symbol"
+      >&#8594;</a
+      ><a name="5071"
+      > </a
+      ><a name="5072" href="Data.Fin.Dec.html#4916" class="Bound"
+      >P</a
+      ><a name="5073"
+      > </a
+      ><a name="5074" class="Symbol"
+      >(</a
+      ><a name="5075" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="5078"
+      > </a
+      ><a name="5079" href="Data.Fin.Dec.html#5068" class="Bound"
+      >i</a
+      ><a name="5080" class="Symbol"
+      >))</a
+      ><a name="5082"
+      > </a
+      ><a name="5083" class="Symbol"
+      >&#8594;</a
+      ><a name="5084"
+      > </a
+      ><a name="5085" class="Symbol"
+      >(&#8704;</a
+      ><a name="5087"
+      > </a
+      ><a name="5088" href="Data.Fin.Dec.html#5088" class="Bound"
+      >i</a
+      ><a name="5089"
+      > </a
+      ><a name="5090" class="Symbol"
+      >&#8594;</a
+      ><a name="5091"
+      > </a
+      ><a name="5092" href="Data.Fin.Dec.html#4916" class="Bound"
+      >P</a
+      ><a name="5093"
+      > </a
+      ><a name="5094" href="Data.Fin.Dec.html#5088" class="Bound"
+      >i</a
+      ><a name="5095" class="Symbol"
+      >)</a
+      ><a name="5096"
+      >
+  </a
+      ><a name="5099" href="Data.Fin.Dec.html#5056" class="Function"
+      >extend</a
+      ><a name="5105"
+      > </a
+      ><a name="5106" href="Data.Fin.Dec.html#5106" class="Bound"
+      >&#8704;iP[1+i]</a
+      ><a name="5114"
+      > </a
+      ><a name="5115" href="Data.Fin.html#797" class="InductiveConstructor"
+      >zero</a
+      ><a name="5119"
+      >    </a
+      ><a name="5123" class="Symbol"
+      >=</a
+      ><a name="5124"
+      > </a
+      ><a name="5125" href="Data.Fin.Dec.html#4934" class="Bound"
+      >P0</a
+      ><a name="5127"
+      >
+  </a
+      ><a name="5130" href="Data.Fin.Dec.html#5056" class="Function"
+      >extend</a
+      ><a name="5136"
+      > </a
+      ><a name="5137" href="Data.Fin.Dec.html#5137" class="Bound"
+      >&#8704;iP[1+i]</a
+      ><a name="5145"
+      > </a
+      ><a name="5146" class="Symbol"
+      >(</a
+      ><a name="5147" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="5150"
+      > </a
+      ><a name="5151" href="Data.Fin.Dec.html#5151" class="Bound"
+      >i</a
+      ><a name="5152" class="Symbol"
+      >)</a
+      ><a name="5153"
+      > </a
+      ><a name="5154" class="Symbol"
+      >=</a
+      ><a name="5155"
+      > </a
+      ><a name="5156" href="Data.Fin.Dec.html#5137" class="Bound"
+      >&#8704;iP[1+i]</a
+      ><a name="5164"
+      > </a
+      ><a name="5165" href="Data.Fin.Dec.html#5151" class="Bound"
+      >i</a
+      ><a name="5166"
+      >
+
+  </a
+      ><a name="5170" href="Data.Fin.Dec.html#5170" class="Function"
+      >extend&#8242;</a
+      ><a name="5177"
+      > </a
+      ><a name="5178" class="Symbol"
+      >:</a
+      ><a name="5179"
+      > </a
+      ><a name="5180" class="Symbol"
+      >&#8704;</a
+      ><a name="5181"
+      > </a
+      ><a name="5182" class="Symbol"
+      >{</a
+      ><a name="5183" href="Data.Fin.Dec.html#5183" class="Bound"
+      >i</a
+      ><a name="5184"
+      > </a
+      ><a name="5185" class="Symbol"
+      >:</a
+      ><a name="5186"
+      > </a
+      ><a name="5187" href="Data.Fin.html#775" class="Datatype"
+      >Fin</a
+      ><a name="5190"
+      > </a
+      ><a name="5191" href="Data.Fin.Dec.html#4913" class="Bound"
+      >n</a
+      ><a name="5192" class="Symbol"
+      >}</a
+      ><a name="5193"
+      > </a
+      ><a name="5194" class="Symbol"
+      >&#8594;</a
+      ><a name="5195"
+      >
+            </a
+      ><a name="5208" class="Symbol"
+      >((</a
+      ><a name="5210" href="Data.Fin.Dec.html#5210" class="Bound"
+      >j</a
+      ><a name="5211"
+      > </a
+      ><a name="5212" class="Symbol"
+      >:</a
+      ><a name="5213"
+      > </a
+      ><a name="5214" href="Data.Fin.html#1002" class="Function"
+      >Fin&#8242;</a
+      ><a name="5218"
+      > </a
+      ><a name="5219" href="Data.Fin.Dec.html#5183" class="Bound"
+      >i</a
+      ><a name="5220" class="Symbol"
+      >)</a
+      ><a name="5221"
+      > </a
+      ><a name="5222" class="Symbol"
+      >&#8594;</a
+      ><a name="5223"
+      > </a
+      ><a name="5224" href="Data.Fin.Dec.html#4916" class="Bound"
+      >P</a
+      ><a name="5225"
+      > </a
+      ><a name="5226" class="Symbol"
+      >(</a
+      ><a name="5227" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="5230"
+      > </a
+      ><a name="5231" class="Symbol"
+      >(</a
+      ><a name="5232" href="Data.Fin.html#1885" class="Function"
+      >inject</a
+      ><a name="5238"
+      > </a
+      ><a name="5239" href="Data.Fin.Dec.html#5210" class="Bound"
+      >j</a
+      ><a name="5240" class="Symbol"
+      >)))</a
+      ><a name="5243"
+      > </a
+      ><a name="5244" class="Symbol"
+      >&#8594;</a
+      ><a name="5245"
+      >
+            </a
+      ><a name="5258" class="Symbol"
+      >((</a
+      ><a name="5260" href="Data.Fin.Dec.html#5260" class="Bound"
+      >j</a
+      ><a name="5261"
+      > </a
+      ><a name="5262" class="Symbol"
+      >:</a
+      ><a name="5263"
+      > </a
+      ><a name="5264" href="Data.Fin.html#1002" class="Function"
+      >Fin&#8242;</a
+      ><a name="5268"
+      > </a
+      ><a name="5269" class="Symbol"
+      >(</a
+      ><a name="5270" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="5273"
+      > </a
+      ><a name="5274" href="Data.Fin.Dec.html#5183" class="Bound"
+      >i</a
+      ><a name="5275" class="Symbol"
+      >))</a
+      ><a name="5277"
+      > </a
+      ><a name="5278" class="Symbol"
+      >&#8594;</a
+      ><a name="5279"
+      > </a
+      ><a name="5280" href="Data.Fin.Dec.html#4916" class="Bound"
+      >P</a
+      ><a name="5281"
+      > </a
+      ><a name="5282" class="Symbol"
+      >(</a
+      ><a name="5283" href="Data.Fin.html#1885" class="Function"
+      >inject</a
+      ><a name="5289"
+      > </a
+      ><a name="5290" href="Data.Fin.Dec.html#5260" class="Bound"
+      >j</a
+      ><a name="5291" class="Symbol"
+      >))</a
+      ><a name="5293"
+      >
+  </a
+      ><a name="5296" href="Data.Fin.Dec.html#5170" class="Function"
+      >extend&#8242;</a
+      ><a name="5303"
+      > </a
+      ><a name="5304" href="Data.Fin.Dec.html#5304" class="Bound"
+      >g</a
+      ><a name="5305"
+      > </a
+      ><a name="5306" href="Data.Fin.html#797" class="InductiveConstructor"
+      >zero</a
+      ><a name="5310"
+      >    </a
+      ><a name="5314" class="Symbol"
+      >=</a
+      ><a name="5315"
+      > </a
+      ><a name="5316" href="Data.Fin.Dec.html#4934" class="Bound"
+      >P0</a
+      ><a name="5318"
+      >
+  </a
+      ><a name="5321" href="Data.Fin.Dec.html#5170" class="Function"
+      >extend&#8242;</a
+      ><a name="5328"
+      > </a
+      ><a name="5329" href="Data.Fin.Dec.html#5329" class="Bound"
+      >g</a
+      ><a name="5330"
+      > </a
+      ><a name="5331" class="Symbol"
+      >(</a
+      ><a name="5332" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="5335"
+      > </a
+      ><a name="5336" href="Data.Fin.Dec.html#5336" class="Bound"
+      >j</a
+      ><a name="5337" class="Symbol"
+      >)</a
+      ><a name="5338"
+      > </a
+      ><a name="5339" class="Symbol"
+      >=</a
+      ><a name="5340"
+      > </a
+      ><a name="5341" href="Data.Fin.Dec.html#5329" class="Bound"
+      >g</a
+      ><a name="5342"
+      > </a
+      ><a name="5343" href="Data.Fin.Dec.html#5336" class="Bound"
+      >j</a
+      ><a name="5344"
+      >
+
+</a
+      ><a name="5346" class="Comment"
+      >-- Decision procedure for _&#8838;_ (obtained via the natural lattice</a
+      ><a name="5409"
+      >
+</a
+      ><a name="5410" class="Comment"
+      >-- order).</a
+      ><a name="5420"
+      >
+
+</a
+      ><a name="5422" class="Keyword"
+      >infix</a
+      ><a name="5427"
+      > </a
+      ><a name="5428" class="Number"
+      >4</a
+      ><a name="5429"
+      > _&#8838;?_
+
+</a
+      ><a name="5436" href="Data.Fin.Dec.html#5436" class="Function Operator"
+      >_&#8838;?_</a
+      ><a name="5440"
+      > </a
+      ><a name="5441" class="Symbol"
+      >:</a
+      ><a name="5442"
+      > </a
+      ><a name="5443" class="Symbol"
+      >&#8704;</a
+      ><a name="5444"
+      > </a
+      ><a name="5445" class="Symbol"
+      >{</a
+      ><a name="5446" href="Data.Fin.Dec.html#5446" class="Bound"
+      >n</a
+      ><a name="5447" class="Symbol"
+      >}</a
+      ><a name="5448"
+      > </a
+      ><a name="5449" class="Symbol"
+      >&#8594;</a
+      ><a name="5450"
+      > </a
+      ><a name="5451" href="Relation.Binary.Core.html#3511" class="Function"
+      >B.Decidable</a
+      ><a name="5462"
+      > </a
+      ><a name="5463" class="Symbol"
+      >(</a
+      ><a name="5464" href="Data.Fin.Subset.html#1200" class="Function Operator"
+      >_&#8838;_</a
+      ><a name="5467"
+      > </a
+      ><a name="5468" class="Symbol"
+      >{</a
+      ><a name="5469"
+      >n </a
+      ><a name="5471" class="Symbol"
+      >=</a
+      ><a name="5472"
+      > </a
+      ><a name="5473" href="Data.Fin.Dec.html#5446" class="Bound"
+      >n</a
+      ><a name="5474" class="Symbol"
+      >})</a
+      ><a name="5476"
+      >
+</a
+      ><a name="5477" href="Data.Fin.Dec.html#5477" class="Bound"
+      >p&#8321;</a
+      ><a name="5479"
+      > </a
+      ><a name="5480" href="Data.Fin.Dec.html#5436" class="Function Operator"
+      >&#8838;?</a
+      ><a name="5482"
+      > </a
+      ><a name="5483" href="Data.Fin.Dec.html#5483" class="Bound"
+      >p&#8322;</a
+      ><a name="5485"
+      > </a
+      ><a name="5486" class="Symbol"
+      >=</a
+      ><a name="5487"
+      >
+  </a
+      ><a name="5490" href="Relation.Nullary.Decidable.html#1593" class="Function"
+      >Dec.map</a
+      ><a name="5497"
+      > </a
+      ><a name="5498" class="Symbol"
+      >(</a
+      ><a name="5499" href="Function.Equivalence.html#2548" class="Function"
+      >Eq.sym</a
+      ><a name="5505"
+      > </a
+      ><a name="5506" href="Data.Fin.Subset.Props.html#3872" class="Function"
+      >NaturalPoset.orders-equivalent</a
+      ><a name="5536" class="Symbol"
+      >)</a
+      ><a name="5537"
+      > </a
+      ><a name="5538" href="Function.html#1829" class="Function Operator"
+      >$</a
+      ><a name="5539"
+      >
+  </a
+      ><a name="5542" href="Relation.Nullary.Decidable.html#1762" class="Function"
+      >Dec.map&#8242;</a
+      ><a name="5550"
+      > </a
+      ><a name="5551" href="Data.Vec.Equality.html#2794" class="Function"
+      >PropVecEq.to-&#8801;</a
+      ><a name="5565"
+      > </a
+      ><a name="5566" href="Data.Vec.Equality.html#2951" class="Function"
+      >PropVecEq.from-&#8801;</a
+      ><a name="5582"
+      > </a
+      ><a name="5583" href="Function.html#1829" class="Function Operator"
+      >$</a
+      ><a name="5584"
+      >
+  </a
+      ><a name="5587" href="Data.Vec.Equality.html#2189" class="Function Operator"
+      >VecEq.DecidableEquality._&#8799;_</a
+      ><a name="5614"
+      > </a
+      ><a name="5615" href="Data.Bool.html#1640" class="Function"
+      >Bool.decSetoid</a
+      ><a name="5629"
+      > </a
+      ><a name="5630" href="Data.Fin.Dec.html#5477" class="Bound"
+      >p&#8321;</a
+      ><a name="5632"
+      > </a
+      ><a name="5633" class="Symbol"
+      >(</a
+      ><a name="5634" href="Data.Fin.Dec.html#5477" class="Bound"
+      >p&#8321;</a
+      ><a name="5636"
+      > </a
+      ><a name="5637" href="Algebra.html#12787" class="Function Operator"
+      >&#8745;</a
+      ><a name="5638"
+      > </a
+      ><a name="5639" href="Data.Fin.Dec.html#5483" class="Bound"
+      >p&#8322;</a
+      ><a name="5641" class="Symbol"
+      >)</a
+      ><a name="5642"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

@@ -1,0 +1,1276 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Game.IND-CPA</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Symbol"
+      >{-#</a
+      ><a name="4"
+      > </a
+      ><a name="5" class="Keyword"
+      >OPTIONS</a
+      ><a name="12"
+      > --without-K </a
+      ><a name="25" class="Symbol"
+      >#-}</a
+      ><a name="28"
+      >
+</a
+      ><a name="29" class="Keyword"
+      >open</a
+      ><a name="33"
+      > </a
+      ><a name="34" class="Keyword"
+      >import</a
+      ><a name="40"
+      > </a
+      ><a name="41" href="Type.html#1" class="Module"
+      >Type</a
+      ><a name="45"
+      >
+</a
+      ><a name="46" class="Keyword"
+      >open</a
+      ><a name="50"
+      > </a
+      ><a name="51" class="Keyword"
+      >import</a
+      ><a name="57"
+      > </a
+      ><a name="58" href="Data.Product.html#1" class="Module"
+      >Data.Product</a
+      ><a name="70"
+      >
+</a
+      ><a name="71" class="Keyword"
+      >open</a
+      ><a name="75"
+      > </a
+      ><a name="76" class="Keyword"
+      >import</a
+      ><a name="82"
+      > </a
+      ><a name="83" href="Data.Two.html#1" class="Module"
+      >Data.Two</a
+      ><a name="91"
+      >
+
+</a
+      ><a name="93" class="Keyword"
+      >module</a
+      ><a name="99"
+      > </a
+      ><a name="100" href="Game.IND-CPA.html#1" class="Module"
+      >Game.IND-CPA</a
+      ><a name="112"
+      >
+  </a
+      ><a name="115" class="Symbol"
+      >(</a
+      ><a name="116" href="Game.IND-CPA.html#116" class="Bound"
+      >PubKey</a
+      ><a name="122"
+      >     </a
+      ><a name="127" class="Symbol"
+      >:</a
+      ><a name="128"
+      > </a
+      ><a name="129" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="130" class="Symbol"
+      >)</a
+      ><a name="131"
+      >
+  </a
+      ><a name="134" class="Symbol"
+      >(</a
+      ><a name="135" href="Game.IND-CPA.html#135" class="Bound"
+      >SecKey</a
+      ><a name="141"
+      >     </a
+      ><a name="146" class="Symbol"
+      >:</a
+      ><a name="147"
+      > </a
+      ><a name="148" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="149" class="Symbol"
+      >)</a
+      ><a name="150"
+      >
+  </a
+      ><a name="153" class="Symbol"
+      >(</a
+      ><a name="154" href="Game.IND-CPA.html#154" class="Bound"
+      >Message</a
+      ><a name="161"
+      >    </a
+      ><a name="165" class="Symbol"
+      >:</a
+      ><a name="166"
+      > </a
+      ><a name="167" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="168" class="Symbol"
+      >)</a
+      ><a name="169"
+      >
+  </a
+      ><a name="172" class="Symbol"
+      >(</a
+      ><a name="173" href="Game.IND-CPA.html#173" class="Bound"
+      >CipherText</a
+      ><a name="183"
+      > </a
+      ><a name="184" class="Symbol"
+      >:</a
+      ><a name="185"
+      > </a
+      ><a name="186" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="187" class="Symbol"
+      >)</a
+      ><a name="188"
+      >
+
+  </a
+      ><a name="192" class="Comment"
+      >-- randomness supply for: encryption, key-generation, adversary, extensions</a
+      ><a name="267"
+      >
+  </a
+      ><a name="270" class="Symbol"
+      >(</a
+      ><a name="271" href="Game.IND-CPA.html#271" class="Bound"
+      >R&#8337;</a
+      ><a name="273"
+      > </a
+      ><a name="274" href="Game.IND-CPA.html#274" class="Bound"
+      >R&#8342;</a
+      ><a name="276"
+      > </a
+      ><a name="277" href="Game.IND-CPA.html#277" class="Bound"
+      >R&#8336;</a
+      ><a name="279"
+      > </a
+      ><a name="280" href="Game.IND-CPA.html#280" class="Bound"
+      >R&#8339;</a
+      ><a name="282"
+      > </a
+      ><a name="283" class="Symbol"
+      >:</a
+      ><a name="284"
+      > </a
+      ><a name="285" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="286" class="Symbol"
+      >)</a
+      ><a name="287"
+      >
+
+  </a
+      ><a name="291" class="Symbol"
+      >(</a
+      ><a name="292" href="Game.IND-CPA.html#292" class="Bound"
+      >KeyGen</a
+      ><a name="298"
+      > </a
+      ><a name="299" class="Symbol"
+      >:</a
+      ><a name="300"
+      > </a
+      ><a name="301" href="Game.IND-CPA.html#274" class="Bound"
+      >R&#8342;</a
+      ><a name="303"
+      > </a
+      ><a name="304" class="Symbol"
+      >&#8594;</a
+      ><a name="305"
+      > </a
+      ><a name="306" href="Game.IND-CPA.html#116" class="Bound"
+      >PubKey</a
+      ><a name="312"
+      > </a
+      ><a name="313" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="314"
+      > </a
+      ><a name="315" href="Game.IND-CPA.html#135" class="Bound"
+      >SecKey</a
+      ><a name="321" class="Symbol"
+      >)</a
+      ><a name="322"
+      >
+  </a
+      ><a name="325" class="Symbol"
+      >(</a
+      ><a name="326" href="Game.IND-CPA.html#326" class="Bound"
+      >Enc</a
+      ><a name="329"
+      >    </a
+      ><a name="333" class="Symbol"
+      >:</a
+      ><a name="334"
+      > </a
+      ><a name="335" href="Game.IND-CPA.html#116" class="Bound"
+      >PubKey</a
+      ><a name="341"
+      > </a
+      ><a name="342" class="Symbol"
+      >&#8594;</a
+      ><a name="343"
+      > </a
+      ><a name="344" href="Game.IND-CPA.html#154" class="Bound"
+      >Message</a
+      ><a name="351"
+      > </a
+      ><a name="352" class="Symbol"
+      >&#8594;</a
+      ><a name="353"
+      > </a
+      ><a name="354" href="Game.IND-CPA.html#271" class="Bound"
+      >R&#8337;</a
+      ><a name="356"
+      > </a
+      ><a name="357" class="Symbol"
+      >&#8594;</a
+      ><a name="358"
+      > </a
+      ><a name="359" href="Game.IND-CPA.html#173" class="Bound"
+      >CipherText</a
+      ><a name="369" class="Symbol"
+      >)</a
+      ><a name="370"
+      >
+
+</a
+      ><a name="372" class="Keyword"
+      >where</a
+      ><a name="377"
+      >
+
+</a
+      ><a name="379" class="Comment"
+      >-- IND-CPA adversary in two parts</a
+      ><a name="412"
+      >
+</a
+      ><a name="413" class="Keyword"
+      >record</a
+      ><a name="419"
+      > </a
+      ><a name="420" href="Game.IND-CPA.html#420" class="Record"
+      >Adversary</a
+      ><a name="429"
+      > </a
+      ><a name="430" class="Symbol"
+      >:</a
+      ><a name="431"
+      > </a
+      ><a name="432" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="433"
+      > </a
+      ><a name="434" class="Keyword"
+      >where</a
+      ><a name="439"
+      >
+  </a
+      ><a name="442" class="Keyword"
+      >field</a
+      ><a name="447"
+      >
+    </a
+      ><a name="452" class="Comment"
+      >-- In the step 'm', the adversary receives some randomness,</a
+      ><a name="511"
+      >
+    </a
+      ><a name="516" class="Comment"
+      >-- the public key, the message we want (m&#8320; or m&#8321;). The adversary</a
+      ><a name="580"
+      >
+    </a
+      ><a name="585" class="Comment"
+      >-- returns the message to encrypt. Remember that the adversary</a
+      ><a name="647"
+      >
+    </a
+      ><a name="652" class="Comment"
+      >-- is a pure and deterministic function, therefore &#120794; &#8594; Message</a
+      ><a name="714"
+      >
+    </a
+      ><a name="719" class="Comment"
+      >-- is the same as Message &#215; Message.</a
+      ><a name="755"
+      >
+    </a
+      ><a name="760" href="Game.IND-CPA.html#760" class="Field"
+      >m</a
+      ><a name="761"
+      >  </a
+      ><a name="763" class="Symbol"
+      >:</a
+      ><a name="764"
+      > </a
+      ><a name="765" href="Game.IND-CPA.html#277" class="Bound"
+      >R&#8336;</a
+      ><a name="767"
+      > </a
+      ><a name="768" class="Symbol"
+      >&#8594;</a
+      ><a name="769"
+      > </a
+      ><a name="770" href="Game.IND-CPA.html#116" class="Bound"
+      >PubKey</a
+      ><a name="776"
+      > </a
+      ><a name="777" class="Symbol"
+      >&#8594;</a
+      ><a name="778"
+      > </a
+      ><a name="779" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="780"
+      > </a
+      ><a name="781" class="Symbol"
+      >&#8594;</a
+      ><a name="782"
+      > </a
+      ><a name="783" href="Game.IND-CPA.html#154" class="Bound"
+      >Message</a
+      ><a name="790"
+      >
+
+    </a
+      ><a name="796" class="Comment"
+      >-- In the step 'b&#8242;' the adversary receives the same randomness</a
+      ><a name="858"
+      >
+    </a
+      ><a name="863" class="Comment"
+      >-- supply and public key as in step 'm' and receives the ciphertext</a
+      ><a name="930"
+      >
+    </a
+      ><a name="935" class="Comment"
+      >-- computed by the challenger. The adversary has to guess which</a
+      ><a name="998"
+      >
+    </a
+      ><a name="1003" class="Comment"
+      >-- message (m&#8320;, m&#8321;) has been encrypted.</a
+      ><a name="1042"
+      >
+    </a
+      ><a name="1047" href="Game.IND-CPA.html#1047" class="Field"
+      >b&#8242;</a
+      ><a name="1049"
+      > </a
+      ><a name="1050" class="Symbol"
+      >:</a
+      ><a name="1051"
+      > </a
+      ><a name="1052" href="Game.IND-CPA.html#277" class="Bound"
+      >R&#8336;</a
+      ><a name="1054"
+      > </a
+      ><a name="1055" class="Symbol"
+      >&#8594;</a
+      ><a name="1056"
+      > </a
+      ><a name="1057" href="Game.IND-CPA.html#116" class="Bound"
+      >PubKey</a
+      ><a name="1063"
+      > </a
+      ><a name="1064" class="Symbol"
+      >&#8594;</a
+      ><a name="1065"
+      > </a
+      ><a name="1066" href="Game.IND-CPA.html#173" class="Bound"
+      >CipherText</a
+      ><a name="1076"
+      > </a
+      ><a name="1077" class="Symbol"
+      >&#8594;</a
+      ><a name="1078"
+      > </a
+      ><a name="1079" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="1080"
+      >
+
+</a
+      ><a name="1082" class="Comment"
+      >-- IND-CPA randomness supply</a
+      ><a name="1110"
+      >
+</a
+      ><a name="1111" href="Game.IND-CPA.html#1111" class="Function"
+      >R</a
+      ><a name="1112"
+      > </a
+      ><a name="1113" class="Symbol"
+      >:</a
+      ><a name="1114"
+      > </a
+      ><a name="1115" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="1116"
+      >
+</a
+      ><a name="1117" href="Game.IND-CPA.html#1111" class="Function"
+      >R</a
+      ><a name="1118"
+      > </a
+      ><a name="1119" class="Symbol"
+      >=</a
+      ><a name="1120"
+      > </a
+      ><a name="1121" class="Symbol"
+      >(</a
+      ><a name="1122" href="Game.IND-CPA.html#277" class="Bound"
+      >R&#8336;</a
+      ><a name="1124"
+      > </a
+      ><a name="1125" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="1126"
+      > </a
+      ><a name="1127" href="Game.IND-CPA.html#274" class="Bound"
+      >R&#8342;</a
+      ><a name="1129"
+      > </a
+      ><a name="1130" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="1131"
+      > </a
+      ><a name="1132" href="Game.IND-CPA.html#271" class="Bound"
+      >R&#8337;</a
+      ><a name="1134"
+      > </a
+      ><a name="1135" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="1136"
+      > </a
+      ><a name="1137" href="Game.IND-CPA.html#280" class="Bound"
+      >R&#8339;</a
+      ><a name="1139" class="Symbol"
+      >)</a
+      ><a name="1140"
+      >
+
+</a
+      ><a name="1142" class="Comment"
+      >-- IND-CPA experiments:</a
+      ><a name="1165"
+      >
+</a
+      ><a name="1166" class="Comment"
+      >--   * input: adversary and randomness supply</a
+      ><a name="1211"
+      >
+</a
+      ><a name="1212" class="Comment"
+      >--   * output b&#8242;: adversary claims we are in experiment EXP b</a
+      ><a name="1273"
+      >
+</a
+      ><a name="1274" href="Game.IND-CPA.html#1274" class="Function"
+      >Experiment</a
+      ><a name="1284"
+      > </a
+      ><a name="1285" class="Symbol"
+      >:</a
+      ><a name="1286"
+      > </a
+      ><a name="1287" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="1288"
+      >
+</a
+      ><a name="1289" href="Game.IND-CPA.html#1274" class="Function"
+      >Experiment</a
+      ><a name="1299"
+      > </a
+      ><a name="1300" class="Symbol"
+      >=</a
+      ><a name="1301"
+      > </a
+      ><a name="1302" href="Game.IND-CPA.html#420" class="Record"
+      >Adversary</a
+      ><a name="1311"
+      > </a
+      ><a name="1312" class="Symbol"
+      >&#8594;</a
+      ><a name="1313"
+      > </a
+      ><a name="1314" href="Game.IND-CPA.html#1111" class="Function"
+      >R</a
+      ><a name="1315"
+      > </a
+      ><a name="1316" class="Symbol"
+      >&#8594;</a
+      ><a name="1317"
+      > </a
+      ><a name="1318" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="1319"
+      >
+
+</a
+      ><a name="1321" class="Comment"
+      >-- The game step by step:</a
+      ><a name="1346"
+      >
+</a
+      ><a name="1347" class="Comment"
+      >-- (pk) key-generation, only the public-key is needed</a
+      ><a name="1400"
+      >
+</a
+      ><a name="1401" class="Comment"
+      >-- (mb) send randomness, public-key and bit</a
+      ><a name="1444"
+      >
+</a
+      ><a name="1445" class="Comment"
+      >--      receive which message to encrypt</a
+      ><a name="1485"
+      >
+</a
+      ><a name="1486" class="Comment"
+      >-- (c)  encrypt the message</a
+      ><a name="1513"
+      >
+</a
+      ><a name="1514" class="Comment"
+      >-- (b&#8242;) send randomness, public-key and ciphertext</a
+      ><a name="1564"
+      >
+</a
+      ><a name="1565" class="Comment"
+      >--      receive the guess from the adversary</a
+      ><a name="1609"
+      >
+</a
+      ><a name="1610" href="Game.IND-CPA.html#1610" class="Function"
+      >EXP</a
+      ><a name="1613"
+      > </a
+      ><a name="1614" class="Symbol"
+      >:</a
+      ><a name="1615"
+      > </a
+      ><a name="1616" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="1617"
+      > </a
+      ><a name="1618" class="Symbol"
+      >&#8594;</a
+      ><a name="1619"
+      > </a
+      ><a name="1620" href="Game.IND-CPA.html#1274" class="Function"
+      >Experiment</a
+      ><a name="1630"
+      >
+</a
+      ><a name="1631" href="Game.IND-CPA.html#1610" class="Function"
+      >EXP</a
+      ><a name="1634"
+      > </a
+      ><a name="1635" href="Game.IND-CPA.html#1635" class="Bound"
+      >b</a
+      ><a name="1636"
+      > </a
+      ><a name="1637" href="Game.IND-CPA.html#1637" class="Bound"
+      >A</a
+      ><a name="1638"
+      > </a
+      ><a name="1639" class="Symbol"
+      >(</a
+      ><a name="1640" href="Game.IND-CPA.html#1640" class="Bound"
+      >r&#8336;</a
+      ><a name="1642"
+      > </a
+      ><a name="1643" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1644"
+      > </a
+      ><a name="1645" href="Game.IND-CPA.html#1645" class="Bound"
+      >r&#8342;</a
+      ><a name="1647"
+      > </a
+      ><a name="1648" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1649"
+      > </a
+      ><a name="1650" href="Game.IND-CPA.html#1650" class="Bound"
+      >r&#8337;</a
+      ><a name="1652"
+      > </a
+      ><a name="1653" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1654"
+      > </a
+      ><a name="1655" href="Game.IND-CPA.html#1655" class="Bound Operator"
+      >_r&#8339;</a
+      ><a name="1658" class="Symbol"
+      >)</a
+      ><a name="1659"
+      > </a
+      ><a name="1660" class="Symbol"
+      >=</a
+      ><a name="1661"
+      > </a
+      ><a name="1662" href="Game.IND-CPA.html#1768" class="Function"
+      >res</a
+      ><a name="1665"
+      >
+  </a
+      ><a name="1668" class="Keyword"
+      >where</a
+      ><a name="1673"
+      >
+  </a
+      ><a name="1676" class="Keyword"
+      >module</a
+      ><a name="1682"
+      > </a
+      ><a name="1683" href="Game.IND-CPA.html#1683" class="Module"
+      >A</a
+      ><a name="1684"
+      > </a
+      ><a name="1685" class="Symbol"
+      >=</a
+      ><a name="1686"
+      > </a
+      ><a name="1687" href="Game.IND-CPA.html#420" class="Module"
+      >Adversary</a
+      ><a name="1696"
+      > </a
+      ><a name="1697" href="Game.IND-CPA.html#1637" class="Bound"
+      >A</a
+      ><a name="1698"
+      >
+  </a
+      ><a name="1701" href="Game.IND-CPA.html#1701" class="Function"
+      >pk</a
+      ><a name="1703"
+      >  </a
+      ><a name="1705" class="Symbol"
+      >=</a
+      ><a name="1706"
+      > </a
+      ><a name="1707" href="Data.Product.html#525" class="Field"
+      >proj&#8321;</a
+      ><a name="1712"
+      > </a
+      ><a name="1713" class="Symbol"
+      >(</a
+      ><a name="1714" href="Game.IND-CPA.html#292" class="Bound"
+      >KeyGen</a
+      ><a name="1720"
+      > </a
+      ><a name="1721" href="Game.IND-CPA.html#1645" class="Bound"
+      >r&#8342;</a
+      ><a name="1723" class="Symbol"
+      >)</a
+      ><a name="1724"
+      >
+  </a
+      ><a name="1727" href="Game.IND-CPA.html#1727" class="Function"
+      >mb</a
+      ><a name="1729"
+      >  </a
+      ><a name="1731" class="Symbol"
+      >=</a
+      ><a name="1732"
+      > </a
+      ><a name="1733" href="Game.IND-CPA.html#760" class="Function"
+      >A.m</a
+      ><a name="1736"
+      > </a
+      ><a name="1737" href="Game.IND-CPA.html#1640" class="Bound"
+      >r&#8336;</a
+      ><a name="1739"
+      > </a
+      ><a name="1740" href="Game.IND-CPA.html#1701" class="Function"
+      >pk</a
+      ><a name="1742"
+      > </a
+      ><a name="1743" href="Game.IND-CPA.html#1635" class="Bound"
+      >b</a
+      ><a name="1744"
+      >
+  </a
+      ><a name="1747" href="Game.IND-CPA.html#1747" class="Function"
+      >c</a
+      ><a name="1748"
+      >   </a
+      ><a name="1751" class="Symbol"
+      >=</a
+      ><a name="1752"
+      > </a
+      ><a name="1753" href="Game.IND-CPA.html#326" class="Bound"
+      >Enc</a
+      ><a name="1756"
+      > </a
+      ><a name="1757" href="Game.IND-CPA.html#1701" class="Function"
+      >pk</a
+      ><a name="1759"
+      > </a
+      ><a name="1760" href="Game.IND-CPA.html#1727" class="Function"
+      >mb</a
+      ><a name="1762"
+      > </a
+      ><a name="1763" href="Game.IND-CPA.html#1650" class="Bound"
+      >r&#8337;</a
+      ><a name="1765"
+      >
+  </a
+      ><a name="1768" href="Game.IND-CPA.html#1768" class="Function"
+      >res</a
+      ><a name="1771"
+      > </a
+      ><a name="1772" class="Symbol"
+      >=</a
+      ><a name="1773"
+      > </a
+      ><a name="1774" href="Game.IND-CPA.html#1047" class="Function"
+      >A.b&#8242;</a
+      ><a name="1778"
+      > </a
+      ><a name="1779" href="Game.IND-CPA.html#1640" class="Bound"
+      >r&#8336;</a
+      ><a name="1781"
+      > </a
+      ><a name="1782" href="Game.IND-CPA.html#1701" class="Function"
+      >pk</a
+      ><a name="1784"
+      > </a
+      ><a name="1785" href="Game.IND-CPA.html#1747" class="Function"
+      >c</a
+      ><a name="1786"
+      >
+
+</a
+      ><a name="1788" href="Game.IND-CPA.html#1788" class="Function"
+      >EXP&#8320;</a
+      ><a name="1792"
+      > </a
+      ><a name="1793" href="Game.IND-CPA.html#1793" class="Function"
+      >EXP&#8321;</a
+      ><a name="1797"
+      > </a
+      ><a name="1798" class="Symbol"
+      >:</a
+      ><a name="1799"
+      > </a
+      ><a name="1800" href="Game.IND-CPA.html#1274" class="Function"
+      >Experiment</a
+      ><a name="1810"
+      >
+</a
+      ><a name="1811" href="Game.IND-CPA.html#1788" class="Function"
+      >EXP&#8320;</a
+      ><a name="1815"
+      > </a
+      ><a name="1816" class="Symbol"
+      >=</a
+      ><a name="1817"
+      > </a
+      ><a name="1818" href="Game.IND-CPA.html#1610" class="Function"
+      >EXP</a
+      ><a name="1821"
+      > </a
+      ><a name="1822" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="1824"
+      >
+</a
+      ><a name="1825" href="Game.IND-CPA.html#1793" class="Function"
+      >EXP&#8321;</a
+      ><a name="1829"
+      > </a
+      ><a name="1830" class="Symbol"
+      >=</a
+      ><a name="1831"
+      > </a
+      ><a name="1832" href="Game.IND-CPA.html#1610" class="Function"
+      >EXP</a
+      ><a name="1835"
+      > </a
+      ><a name="1836" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="1838"
+      >
+
+</a
+      ><a name="1840" href="Game.IND-CPA.html#1840" class="Function"
+      >game</a
+      ><a name="1844"
+      > </a
+      ><a name="1845" class="Symbol"
+      >:</a
+      ><a name="1846"
+      > </a
+      ><a name="1847" href="Game.IND-CPA.html#420" class="Record"
+      >Adversary</a
+      ><a name="1856"
+      > </a
+      ><a name="1857" class="Symbol"
+      >&#8594;</a
+      ><a name="1858"
+      > </a
+      ><a name="1859" class="Symbol"
+      >(</a
+      ><a name="1860" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="1861"
+      > </a
+      ><a name="1862" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="1863"
+      > </a
+      ><a name="1864" href="Game.IND-CPA.html#1111" class="Function"
+      >R</a
+      ><a name="1865" class="Symbol"
+      >)</a
+      ><a name="1866"
+      > </a
+      ><a name="1867" class="Symbol"
+      >&#8594;</a
+      ><a name="1868"
+      > </a
+      ><a name="1869" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="1870"
+      >
+</a
+      ><a name="1871" href="Game.IND-CPA.html#1840" class="Function"
+      >game</a
+      ><a name="1875"
+      > </a
+      ><a name="1876" href="Game.IND-CPA.html#1876" class="Bound"
+      >A</a
+      ><a name="1877"
+      > </a
+      ><a name="1878" class="Symbol"
+      >(</a
+      ><a name="1879" href="Game.IND-CPA.html#1879" class="Bound"
+      >b</a
+      ><a name="1880"
+      > </a
+      ><a name="1881" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1882"
+      > </a
+      ><a name="1883" href="Game.IND-CPA.html#1883" class="Bound"
+      >r</a
+      ><a name="1884" class="Symbol"
+      >)</a
+      ><a name="1885"
+      > </a
+      ><a name="1886" class="Symbol"
+      >=</a
+      ><a name="1887"
+      > </a
+      ><a name="1888" href="Game.IND-CPA.html#1879" class="Bound"
+      >b</a
+      ><a name="1889"
+      > </a
+      ><a name="1890" href="Data.Two.html#2568" class="Function Operator"
+      >==</a
+      ><a name="1892"
+      > </a
+      ><a name="1893" href="Game.IND-CPA.html#1610" class="Function"
+      >EXP</a
+      ><a name="1896"
+      > </a
+      ><a name="1897" href="Game.IND-CPA.html#1879" class="Bound"
+      >b</a
+      ><a name="1898"
+      > </a
+      ><a name="1899" href="Game.IND-CPA.html#1876" class="Bound"
+      >A</a
+      ><a name="1900"
+      > </a
+      ><a name="1901" href="Game.IND-CPA.html#1883" class="Bound"
+      >r</a
+      ><a name="1902"
+      >
+
+</a
+      ><a name="1904" class="Keyword"
+      >open</a
+      ><a name="1908"
+      > </a
+      ><a name="1909" class="Keyword"
+      >import</a
+      ><a name="1915"
+      > </a
+      ><a name="1916" href="Relation.Binary.PropositionalEquality.html#1" class="Module"
+      >Relation.Binary.PropositionalEquality</a
+      ><a name="1953"
+      >
+</a
+      ><a name="1954" class="Keyword"
+      >module</a
+      ><a name="1960"
+      > </a
+      ><a name="1961" href="Game.IND-CPA.html#1961" class="Module"
+      >_</a
+      ><a name="1962"
+      >
+  </a
+      ><a name="1965" class="Symbol"
+      >(</a
+      ><a name="1966" href="Game.IND-CPA.html#1966" class="Bound"
+      >Dist</a
+      ><a name="1970"
+      > </a
+      ><a name="1971" class="Symbol"
+      >:</a
+      ><a name="1972"
+      > </a
+      ><a name="1973" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="1974" class="Symbol"
+      >)</a
+      ><a name="1975"
+      >
+  </a
+      ><a name="1978" class="Symbol"
+      >(</a
+      ><a name="1979" href="Game.IND-CPA.html#1979" class="Bound Operator"
+      >|Pr[_&#8801;1]-Pr[_&#8801;1]|</a
+      ><a name="1996"
+      > </a
+      ><a name="1997" class="Symbol"
+      >:</a
+      ><a name="1998"
+      > </a
+      ><a name="1999" class="Symbol"
+      >(</a
+      ><a name="2000" href="Game.IND-CPA.html#2000" class="Bound"
+      >f</a
+      ><a name="2001"
+      > </a
+      ><a name="2002" href="Game.IND-CPA.html#2002" class="Bound"
+      >g</a
+      ><a name="2003"
+      > </a
+      ><a name="2004" class="Symbol"
+      >:</a
+      ><a name="2005"
+      > </a
+      ><a name="2006" href="Game.IND-CPA.html#1111" class="Function"
+      >R</a
+      ><a name="2007"
+      > </a
+      ><a name="2008" class="Symbol"
+      >&#8594;</a
+      ><a name="2009"
+      > </a
+      ><a name="2010" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="2011" class="Symbol"
+      >)</a
+      ><a name="2012"
+      > </a
+      ><a name="2013" class="Symbol"
+      >&#8594;</a
+      ><a name="2014"
+      > </a
+      ><a name="2015" href="Game.IND-CPA.html#1966" class="Bound"
+      >Dist</a
+      ><a name="2019" class="Symbol"
+      >)</a
+      ><a name="2020"
+      >
+  </a
+      ><a name="2023" class="Symbol"
+      >(</a
+      ><a name="2024" href="Game.IND-CPA.html#2024" class="Bound"
+      >dist-comm</a
+      ><a name="2033"
+      > </a
+      ><a name="2034" class="Symbol"
+      >:</a
+      ><a name="2035"
+      > </a
+      ><a name="2036" class="Symbol"
+      >&#8704;</a
+      ><a name="2037"
+      > </a
+      ><a name="2038" href="Game.IND-CPA.html#2038" class="Bound"
+      >f</a
+      ><a name="2039"
+      > </a
+      ><a name="2040" href="Game.IND-CPA.html#2040" class="Bound"
+      >g</a
+      ><a name="2041"
+      > </a
+      ><a name="2042" class="Symbol"
+      >&#8594;</a
+      ><a name="2043"
+      > </a
+      ><a name="2044" href="Game.IND-CPA.html#1979" class="Bound Operator"
+      >|Pr[</a
+      ><a name="2048"
+      > </a
+      ><a name="2049" href="Game.IND-CPA.html#2038" class="Bound"
+      >f</a
+      ><a name="2050"
+      > </a
+      ><a name="2051" href="Game.IND-CPA.html#1979" class="Bound Operator"
+      >&#8801;1]-Pr[</a
+      ><a name="2058"
+      > </a
+      ><a name="2059" href="Game.IND-CPA.html#2040" class="Bound"
+      >g</a
+      ><a name="2060"
+      > </a
+      ><a name="2061" href="Game.IND-CPA.html#1979" class="Bound Operator"
+      >&#8801;1]|</a
+      ><a name="2065"
+      > </a
+      ><a name="2066" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="2067"
+      > </a
+      ><a name="2068" href="Game.IND-CPA.html#1979" class="Bound Operator"
+      >|Pr[</a
+      ><a name="2072"
+      > </a
+      ><a name="2073" href="Game.IND-CPA.html#2040" class="Bound"
+      >g</a
+      ><a name="2074"
+      > </a
+      ><a name="2075" href="Game.IND-CPA.html#1979" class="Bound Operator"
+      >&#8801;1]-Pr[</a
+      ><a name="2082"
+      > </a
+      ><a name="2083" href="Game.IND-CPA.html#2038" class="Bound"
+      >f</a
+      ><a name="2084"
+      > </a
+      ><a name="2085" href="Game.IND-CPA.html#1979" class="Bound Operator"
+      >&#8801;1]|</a
+      ><a name="2089" class="Symbol"
+      >)</a
+      ><a name="2090"
+      >
+  </a
+      ><a name="2093" class="Keyword"
+      >where</a
+      ><a name="2098"
+      >
+
+    </a
+      ><a name="2104" href="Game.IND-CPA.html#2104" class="Function"
+      >Advantage</a
+      ><a name="2113"
+      > </a
+      ><a name="2114" class="Symbol"
+      >:</a
+      ><a name="2115"
+      > </a
+      ><a name="2116" href="Game.IND-CPA.html#420" class="Record"
+      >Adversary</a
+      ><a name="2125"
+      > </a
+      ><a name="2126" class="Symbol"
+      >&#8594;</a
+      ><a name="2127"
+      > </a
+      ><a name="2128" href="Game.IND-CPA.html#1966" class="Bound"
+      >Dist</a
+      ><a name="2132"
+      >
+    </a
+      ><a name="2137" href="Game.IND-CPA.html#2104" class="Function"
+      >Advantage</a
+      ><a name="2146"
+      > </a
+      ><a name="2147" href="Game.IND-CPA.html#2147" class="Bound"
+      >A</a
+      ><a name="2148"
+      > </a
+      ><a name="2149" class="Symbol"
+      >=</a
+      ><a name="2150"
+      > </a
+      ><a name="2151" href="Game.IND-CPA.html#1979" class="Bound Operator"
+      >|Pr[</a
+      ><a name="2155"
+      > </a
+      ><a name="2156" href="Game.IND-CPA.html#1788" class="Function"
+      >EXP&#8320;</a
+      ><a name="2160"
+      > </a
+      ><a name="2161" href="Game.IND-CPA.html#2147" class="Bound"
+      >A</a
+      ><a name="2162"
+      > </a
+      ><a name="2163" href="Game.IND-CPA.html#1979" class="Bound Operator"
+      >&#8801;1]-Pr[</a
+      ><a name="2170"
+      > </a
+      ><a name="2171" href="Game.IND-CPA.html#1793" class="Function"
+      >EXP&#8321;</a
+      ><a name="2175"
+      > </a
+      ><a name="2176" href="Game.IND-CPA.html#2147" class="Bound"
+      >A</a
+      ><a name="2177"
+      > </a
+      ><a name="2178" href="Game.IND-CPA.html#1979" class="Bound Operator"
+      >&#8801;1]|</a
+      ><a name="2182"
+      >
+
+    </a
+      ><a name="2188" href="Game.IND-CPA.html#2188" class="Function"
+      >Advantage-unordered</a
+      ><a name="2207"
+      > </a
+      ><a name="2208" class="Symbol"
+      >:</a
+      ><a name="2209"
+      > </a
+      ><a name="2210" class="Symbol"
+      >&#8704;</a
+      ><a name="2211"
+      > </a
+      ><a name="2212" href="Game.IND-CPA.html#2212" class="Bound"
+      >A</a
+      ><a name="2213"
+      > </a
+      ><a name="2214" href="Game.IND-CPA.html#2214" class="Bound"
+      >b</a
+      ><a name="2215"
+      > </a
+      ><a name="2216" class="Symbol"
+      >&#8594;</a
+      ><a name="2217"
+      > </a
+      ><a name="2218" href="Game.IND-CPA.html#2104" class="Function"
+      >Advantage</a
+      ><a name="2227"
+      > </a
+      ><a name="2228" href="Game.IND-CPA.html#2212" class="Bound"
+      >A</a
+      ><a name="2229"
+      > </a
+      ><a name="2230" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="2231"
+      > </a
+      ><a name="2232" href="Game.IND-CPA.html#1979" class="Bound Operator"
+      >|Pr[</a
+      ><a name="2236"
+      > </a
+      ><a name="2237" href="Game.IND-CPA.html#1610" class="Function"
+      >EXP</a
+      ><a name="2240"
+      > </a
+      ><a name="2241" href="Game.IND-CPA.html#2214" class="Bound"
+      >b</a
+      ><a name="2242"
+      > </a
+      ><a name="2243" href="Game.IND-CPA.html#2212" class="Bound"
+      >A</a
+      ><a name="2244"
+      > </a
+      ><a name="2245" href="Game.IND-CPA.html#1979" class="Bound Operator"
+      >&#8801;1]-Pr[</a
+      ><a name="2252"
+      > </a
+      ><a name="2253" href="Game.IND-CPA.html#1610" class="Function"
+      >EXP</a
+      ><a name="2256"
+      > </a
+      ><a name="2257" class="Symbol"
+      >(</a
+      ><a name="2258" href="Data.Bool.html#873" class="Function"
+      >not</a
+      ><a name="2261"
+      > </a
+      ><a name="2262" href="Game.IND-CPA.html#2214" class="Bound"
+      >b</a
+      ><a name="2263" class="Symbol"
+      >)</a
+      ><a name="2264"
+      > </a
+      ><a name="2265" href="Game.IND-CPA.html#2212" class="Bound"
+      >A</a
+      ><a name="2266"
+      > </a
+      ><a name="2267" href="Game.IND-CPA.html#1979" class="Bound Operator"
+      >&#8801;1]|</a
+      ><a name="2271"
+      >
+    </a
+      ><a name="2276" href="Game.IND-CPA.html#2188" class="Function"
+      >Advantage-unordered</a
+      ><a name="2295"
+      > </a
+      ><a name="2296" href="Game.IND-CPA.html#2296" class="Bound"
+      >A</a
+      ><a name="2297"
+      > </a
+      ><a name="2298" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="2300"
+      > </a
+      ><a name="2301" class="Symbol"
+      >=</a
+      ><a name="2302"
+      > </a
+      ><a name="2303" href="Game.IND-CPA.html#2024" class="Bound"
+      >dist-comm</a
+      ><a name="2312"
+      > </a
+      ><a name="2313" class="Symbol"
+      >_</a
+      ><a name="2314"
+      > </a
+      ><a name="2315" class="Symbol"
+      >_</a
+      ><a name="2316"
+      >
+    </a
+      ><a name="2321" href="Game.IND-CPA.html#2188" class="Function"
+      >Advantage-unordered</a
+      ><a name="2340"
+      > </a
+      ><a name="2341" href="Game.IND-CPA.html#2341" class="Bound"
+      >A</a
+      ><a name="2342"
+      > </a
+      ><a name="2343" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="2345"
+      > </a
+      ><a name="2346" class="Symbol"
+      >=</a
+      ><a name="2347"
+      > </a
+      ><a name="2348" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="2352"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

@@ -1,0 +1,1157 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Game.IND-CCA2-dagger</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1"
+      >
+</a
+      ><a name="2" class="Keyword"
+      >open</a
+      ><a name="6"
+      > </a
+      ><a name="7" class="Keyword"
+      >import</a
+      ><a name="13"
+      > </a
+      ><a name="14" href="Type.html#1" class="Module"
+      >Type</a
+      ><a name="18"
+      >
+</a
+      ><a name="19" class="Keyword"
+      >open</a
+      ><a name="23"
+      > </a
+      ><a name="24" class="Keyword"
+      >import</a
+      ><a name="30"
+      > </a
+      ><a name="31" href="Data.Bit.html#1" class="Module"
+      >Data.Bit</a
+      ><a name="39"
+      >
+</a
+      ><a name="40" class="Keyword"
+      >open</a
+      ><a name="44"
+      > </a
+      ><a name="45" class="Keyword"
+      >import</a
+      ><a name="51"
+      > </a
+      ><a name="52" href="Data.Maybe.html#1" class="Module"
+      >Data.Maybe</a
+      ><a name="62"
+      >
+</a
+      ><a name="63" class="Keyword"
+      >open</a
+      ><a name="67"
+      > </a
+      ><a name="68" class="Keyword"
+      >import</a
+      ><a name="74"
+      > </a
+      ><a name="75" href="Data.Product.html#1" class="Module"
+      >Data.Product</a
+      ><a name="87"
+      >
+
+</a
+      ><a name="89" class="Keyword"
+      >open</a
+      ><a name="93"
+      > </a
+      ><a name="94" class="Keyword"
+      >import</a
+      ><a name="100"
+      > </a
+      ><a name="101" href="Data.Nat.NP.html#1" class="Module"
+      >Data.Nat.NP</a
+      ><a name="112"
+      >
+</a
+      ><a name="113" class="Comment"
+      >--open import Rat</a
+      ><a name="130"
+      >
+
+</a
+      ><a name="132" class="Keyword"
+      >open</a
+      ><a name="136"
+      > </a
+      ><a name="137" class="Keyword"
+      >import</a
+      ><a name="143"
+      > </a
+      ><a name="144" href="Explore.Core.html#1" class="Module"
+      >Explore.Core</a
+      ><a name="156"
+      >
+</a
+      ><a name="157" class="Keyword"
+      >open</a
+      ><a name="161"
+      > </a
+      ><a name="162" class="Keyword"
+      >import</a
+      ><a name="168"
+      > </a
+      ><a name="169" href="Explore.Explorable.html#1" class="Module"
+      >Explore.Explorable</a
+      ><a name="187"
+      >
+</a
+      ><a name="188" class="Keyword"
+      >open</a
+      ><a name="192"
+      > </a
+      ><a name="193" class="Keyword"
+      >import</a
+      ><a name="199"
+      > </a
+      ><a name="200" href="Explore.Product.html#1" class="Module"
+      >Explore.Product</a
+      ><a name="215"
+      >
+</a
+      ><a name="216" class="Keyword"
+      >open</a
+      ><a name="220"
+      > </a
+      ><a name="221" href="Explore.Product.html#5183" class="Module"
+      >Operators</a
+      ><a name="230"
+      >
+</a
+      ><a name="231" class="Keyword"
+      >open</a
+      ><a name="235"
+      > </a
+      ><a name="236" class="Keyword"
+      >import</a
+      ><a name="242"
+      > </a
+      ><a name="243" href="Control.Strategy.html#1" class="Module"
+      >Control.Strategy</a
+      ><a name="259"
+      > </a
+      ><a name="260" class="Keyword"
+      >renaming</a
+      ><a name="268"
+      > </a
+      ><a name="269" class="Symbol"
+      >(</a
+      ><a name="270"
+      >run </a
+      ><a name="274" class="Symbol"
+      >to</a
+      ><a name="276"
+      > runStrategy</a
+      ><a name="288" class="Symbol"
+      >)</a
+      ><a name="289"
+      >
+</a
+      ><a name="290" class="Keyword"
+      >import</a
+      ><a name="296"
+      > </a
+      ><a name="297" href="Game.IND-CPA-utils.html#1" class="Module"
+      >Game.IND-CPA-utils</a
+      ><a name="315"
+      >
+
+</a
+      ><a name="317" class="Keyword"
+      >open</a
+      ><a name="321"
+      > </a
+      ><a name="322" class="Keyword"
+      >import</a
+      ><a name="328"
+      > </a
+      ><a name="329" href="Relation.Binary.PropositionalEquality.html#1" class="Module"
+      >Relation.Binary.PropositionalEquality</a
+      ><a name="366"
+      >
+
+</a
+      ><a name="368" class="Keyword"
+      >module</a
+      ><a name="374"
+      > </a
+      ><a name="375" href="Game.IND-CCA2-dagger.html#1" class="Module"
+      >Game.IND-CCA2-dagger</a
+      ><a name="395"
+      >
+  </a
+      ><a name="398" class="Symbol"
+      >(</a
+      ><a name="399" href="Game.IND-CCA2-dagger.html#399" class="Bound"
+      >PubKey</a
+      ><a name="405"
+      >    </a
+      ><a name="409" class="Symbol"
+      >:</a
+      ><a name="410"
+      > </a
+      ><a name="411" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="412" class="Symbol"
+      >)</a
+      ><a name="413"
+      >
+  </a
+      ><a name="416" class="Symbol"
+      >(</a
+      ><a name="417" href="Game.IND-CCA2-dagger.html#417" class="Bound"
+      >SecKey</a
+      ><a name="423"
+      >    </a
+      ><a name="427" class="Symbol"
+      >:</a
+      ><a name="428"
+      > </a
+      ><a name="429" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="430" class="Symbol"
+      >)</a
+      ><a name="431"
+      >
+  </a
+      ><a name="434" class="Symbol"
+      >(</a
+      ><a name="435" href="Game.IND-CCA2-dagger.html#435" class="Bound"
+      >Message</a
+      ><a name="442"
+      >   </a
+      ><a name="445" class="Symbol"
+      >:</a
+      ><a name="446"
+      > </a
+      ><a name="447" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="448" class="Symbol"
+      >)</a
+      ><a name="449"
+      >
+  </a
+      ><a name="452" class="Symbol"
+      >(</a
+      ><a name="453" href="Game.IND-CCA2-dagger.html#453" class="Bound"
+      >CipherText</a
+      ><a name="463"
+      > </a
+      ><a name="464" class="Symbol"
+      >:</a
+      ><a name="465"
+      > </a
+      ><a name="466" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="467" class="Symbol"
+      >)</a
+      ><a name="468"
+      >
+
+  </a
+      ><a name="472" class="Comment"
+      >-- randomness supply for, encryption, key-generation, adversary, adversary state</a
+      ><a name="552"
+      >
+  </a
+      ><a name="555" class="Symbol"
+      >(</a
+      ><a name="556" href="Game.IND-CCA2-dagger.html#556" class="Bound"
+      >R&#8337;</a
+      ><a name="558"
+      > </a
+      ><a name="559" href="Game.IND-CCA2-dagger.html#559" class="Bound"
+      >R&#8342;</a
+      ><a name="561"
+      > </a
+      ><a name="562" href="Game.IND-CCA2-dagger.html#562" class="Bound"
+      >R&#8336;</a
+      ><a name="564"
+      > </a
+      ><a name="565" class="Symbol"
+      >:</a
+      ><a name="566"
+      > </a
+      ><a name="567" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="568" class="Symbol"
+      >)</a
+      ><a name="569"
+      >
+  </a
+      ><a name="572" class="Symbol"
+      >(</a
+      ><a name="573" href="Game.IND-CCA2-dagger.html#573" class="Bound"
+      >KeyGen</a
+      ><a name="579"
+      > </a
+      ><a name="580" class="Symbol"
+      >:</a
+      ><a name="581"
+      > </a
+      ><a name="582" href="Game.IND-CCA2-dagger.html#559" class="Bound"
+      >R&#8342;</a
+      ><a name="584"
+      > </a
+      ><a name="585" class="Symbol"
+      >&#8594;</a
+      ><a name="586"
+      > </a
+      ><a name="587" href="Game.IND-CCA2-dagger.html#399" class="Bound"
+      >PubKey</a
+      ><a name="593"
+      > </a
+      ><a name="594" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="595"
+      > </a
+      ><a name="596" href="Game.IND-CCA2-dagger.html#417" class="Bound"
+      >SecKey</a
+      ><a name="602" class="Symbol"
+      >)</a
+      ><a name="603"
+      >
+  </a
+      ><a name="606" class="Symbol"
+      >(</a
+      ><a name="607" href="Game.IND-CCA2-dagger.html#607" class="Bound"
+      >Enc</a
+      ><a name="610"
+      >    </a
+      ><a name="614" class="Symbol"
+      >:</a
+      ><a name="615"
+      > </a
+      ><a name="616" href="Game.IND-CCA2-dagger.html#399" class="Bound"
+      >PubKey</a
+      ><a name="622"
+      > </a
+      ><a name="623" class="Symbol"
+      >&#8594;</a
+      ><a name="624"
+      > </a
+      ><a name="625" href="Game.IND-CCA2-dagger.html#435" class="Bound"
+      >Message</a
+      ><a name="632"
+      > </a
+      ><a name="633" class="Symbol"
+      >&#8594;</a
+      ><a name="634"
+      > </a
+      ><a name="635" href="Game.IND-CCA2-dagger.html#556" class="Bound"
+      >R&#8337;</a
+      ><a name="637"
+      > </a
+      ><a name="638" class="Symbol"
+      >&#8594;</a
+      ><a name="639"
+      > </a
+      ><a name="640" href="Game.IND-CCA2-dagger.html#453" class="Bound"
+      >CipherText</a
+      ><a name="650" class="Symbol"
+      >)</a
+      ><a name="651"
+      >
+  </a
+      ><a name="654" class="Symbol"
+      >(</a
+      ><a name="655" href="Game.IND-CCA2-dagger.html#655" class="Bound"
+      >Dec</a
+      ><a name="658"
+      >    </a
+      ><a name="662" class="Symbol"
+      >:</a
+      ><a name="663"
+      > </a
+      ><a name="664" href="Game.IND-CCA2-dagger.html#417" class="Bound"
+      >SecKey</a
+      ><a name="670"
+      > </a
+      ><a name="671" class="Symbol"
+      >&#8594;</a
+      ><a name="672"
+      > </a
+      ><a name="673" href="Game.IND-CCA2-dagger.html#453" class="Bound"
+      >CipherText</a
+      ><a name="683"
+      > </a
+      ><a name="684" class="Symbol"
+      >&#8594;</a
+      ><a name="685"
+      > </a
+      ><a name="686" href="Game.IND-CCA2-dagger.html#435" class="Bound"
+      >Message</a
+      ><a name="693" class="Symbol"
+      >)</a
+      ><a name="694"
+      >
+
+</a
+      ><a name="696" class="Keyword"
+      >where</a
+      ><a name="701"
+      >
+
+</a
+      ><a name="703" class="Keyword"
+      >open</a
+      ><a name="707"
+      > </a
+      ><a name="708" href="Game.IND-CPA-utils.html#1" class="Module"
+      >Game.IND-CPA-utils</a
+      ><a name="726"
+      > </a
+      ><a name="727" href="Game.IND-CCA2-dagger.html#435" class="Bound"
+      >Message</a
+      ><a name="734"
+      > </a
+      ><a name="735" href="Game.IND-CCA2-dagger.html#453" class="Bound"
+      >CipherText</a
+      ><a name="745"
+      >
+</a
+      ><a name="746" class="Keyword"
+      >open</a
+      ><a name="750"
+      > </a
+      ><a name="751" href="Game.IND-CPA-utils.html#282" class="Module"
+      >CPAAdversary</a
+      ><a name="763"
+      >
+
+</a
+      ><a name="765" href="Game.IND-CCA2-dagger.html#765" class="Function"
+      >Adversary</a
+      ><a name="774"
+      > </a
+      ><a name="775" class="Symbol"
+      >:</a
+      ><a name="776"
+      > </a
+      ><a name="777" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="778"
+      >
+</a
+      ><a name="779" href="Game.IND-CCA2-dagger.html#765" class="Function"
+      >Adversary</a
+      ><a name="788"
+      > </a
+      ><a name="789" class="Symbol"
+      >=</a
+      ><a name="790"
+      > </a
+      ><a name="791" href="Game.IND-CCA2-dagger.html#562" class="Bound"
+      >R&#8336;</a
+      ><a name="793"
+      > </a
+      ><a name="794" class="Symbol"
+      >&#8594;</a
+      ><a name="795"
+      > </a
+      ><a name="796" href="Game.IND-CCA2-dagger.html#399" class="Bound"
+      >PubKey</a
+      ><a name="802"
+      > </a
+      ><a name="803" class="Symbol"
+      >&#8594;</a
+      ><a name="804"
+      >
+                   </a
+      ><a name="824" href="Game.IND-CPA-utils.html#210" class="Function"
+      >DecRound</a
+      ><a name="832"
+      >              </a
+      ><a name="846" class="Comment"
+      >-- first round of decryption queries</a
+      ><a name="882"
+      >
+                     </a
+      ><a name="904" class="Symbol"
+      >(</a
+      ><a name="905" href="Game.IND-CPA-utils.html#282" class="Record"
+      >CPAAdversary</a
+      ><a name="917"
+      >       </a
+      ><a name="924" class="Comment"
+      >-- choosen plaintext attack</a
+      ><a name="951"
+      >
+                       </a
+      ><a name="975" class="Symbol"
+      >(</a
+      ><a name="976" href="Game.IND-CCA2-dagger.html#453" class="Bound"
+      >CipherText</a
+      ><a name="986"
+      > </a
+      ><a name="987" class="Symbol"
+      >&#8594;</a
+      ><a name="988"
+      >     </a
+      ><a name="993" class="Comment"
+      >-- in which a second ciphertext is provided</a
+      ><a name="1036"
+      >
+                          </a
+      ><a name="1063" href="Game.IND-CPA-utils.html#210" class="Function"
+      >DecRound</a
+      ><a name="1071"
+      > </a
+      ><a name="1072" href="Data.Bool.html#603" class="Datatype"
+      >Bit</a
+      ><a name="1075" class="Symbol"
+      >))</a
+      ><a name="1077"
+      > </a
+      ><a name="1078" class="Comment"
+      >-- second round of decryption queries</a
+      ><a name="1115"
+      >
+
+</a
+      ><a name="1117" class="Comment"
+      >{-
+Valid-Adv : Adv &#8594; Set
+Valid-Adv (m , d) = &#8704; {r&#8336; r&#8339; pk c c'} &#8594; Valid (&#955; x &#8594; x &#8802; c &#215; x &#8802; c') (d r&#8336; r&#8339; pk c c')
+-}</a
+      ><a name="1231"
+      >
+
+</a
+      ><a name="1233" href="Game.IND-CCA2-dagger.html#1233" class="Function"
+      >R</a
+      ><a name="1234"
+      > </a
+      ><a name="1235" class="Symbol"
+      >:</a
+      ><a name="1236"
+      > </a
+      ><a name="1237" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="1238"
+      >
+</a
+      ><a name="1239" href="Game.IND-CCA2-dagger.html#1233" class="Function"
+      >R</a
+      ><a name="1240"
+      > </a
+      ><a name="1241" class="Symbol"
+      >=</a
+      ><a name="1242"
+      > </a
+      ><a name="1243" href="Game.IND-CCA2-dagger.html#562" class="Bound"
+      >R&#8336;</a
+      ><a name="1245"
+      > </a
+      ><a name="1246" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="1247"
+      > </a
+      ><a name="1248" href="Game.IND-CCA2-dagger.html#559" class="Bound"
+      >R&#8342;</a
+      ><a name="1250"
+      > </a
+      ><a name="1251" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="1252"
+      > </a
+      ><a name="1253" href="Game.IND-CCA2-dagger.html#556" class="Bound"
+      >R&#8337;</a
+      ><a name="1255"
+      > </a
+      ><a name="1256" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="1257"
+      > </a
+      ><a name="1258" href="Game.IND-CCA2-dagger.html#556" class="Bound"
+      >R&#8337;</a
+      ><a name="1260"
+      >
+
+</a
+      ><a name="1262" href="Game.IND-CCA2-dagger.html#1262" class="Function"
+      >Experiment</a
+      ><a name="1272"
+      > </a
+      ><a name="1273" class="Symbol"
+      >:</a
+      ><a name="1274"
+      > </a
+      ><a name="1275" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="1276"
+      >
+</a
+      ><a name="1277" href="Game.IND-CCA2-dagger.html#1262" class="Function"
+      >Experiment</a
+      ><a name="1287"
+      > </a
+      ><a name="1288" class="Symbol"
+      >=</a
+      ><a name="1289"
+      > </a
+      ><a name="1290" href="Game.IND-CCA2-dagger.html#765" class="Function"
+      >Adversary</a
+      ><a name="1299"
+      > </a
+      ><a name="1300" class="Symbol"
+      >&#8594;</a
+      ><a name="1301"
+      > </a
+      ><a name="1302" href="Game.IND-CCA2-dagger.html#1233" class="Function"
+      >R</a
+      ><a name="1303"
+      > </a
+      ><a name="1304" class="Symbol"
+      >&#8594;</a
+      ><a name="1305"
+      > </a
+      ><a name="1306" href="Data.Bool.html#603" class="Datatype"
+      >Bit</a
+      ><a name="1309"
+      >
+
+</a
+      ><a name="1311" href="Game.IND-CCA2-dagger.html#1311" class="Function"
+      >EXP</a
+      ><a name="1314"
+      > </a
+      ><a name="1315" class="Symbol"
+      >:</a
+      ><a name="1316"
+      > </a
+      ><a name="1317" href="Data.Bool.html#603" class="Datatype"
+      >Bit</a
+      ><a name="1320"
+      > </a
+      ><a name="1321" class="Symbol"
+      >&#8594;</a
+      ><a name="1322"
+      > </a
+      ><a name="1323" href="Game.IND-CCA2-dagger.html#1262" class="Function"
+      >Experiment</a
+      ><a name="1333"
+      >
+</a
+      ><a name="1334" href="Game.IND-CCA2-dagger.html#1311" class="Function"
+      >EXP</a
+      ><a name="1337"
+      > </a
+      ><a name="1338" href="Game.IND-CCA2-dagger.html#1338" class="Bound"
+      >b</a
+      ><a name="1339"
+      > </a
+      ><a name="1340" href="Game.IND-CCA2-dagger.html#1340" class="Bound"
+      >A</a
+      ><a name="1341"
+      > </a
+      ><a name="1342" class="Symbol"
+      >(</a
+      ><a name="1343" href="Game.IND-CCA2-dagger.html#1343" class="Bound"
+      >r&#8336;</a
+      ><a name="1345"
+      > </a
+      ><a name="1346" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1347"
+      > </a
+      ><a name="1348" href="Game.IND-CCA2-dagger.html#1348" class="Bound"
+      >r&#8342;</a
+      ><a name="1350"
+      > </a
+      ><a name="1351" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1352"
+      > </a
+      ><a name="1353" href="Game.IND-CCA2-dagger.html#1353" class="Bound"
+      >r&#8337;&#8320;</a
+      ><a name="1356"
+      > </a
+      ><a name="1357" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1358"
+      > </a
+      ><a name="1359" href="Game.IND-CCA2-dagger.html#1359" class="Bound"
+      >r&#8337;&#8321;</a
+      ><a name="1362" class="Symbol"
+      >)</a
+      ><a name="1363"
+      > </a
+      ><a name="1364" class="Keyword"
+      >with</a
+      ><a name="1368"
+      > </a
+      ><a name="1369" href="Game.IND-CCA2-dagger.html#573" class="Bound"
+      >KeyGen</a
+      ><a name="1375"
+      > </a
+      ><a name="1376" href="Game.IND-CCA2-dagger.html#1348" class="Bound"
+      >r&#8342;</a
+      ><a name="1378"
+      >
+</a
+      ><a name="1379" class="Symbol"
+      >...</a
+      ><a name="1382"
+      > </a
+      ><a name="1383" class="Symbol"
+      >|</a
+      ><a name="1384"
+      > </a
+      ><a name="1385" href="Game.IND-CCA2-dagger.html#1385" class="Bound"
+      >pk</a
+      ><a name="1387"
+      > </a
+      ><a name="1388" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1389"
+      > </a
+      ><a name="1390" href="Game.IND-CCA2-dagger.html#1390" class="Bound"
+      >sk</a
+      ><a name="1392"
+      > </a
+      ><a name="1393" class="Symbol"
+      >=</a
+      ><a name="1394"
+      > </a
+      ><a name="1395" href="Game.IND-CCA2-dagger.html#1577" class="Function"
+      >b&#8242;</a
+      ><a name="1397"
+      > </a
+      ><a name="1398" class="Keyword"
+      >where</a
+      ><a name="1403"
+      >
+  </a
+      ><a name="1406" href="Game.IND-CCA2-dagger.html#1406" class="Function"
+      >decRound</a
+      ><a name="1414"
+      > </a
+      ><a name="1415" class="Symbol"
+      >=</a
+      ><a name="1416"
+      > </a
+      ><a name="1417" href="Control.Strategy.html#2221" class="Function"
+      >runStrategy</a
+      ><a name="1428"
+      > </a
+      ><a name="1429" class="Symbol"
+      >(</a
+      ><a name="1430" href="Game.IND-CCA2-dagger.html#655" class="Bound"
+      >Dec</a
+      ><a name="1433"
+      > </a
+      ><a name="1434" href="Game.IND-CCA2-dagger.html#1390" class="Bound"
+      >sk</a
+      ><a name="1436" class="Symbol"
+      >)</a
+      ><a name="1437"
+      >
+  </a
+      ><a name="1440" href="Game.IND-CCA2-dagger.html#1440" class="Function"
+      >cpaA</a
+      ><a name="1444"
+      >     </a
+      ><a name="1449" class="Symbol"
+      >=</a
+      ><a name="1450"
+      > </a
+      ><a name="1451" href="Game.IND-CCA2-dagger.html#1406" class="Function"
+      >decRound</a
+      ><a name="1459"
+      > </a
+      ><a name="1460" class="Symbol"
+      >(</a
+      ><a name="1461" href="Game.IND-CCA2-dagger.html#1340" class="Bound"
+      >A</a
+      ><a name="1462"
+      > </a
+      ><a name="1463" href="Game.IND-CCA2-dagger.html#1343" class="Bound"
+      >r&#8336;</a
+      ><a name="1465"
+      > </a
+      ><a name="1466" href="Game.IND-CCA2-dagger.html#1385" class="Bound"
+      >pk</a
+      ><a name="1468" class="Symbol"
+      >)</a
+      ><a name="1469"
+      >
+  </a
+      ><a name="1472" href="Game.IND-CCA2-dagger.html#1472" class="Function"
+      >mb</a
+      ><a name="1474"
+      >       </a
+      ><a name="1481" class="Symbol"
+      >=</a
+      ><a name="1482"
+      > </a
+      ><a name="1483" href="Data.Two.html#1897" class="Function"
+      >proj</a
+      ><a name="1487"
+      > </a
+      ><a name="1488" class="Symbol"
+      >(</a
+      ><a name="1489" href="Game.IND-CPA-utils.html#328" class="Field"
+      >get-m</a
+      ><a name="1494"
+      > </a
+      ><a name="1495" href="Game.IND-CCA2-dagger.html#1440" class="Function"
+      >cpaA</a
+      ><a name="1499" class="Symbol"
+      >)</a
+      ><a name="1500"
+      >
+  </a
+      ><a name="1503" href="Game.IND-CCA2-dagger.html#1503" class="Function"
+      >c&#8320;</a
+      ><a name="1505"
+      >       </a
+      ><a name="1512" class="Symbol"
+      >=</a
+      ><a name="1513"
+      > </a
+      ><a name="1514" href="Game.IND-CCA2-dagger.html#607" class="Bound"
+      >Enc</a
+      ><a name="1517"
+      > </a
+      ><a name="1518" href="Game.IND-CCA2-dagger.html#1385" class="Bound"
+      >pk</a
+      ><a name="1520"
+      > </a
+      ><a name="1521" class="Symbol"
+      >(</a
+      ><a name="1522" href="Game.IND-CCA2-dagger.html#1472" class="Function"
+      >mb</a
+      ><a name="1524"
+      > </a
+      ><a name="1525" href="Game.IND-CCA2-dagger.html#1338" class="Bound"
+      >b</a
+      ><a name="1526" class="Symbol"
+      >)</a
+      ><a name="1527"
+      >       </a
+      ><a name="1534" href="Game.IND-CCA2-dagger.html#1353" class="Bound"
+      >r&#8337;&#8320;</a
+      ><a name="1537"
+      >
+  </a
+      ><a name="1540" href="Game.IND-CCA2-dagger.html#1540" class="Function"
+      >c&#8321;</a
+      ><a name="1542"
+      >       </a
+      ><a name="1549" class="Symbol"
+      >=</a
+      ><a name="1550"
+      > </a
+      ><a name="1551" href="Game.IND-CCA2-dagger.html#607" class="Bound"
+      >Enc</a
+      ><a name="1554"
+      > </a
+      ><a name="1555" href="Game.IND-CCA2-dagger.html#1385" class="Bound"
+      >pk</a
+      ><a name="1557"
+      > </a
+      ><a name="1558" class="Symbol"
+      >(</a
+      ><a name="1559" href="Game.IND-CCA2-dagger.html#1472" class="Function"
+      >mb</a
+      ><a name="1561"
+      > </a
+      ><a name="1562" class="Symbol"
+      >(</a
+      ><a name="1563" href="Data.Bool.html#873" class="Function"
+      >not</a
+      ><a name="1566"
+      > </a
+      ><a name="1567" href="Game.IND-CCA2-dagger.html#1338" class="Bound"
+      >b</a
+      ><a name="1568" class="Symbol"
+      >))</a
+      ><a name="1570"
+      > </a
+      ><a name="1571" href="Game.IND-CCA2-dagger.html#1359" class="Bound"
+      >r&#8337;&#8321;</a
+      ><a name="1574"
+      >
+  </a
+      ><a name="1577" href="Game.IND-CCA2-dagger.html#1577" class="Function"
+      >b&#8242;</a
+      ><a name="1579"
+      >       </a
+      ><a name="1586" class="Symbol"
+      >=</a
+      ><a name="1587"
+      > </a
+      ><a name="1588" href="Game.IND-CCA2-dagger.html#1406" class="Function"
+      >decRound</a
+      ><a name="1596"
+      > </a
+      ><a name="1597" class="Symbol"
+      >(</a
+      ><a name="1598" href="Game.IND-CPA-utils.html#358" class="Field"
+      >put-c</a
+      ><a name="1603"
+      > </a
+      ><a name="1604" href="Game.IND-CCA2-dagger.html#1440" class="Function"
+      >cpaA</a
+      ><a name="1608"
+      > </a
+      ><a name="1609" href="Game.IND-CCA2-dagger.html#1503" class="Function"
+      >c&#8320;</a
+      ><a name="1611"
+      > </a
+      ><a name="1612" href="Game.IND-CCA2-dagger.html#1540" class="Function"
+      >c&#8321;</a
+      ><a name="1614" class="Symbol"
+      >)</a
+      ><a name="1615"
+      >
+
+</a
+      ><a name="1617" class="Keyword"
+      >module</a
+      ><a name="1623"
+      > </a
+      ><a name="1624" href="Game.IND-CCA2-dagger.html#1624" class="Module"
+      >Advantage</a
+      ><a name="1633"
+      >
+  </a
+      ><a name="1636" class="Symbol"
+      >(</a
+      ><a name="1637" href="Game.IND-CCA2-dagger.html#1637" class="Bound"
+      >&#956;&#8337;</a
+      ><a name="1639"
+      > </a
+      ><a name="1640" class="Symbol"
+      >:</a
+      ><a name="1641"
+      > </a
+      ><a name="1642" href="Explore.Core.html#707" class="Function"
+      >Explore&#8320;</a
+      ><a name="1650"
+      > </a
+      ><a name="1651" href="Game.IND-CCA2-dagger.html#556" class="Bound"
+      >R&#8337;</a
+      ><a name="1653" class="Symbol"
+      >)</a
+      ><a name="1654"
+      >
+  </a
+      ><a name="1657" class="Symbol"
+      >(</a
+      ><a name="1658" href="Game.IND-CCA2-dagger.html#1658" class="Bound"
+      >&#956;&#8342;</a
+      ><a name="1660"
+      > </a
+      ><a name="1661" class="Symbol"
+      >:</a
+      ><a name="1662"
+      > </a
+      ><a name="1663" href="Explore.Core.html#707" class="Function"
+      >Explore&#8320;</a
+      ><a name="1671"
+      > </a
+      ><a name="1672" href="Game.IND-CCA2-dagger.html#559" class="Bound"
+      >R&#8342;</a
+      ><a name="1674" class="Symbol"
+      >)</a
+      ><a name="1675"
+      >
+  </a
+      ><a name="1678" class="Symbol"
+      >(</a
+      ><a name="1679" href="Game.IND-CCA2-dagger.html#1679" class="Bound"
+      >&#956;&#8336;</a
+      ><a name="1681"
+      > </a
+      ><a name="1682" class="Symbol"
+      >:</a
+      ><a name="1683"
+      > </a
+      ><a name="1684" href="Explore.Core.html#707" class="Function"
+      >Explore&#8320;</a
+      ><a name="1692"
+      > </a
+      ><a name="1693" href="Game.IND-CCA2-dagger.html#562" class="Bound"
+      >R&#8336;</a
+      ><a name="1695" class="Symbol"
+      >)</a
+      ><a name="1696"
+      >
+  </a
+      ><a name="1699" class="Keyword"
+      >where</a
+      ><a name="1704"
+      >
+  </a
+      ><a name="1707" href="Game.IND-CCA2-dagger.html#1707" class="Function"
+      >&#956;R</a
+      ><a name="1709"
+      > </a
+      ><a name="1710" class="Symbol"
+      >:</a
+      ><a name="1711"
+      > </a
+      ><a name="1712" href="Explore.Core.html#707" class="Function"
+      >Explore&#8320;</a
+      ><a name="1720"
+      > </a
+      ><a name="1721" href="Game.IND-CCA2-dagger.html#1233" class="Function"
+      >R</a
+      ><a name="1722"
+      >
+  </a
+      ><a name="1725" href="Game.IND-CCA2-dagger.html#1707" class="Function"
+      >&#956;R</a
+      ><a name="1727"
+      > </a
+      ><a name="1728" class="Symbol"
+      >=</a
+      ><a name="1729"
+      > </a
+      ><a name="1730" href="Game.IND-CCA2-dagger.html#1679" class="Bound"
+      >&#956;&#8336;</a
+      ><a name="1732"
+      > </a
+      ><a name="1733" href="Explore.Product.html#5231" class="Function Operator"
+      >&#215;&#7497;</a
+      ><a name="1735"
+      > </a
+      ><a name="1736" href="Game.IND-CCA2-dagger.html#1658" class="Bound"
+      >&#956;&#8342;</a
+      ><a name="1738"
+      > </a
+      ><a name="1739" href="Explore.Product.html#5231" class="Function Operator"
+      >&#215;&#7497;</a
+      ><a name="1741"
+      > </a
+      ><a name="1742" href="Game.IND-CCA2-dagger.html#1637" class="Bound"
+      >&#956;&#8337;</a
+      ><a name="1744"
+      > </a
+      ><a name="1745" href="Explore.Product.html#5231" class="Function Operator"
+      >&#215;&#7497;</a
+      ><a name="1747"
+      > </a
+      ><a name="1748" href="Game.IND-CCA2-dagger.html#1637" class="Bound"
+      >&#956;&#8337;</a
+      ><a name="1750"
+      >
+  
+  </a
+      ><a name="1756" class="Keyword"
+      >module</a
+      ><a name="1762"
+      > </a
+      ><a name="1763" href="Game.IND-CCA2-dagger.html#1763" class="Module"
+      >&#956;R</a
+      ><a name="1765"
+      > </a
+      ><a name="1766" class="Symbol"
+      >=</a
+      ><a name="1767"
+      > </a
+      ><a name="1768" href="Explore.Explorable.html#2752" class="Module"
+      >FromExplore&#8320;</a
+      ><a name="1780"
+      > </a
+      ><a name="1781" href="Game.IND-CCA2-dagger.html#1707" class="Function"
+      >&#956;R</a
+      ><a name="1783"
+      >
+  
+  </a
+      ><a name="1789" href="Game.IND-CCA2-dagger.html#1789" class="Function"
+      >run</a
+      ><a name="1792"
+      > </a
+      ><a name="1793" class="Symbol"
+      >:</a
+      ><a name="1794"
+      > </a
+      ><a name="1795" href="Data.Bool.html#603" class="Datatype"
+      >Bit</a
+      ><a name="1798"
+      > </a
+      ><a name="1799" class="Symbol"
+      >&#8594;</a
+      ><a name="1800"
+      > </a
+      ><a name="1801" href="Game.IND-CCA2-dagger.html#765" class="Function"
+      >Adversary</a
+      ><a name="1810"
+      > </a
+      ><a name="1811" class="Symbol"
+      >&#8594;</a
+      ><a name="1812"
+      > </a
+      ><a name="1813" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="1814"
+      >
+  </a
+      ><a name="1817" href="Game.IND-CCA2-dagger.html#1789" class="Function"
+      >run</a
+      ><a name="1820"
+      > </a
+      ><a name="1821" href="Game.IND-CCA2-dagger.html#1821" class="Bound"
+      >b</a
+      ><a name="1822"
+      > </a
+      ><a name="1823" href="Game.IND-CCA2-dagger.html#1823" class="Bound"
+      >adv</a
+      ><a name="1826"
+      > </a
+      ><a name="1827" class="Symbol"
+      >=</a
+      ><a name="1828"
+      > </a
+      ><a name="1829" href="Explore.Explorable.html#2900" class="Function"
+      >&#956;R.count</a
+      ><a name="1837"
+      > </a
+      ><a name="1838" class="Symbol"
+      >(</a
+      ><a name="1839" href="Game.IND-CCA2-dagger.html#1311" class="Function"
+      >EXP</a
+      ><a name="1842"
+      > </a
+      ><a name="1843" href="Game.IND-CCA2-dagger.html#1821" class="Bound"
+      >b</a
+      ><a name="1844"
+      > </a
+      ><a name="1845" href="Game.IND-CCA2-dagger.html#1823" class="Bound"
+      >adv</a
+      ><a name="1848" class="Symbol"
+      >)</a
+      ><a name="1849"
+      >
+    
+  </a
+      ><a name="1857" class="Comment"
+      >{-
+  Advantage : Adv &#8594; &#8474;
+  Advantage adv = dist (run 0b adv) (run 1b adv) / &#956;R.Card
+  -}</a
+      ><a name="1945"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

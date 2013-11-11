@@ -1,0 +1,252 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Data.Char.NP</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Symbol"
+      >{-#</a
+      ><a name="4"
+      > </a
+      ><a name="5" class="Keyword"
+      >OPTIONS</a
+      ><a name="12"
+      > --without-K </a
+      ><a name="25" class="Symbol"
+      >#-}</a
+      ><a name="28"
+      >
+</a
+      ><a name="29" class="Keyword"
+      >module</a
+      ><a name="35"
+      > </a
+      ><a name="36" href="Data.Char.NP.html#1" class="Module"
+      >Data.Char.NP</a
+      ><a name="48"
+      > </a
+      ><a name="49" class="Keyword"
+      >where</a
+      ><a name="54"
+      >
+
+</a
+      ><a name="56" class="Keyword"
+      >open</a
+      ><a name="60"
+      > </a
+      ><a name="61" class="Keyword"
+      >import</a
+      ><a name="67"
+      > </a
+      ><a name="68" href="Data.Char.html#1" class="Module"
+      >Data.Char</a
+      ><a name="77"
+      > </a
+      ><a name="78" class="Keyword"
+      >public</a
+      ><a name="84"
+      >
+</a
+      ><a name="85" class="Keyword"
+      >open</a
+      ><a name="89"
+      > </a
+      ><a name="90" class="Keyword"
+      >import</a
+      ><a name="96"
+      > </a
+      ><a name="97" href="Data.List.html#1" class="Module"
+      >Data.List</a
+      ><a name="106"
+      >
+</a
+      ><a name="107" class="Keyword"
+      >open</a
+      ><a name="111"
+      > </a
+      ><a name="112" class="Keyword"
+      >import</a
+      ><a name="118"
+      > </a
+      ><a name="119" href="Data.Bool.html#1" class="Module"
+      >Data.Bool</a
+      ><a name="128"
+      >
+</a
+      ><a name="129" class="Keyword"
+      >open</a
+      ><a name="133"
+      > </a
+      ><a name="134" class="Keyword"
+      >import</a
+      ><a name="140"
+      > </a
+      ><a name="141" href="Function.html#1" class="Module"
+      >Function</a
+      ><a name="149"
+      >
+
+</a
+      ><a name="151" href="Data.Char.NP.html#151" class="Function"
+      >notElem</a
+      ><a name="158"
+      > </a
+      ><a name="159" class="Symbol"
+      >:</a
+      ><a name="160"
+      > </a
+      ><a name="161" href="Data.Char.html#692" class="Postulate"
+      >Char</a
+      ><a name="165"
+      > </a
+      ><a name="166" class="Symbol"
+      >&#8594;</a
+      ><a name="167"
+      > </a
+      ><a name="168" href="Data.List.html#659" class="Datatype"
+      >List</a
+      ><a name="172"
+      > </a
+      ><a name="173" href="Data.Char.html#692" class="Postulate"
+      >Char</a
+      ><a name="177"
+      > </a
+      ><a name="178" class="Symbol"
+      >&#8594;</a
+      ><a name="179"
+      > </a
+      ><a name="180" href="Data.Bool.html#603" class="Datatype"
+      >Bool</a
+      ><a name="184"
+      >
+</a
+      ><a name="185" href="Data.Char.NP.html#151" class="Function"
+      >notElem</a
+      ><a name="192"
+      > </a
+      ><a name="193" href="Data.Char.NP.html#193" class="Bound"
+      >c</a
+      ><a name="194"
+      > </a
+      ><a name="195" class="Symbol"
+      >=</a
+      ><a name="196"
+      > </a
+      ><a name="197" href="Data.List.html#1273" class="Function"
+      >null</a
+      ><a name="201"
+      > </a
+      ><a name="202" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="203"
+      > </a
+      ><a name="204" href="Data.List.html#6303" class="Function"
+      >filter</a
+      ><a name="210"
+      > </a
+      ><a name="211" class="Symbol"
+      >(</a
+      ><a name="212" href="Data.Char.html#1450" class="Function Operator"
+      >_==_</a
+      ><a name="216"
+      > </a
+      ><a name="217" href="Data.Char.NP.html#193" class="Bound"
+      >c</a
+      ><a name="218" class="Symbol"
+      >)</a
+      ><a name="219"
+      >
+
+</a
+      ><a name="221" class="Keyword"
+      >syntax</a
+      ><a name="227"
+      > notElem c cs </a
+      ><a name="241" class="Symbol"
+      >=</a
+      ><a name="242"
+      > c `notElem` cs
+
+</a
+      ><a name="259" href="Data.Char.NP.html#259" class="Function"
+      >elem</a
+      ><a name="263"
+      > </a
+      ><a name="264" class="Symbol"
+      >:</a
+      ><a name="265"
+      > </a
+      ><a name="266" href="Data.Char.html#692" class="Postulate"
+      >Char</a
+      ><a name="270"
+      > </a
+      ><a name="271" class="Symbol"
+      >&#8594;</a
+      ><a name="272"
+      > </a
+      ><a name="273" href="Data.List.html#659" class="Datatype"
+      >List</a
+      ><a name="277"
+      > </a
+      ><a name="278" href="Data.Char.html#692" class="Postulate"
+      >Char</a
+      ><a name="282"
+      > </a
+      ><a name="283" class="Symbol"
+      >&#8594;</a
+      ><a name="284"
+      > </a
+      ><a name="285" href="Data.Bool.html#603" class="Datatype"
+      >Bool</a
+      ><a name="289"
+      >
+</a
+      ><a name="290" href="Data.Char.NP.html#259" class="Function"
+      >elem</a
+      ><a name="294"
+      > </a
+      ><a name="295" href="Data.Char.NP.html#295" class="Bound"
+      >c</a
+      ><a name="296"
+      > </a
+      ><a name="297" class="Symbol"
+      >=</a
+      ><a name="298"
+      > </a
+      ><a name="299" href="Data.Bool.html#873" class="Function"
+      >not</a
+      ><a name="302"
+      > </a
+      ><a name="303" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="304"
+      > </a
+      ><a name="305" href="Data.Char.NP.html#151" class="Function"
+      >notElem</a
+      ><a name="312"
+      > </a
+      ><a name="313" href="Data.Char.NP.html#295" class="Bound"
+      >c</a
+      ><a name="314"
+      >
+
+</a
+      ><a name="316" class="Keyword"
+      >syntax</a
+      ><a name="322"
+      > elem c cs </a
+      ><a name="333" class="Symbol"
+      >=</a
+      ><a name="334"
+      > c `elem` cs
+</a
+      ></pre
+    ></body
+  ></html
+>

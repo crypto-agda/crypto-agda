@@ -1,0 +1,4137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >FunUniverse.Cost</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Comment"
+      >-- NOTE with-K</a
+      ><a name="15"
+      >
+</a
+      ><a name="16" class="Keyword"
+      >module</a
+      ><a name="22"
+      > </a
+      ><a name="23" href="FunUniverse.Cost.html#1" class="Module"
+      >FunUniverse.Cost</a
+      ><a name="39"
+      > </a
+      ><a name="40" class="Keyword"
+      >where</a
+      ><a name="45"
+      >
+
+</a
+      ><a name="47" class="Keyword"
+      >open</a
+      ><a name="51"
+      > </a
+      ><a name="52" class="Keyword"
+      >import</a
+      ><a name="58"
+      > </a
+      ><a name="59" href="Data.Nat.NP.html#1" class="Module"
+      >Data.Nat.NP</a
+      ><a name="70"
+      > </a
+      ><a name="71" class="Keyword"
+      >using</a
+      ><a name="76"
+      > </a
+      ><a name="77" class="Symbol"
+      >(</a
+      ><a name="78"
+      >&#8469;</a
+      ><a name="79" class="Symbol"
+      >;</a
+      ><a name="80"
+      > zero</a
+      ><a name="85" class="Symbol"
+      >;</a
+      ><a name="86"
+      > suc</a
+      ><a name="90" class="Symbol"
+      >;</a
+      ><a name="91"
+      > _+_</a
+      ><a name="95" class="Symbol"
+      >;</a
+      ><a name="96"
+      > _*_</a
+      ><a name="100" class="Symbol"
+      >;</a
+      ><a name="101"
+      > 2*_</a
+      ><a name="105" class="Symbol"
+      >;</a
+      ><a name="106"
+      > 2^_</a
+      ><a name="110" class="Symbol"
+      >;</a
+      ><a name="111"
+      > _^_</a
+      ><a name="115" class="Symbol"
+      >;</a
+      ><a name="116"
+      > _&#8852;_</a
+      ><a name="120" class="Symbol"
+      >;</a
+      ><a name="121"
+      > </a
+      ><a name="122" class="Keyword"
+      >module</a
+      ><a name="128"
+      > &#8469;&#176;</a
+      ><a name="131" class="Symbol"
+      >;</a
+      ><a name="132"
+      > </a
+      ><a name="133" class="Keyword"
+      >module</a
+      ><a name="139"
+      > &#8852;&#176;</a
+      ><a name="142" class="Symbol"
+      >;</a
+      ><a name="143"
+      > 2*&#8242;_</a
+      ><a name="148" class="Symbol"
+      >)</a
+      ><a name="149"
+      >
+</a
+      ><a name="150" class="Keyword"
+      >open</a
+      ><a name="154"
+      > </a
+      ><a name="155" class="Keyword"
+      >import</a
+      ><a name="161"
+      > </a
+      ><a name="162" href="Data.Bool.html#1" class="Module"
+      >Data.Bool</a
+      ><a name="171"
+      > </a
+      ><a name="172" class="Keyword"
+      >using</a
+      ><a name="177"
+      > </a
+      ><a name="178" class="Symbol"
+      >(</a
+      ><a name="179"
+      >true</a
+      ><a name="183" class="Symbol"
+      >;</a
+      ><a name="184"
+      > false</a
+      ><a name="190" class="Symbol"
+      >)</a
+      ><a name="191"
+      >
+</a
+      ><a name="192" class="Keyword"
+      >open</a
+      ><a name="196"
+      > </a
+      ><a name="197" class="Keyword"
+      >import</a
+      ><a name="203"
+      > </a
+      ><a name="204" href="Data.One.html#1" class="Module"
+      >Data.One</a
+      ><a name="212"
+      >
+</a
+      ><a name="213" class="Keyword"
+      >import</a
+      ><a name="219"
+      > </a
+      ><a name="220" href="Data.DifferenceNat.html#1" class="Module"
+      >Data.DifferenceNat</a
+      ><a name="238"
+      >
+</a
+      ><a name="239" class="Keyword"
+      >import</a
+      ><a name="245"
+      > </a
+      ><a name="246" href="Data.Vec.NP.html#1" class="Module"
+      >Data.Vec.NP</a
+      ><a name="257"
+      > </a
+      ><a name="258" class="Symbol"
+      >as</a
+      ><a name="260"
+      > </a
+      ><a name="261" class="Module"
+      >V</a
+      ><a name="262"
+      >
+</a
+      ><a name="263" class="Keyword"
+      >import</a
+      ><a name="269"
+      > </a
+      ><a name="270" href="Function.html#1" class="Module"
+      >Function</a
+      ><a name="278"
+      > </a
+      ><a name="279" class="Symbol"
+      >as</a
+      ><a name="281"
+      > </a
+      ><a name="282" class="Module"
+      >F</a
+      ><a name="283"
+      >
+</a
+      ><a name="284" class="Keyword"
+      >import</a
+      ><a name="290"
+      > </a
+      ><a name="291" href="Data.Product.html#1" class="Module"
+      >Data.Product</a
+      ><a name="303"
+      > </a
+      ><a name="304" class="Symbol"
+      >as</a
+      ><a name="306"
+      > </a
+      ><a name="307" class="Module"
+      >&#215;</a
+      ><a name="308"
+      >
+</a
+      ><a name="309" class="Keyword"
+      >import</a
+      ><a name="315"
+      > </a
+      ><a name="316" href="Relation.Binary.PropositionalEquality.html#1" class="Module"
+      >Relation.Binary.PropositionalEquality</a
+      ><a name="353"
+      > </a
+      ><a name="354" class="Symbol"
+      >as</a
+      ><a name="356"
+      > </a
+      ><a name="357" class="Module"
+      >&#8801;</a
+      ><a name="358"
+      >
+</a
+      ><a name="359" class="Keyword"
+      >open</a
+      ><a name="363"
+      > </a
+      ><a name="364" href="Function.html#1" class="Module"
+      >F</a
+      ><a name="365"
+      > </a
+      ><a name="366" class="Keyword"
+      >using</a
+      ><a name="371"
+      > </a
+      ><a name="372" class="Symbol"
+      >(</a
+      ><a name="373"
+      >const</a
+      ><a name="378" class="Symbol"
+      >;</a
+      ><a name="379"
+      > _&#8728;&#8242;_</a
+      ><a name="384" class="Symbol"
+      >)</a
+      ><a name="385"
+      >
+</a
+      ><a name="386" class="Keyword"
+      >open</a
+      ><a name="390"
+      > </a
+      ><a name="391" href="Data.Vec.NP.html#1" class="Module"
+      >V</a
+      ><a name="392"
+      > </a
+      ><a name="393" class="Keyword"
+      >using</a
+      ><a name="398"
+      > </a
+      ><a name="399" class="Symbol"
+      >(</a
+      ><a name="400"
+      >Vec</a
+      ><a name="403" class="Symbol"
+      >;</a
+      ><a name="404"
+      > []</a
+      ><a name="407" class="Symbol"
+      >;</a
+      ><a name="408"
+      > _&#8759;_</a
+      ><a name="412" class="Symbol"
+      >;</a
+      ><a name="413"
+      > _++_</a
+      ><a name="418" class="Symbol"
+      >;</a
+      ><a name="419"
+      > [_]</a
+      ><a name="423" class="Symbol"
+      >)</a
+      ><a name="424"
+      >
+</a
+      ><a name="425" class="Keyword"
+      >open</a
+      ><a name="429"
+      > </a
+      ><a name="430" href="Data.Product.html#1" class="Module"
+      >&#215;</a
+      ><a name="431"
+      > </a
+      ><a name="432" class="Keyword"
+      >using</a
+      ><a name="437"
+      > </a
+      ><a name="438" class="Symbol"
+      >(</a
+      ><a name="439"
+      >_&#215;_</a
+      ><a name="442" class="Symbol"
+      >)</a
+      ><a name="443"
+      >
+</a
+      ><a name="444" class="Keyword"
+      >open</a
+      ><a name="448"
+      > </a
+      ><a name="449" href="Relation.Binary.PropositionalEquality.html#1" class="Module"
+      >&#8801;</a
+      ><a name="450"
+      > </a
+      ><a name="451" class="Keyword"
+      >using</a
+      ><a name="456"
+      > </a
+      ><a name="457" class="Symbol"
+      >(</a
+      ><a name="458"
+      >_&#8801;_</a
+      ><a name="461" class="Symbol"
+      >;</a
+      ><a name="462"
+      > _&#8791;_</a
+      ><a name="466" class="Symbol"
+      >)</a
+      ><a name="467"
+      >
+</a
+      ><a name="468" class="Keyword"
+      >open</a
+      ><a name="472"
+      > </a
+      ><a name="473" class="Keyword"
+      >import</a
+      ><a name="479"
+      > </a
+      ><a name="480" href="Level.NP.html#1" class="Module"
+      >Level.NP</a
+      ><a name="488"
+      > </a
+      ><a name="489" class="Keyword"
+      >hiding</a
+      ><a name="495"
+      > </a
+      ><a name="496" class="Symbol"
+      >(</a
+      ><a name="497"
+      >_&#8852;_</a
+      ><a name="500" class="Symbol"
+      >)</a
+      ><a name="501"
+      >
+
+</a
+      ><a name="503" class="Keyword"
+      >open</a
+      ><a name="507"
+      > </a
+      ><a name="508" class="Keyword"
+      >import</a
+      ><a name="514"
+      > </a
+      ><a name="515" href="Data.Bits.html#1" class="Module"
+      >Data.Bits</a
+      ><a name="524"
+      > </a
+      ><a name="525" class="Keyword"
+      >using</a
+      ><a name="530"
+      > </a
+      ><a name="531" class="Symbol"
+      >(</a
+      ><a name="532"
+      >Bits</a
+      ><a name="536" class="Symbol"
+      >;</a
+      ><a name="537"
+      > 0&#8759;_</a
+      ><a name="541" class="Symbol"
+      >;</a
+      ><a name="542"
+      > 1&#8759;_</a
+      ><a name="546" class="Symbol"
+      >;</a
+      ><a name="547"
+      > _&#8594;&#7495;_</a
+      ><a name="552" class="Symbol"
+      >)</a
+      ><a name="553"
+      >
+
+</a
+      ><a name="555" class="Keyword"
+      >open</a
+      ><a name="559"
+      > </a
+      ><a name="560" class="Keyword"
+      >import</a
+      ><a name="566"
+      > </a
+      ><a name="567" href="FunUniverse.Core.html#1" class="Module"
+      >FunUniverse.Core</a
+      ><a name="583"
+      >
+</a
+      ><a name="584" class="Keyword"
+      >open</a
+      ><a name="588"
+      > </a
+      ><a name="589" class="Keyword"
+      >import</a
+      ><a name="595"
+      > </a
+      ><a name="596" href="FunUniverse.Category.html#1" class="Module"
+      >FunUniverse.Category</a
+      ><a name="616"
+      >
+</a
+      ><a name="617" class="Keyword"
+      >open</a
+      ><a name="621"
+      > </a
+      ><a name="622" class="Keyword"
+      >import</a
+      ><a name="628"
+      > </a
+      ><a name="629" href="FunUniverse.Rewiring.Linear.html#1" class="Module"
+      >FunUniverse.Rewiring.Linear</a
+      ><a name="656"
+      >
+</a
+      ><a name="657" class="Keyword"
+      >open</a
+      ><a name="661"
+      > </a
+      ><a name="662" class="Keyword"
+      >import</a
+      ><a name="668"
+      > </a
+      ><a name="669" href="FunUniverse.Const.html#1" class="Module"
+      >FunUniverse.Const</a
+      ><a name="686"
+      >
+
+</a
+      ><a name="688" class="Keyword"
+      >module</a
+      ><a name="694"
+      > </a
+      ><a name="695" href="FunUniverse.Cost.html#695" class="Module"
+      >D</a
+      ><a name="696"
+      > </a
+      ><a name="697" class="Keyword"
+      >where</a
+      ><a name="702"
+      >
+  </a
+      ><a name="705" class="Keyword"
+      >open</a
+      ><a name="709"
+      > </a
+      ><a name="710" href="Data.DifferenceNat.html#1" class="Module"
+      >Data.DifferenceNat</a
+      ><a name="728"
+      > </a
+      ><a name="729" class="Keyword"
+      >public</a
+      ><a name="735"
+      > </a
+      ><a name="736" class="Keyword"
+      >renaming</a
+      ><a name="744"
+      > </a
+      ><a name="745" class="Symbol"
+      >(</a
+      ><a name="746"
+      >suc </a
+      ><a name="750" class="Symbol"
+      >to</a
+      ><a name="752"
+      > suc#</a
+      ><a name="757" class="Symbol"
+      >;</a
+      ><a name="758"
+      > _+_ </a
+      ><a name="763" class="Symbol"
+      >to</a
+      ><a name="765"
+      > _+#_</a
+      ><a name="770" class="Symbol"
+      >)</a
+      ><a name="771"
+      >
+  </a
+      ><a name="774" href="FunUniverse.Cost.html#774" class="Function Operator"
+      >_*#_</a
+      ><a name="778"
+      > </a
+      ><a name="779" class="Symbol"
+      >:</a
+      ><a name="780"
+      > </a
+      ><a name="781" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="782"
+      > </a
+      ><a name="783" class="Symbol"
+      >&#8594;</a
+      ><a name="784"
+      > </a
+      ><a name="785" href="Data.DifferenceNat.html#364" class="Function"
+      >Diff&#8469;</a
+      ><a name="790"
+      > </a
+      ><a name="791" class="Symbol"
+      >&#8594;</a
+      ><a name="792"
+      > </a
+      ><a name="793" href="Data.DifferenceNat.html#364" class="Function"
+      >Diff&#8469;</a
+      ><a name="798"
+      >
+  </a
+      ><a name="801" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="805"
+      >  </a
+      ><a name="807" href="FunUniverse.Cost.html#774" class="Function Operator"
+      >*#</a
+      ><a name="809"
+      > </a
+      ><a name="810" href="FunUniverse.Cost.html#810" class="Bound"
+      >d</a
+      ><a name="811"
+      > </a
+      ><a name="812" class="Symbol"
+      >=</a
+      ><a name="813"
+      > </a
+      ><a name="814" href="Data.DifferenceNat.html#391" class="Function"
+      >0#</a
+      ><a name="816"
+      >
+  </a
+      ><a name="819" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="822"
+      > </a
+      ><a name="823" href="FunUniverse.Cost.html#823" class="Bound"
+      >n</a
+      ><a name="824"
+      > </a
+      ><a name="825" href="FunUniverse.Cost.html#774" class="Function Operator"
+      >*#</a
+      ><a name="827"
+      > </a
+      ><a name="828" href="FunUniverse.Cost.html#828" class="Bound"
+      >d</a
+      ><a name="829"
+      > </a
+      ><a name="830" class="Symbol"
+      >=</a
+      ><a name="831"
+      > </a
+      ><a name="832" class="Symbol"
+      >(</a
+      ><a name="833" href="FunUniverse.Cost.html#823" class="Bound"
+      >n</a
+      ><a name="834"
+      > </a
+      ><a name="835" href="FunUniverse.Cost.html#774" class="Function Operator"
+      >*#</a
+      ><a name="837"
+      > </a
+      ><a name="838" href="FunUniverse.Cost.html#828" class="Bound"
+      >d</a
+      ><a name="839" class="Symbol"
+      >)</a
+      ><a name="840"
+      > </a
+      ><a name="841" href="Data.DifferenceNat.html#487" class="Function Operator"
+      >+#</a
+      ><a name="843"
+      > </a
+      ><a name="844" href="FunUniverse.Cost.html#828" class="Bound"
+      >d</a
+      ><a name="845"
+      >
+  </a
+      ><a name="848" href="FunUniverse.Cost.html#848" class="Function Operator"
+      >_*#&#8242;_</a
+      ><a name="853"
+      > </a
+      ><a name="854" class="Symbol"
+      >:</a
+      ><a name="855"
+      > </a
+      ><a name="856" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="857"
+      > </a
+      ><a name="858" class="Symbol"
+      >&#8594;</a
+      ><a name="859"
+      > </a
+      ><a name="860" href="Data.DifferenceNat.html#364" class="Function"
+      >Diff&#8469;</a
+      ><a name="865"
+      > </a
+      ><a name="866" class="Symbol"
+      >&#8594;</a
+      ><a name="867"
+      > </a
+      ><a name="868" href="Data.DifferenceNat.html#364" class="Function"
+      >Diff&#8469;</a
+      ><a name="873"
+      >
+  </a
+      ><a name="876" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="880"
+      >  </a
+      ><a name="882" href="FunUniverse.Cost.html#848" class="Function Operator"
+      >*#&#8242;</a
+      ><a name="885"
+      > </a
+      ><a name="886" href="FunUniverse.Cost.html#886" class="Bound"
+      >d</a
+      ><a name="887"
+      > </a
+      ><a name="888" class="Symbol"
+      >=</a
+      ><a name="889"
+      > </a
+      ><a name="890" href="Data.DifferenceNat.html#391" class="Function"
+      >0#</a
+      ><a name="892"
+      >
+  </a
+      ><a name="895" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="898"
+      > </a
+      ><a name="899" href="FunUniverse.Cost.html#899" class="Bound"
+      >n</a
+      ><a name="900"
+      > </a
+      ><a name="901" href="FunUniverse.Cost.html#848" class="Function Operator"
+      >*#&#8242;</a
+      ><a name="904"
+      > </a
+      ><a name="905" href="FunUniverse.Cost.html#905" class="Bound"
+      >d</a
+      ><a name="906"
+      > </a
+      ><a name="907" class="Symbol"
+      >=</a
+      ><a name="908"
+      > </a
+      ><a name="909" href="FunUniverse.Cost.html#905" class="Bound"
+      >d</a
+      ><a name="910"
+      > </a
+      ><a name="911" href="Data.DifferenceNat.html#487" class="Function Operator"
+      >+#</a
+      ><a name="913"
+      > </a
+      ><a name="914" class="Symbol"
+      >(</a
+      ><a name="915" href="FunUniverse.Cost.html#899" class="Bound"
+      >n</a
+      ><a name="916"
+      > </a
+      ><a name="917" href="FunUniverse.Cost.html#848" class="Function Operator"
+      >*#&#8242;</a
+      ><a name="920"
+      > </a
+      ><a name="921" href="FunUniverse.Cost.html#905" class="Bound"
+      >d</a
+      ><a name="922" class="Symbol"
+      >)</a
+      ><a name="923"
+      >
+  </a
+      ><a name="926" href="FunUniverse.Cost.html#926" class="Function Operator"
+      >2*#_</a
+      ><a name="930"
+      > </a
+      ><a name="931" class="Symbol"
+      >:</a
+      ><a name="932"
+      > </a
+      ><a name="933" href="Data.DifferenceNat.html#364" class="Function"
+      >Diff&#8469;</a
+      ><a name="938"
+      > </a
+      ><a name="939" class="Symbol"
+      >&#8594;</a
+      ><a name="940"
+      > </a
+      ><a name="941" href="Data.DifferenceNat.html#364" class="Function"
+      >Diff&#8469;</a
+      ><a name="946"
+      >
+  </a
+      ><a name="949" href="FunUniverse.Cost.html#926" class="Function Operator"
+      >2*#</a
+      ><a name="952"
+      > </a
+      ><a name="953" href="FunUniverse.Cost.html#953" class="Bound"
+      >n</a
+      ><a name="954"
+      > </a
+      ><a name="955" class="Symbol"
+      >=</a
+      ><a name="956"
+      > </a
+      ><a name="957" href="FunUniverse.Cost.html#953" class="Bound"
+      >n</a
+      ><a name="958"
+      > </a
+      ><a name="959" href="Data.DifferenceNat.html#487" class="Function Operator"
+      >+#</a
+      ><a name="961"
+      > </a
+      ><a name="962" href="FunUniverse.Cost.html#953" class="Bound"
+      >n</a
+      ><a name="963"
+      >
+  </a
+      ><a name="966" href="FunUniverse.Cost.html#966" class="Function Operator"
+      >2^#_</a
+      ><a name="970"
+      > </a
+      ><a name="971" class="Symbol"
+      >:</a
+      ><a name="972"
+      > </a
+      ><a name="973" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="974"
+      > </a
+      ><a name="975" class="Symbol"
+      >&#8594;</a
+      ><a name="976"
+      > </a
+      ><a name="977" href="Data.DifferenceNat.html#364" class="Function"
+      >Diff&#8469;</a
+      ><a name="982"
+      >
+  </a
+      ><a name="985" href="FunUniverse.Cost.html#966" class="Function Operator"
+      >2^#</a
+      ><a name="988"
+      > </a
+      ><a name="989" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="993"
+      > </a
+      ><a name="994" class="Symbol"
+      >=</a
+      ><a name="995"
+      > </a
+      ><a name="996" href="Data.DifferenceNat.html#463" class="Function"
+      >1#</a
+      ><a name="998"
+      >
+  </a
+      ><a name="1001" href="FunUniverse.Cost.html#966" class="Function Operator"
+      >2^#</a
+      ><a name="1004"
+      > </a
+      ><a name="1005" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="1008"
+      > </a
+      ><a name="1009" href="FunUniverse.Cost.html#1009" class="Bound"
+      >n</a
+      ><a name="1010"
+      > </a
+      ><a name="1011" class="Symbol"
+      >=</a
+      ><a name="1012"
+      > </a
+      ><a name="1013" href="FunUniverse.Cost.html#926" class="Function Operator"
+      >2*#</a
+      ><a name="1016"
+      > </a
+      ><a name="1017" class="Symbol"
+      >(</a
+      ><a name="1018" href="FunUniverse.Cost.html#966" class="Function Operator"
+      >2^#</a
+      ><a name="1021"
+      > </a
+      ><a name="1022" href="FunUniverse.Cost.html#1009" class="Bound"
+      >n</a
+      ><a name="1023" class="Symbol"
+      >)</a
+      ><a name="1024"
+      >
+  </a
+      ><a name="1027" href="FunUniverse.Cost.html#1027" class="Function Operator"
+      >1+_+_D</a
+      ><a name="1033"
+      > </a
+      ><a name="1034" class="Symbol"
+      >:</a
+      ><a name="1035"
+      > </a
+      ><a name="1036" href="Data.DifferenceNat.html#364" class="Function"
+      >Diff&#8469;</a
+      ><a name="1041"
+      > </a
+      ><a name="1042" class="Symbol"
+      >&#8594;</a
+      ><a name="1043"
+      > </a
+      ><a name="1044" href="Data.DifferenceNat.html#364" class="Function"
+      >Diff&#8469;</a
+      ><a name="1049"
+      > </a
+      ><a name="1050" class="Symbol"
+      >&#8594;</a
+      ><a name="1051"
+      > </a
+      ><a name="1052" href="Data.DifferenceNat.html#364" class="Function"
+      >Diff&#8469;</a
+      ><a name="1057"
+      >
+  </a
+      ><a name="1060" href="FunUniverse.Cost.html#1027" class="Function Operator"
+      >1+</a
+      ><a name="1062"
+      > </a
+      ><a name="1063" href="FunUniverse.Cost.html#1063" class="Bound"
+      >x</a
+      ><a name="1064"
+      > </a
+      ><a name="1065" href="FunUniverse.Cost.html#1027" class="Function Operator"
+      >+</a
+      ><a name="1066"
+      > </a
+      ><a name="1067" href="FunUniverse.Cost.html#1067" class="Bound"
+      >y</a
+      ><a name="1068"
+      > </a
+      ><a name="1069" href="FunUniverse.Cost.html#1027" class="Function Operator"
+      >D</a
+      ><a name="1070"
+      > </a
+      ><a name="1071" class="Symbol"
+      >=</a
+      ><a name="1072"
+      > </a
+      ><a name="1073" href="Data.DifferenceNat.html#463" class="Function"
+      >1#</a
+      ><a name="1075"
+      > </a
+      ><a name="1076" href="Function.html#898" class="Function Operator"
+      >&#8728;&#8242;</a
+      ><a name="1078"
+      > </a
+      ><a name="1079" class="Symbol"
+      >(</a
+      ><a name="1080" href="FunUniverse.Cost.html#1063" class="Bound"
+      >x</a
+      ><a name="1081"
+      > </a
+      ><a name="1082" href="Function.html#898" class="Function Operator"
+      >&#8728;&#8242;</a
+      ><a name="1084"
+      > </a
+      ><a name="1085" href="FunUniverse.Cost.html#1067" class="Bound"
+      >y</a
+      ><a name="1086" class="Symbol"
+      >)</a
+      ><a name="1087"
+      >
+</a
+      ><a name="1088" class="Keyword"
+      >open</a
+      ><a name="1092"
+      > </a
+      ><a name="1093" href="FunUniverse.Cost.html#695" class="Module"
+      >D</a
+      ><a name="1094"
+      > </a
+      ><a name="1095" class="Keyword"
+      >using</a
+      ><a name="1100"
+      > </a
+      ><a name="1101" class="Symbol"
+      >(</a
+      ><a name="1102"
+      >Diff&#8469;</a
+      ><a name="1107" class="Symbol"
+      >)</a
+      ><a name="1108"
+      >
+
+</a
+      ><a name="1110" class="Keyword"
+      >private</a
+      ><a name="1117"
+      >
+  </a
+      ><a name="1120" href="FunUniverse.Cost.html#1120" class="Function Operator"
+      >1+_+_</a
+      ><a name="1125"
+      > </a
+      ><a name="1126" class="Symbol"
+      >:</a
+      ><a name="1127"
+      > </a
+      ><a name="1128" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="1129"
+      > </a
+      ><a name="1130" class="Symbol"
+      >&#8594;</a
+      ><a name="1131"
+      > </a
+      ><a name="1132" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="1133"
+      > </a
+      ><a name="1134" class="Symbol"
+      >&#8594;</a
+      ><a name="1135"
+      > </a
+      ><a name="1136" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="1137"
+      >
+  </a
+      ><a name="1140" href="FunUniverse.Cost.html#1120" class="Function Operator"
+      >1+</a
+      ><a name="1142"
+      > </a
+      ><a name="1143" href="FunUniverse.Cost.html#1143" class="Bound"
+      >x</a
+      ><a name="1144"
+      > </a
+      ><a name="1145" href="FunUniverse.Cost.html#1120" class="Function Operator"
+      >+</a
+      ><a name="1146"
+      > </a
+      ><a name="1147" href="FunUniverse.Cost.html#1147" class="Bound"
+      >y</a
+      ><a name="1148"
+      > </a
+      ><a name="1149" class="Symbol"
+      >=</a
+      ><a name="1150"
+      > </a
+      ><a name="1151" class="Number"
+      >1</a
+      ><a name="1152"
+      > </a
+      ><a name="1153" href="Data.Nat.html#2239" class="Primitive Operator"
+      >+</a
+      ><a name="1154"
+      > </a
+      ><a name="1155" class="Symbol"
+      >(</a
+      ><a name="1156" href="FunUniverse.Cost.html#1143" class="Bound"
+      >x</a
+      ><a name="1157"
+      > </a
+      ><a name="1158" href="Data.Nat.html#2239" class="Primitive Operator"
+      >+</a
+      ><a name="1159"
+      > </a
+      ><a name="1160" href="FunUniverse.Cost.html#1147" class="Bound"
+      >y</a
+      ><a name="1161" class="Symbol"
+      >)</a
+      ><a name="1162"
+      >
+  </a
+      ><a name="1165" href="FunUniverse.Cost.html#1165" class="Function Operator"
+      >1+_&#8852;_</a
+      ><a name="1170"
+      > </a
+      ><a name="1171" class="Symbol"
+      >:</a
+      ><a name="1172"
+      > </a
+      ><a name="1173" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="1174"
+      > </a
+      ><a name="1175" class="Symbol"
+      >&#8594;</a
+      ><a name="1176"
+      > </a
+      ><a name="1177" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="1178"
+      > </a
+      ><a name="1179" class="Symbol"
+      >&#8594;</a
+      ><a name="1180"
+      > </a
+      ><a name="1181" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="1182"
+      >
+  </a
+      ><a name="1185" href="FunUniverse.Cost.html#1165" class="Function Operator"
+      >1+</a
+      ><a name="1187"
+      > </a
+      ><a name="1188" href="FunUniverse.Cost.html#1188" class="Bound"
+      >x</a
+      ><a name="1189"
+      > </a
+      ><a name="1190" href="FunUniverse.Cost.html#1165" class="Function Operator"
+      >&#8852;</a
+      ><a name="1191"
+      > </a
+      ><a name="1192" href="FunUniverse.Cost.html#1192" class="Bound"
+      >y</a
+      ><a name="1193"
+      > </a
+      ><a name="1194" class="Symbol"
+      >=</a
+      ><a name="1195"
+      > </a
+      ><a name="1196" class="Number"
+      >1</a
+      ><a name="1197"
+      > </a
+      ><a name="1198" href="Data.Nat.html#2239" class="Primitive Operator"
+      >+</a
+      ><a name="1199"
+      > </a
+      ><a name="1200" class="Symbol"
+      >(</a
+      ><a name="1201" href="FunUniverse.Cost.html#1188" class="Bound"
+      >x</a
+      ><a name="1202"
+      > </a
+      ><a name="1203" href="Data.Nat.html#2639" class="Function Operator"
+      >&#8852;</a
+      ><a name="1204"
+      > </a
+      ><a name="1205" href="FunUniverse.Cost.html#1192" class="Bound"
+      >y</a
+      ><a name="1206" class="Symbol"
+      >)</a
+      ><a name="1207"
+      >
+  </a
+      ><a name="1210" href="FunUniverse.Cost.html#1210" class="Function"
+      >i&#8852;i&#8801;i</a
+      ><a name="1215"
+      > </a
+      ><a name="1216" class="Symbol"
+      >:</a
+      ><a name="1217"
+      > </a
+      ><a name="1218" class="Symbol"
+      >&#8704;</a
+      ><a name="1219"
+      > </a
+      ><a name="1220" href="FunUniverse.Cost.html#1220" class="Bound"
+      >i</a
+      ><a name="1221"
+      > </a
+      ><a name="1222" class="Symbol"
+      >&#8594;</a
+      ><a name="1223"
+      > </a
+      ><a name="1224" href="FunUniverse.Cost.html#1220" class="Bound"
+      >i</a
+      ><a name="1225"
+      > </a
+      ><a name="1226" href="Data.Nat.html#2639" class="Function Operator"
+      >&#8852;</a
+      ><a name="1227"
+      > </a
+      ><a name="1228" href="FunUniverse.Cost.html#1220" class="Bound"
+      >i</a
+      ><a name="1229"
+      > </a
+      ><a name="1230" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="1231"
+      > </a
+      ><a name="1232" href="FunUniverse.Cost.html#1220" class="Bound"
+      >i</a
+      ><a name="1233"
+      >
+  </a
+      ><a name="1236" href="FunUniverse.Cost.html#1210" class="Function"
+      >i&#8852;i&#8801;i</a
+      ><a name="1241"
+      > </a
+      ><a name="1242" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="1246"
+      > </a
+      ><a name="1247" class="Symbol"
+      >=</a
+      ><a name="1248"
+      > </a
+      ><a name="1249" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >&#8801;.refl</a
+      ><a name="1255"
+      >
+  </a
+      ><a name="1258" href="FunUniverse.Cost.html#1210" class="Function"
+      >i&#8852;i&#8801;i</a
+      ><a name="1263"
+      > </a
+      ><a name="1264" class="Symbol"
+      >(</a
+      ><a name="1265" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="1268"
+      > </a
+      ><a name="1269" href="FunUniverse.Cost.html#1269" class="Bound"
+      >i</a
+      ><a name="1270" class="Symbol"
+      >)</a
+      ><a name="1271"
+      > </a
+      ><a name="1272" class="Symbol"
+      >=</a
+      ><a name="1273"
+      > </a
+      ><a name="1274" href="Relation.Binary.PropositionalEquality.html#1034" class="Function"
+      >&#8801;.cong</a
+      ><a name="1280"
+      > </a
+      ><a name="1281" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="1284"
+      > </a
+      ><a name="1285" class="Symbol"
+      >(</a
+      ><a name="1286" href="FunUniverse.Cost.html#1210" class="Function"
+      >i&#8852;i&#8801;i</a
+      ><a name="1291"
+      > </a
+      ><a name="1292" href="FunUniverse.Cost.html#1269" class="Bound"
+      >i</a
+      ><a name="1293" class="Symbol"
+      >)</a
+      ><a name="1294"
+      >
+
+</a
+      ><a name="1296" class="Comment"
+      >{-
+seqTimeOpsD : FunOps (constFuns Diff&#8469;)
+seqTimeOpsD = record {
+            id = 0#; _&#8728;_ = _&#8728;&#8242;_;
+            &lt;0&#8322;&gt; = 0#; &lt;1&#8322;&gt; = 0#; cond = 1#; fork = 1+_+_D; tt = 0#;
+            &lt;_,_&gt; = _&#8728;&#8242;_; fst = 0#; snd = 0#;
+            dup = 0#; first = F.id; swap = 0#; assoc = 0#;
+            &lt;tt,id&gt; = 0#; snd&lt;tt,&gt; = 0#;
+            &lt;_&#215;_&gt; = _&#8728;&#8242;_; second = F.id;
+            &lt;[]&gt; = 0#; &lt;&#8759;&gt; = 0#; uncons = 0# }
+            where open D
+
+module SeqTimeOpsD where
+  Time = Diff&#8469;
+  open D
+  open FunOps seqTimeOpsD public
+
+  snoc&#8801;0 : &#8704; n &#8594; snoc {n} &#8791; 0#
+  snoc&#8801;0 zero x = &#8801;.refl
+  snoc&#8801;0 (suc n) x rewrite snoc&#8801;0 n x = &#8801;.refl
+
+  reverse&#8801;0 : &#8704; n &#8594; reverse {n} &#8791; 0#
+  reverse&#8801;0 zero x = &#8801;.refl
+  reverse&#8801;0 (suc n) x rewrite reverse&#8801;0 n x | snoc&#8801;0 n x = &#8801;.refl
+
+  replicate&#8801;0 : &#8704; n &#8594; replicate {n} &#8791; 0#
+  replicate&#8801;0 zero = &#955; _ &#8594; &#8801;.refl
+  replicate&#8801;0 (suc n) = replicate&#8801;0 n
+
+  constBit&#8801;0 : &#8704; b &#8594; constBit b &#8791; 0#
+  constBit&#8801;0 true  {-1&#8322;-} _ = &#8801;.refl
+  constBit&#8801;0 false {-0&#8322;-} _ = &#8801;.refl
+
+  sum&#8242; : &#8704; {n} &#8594; Vec Diff&#8469; n &#8594; Diff&#8469;
+  sum&#8242; = V.foldr (const Diff&#8469;) _&#8728;&#8242;_ id
+
+  constVec&#8801;sum : &#8704; {n b} {B : Set b} (f : B &#8594; Time) xs &#8594; constVec {n} f xs &#8791; sum&#8242; (V.map f xs)
+  constVec&#8801;sum f [] x = &#8801;.refl
+  constVec&#8801;sum {suc n} f (b &#8759; bs) x rewrite &#8469;&#176;.+-comm (f b x &#8852; constVec f bs x) 0
+                                          | constVec&#8801;sum f bs x = &#8801;.refl
+
+  constBits&#8801;0 : &#8704; {n} xs &#8594; constBits {n} xs &#8791; 0#
+  constBits&#8801;0 [] x = &#8801;.refl
+  constBits&#8801;0 {suc n} (b &#8759; bs) x rewrite constBits&#8801;0 bs x
+                                       | constBit&#8801;0 b x = &#8801;.refl
+
+  foldl&#8801;* : &#8704; m n &#8594; foldl {m} n &#8791; m *# n
+  foldl&#8801;* zero    n x = &#8801;.refl
+  foldl&#8801;* (suc m) n x rewrite foldl&#8801;* m n (n x) = &#8801;.refl
+
+  foldr&#8801;* : &#8704; m n &#8594; foldr {m} n &#8791; m *#&#8242; n
+  foldr&#8801;* zero    n x = &#8801;.refl
+  foldr&#8801;* (suc m) n x rewrite foldr&#8801;* m n x = &#8801;.refl
+
+  #nodes : &#8704; i &#8594; Diff&#8469;
+  #nodes zero    = 0#
+  #nodes (suc i) = 1# +# #nodes i +# #nodes i
+
+  fromBitsFun&#8801; : &#8704; {i o} (f : i &#8594;&#7495; o) &#8594; fromBitsFun f &#8791; #nodes i
+  fromBitsFun&#8801; {zero} f x = constBits&#8801;0 (f []) x
+  fromBitsFun&#8801; {suc i} f x rewrite fromBitsFun&#8801; {i} (f &#8728;&#8242; 1&#8759;_) x
+                                 | fromBitsFun&#8801; {i} (f &#8728;&#8242; 0&#8759;_) (#nodes i x) = &#8801;.refl
+-}</a
+      ><a name="3443"
+      >
+
+</a
+      ><a name="3445" href="FunUniverse.Cost.html#3445" class="Function"
+      >Time</a
+      ><a name="3449"
+      > </a
+      ><a name="3450" class="Symbol"
+      >=</a
+      ><a name="3451"
+      > </a
+      ><a name="3452" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="3453"
+      >
+</a
+      ><a name="3454" href="FunUniverse.Cost.html#3454" class="Function"
+      >TimeCost</a
+      ><a name="3462"
+      > </a
+      ><a name="3463" class="Symbol"
+      >=</a
+      ><a name="3464"
+      > </a
+      ><a name="3465" href="FunUniverse.Const.html#170" class="Function"
+      >constFuns</a
+      ><a name="3474"
+      > </a
+      ><a name="3475" href="FunUniverse.Cost.html#3445" class="Function"
+      >Time</a
+      ><a name="3479"
+      >
+</a
+      ><a name="3480" href="FunUniverse.Cost.html#3480" class="Function"
+      >Space</a
+      ><a name="3485"
+      > </a
+      ><a name="3486" class="Symbol"
+      >=</a
+      ><a name="3487"
+      > </a
+      ><a name="3488" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="3489"
+      >
+</a
+      ><a name="3490" href="FunUniverse.Cost.html#3490" class="Function"
+      >SpaceCost</a
+      ><a name="3499"
+      > </a
+      ><a name="3500" class="Symbol"
+      >=</a
+      ><a name="3501"
+      > </a
+      ><a name="3502" href="FunUniverse.Const.html#170" class="Function"
+      >constFuns</a
+      ><a name="3511"
+      > </a
+      ><a name="3512" href="FunUniverse.Cost.html#3480" class="Function"
+      >Space</a
+      ><a name="3517"
+      >
+
+</a
+      ><a name="3519" href="FunUniverse.Cost.html#3519" class="Function"
+      >seqTimeCat</a
+      ><a name="3529"
+      > </a
+      ><a name="3530" class="Symbol"
+      >:</a
+      ><a name="3531"
+      > </a
+      ><a name="3532" href="FunUniverse.Category.html#556" class="Record"
+      >Category</a
+      ><a name="3540"
+      > </a
+      ><a name="3541" class="Symbol"
+      >{</a
+      ><a name="3542" href="Agda.Prim.html#268" class="Primitive"
+      >&#8320;</a
+      ><a name="3543" class="Symbol"
+      >}</a
+      ><a name="3544"
+      > </a
+      ><a name="3545" class="Symbol"
+      >{</a
+      ><a name="3546" href="Agda.Prim.html#268" class="Primitive"
+      >&#8320;</a
+      ><a name="3547" class="Symbol"
+      >}</a
+      ><a name="3548"
+      > </a
+      ><a name="3549" class="Symbol"
+      >{</a
+      ><a name="3550" href="Data.Unit.html#653" class="Record"
+      >&#120793;</a
+      ><a name="3551" class="Symbol"
+      >}</a
+      ><a name="3552"
+      > </a
+      ><a name="3553" class="Symbol"
+      >(&#955;</a
+      ><a name="3555"
+      > </a
+      ><a name="3556" href="FunUniverse.Cost.html#3556" class="Bound"
+      >_</a
+      ><a name="3557"
+      > </a
+      ><a name="3558" href="FunUniverse.Cost.html#3558" class="Bound"
+      >_</a
+      ><a name="3559"
+      > </a
+      ><a name="3560" class="Symbol"
+      >&#8594;</a
+      ><a name="3561"
+      > </a
+      ><a name="3562" href="FunUniverse.Cost.html#3445" class="Function"
+      >Time</a
+      ><a name="3566" class="Symbol"
+      >)</a
+      ><a name="3567"
+      >
+</a
+      ><a name="3568" href="FunUniverse.Cost.html#3519" class="Function"
+      >seqTimeCat</a
+      ><a name="3578"
+      > </a
+      ><a name="3579" class="Symbol"
+      >=</a
+      ><a name="3580"
+      > </a
+      ><a name="3581" class="Number"
+      >0</a
+      ><a name="3582"
+      > </a
+      ><a name="3583" href="FunUniverse.Category.html#597" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="3584"
+      > </a
+      ><a name="3585" href="Data.Nat.html#2239" class="Primitive Operator"
+      >_+_</a
+      ><a name="3588"
+      >
+
+</a
+      ><a name="3590" href="FunUniverse.Cost.html#3590" class="Function"
+      >seqTimeLin</a
+      ><a name="3600"
+      > </a
+      ><a name="3601" class="Symbol"
+      >:</a
+      ><a name="3602"
+      > </a
+      ><a name="3603" href="FunUniverse.Rewiring.Linear.html#377" class="Record"
+      >LinRewiring</a
+      ><a name="3614"
+      > </a
+      ><a name="3615" href="FunUniverse.Cost.html#3454" class="Function"
+      >TimeCost</a
+      ><a name="3623"
+      >
+</a
+      ><a name="3624" href="FunUniverse.Cost.html#3590" class="Function"
+      >seqTimeLin</a
+      ><a name="3634"
+      > </a
+      ><a name="3635" class="Symbol"
+      >=</a
+      ><a name="3636"
+      >
+  </a
+      ><a name="3639" class="Keyword"
+      >record</a
+      ><a name="3645"
+      > </a
+      ><a name="3646" class="Symbol"
+      >{</a
+      ><a name="3647"
+      >
+    </a
+      ><a name="3652" class="Field"
+      >cat</a
+      ><a name="3655"
+      > </a
+      ><a name="3656" class="Symbol"
+      >=</a
+      ><a name="3657"
+      > </a
+      ><a name="3658" href="FunUniverse.Cost.html#3519" class="Function"
+      >seqTimeCat</a
+      ><a name="3668" class="Symbol"
+      >;</a
+      ><a name="3669"
+      >
+    </a
+      ><a name="3674" class="Field"
+      >first</a
+      ><a name="3679"
+      > </a
+      ><a name="3680" class="Symbol"
+      >=</a
+      ><a name="3681"
+      > </a
+      ><a name="3682" href="Function.html#1006" class="Function"
+      >F.id</a
+      ><a name="3686" class="Symbol"
+      >;</a
+      ><a name="3687"
+      >
+    </a
+      ><a name="3692" class="Field"
+      >swap</a
+      ><a name="3696"
+      > </a
+      ><a name="3697" class="Symbol"
+      >=</a
+      ><a name="3698"
+      > </a
+      ><a name="3699" class="Number"
+      >0</a
+      ><a name="3700" class="Symbol"
+      >;</a
+      ><a name="3701"
+      >
+    </a
+      ><a name="3706" class="Field"
+      >assoc</a
+      ><a name="3711"
+      > </a
+      ><a name="3712" class="Symbol"
+      >=</a
+      ><a name="3713"
+      > </a
+      ><a name="3714" class="Number"
+      >0</a
+      ><a name="3715" class="Symbol"
+      >;</a
+      ><a name="3716"
+      >
+    </a
+      ><a name="3721" class="Field"
+      >&lt;tt,id&gt;</a
+      ><a name="3728"
+      > </a
+      ><a name="3729" class="Symbol"
+      >=</a
+      ><a name="3730"
+      > </a
+      ><a name="3731" class="Number"
+      >0</a
+      ><a name="3732" class="Symbol"
+      >;</a
+      ><a name="3733"
+      >
+    </a
+      ><a name="3738" class="Field"
+      >snd&lt;tt,&gt;</a
+      ><a name="3746"
+      > </a
+      ><a name="3747" class="Symbol"
+      >=</a
+      ><a name="3748"
+      > </a
+      ><a name="3749" class="Number"
+      >0</a
+      ><a name="3750" class="Symbol"
+      >;</a
+      ><a name="3751"
+      >
+    </a
+      ><a name="3756" class="Field Operator"
+      >&lt;_&#215;_&gt;</a
+      ><a name="3761"
+      > </a
+      ><a name="3762" class="Symbol"
+      >=</a
+      ><a name="3763"
+      > </a
+      ><a name="3764" href="Data.Nat.html#2239" class="Primitive Operator"
+      >_+_</a
+      ><a name="3767" class="Symbol"
+      >;</a
+      ><a name="3768"
+      >
+    </a
+      ><a name="3773" class="Field"
+      >second</a
+      ><a name="3779"
+      > </a
+      ><a name="3780" class="Symbol"
+      >=</a
+      ><a name="3781"
+      > </a
+      ><a name="3782" href="Function.html#1006" class="Function"
+      >F.id</a
+      ><a name="3786" class="Symbol"
+      >;</a
+      ><a name="3787"
+      >
+    </a
+      ><a name="3792" class="Field"
+      >tt&#8594;[]</a
+      ><a name="3797"
+      > </a
+      ><a name="3798" class="Symbol"
+      >=</a
+      ><a name="3799"
+      > </a
+      ><a name="3800" class="Number"
+      >0</a
+      ><a name="3801" class="Symbol"
+      >;</a
+      ><a name="3802"
+      >
+    </a
+      ><a name="3807" class="Field"
+      >[]&#8594;tt</a
+      ><a name="3812"
+      > </a
+      ><a name="3813" class="Symbol"
+      >=</a
+      ><a name="3814"
+      > </a
+      ><a name="3815" class="Number"
+      >0</a
+      ><a name="3816" class="Symbol"
+      >;</a
+      ><a name="3817"
+      >
+    </a
+      ><a name="3822" class="Field"
+      >&lt;&#8759;&gt;</a
+      ><a name="3825"
+      > </a
+      ><a name="3826" class="Symbol"
+      >=</a
+      ><a name="3827"
+      > </a
+      ><a name="3828" class="Number"
+      >0</a
+      ><a name="3829" class="Symbol"
+      >;</a
+      ><a name="3830"
+      >
+    </a
+      ><a name="3835" class="Field"
+      >uncons</a
+      ><a name="3841"
+      > </a
+      ><a name="3842" class="Symbol"
+      >=</a
+      ><a name="3843"
+      > </a
+      ><a name="3844" class="Number"
+      >0</a
+      ><a name="3845"
+      > </a
+      ><a name="3846" class="Symbol"
+      >}</a
+      ><a name="3847"
+      >
+
+</a
+      ><a name="3849" href="FunUniverse.Cost.html#3849" class="Function"
+      >seqTimeRewiring</a
+      ><a name="3864"
+      > </a
+      ><a name="3865" class="Symbol"
+      >:</a
+      ><a name="3866"
+      > </a
+      ><a name="3867" href="FunUniverse.Core.html#2100" class="Record"
+      >Rewiring</a
+      ><a name="3875"
+      > </a
+      ><a name="3876" href="FunUniverse.Cost.html#3454" class="Function"
+      >TimeCost</a
+      ><a name="3884"
+      >
+</a
+      ><a name="3885" href="FunUniverse.Cost.html#3849" class="Function"
+      >seqTimeRewiring</a
+      ><a name="3900"
+      > </a
+      ><a name="3901" class="Symbol"
+      >=</a
+      ><a name="3902"
+      >
+  </a
+      ><a name="3905" class="Keyword"
+      >record</a
+      ><a name="3911"
+      > </a
+      ><a name="3912" class="Symbol"
+      >{</a
+      ><a name="3913"
+      >
+    </a
+      ><a name="3918" class="Field"
+      >linRewiring</a
+      ><a name="3929"
+      > </a
+      ><a name="3930" class="Symbol"
+      >=</a
+      ><a name="3931"
+      > </a
+      ><a name="3932" href="FunUniverse.Cost.html#3590" class="Function"
+      >seqTimeLin</a
+      ><a name="3942" class="Symbol"
+      >;</a
+      ><a name="3943"
+      >
+    </a
+      ><a name="3948" class="Field"
+      >tt</a
+      ><a name="3950"
+      > </a
+      ><a name="3951" class="Symbol"
+      >=</a
+      ><a name="3952"
+      > </a
+      ><a name="3953" class="Number"
+      >0</a
+      ><a name="3954" class="Symbol"
+      >;</a
+      ><a name="3955"
+      >
+    </a
+      ><a name="3960" class="Field"
+      >dup</a
+      ><a name="3963"
+      > </a
+      ><a name="3964" class="Symbol"
+      >=</a
+      ><a name="3965"
+      > </a
+      ><a name="3966" class="Number"
+      >0</a
+      ><a name="3967" class="Symbol"
+      >;</a
+      ><a name="3968"
+      >
+    </a
+      ><a name="3973" class="Field"
+      >&lt;[]&gt;</a
+      ><a name="3977"
+      > </a
+      ><a name="3978" class="Symbol"
+      >=</a
+      ><a name="3979"
+      > </a
+      ><a name="3980" class="Number"
+      >0</a
+      ><a name="3981" class="Symbol"
+      >;</a
+      ><a name="3982"
+      >
+    </a
+      ><a name="3987" class="Field Operator"
+      >&lt;_,_&gt;</a
+      ><a name="3992"
+      > </a
+      ><a name="3993" class="Symbol"
+      >=</a
+      ><a name="3994"
+      > </a
+      ><a name="3995" href="Data.Nat.html#2239" class="Primitive Operator"
+      >_+_</a
+      ><a name="3998" class="Symbol"
+      >;</a
+      ><a name="3999"
+      >
+    </a
+      ><a name="4004" class="Field"
+      >fst</a
+      ><a name="4007"
+      > </a
+      ><a name="4008" class="Symbol"
+      >=</a
+      ><a name="4009"
+      > </a
+      ><a name="4010" class="Number"
+      >0</a
+      ><a name="4011" class="Symbol"
+      >;</a
+      ><a name="4012"
+      >
+    </a
+      ><a name="4017" class="Field"
+      >snd</a
+      ><a name="4020"
+      > </a
+      ><a name="4021" class="Symbol"
+      >=</a
+      ><a name="4022"
+      > </a
+      ><a name="4023" class="Number"
+      >0</a
+      ><a name="4024" class="Symbol"
+      >;</a
+      ><a name="4025"
+      >
+    </a
+      ><a name="4030" class="Field"
+      >rewire</a
+      ><a name="4036"
+      > </a
+      ><a name="4037" class="Symbol"
+      >=</a
+      ><a name="4038"
+      > </a
+      ><a name="4039" href="Function.html#1047" class="Function"
+      >const</a
+      ><a name="4044"
+      > </a
+      ><a name="4045" class="Number"
+      >0</a
+      ><a name="4046" class="Symbol"
+      >;</a
+      ><a name="4047"
+      >
+    </a
+      ><a name="4052" class="Field"
+      >rewireTbl</a
+      ><a name="4061"
+      > </a
+      ><a name="4062" class="Symbol"
+      >=</a
+      ><a name="4063"
+      > </a
+      ><a name="4064" href="Function.html#1047" class="Function"
+      >const</a
+      ><a name="4069"
+      > </a
+      ><a name="4070" class="Number"
+      >0</a
+      ><a name="4071"
+      > </a
+      ><a name="4072" class="Symbol"
+      >}</a
+      ><a name="4073"
+      >
+
+</a
+      ><a name="4075" href="FunUniverse.Cost.html#4075" class="Function"
+      >seqTimeFork</a
+      ><a name="4086"
+      > </a
+      ><a name="4087" class="Symbol"
+      >:</a
+      ><a name="4088"
+      > </a
+      ><a name="4089" href="FunUniverse.Core.html#1138" class="Record"
+      >HasFork</a
+      ><a name="4096"
+      > </a
+      ><a name="4097" href="FunUniverse.Cost.html#3454" class="Function"
+      >TimeCost</a
+      ><a name="4105"
+      >
+</a
+      ><a name="4106" href="FunUniverse.Cost.html#4075" class="Function"
+      >seqTimeFork</a
+      ><a name="4117"
+      > </a
+      ><a name="4118" class="Symbol"
+      >=</a
+      ><a name="4119"
+      > </a
+      ><a name="4120" class="Keyword"
+      >record</a
+      ><a name="4126"
+      > </a
+      ><a name="4127" class="Symbol"
+      >{</a
+      ><a name="4128"
+      > </a
+      ><a name="4129" class="Field"
+      >cond</a
+      ><a name="4133"
+      > </a
+      ><a name="4134" class="Symbol"
+      >=</a
+      ><a name="4135"
+      > </a
+      ><a name="4136" class="Number"
+      >1</a
+      ><a name="4137" class="Symbol"
+      >;</a
+      ><a name="4138"
+      > </a
+      ><a name="4139" class="Field"
+      >fork</a
+      ><a name="4143"
+      > </a
+      ><a name="4144" class="Symbol"
+      >=</a
+      ><a name="4145"
+      > </a
+      ><a name="4146" href="FunUniverse.Cost.html#1120" class="Function Operator"
+      >1+_+_</a
+      ><a name="4151"
+      > </a
+      ><a name="4152" class="Symbol"
+      >}</a
+      ><a name="4153"
+      >
+
+</a
+      ><a name="4155" href="FunUniverse.Cost.html#4155" class="Function"
+      >seqTimeOps</a
+      ><a name="4165"
+      > </a
+      ><a name="4166" class="Symbol"
+      >:</a
+      ><a name="4167"
+      > </a
+      ><a name="4168" href="FunUniverse.Core.html#3911" class="Record"
+      >FunOps</a
+      ><a name="4174"
+      > </a
+      ><a name="4175" href="FunUniverse.Cost.html#3454" class="Function"
+      >TimeCost</a
+      ><a name="4183"
+      >
+</a
+      ><a name="4184" href="FunUniverse.Cost.html#4155" class="Function"
+      >seqTimeOps</a
+      ><a name="4194"
+      > </a
+      ><a name="4195" class="Symbol"
+      >=</a
+      ><a name="4196"
+      > </a
+      ><a name="4197" class="Keyword"
+      >record</a
+      ><a name="4203"
+      > </a
+      ><a name="4204" class="Symbol"
+      >{</a
+      ><a name="4205"
+      > </a
+      ><a name="4206" class="Field"
+      >rewiring</a
+      ><a name="4214"
+      > </a
+      ><a name="4215" class="Symbol"
+      >=</a
+      ><a name="4216"
+      > </a
+      ><a name="4217" href="FunUniverse.Cost.html#3849" class="Function"
+      >seqTimeRewiring</a
+      ><a name="4232" class="Symbol"
+      >;</a
+      ><a name="4233"
+      > </a
+      ><a name="4234" class="Field"
+      >hasFork</a
+      ><a name="4241"
+      > </a
+      ><a name="4242" class="Symbol"
+      >=</a
+      ><a name="4243"
+      > </a
+      ><a name="4244" href="FunUniverse.Cost.html#4075" class="Function"
+      >seqTimeFork</a
+      ><a name="4255" class="Symbol"
+      >;</a
+      ><a name="4256"
+      >
+                      </a
+      ><a name="4279" class="Field"
+      >&lt;0&#8322;&gt;</a
+      ><a name="4283"
+      > </a
+      ><a name="4284" class="Symbol"
+      >=</a
+      ><a name="4285"
+      > </a
+      ><a name="4286" class="Number"
+      >0</a
+      ><a name="4287" class="Symbol"
+      >;</a
+      ><a name="4288"
+      > </a
+      ><a name="4289" class="Field"
+      >&lt;1&#8322;&gt;</a
+      ><a name="4293"
+      > </a
+      ><a name="4294" class="Symbol"
+      >=</a
+      ><a name="4295"
+      > </a
+      ><a name="4296" class="Number"
+      >0</a
+      ><a name="4297"
+      > </a
+      ><a name="4298" class="Symbol"
+      >}</a
+      ><a name="4299"
+      >
+
+</a
+      ><a name="4301" href="FunUniverse.Cost.html#4301" class="Function"
+      >seqTimeBij</a
+      ><a name="4311"
+      > </a
+      ><a name="4312" class="Symbol"
+      >:</a
+      ><a name="4313"
+      > </a
+      ><a name="4314" href="FunUniverse.Core.html#1898" class="Record"
+      >Bijective</a
+      ><a name="4323"
+      > </a
+      ><a name="4324" href="FunUniverse.Cost.html#3454" class="Function"
+      >TimeCost</a
+      ><a name="4332"
+      >
+</a
+      ><a name="4333" href="FunUniverse.Cost.html#4301" class="Function"
+      >seqTimeBij</a
+      ><a name="4343"
+      > </a
+      ><a name="4344" class="Symbol"
+      >=</a
+      ><a name="4345"
+      > </a
+      ><a name="4346" href="FunUniverse.Core.html#4852" class="Function"
+      >FunOps.bijective</a
+      ><a name="4362"
+      > </a
+      ><a name="4363" href="FunUniverse.Cost.html#4155" class="Function"
+      >seqTimeOps</a
+      ><a name="4373"
+      >
+
+</a
+      ><a name="4375" href="FunUniverse.Cost.html#4375" class="Function"
+      >timeCat</a
+      ><a name="4382"
+      > </a
+      ><a name="4383" class="Symbol"
+      >:</a
+      ><a name="4384"
+      > </a
+      ><a name="4385" href="FunUniverse.Category.html#556" class="Record"
+      >Category</a
+      ><a name="4393"
+      > </a
+      ><a name="4394" class="Symbol"
+      >(&#955;</a
+      ><a name="4396"
+      > </a
+      ><a name="4397" href="FunUniverse.Cost.html#4397" class="Bound"
+      >_</a
+      ><a name="4398"
+      > </a
+      ><a name="4399" href="FunUniverse.Cost.html#4399" class="Bound"
+      >_</a
+      ><a name="4400"
+      > </a
+      ><a name="4401" class="Symbol"
+      >&#8594;</a
+      ><a name="4402"
+      > </a
+      ><a name="4403" href="FunUniverse.Cost.html#3445" class="Function"
+      >Time</a
+      ><a name="4407" class="Symbol"
+      >)</a
+      ><a name="4408"
+      >
+</a
+      ><a name="4409" href="FunUniverse.Cost.html#4375" class="Function"
+      >timeCat</a
+      ><a name="4416"
+      > </a
+      ><a name="4417" class="Symbol"
+      >=</a
+      ><a name="4418"
+      > </a
+      ><a name="4419" href="FunUniverse.Cost.html#3519" class="Function"
+      >seqTimeCat</a
+      ><a name="4429"
+      >
+
+</a
+      ><a name="4431" href="FunUniverse.Cost.html#4431" class="Function"
+      >timeLin</a
+      ><a name="4438"
+      > </a
+      ><a name="4439" class="Symbol"
+      >:</a
+      ><a name="4440"
+      > </a
+      ><a name="4441" href="FunUniverse.Rewiring.Linear.html#377" class="Record"
+      >LinRewiring</a
+      ><a name="4452"
+      > </a
+      ><a name="4453" href="FunUniverse.Cost.html#3454" class="Function"
+      >TimeCost</a
+      ><a name="4461"
+      >
+</a
+      ><a name="4462" href="FunUniverse.Cost.html#4431" class="Function"
+      >timeLin</a
+      ><a name="4469"
+      > </a
+      ><a name="4470" class="Symbol"
+      >=</a
+      ><a name="4471"
+      >
+  </a
+      ><a name="4474" class="Keyword"
+      >record</a
+      ><a name="4480"
+      > </a
+      ><a name="4481" class="Symbol"
+      >{</a
+      ><a name="4482"
+      >
+    </a
+      ><a name="4487" class="Field"
+      >cat</a
+      ><a name="4490"
+      > </a
+      ><a name="4491" class="Symbol"
+      >=</a
+      ><a name="4492"
+      > </a
+      ><a name="4493" href="FunUniverse.Cost.html#4375" class="Function"
+      >timeCat</a
+      ><a name="4500" class="Symbol"
+      >;</a
+      ><a name="4501"
+      >
+    </a
+      ><a name="4506" class="Field"
+      >first</a
+      ><a name="4511"
+      > </a
+      ><a name="4512" class="Symbol"
+      >=</a
+      ><a name="4513"
+      > </a
+      ><a name="4514" href="Function.html#1006" class="Function"
+      >F.id</a
+      ><a name="4518" class="Symbol"
+      >;</a
+      ><a name="4519"
+      >
+    </a
+      ><a name="4524" class="Field"
+      >swap</a
+      ><a name="4528"
+      > </a
+      ><a name="4529" class="Symbol"
+      >=</a
+      ><a name="4530"
+      > </a
+      ><a name="4531" class="Number"
+      >0</a
+      ><a name="4532" class="Symbol"
+      >;</a
+      ><a name="4533"
+      >
+    </a
+      ><a name="4538" class="Field"
+      >assoc</a
+      ><a name="4543"
+      > </a
+      ><a name="4544" class="Symbol"
+      >=</a
+      ><a name="4545"
+      > </a
+      ><a name="4546" class="Number"
+      >0</a
+      ><a name="4547" class="Symbol"
+      >;</a
+      ><a name="4548"
+      >
+    </a
+      ><a name="4553" class="Field"
+      >&lt;tt,id&gt;</a
+      ><a name="4560"
+      > </a
+      ><a name="4561" class="Symbol"
+      >=</a
+      ><a name="4562"
+      > </a
+      ><a name="4563" class="Number"
+      >0</a
+      ><a name="4564" class="Symbol"
+      >;</a
+      ><a name="4565"
+      >
+    </a
+      ><a name="4570" class="Field"
+      >snd&lt;tt,&gt;</a
+      ><a name="4578"
+      > </a
+      ><a name="4579" class="Symbol"
+      >=</a
+      ><a name="4580"
+      > </a
+      ><a name="4581" class="Number"
+      >0</a
+      ><a name="4582" class="Symbol"
+      >;</a
+      ><a name="4583"
+      >
+    </a
+      ><a name="4588" class="Field Operator"
+      >&lt;_&#215;_&gt;</a
+      ><a name="4593"
+      > </a
+      ><a name="4594" class="Symbol"
+      >=</a
+      ><a name="4595"
+      > </a
+      ><a name="4596" href="Data.Nat.html#2639" class="Function Operator"
+      >_&#8852;_</a
+      ><a name="4599" class="Symbol"
+      >;</a
+      ><a name="4600"
+      >
+    </a
+      ><a name="4605" class="Field"
+      >second</a
+      ><a name="4611"
+      > </a
+      ><a name="4612" class="Symbol"
+      >=</a
+      ><a name="4613"
+      > </a
+      ><a name="4614" href="Function.html#1006" class="Function"
+      >F.id</a
+      ><a name="4618" class="Symbol"
+      >;</a
+      ><a name="4619"
+      >
+    </a
+      ><a name="4624" class="Field"
+      >tt&#8594;[]</a
+      ><a name="4629"
+      > </a
+      ><a name="4630" class="Symbol"
+      >=</a
+      ><a name="4631"
+      > </a
+      ><a name="4632" class="Number"
+      >0</a
+      ><a name="4633" class="Symbol"
+      >;</a
+      ><a name="4634"
+      >
+    </a
+      ><a name="4639" class="Field"
+      >[]&#8594;tt</a
+      ><a name="4644"
+      > </a
+      ><a name="4645" class="Symbol"
+      >=</a
+      ><a name="4646"
+      > </a
+      ><a name="4647" class="Number"
+      >0</a
+      ><a name="4648" class="Symbol"
+      >;</a
+      ><a name="4649"
+      >
+    </a
+      ><a name="4654" class="Field"
+      >&lt;&#8759;&gt;</a
+      ><a name="4657"
+      > </a
+      ><a name="4658" class="Symbol"
+      >=</a
+      ><a name="4659"
+      > </a
+      ><a name="4660" class="Number"
+      >0</a
+      ><a name="4661" class="Symbol"
+      >;</a
+      ><a name="4662"
+      >
+    </a
+      ><a name="4667" class="Field"
+      >uncons</a
+      ><a name="4673"
+      > </a
+      ><a name="4674" class="Symbol"
+      >=</a
+      ><a name="4675"
+      > </a
+      ><a name="4676" class="Number"
+      >0</a
+      ><a name="4677"
+      > </a
+      ><a name="4678" class="Symbol"
+      >}</a
+      ><a name="4679"
+      >
+
+</a
+      ><a name="4681" href="FunUniverse.Cost.html#4681" class="Function"
+      >timeRewiring</a
+      ><a name="4693"
+      > </a
+      ><a name="4694" class="Symbol"
+      >:</a
+      ><a name="4695"
+      > </a
+      ><a name="4696" href="FunUniverse.Core.html#2100" class="Record"
+      >Rewiring</a
+      ><a name="4704"
+      > </a
+      ><a name="4705" href="FunUniverse.Cost.html#3454" class="Function"
+      >TimeCost</a
+      ><a name="4713"
+      >
+</a
+      ><a name="4714" href="FunUniverse.Cost.html#4681" class="Function"
+      >timeRewiring</a
+      ><a name="4726"
+      > </a
+      ><a name="4727" class="Symbol"
+      >=</a
+      ><a name="4728"
+      >
+  </a
+      ><a name="4731" class="Keyword"
+      >record</a
+      ><a name="4737"
+      > </a
+      ><a name="4738" class="Symbol"
+      >{</a
+      ><a name="4739"
+      >
+    </a
+      ><a name="4744" class="Field"
+      >linRewiring</a
+      ><a name="4755"
+      > </a
+      ><a name="4756" class="Symbol"
+      >=</a
+      ><a name="4757"
+      > </a
+      ><a name="4758" href="FunUniverse.Cost.html#4431" class="Function"
+      >timeLin</a
+      ><a name="4765" class="Symbol"
+      >;</a
+      ><a name="4766"
+      >
+    </a
+      ><a name="4771" class="Field"
+      >tt</a
+      ><a name="4773"
+      > </a
+      ><a name="4774" class="Symbol"
+      >=</a
+      ><a name="4775"
+      > </a
+      ><a name="4776" class="Number"
+      >0</a
+      ><a name="4777" class="Symbol"
+      >;</a
+      ><a name="4778"
+      >
+    </a
+      ><a name="4783" class="Field"
+      >dup</a
+      ><a name="4786"
+      > </a
+      ><a name="4787" class="Symbol"
+      >=</a
+      ><a name="4788"
+      > </a
+      ><a name="4789" class="Number"
+      >0</a
+      ><a name="4790" class="Symbol"
+      >;</a
+      ><a name="4791"
+      >
+    </a
+      ><a name="4796" class="Field"
+      >&lt;[]&gt;</a
+      ><a name="4800"
+      > </a
+      ><a name="4801" class="Symbol"
+      >=</a
+      ><a name="4802"
+      > </a
+      ><a name="4803" class="Number"
+      >0</a
+      ><a name="4804" class="Symbol"
+      >;</a
+      ><a name="4805"
+      >
+    </a
+      ><a name="4810" class="Field Operator"
+      >&lt;_,_&gt;</a
+      ><a name="4815"
+      > </a
+      ><a name="4816" class="Symbol"
+      >=</a
+      ><a name="4817"
+      > </a
+      ><a name="4818" href="Data.Nat.html#2639" class="Function Operator"
+      >_&#8852;_</a
+      ><a name="4821" class="Symbol"
+      >;</a
+      ><a name="4822"
+      >
+    </a
+      ><a name="4827" class="Field"
+      >fst</a
+      ><a name="4830"
+      > </a
+      ><a name="4831" class="Symbol"
+      >=</a
+      ><a name="4832"
+      > </a
+      ><a name="4833" class="Number"
+      >0</a
+      ><a name="4834" class="Symbol"
+      >;</a
+      ><a name="4835"
+      >
+    </a
+      ><a name="4840" class="Field"
+      >snd</a
+      ><a name="4843"
+      > </a
+      ><a name="4844" class="Symbol"
+      >=</a
+      ><a name="4845"
+      > </a
+      ><a name="4846" class="Number"
+      >0</a
+      ><a name="4847" class="Symbol"
+      >;</a
+      ><a name="4848"
+      >
+    </a
+      ><a name="4853" class="Field"
+      >rewire</a
+      ><a name="4859"
+      > </a
+      ><a name="4860" class="Symbol"
+      >=</a
+      ><a name="4861"
+      > </a
+      ><a name="4862" href="Function.html#1047" class="Function"
+      >const</a
+      ><a name="4867"
+      > </a
+      ><a name="4868" class="Number"
+      >0</a
+      ><a name="4869" class="Symbol"
+      >;</a
+      ><a name="4870"
+      >
+    </a
+      ><a name="4875" class="Field"
+      >rewireTbl</a
+      ><a name="4884"
+      > </a
+      ><a name="4885" class="Symbol"
+      >=</a
+      ><a name="4886"
+      > </a
+      ><a name="4887" href="Function.html#1047" class="Function"
+      >const</a
+      ><a name="4892"
+      > </a
+      ><a name="4893" class="Number"
+      >0</a
+      ><a name="4894"
+      > </a
+      ><a name="4895" class="Symbol"
+      >}</a
+      ><a name="4896"
+      >
+
+</a
+      ><a name="4898" href="FunUniverse.Cost.html#4898" class="Function"
+      >timeFork</a
+      ><a name="4906"
+      > </a
+      ><a name="4907" class="Symbol"
+      >:</a
+      ><a name="4908"
+      > </a
+      ><a name="4909" href="FunUniverse.Core.html#1138" class="Record"
+      >HasFork</a
+      ><a name="4916"
+      > </a
+      ><a name="4917" href="FunUniverse.Cost.html#3454" class="Function"
+      >TimeCost</a
+      ><a name="4925"
+      >
+</a
+      ><a name="4926" href="FunUniverse.Cost.html#4898" class="Function"
+      >timeFork</a
+      ><a name="4934"
+      > </a
+      ><a name="4935" class="Symbol"
+      >=</a
+      ><a name="4936"
+      > </a
+      ><a name="4937" class="Keyword"
+      >record</a
+      ><a name="4943"
+      > </a
+      ><a name="4944" class="Symbol"
+      >{</a
+      ><a name="4945"
+      > </a
+      ><a name="4946" class="Field"
+      >cond</a
+      ><a name="4950"
+      > </a
+      ><a name="4951" class="Symbol"
+      >=</a
+      ><a name="4952"
+      > </a
+      ><a name="4953" class="Number"
+      >1</a
+      ><a name="4954" class="Symbol"
+      >;</a
+      ><a name="4955"
+      > </a
+      ><a name="4956" class="Field"
+      >fork</a
+      ><a name="4960"
+      > </a
+      ><a name="4961" class="Symbol"
+      >=</a
+      ><a name="4962"
+      > </a
+      ><a name="4963" href="FunUniverse.Cost.html#1165" class="Function Operator"
+      >1+_&#8852;_</a
+      ><a name="4968"
+      > </a
+      ><a name="4969" class="Symbol"
+      >}</a
+      ><a name="4970"
+      >
+
+</a
+      ><a name="4972" href="FunUniverse.Cost.html#4972" class="Function"
+      >timeOps</a
+      ><a name="4979"
+      > </a
+      ><a name="4980" class="Symbol"
+      >:</a
+      ><a name="4981"
+      > </a
+      ><a name="4982" href="FunUniverse.Core.html#3911" class="Record"
+      >FunOps</a
+      ><a name="4988"
+      > </a
+      ><a name="4989" href="FunUniverse.Cost.html#3454" class="Function"
+      >TimeCost</a
+      ><a name="4997"
+      >
+</a
+      ><a name="4998" href="FunUniverse.Cost.html#4972" class="Function"
+      >timeOps</a
+      ><a name="5005"
+      > </a
+      ><a name="5006" class="Symbol"
+      >=</a
+      ><a name="5007"
+      > </a
+      ><a name="5008" class="Keyword"
+      >record</a
+      ><a name="5014"
+      > </a
+      ><a name="5015" class="Symbol"
+      >{</a
+      ><a name="5016"
+      > </a
+      ><a name="5017" class="Field"
+      >rewiring</a
+      ><a name="5025"
+      > </a
+      ><a name="5026" class="Symbol"
+      >=</a
+      ><a name="5027"
+      > </a
+      ><a name="5028" href="FunUniverse.Cost.html#4681" class="Function"
+      >timeRewiring</a
+      ><a name="5040" class="Symbol"
+      >;</a
+      ><a name="5041"
+      > </a
+      ><a name="5042" class="Field"
+      >hasFork</a
+      ><a name="5049"
+      > </a
+      ><a name="5050" class="Symbol"
+      >=</a
+      ><a name="5051"
+      > </a
+      ><a name="5052" href="FunUniverse.Cost.html#4898" class="Function"
+      >timeFork</a
+      ><a name="5060" class="Symbol"
+      >;</a
+      ><a name="5061"
+      >
+                   </a
+      ><a name="5081" class="Field"
+      >&lt;0&#8322;&gt;</a
+      ><a name="5085"
+      > </a
+      ><a name="5086" class="Symbol"
+      >=</a
+      ><a name="5087"
+      > </a
+      ><a name="5088" class="Number"
+      >0</a
+      ><a name="5089" class="Symbol"
+      >;</a
+      ><a name="5090"
+      > </a
+      ><a name="5091" class="Field"
+      >&lt;1&#8322;&gt;</a
+      ><a name="5095"
+      > </a
+      ><a name="5096" class="Symbol"
+      >=</a
+      ><a name="5097"
+      > </a
+      ><a name="5098" class="Number"
+      >0</a
+      ><a name="5099"
+      > </a
+      ><a name="5100" class="Symbol"
+      >}</a
+      ><a name="5101"
+      >
+
+</a
+      ><a name="5103" class="Comment"
+      >{-
+timeOps&#8801;seqTimeOps : timeOps &#8801; record seqTimeOps {
+                                rewiring = record seqTimeRewiring {
+                                             linRewiring = record seqTimeLin { &lt;_&#215;_&gt; = _&#8852;_ };
+                                             &lt;_,_&gt; = _&#8852;_};
+                                fork = 1+_&#8852;_ }
+                                {-;
+                                &lt;&#8759;&gt; = 0; uncons = 0 } -- Without &lt;&#8759;&gt; = 0... this definition makes
+                                                       -- the FunOps record def yellow
+                                                       -}
+timeOps&#8801;seqTimeOps = &#8801;.refl
+-}</a
+      ><a name="5734"
+      >
+
+</a
+      ><a name="5736" class="Comment"
+      >{-
+open import maxsemiring
+open &#8852;-+-SemiringSolver
+timeOps' : &#8704; n &#8594; FunOps (constFuns (Polynomial n))
+timeOps' n = record {
+            id = con 0; _&#8728;_ = _:*_;
+            &lt;0&#8322;&gt; = con 0; &lt;1&#8322;&gt; = con 0; cond = con 1; fork = 1+_+_; tt = con 0;
+            &lt;_,_&gt; = _:*_; fst = con 0; snd = con 0;
+            dup = con 0; &lt;_&#215;_&gt; = _:+_; swap = con 0; assoc = con 0;
+            &lt;tt,id&gt; = con 0; snd&lt;tt,&gt; = con 0;
+            &lt;[]&gt; = con 0; &lt;&#8759;&gt; = con 0; uncons = con 0 }
+   where 1+_+_ : Polynomial n &#8594; Polynomial n &#8594; Polynomial n
+         1+ x + y = con 1 :* (x :* y)
+
+Module TimeOps' where
+  Time = &#8469;
+  open FunOps (timeOps' 1) public
+
+  snoc&#8801;0 : &#8704; n &#8594; snoc {n} := con 0
+  snoc&#8801;0 zero = ?
+  snoc&#8801;0 (suc n) = ?
+-}</a
+      ><a name="6442"
+      >
+
+</a
+      ><a name="6444" class="Keyword"
+      >module</a
+      ><a name="6450"
+      > </a
+      ><a name="6451" href="FunUniverse.Cost.html#6451" class="Module"
+      >TimeOps</a
+      ><a name="6458"
+      > </a
+      ><a name="6459" class="Keyword"
+      >where</a
+      ><a name="6464"
+      >
+  </a
+      ><a name="6467" class="Keyword"
+      >open</a
+      ><a name="6471"
+      > </a
+      ><a name="6472" href="FunUniverse.Core.html#3911" class="Module"
+      >FunOps</a
+      ><a name="6478"
+      > </a
+      ><a name="6479" href="FunUniverse.Cost.html#4972" class="Function"
+      >timeOps</a
+      ><a name="6486"
+      > </a
+      ><a name="6487" class="Keyword"
+      >public</a
+      ><a name="6493"
+      >
+
+  </a
+      ><a name="6497" href="FunUniverse.Cost.html#6497" class="Function"
+      >snoc&#8801;0</a
+      ><a name="6503"
+      > </a
+      ><a name="6504" class="Symbol"
+      >:</a
+      ><a name="6505"
+      > </a
+      ><a name="6506" class="Symbol"
+      >&#8704;</a
+      ><a name="6507"
+      > </a
+      ><a name="6508" href="FunUniverse.Cost.html#6508" class="Bound"
+      >n</a
+      ><a name="6509"
+      > </a
+      ><a name="6510" class="Symbol"
+      >&#8594;</a
+      ><a name="6511"
+      > </a
+      ><a name="6512" href="FunUniverse.Rewiring.Linear.html#5987" class="Function"
+      >snoc</a
+      ><a name="6516"
+      > </a
+      ><a name="6517" class="Symbol"
+      >{</a
+      ><a name="6518" href="FunUniverse.Cost.html#6508" class="Bound"
+      >n</a
+      ><a name="6519" class="Symbol"
+      >}</a
+      ><a name="6520"
+      > </a
+      ><a name="6521" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="6522"
+      > </a
+      ><a name="6523" class="Number"
+      >0</a
+      ><a name="6524"
+      >
+  </a
+      ><a name="6527" href="FunUniverse.Cost.html#6497" class="Function"
+      >snoc&#8801;0</a
+      ><a name="6533"
+      > </a
+      ><a name="6534" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="6538"
+      > </a
+      ><a name="6539" class="Symbol"
+      >=</a
+      ><a name="6540"
+      > </a
+      ><a name="6541" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >&#8801;.refl</a
+      ><a name="6547"
+      >
+  </a
+      ><a name="6550" href="FunUniverse.Cost.html#6497" class="Function"
+      >snoc&#8801;0</a
+      ><a name="6556"
+      > </a
+      ><a name="6557" class="Symbol"
+      >(</a
+      ><a name="6558" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="6561"
+      > </a
+      ><a name="6562" href="FunUniverse.Cost.html#6562" class="Bound"
+      >n</a
+      ><a name="6563" class="Symbol"
+      >)</a
+      ><a name="6564"
+      > </a
+      ><a name="6565" class="Keyword"
+      >rewrite</a
+      ><a name="6572"
+      > </a
+      ><a name="6573" href="FunUniverse.Cost.html#6497" class="Function"
+      >snoc&#8801;0</a
+      ><a name="6579"
+      > </a
+      ><a name="6580" href="FunUniverse.Cost.html#6562" class="Bound"
+      >n</a
+      ><a name="6581"
+      > </a
+      ><a name="6582" class="Symbol"
+      >=</a
+      ><a name="6583"
+      > </a
+      ><a name="6584" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >&#8801;.refl</a
+      ><a name="6590"
+      >
+
+  </a
+      ><a name="6594" href="FunUniverse.Cost.html#6594" class="Function"
+      >reverse&#8801;0</a
+      ><a name="6603"
+      > </a
+      ><a name="6604" class="Symbol"
+      >:</a
+      ><a name="6605"
+      > </a
+      ><a name="6606" class="Symbol"
+      >&#8704;</a
+      ><a name="6607"
+      > </a
+      ><a name="6608" href="FunUniverse.Cost.html#6608" class="Bound"
+      >n</a
+      ><a name="6609"
+      > </a
+      ><a name="6610" class="Symbol"
+      >&#8594;</a
+      ><a name="6611"
+      > </a
+      ><a name="6612" href="FunUniverse.Rewiring.Linear.html#6132" class="Function"
+      >reverse</a
+      ><a name="6619"
+      > </a
+      ><a name="6620" class="Symbol"
+      >{</a
+      ><a name="6621" href="FunUniverse.Cost.html#6608" class="Bound"
+      >n</a
+      ><a name="6622" class="Symbol"
+      >}</a
+      ><a name="6623"
+      > </a
+      ><a name="6624" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="6625"
+      > </a
+      ><a name="6626" class="Number"
+      >0</a
+      ><a name="6627"
+      >
+  </a
+      ><a name="6630" href="FunUniverse.Cost.html#6594" class="Function"
+      >reverse&#8801;0</a
+      ><a name="6639"
+      > </a
+      ><a name="6640" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="6644"
+      > </a
+      ><a name="6645" class="Symbol"
+      >=</a
+      ><a name="6646"
+      > </a
+      ><a name="6647" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >&#8801;.refl</a
+      ><a name="6653"
+      >
+  </a
+      ><a name="6656" href="FunUniverse.Cost.html#6594" class="Function"
+      >reverse&#8801;0</a
+      ><a name="6665"
+      > </a
+      ><a name="6666" class="Symbol"
+      >(</a
+      ><a name="6667" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="6670"
+      > </a
+      ><a name="6671" href="FunUniverse.Cost.html#6671" class="Bound"
+      >n</a
+      ><a name="6672" class="Symbol"
+      >)</a
+      ><a name="6673"
+      > </a
+      ><a name="6674" class="Keyword"
+      >rewrite</a
+      ><a name="6681"
+      > </a
+      ><a name="6682" href="FunUniverse.Cost.html#6497" class="Function"
+      >snoc&#8801;0</a
+      ><a name="6688"
+      > </a
+      ><a name="6689" href="FunUniverse.Cost.html#6671" class="Bound"
+      >n</a
+      ><a name="6690"
+      > </a
+      ><a name="6691" class="Symbol"
+      >|</a
+      ><a name="6692"
+      > </a
+      ><a name="6693" href="FunUniverse.Cost.html#6594" class="Function"
+      >reverse&#8801;0</a
+      ><a name="6702"
+      > </a
+      ><a name="6703" href="FunUniverse.Cost.html#6671" class="Bound"
+      >n</a
+      ><a name="6704"
+      > </a
+      ><a name="6705" class="Symbol"
+      >=</a
+      ><a name="6706"
+      > </a
+      ><a name="6707" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >&#8801;.refl</a
+      ><a name="6713"
+      >
+
+  </a
+      ><a name="6717" href="FunUniverse.Cost.html#6717" class="Function"
+      >foldl&#8801;*</a
+      ><a name="6724"
+      > </a
+      ><a name="6725" class="Symbol"
+      >:</a
+      ><a name="6726"
+      > </a
+      ><a name="6727" class="Symbol"
+      >&#8704;</a
+      ><a name="6728"
+      > </a
+      ><a name="6729" href="FunUniverse.Cost.html#6729" class="Bound"
+      >m</a
+      ><a name="6730"
+      > </a
+      ><a name="6731" href="FunUniverse.Cost.html#6731" class="Bound"
+      >n</a
+      ><a name="6732"
+      > </a
+      ><a name="6733" class="Symbol"
+      >&#8594;</a
+      ><a name="6734"
+      > </a
+      ><a name="6735" href="FunUniverse.Rewiring.Linear.html#4728" class="Function"
+      >foldl</a
+      ><a name="6740"
+      > </a
+      ><a name="6741" class="Symbol"
+      >{</a
+      ><a name="6742" href="FunUniverse.Cost.html#6729" class="Bound"
+      >m</a
+      ><a name="6743" class="Symbol"
+      >}</a
+      ><a name="6744"
+      > </a
+      ><a name="6745" href="FunUniverse.Cost.html#6731" class="Bound"
+      >n</a
+      ><a name="6746"
+      > </a
+      ><a name="6747" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="6748"
+      > </a
+      ><a name="6749" href="FunUniverse.Cost.html#6729" class="Bound"
+      >m</a
+      ><a name="6750"
+      > </a
+      ><a name="6751" href="Data.Nat.html#2544" class="Primitive Operator"
+      >*</a
+      ><a name="6752"
+      > </a
+      ><a name="6753" href="FunUniverse.Cost.html#6731" class="Bound"
+      >n</a
+      ><a name="6754"
+      >
+  </a
+      ><a name="6757" href="FunUniverse.Cost.html#6717" class="Function"
+      >foldl&#8801;*</a
+      ><a name="6764"
+      > </a
+      ><a name="6765" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="6769"
+      > </a
+      ><a name="6770" href="FunUniverse.Cost.html#6770" class="Bound"
+      >n</a
+      ><a name="6771"
+      > </a
+      ><a name="6772" class="Symbol"
+      >=</a
+      ><a name="6773"
+      > </a
+      ><a name="6774" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >&#8801;.refl</a
+      ><a name="6780"
+      >
+  </a
+      ><a name="6783" href="FunUniverse.Cost.html#6717" class="Function"
+      >foldl&#8801;*</a
+      ><a name="6790"
+      > </a
+      ><a name="6791" class="Symbol"
+      >(</a
+      ><a name="6792" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="6795"
+      > </a
+      ><a name="6796" href="FunUniverse.Cost.html#6796" class="Bound"
+      >m</a
+      ><a name="6797" class="Symbol"
+      >)</a
+      ><a name="6798"
+      > </a
+      ><a name="6799" href="FunUniverse.Cost.html#6799" class="Bound"
+      >n</a
+      ><a name="6800"
+      > </a
+      ><a name="6801" class="Keyword"
+      >rewrite</a
+      ><a name="6808"
+      > </a
+      ><a name="6809" href="FunUniverse.Cost.html#6717" class="Function"
+      >foldl&#8801;*</a
+      ><a name="6816"
+      > </a
+      ><a name="6817" href="FunUniverse.Cost.html#6796" class="Bound"
+      >m</a
+      ><a name="6818"
+      > </a
+      ><a name="6819" href="FunUniverse.Cost.html#6799" class="Bound"
+      >n</a
+      ><a name="6820"
+      >
+                          </a
+      ><a name="6847" class="Symbol"
+      >|</a
+      ><a name="6848"
+      > </a
+      ><a name="6849" href="Algebra.Structures.html#1414" class="Function"
+      >&#8852;&#176;.+-comm</a
+      ><a name="6858"
+      > </a
+      ><a name="6859" href="FunUniverse.Cost.html#6799" class="Bound"
+      >n</a
+      ><a name="6860"
+      > </a
+      ><a name="6861" class="Number"
+      >0</a
+      ><a name="6862"
+      >
+                          </a
+      ><a name="6889" class="Symbol"
+      >|</a
+      ><a name="6890"
+      > </a
+      ><a name="6891" href="Algebra.Structures.html#1414" class="Function"
+      >&#8469;&#176;.+-comm</a
+      ><a name="6900"
+      > </a
+      ><a name="6901" class="Symbol"
+      >(</a
+      ><a name="6902" href="FunUniverse.Cost.html#6796" class="Bound"
+      >m</a
+      ><a name="6903"
+      > </a
+      ><a name="6904" href="Data.Nat.html#2544" class="Primitive Operator"
+      >*</a
+      ><a name="6905"
+      > </a
+      ><a name="6906" href="FunUniverse.Cost.html#6799" class="Bound"
+      >n</a
+      ><a name="6907"
+      > </a
+      ><a name="6908" href="Data.Nat.html#2239" class="Primitive Operator"
+      >+</a
+      ><a name="6909"
+      > </a
+      ><a name="6910" href="FunUniverse.Cost.html#6799" class="Bound"
+      >n</a
+      ><a name="6911" class="Symbol"
+      >)</a
+      ><a name="6912"
+      > </a
+      ><a name="6913" class="Number"
+      >0</a
+      ><a name="6914"
+      >
+                          </a
+      ><a name="6941" class="Symbol"
+      >|</a
+      ><a name="6942"
+      > </a
+      ><a name="6943" href="Algebra.Structures.html#1414" class="Function"
+      >&#8469;&#176;.+-comm</a
+      ><a name="6952"
+      > </a
+      ><a name="6953" class="Symbol"
+      >(</a
+      ><a name="6954" href="FunUniverse.Cost.html#6796" class="Bound"
+      >m</a
+      ><a name="6955"
+      > </a
+      ><a name="6956" href="Data.Nat.html#2544" class="Primitive Operator"
+      >*</a
+      ><a name="6957"
+      > </a
+      ><a name="6958" href="FunUniverse.Cost.html#6799" class="Bound"
+      >n</a
+      ><a name="6959"
+      > </a
+      ><a name="6960" href="Data.Nat.html#2239" class="Primitive Operator"
+      >+</a
+      ><a name="6961"
+      > </a
+      ><a name="6962" href="FunUniverse.Cost.html#6799" class="Bound"
+      >n</a
+      ><a name="6963" class="Symbol"
+      >)</a
+      ><a name="6964"
+      > </a
+      ><a name="6965" class="Number"
+      >0</a
+      ><a name="6966"
+      >
+                          </a
+      ><a name="6993" class="Symbol"
+      >|</a
+      ><a name="6994"
+      > </a
+      ><a name="6995" href="Algebra.Structures.html#1414" class="Function"
+      >&#8469;&#176;.+-comm</a
+      ><a name="7004"
+      > </a
+      ><a name="7005" class="Symbol"
+      >(</a
+      ><a name="7006" href="FunUniverse.Cost.html#6796" class="Bound"
+      >m</a
+      ><a name="7007"
+      > </a
+      ><a name="7008" href="Data.Nat.html#2544" class="Primitive Operator"
+      >*</a
+      ><a name="7009"
+      > </a
+      ><a name="7010" href="FunUniverse.Cost.html#6799" class="Bound"
+      >n</a
+      ><a name="7011" class="Symbol"
+      >)</a
+      ><a name="7012"
+      > </a
+      ><a name="7013" href="FunUniverse.Cost.html#6799" class="Bound"
+      >n</a
+      ><a name="7014"
+      >
+                          </a
+      ><a name="7041" class="Symbol"
+      >=</a
+      ><a name="7042"
+      > </a
+      ><a name="7043" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >&#8801;.refl</a
+      ><a name="7049"
+      >
+
+  </a
+      ><a name="7053" href="FunUniverse.Cost.html#7053" class="Function"
+      >replicate&#8801;0</a
+      ><a name="7064"
+      > </a
+      ><a name="7065" class="Symbol"
+      >:</a
+      ><a name="7066"
+      > </a
+      ><a name="7067" class="Symbol"
+      >&#8704;</a
+      ><a name="7068"
+      > </a
+      ><a name="7069" href="FunUniverse.Cost.html#7069" class="Bound"
+      >n</a
+      ><a name="7070"
+      > </a
+      ><a name="7071" class="Symbol"
+      >&#8594;</a
+      ><a name="7072"
+      > </a
+      ><a name="7073" href="FunUniverse.Core.html#3650" class="Function"
+      >replicate</a
+      ><a name="7082"
+      > </a
+      ><a name="7083" class="Symbol"
+      >{</a
+      ><a name="7084" href="FunUniverse.Cost.html#7069" class="Bound"
+      >n</a
+      ><a name="7085" class="Symbol"
+      >}</a
+      ><a name="7086"
+      > </a
+      ><a name="7087" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="7088"
+      > </a
+      ><a name="7089" class="Number"
+      >0</a
+      ><a name="7090"
+      >
+  </a
+      ><a name="7093" href="FunUniverse.Cost.html#7053" class="Function"
+      >replicate&#8801;0</a
+      ><a name="7104"
+      > </a
+      ><a name="7105" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="7109"
+      > </a
+      ><a name="7110" class="Symbol"
+      >=</a
+      ><a name="7111"
+      > </a
+      ><a name="7112" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >&#8801;.refl</a
+      ><a name="7118"
+      >
+  </a
+      ><a name="7121" href="FunUniverse.Cost.html#7053" class="Function"
+      >replicate&#8801;0</a
+      ><a name="7132"
+      > </a
+      ><a name="7133" class="Symbol"
+      >(</a
+      ><a name="7134" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="7137"
+      > </a
+      ><a name="7138" href="FunUniverse.Cost.html#7138" class="Bound"
+      >n</a
+      ><a name="7139" class="Symbol"
+      >)</a
+      ><a name="7140"
+      > </a
+      ><a name="7141" class="Symbol"
+      >=</a
+      ><a name="7142"
+      > </a
+      ><a name="7143" href="FunUniverse.Cost.html#7053" class="Function"
+      >replicate&#8801;0</a
+      ><a name="7154"
+      > </a
+      ><a name="7155" href="FunUniverse.Cost.html#7138" class="Bound"
+      >n</a
+      ><a name="7156"
+      >
+
+  </a
+      ><a name="7160" href="FunUniverse.Cost.html#7160" class="Function"
+      >constBit&#8801;0</a
+      ><a name="7170"
+      > </a
+      ><a name="7171" class="Symbol"
+      >:</a
+      ><a name="7172"
+      > </a
+      ><a name="7173" class="Symbol"
+      >&#8704;</a
+      ><a name="7174"
+      > </a
+      ><a name="7175" href="FunUniverse.Cost.html#7175" class="Bound"
+      >b</a
+      ><a name="7176"
+      > </a
+      ><a name="7177" class="Symbol"
+      >&#8594;</a
+      ><a name="7178"
+      > </a
+      ><a name="7179" href="FunUniverse.Core.html#5094" class="Function"
+      >constBit</a
+      ><a name="7187"
+      > </a
+      ><a name="7188" href="FunUniverse.Cost.html#7175" class="Bound"
+      >b</a
+      ><a name="7189"
+      > </a
+      ><a name="7190" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="7191"
+      > </a
+      ><a name="7192" class="Number"
+      >0</a
+      ><a name="7193"
+      >
+  </a
+      ><a name="7196" href="FunUniverse.Cost.html#7160" class="Function"
+      >constBit&#8801;0</a
+      ><a name="7206"
+      > </a
+      ><a name="7207" href="Data.Bool.html#622" class="InductiveConstructor"
+      >true</a
+      ><a name="7211"
+      >  </a
+      ><a name="7213" class="Symbol"
+      >=</a
+      ><a name="7214"
+      > </a
+      ><a name="7215" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >&#8801;.refl</a
+      ><a name="7221"
+      >
+  </a
+      ><a name="7224" href="FunUniverse.Cost.html#7160" class="Function"
+      >constBit&#8801;0</a
+      ><a name="7234"
+      > </a
+      ><a name="7235" href="Data.Bool.html#637" class="InductiveConstructor"
+      >false</a
+      ><a name="7240"
+      > </a
+      ><a name="7241" class="Symbol"
+      >=</a
+      ><a name="7242"
+      > </a
+      ><a name="7243" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >&#8801;.refl</a
+      ><a name="7249"
+      >
+
+  </a
+      ><a name="7253" href="FunUniverse.Cost.html#7253" class="Function"
+      >maximum</a
+      ><a name="7260"
+      > </a
+      ><a name="7261" class="Symbol"
+      >:</a
+      ><a name="7262"
+      > </a
+      ><a name="7263" class="Symbol"
+      >&#8704;</a
+      ><a name="7264"
+      > </a
+      ><a name="7265" class="Symbol"
+      >{</a
+      ><a name="7266" href="FunUniverse.Cost.html#7266" class="Bound"
+      >n</a
+      ><a name="7267" class="Symbol"
+      >}</a
+      ><a name="7268"
+      > </a
+      ><a name="7269" class="Symbol"
+      >&#8594;</a
+      ><a name="7270"
+      > </a
+      ><a name="7271" href="Data.Vec.html#604" class="Datatype"
+      >Vec</a
+      ><a name="7274"
+      > </a
+      ><a name="7275" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="7276"
+      > </a
+      ><a name="7277" href="FunUniverse.Cost.html#7266" class="Bound"
+      >n</a
+      ><a name="7278"
+      > </a
+      ><a name="7279" class="Symbol"
+      >&#8594;</a
+      ><a name="7280"
+      > </a
+      ><a name="7281" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="7282"
+      >
+  </a
+      ><a name="7285" href="FunUniverse.Cost.html#7253" class="Function"
+      >maximum</a
+      ><a name="7292"
+      > </a
+      ><a name="7293" class="Symbol"
+      >=</a
+      ><a name="7294"
+      > </a
+      ><a name="7295" href="Data.Vec.html#2537" class="Function"
+      >V.foldr</a
+      ><a name="7302"
+      > </a
+      ><a name="7303" class="Symbol"
+      >(</a
+      ><a name="7304" href="Function.html#1047" class="Function"
+      >const</a
+      ><a name="7309"
+      > </a
+      ><a name="7310" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="7311" class="Symbol"
+      >)</a
+      ><a name="7312"
+      > </a
+      ><a name="7313" class="Symbol"
+      >(&#955;</a
+      ><a name="7315"
+      > </a
+      ><a name="7316" class="Symbol"
+      >{</a
+      ><a name="7317" href="FunUniverse.Cost.html#7317" class="Bound"
+      >_</a
+      ><a name="7318" class="Symbol"
+      >}</a
+      ><a name="7319"
+      > </a
+      ><a name="7320" href="FunUniverse.Cost.html#7320" class="Bound"
+      >x</a
+      ><a name="7321"
+      > </a
+      ><a name="7322" href="FunUniverse.Cost.html#7322" class="Bound"
+      >y</a
+      ><a name="7323"
+      > </a
+      ><a name="7324" class="Symbol"
+      >&#8594;</a
+      ><a name="7325"
+      > </a
+      ><a name="7326" href="FunUniverse.Cost.html#7320" class="Bound"
+      >x</a
+      ><a name="7327"
+      > </a
+      ><a name="7328" href="Data.Nat.html#2639" class="Function Operator"
+      >&#8852;</a
+      ><a name="7329"
+      > </a
+      ><a name="7330" href="FunUniverse.Cost.html#7322" class="Bound"
+      >y</a
+      ><a name="7331" class="Symbol"
+      >)</a
+      ><a name="7332"
+      > </a
+      ><a name="7333" class="Number"
+      >0</a
+      ><a name="7334"
+      >
+
+  </a
+      ><a name="7338" href="FunUniverse.Cost.html#7338" class="Function"
+      >constVec&#8868;&#8801;maximum</a
+      ><a name="7355"
+      > </a
+      ><a name="7356" class="Symbol"
+      >:</a
+      ><a name="7357"
+      > </a
+      ><a name="7358" class="Symbol"
+      >&#8704;</a
+      ><a name="7359"
+      > </a
+      ><a name="7360" class="Symbol"
+      >{</a
+      ><a name="7361" href="FunUniverse.Cost.html#7361" class="Bound"
+      >n</a
+      ><a name="7362"
+      > </a
+      ><a name="7363" href="FunUniverse.Cost.html#7363" class="Bound"
+      >b</a
+      ><a name="7364" class="Symbol"
+      >}</a
+      ><a name="7365"
+      > </a
+      ><a name="7366" class="Symbol"
+      >{</a
+      ><a name="7367" href="FunUniverse.Cost.html#7367" class="Bound"
+      >B</a
+      ><a name="7368"
+      > </a
+      ><a name="7369" class="Symbol"
+      >:</a
+      ><a name="7370"
+      > </a
+      ><a name="7371" class="PrimitiveType"
+      >Set</a
+      ><a name="7374"
+      > </a
+      ><a name="7375" href="FunUniverse.Cost.html#7363" class="Bound"
+      >b</a
+      ><a name="7376" class="Symbol"
+      >}</a
+      ><a name="7377"
+      > </a
+      ><a name="7378" class="Symbol"
+      >(</a
+      ><a name="7379" href="FunUniverse.Cost.html#7379" class="Bound"
+      >f</a
+      ><a name="7380"
+      > </a
+      ><a name="7381" class="Symbol"
+      >:</a
+      ><a name="7382"
+      > </a
+      ><a name="7383" href="FunUniverse.Cost.html#7367" class="Bound"
+      >B</a
+      ><a name="7384"
+      > </a
+      ><a name="7385" class="Symbol"
+      >&#8594;</a
+      ><a name="7386"
+      > </a
+      ><a name="7387" href="FunUniverse.Cost.html#3445" class="Function"
+      >Time</a
+      ><a name="7391" class="Symbol"
+      >)</a
+      ><a name="7392"
+      > </a
+      ><a name="7393" href="FunUniverse.Cost.html#7393" class="Bound"
+      >xs</a
+      ><a name="7395"
+      > </a
+      ><a name="7396" class="Symbol"
+      >&#8594;</a
+      ><a name="7397"
+      > </a
+      ><a name="7398" href="FunUniverse.Rewiring.Linear.html#4289" class="Function"
+      >constVec&#8868;</a
+      ><a name="7407"
+      > </a
+      ><a name="7408" class="Symbol"
+      >{</a
+      ><a name="7409" href="FunUniverse.Cost.html#7361" class="Bound"
+      >n</a
+      ><a name="7410" class="Symbol"
+      >}</a
+      ><a name="7411"
+      > </a
+      ><a name="7412" href="FunUniverse.Cost.html#7379" class="Bound"
+      >f</a
+      ><a name="7413"
+      > </a
+      ><a name="7414" href="FunUniverse.Cost.html#7393" class="Bound"
+      >xs</a
+      ><a name="7416"
+      > </a
+      ><a name="7417" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="7418"
+      > </a
+      ><a name="7419" href="FunUniverse.Cost.html#7253" class="Function"
+      >maximum</a
+      ><a name="7426"
+      > </a
+      ><a name="7427" class="Symbol"
+      >(</a
+      ><a name="7428" href="Data.Vec.NP.html#1171" class="Function"
+      >V.map</a
+      ><a name="7433"
+      > </a
+      ><a name="7434" href="FunUniverse.Cost.html#7379" class="Bound"
+      >f</a
+      ><a name="7435"
+      > </a
+      ><a name="7436" href="FunUniverse.Cost.html#7393" class="Bound"
+      >xs</a
+      ><a name="7438" class="Symbol"
+      >)</a
+      ><a name="7439"
+      >
+  </a
+      ><a name="7442" href="FunUniverse.Cost.html#7338" class="Function"
+      >constVec&#8868;&#8801;maximum</a
+      ><a name="7459"
+      > </a
+      ><a name="7460" href="FunUniverse.Cost.html#7460" class="Bound"
+      >f</a
+      ><a name="7461"
+      > </a
+      ><a name="7462" href="Data.Vec.html#644" class="InductiveConstructor"
+      >[]</a
+      ><a name="7464"
+      > </a
+      ><a name="7465" class="Symbol"
+      >=</a
+      ><a name="7466"
+      > </a
+      ><a name="7467" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >&#8801;.refl</a
+      ><a name="7473"
+      >
+  </a
+      ><a name="7476" href="FunUniverse.Cost.html#7338" class="Function"
+      >constVec&#8868;&#8801;maximum</a
+      ><a name="7493"
+      > </a
+      ><a name="7494" class="Symbol"
+      >{</a
+      ><a name="7495" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="7498"
+      > </a
+      ><a name="7499" href="FunUniverse.Cost.html#7499" class="Bound"
+      >n</a
+      ><a name="7500" class="Symbol"
+      >}</a
+      ><a name="7501"
+      > </a
+      ><a name="7502" href="FunUniverse.Cost.html#7502" class="Bound"
+      >f</a
+      ><a name="7503"
+      > </a
+      ><a name="7504" class="Symbol"
+      >(</a
+      ><a name="7505" href="FunUniverse.Cost.html#7505" class="Bound"
+      >b</a
+      ><a name="7506"
+      > </a
+      ><a name="7507" href="Data.Vec.html#663" class="InductiveConstructor Operator"
+      >&#8759;</a
+      ><a name="7508"
+      > </a
+      ><a name="7509" href="FunUniverse.Cost.html#7509" class="Bound"
+      >bs</a
+      ><a name="7511" class="Symbol"
+      >)</a
+      ><a name="7512"
+      > </a
+      ><a name="7513" class="Keyword"
+      >rewrite</a
+      ><a name="7520"
+      > </a
+      ><a name="7521" href="Algebra.Structures.html#1414" class="Function"
+      >&#8469;&#176;.+-comm</a
+      ><a name="7530"
+      > </a
+      ><a name="7531" class="Symbol"
+      >(</a
+      ><a name="7532" href="FunUniverse.Cost.html#7502" class="Bound"
+      >f</a
+      ><a name="7533"
+      > </a
+      ><a name="7534" href="FunUniverse.Cost.html#7505" class="Bound"
+      >b</a
+      ><a name="7535"
+      > </a
+      ><a name="7536" href="Data.Nat.html#2639" class="Function Operator"
+      >&#8852;</a
+      ><a name="7537"
+      > </a
+      ><a name="7538" href="FunUniverse.Rewiring.Linear.html#4289" class="Function"
+      >constVec&#8868;</a
+      ><a name="7547"
+      > </a
+      ><a name="7548" href="FunUniverse.Cost.html#7502" class="Bound"
+      >f</a
+      ><a name="7549"
+      > </a
+      ><a name="7550" href="FunUniverse.Cost.html#7509" class="Bound"
+      >bs</a
+      ><a name="7552" class="Symbol"
+      >)</a
+      ><a name="7553"
+      > </a
+      ><a name="7554" class="Number"
+      >0</a
+      ><a name="7555"
+      >
+                                              </a
+      ><a name="7602" class="Symbol"
+      >|</a
+      ><a name="7603"
+      > </a
+      ><a name="7604" href="FunUniverse.Cost.html#7338" class="Function"
+      >constVec&#8868;&#8801;maximum</a
+      ><a name="7621"
+      > </a
+      ><a name="7622" href="FunUniverse.Cost.html#7502" class="Bound"
+      >f</a
+      ><a name="7623"
+      > </a
+      ><a name="7624" href="FunUniverse.Cost.html#7509" class="Bound"
+      >bs</a
+      ><a name="7626"
+      > </a
+      ><a name="7627" class="Symbol"
+      >=</a
+      ><a name="7628"
+      > </a
+      ><a name="7629" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >&#8801;.refl</a
+      ><a name="7635"
+      >
+
+  </a
+      ><a name="7639" href="FunUniverse.Cost.html#7639" class="Function"
+      >constBits&#8801;0</a
+      ><a name="7650"
+      > </a
+      ><a name="7651" class="Symbol"
+      >:</a
+      ><a name="7652"
+      > </a
+      ><a name="7653" class="Symbol"
+      >&#8704;</a
+      ><a name="7654"
+      > </a
+      ><a name="7655" class="Symbol"
+      >{</a
+      ><a name="7656" href="FunUniverse.Cost.html#7656" class="Bound"
+      >n</a
+      ><a name="7657" class="Symbol"
+      >}</a
+      ><a name="7658"
+      > </a
+      ><a name="7659" href="FunUniverse.Cost.html#7659" class="Bound"
+      >xs</a
+      ><a name="7661"
+      > </a
+      ><a name="7662" class="Symbol"
+      >&#8594;</a
+      ><a name="7663"
+      > </a
+      ><a name="7664" href="FunUniverse.Core.html#5935" class="Function"
+      >constBits</a
+      ><a name="7673"
+      > </a
+      ><a name="7674" class="Symbol"
+      >{</a
+      ><a name="7675" href="FunUniverse.Cost.html#7656" class="Bound"
+      >n</a
+      ><a name="7676" class="Symbol"
+      >}</a
+      ><a name="7677"
+      > </a
+      ><a name="7678" href="FunUniverse.Cost.html#7659" class="Bound"
+      >xs</a
+      ><a name="7680"
+      > </a
+      ><a name="7681" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="7682"
+      > </a
+      ><a name="7683" class="Number"
+      >0</a
+      ><a name="7684"
+      >
+  </a
+      ><a name="7687" href="FunUniverse.Cost.html#7639" class="Function"
+      >constBits&#8801;0</a
+      ><a name="7698"
+      > </a
+      ><a name="7699" href="Data.Vec.html#644" class="InductiveConstructor"
+      >[]</a
+      ><a name="7701"
+      > </a
+      ><a name="7702" class="Symbol"
+      >=</a
+      ><a name="7703"
+      > </a
+      ><a name="7704" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >&#8801;.refl</a
+      ><a name="7710"
+      >
+  </a
+      ><a name="7713" href="FunUniverse.Cost.html#7639" class="Function"
+      >constBits&#8801;0</a
+      ><a name="7724"
+      > </a
+      ><a name="7725" class="Symbol"
+      >{</a
+      ><a name="7726" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="7729"
+      > </a
+      ><a name="7730" href="FunUniverse.Cost.html#7730" class="Bound"
+      >n</a
+      ><a name="7731" class="Symbol"
+      >}</a
+      ><a name="7732"
+      > </a
+      ><a name="7733" class="Symbol"
+      >(</a
+      ><a name="7734" href="FunUniverse.Cost.html#7734" class="Bound"
+      >b</a
+      ><a name="7735"
+      > </a
+      ><a name="7736" href="Data.Vec.html#663" class="InductiveConstructor Operator"
+      >&#8759;</a
+      ><a name="7737"
+      > </a
+      ><a name="7738" href="FunUniverse.Cost.html#7738" class="Bound"
+      >bs</a
+      ><a name="7740" class="Symbol"
+      >)</a
+      ><a name="7741"
+      > </a
+      ><a name="7742" class="Keyword"
+      >rewrite</a
+      ><a name="7749"
+      > </a
+      ><a name="7750" href="FunUniverse.Cost.html#7160" class="Function"
+      >constBit&#8801;0</a
+      ><a name="7760"
+      > </a
+      ><a name="7761" href="FunUniverse.Cost.html#7734" class="Bound"
+      >b</a
+      ><a name="7762"
+      >
+                                     </a
+      ><a name="7800" class="Symbol"
+      >|</a
+      ><a name="7801"
+      > </a
+      ><a name="7802" href="FunUniverse.Cost.html#7639" class="Function"
+      >constBits&#8801;0</a
+      ><a name="7813"
+      > </a
+      ><a name="7814" href="FunUniverse.Cost.html#7738" class="Bound"
+      >bs</a
+      ><a name="7816"
+      > </a
+      ><a name="7817" class="Symbol"
+      >=</a
+      ><a name="7818"
+      > </a
+      ><a name="7819" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >&#8801;.refl</a
+      ><a name="7825"
+      >
+
+  </a
+      ><a name="7829" href="FunUniverse.Cost.html#7829" class="Function"
+      >fromBitsFun&#8801;i</a
+      ><a name="7842"
+      > </a
+      ><a name="7843" class="Symbol"
+      >:</a
+      ><a name="7844"
+      > </a
+      ><a name="7845" class="Symbol"
+      >&#8704;</a
+      ><a name="7846"
+      > </a
+      ><a name="7847" class="Symbol"
+      >{</a
+      ><a name="7848" href="FunUniverse.Cost.html#7848" class="Bound"
+      >i</a
+      ><a name="7849"
+      > </a
+      ><a name="7850" href="FunUniverse.Cost.html#7850" class="Bound"
+      >o</a
+      ><a name="7851" class="Symbol"
+      >}</a
+      ><a name="7852"
+      > </a
+      ><a name="7853" class="Symbol"
+      >(</a
+      ><a name="7854" href="FunUniverse.Cost.html#7854" class="Bound"
+      >f</a
+      ><a name="7855"
+      > </a
+      ><a name="7856" class="Symbol"
+      >:</a
+      ><a name="7857"
+      > </a
+      ><a name="7858" href="FunUniverse.Cost.html#7848" class="Bound"
+      >i</a
+      ><a name="7859"
+      > </a
+      ><a name="7860" href="Data.Bits.html#602" class="Function Operator"
+      >&#8594;&#7495;</a
+      ><a name="7862"
+      > </a
+      ><a name="7863" href="FunUniverse.Cost.html#7850" class="Bound"
+      >o</a
+      ><a name="7864" class="Symbol"
+      >)</a
+      ><a name="7865"
+      > </a
+      ><a name="7866" class="Symbol"
+      >&#8594;</a
+      ><a name="7867"
+      > </a
+      ><a name="7868" href="FunUniverse.Core.html#7273" class="Function"
+      >fromBitsFun</a
+      ><a name="7879"
+      > </a
+      ><a name="7880" href="FunUniverse.Cost.html#7854" class="Bound"
+      >f</a
+      ><a name="7881"
+      > </a
+      ><a name="7882" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="7883"
+      > </a
+      ><a name="7884" href="FunUniverse.Cost.html#7848" class="Bound"
+      >i</a
+      ><a name="7885"
+      >
+  </a
+      ><a name="7888" href="FunUniverse.Cost.html#7829" class="Function"
+      >fromBitsFun&#8801;i</a
+      ><a name="7901"
+      > </a
+      ><a name="7902" class="Symbol"
+      >{</a
+      ><a name="7903" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="7907" class="Symbol"
+      >}</a
+      ><a name="7908"
+      >  </a
+      ><a name="7910" href="FunUniverse.Cost.html#7910" class="Bound"
+      >f</a
+      ><a name="7911"
+      > </a
+      ><a name="7912" class="Keyword"
+      >rewrite</a
+      ><a name="7919"
+      > </a
+      ><a name="7920" href="FunUniverse.Cost.html#7639" class="Function"
+      >constBits&#8801;0</a
+      ><a name="7931"
+      > </a
+      ><a name="7932" class="Symbol"
+      >(</a
+      ><a name="7933" href="FunUniverse.Cost.html#7910" class="Bound"
+      >f</a
+      ><a name="7934"
+      > </a
+      ><a name="7935" href="Data.Vec.html#644" class="InductiveConstructor"
+      >[]</a
+      ><a name="7937" class="Symbol"
+      >)</a
+      ><a name="7938"
+      > </a
+      ><a name="7939" class="Symbol"
+      >=</a
+      ><a name="7940"
+      > </a
+      ><a name="7941" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >&#8801;.refl</a
+      ><a name="7947"
+      >
+  </a
+      ><a name="7950" href="FunUniverse.Cost.html#7829" class="Function"
+      >fromBitsFun&#8801;i</a
+      ><a name="7963"
+      > </a
+      ><a name="7964" class="Symbol"
+      >{</a
+      ><a name="7965" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="7968"
+      > </a
+      ><a name="7969" href="FunUniverse.Cost.html#7969" class="Bound"
+      >i</a
+      ><a name="7970" class="Symbol"
+      >}</a
+      ><a name="7971"
+      > </a
+      ><a name="7972" href="FunUniverse.Cost.html#7972" class="Bound"
+      >f</a
+      ><a name="7973"
+      > </a
+      ><a name="7974" class="Keyword"
+      >rewrite</a
+      ><a name="7981"
+      > </a
+      ><a name="7982" href="FunUniverse.Cost.html#7829" class="Function"
+      >fromBitsFun&#8801;i</a
+      ><a name="7995"
+      > </a
+      ><a name="7996" class="Symbol"
+      >{</a
+      ><a name="7997" href="FunUniverse.Cost.html#7969" class="Bound"
+      >i</a
+      ><a name="7998" class="Symbol"
+      >}</a
+      ><a name="7999"
+      > </a
+      ><a name="8000" class="Symbol"
+      >(</a
+      ><a name="8001" href="FunUniverse.Cost.html#7972" class="Bound"
+      >f</a
+      ><a name="8002"
+      > </a
+      ><a name="8003" href="Function.html#898" class="Function Operator"
+      >&#8728;&#8242;</a
+      ><a name="8005"
+      > </a
+      ><a name="8006" href="Data.Bits.html#886" class="Function Operator"
+      >1&#8759;_</a
+      ><a name="8009" class="Symbol"
+      >)</a
+      ><a name="8010"
+      >
+                                </a
+      ><a name="8043" class="Symbol"
+      >|</a
+      ><a name="8044"
+      > </a
+      ><a name="8045" href="FunUniverse.Cost.html#7829" class="Function"
+      >fromBitsFun&#8801;i</a
+      ><a name="8058"
+      > </a
+      ><a name="8059" class="Symbol"
+      >{</a
+      ><a name="8060" href="FunUniverse.Cost.html#7969" class="Bound"
+      >i</a
+      ><a name="8061" class="Symbol"
+      >}</a
+      ><a name="8062"
+      > </a
+      ><a name="8063" class="Symbol"
+      >(</a
+      ><a name="8064" href="FunUniverse.Cost.html#7972" class="Bound"
+      >f</a
+      ><a name="8065"
+      > </a
+      ><a name="8066" href="Function.html#898" class="Function Operator"
+      >&#8728;&#8242;</a
+      ><a name="8068"
+      > </a
+      ><a name="8069" href="Data.Bits.html#793" class="Function Operator"
+      >0&#8759;_</a
+      ><a name="8072" class="Symbol"
+      >)</a
+      ><a name="8073"
+      >
+                                </a
+      ><a name="8106" class="Symbol"
+      >|</a
+      ><a name="8107"
+      > </a
+      ><a name="8108" href="Algebra.Structures.html#1414" class="Function"
+      >&#8469;&#176;.+-comm</a
+      ><a name="8117"
+      > </a
+      ><a name="8118" class="Symbol"
+      >(</a
+      ><a name="8119" href="FunUniverse.Cost.html#7969" class="Bound"
+      >i</a
+      ><a name="8120"
+      > </a
+      ><a name="8121" href="Data.Nat.html#2639" class="Function Operator"
+      >&#8852;</a
+      ><a name="8122"
+      > </a
+      ><a name="8123" href="FunUniverse.Cost.html#7969" class="Bound"
+      >i</a
+      ><a name="8124" class="Symbol"
+      >)</a
+      ><a name="8125"
+      > </a
+      ><a name="8126" class="Number"
+      >0</a
+      ><a name="8127"
+      >
+                                </a
+      ><a name="8160" class="Symbol"
+      >=</a
+      ><a name="8161"
+      > </a
+      ><a name="8162" href="Relation.Binary.PropositionalEquality.html#1034" class="Function"
+      >&#8801;.cong</a
+      ><a name="8168"
+      > </a
+      ><a name="8169" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="8172"
+      > </a
+      ><a name="8173" class="Symbol"
+      >(</a
+      ><a name="8174" href="FunUniverse.Cost.html#1210" class="Function"
+      >i&#8852;i&#8801;i</a
+      ><a name="8179"
+      > </a
+      ><a name="8180" href="FunUniverse.Cost.html#7969" class="Bound"
+      >i</a
+      ><a name="8181" class="Symbol"
+      >)</a
+      ><a name="8182"
+      >
+
+                                </a
+      ><a name="8216" class="Comment"
+      >{-
+spaceLin : LinRewiring SpaceCost
+spaceLin =
+  record {
+    id = 0;
+    _&#8728;_ = _+_;
+    first = F.id;
+    swap = 0;
+    assoc = 0;
+    &lt;tt,id&gt; = 0;
+    snd&lt;tt,&gt; = 0;
+    &lt;_&#215;_&gt; = _+_;
+    second = F.id;
+    tt&#8594;[] = 0;
+    []&#8594;tt = 0;
+    &lt;&#8759;&gt; = 0;
+    uncons = 0 }
+
+spaceLin&#8801;seqTimeLin : spaceLin &#8801; seqTimeLin
+spaceLin&#8801;seqTimeLin = &#8801;.refl
+
+spaceRewiring : Rewiring TimeCost
+spaceRewiring =
+  record {
+    linRewiring = spaceLin;
+    tt = 0;
+    dup = 1;
+    &lt;[]&gt; = 0;
+    &lt;_,_&gt; = 1+_+_;
+    fst = 0;
+    snd = 0;
+    rewire = &#955; {_} {o} _ &#8594; o;
+    rewireTbl = &#955; {_} {o} _ &#8594; o }
+
+spaceFork : HasFork SpaceCost
+spaceFork = record { cond = 1; fork = 1+_+_ }
+
+spaceOps : FunOps SpaceCost
+spaceOps = record { rewiring = spaceRewiring; hasFork = spaceFork;
+                    &lt;0&#8322;&gt; = 1; &lt;1&#8322;&gt; = 1 }
+
+             {-
+-- So far the space cost model is like the sequential time cost model but makes &lt;0&#8322;&gt;,&lt;1&#8322;&gt;,dup
+-- cost one unit of space.
+spaceOps&#8801;seqTimeOps : spaceOps &#8801; record seqTimeOps { &lt;0&#8322;&gt; = 1; &lt;1&#8322;&gt; = 1; dup = 1; &lt;_,_&gt; = 1+_+_
+                                                    ; &lt;&#8759;&gt; = 0; uncons = 0 } -- same bug here
+spaceOps&#8801;seqTimeOps = &#8801;.refl
+-}
+
+module SpaceOps where
+  open FunOps spaceOps public
+
+  snoc&#8801;0 : &#8704; n &#8594; snoc {n} &#8801; 0
+  snoc&#8801;0 zero = &#8801;.refl
+  snoc&#8801;0 (suc n) rewrite snoc&#8801;0 n = &#8801;.refl
+
+  reverse&#8801;0 : &#8704; n &#8594; reverse {n} &#8801; 0
+  reverse&#8801;0 zero = &#8801;.refl
+  reverse&#8801;0 (suc n) rewrite snoc&#8801;0 n | reverse&#8801;0 n = &#8801;.refl
+
+  foldl&#8801;* : &#8704; m n &#8594; foldl {m} n &#8801; m * n
+  foldl&#8801;* zero n = &#8801;.refl
+  foldl&#8801;* (suc m) n rewrite foldl&#8801;* m n
+                          | &#8469;&#176;.+-comm n 0
+                          | &#8469;&#176;.+-comm (m * n + n) 0
+                          | &#8469;&#176;.+-comm (m * n + n) 0
+                          | &#8469;&#176;.+-comm (m * n) n
+                          = &#8801;.refl
+
+  replicate&#8801;n : &#8704; n &#8594; replicate {n} &#8801; n
+  replicate&#8801;n zero = &#8801;.refl
+  replicate&#8801;n (suc n) rewrite replicate&#8801;n n = &#8801;.refl
+
+  constBit&#8801;1 : &#8704; b &#8594; constBit b &#8801; 1
+  constBit&#8801;1 true  = &#8801;.refl
+  constBit&#8801;1 false = &#8801;.refl
+
+  constVec&#8868;&#8801;sum : &#8704; {n b} {B : Set b} (f : B &#8594; Space) xs &#8594; constVec&#8868; {n} f xs &#8801; V.sum (V.map f xs)
+  constVec&#8868;&#8801;sum f [] = &#8801;.refl
+  constVec&#8868;&#8801;sum {suc n} f (b &#8759; bs) rewrite &#8469;&#176;.+-comm (f b + constVec&#8868; f bs) 0
+                                          | constVec&#8868;&#8801;sum f bs = &#8801;.refl
+
+  constVec&#8801;sum : &#8704; {n b} {B : Set b} (f : B &#8594; Space) xs &#8594; constVec {n} f xs &#8801; V.sum (V.map f xs)
+  constVec&#8801;sum f xs rewrite constVec&#8868;&#8801;sum f xs | &#8469;&#176;.+-comm (V.sum (V.map f xs)) 0 = &#8801;.refl
+
+  constBits&#8801;n : &#8704; {n} xs &#8594; constBits {n} xs &#8801; n
+  constBits&#8801;n [] = &#8801;.refl
+  constBits&#8801;n {suc n} (b &#8759; bs) rewrite constBit&#8801;1 b
+                                     | constBits&#8801;n bs
+                                     | &#8469;&#176;.+-comm n 0 = &#8801;.refl
+
+  fromBitsFun-cost : &#8704; (i o : &#8469;) &#8594; &#8469;
+  fromBitsFun-cost zero    o = o
+  fromBitsFun-cost (suc i) o = 1 + 2*(fromBitsFun-cost i o)
+
+  fromBitsFun&#8801; : &#8704; {i o} (f : i &#8594;&#7495; o) &#8594; fromBitsFun f &#8801; fromBitsFun-cost i o
+  fromBitsFun&#8801; {zero}  {o} f rewrite constBits&#8801;n (f []) | &#8469;&#176;.+-comm o 0 = &#8801;.refl
+  fromBitsFun&#8801; {suc i} {o} f rewrite fromBitsFun&#8801; {i} (f &#8728;&#8242; 1&#8759;_)
+                                   | fromBitsFun&#8801; {i} (f &#8728;&#8242; 0&#8759;_)
+                                   | &#8469;&#176;.+-comm (2* (fromBitsFun-cost i o)) 0
+                                   = &#8801;.refl
+
+{-
+time&#215;spaceOps : FunOps (constFuns (&#8469; &#215; &#8469;))
+time&#215;spaceOps = &#215;&#8868;-Ops timeOps spaceOps
+
+module Time&#215;SpaceOps = FunOps time&#215;spaceOps
+-}
+-- -}</a
+      ><a name="11581"
+      >
+</a
+      ><a name="11582" class="Comment"
+      >-- -}</a
+      ><a name="11587"
+      >
+</a
+      ><a name="11588" class="Comment"
+      >-- -}</a
+      ><a name="11593"
+      >
+</a
+      ><a name="11594" class="Comment"
+      >-- -}</a
+      ><a name="11599"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

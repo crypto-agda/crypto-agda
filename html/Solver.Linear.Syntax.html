@@ -1,0 +1,378 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Solver.Linear.Syntax</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Symbol"
+      >{-#</a
+      ><a name="4"
+      > </a
+      ><a name="5" class="Keyword"
+      >OPTIONS</a
+      ><a name="12"
+      > --without-K </a
+      ><a name="25" class="Symbol"
+      >#-}</a
+      ><a name="28"
+      >
+</a
+      ><a name="29" class="Keyword"
+      >open</a
+      ><a name="33"
+      > </a
+      ><a name="34" class="Keyword"
+      >import</a
+      ><a name="40"
+      > </a
+      ><a name="41" href="Type.html#1" class="Module"
+      >Type</a
+      ><a name="45"
+      >
+</a
+      ><a name="46" class="Keyword"
+      >open</a
+      ><a name="50"
+      > </a
+      ><a name="51" class="Keyword"
+      >import</a
+      ><a name="57"
+      > </a
+      ><a name="58" href="Data.List.html#1" class="Module"
+      >Data.List</a
+      ><a name="67"
+      >
+
+</a
+      ><a name="69" class="Keyword"
+      >module</a
+      ><a name="75"
+      > </a
+      ><a name="76" href="Solver.Linear.Syntax.html#1" class="Module"
+      >Solver.Linear.Syntax</a
+      ><a name="96"
+      > </a
+      ><a name="97" class="Symbol"
+      >{</a
+      ><a name="98" href="Solver.Linear.Syntax.html#98" class="Bound"
+      >a</a
+      ><a name="99" class="Symbol"
+      >}</a
+      ><a name="100"
+      > </a
+      ><a name="101" class="Symbol"
+      >(</a
+      ><a name="102" href="Solver.Linear.Syntax.html#102" class="Bound"
+      >Var</a
+      ><a name="105"
+      > </a
+      ><a name="106" class="Symbol"
+      >:</a
+      ><a name="107"
+      > </a
+      ><a name="108" href="Type.html#140" class="Function Operator"
+      >&#9733;_</a
+      ><a name="110"
+      > </a
+      ><a name="111" href="Solver.Linear.Syntax.html#98" class="Bound"
+      >a</a
+      ><a name="112" class="Symbol"
+      >)</a
+      ><a name="113"
+      > </a
+      ><a name="114" class="Keyword"
+      >where</a
+      ><a name="119"
+      >
+
+  </a
+      ><a name="123" class="Keyword"
+      >infixr</a
+      ><a name="129"
+      > </a
+      ><a name="130" class="Number"
+      >5</a
+      ><a name="131"
+      > _,_
+  </a
+      ><a name="138" class="Keyword"
+      >data</a
+      ><a name="142"
+      > </a
+      ><a name="143" href="Solver.Linear.Syntax.html#143" class="Datatype"
+      >Syn</a
+      ><a name="146"
+      > </a
+      ><a name="147" class="Symbol"
+      >:</a
+      ><a name="148"
+      > </a
+      ><a name="149" class="PrimitiveType"
+      >Set</a
+      ><a name="152"
+      > </a
+      ><a name="153" href="Solver.Linear.Syntax.html#98" class="Bound"
+      >a</a
+      ><a name="154"
+      > </a
+      ><a name="155" class="Keyword"
+      >where</a
+      ><a name="160"
+      >
+   </a
+      ><a name="164" href="Solver.Linear.Syntax.html#164" class="InductiveConstructor"
+      >var</a
+      ><a name="167"
+      > </a
+      ><a name="168" class="Symbol"
+      >:</a
+      ><a name="169"
+      > </a
+      ><a name="170" href="Solver.Linear.Syntax.html#102" class="Bound"
+      >Var</a
+      ><a name="173"
+      > </a
+      ><a name="174" class="Symbol"
+      >&#8594;</a
+      ><a name="175"
+      > </a
+      ><a name="176" href="Solver.Linear.Syntax.html#143" class="Datatype"
+      >Syn</a
+      ><a name="179"
+      >
+   </a
+      ><a name="183" href="Solver.Linear.Syntax.html#183" class="InductiveConstructor"
+      >tt</a
+      ><a name="185"
+      >  </a
+      ><a name="187" class="Symbol"
+      >:</a
+      ><a name="188"
+      > </a
+      ><a name="189" href="Solver.Linear.Syntax.html#143" class="Datatype"
+      >Syn</a
+      ><a name="192"
+      >
+   </a
+      ><a name="196" href="Solver.Linear.Syntax.html#196" class="InductiveConstructor Operator"
+      >_,_</a
+      ><a name="199"
+      > </a
+      ><a name="200" class="Symbol"
+      >:</a
+      ><a name="201"
+      > </a
+      ><a name="202" href="Solver.Linear.Syntax.html#143" class="Datatype"
+      >Syn</a
+      ><a name="205"
+      > </a
+      ><a name="206" class="Symbol"
+      >&#8594;</a
+      ><a name="207"
+      > </a
+      ><a name="208" href="Solver.Linear.Syntax.html#143" class="Datatype"
+      >Syn</a
+      ><a name="211"
+      > </a
+      ><a name="212" class="Symbol"
+      >&#8594;</a
+      ><a name="213"
+      > </a
+      ><a name="214" href="Solver.Linear.Syntax.html#143" class="Datatype"
+      >Syn</a
+      ><a name="217"
+      >
+
+  </a
+      ><a name="221" class="Keyword"
+      >infix</a
+      ><a name="226"
+      > </a
+      ><a name="227" class="Number"
+      >4</a
+      ><a name="228"
+      > _&#8614;_
+
+  </a
+      ><a name="236" class="Keyword"
+      >record</a
+      ><a name="242"
+      > </a
+      ><a name="243" href="Solver.Linear.Syntax.html#243" class="Record"
+      >Eq</a
+      ><a name="245"
+      > </a
+      ><a name="246" class="Symbol"
+      >:</a
+      ><a name="247"
+      > </a
+      ><a name="248" class="PrimitiveType"
+      >Set</a
+      ><a name="251"
+      > </a
+      ><a name="252" href="Solver.Linear.Syntax.html#98" class="Bound"
+      >a</a
+      ><a name="253"
+      > </a
+      ><a name="254" class="Keyword"
+      >where</a
+      ><a name="259"
+      >
+    </a
+      ><a name="264" class="Keyword"
+      >constructor</a
+      ><a name="275"
+      > </a
+      ><a name="276" href="Solver.Linear.Syntax.html#276" class="InductiveConstructor Operator"
+      >_&#8614;_</a
+      ><a name="279"
+      >
+    </a
+      ><a name="284" class="Keyword"
+      >field</a
+      ><a name="289"
+      >
+      </a
+      ><a name="296" href="Solver.Linear.Syntax.html#296" class="Field"
+      >LHS</a
+      ><a name="299"
+      > </a
+      ><a name="300" href="Solver.Linear.Syntax.html#300" class="Field"
+      >RHS</a
+      ><a name="303"
+      > </a
+      ><a name="304" class="Symbol"
+      >:</a
+      ><a name="305"
+      > </a
+      ><a name="306" href="Solver.Linear.Syntax.html#143" class="Datatype"
+      >Syn</a
+      ><a name="309"
+      >
+  </a
+      ><a name="312" class="Keyword"
+      >open</a
+      ><a name="316"
+      > </a
+      ><a name="317" href="Solver.Linear.Syntax.html#243" class="Module"
+      >Eq</a
+      ><a name="319"
+      > </a
+      ><a name="320" class="Keyword"
+      >public</a
+      ><a name="326"
+      >
+
+  </a
+      ><a name="330" href="Solver.Linear.Syntax.html#330" class="Function"
+      >tuple</a
+      ><a name="335"
+      > </a
+      ><a name="336" class="Symbol"
+      >:</a
+      ><a name="337"
+      > </a
+      ><a name="338" href="Solver.Linear.Syntax.html#143" class="Datatype"
+      >Syn</a
+      ><a name="341"
+      > </a
+      ><a name="342" class="Symbol"
+      >&#8594;</a
+      ><a name="343"
+      > </a
+      ><a name="344" href="Data.List.html#659" class="Datatype"
+      >List</a
+      ><a name="348"
+      > </a
+      ><a name="349" href="Solver.Linear.Syntax.html#143" class="Datatype"
+      >Syn</a
+      ><a name="352"
+      > </a
+      ><a name="353" class="Symbol"
+      >&#8594;</a
+      ><a name="354"
+      > </a
+      ><a name="355" href="Solver.Linear.Syntax.html#143" class="Datatype"
+      >Syn</a
+      ><a name="358"
+      >
+  </a
+      ><a name="361" href="Solver.Linear.Syntax.html#330" class="Function"
+      >tuple</a
+      ><a name="366"
+      > </a
+      ><a name="367" href="Solver.Linear.Syntax.html#367" class="Bound"
+      >x</a
+      ><a name="368"
+      > </a
+      ><a name="369" href="Data.List.html#696" class="InductiveConstructor"
+      >[]</a
+      ><a name="371"
+      >       </a
+      ><a name="378" class="Symbol"
+      >=</a
+      ><a name="379"
+      > </a
+      ><a name="380" href="Solver.Linear.Syntax.html#367" class="Bound"
+      >x</a
+      ><a name="381"
+      >
+  </a
+      ><a name="384" href="Solver.Linear.Syntax.html#330" class="Function"
+      >tuple</a
+      ><a name="389"
+      > </a
+      ><a name="390" href="Solver.Linear.Syntax.html#390" class="Bound"
+      >x</a
+      ><a name="391"
+      > </a
+      ><a name="392" class="Symbol"
+      >(</a
+      ><a name="393" href="Solver.Linear.Syntax.html#393" class="Bound"
+      >y</a
+      ><a name="394"
+      > </a
+      ><a name="395" href="Data.List.html#711" class="InductiveConstructor Operator"
+      >&#8759;</a
+      ><a name="396"
+      > </a
+      ><a name="397" href="Solver.Linear.Syntax.html#397" class="Bound"
+      >ys</a
+      ><a name="399" class="Symbol"
+      >)</a
+      ><a name="400"
+      > </a
+      ><a name="401" class="Symbol"
+      >=</a
+      ><a name="402"
+      > </a
+      ><a name="403" href="Solver.Linear.Syntax.html#390" class="Bound"
+      >x</a
+      ><a name="404"
+      > </a
+      ><a name="405" href="Solver.Linear.Syntax.html#196" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="406"
+      > </a
+      ><a name="407" href="Solver.Linear.Syntax.html#330" class="Function"
+      >tuple</a
+      ><a name="412"
+      > </a
+      ><a name="413" href="Solver.Linear.Syntax.html#393" class="Bound"
+      >y</a
+      ><a name="414"
+      > </a
+      ><a name="415" href="Solver.Linear.Syntax.html#397" class="Bound"
+      >ys</a
+      ><a name="417"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

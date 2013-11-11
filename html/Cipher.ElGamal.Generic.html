@@ -1,0 +1,1023 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Cipher.ElGamal.Generic</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Symbol"
+      >{-#</a
+      ><a name="4"
+      > </a
+      ><a name="5" class="Keyword"
+      >OPTIONS</a
+      ><a name="12"
+      > --without-K </a
+      ><a name="25" class="Symbol"
+      >#-}</a
+      ><a name="28"
+      >
+</a
+      ><a name="29" class="Keyword"
+      >open</a
+      ><a name="33"
+      > </a
+      ><a name="34" class="Keyword"
+      >import</a
+      ><a name="40"
+      > </a
+      ><a name="41" href="Type.html#1" class="Module"
+      >Type</a
+      ><a name="45"
+      >
+</a
+      ><a name="46" class="Keyword"
+      >open</a
+      ><a name="50"
+      > </a
+      ><a name="51" class="Keyword"
+      >import</a
+      ><a name="57"
+      > </a
+      ><a name="58" href="Data.Product.html#1" class="Module"
+      >Data.Product</a
+      ><a name="70"
+      >
+</a
+      ><a name="71" class="Keyword"
+      >open</a
+      ><a name="75"
+      > </a
+      ><a name="76" class="Keyword"
+      >import</a
+      ><a name="82"
+      > </a
+      ><a name="83" href="Relation.Binary.PropositionalEquality.NP.html#1" class="Module"
+      >Relation.Binary.PropositionalEquality.NP</a
+      ><a name="123"
+      >
+
+</a
+      ><a name="125" class="Keyword"
+      >module</a
+      ><a name="131"
+      > </a
+      ><a name="132" href="Cipher.ElGamal.Generic.html#1" class="Module"
+      >Cipher.ElGamal.Generic</a
+      ><a name="154"
+      >
+  </a
+      ><a name="157" class="Symbol"
+      >(</a
+      ><a name="158" href="Cipher.ElGamal.Generic.html#158" class="Bound"
+      >Message</a
+      ><a name="165"
+      > </a
+      ><a name="166" class="Symbol"
+      >:</a
+      ><a name="167"
+      > </a
+      ><a name="168" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="169" class="Symbol"
+      >)</a
+      ><a name="170"
+      >
+  </a
+      ><a name="173" class="Symbol"
+      >(</a
+      ><a name="174" href="Cipher.ElGamal.Generic.html#174" class="Bound"
+      >&#8484;q</a
+      ><a name="176"
+      >      </a
+      ><a name="182" class="Symbol"
+      >:</a
+      ><a name="183"
+      > </a
+      ><a name="184" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="185" class="Symbol"
+      >)</a
+      ><a name="186"
+      >
+  </a
+      ><a name="189" class="Symbol"
+      >(</a
+      ><a name="190" href="Cipher.ElGamal.Generic.html#190" class="Bound"
+      >G</a
+      ><a name="191"
+      >       </a
+      ><a name="198" class="Symbol"
+      >:</a
+      ><a name="199"
+      > </a
+      ><a name="200" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="201" class="Symbol"
+      >)</a
+      ><a name="202"
+      >
+  </a
+      ><a name="205" class="Symbol"
+      >(</a
+      ><a name="206" href="Cipher.ElGamal.Generic.html#206" class="Bound"
+      >g</a
+      ><a name="207"
+      >       </a
+      ><a name="214" class="Symbol"
+      >:</a
+      ><a name="215"
+      > </a
+      ><a name="216" href="Cipher.ElGamal.Generic.html#190" class="Bound"
+      >G</a
+      ><a name="217" class="Symbol"
+      >)</a
+      ><a name="218"
+      >
+  </a
+      ><a name="221" class="Symbol"
+      >(</a
+      ><a name="222" href="Cipher.ElGamal.Generic.html#222" class="Bound Operator"
+      >_^_</a
+      ><a name="225"
+      >     </a
+      ><a name="230" class="Symbol"
+      >:</a
+      ><a name="231"
+      > </a
+      ><a name="232" href="Cipher.ElGamal.Generic.html#190" class="Bound"
+      >G</a
+      ><a name="233"
+      > </a
+      ><a name="234" class="Symbol"
+      >&#8594;</a
+      ><a name="235"
+      > </a
+      ><a name="236" href="Cipher.ElGamal.Generic.html#174" class="Bound"
+      >&#8484;q</a
+      ><a name="238"
+      > </a
+      ><a name="239" class="Symbol"
+      >&#8594;</a
+      ><a name="240"
+      > </a
+      ><a name="241" href="Cipher.ElGamal.Generic.html#190" class="Bound"
+      >G</a
+      ><a name="242" class="Symbol"
+      >)</a
+      ><a name="243"
+      >
+
+  </a
+      ><a name="247" class="Comment"
+      >-- Required for encryption</a
+      ><a name="273"
+      >
+  </a
+      ><a name="276" class="Symbol"
+      >(</a
+      ><a name="277" href="Cipher.ElGamal.Generic.html#277" class="Bound Operator"
+      >_&#9830;_</a
+      ><a name="280"
+      >     </a
+      ><a name="285" class="Symbol"
+      >:</a
+      ><a name="286"
+      > </a
+      ><a name="287" href="Cipher.ElGamal.Generic.html#190" class="Bound"
+      >G</a
+      ><a name="288"
+      > </a
+      ><a name="289" class="Symbol"
+      >&#8594;</a
+      ><a name="290"
+      > </a
+      ><a name="291" href="Cipher.ElGamal.Generic.html#158" class="Bound"
+      >Message</a
+      ><a name="298"
+      > </a
+      ><a name="299" class="Symbol"
+      >&#8594;</a
+      ><a name="300"
+      > </a
+      ><a name="301" href="Cipher.ElGamal.Generic.html#158" class="Bound"
+      >Message</a
+      ><a name="308" class="Symbol"
+      >)</a
+      ><a name="309"
+      >
+
+  </a
+      ><a name="313" class="Comment"
+      >-- Required for decryption</a
+      ><a name="339"
+      >
+  </a
+      ><a name="342" class="Symbol"
+      >(</a
+      ><a name="343" href="Cipher.ElGamal.Generic.html#343" class="Bound Operator"
+      >_/_</a
+      ><a name="346"
+      >     </a
+      ><a name="351" class="Symbol"
+      >:</a
+      ><a name="352"
+      > </a
+      ><a name="353" href="Cipher.ElGamal.Generic.html#158" class="Bound"
+      >Message</a
+      ><a name="360"
+      > </a
+      ><a name="361" class="Symbol"
+      >&#8594;</a
+      ><a name="362"
+      > </a
+      ><a name="363" href="Cipher.ElGamal.Generic.html#190" class="Bound"
+      >G</a
+      ><a name="364"
+      > </a
+      ><a name="365" class="Symbol"
+      >&#8594;</a
+      ><a name="366"
+      > </a
+      ><a name="367" href="Cipher.ElGamal.Generic.html#158" class="Bound"
+      >Message</a
+      ><a name="374" class="Symbol"
+      >)</a
+      ><a name="375"
+      >
+</a
+      ><a name="376" class="Keyword"
+      >where</a
+      ><a name="381"
+      >
+
+</a
+      ><a name="383" href="Cipher.ElGamal.Generic.html#383" class="Function"
+      >PubKey</a
+      ><a name="389"
+      >     </a
+      ><a name="394" class="Symbol"
+      >=</a
+      ><a name="395"
+      > </a
+      ><a name="396" href="Cipher.ElGamal.Generic.html#190" class="Bound"
+      >G</a
+      ><a name="397"
+      >
+</a
+      ><a name="398" href="Cipher.ElGamal.Generic.html#398" class="Function"
+      >SecKey</a
+      ><a name="404"
+      >     </a
+      ><a name="409" class="Symbol"
+      >=</a
+      ><a name="410"
+      > </a
+      ><a name="411" href="Cipher.ElGamal.Generic.html#174" class="Bound"
+      >&#8484;q</a
+      ><a name="413"
+      >
+</a
+      ><a name="414" href="Cipher.ElGamal.Generic.html#414" class="Function"
+      >CipherText</a
+      ><a name="424"
+      > </a
+      ><a name="425" class="Symbol"
+      >=</a
+      ><a name="426"
+      > </a
+      ><a name="427" href="Cipher.ElGamal.Generic.html#190" class="Bound"
+      >G</a
+      ><a name="428"
+      > </a
+      ><a name="429" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="430"
+      > </a
+      ><a name="431" href="Cipher.ElGamal.Generic.html#158" class="Bound"
+      >Message</a
+      ><a name="438"
+      >
+</a
+      ><a name="439" href="Cipher.ElGamal.Generic.html#439" class="Function"
+      >R&#8342;</a
+      ><a name="441"
+      >         </a
+      ><a name="450" class="Symbol"
+      >=</a
+      ><a name="451"
+      > </a
+      ><a name="452" href="Cipher.ElGamal.Generic.html#174" class="Bound"
+      >&#8484;q</a
+      ><a name="454"
+      >
+</a
+      ><a name="455" href="Cipher.ElGamal.Generic.html#455" class="Function"
+      >R&#8337;</a
+      ><a name="457"
+      >         </a
+      ><a name="466" class="Symbol"
+      >=</a
+      ><a name="467"
+      > </a
+      ><a name="468" href="Cipher.ElGamal.Generic.html#174" class="Bound"
+      >&#8484;q</a
+      ><a name="470"
+      >
+
+</a
+      ><a name="472" href="Cipher.ElGamal.Generic.html#472" class="Function"
+      >PubKeyGen</a
+      ><a name="481"
+      > </a
+      ><a name="482" class="Symbol"
+      >:</a
+      ><a name="483"
+      > </a
+      ><a name="484" href="Cipher.ElGamal.Generic.html#439" class="Function"
+      >R&#8342;</a
+      ><a name="486"
+      > </a
+      ><a name="487" class="Symbol"
+      >&#8594;</a
+      ><a name="488"
+      > </a
+      ><a name="489" href="Cipher.ElGamal.Generic.html#383" class="Function"
+      >PubKey</a
+      ><a name="495"
+      >
+</a
+      ><a name="496" href="Cipher.ElGamal.Generic.html#472" class="Function"
+      >PubKeyGen</a
+      ><a name="505"
+      > </a
+      ><a name="506" href="Cipher.ElGamal.Generic.html#506" class="Bound"
+      >x</a
+      ><a name="507"
+      > </a
+      ><a name="508" class="Symbol"
+      >=</a
+      ><a name="509"
+      > </a
+      ><a name="510" href="Cipher.ElGamal.Generic.html#206" class="Bound"
+      >g</a
+      ><a name="511"
+      > </a
+      ><a name="512" href="Cipher.ElGamal.Generic.html#222" class="Bound Operator"
+      >^</a
+      ><a name="513"
+      > </a
+      ><a name="514" href="Cipher.ElGamal.Generic.html#506" class="Bound"
+      >x</a
+      ><a name="515"
+      >
+
+</a
+      ><a name="517" href="Cipher.ElGamal.Generic.html#517" class="Function"
+      >KeyGen</a
+      ><a name="523"
+      > </a
+      ><a name="524" class="Symbol"
+      >:</a
+      ><a name="525"
+      > </a
+      ><a name="526" href="Cipher.ElGamal.Generic.html#439" class="Function"
+      >R&#8342;</a
+      ><a name="528"
+      > </a
+      ><a name="529" class="Symbol"
+      >&#8594;</a
+      ><a name="530"
+      > </a
+      ><a name="531" href="Cipher.ElGamal.Generic.html#383" class="Function"
+      >PubKey</a
+      ><a name="537"
+      > </a
+      ><a name="538" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="539"
+      > </a
+      ><a name="540" href="Cipher.ElGamal.Generic.html#398" class="Function"
+      >SecKey</a
+      ><a name="546"
+      >
+</a
+      ><a name="547" href="Cipher.ElGamal.Generic.html#517" class="Function"
+      >KeyGen</a
+      ><a name="553"
+      > </a
+      ><a name="554" href="Cipher.ElGamal.Generic.html#554" class="Bound"
+      >x</a
+      ><a name="555"
+      > </a
+      ><a name="556" class="Symbol"
+      >=</a
+      ><a name="557"
+      > </a
+      ><a name="558" class="Symbol"
+      >(</a
+      ><a name="559" href="Cipher.ElGamal.Generic.html#206" class="Bound"
+      >g</a
+      ><a name="560"
+      > </a
+      ><a name="561" href="Cipher.ElGamal.Generic.html#222" class="Bound Operator"
+      >^</a
+      ><a name="562"
+      > </a
+      ><a name="563" href="Cipher.ElGamal.Generic.html#554" class="Bound"
+      >x</a
+      ><a name="564"
+      > </a
+      ><a name="565" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="566"
+      > </a
+      ><a name="567" href="Cipher.ElGamal.Generic.html#554" class="Bound"
+      >x</a
+      ><a name="568" class="Symbol"
+      >)</a
+      ><a name="569"
+      >
+
+</a
+      ><a name="571" href="Cipher.ElGamal.Generic.html#571" class="Function"
+      >Enc</a
+      ><a name="574"
+      > </a
+      ><a name="575" class="Symbol"
+      >:</a
+      ><a name="576"
+      > </a
+      ><a name="577" href="Cipher.ElGamal.Generic.html#383" class="Function"
+      >PubKey</a
+      ><a name="583"
+      > </a
+      ><a name="584" class="Symbol"
+      >&#8594;</a
+      ><a name="585"
+      > </a
+      ><a name="586" href="Cipher.ElGamal.Generic.html#158" class="Bound"
+      >Message</a
+      ><a name="593"
+      > </a
+      ><a name="594" class="Symbol"
+      >&#8594;</a
+      ><a name="595"
+      > </a
+      ><a name="596" href="Cipher.ElGamal.Generic.html#455" class="Function"
+      >R&#8337;</a
+      ><a name="598"
+      > </a
+      ><a name="599" class="Symbol"
+      >&#8594;</a
+      ><a name="600"
+      > </a
+      ><a name="601" href="Cipher.ElGamal.Generic.html#414" class="Function"
+      >CipherText</a
+      ><a name="611"
+      >
+</a
+      ><a name="612" href="Cipher.ElGamal.Generic.html#571" class="Function"
+      >Enc</a
+      ><a name="615"
+      > </a
+      ><a name="616" href="Cipher.ElGamal.Generic.html#616" class="Bound"
+      >g&#739;</a
+      ><a name="618"
+      > </a
+      ><a name="619" href="Cipher.ElGamal.Generic.html#619" class="Bound"
+      >m</a
+      ><a name="620"
+      > </a
+      ><a name="621" href="Cipher.ElGamal.Generic.html#621" class="Bound"
+      >y</a
+      ><a name="622"
+      > </a
+      ><a name="623" class="Symbol"
+      >=</a
+      ><a name="624"
+      > </a
+      ><a name="625" href="Cipher.ElGamal.Generic.html#640" class="Function"
+      >g&#696;</a
+      ><a name="627"
+      > </a
+      ><a name="628" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="629"
+      > </a
+      ><a name="630" href="Cipher.ElGamal.Generic.html#668" class="Function"
+      >&#950;</a
+      ><a name="631"
+      > </a
+      ><a name="632" class="Keyword"
+      >where</a
+      ><a name="637"
+      >
+  </a
+      ><a name="640" href="Cipher.ElGamal.Generic.html#640" class="Function"
+      >g&#696;</a
+      ><a name="642"
+      > </a
+      ><a name="643" class="Symbol"
+      >=</a
+      ><a name="644"
+      > </a
+      ><a name="645" href="Cipher.ElGamal.Generic.html#206" class="Bound"
+      >g</a
+      ><a name="646"
+      >  </a
+      ><a name="648" href="Cipher.ElGamal.Generic.html#222" class="Bound Operator"
+      >^</a
+      ><a name="649"
+      > </a
+      ><a name="650" href="Cipher.ElGamal.Generic.html#621" class="Bound"
+      >y</a
+      ><a name="651"
+      >
+  </a
+      ><a name="654" href="Cipher.ElGamal.Generic.html#654" class="Function"
+      >&#948;</a
+      ><a name="655"
+      >  </a
+      ><a name="657" class="Symbol"
+      >=</a
+      ><a name="658"
+      > </a
+      ><a name="659" href="Cipher.ElGamal.Generic.html#616" class="Bound"
+      >g&#739;</a
+      ><a name="661"
+      > </a
+      ><a name="662" href="Cipher.ElGamal.Generic.html#222" class="Bound Operator"
+      >^</a
+      ><a name="663"
+      > </a
+      ><a name="664" href="Cipher.ElGamal.Generic.html#621" class="Bound"
+      >y</a
+      ><a name="665"
+      >
+  </a
+      ><a name="668" href="Cipher.ElGamal.Generic.html#668" class="Function"
+      >&#950;</a
+      ><a name="669"
+      >  </a
+      ><a name="671" class="Symbol"
+      >=</a
+      ><a name="672"
+      > </a
+      ><a name="673" href="Cipher.ElGamal.Generic.html#654" class="Function"
+      >&#948;</a
+      ><a name="674"
+      >  </a
+      ><a name="676" href="Cipher.ElGamal.Generic.html#277" class="Bound Operator"
+      >&#9830;</a
+      ><a name="677"
+      > </a
+      ><a name="678" href="Cipher.ElGamal.Generic.html#619" class="Bound"
+      >m</a
+      ><a name="679"
+      >
+
+</a
+      ><a name="681" href="Cipher.ElGamal.Generic.html#681" class="Function"
+      >Dec</a
+      ><a name="684"
+      > </a
+      ><a name="685" class="Symbol"
+      >:</a
+      ><a name="686"
+      > </a
+      ><a name="687" href="Cipher.ElGamal.Generic.html#398" class="Function"
+      >SecKey</a
+      ><a name="693"
+      > </a
+      ><a name="694" class="Symbol"
+      >&#8594;</a
+      ><a name="695"
+      > </a
+      ><a name="696" href="Cipher.ElGamal.Generic.html#414" class="Function"
+      >CipherText</a
+      ><a name="706"
+      > </a
+      ><a name="707" class="Symbol"
+      >&#8594;</a
+      ><a name="708"
+      > </a
+      ><a name="709" href="Cipher.ElGamal.Generic.html#158" class="Bound"
+      >Message</a
+      ><a name="716"
+      >
+</a
+      ><a name="717" href="Cipher.ElGamal.Generic.html#681" class="Function"
+      >Dec</a
+      ><a name="720"
+      > </a
+      ><a name="721" href="Cipher.ElGamal.Generic.html#721" class="Bound"
+      >x</a
+      ><a name="722"
+      > </a
+      ><a name="723" class="Symbol"
+      >(</a
+      ><a name="724" href="Cipher.ElGamal.Generic.html#724" class="Bound"
+      >g&#696;</a
+      ><a name="726"
+      > </a
+      ><a name="727" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="728"
+      > </a
+      ><a name="729" href="Cipher.ElGamal.Generic.html#729" class="Bound"
+      >&#950;</a
+      ><a name="730" class="Symbol"
+      >)</a
+      ><a name="731"
+      > </a
+      ><a name="732" class="Symbol"
+      >=</a
+      ><a name="733"
+      > </a
+      ><a name="734" href="Cipher.ElGamal.Generic.html#729" class="Bound"
+      >&#950;</a
+      ><a name="735"
+      > </a
+      ><a name="736" href="Cipher.ElGamal.Generic.html#343" class="Bound Operator"
+      >/</a
+      ><a name="737"
+      > </a
+      ><a name="738" class="Symbol"
+      >(</a
+      ><a name="739" href="Cipher.ElGamal.Generic.html#724" class="Bound"
+      >g&#696;</a
+      ><a name="741"
+      > </a
+      ><a name="742" href="Cipher.ElGamal.Generic.html#222" class="Bound Operator"
+      >^</a
+      ><a name="743"
+      > </a
+      ><a name="744" href="Cipher.ElGamal.Generic.html#721" class="Bound"
+      >x</a
+      ><a name="745" class="Symbol"
+      >)</a
+      ><a name="746"
+      >
+
+</a
+      ><a name="748" class="Keyword"
+      >module</a
+      ><a name="754"
+      > </a
+      ><a name="755" href="Cipher.ElGamal.Generic.html#755" class="Module"
+      >FunctionalCorrectness</a
+      ><a name="776"
+      >
+    </a
+      ><a name="781" class="Symbol"
+      >(</a
+      ><a name="782" href="Cipher.ElGamal.Generic.html#782" class="Bound"
+      >/-&#9830;</a
+      ><a name="785"
+      >    </a
+      ><a name="789" class="Symbol"
+      >:</a
+      ><a name="790"
+      > </a
+      ><a name="791" class="Symbol"
+      >&#8704;</a
+      ><a name="792"
+      > </a
+      ><a name="793" class="Symbol"
+      >{</a
+      ><a name="794" href="Cipher.ElGamal.Generic.html#794" class="Bound"
+      >x</a
+      ><a name="795"
+      > </a
+      ><a name="796" href="Cipher.ElGamal.Generic.html#796" class="Bound"
+      >y</a
+      ><a name="797" class="Symbol"
+      >}</a
+      ><a name="798"
+      > </a
+      ><a name="799" class="Symbol"
+      >&#8594;</a
+      ><a name="800"
+      > </a
+      ><a name="801" class="Symbol"
+      >(</a
+      ><a name="802" href="Cipher.ElGamal.Generic.html#794" class="Bound"
+      >x</a
+      ><a name="803"
+      > </a
+      ><a name="804" href="Cipher.ElGamal.Generic.html#277" class="Bound Operator"
+      >&#9830;</a
+      ><a name="805"
+      > </a
+      ><a name="806" href="Cipher.ElGamal.Generic.html#796" class="Bound"
+      >y</a
+      ><a name="807" class="Symbol"
+      >)</a
+      ><a name="808"
+      > </a
+      ><a name="809" href="Cipher.ElGamal.Generic.html#343" class="Bound Operator"
+      >/</a
+      ><a name="810"
+      > </a
+      ><a name="811" href="Cipher.ElGamal.Generic.html#794" class="Bound"
+      >x</a
+      ><a name="812"
+      > </a
+      ><a name="813" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="814"
+      > </a
+      ><a name="815" href="Cipher.ElGamal.Generic.html#796" class="Bound"
+      >y</a
+      ><a name="816" class="Symbol"
+      >)</a
+      ><a name="817"
+      >
+    </a
+      ><a name="822" class="Symbol"
+      >(</a
+      ><a name="823" href="Cipher.ElGamal.Generic.html#823" class="Bound"
+      >comm-^</a
+      ><a name="829"
+      > </a
+      ><a name="830" class="Symbol"
+      >:</a
+      ><a name="831"
+      > </a
+      ><a name="832" class="Symbol"
+      >&#8704;</a
+      ><a name="833"
+      > </a
+      ><a name="834" class="Symbol"
+      >{</a
+      ><a name="835" href="Cipher.ElGamal.Generic.html#835" class="Bound"
+      >&#945;</a
+      ><a name="836"
+      > </a
+      ><a name="837" href="Cipher.ElGamal.Generic.html#837" class="Bound"
+      >x</a
+      ><a name="838"
+      > </a
+      ><a name="839" href="Cipher.ElGamal.Generic.html#839" class="Bound"
+      >y</a
+      ><a name="840" class="Symbol"
+      >}</a
+      ><a name="841"
+      > </a
+      ><a name="842" class="Symbol"
+      >&#8594;</a
+      ><a name="843"
+      > </a
+      ><a name="844" class="Symbol"
+      >(</a
+      ><a name="845" href="Cipher.ElGamal.Generic.html#835" class="Bound"
+      >&#945;</a
+      ><a name="846"
+      > </a
+      ><a name="847" href="Cipher.ElGamal.Generic.html#222" class="Bound Operator"
+      >^</a
+      ><a name="848"
+      > </a
+      ><a name="849" href="Cipher.ElGamal.Generic.html#837" class="Bound"
+      >x</a
+      ><a name="850" class="Symbol"
+      >)</a
+      ><a name="851" href="Cipher.ElGamal.Generic.html#222" class="Bound Operator"
+      >^</a
+      ><a name="852"
+      > </a
+      ><a name="853" href="Cipher.ElGamal.Generic.html#839" class="Bound"
+      >y</a
+      ><a name="854"
+      > </a
+      ><a name="855" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="856"
+      > </a
+      ><a name="857" class="Symbol"
+      >(</a
+      ><a name="858" href="Cipher.ElGamal.Generic.html#835" class="Bound"
+      >&#945;</a
+      ><a name="859"
+      > </a
+      ><a name="860" href="Cipher.ElGamal.Generic.html#222" class="Bound Operator"
+      >^</a
+      ><a name="861"
+      > </a
+      ><a name="862" href="Cipher.ElGamal.Generic.html#839" class="Bound"
+      >y</a
+      ><a name="863" class="Symbol"
+      >)</a
+      ><a name="864" href="Cipher.ElGamal.Generic.html#222" class="Bound Operator"
+      >^</a
+      ><a name="865"
+      > </a
+      ><a name="866" href="Cipher.ElGamal.Generic.html#837" class="Bound"
+      >x</a
+      ><a name="867" class="Symbol"
+      >)</a
+      ><a name="868"
+      >
+    </a
+      ><a name="873" class="Keyword"
+      >where</a
+      ><a name="878"
+      >
+
+    </a
+      ><a name="884" href="Cipher.ElGamal.Generic.html#884" class="Function"
+      >functional-correctness</a
+      ><a name="906"
+      > </a
+      ><a name="907" class="Symbol"
+      >:</a
+      ><a name="908"
+      > </a
+      ><a name="909" class="Symbol"
+      >&#8704;</a
+      ><a name="910"
+      > </a
+      ><a name="911" href="Cipher.ElGamal.Generic.html#911" class="Bound"
+      >x</a
+      ><a name="912"
+      > </a
+      ><a name="913" href="Cipher.ElGamal.Generic.html#913" class="Bound"
+      >y</a
+      ><a name="914"
+      > </a
+      ><a name="915" href="Cipher.ElGamal.Generic.html#915" class="Bound"
+      >m</a
+      ><a name="916"
+      > </a
+      ><a name="917" class="Symbol"
+      >&#8594;</a
+      ><a name="918"
+      > </a
+      ><a name="919" href="Cipher.ElGamal.Generic.html#681" class="Function"
+      >Dec</a
+      ><a name="922"
+      > </a
+      ><a name="923" href="Cipher.ElGamal.Generic.html#911" class="Bound"
+      >x</a
+      ><a name="924"
+      > </a
+      ><a name="925" class="Symbol"
+      >(</a
+      ><a name="926" href="Cipher.ElGamal.Generic.html#571" class="Function"
+      >Enc</a
+      ><a name="929"
+      > </a
+      ><a name="930" class="Symbol"
+      >(</a
+      ><a name="931" href="Cipher.ElGamal.Generic.html#206" class="Bound"
+      >g</a
+      ><a name="932"
+      > </a
+      ><a name="933" href="Cipher.ElGamal.Generic.html#222" class="Bound Operator"
+      >^</a
+      ><a name="934"
+      > </a
+      ><a name="935" href="Cipher.ElGamal.Generic.html#911" class="Bound"
+      >x</a
+      ><a name="936" class="Symbol"
+      >)</a
+      ><a name="937"
+      > </a
+      ><a name="938" href="Cipher.ElGamal.Generic.html#915" class="Bound"
+      >m</a
+      ><a name="939"
+      > </a
+      ><a name="940" href="Cipher.ElGamal.Generic.html#913" class="Bound"
+      >y</a
+      ><a name="941" class="Symbol"
+      >)</a
+      ><a name="942"
+      > </a
+      ><a name="943" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="944"
+      > </a
+      ><a name="945" href="Cipher.ElGamal.Generic.html#915" class="Bound"
+      >m</a
+      ><a name="946"
+      >
+    </a
+      ><a name="951" href="Cipher.ElGamal.Generic.html#884" class="Function"
+      >functional-correctness</a
+      ><a name="973"
+      > </a
+      ><a name="974" href="Cipher.ElGamal.Generic.html#974" class="Bound"
+      >x</a
+      ><a name="975"
+      > </a
+      ><a name="976" href="Cipher.ElGamal.Generic.html#976" class="Bound"
+      >y</a
+      ><a name="977"
+      > </a
+      ><a name="978" href="Cipher.ElGamal.Generic.html#978" class="Bound"
+      >m</a
+      ><a name="979"
+      > </a
+      ><a name="980" class="Symbol"
+      >=</a
+      ><a name="981"
+      > </a
+      ><a name="982" href="Relation.Binary.PropositionalEquality.NP.html#1330" class="Function"
+      >ap</a
+      ><a name="984"
+      > </a
+      ><a name="985" href="Cipher.ElGamal.Generic.html#1014" class="Function"
+      >Ctx</a
+      ><a name="988"
+      > </a
+      ><a name="989" href="Cipher.ElGamal.Generic.html#823" class="Bound"
+      >comm-^</a
+      ><a name="995"
+      > </a
+      ><a name="996" href="Relation.Binary.PropositionalEquality.NP.html#986" class="Function Operator"
+      >&#8729;</a
+      ><a name="997"
+      > </a
+      ><a name="998" href="Cipher.ElGamal.Generic.html#782" class="Bound"
+      >/-&#9830;</a
+      ><a name="1001"
+      >
+      </a
+      ><a name="1008" class="Keyword"
+      >where</a
+      ><a name="1013"
+      > </a
+      ><a name="1014" href="Cipher.ElGamal.Generic.html#1014" class="Function"
+      >Ctx</a
+      ><a name="1017"
+      > </a
+      ><a name="1018" class="Symbol"
+      >=</a
+      ><a name="1019"
+      > </a
+      ><a name="1020" class="Symbol"
+      >&#955;</a
+      ><a name="1021"
+      > </a
+      ><a name="1022" href="Cipher.ElGamal.Generic.html#1022" class="Bound"
+      >z</a
+      ><a name="1023"
+      > </a
+      ><a name="1024" class="Symbol"
+      >&#8594;</a
+      ><a name="1025"
+      > </a
+      ><a name="1026" class="Symbol"
+      >(</a
+      ><a name="1027" href="Cipher.ElGamal.Generic.html#1022" class="Bound"
+      >z</a
+      ><a name="1028"
+      > </a
+      ><a name="1029" href="Cipher.ElGamal.Generic.html#277" class="Bound Operator"
+      >&#9830;</a
+      ><a name="1030"
+      > </a
+      ><a name="1031" href="Cipher.ElGamal.Generic.html#978" class="Bound"
+      >m</a
+      ><a name="1032" class="Symbol"
+      >)</a
+      ><a name="1033"
+      > </a
+      ><a name="1034" href="Cipher.ElGamal.Generic.html#343" class="Bound Operator"
+      >/</a
+      ><a name="1035"
+      > </a
+      ><a name="1036" class="Symbol"
+      >((</a
+      ><a name="1038" href="Cipher.ElGamal.Generic.html#206" class="Bound"
+      >g</a
+      ><a name="1039"
+      > </a
+      ><a name="1040" href="Cipher.ElGamal.Generic.html#222" class="Bound Operator"
+      >^</a
+      ><a name="1041"
+      > </a
+      ><a name="1042" href="Cipher.ElGamal.Generic.html#976" class="Bound"
+      >y</a
+      ><a name="1043" class="Symbol"
+      >)</a
+      ><a name="1044" href="Cipher.ElGamal.Generic.html#222" class="Bound Operator"
+      >^</a
+      ><a name="1045"
+      > </a
+      ><a name="1046" href="Cipher.ElGamal.Generic.html#974" class="Bound"
+      >x</a
+      ><a name="1047" class="Symbol"
+      >)</a
+      ><a name="1048"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

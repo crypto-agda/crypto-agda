@@ -1,0 +1,1273 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >FunUniverse.Nand.Properties</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Keyword"
+      >open</a
+      ><a name="5"
+      > </a
+      ><a name="6" class="Keyword"
+      >import</a
+      ><a name="12"
+      > </a
+      ><a name="13" href="Level.NP.html#1" class="Module"
+      >Level.NP</a
+      ><a name="21"
+      >
+</a
+      ><a name="22" class="Keyword"
+      >open</a
+      ><a name="26"
+      > </a
+      ><a name="27" class="Keyword"
+      >import</a
+      ><a name="33"
+      > </a
+      ><a name="34" href="Type.html#1" class="Module"
+      >Type</a
+      ><a name="38"
+      >
+</a
+      ><a name="39" class="Keyword"
+      >open</a
+      ><a name="43"
+      > </a
+      ><a name="44" class="Keyword"
+      >import</a
+      ><a name="50"
+      > </a
+      ><a name="51" href="Data.One.html#1" class="Module"
+      >Data.One</a
+      ><a name="59"
+      >
+</a
+      ><a name="60" class="Keyword"
+      >open</a
+      ><a name="64"
+      > </a
+      ><a name="65" class="Keyword"
+      >import</a
+      ><a name="71"
+      > </a
+      ><a name="72" href="Data.Two.html#1" class="Module"
+      >Data.Two</a
+      ><a name="80"
+      > </a
+      ><a name="81" class="Keyword"
+      >hiding</a
+      ><a name="87"
+      > </a
+      ><a name="88" class="Symbol"
+      >(</a
+      ><a name="89"
+      >nand</a
+      ><a name="93" class="Symbol"
+      >)</a
+      ><a name="94"
+      >
+</a
+      ><a name="95" class="Keyword"
+      >open</a
+      ><a name="99"
+      > </a
+      ><a name="100" class="Keyword"
+      >import</a
+      ><a name="106"
+      > </a
+      ><a name="107" href="Data.Product.html#1" class="Module"
+      >Data.Product</a
+      ><a name="119"
+      >
+</a
+      ><a name="120" class="Keyword"
+      >open</a
+      ><a name="124"
+      > </a
+      ><a name="125" class="Keyword"
+      >import</a
+      ><a name="131"
+      > </a
+      ><a name="132" href="Function.NP.html#1" class="Module"
+      >Function.NP</a
+      ><a name="143"
+      >
+</a
+      ><a name="144" class="Keyword"
+      >open</a
+      ><a name="148"
+      > </a
+      ><a name="149" class="Keyword"
+      >import</a
+      ><a name="155"
+      > </a
+      ><a name="156" href="Relation.Binary.html#1" class="Module"
+      >Relation.Binary</a
+      ><a name="171"
+      >
+</a
+      ><a name="172" class="Keyword"
+      >open</a
+      ><a name="176"
+      > </a
+      ><a name="177" class="Keyword"
+      >import</a
+      ><a name="183"
+      > </a
+      ><a name="184" href="Relation.Nullary.Decidable.html#1" class="Module"
+      >Relation.Nullary.Decidable</a
+      ><a name="210"
+      >
+</a
+      ><a name="211" class="Keyword"
+      >open</a
+      ><a name="215"
+      > </a
+      ><a name="216" class="Keyword"
+      >import</a
+      ><a name="222"
+      > </a
+      ><a name="223" href="Relation.Binary.PropositionalEquality.html#1" class="Module"
+      >Relation.Binary.PropositionalEquality</a
+      ><a name="260"
+      >
+
+</a
+      ><a name="262" class="Keyword"
+      >open</a
+      ><a name="266"
+      > </a
+      ><a name="267" class="Keyword"
+      >import</a
+      ><a name="273"
+      > </a
+      ><a name="274" href="Explore.Core.html#1" class="Module"
+      >Explore.Core</a
+      ><a name="286"
+      >
+</a
+      ><a name="287" class="Keyword"
+      >open</a
+      ><a name="291"
+      > </a
+      ><a name="292" class="Keyword"
+      >import</a
+      ><a name="298"
+      > </a
+      ><a name="299" href="Explore.Properties.html#1" class="Module"
+      >Explore.Properties</a
+      ><a name="317"
+      >
+</a
+      ><a name="318" class="Keyword"
+      >import</a
+      ><a name="324"
+      > </a
+      ><a name="325" href="Explore.Explorable.html#1" class="Module"
+      >Explore.Explorable</a
+      ><a name="343"
+      >
+</a
+      ><a name="344" class="Keyword"
+      >open</a
+      ><a name="348"
+      > </a
+      ><a name="349" class="Keyword"
+      >import</a
+      ><a name="355"
+      > </a
+      ><a name="356" href="Explore.Universe.html#1" class="Module"
+      >Explore.Universe</a
+      ><a name="372"
+      >
+
+</a
+      ><a name="374" class="Keyword"
+      >open</a
+      ><a name="378"
+      > </a
+      ><a name="379" class="Keyword"
+      >import</a
+      ><a name="385"
+      > </a
+      ><a name="386" href="FunUniverse.Nand.html#1" class="Module"
+      >FunUniverse.Nand</a
+      ><a name="402"
+      >
+</a
+      ><a name="403" class="Keyword"
+      >open</a
+      ><a name="407"
+      > </a
+      ><a name="408" class="Keyword"
+      >import</a
+      ><a name="414"
+      > </a
+      ><a name="415" href="FunUniverse.Agda.html#1" class="Module"
+      >FunUniverse.Agda</a
+      ><a name="431"
+      >
+
+</a
+      ><a name="433" class="Keyword"
+      >module</a
+      ><a name="439"
+      > </a
+      ><a name="440" href="FunUniverse.Nand.Properties.html#1" class="Module"
+      >FunUniverse.Nand.Properties</a
+      ><a name="467"
+      > </a
+      ><a name="468" class="Keyword"
+      >where</a
+      ><a name="473"
+      >
+
+</a
+      ><a name="475" class="Keyword"
+      >module</a
+      ><a name="481"
+      > </a
+      ><a name="482" href="FunUniverse.Nand.Properties.html#482" class="Module"
+      >Test</a
+      ><a name="486"
+      > </a
+      ><a name="487" class="Symbol"
+      >{</a
+      ><a name="488" href="FunUniverse.Nand.Properties.html#488" class="Bound"
+      >B</a
+      ><a name="489"
+      > </a
+      ><a name="490" class="Symbol"
+      >:</a
+      ><a name="491"
+      > </a
+      ><a name="492" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="493" class="Symbol"
+      >}</a
+      ><a name="494"
+      > </a
+      ><a name="495" class="Symbol"
+      >(</a
+      ><a name="496" href="FunUniverse.Nand.Properties.html#496" class="Bound Operator"
+      >_&#8799;_</a
+      ><a name="499"
+      > </a
+      ><a name="500" class="Symbol"
+      >:</a
+      ><a name="501"
+      > </a
+      ><a name="502" href="Relation.Binary.Core.html#3511" class="Function"
+      >Decidable</a
+      ><a name="511"
+      > </a
+      ><a name="512" class="Symbol"
+      >{</a
+      ><a name="513"
+      >A </a
+      ><a name="515" class="Symbol"
+      >=</a
+      ><a name="516"
+      > </a
+      ><a name="517" href="FunUniverse.Nand.Properties.html#488" class="Bound"
+      >B</a
+      ><a name="518" class="Symbol"
+      >}</a
+      ><a name="519"
+      > </a
+      ><a name="520" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >_&#8801;_</a
+      ><a name="523" class="Symbol"
+      >)</a
+      ><a name="524"
+      >
+            </a
+      ><a name="537" class="Symbol"
+      >(</a
+      ><a name="538" href="FunUniverse.Nand.Properties.html#538" class="Bound"
+      >A</a
+      ><a name="539"
+      > </a
+      ><a name="540" class="Symbol"
+      >:</a
+      ><a name="541"
+      > </a
+      ><a name="542" href="Explore.Universe.html#661" class="Datatype"
+      >U</a
+      ><a name="543" class="Symbol"
+      >)</a
+      ><a name="544"
+      >
+            </a
+      ><a name="557" class="Symbol"
+      >{</a
+      ><a name="558" href="FunUniverse.Nand.Properties.html#558" class="Bound"
+      >f</a
+      ><a name="559"
+      > </a
+      ><a name="560" href="FunUniverse.Nand.Properties.html#560" class="Bound"
+      >g</a
+      ><a name="561"
+      > </a
+      ><a name="562" class="Symbol"
+      >:</a
+      ><a name="563"
+      > </a
+      ><a name="564" href="Explore.Universe.html#667" class="Function"
+      >El</a
+      ><a name="566"
+      > </a
+      ><a name="567" href="FunUniverse.Nand.Properties.html#538" class="Bound"
+      >A</a
+      ><a name="568"
+      > </a
+      ><a name="569" class="Symbol"
+      >&#8594;</a
+      ><a name="570"
+      > </a
+      ><a name="571" href="FunUniverse.Nand.Properties.html#488" class="Bound"
+      >B</a
+      ><a name="572" class="Symbol"
+      >}</a
+      ><a name="573"
+      > </a
+      ><a name="574" class="Keyword"
+      >where</a
+      ><a name="579"
+      >
+  </a
+      ><a name="582" class="Keyword"
+      >module</a
+      ><a name="588"
+      > </a
+      ><a name="589" href="FunUniverse.Nand.Properties.html#589" class="Module"
+      >_</a
+      ><a name="590"
+      > </a
+      ><a name="591" class="Symbol"
+      >{</a
+      ><a name="592" href="FunUniverse.Nand.Properties.html#592" class="Bound"
+      >&#8467;</a
+      ><a name="593" class="Symbol"
+      >}</a
+      ><a name="594"
+      > </a
+      ><a name="595" class="Keyword"
+      >where</a
+      ><a name="600"
+      >
+    </a
+      ><a name="605" href="FunUniverse.Nand.Properties.html#605" class="Function"
+      >A&#7497;</a
+      ><a name="607"
+      > </a
+      ><a name="608" class="Symbol"
+      >:</a
+      ><a name="609"
+      > </a
+      ><a name="610" href="Explore.Core.html#447" class="Function"
+      >Explore</a
+      ><a name="617"
+      > </a
+      ><a name="618" href="FunUniverse.Nand.Properties.html#592" class="Bound"
+      >&#8467;</a
+      ><a name="619"
+      > </a
+      ><a name="620" class="Symbol"
+      >(</a
+      ><a name="621" href="Explore.Universe.html#667" class="Function"
+      >El</a
+      ><a name="623"
+      > </a
+      ><a name="624" href="FunUniverse.Nand.Properties.html#538" class="Bound"
+      >A</a
+      ><a name="625" class="Symbol"
+      >)</a
+      ><a name="626"
+      >
+    </a
+      ><a name="631" href="FunUniverse.Nand.Properties.html#605" class="Function"
+      >A&#7497;</a
+      ><a name="633"
+      > </a
+      ><a name="634" class="Symbol"
+      >=</a
+      ><a name="635"
+      > </a
+      ><a name="636" href="Explore.Universe.html#967" class="Function"
+      >exploreU</a
+      ><a name="644"
+      > </a
+      ><a name="645" href="FunUniverse.Nand.Properties.html#538" class="Bound"
+      >A</a
+      ><a name="646"
+      >
+    </a
+      ><a name="651" href="FunUniverse.Nand.Properties.html#651" class="Function"
+      >A&#8305;</a
+      ><a name="653"
+      > </a
+      ><a name="654" class="Symbol"
+      >:</a
+      ><a name="655"
+      > </a
+      ><a name="656" href="Explore.Properties.html#1850" class="Function"
+      >ExploreInd</a
+      ><a name="666"
+      > </a
+      ><a name="667" href="FunUniverse.Nand.Properties.html#592" class="Bound"
+      >&#8467;</a
+      ><a name="668"
+      > </a
+      ><a name="669" href="FunUniverse.Nand.Properties.html#605" class="Function"
+      >A&#7497;</a
+      ><a name="671"
+      >
+    </a
+      ><a name="676" href="FunUniverse.Nand.Properties.html#651" class="Function"
+      >A&#8305;</a
+      ><a name="678"
+      > </a
+      ><a name="679" class="Symbol"
+      >=</a
+      ><a name="680"
+      > </a
+      ><a name="681" href="Explore.Universe.html#1236" class="Function"
+      >exploreU-ind</a
+      ><a name="693"
+      > </a
+      ><a name="694" href="FunUniverse.Nand.Properties.html#538" class="Bound"
+      >A</a
+      ><a name="695"
+      >
+  </a
+      ><a name="698" href="FunUniverse.Nand.Properties.html#698" class="Function"
+      >A&#737;</a
+      ><a name="700"
+      > </a
+      ><a name="701" class="Symbol"
+      >:</a
+      ><a name="702"
+      > </a
+      ><a name="703" href="Explore.Properties.html#9476" class="Function"
+      >Lookup</a
+      ><a name="709"
+      > </a
+      ><a name="710" class="Symbol"
+      >{</a
+      ><a name="711" href="Agda.Prim.html#268" class="Primitive"
+      >&#8320;</a
+      ><a name="712" class="Symbol"
+      >}</a
+      ><a name="713"
+      > </a
+      ><a name="714" href="FunUniverse.Nand.Properties.html#605" class="Function"
+      >A&#7497;</a
+      ><a name="716"
+      >
+  </a
+      ><a name="719" href="FunUniverse.Nand.Properties.html#698" class="Function"
+      >A&#737;</a
+      ><a name="721"
+      > </a
+      ><a name="722" class="Symbol"
+      >=</a
+      ><a name="723"
+      > </a
+      ><a name="724" href="Explore.Universe.html#2343" class="Function"
+      >lookupU</a
+      ><a name="731"
+      > </a
+      ><a name="732" href="FunUniverse.Nand.Properties.html#538" class="Bound"
+      >A</a
+      ><a name="733"
+      >
+
+  </a
+      ><a name="737" href="FunUniverse.Nand.Properties.html#737" class="Function"
+      >Check!</a
+      ><a name="743"
+      > </a
+      ><a name="744" class="Symbol"
+      >=</a
+      ><a name="745"
+      > </a
+      ><a name="746" href="FunUniverse.Nand.Properties.html#605" class="Function"
+      >A&#7497;</a
+      ><a name="748"
+      > </a
+      ><a name="749" class="Symbol"
+      >(</a
+      ><a name="750" href="Level.html#345" class="Record"
+      >Lift</a
+      ><a name="754"
+      > </a
+      ><a name="755" href="Data.Unit.html#653" class="Record"
+      >&#120793;</a
+      ><a name="756" class="Symbol"
+      >)</a
+      ><a name="757"
+      > </a
+      ><a name="758" href="Data.Product.html#1055" class="Function Operator"
+      >_&#215;_</a
+      ><a name="761"
+      > </a
+      ><a name="762" class="Symbol"
+      >&#955;</a
+      ><a name="763"
+      > </a
+      ><a name="764" href="FunUniverse.Nand.Properties.html#764" class="Bound"
+      >x</a
+      ><a name="765"
+      > </a
+      ><a name="766" class="Symbol"
+      >&#8594;</a
+      ><a name="767"
+      > </a
+      ><a name="768" href="Data.Bool.html#1007" class="Function"
+      >&#10003;</a
+      ><a name="769"
+      > </a
+      ><a name="770" href="Relation.Nullary.Decidable.html#783" class="Function Operator"
+      >&#8970;</a
+      ><a name="771"
+      > </a
+      ><a name="772" href="FunUniverse.Nand.Properties.html#558" class="Bound"
+      >f</a
+      ><a name="773"
+      > </a
+      ><a name="774" href="FunUniverse.Nand.Properties.html#764" class="Bound"
+      >x</a
+      ><a name="775"
+      > </a
+      ><a name="776" href="FunUniverse.Nand.Properties.html#496" class="Bound Operator"
+      >&#8799;</a
+      ><a name="777"
+      > </a
+      ><a name="778" href="FunUniverse.Nand.Properties.html#560" class="Bound"
+      >g</a
+      ><a name="779"
+      > </a
+      ><a name="780" href="FunUniverse.Nand.Properties.html#764" class="Bound"
+      >x</a
+      ><a name="781"
+      > </a
+      ><a name="782" href="Relation.Nullary.Decidable.html#783" class="Function Operator"
+      >&#8971;</a
+      ><a name="783"
+      >
+
+  </a
+      ><a name="787" href="FunUniverse.Nand.Properties.html#787" class="Function"
+      >check!</a
+      ><a name="793"
+      > </a
+      ><a name="794" class="Symbol"
+      >:</a
+      ><a name="795"
+      > </a
+      ><a name="796" class="Symbol"
+      >{</a
+      ><a name="797" href="FunUniverse.Nand.Properties.html#797" class="Bound"
+      >p&#10003;</a
+      ><a name="799"
+      > </a
+      ><a name="800" class="Symbol"
+      >:</a
+      ><a name="801"
+      > </a
+      ><a name="802" href="FunUniverse.Nand.Properties.html#737" class="Function"
+      >Check!</a
+      ><a name="808" class="Symbol"
+      >}</a
+      ><a name="809"
+      > </a
+      ><a name="810" class="Symbol"
+      >&#8594;</a
+      ><a name="811"
+      > </a
+      ><a name="812" href="FunUniverse.Nand.Properties.html#558" class="Bound"
+      >f</a
+      ><a name="813"
+      > </a
+      ><a name="814" href="Relation.Binary.PropositionalEquality.html#2312" class="Function Operator"
+      >&#8791;</a
+      ><a name="815"
+      > </a
+      ><a name="816" href="FunUniverse.Nand.Properties.html#560" class="Bound"
+      >g</a
+      ><a name="817"
+      >
+  </a
+      ><a name="820" href="FunUniverse.Nand.Properties.html#787" class="Function"
+      >check!</a
+      ><a name="826"
+      > </a
+      ><a name="827" class="Symbol"
+      >{</a
+      ><a name="828" href="FunUniverse.Nand.Properties.html#828" class="Bound"
+      >p&#10003;</a
+      ><a name="830" class="Symbol"
+      >}</a
+      ><a name="831"
+      > </a
+      ><a name="832" href="FunUniverse.Nand.Properties.html#832" class="Bound"
+      >x</a
+      ><a name="833"
+      > </a
+      ><a name="834" class="Symbol"
+      >=</a
+      ><a name="835"
+      > </a
+      ><a name="836" href="Relation.Nullary.Decidable.html#1016" class="Function"
+      >toWitness</a
+      ><a name="845"
+      > </a
+      ><a name="846" class="Symbol"
+      >(</a
+      ><a name="847" href="FunUniverse.Nand.Properties.html#698" class="Function"
+      >A&#737;</a
+      ><a name="849"
+      > </a
+      ><a name="850" href="FunUniverse.Nand.Properties.html#828" class="Bound"
+      >p&#10003;</a
+      ><a name="852"
+      > </a
+      ><a name="853" href="FunUniverse.Nand.Properties.html#832" class="Bound"
+      >x</a
+      ><a name="854" class="Symbol"
+      >)</a
+      ><a name="855"
+      >
+
+  </a
+      ><a name="859" class="Comment"
+      >{- Unused
+  open Explore.Explorable.Explorable&#8320; A&#8305;
+  test-&#8743; = big-&#8743; &#955; x &#8594; &#8970; f x &#8799; g x &#8971;
+  -}</a
+      ><a name="951"
+      >
+
+</a
+      ><a name="953" class="Keyword"
+      >module</a
+      ><a name="959"
+      > </a
+      ><a name="960" href="FunUniverse.Nand.Properties.html#960" class="Module"
+      >Test22</a
+      ><a name="966"
+      > </a
+      ><a name="967" class="Keyword"
+      >where</a
+      ><a name="972"
+      >
+  </a
+      ><a name="975" href="FunUniverse.Nand.Properties.html#975" class="Function"
+      >nand</a
+      ><a name="979"
+      > </a
+      ><a name="980" href="FunUniverse.Nand.Properties.html#980" class="Function"
+      >nand'</a
+      ><a name="985"
+      > </a
+      ><a name="986" class="Symbol"
+      >:</a
+      ><a name="987"
+      > </a
+      ><a name="988" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="989"
+      > </a
+      ><a name="990" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="991"
+      > </a
+      ><a name="992" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="993"
+      > </a
+      ><a name="994" class="Symbol"
+      >&#8594;</a
+      ><a name="995"
+      > </a
+      ><a name="996" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="997"
+      >
+
+  </a
+      ><a name="1001" href="FunUniverse.Nand.Properties.html#975" class="Function"
+      >nand</a
+      ><a name="1005"
+      >  </a
+      ><a name="1007" class="Symbol"
+      >(</a
+      ><a name="1008" href="FunUniverse.Nand.Properties.html#1008" class="Bound"
+      >x</a
+      ><a name="1009"
+      > </a
+      ><a name="1010" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1011"
+      > </a
+      ><a name="1012" href="FunUniverse.Nand.Properties.html#1012" class="Bound"
+      >y</a
+      ><a name="1013" class="Symbol"
+      >)</a
+      ><a name="1014"
+      > </a
+      ><a name="1015" class="Symbol"
+      >=</a
+      ><a name="1016"
+      > </a
+      ><a name="1017" href="Data.Bool.html#873" class="Function"
+      >not</a
+      ><a name="1020"
+      > </a
+      ><a name="1021" class="Symbol"
+      >(</a
+      ><a name="1022" href="FunUniverse.Nand.Properties.html#1008" class="Bound"
+      >x</a
+      ><a name="1023"
+      > </a
+      ><a name="1024" href="Data.Bool.html#1155" class="Function Operator"
+      >&#8743;</a
+      ><a name="1025"
+      > </a
+      ><a name="1026" href="FunUniverse.Nand.Properties.html#1012" class="Bound"
+      >y</a
+      ><a name="1027" class="Symbol"
+      >)</a
+      ><a name="1028"
+      >
+  </a
+      ><a name="1031" href="FunUniverse.Nand.Properties.html#980" class="Function"
+      >nand'</a
+      ><a name="1036"
+      > </a
+      ><a name="1037" class="Symbol"
+      >(</a
+      ><a name="1038" href="FunUniverse.Nand.Properties.html#1038" class="Bound"
+      >x</a
+      ><a name="1039"
+      > </a
+      ><a name="1040" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1041"
+      > </a
+      ><a name="1042" href="FunUniverse.Nand.Properties.html#1042" class="Bound"
+      >y</a
+      ><a name="1043" class="Symbol"
+      >)</a
+      ><a name="1044"
+      > </a
+      ><a name="1045" class="Symbol"
+      >=</a
+      ><a name="1046"
+      > </a
+      ><a name="1047" href="Data.Bool.html#873" class="Function"
+      >not</a
+      ><a name="1050"
+      > </a
+      ><a name="1051" href="FunUniverse.Nand.Properties.html#1038" class="Bound"
+      >x</a
+      ><a name="1052"
+      > </a
+      ><a name="1053" href="Data.Bool.html#1213" class="Function Operator"
+      >&#8744;</a
+      ><a name="1054"
+      > </a
+      ><a name="1055" href="Data.Bool.html#873" class="Function"
+      >not</a
+      ><a name="1058"
+      > </a
+      ><a name="1059" href="FunUniverse.Nand.Properties.html#1042" class="Bound"
+      >y</a
+      ><a name="1060"
+      >
+
+  </a
+      ><a name="1064" class="Keyword"
+      >module</a
+      ><a name="1070"
+      > </a
+      ><a name="1071" href="FunUniverse.Nand.Properties.html#1071" class="Module"
+      >N</a
+      ><a name="1072"
+      > </a
+      ><a name="1073" class="Symbol"
+      >=</a
+      ><a name="1074"
+      > </a
+      ><a name="1075" href="FunUniverse.Nand.html#296" class="Module"
+      >FromNand</a
+      ><a name="1083"
+      > </a
+      ><a name="1084" href="FunUniverse.Agda.html#1127" class="Function"
+      >funRewiring</a
+      ><a name="1095"
+      > </a
+      ><a name="1096" href="FunUniverse.Nand.Properties.html#975" class="Function"
+      >nand</a
+      ><a name="1100"
+      >
+  </a
+      ><a name="1103" class="Keyword"
+      >module</a
+      ><a name="1109"
+      > </a
+      ><a name="1110" href="FunUniverse.Nand.Properties.html#1110" class="Module"
+      >T</a
+      ><a name="1111"
+      > </a
+      ><a name="1112" class="Symbol"
+      >=</a
+      ><a name="1113"
+      > </a
+      ><a name="1114" href="FunUniverse.Nand.Properties.html#482" class="Module"
+      >Test</a
+      ><a name="1118"
+      > </a
+      ><a name="1119" href="Data.Bool.html#1419" class="Function Operator"
+      >Data.Two._&#8799;_</a
+      ><a name="1131"
+      >
+
+  </a
+      ><a name="1135" class="Keyword"
+      >module</a
+      ><a name="1141"
+      > </a
+      ><a name="1142" href="FunUniverse.Nand.Properties.html#1142" class="Module"
+      >UnOp</a
+      ><a name="1146"
+      > </a
+      ><a name="1147" class="Keyword"
+      >where</a
+      ><a name="1152"
+      >
+    </a
+      ><a name="1157" class="Keyword"
+      >open</a
+      ><a name="1161"
+      > </a
+      ><a name="1162" href="FunUniverse.Nand.Properties.html#1110" class="Module"
+      >T</a
+      ><a name="1163"
+      > </a
+      ><a name="1164" href="Explore.Universe.html#700" class="InductiveConstructor"
+      >&#120794;&#8242;</a
+      ><a name="1166"
+      >
+
+    </a
+      ><a name="1172" href="FunUniverse.Nand.Properties.html#1172" class="Function"
+      >not-ok</a
+      ><a name="1178"
+      > </a
+      ><a name="1179" class="Symbol"
+      >:</a
+      ><a name="1180"
+      > </a
+      ><a name="1181" href="FunUniverse.Nand.html#337" class="Function"
+      >N.not</a
+      ><a name="1186"
+      > </a
+      ><a name="1187" href="Relation.Binary.PropositionalEquality.html#2312" class="Function Operator"
+      >&#8791;</a
+      ><a name="1188"
+      > </a
+      ><a name="1189" href="Data.Bool.html#873" class="Function"
+      >not</a
+      ><a name="1192"
+      >
+    </a
+      ><a name="1197" href="FunUniverse.Nand.Properties.html#1172" class="Function"
+      >not-ok</a
+      ><a name="1203"
+      > </a
+      ><a name="1204" class="Symbol"
+      >=</a
+      ><a name="1205"
+      > </a
+      ><a name="1206" href="FunUniverse.Nand.Properties.html#787" class="Function"
+      >check!</a
+      ><a name="1212"
+      >
+
+  </a
+      ><a name="1216" class="Keyword"
+      >module</a
+      ><a name="1222"
+      > </a
+      ><a name="1223" href="FunUniverse.Nand.Properties.html#1223" class="Module"
+      >BinOp</a
+      ><a name="1228"
+      > </a
+      ><a name="1229" class="Keyword"
+      >where</a
+      ><a name="1234"
+      >
+    </a
+      ><a name="1239" class="Keyword"
+      >open</a
+      ><a name="1243"
+      > </a
+      ><a name="1244" href="FunUniverse.Nand.Properties.html#1110" class="Module"
+      >T</a
+      ><a name="1245"
+      > </a
+      ><a name="1246" class="Symbol"
+      >(</a
+      ><a name="1247" href="Explore.Universe.html#700" class="InductiveConstructor"
+      >&#120794;&#8242;</a
+      ><a name="1249"
+      > </a
+      ><a name="1250" href="Explore.Universe.html#709" class="InductiveConstructor Operator"
+      >&#215;&#8242;</a
+      ><a name="1252"
+      > </a
+      ><a name="1253" href="Explore.Universe.html#700" class="InductiveConstructor"
+      >&#120794;&#8242;</a
+      ><a name="1255" class="Symbol"
+      >)</a
+      ><a name="1256"
+      >
+
+    </a
+      ><a name="1262" href="FunUniverse.Nand.Properties.html#1262" class="Function"
+      >nand-ok</a
+      ><a name="1269"
+      > </a
+      ><a name="1270" class="Symbol"
+      >:</a
+      ><a name="1271"
+      > </a
+      ><a name="1272" href="FunUniverse.Nand.Properties.html#975" class="Function"
+      >nand</a
+      ><a name="1276"
+      > </a
+      ><a name="1277" href="Relation.Binary.PropositionalEquality.html#2312" class="Function Operator"
+      >&#8791;</a
+      ><a name="1278"
+      > </a
+      ><a name="1279" href="FunUniverse.Nand.Properties.html#980" class="Function"
+      >nand'</a
+      ><a name="1284"
+      >
+    </a
+      ><a name="1289" href="FunUniverse.Nand.Properties.html#1262" class="Function"
+      >nand-ok</a
+      ><a name="1296"
+      > </a
+      ><a name="1297" class="Symbol"
+      >=</a
+      ><a name="1298"
+      > </a
+      ><a name="1299" href="FunUniverse.Nand.Properties.html#787" class="Function"
+      >check!</a
+      ><a name="1305"
+      >
+
+    </a
+      ><a name="1311" href="FunUniverse.Nand.Properties.html#1311" class="Function"
+      >and-ok</a
+      ><a name="1317"
+      > </a
+      ><a name="1318" class="Symbol"
+      >:</a
+      ><a name="1319"
+      > </a
+      ><a name="1320" href="FunUniverse.Nand.html#376" class="Function"
+      >N.and</a
+      ><a name="1325"
+      > </a
+      ><a name="1326" href="Relation.Binary.PropositionalEquality.html#2312" class="Function Operator"
+      >&#8791;</a
+      ><a name="1327"
+      > </a
+      ><a name="1328" href="Data.Product.html#2824" class="Function"
+      >uncurry</a
+      ><a name="1335"
+      > </a
+      ><a name="1336" href="Data.Bool.html#1155" class="Function Operator"
+      >_&#8743;_</a
+      ><a name="1339"
+      >
+    </a
+      ><a name="1344" href="FunUniverse.Nand.Properties.html#1311" class="Function"
+      >and-ok</a
+      ><a name="1350"
+      > </a
+      ><a name="1351" class="Symbol"
+      >=</a
+      ><a name="1352"
+      > </a
+      ><a name="1353" href="FunUniverse.Nand.Properties.html#787" class="Function"
+      >check!</a
+      ><a name="1359"
+      >
+
+    </a
+      ><a name="1365" href="FunUniverse.Nand.Properties.html#1365" class="Function"
+      >or-ok</a
+      ><a name="1370"
+      > </a
+      ><a name="1371" class="Symbol"
+      >:</a
+      ><a name="1372"
+      > </a
+      ><a name="1373" href="FunUniverse.Nand.html#380" class="Function"
+      >N.or</a
+      ><a name="1377"
+      > </a
+      ><a name="1378" href="Relation.Binary.PropositionalEquality.html#2312" class="Function Operator"
+      >&#8791;</a
+      ><a name="1379"
+      > </a
+      ><a name="1380" href="Data.Product.html#2824" class="Function"
+      >uncurry</a
+      ><a name="1387"
+      > </a
+      ><a name="1388" href="Data.Bool.html#1213" class="Function Operator"
+      >_&#8744;_</a
+      ><a name="1391"
+      >
+    </a
+      ><a name="1396" href="FunUniverse.Nand.Properties.html#1365" class="Function"
+      >or-ok</a
+      ><a name="1401"
+      > </a
+      ><a name="1402" class="Symbol"
+      >=</a
+      ><a name="1403"
+      > </a
+      ><a name="1404" href="FunUniverse.Nand.Properties.html#787" class="Function"
+      >check!</a
+      ><a name="1410"
+      >
+
+    </a
+      ><a name="1416" href="FunUniverse.Nand.Properties.html#1416" class="Function"
+      >nor-ok</a
+      ><a name="1422"
+      > </a
+      ><a name="1423" class="Symbol"
+      >:</a
+      ><a name="1424"
+      > </a
+      ><a name="1425" href="FunUniverse.Nand.html#383" class="Function"
+      >N.nor</a
+      ><a name="1430"
+      > </a
+      ><a name="1431" href="Relation.Binary.PropositionalEquality.html#2312" class="Function Operator"
+      >&#8791;</a
+      ><a name="1432"
+      > </a
+      ><a name="1433" class="Symbol"
+      >(</a
+      ><a name="1434" href="Data.Bool.html#873" class="Function"
+      >not</a
+      ><a name="1437"
+      > </a
+      ><a name="1438" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1439"
+      > </a
+      ><a name="1440" href="Data.Product.html#2824" class="Function"
+      >uncurry</a
+      ><a name="1447"
+      > </a
+      ><a name="1448" href="Data.Bool.html#1213" class="Function Operator"
+      >_&#8744;_</a
+      ><a name="1451" class="Symbol"
+      >)</a
+      ><a name="1452"
+      >
+    </a
+      ><a name="1457" href="FunUniverse.Nand.Properties.html#1416" class="Function"
+      >nor-ok</a
+      ><a name="1463"
+      > </a
+      ><a name="1464" class="Symbol"
+      >=</a
+      ><a name="1465"
+      > </a
+      ><a name="1466" href="FunUniverse.Nand.Properties.html#787" class="Function"
+      >check!</a
+      ><a name="1472"
+      >
+
+    </a
+      ><a name="1478" href="FunUniverse.Nand.Properties.html#1478" class="Function"
+      >xor-ok</a
+      ><a name="1484"
+      > </a
+      ><a name="1485" class="Symbol"
+      >:</a
+      ><a name="1486"
+      > </a
+      ><a name="1487" href="FunUniverse.Nand.html#387" class="Function"
+      >N.xor</a
+      ><a name="1492"
+      > </a
+      ><a name="1493" href="Relation.Binary.PropositionalEquality.html#2312" class="Function Operator"
+      >&#8791;</a
+      ><a name="1494"
+      > </a
+      ><a name="1495" href="Data.Product.html#2824" class="Function"
+      >uncurry</a
+      ><a name="1502"
+      > </a
+      ><a name="1503" href="Data.Bool.html#1270" class="Function Operator"
+      >_xor_</a
+      ><a name="1508"
+      >
+    </a
+      ><a name="1513" href="FunUniverse.Nand.Properties.html#1478" class="Function"
+      >xor-ok</a
+      ><a name="1519"
+      > </a
+      ><a name="1520" class="Symbol"
+      >=</a
+      ><a name="1521"
+      > </a
+      ><a name="1522" href="FunUniverse.Nand.Properties.html#787" class="Function"
+      >check!</a
+      ><a name="1528"
+      >
+
+    </a
+      ><a name="1534" href="FunUniverse.Nand.Properties.html#1534" class="Function"
+      >xnor-ok</a
+      ><a name="1541"
+      > </a
+      ><a name="1542" class="Symbol"
+      >:</a
+      ><a name="1543"
+      > </a
+      ><a name="1544" href="FunUniverse.Nand.html#391" class="Function"
+      >N.xnor</a
+      ><a name="1550"
+      > </a
+      ><a name="1551" href="Relation.Binary.PropositionalEquality.html#2312" class="Function Operator"
+      >&#8791;</a
+      ><a name="1552"
+      > </a
+      ><a name="1553" href="Data.Product.html#2824" class="Function"
+      >uncurry</a
+      ><a name="1560"
+      > </a
+      ><a name="1561" href="Data.Two.html#2568" class="Function Operator"
+      >_==_</a
+      ><a name="1565"
+      >
+    </a
+      ><a name="1570" href="FunUniverse.Nand.Properties.html#1534" class="Function"
+      >xnor-ok</a
+      ><a name="1577"
+      > </a
+      ><a name="1578" class="Symbol"
+      >=</a
+      ><a name="1579"
+      > </a
+      ><a name="1580" href="FunUniverse.Nand.Properties.html#787" class="Function"
+      >check!</a
+      ><a name="1586"
+      >
+
+  </a
+      ><a name="1590" class="Keyword"
+      >module</a
+      ><a name="1596"
+      > </a
+      ><a name="1597" href="FunUniverse.Nand.Properties.html#1597" class="Module"
+      >TriOp</a
+      ><a name="1602"
+      > </a
+      ><a name="1603" class="Keyword"
+      >where</a
+      ><a name="1608"
+      >
+    </a
+      ><a name="1613" class="Keyword"
+      >open</a
+      ><a name="1617"
+      > </a
+      ><a name="1618" href="FunUniverse.Nand.Properties.html#1110" class="Module"
+      >T</a
+      ><a name="1619"
+      > </a
+      ><a name="1620" class="Symbol"
+      >(</a
+      ><a name="1621" href="Explore.Universe.html#700" class="InductiveConstructor"
+      >&#120794;&#8242;</a
+      ><a name="1623"
+      > </a
+      ><a name="1624" href="Explore.Universe.html#709" class="InductiveConstructor Operator"
+      >&#215;&#8242;</a
+      ><a name="1626"
+      > </a
+      ><a name="1627" class="Symbol"
+      >(</a
+      ><a name="1628" href="Explore.Universe.html#700" class="InductiveConstructor"
+      >&#120794;&#8242;</a
+      ><a name="1630"
+      > </a
+      ><a name="1631" href="Explore.Universe.html#709" class="InductiveConstructor Operator"
+      >&#215;&#8242;</a
+      ><a name="1633"
+      > </a
+      ><a name="1634" href="Explore.Universe.html#700" class="InductiveConstructor"
+      >&#120794;&#8242;</a
+      ><a name="1636" class="Symbol"
+      >))</a
+      ><a name="1638"
+      >
+
+    </a
+      ><a name="1644" href="FunUniverse.Nand.Properties.html#1644" class="Function"
+      >mux-ok</a
+      ><a name="1650"
+      > </a
+      ><a name="1651" class="Symbol"
+      >:</a
+      ><a name="1652"
+      > </a
+      ><a name="1653" href="FunUniverse.Nand.html#870" class="Function"
+      >N.mux</a
+      ><a name="1658"
+      > </a
+      ><a name="1659" href="Relation.Binary.PropositionalEquality.html#2312" class="Function Operator"
+      >&#8791;</a
+      ><a name="1660"
+      > </a
+      ><a name="1661" href="Data.Two.html#2365" class="Function"
+      >mux</a
+      ><a name="1664"
+      >
+    </a
+      ><a name="1669" href="FunUniverse.Nand.Properties.html#1644" class="Function"
+      >mux-ok</a
+      ><a name="1675"
+      > </a
+      ><a name="1676" class="Symbol"
+      >=</a
+      ><a name="1677"
+      > </a
+      ><a name="1678" href="FunUniverse.Nand.Properties.html#787" class="Function"
+      >check!</a
+      ><a name="1684"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

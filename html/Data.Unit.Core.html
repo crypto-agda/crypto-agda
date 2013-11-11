@@ -1,0 +1,507 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Data.Unit.Core</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="73"
+      >
+</a
+      ><a name="74" class="Comment"
+      >-- The Agda standard library</a
+      ><a name="102"
+      >
+</a
+      ><a name="103" class="Comment"
+      >--</a
+      ><a name="105"
+      >
+</a
+      ><a name="106" class="Comment"
+      >-- Some unit types</a
+      ><a name="124"
+      >
+</a
+      ><a name="125" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="197"
+      >
+
+</a
+      ><a name="199" class="Comment"
+      >-- The definitions in this file are reexported by Data.Unit.</a
+      ><a name="259"
+      >
+
+</a
+      ><a name="261" class="Keyword"
+      >module</a
+      ><a name="267"
+      > </a
+      ><a name="268" href="Data.Unit.Core.html#1" class="Module"
+      >Data.Unit.Core</a
+      ><a name="282"
+      > </a
+      ><a name="283" class="Keyword"
+      >where</a
+      ><a name="288"
+      >
+
+</a
+      ><a name="290" class="Keyword"
+      >open</a
+      ><a name="294"
+      > </a
+      ><a name="295" class="Keyword"
+      >import</a
+      ><a name="301"
+      > </a
+      ><a name="302" href="Level.html#1" class="Module"
+      >Level</a
+      ><a name="307"
+      >
+
+</a
+      ><a name="309" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="381"
+      >
+</a
+      ><a name="382" class="Comment"
+      >-- A unit type defined as a data-type</a
+      ><a name="419"
+      >
+
+</a
+      ><a name="421" class="Comment"
+      >-- The &#8868; type (see Data.Unit) comes with &#951;-equality, which is often</a
+      ><a name="488"
+      >
+</a
+      ><a name="489" class="Comment"
+      >-- nice to have, but sometimes it is convenient to be able to stop</a
+      ><a name="555"
+      >
+</a
+      ><a name="556" class="Comment"
+      >-- unfolding (see &quot;Hidden types&quot; below).</a
+      ><a name="596"
+      >
+
+</a
+      ><a name="598" class="Keyword"
+      >data</a
+      ><a name="602"
+      > </a
+      ><a name="603" href="Data.Unit.Core.html#603" class="Datatype"
+      >Unit</a
+      ><a name="607"
+      > </a
+      ><a name="608" class="Symbol"
+      >:</a
+      ><a name="609"
+      > </a
+      ><a name="610" class="PrimitiveType"
+      >Set</a
+      ><a name="613"
+      > </a
+      ><a name="614" class="Keyword"
+      >where</a
+      ><a name="619"
+      >
+  </a
+      ><a name="622" href="Data.Unit.Core.html#622" class="InductiveConstructor"
+      >unit</a
+      ><a name="626"
+      > </a
+      ><a name="627" class="Symbol"
+      >:</a
+      ><a name="628"
+      > </a
+      ><a name="629" href="Data.Unit.Core.html#603" class="Datatype"
+      >Unit</a
+      ><a name="633"
+      >
+
+</a
+      ><a name="635" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="707"
+      >
+</a
+      ><a name="708" class="Comment"
+      >-- Hidden types</a
+      ><a name="723"
+      >
+
+</a
+      ><a name="725" class="Comment"
+      >-- &quot;Hidden&quot; values.</a
+      ><a name="744"
+      >
+
+</a
+      ><a name="746" href="Data.Unit.Core.html#746" class="Function"
+      >Hidden</a
+      ><a name="752"
+      > </a
+      ><a name="753" class="Symbol"
+      >:</a
+      ><a name="754"
+      > </a
+      ><a name="755" class="Symbol"
+      >&#8704;</a
+      ><a name="756"
+      > </a
+      ><a name="757" class="Symbol"
+      >{</a
+      ><a name="758" href="Data.Unit.Core.html#758" class="Bound"
+      >a</a
+      ><a name="759" class="Symbol"
+      >}</a
+      ><a name="760"
+      > </a
+      ><a name="761" class="Symbol"
+      >&#8594;</a
+      ><a name="762"
+      > </a
+      ><a name="763" class="PrimitiveType"
+      >Set</a
+      ><a name="766"
+      > </a
+      ><a name="767" href="Data.Unit.Core.html#758" class="Bound"
+      >a</a
+      ><a name="768"
+      > </a
+      ><a name="769" class="Symbol"
+      >&#8594;</a
+      ><a name="770"
+      > </a
+      ><a name="771" class="PrimitiveType"
+      >Set</a
+      ><a name="774"
+      > </a
+      ><a name="775" href="Data.Unit.Core.html#758" class="Bound"
+      >a</a
+      ><a name="776"
+      >
+</a
+      ><a name="777" href="Data.Unit.Core.html#746" class="Function"
+      >Hidden</a
+      ><a name="783"
+      > </a
+      ><a name="784" href="Data.Unit.Core.html#784" class="Bound"
+      >A</a
+      ><a name="785"
+      > </a
+      ><a name="786" class="Symbol"
+      >=</a
+      ><a name="787"
+      > </a
+      ><a name="788" href="Data.Unit.Core.html#603" class="Datatype"
+      >Unit</a
+      ><a name="792"
+      > </a
+      ><a name="793" class="Symbol"
+      >&#8594;</a
+      ><a name="794"
+      > </a
+      ><a name="795" href="Data.Unit.Core.html#784" class="Bound"
+      >A</a
+      ><a name="796"
+      >
+
+</a
+      ><a name="798" class="Comment"
+      >-- The hide function can be used to hide function applications. Note</a
+      ><a name="866"
+      >
+</a
+      ><a name="867" class="Comment"
+      >-- that the type-checker doesn't see that &quot;hide f x&quot; contains the</a
+      ><a name="932"
+      >
+</a
+      ><a name="933" class="Comment"
+      >-- application &quot;f&#160;x&quot;.</a
+      ><a name="954"
+      >
+
+</a
+      ><a name="956" href="Data.Unit.Core.html#956" class="Function"
+      >hide</a
+      ><a name="960"
+      > </a
+      ><a name="961" class="Symbol"
+      >:</a
+      ><a name="962"
+      > </a
+      ><a name="963" class="Symbol"
+      >&#8704;</a
+      ><a name="964"
+      > </a
+      ><a name="965" class="Symbol"
+      >{</a
+      ><a name="966" href="Data.Unit.Core.html#966" class="Bound"
+      >a</a
+      ><a name="967"
+      > </a
+      ><a name="968" href="Data.Unit.Core.html#968" class="Bound"
+      >b</a
+      ><a name="969" class="Symbol"
+      >}</a
+      ><a name="970"
+      > </a
+      ><a name="971" class="Symbol"
+      >{</a
+      ><a name="972" href="Data.Unit.Core.html#972" class="Bound"
+      >A</a
+      ><a name="973"
+      > </a
+      ><a name="974" class="Symbol"
+      >:</a
+      ><a name="975"
+      > </a
+      ><a name="976" class="PrimitiveType"
+      >Set</a
+      ><a name="979"
+      > </a
+      ><a name="980" href="Data.Unit.Core.html#966" class="Bound"
+      >a</a
+      ><a name="981" class="Symbol"
+      >}</a
+      ><a name="982"
+      > </a
+      ><a name="983" class="Symbol"
+      >{</a
+      ><a name="984" href="Data.Unit.Core.html#984" class="Bound"
+      >B</a
+      ><a name="985"
+      > </a
+      ><a name="986" class="Symbol"
+      >:</a
+      ><a name="987"
+      > </a
+      ><a name="988" href="Data.Unit.Core.html#972" class="Bound"
+      >A</a
+      ><a name="989"
+      > </a
+      ><a name="990" class="Symbol"
+      >&#8594;</a
+      ><a name="991"
+      > </a
+      ><a name="992" class="PrimitiveType"
+      >Set</a
+      ><a name="995"
+      > </a
+      ><a name="996" href="Data.Unit.Core.html#968" class="Bound"
+      >b</a
+      ><a name="997" class="Symbol"
+      >}</a
+      ><a name="998"
+      > </a
+      ><a name="999" class="Symbol"
+      >&#8594;</a
+      ><a name="1000"
+      >
+       </a
+      ><a name="1008" class="Symbol"
+      >((</a
+      ><a name="1010" href="Data.Unit.Core.html#1010" class="Bound"
+      >x</a
+      ><a name="1011"
+      > </a
+      ><a name="1012" class="Symbol"
+      >:</a
+      ><a name="1013"
+      > </a
+      ><a name="1014" href="Data.Unit.Core.html#972" class="Bound"
+      >A</a
+      ><a name="1015" class="Symbol"
+      >)</a
+      ><a name="1016"
+      > </a
+      ><a name="1017" class="Symbol"
+      >&#8594;</a
+      ><a name="1018"
+      > </a
+      ><a name="1019" href="Data.Unit.Core.html#984" class="Bound"
+      >B</a
+      ><a name="1020"
+      > </a
+      ><a name="1021" href="Data.Unit.Core.html#1010" class="Bound"
+      >x</a
+      ><a name="1022" class="Symbol"
+      >)</a
+      ><a name="1023"
+      > </a
+      ><a name="1024" class="Symbol"
+      >&#8594;</a
+      ><a name="1025"
+      > </a
+      ><a name="1026" class="Symbol"
+      >((</a
+      ><a name="1028" href="Data.Unit.Core.html#1028" class="Bound"
+      >x</a
+      ><a name="1029"
+      > </a
+      ><a name="1030" class="Symbol"
+      >:</a
+      ><a name="1031"
+      > </a
+      ><a name="1032" href="Data.Unit.Core.html#972" class="Bound"
+      >A</a
+      ><a name="1033" class="Symbol"
+      >)</a
+      ><a name="1034"
+      > </a
+      ><a name="1035" class="Symbol"
+      >&#8594;</a
+      ><a name="1036"
+      > </a
+      ><a name="1037" href="Data.Unit.Core.html#746" class="Function"
+      >Hidden</a
+      ><a name="1043"
+      > </a
+      ><a name="1044" class="Symbol"
+      >(</a
+      ><a name="1045" href="Data.Unit.Core.html#984" class="Bound"
+      >B</a
+      ><a name="1046"
+      > </a
+      ><a name="1047" href="Data.Unit.Core.html#1028" class="Bound"
+      >x</a
+      ><a name="1048" class="Symbol"
+      >))</a
+      ><a name="1050"
+      >
+</a
+      ><a name="1051" href="Data.Unit.Core.html#956" class="Function"
+      >hide</a
+      ><a name="1055"
+      > </a
+      ><a name="1056" href="Data.Unit.Core.html#1056" class="Bound"
+      >f</a
+      ><a name="1057"
+      > </a
+      ><a name="1058" href="Data.Unit.Core.html#1058" class="Bound"
+      >x</a
+      ><a name="1059"
+      > </a
+      ><a name="1060" href="Data.Unit.Core.html#622" class="InductiveConstructor"
+      >unit</a
+      ><a name="1064"
+      > </a
+      ><a name="1065" class="Symbol"
+      >=</a
+      ><a name="1066"
+      > </a
+      ><a name="1067" href="Data.Unit.Core.html#1056" class="Bound"
+      >f</a
+      ><a name="1068"
+      > </a
+      ><a name="1069" href="Data.Unit.Core.html#1058" class="Bound"
+      >x</a
+      ><a name="1070"
+      >
+
+</a
+      ><a name="1072" class="Comment"
+      >-- Reveals a hidden value.</a
+      ><a name="1098"
+      >
+
+</a
+      ><a name="1100" href="Data.Unit.Core.html#1100" class="Function"
+      >reveal</a
+      ><a name="1106"
+      > </a
+      ><a name="1107" class="Symbol"
+      >:</a
+      ><a name="1108"
+      > </a
+      ><a name="1109" class="Symbol"
+      >&#8704;</a
+      ><a name="1110"
+      > </a
+      ><a name="1111" class="Symbol"
+      >{</a
+      ><a name="1112" href="Data.Unit.Core.html#1112" class="Bound"
+      >a</a
+      ><a name="1113" class="Symbol"
+      >}</a
+      ><a name="1114"
+      > </a
+      ><a name="1115" class="Symbol"
+      >{</a
+      ><a name="1116" href="Data.Unit.Core.html#1116" class="Bound"
+      >A</a
+      ><a name="1117"
+      > </a
+      ><a name="1118" class="Symbol"
+      >:</a
+      ><a name="1119"
+      > </a
+      ><a name="1120" class="PrimitiveType"
+      >Set</a
+      ><a name="1123"
+      > </a
+      ><a name="1124" href="Data.Unit.Core.html#1112" class="Bound"
+      >a</a
+      ><a name="1125" class="Symbol"
+      >}</a
+      ><a name="1126"
+      > </a
+      ><a name="1127" class="Symbol"
+      >&#8594;</a
+      ><a name="1128"
+      > </a
+      ><a name="1129" href="Data.Unit.Core.html#746" class="Function"
+      >Hidden</a
+      ><a name="1135"
+      > </a
+      ><a name="1136" href="Data.Unit.Core.html#1116" class="Bound"
+      >A</a
+      ><a name="1137"
+      > </a
+      ><a name="1138" class="Symbol"
+      >&#8594;</a
+      ><a name="1139"
+      > </a
+      ><a name="1140" href="Data.Unit.Core.html#1116" class="Bound"
+      >A</a
+      ><a name="1141"
+      >
+</a
+      ><a name="1142" href="Data.Unit.Core.html#1100" class="Function"
+      >reveal</a
+      ><a name="1148"
+      > </a
+      ><a name="1149" href="Data.Unit.Core.html#1149" class="Bound"
+      >f</a
+      ><a name="1150"
+      > </a
+      ><a name="1151" class="Symbol"
+      >=</a
+      ><a name="1152"
+      > </a
+      ><a name="1153" href="Data.Unit.Core.html#1149" class="Bound"
+      >f</a
+      ><a name="1154"
+      > </a
+      ><a name="1155" href="Data.Unit.Core.html#622" class="InductiveConstructor"
+      >unit</a
+      ><a name="1159"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

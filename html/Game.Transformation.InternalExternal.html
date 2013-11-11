@@ -1,0 +1,1882 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Game.Transformation.InternalExternal</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Comment"
+      >-- NOTE with-K</a
+      ><a name="15"
+      >
+</a
+      ><a name="16" class="Keyword"
+      >module</a
+      ><a name="22"
+      > </a
+      ><a name="23" href="Game.Transformation.InternalExternal.html#1" class="Module"
+      >Game.Transformation.InternalExternal</a
+      ><a name="59"
+      > </a
+      ><a name="60" class="Keyword"
+      >where</a
+      ><a name="65"
+      >
+
+</a
+      ><a name="67" class="Keyword"
+      >open</a
+      ><a name="71"
+      > </a
+      ><a name="72" class="Keyword"
+      >import</a
+      ><a name="78"
+      > </a
+      ><a name="79" href="Data.Two.html#1" class="Module"
+      >Data.Two</a
+      ><a name="87"
+      >
+</a
+      ><a name="88" class="Keyword"
+      >open</a
+      ><a name="92"
+      > </a
+      ><a name="93" class="Keyword"
+      >import</a
+      ><a name="99"
+      > </a
+      ><a name="100" href="Data.Nat.NP.html#1" class="Module"
+      >Data.Nat.NP</a
+      ><a name="111"
+      > </a
+      ><a name="112" class="Keyword"
+      >hiding</a
+      ><a name="118"
+      > </a
+      ><a name="119" class="Symbol"
+      >(</a
+      ><a name="120"
+      >_==_</a
+      ><a name="124" class="Symbol"
+      >)</a
+      ><a name="125"
+      >
+</a
+      ><a name="126" class="Keyword"
+      >open</a
+      ><a name="130"
+      > </a
+      ><a name="131" class="Keyword"
+      >import</a
+      ><a name="137"
+      > </a
+      ><a name="138" href="Data.Nat.Distance.html#1" class="Module"
+      >Data.Nat.Distance</a
+      ><a name="155"
+      >
+</a
+      ><a name="156" class="Keyword"
+      >open</a
+      ><a name="160"
+      > </a
+      ><a name="161" class="Keyword"
+      >import</a
+      ><a name="167"
+      > </a
+      ><a name="168" href="Data.Product.html#1" class="Module"
+      >Data.Product</a
+      ><a name="180"
+      >
+
+</a
+      ><a name="182" class="Keyword"
+      >open</a
+      ><a name="186"
+      > </a
+      ><a name="187" class="Keyword"
+      >import</a
+      ><a name="193"
+      > </a
+      ><a name="194" href="Function.html#1" class="Module"
+      >Function</a
+      ><a name="202"
+      >
+
+</a
+      ><a name="204" class="Keyword"
+      >open</a
+      ><a name="208"
+      > </a
+      ><a name="209" class="Keyword"
+      >import</a
+      ><a name="215"
+      > </a
+      ><a name="216" href="Explore.Core.html#1" class="Module"
+      >Explore.Core</a
+      ><a name="228"
+      >
+</a
+      ><a name="229" class="Keyword"
+      >open</a
+      ><a name="233"
+      > </a
+      ><a name="234" class="Keyword"
+      >import</a
+      ><a name="240"
+      > </a
+      ><a name="241" href="Explore.Properties.html#1" class="Module"
+      >Explore.Properties</a
+      ><a name="259"
+      >
+</a
+      ><a name="260" class="Keyword"
+      >open</a
+      ><a name="264"
+      > </a
+      ><a name="265" class="Keyword"
+      >import</a
+      ><a name="271"
+      > </a
+      ><a name="272" href="Explore.Summable.html#1" class="Module"
+      >Explore.Summable</a
+      ><a name="288"
+      >
+</a
+      ><a name="289" class="Keyword"
+      >open</a
+      ><a name="293"
+      > </a
+      ><a name="294" class="Keyword"
+      >import</a
+      ><a name="300"
+      > </a
+      ><a name="301" href="Explore.Sum.html#1" class="Module"
+      >Explore.Sum</a
+      ><a name="312"
+      >
+</a
+      ><a name="313" class="Keyword"
+      >open</a
+      ><a name="317"
+      > </a
+      ><a name="318" class="Keyword"
+      >import</a
+      ><a name="324"
+      > </a
+      ><a name="325" href="Explore.Product.html#1" class="Module"
+      >Explore.Product</a
+      ><a name="340"
+      >
+</a
+      ><a name="341" class="Keyword"
+      >open</a
+      ><a name="345"
+      > </a
+      ><a name="346" class="Keyword"
+      >import</a
+      ><a name="352"
+      > </a
+      ><a name="353" href="Explore.Two.html#1" class="Module"
+      >Explore.Two</a
+      ><a name="364"
+      >
+
+</a
+      ><a name="366" class="Keyword"
+      >open</a
+      ><a name="370"
+      > </a
+      ><a name="371" class="Keyword"
+      >import</a
+      ><a name="377"
+      > </a
+      ><a name="378" href="Relation.Binary.PropositionalEquality.NP.html#1" class="Module"
+      >Relation.Binary.PropositionalEquality.NP</a
+      ><a name="418"
+      >
+
+</a
+      ><a name="420" class="Keyword"
+      >module</a
+      ><a name="426"
+      > </a
+      ><a name="427" href="Game.Transformation.InternalExternal.html#427" class="Module"
+      >GameFlipping</a
+      ><a name="439"
+      > </a
+      ><a name="440" class="Symbol"
+      >(</a
+      ><a name="441" href="Game.Transformation.InternalExternal.html#441" class="Bound"
+      >R</a
+      ><a name="442"
+      > </a
+      ><a name="443" class="Symbol"
+      >:</a
+      ><a name="444"
+      > </a
+      ><a name="445" class="PrimitiveType"
+      >Set</a
+      ><a name="448" class="Symbol"
+      >)(</a
+      ><a name="450" href="Game.Transformation.InternalExternal.html#450" class="Bound"
+      >sum</a
+      ><a name="453"
+      > </a
+      ><a name="454" class="Symbol"
+      >:</a
+      ><a name="455"
+      > </a
+      ><a name="456" href="Explore.Core.html#789" class="Function"
+      >Sum</a
+      ><a name="459"
+      > </a
+      ><a name="460" href="Game.Transformation.InternalExternal.html#441" class="Bound"
+      >R</a
+      ><a name="461" class="Symbol"
+      >)(</a
+      ><a name="463" href="Game.Transformation.InternalExternal.html#463" class="Bound"
+      >sum-ind</a
+      ><a name="470"
+      > </a
+      ><a name="471" class="Symbol"
+      >:</a
+      ><a name="472"
+      > </a
+      ><a name="473" href="Explore.Properties.html#5531" class="Function"
+      >SumInd</a
+      ><a name="479"
+      > </a
+      ><a name="480" href="Game.Transformation.InternalExternal.html#450" class="Bound"
+      >sum</a
+      ><a name="483" class="Symbol"
+      >)(</a
+      ><a name="485" href="Game.Transformation.InternalExternal.html#485" class="Bound"
+      >&#8513;</a
+      ><a name="486"
+      > </a
+      ><a name="487" class="Symbol"
+      >:</a
+      ><a name="488"
+      > </a
+      ><a name="489" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="490"
+      > </a
+      ><a name="491" class="Symbol"
+      >&#8594;</a
+      ><a name="492"
+      > </a
+      ><a name="493" href="Game.Transformation.InternalExternal.html#441" class="Bound"
+      >R</a
+      ><a name="494"
+      > </a
+      ><a name="495" class="Symbol"
+      >&#8594;</a
+      ><a name="496"
+      > </a
+      ><a name="497" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="498" class="Symbol"
+      >)</a
+      ><a name="499"
+      > </a
+      ><a name="500" class="Keyword"
+      >where</a
+      ><a name="505"
+      >
+  </a
+      ><a name="508" class="Keyword"
+      >open</a
+      ><a name="512"
+      > </a
+      ><a name="513" href="Explore.Product.html#5183" class="Module"
+      >Operators</a
+      ><a name="522"
+      >
+  </a
+      ><a name="525" href="Game.Transformation.InternalExternal.html#525" class="Function"
+      >X</a
+      ><a name="526"
+      > </a
+      ><a name="527" href="Game.Transformation.InternalExternal.html#527" class="Function"
+      >Y</a
+      ><a name="528"
+      > </a
+      ><a name="529" class="Symbol"
+      >:</a
+      ><a name="530"
+      > </a
+      ><a name="531" href="Game.Transformation.InternalExternal.html#441" class="Bound"
+      >R</a
+      ><a name="532"
+      > </a
+      ><a name="533" class="Symbol"
+      >&#8594;</a
+      ><a name="534"
+      > </a
+      ><a name="535" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="536"
+      >
+  </a
+      ><a name="539" href="Game.Transformation.InternalExternal.html#525" class="Function"
+      >X</a
+      ><a name="540"
+      > </a
+      ><a name="541" class="Symbol"
+      >=</a
+      ><a name="542"
+      > </a
+      ><a name="543" href="Game.Transformation.InternalExternal.html#485" class="Bound"
+      >&#8513;</a
+      ><a name="544"
+      > </a
+      ><a name="545" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="547"
+      >
+  </a
+      ><a name="550" href="Game.Transformation.InternalExternal.html#527" class="Function"
+      >Y</a
+      ><a name="551"
+      > </a
+      ><a name="552" class="Symbol"
+      >=</a
+      ><a name="553"
+      > </a
+      ><a name="554" href="Game.Transformation.InternalExternal.html#485" class="Bound"
+      >&#8513;</a
+      ><a name="555"
+      > </a
+      ><a name="556" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="558"
+      >
+  </a
+      ><a name="561" href="Game.Transformation.InternalExternal.html#561" class="Function"
+      >R'</a
+      ><a name="563"
+      > </a
+      ><a name="564" class="Symbol"
+      >=</a
+      ><a name="565"
+      > </a
+      ><a name="566" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="567"
+      > </a
+      ><a name="568" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="569"
+      > </a
+      ><a name="570" href="Game.Transformation.InternalExternal.html#441" class="Bound"
+      >R</a
+      ><a name="571"
+      >
+  </a
+      ><a name="574" href="Game.Transformation.InternalExternal.html#574" class="Function"
+      >sum'</a
+      ><a name="578"
+      > </a
+      ><a name="579" class="Symbol"
+      >:</a
+      ><a name="580"
+      > </a
+      ><a name="581" href="Explore.Core.html#789" class="Function"
+      >Sum</a
+      ><a name="584"
+      > </a
+      ><a name="585" href="Game.Transformation.InternalExternal.html#561" class="Function"
+      >R'</a
+      ><a name="587"
+      >
+  </a
+      ><a name="590" href="Game.Transformation.InternalExternal.html#574" class="Function"
+      >sum'</a
+      ><a name="594"
+      > </a
+      ><a name="595" class="Symbol"
+      >=</a
+      ><a name="596"
+      > </a
+      ><a name="597" href="Explore.Explorable.html#2828" class="Function"
+      >&#120794;&#738;</a
+      ><a name="599"
+      > </a
+      ><a name="600" href="Explore.Product.html#5300" class="Function Operator"
+      >&#215;&#738;</a
+      ><a name="602"
+      > </a
+      ><a name="603" href="Game.Transformation.InternalExternal.html#450" class="Bound"
+      >sum</a
+      ><a name="606"
+      >
+
+  </a
+      ><a name="610" class="Keyword"
+      >open</a
+      ><a name="614"
+      > </a
+      ><a name="615" href="Explore.Summable.html#446" class="Module"
+      >FromSum</a
+      ><a name="622"
+      >    </a
+      ><a name="626" href="Game.Transformation.InternalExternal.html#574" class="Function"
+      >sum'</a
+      ><a name="630"
+      >    </a
+      ><a name="634" class="Keyword"
+      >renaming</a
+      ><a name="642"
+      > </a
+      ><a name="643" class="Symbol"
+      >(</a
+      ><a name="644"
+      >count </a
+      ><a name="650" class="Symbol"
+      >to</a
+      ><a name="652"
+      > #'_</a
+      ><a name="656" class="Symbol"
+      >)</a
+      ><a name="657"
+      >
+  </a
+      ><a name="660" class="Keyword"
+      >open</a
+      ><a name="664"
+      > </a
+      ><a name="665" href="Explore.Summable.html#1170" class="Module"
+      >FromSumInd</a
+      ><a name="675"
+      > </a
+      ><a name="676" href="Game.Transformation.InternalExternal.html#463" class="Bound"
+      >sum-ind</a
+      ><a name="683"
+      > </a
+      ><a name="684" class="Keyword"
+      >renaming</a
+      ><a name="692"
+      > </a
+      ><a name="693" class="Symbol"
+      >(</a
+      ><a name="694"
+      >count </a
+      ><a name="700" class="Symbol"
+      >to</a
+      ><a name="702"
+      > #_</a
+      ><a name="705" class="Symbol"
+      >)</a
+      ><a name="706"
+      >
+
+  </a
+      ><a name="710" href="Game.Transformation.InternalExternal.html#710" class="Function"
+      >G</a
+      ><a name="711"
+      > </a
+      ><a name="712" class="Symbol"
+      >:</a
+      ><a name="713"
+      > </a
+      ><a name="714" href="Game.Transformation.InternalExternal.html#561" class="Function"
+      >R'</a
+      ><a name="716"
+      > </a
+      ><a name="717" class="Symbol"
+      >&#8594;</a
+      ><a name="718"
+      > </a
+      ><a name="719" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="720"
+      >
+</a
+      ><a name="721" class="Comment"
+      >--  G (b , r) = b == (case b 0&#8594; X 1&#8594; Y) r</a
+      ><a name="762"
+      >
+</a
+      ><a name="763" class="Comment"
+      >--  G (b , r) = b == (case b 0&#8594; X r 1&#8594; Y r)</a
+      ><a name="806"
+      >
+  </a
+      ><a name="809" href="Game.Transformation.InternalExternal.html#710" class="Function"
+      >G</a
+      ><a name="810"
+      > </a
+      ><a name="811" class="Symbol"
+      >(</a
+      ><a name="812" href="Game.Transformation.InternalExternal.html#812" class="Bound"
+      >b</a
+      ><a name="813"
+      > </a
+      ><a name="814" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="815"
+      > </a
+      ><a name="816" href="Game.Transformation.InternalExternal.html#816" class="Bound"
+      >r</a
+      ><a name="817" class="Symbol"
+      >)</a
+      ><a name="818"
+      > </a
+      ><a name="819" class="Symbol"
+      >=</a
+      ><a name="820"
+      > </a
+      ><a name="821" href="Game.Transformation.InternalExternal.html#812" class="Bound"
+      >b</a
+      ><a name="822"
+      > </a
+      ><a name="823" href="Data.Two.html#2568" class="Function Operator"
+      >==</a
+      ><a name="825"
+      > </a
+      ><a name="826" href="Game.Transformation.InternalExternal.html#485" class="Bound"
+      >&#8513;</a
+      ><a name="827"
+      > </a
+      ><a name="828" href="Game.Transformation.InternalExternal.html#812" class="Bound"
+      >b</a
+      ><a name="829"
+      > </a
+      ><a name="830" href="Game.Transformation.InternalExternal.html#816" class="Bound"
+      >r</a
+      ><a name="831"
+      >
+
+  </a
+      ><a name="835" href="Game.Transformation.InternalExternal.html#835" class="Function"
+      >1/2</a
+      ><a name="838"
+      > </a
+      ><a name="839" class="Symbol"
+      >:</a
+      ><a name="840"
+      > </a
+      ><a name="841" href="Game.Transformation.InternalExternal.html#561" class="Function"
+      >R'</a
+      ><a name="843"
+      > </a
+      ><a name="844" class="Symbol"
+      >&#8594;</a
+      ><a name="845"
+      > </a
+      ><a name="846" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="847"
+      >
+  </a
+      ><a name="850" href="Game.Transformation.InternalExternal.html#835" class="Function"
+      >1/2</a
+      ><a name="853"
+      > </a
+      ><a name="854" class="Symbol"
+      >=</a
+      ><a name="855"
+      > </a
+      ><a name="856" href="Data.Product.html#525" class="Field"
+      >proj&#8321;</a
+      ><a name="861"
+      >
+
+  </a
+      ><a name="865" class="Comment"
+      >-- TODO use the library</a
+      ><a name="888"
+      >
+  </a
+      ><a name="891" href="Game.Transformation.InternalExternal.html#891" class="Function"
+      >lemma</a
+      ><a name="896"
+      > </a
+      ><a name="897" class="Symbol"
+      >:</a
+      ><a name="898"
+      > </a
+      ><a name="899" class="Symbol"
+      >&#8704;</a
+      ><a name="900"
+      > </a
+      ><a name="901" href="Game.Transformation.InternalExternal.html#901" class="Bound"
+      >X</a
+      ><a name="902"
+      > </a
+      ><a name="903" class="Symbol"
+      >&#8594;</a
+      ><a name="904"
+      > </a
+      ><a name="905" href="Game.Transformation.InternalExternal.html#450" class="Bound"
+      >sum</a
+      ><a name="908"
+      > </a
+      ><a name="909" class="Symbol"
+      >(</a
+      ><a name="910" href="Function.html#1047" class="Function"
+      >const</a
+      ><a name="915"
+      > </a
+      ><a name="916" class="Number"
+      >1</a
+      ><a name="917" class="Symbol"
+      >)</a
+      ><a name="918"
+      > </a
+      ><a name="919" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="920"
+      > </a
+      ><a name="921" href="Explore.Summable.html#519" class="Function Operator"
+      >#</a
+      ><a name="922" class="Symbol"
+      >(</a
+      ><a name="923" href="Data.Bool.html#873" class="Function"
+      >not</a
+      ><a name="926"
+      > </a
+      ><a name="927" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="928"
+      > </a
+      ><a name="929" href="Game.Transformation.InternalExternal.html#901" class="Bound"
+      >X</a
+      ><a name="930" class="Symbol"
+      >)</a
+      ><a name="931"
+      > </a
+      ><a name="932" href="Data.Nat.html#2239" class="Primitive Operator"
+      >+</a
+      ><a name="933"
+      > </a
+      ><a name="934" href="Explore.Summable.html#519" class="Function Operator"
+      >#</a
+      ><a name="935"
+      > </a
+      ><a name="936" href="Game.Transformation.InternalExternal.html#901" class="Bound"
+      >X</a
+      ><a name="937"
+      >
+  </a
+      ><a name="940" href="Game.Transformation.InternalExternal.html#891" class="Function"
+      >lemma</a
+      ><a name="945"
+      > </a
+      ><a name="946" href="Game.Transformation.InternalExternal.html#946" class="Bound"
+      >X</a
+      ><a name="947"
+      > </a
+      ><a name="948" class="Symbol"
+      >=</a
+      ><a name="949"
+      > </a
+      ><a name="950" href="Game.Transformation.InternalExternal.html#463" class="Bound"
+      >sum-ind</a
+      ><a name="957"
+      > </a
+      ><a name="958" href="Game.Transformation.InternalExternal.html#1042" class="Function"
+      >P</a
+      ><a name="959"
+      > </a
+      ><a name="960" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="964"
+      > </a
+      ><a name="965" class="Symbol"
+      >(&#955;</a
+      ><a name="967"
+      > </a
+      ><a name="968" class="Symbol"
+      >{</a
+      ><a name="969" href="Game.Transformation.InternalExternal.html#969" class="Bound"
+      >a</a
+      ><a name="970" class="Symbol"
+      >}{</a
+      ><a name="972" href="Game.Transformation.InternalExternal.html#972" class="Bound"
+      >b</a
+      ><a name="973" class="Symbol"
+      >}</a
+      ><a name="974"
+      > </a
+      ><a name="975" class="Symbol"
+      >&#8594;</a
+      ><a name="976"
+      > </a
+      ><a name="977" href="Game.Transformation.InternalExternal.html#1103" class="Function"
+      >part1</a
+      ><a name="982"
+      > </a
+      ><a name="983" class="Symbol"
+      >{</a
+      ><a name="984" href="Game.Transformation.InternalExternal.html#969" class="Bound"
+      >a</a
+      ><a name="985" class="Symbol"
+      >}{</a
+      ><a name="987" href="Game.Transformation.InternalExternal.html#972" class="Bound"
+      >b</a
+      ><a name="988" class="Symbol"
+      >})</a
+      ><a name="990"
+      > </a
+      ><a name="991" href="Game.Transformation.InternalExternal.html#1298" class="Function"
+      >part2</a
+      ><a name="996"
+      >
+    </a
+      ><a name="1001" class="Keyword"
+      >where</a
+      ><a name="1006"
+      >
+      </a
+      ><a name="1013" href="Game.Transformation.InternalExternal.html#1013" class="Function"
+      >count</a
+      ><a name="1018"
+      > </a
+      ><a name="1019" class="Symbol"
+      >=</a
+      ><a name="1020"
+      > </a
+      ><a name="1021" href="Explore.Summable.html#519" class="Function"
+      >FromSum.count</a
+      ><a name="1034"
+      >
+
+      </a
+      ><a name="1042" href="Game.Transformation.InternalExternal.html#1042" class="Function"
+      >P</a
+      ><a name="1043"
+      > </a
+      ><a name="1044" class="Symbol"
+      >=</a
+      ><a name="1045"
+      > </a
+      ><a name="1046" class="Symbol"
+      >&#955;</a
+      ><a name="1047"
+      > </a
+      ><a name="1048" href="Game.Transformation.InternalExternal.html#1048" class="Bound"
+      >s</a
+      ><a name="1049"
+      > </a
+      ><a name="1050" class="Symbol"
+      >&#8594;</a
+      ><a name="1051"
+      > </a
+      ><a name="1052" href="Game.Transformation.InternalExternal.html#1048" class="Bound"
+      >s</a
+      ><a name="1053"
+      > </a
+      ><a name="1054" class="Symbol"
+      >(</a
+      ><a name="1055" href="Function.html#1047" class="Function"
+      >const</a
+      ><a name="1060"
+      > </a
+      ><a name="1061" class="Number"
+      >1</a
+      ><a name="1062" class="Symbol"
+      >)</a
+      ><a name="1063"
+      > </a
+      ><a name="1064" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="1065"
+      > </a
+      ><a name="1066" href="Game.Transformation.InternalExternal.html#1013" class="Function"
+      >count</a
+      ><a name="1071"
+      > </a
+      ><a name="1072" href="Game.Transformation.InternalExternal.html#1048" class="Bound"
+      >s</a
+      ><a name="1073"
+      > </a
+      ><a name="1074" class="Symbol"
+      >(</a
+      ><a name="1075" href="Data.Bool.html#873" class="Function"
+      >not</a
+      ><a name="1078"
+      > </a
+      ><a name="1079" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1080"
+      > </a
+      ><a name="1081" href="Game.Transformation.InternalExternal.html#946" class="Bound"
+      >X</a
+      ><a name="1082" class="Symbol"
+      >)</a
+      ><a name="1083"
+      > </a
+      ><a name="1084" href="Data.Nat.html#2239" class="Primitive Operator"
+      >+</a
+      ><a name="1085"
+      > </a
+      ><a name="1086" href="Game.Transformation.InternalExternal.html#1013" class="Function"
+      >count</a
+      ><a name="1091"
+      > </a
+      ><a name="1092" href="Game.Transformation.InternalExternal.html#1048" class="Bound"
+      >s</a
+      ><a name="1093"
+      > </a
+      ><a name="1094" href="Game.Transformation.InternalExternal.html#946" class="Bound"
+      >X</a
+      ><a name="1095"
+      >
+
+      </a
+      ><a name="1103" href="Game.Transformation.InternalExternal.html#1103" class="Function"
+      >part1</a
+      ><a name="1108"
+      > </a
+      ><a name="1109" class="Symbol"
+      >:</a
+      ><a name="1110"
+      > </a
+      ><a name="1111" class="Symbol"
+      >&#8704;</a
+      ><a name="1112"
+      > </a
+      ><a name="1113" class="Symbol"
+      >{</a
+      ><a name="1114" href="Game.Transformation.InternalExternal.html#1114" class="Bound"
+      >s&#8320;</a
+      ><a name="1116"
+      > </a
+      ><a name="1117" href="Game.Transformation.InternalExternal.html#1117" class="Bound"
+      >s&#8321;</a
+      ><a name="1119" class="Symbol"
+      >}</a
+      ><a name="1120"
+      > </a
+      ><a name="1121" class="Symbol"
+      >&#8594;</a
+      ><a name="1122"
+      > </a
+      ><a name="1123" href="Game.Transformation.InternalExternal.html#1042" class="Function"
+      >P</a
+      ><a name="1124"
+      > </a
+      ><a name="1125" href="Game.Transformation.InternalExternal.html#1114" class="Bound"
+      >s&#8320;</a
+      ><a name="1127"
+      > </a
+      ><a name="1128" class="Symbol"
+      >&#8594;</a
+      ><a name="1129"
+      > </a
+      ><a name="1130" href="Game.Transformation.InternalExternal.html#1042" class="Function"
+      >P</a
+      ><a name="1131"
+      > </a
+      ><a name="1132" href="Game.Transformation.InternalExternal.html#1117" class="Bound"
+      >s&#8321;</a
+      ><a name="1134"
+      > </a
+      ><a name="1135" class="Symbol"
+      >&#8594;</a
+      ><a name="1136"
+      > </a
+      ><a name="1137" href="Game.Transformation.InternalExternal.html#1042" class="Function"
+      >P</a
+      ><a name="1138"
+      > </a
+      ><a name="1139" class="Symbol"
+      >(&#955;</a
+      ><a name="1141"
+      > </a
+      ><a name="1142" href="Game.Transformation.InternalExternal.html#1142" class="Bound"
+      >f</a
+      ><a name="1143"
+      > </a
+      ><a name="1144" class="Symbol"
+      >&#8594;</a
+      ><a name="1145"
+      > </a
+      ><a name="1146" href="Game.Transformation.InternalExternal.html#1114" class="Bound"
+      >s&#8320;</a
+      ><a name="1148"
+      > </a
+      ><a name="1149" href="Game.Transformation.InternalExternal.html#1142" class="Bound"
+      >f</a
+      ><a name="1150"
+      > </a
+      ><a name="1151" href="Data.Nat.html#2239" class="Primitive Operator"
+      >+</a
+      ><a name="1152"
+      > </a
+      ><a name="1153" href="Game.Transformation.InternalExternal.html#1117" class="Bound"
+      >s&#8321;</a
+      ><a name="1155"
+      > </a
+      ><a name="1156" href="Game.Transformation.InternalExternal.html#1142" class="Bound"
+      >f</a
+      ><a name="1157" class="Symbol"
+      >)</a
+      ><a name="1158"
+      >
+      </a
+      ><a name="1165" href="Game.Transformation.InternalExternal.html#1103" class="Function"
+      >part1</a
+      ><a name="1170"
+      > </a
+      ><a name="1171" class="Symbol"
+      >{</a
+      ><a name="1172" href="Game.Transformation.InternalExternal.html#1172" class="Bound"
+      >s&#8320;</a
+      ><a name="1174" class="Symbol"
+      >}</a
+      ><a name="1175"
+      > </a
+      ><a name="1176" class="Symbol"
+      >{</a
+      ><a name="1177" href="Game.Transformation.InternalExternal.html#1177" class="Bound"
+      >s&#8321;</a
+      ><a name="1179" class="Symbol"
+      >}</a
+      ><a name="1180"
+      > </a
+      ><a name="1181" href="Game.Transformation.InternalExternal.html#1181" class="Bound"
+      >Ps&#8320;</a
+      ><a name="1184"
+      > </a
+      ><a name="1185" href="Game.Transformation.InternalExternal.html#1185" class="Bound"
+      >Ps&#8321;</a
+      ><a name="1188"
+      > </a
+      ><a name="1189" class="Keyword"
+      >rewrite</a
+      ><a name="1196"
+      > </a
+      ><a name="1197" href="Game.Transformation.InternalExternal.html#1181" class="Bound"
+      >Ps&#8320;</a
+      ><a name="1200"
+      > </a
+      ><a name="1201" class="Symbol"
+      >|</a
+      ><a name="1202"
+      > </a
+      ><a name="1203" href="Game.Transformation.InternalExternal.html#1185" class="Bound"
+      >Ps&#8321;</a
+      ><a name="1206"
+      > </a
+      ><a name="1207" class="Symbol"
+      >=</a
+      ><a name="1208"
+      > </a
+      ><a name="1209" href="Data.Nat.NP.html#3656" class="Function"
+      >+-interchange</a
+      ><a name="1222"
+      > </a
+      ><a name="1223" class="Symbol"
+      >(</a
+      ><a name="1224" href="Game.Transformation.InternalExternal.html#1013" class="Function"
+      >count</a
+      ><a name="1229"
+      > </a
+      ><a name="1230" href="Game.Transformation.InternalExternal.html#1172" class="Bound"
+      >s&#8320;</a
+      ><a name="1232"
+      > </a
+      ><a name="1233" class="Symbol"
+      >(</a
+      ><a name="1234" href="Data.Bool.html#873" class="Function"
+      >not</a
+      ><a name="1237"
+      > </a
+      ><a name="1238" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1239"
+      > </a
+      ><a name="1240" href="Game.Transformation.InternalExternal.html#946" class="Bound"
+      >X</a
+      ><a name="1241" class="Symbol"
+      >))</a
+      ><a name="1243"
+      > </a
+      ><a name="1244" class="Symbol"
+      >(</a
+      ><a name="1245" href="Game.Transformation.InternalExternal.html#1013" class="Function"
+      >count</a
+      ><a name="1250"
+      > </a
+      ><a name="1251" href="Game.Transformation.InternalExternal.html#1172" class="Bound"
+      >s&#8320;</a
+      ><a name="1253"
+      > </a
+      ><a name="1254" href="Game.Transformation.InternalExternal.html#946" class="Bound"
+      >X</a
+      ><a name="1255" class="Symbol"
+      >)</a
+      ><a name="1256"
+      > </a
+      ><a name="1257" class="Symbol"
+      >(</a
+      ><a name="1258" href="Game.Transformation.InternalExternal.html#1013" class="Function"
+      >count</a
+      ><a name="1263"
+      > </a
+      ><a name="1264" href="Game.Transformation.InternalExternal.html#1177" class="Bound"
+      >s&#8321;</a
+      ><a name="1266"
+      > </a
+      ><a name="1267" class="Symbol"
+      >(</a
+      ><a name="1268" href="Data.Bool.html#873" class="Function"
+      >not</a
+      ><a name="1271"
+      > </a
+      ><a name="1272" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1273"
+      > </a
+      ><a name="1274" href="Game.Transformation.InternalExternal.html#946" class="Bound"
+      >X</a
+      ><a name="1275" class="Symbol"
+      >))</a
+      ><a name="1277"
+      > </a
+      ><a name="1278" class="Symbol"
+      >(</a
+      ><a name="1279" href="Game.Transformation.InternalExternal.html#1013" class="Function"
+      >count</a
+      ><a name="1284"
+      > </a
+      ><a name="1285" href="Game.Transformation.InternalExternal.html#1177" class="Bound"
+      >s&#8321;</a
+      ><a name="1287"
+      > </a
+      ><a name="1288" href="Game.Transformation.InternalExternal.html#946" class="Bound"
+      >X</a
+      ><a name="1289" class="Symbol"
+      >)</a
+      ><a name="1290"
+      >
+
+      </a
+      ><a name="1298" href="Game.Transformation.InternalExternal.html#1298" class="Function"
+      >part2</a
+      ><a name="1303"
+      > </a
+      ><a name="1304" class="Symbol"
+      >:</a
+      ><a name="1305"
+      > </a
+      ><a name="1306" class="Symbol"
+      >&#8704;</a
+      ><a name="1307"
+      > </a
+      ><a name="1308" href="Game.Transformation.InternalExternal.html#1308" class="Bound"
+      >x</a
+      ><a name="1309"
+      > </a
+      ><a name="1310" class="Symbol"
+      >&#8594;</a
+      ><a name="1311"
+      > </a
+      ><a name="1312" href="Game.Transformation.InternalExternal.html#1042" class="Function"
+      >P</a
+      ><a name="1313"
+      > </a
+      ><a name="1314" class="Symbol"
+      >(&#955;</a
+      ><a name="1316"
+      > </a
+      ><a name="1317" href="Game.Transformation.InternalExternal.html#1317" class="Bound"
+      >f</a
+      ><a name="1318"
+      > </a
+      ><a name="1319" class="Symbol"
+      >&#8594;</a
+      ><a name="1320"
+      > </a
+      ><a name="1321" href="Game.Transformation.InternalExternal.html#1317" class="Bound"
+      >f</a
+      ><a name="1322"
+      > </a
+      ><a name="1323" href="Game.Transformation.InternalExternal.html#1308" class="Bound"
+      >x</a
+      ><a name="1324" class="Symbol"
+      >)</a
+      ><a name="1325"
+      >
+      </a
+      ><a name="1332" href="Game.Transformation.InternalExternal.html#1298" class="Function"
+      >part2</a
+      ><a name="1337"
+      > </a
+      ><a name="1338" href="Game.Transformation.InternalExternal.html#1338" class="Bound"
+      >x</a
+      ><a name="1339"
+      > </a
+      ><a name="1340" class="Keyword"
+      >with</a
+      ><a name="1344"
+      > </a
+      ><a name="1345" href="Game.Transformation.InternalExternal.html#946" class="Bound"
+      >X</a
+      ><a name="1346"
+      > </a
+      ><a name="1347" href="Game.Transformation.InternalExternal.html#1338" class="Bound"
+      >x</a
+      ><a name="1348"
+      >
+      </a
+      ><a name="1355" href="Game.Transformation.InternalExternal.html#1298" class="Function"
+      >part2</a
+      ><a name="1360"
+      > </a
+      ><a name="1361" href="Game.Transformation.InternalExternal.html#1361" class="Bound"
+      >x</a
+      ><a name="1362"
+      > </a
+      ><a name="1363" class="Symbol"
+      >|</a
+      ><a name="1364"
+      > </a
+      ><a name="1365" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="1367"
+      > </a
+      ><a name="1368" class="Symbol"
+      >=</a
+      ><a name="1369"
+      > </a
+      ><a name="1370" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="1374"
+      >
+      </a
+      ><a name="1381" href="Game.Transformation.InternalExternal.html#1298" class="Function"
+      >part2</a
+      ><a name="1386"
+      > </a
+      ><a name="1387" href="Game.Transformation.InternalExternal.html#1387" class="Bound"
+      >x</a
+      ><a name="1388"
+      > </a
+      ><a name="1389" class="Symbol"
+      >|</a
+      ><a name="1390"
+      > </a
+      ><a name="1391" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="1393"
+      > </a
+      ><a name="1394" class="Symbol"
+      >=</a
+      ><a name="1395"
+      > </a
+      ><a name="1396" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="1400"
+      >
+
+  </a
+      ><a name="1404" href="Game.Transformation.InternalExternal.html#1404" class="Function"
+      >thm</a
+      ><a name="1407"
+      > </a
+      ><a name="1408" class="Symbol"
+      >:</a
+      ><a name="1409"
+      > </a
+      ><a name="1410" href="Data.Nat.Distance.html#177" class="Function"
+      >dist</a
+      ><a name="1414"
+      > </a
+      ><a name="1415" class="Symbol"
+      >(</a
+      ><a name="1416" href="Explore.Summable.html#519" class="Function Operator"
+      >#'</a
+      ><a name="1418"
+      > </a
+      ><a name="1419" href="Game.Transformation.InternalExternal.html#710" class="Function"
+      >G</a
+      ><a name="1420" class="Symbol"
+      >)</a
+      ><a name="1421"
+      > </a
+      ><a name="1422" class="Symbol"
+      >(</a
+      ><a name="1423" href="Explore.Summable.html#519" class="Function Operator"
+      >#'</a
+      ><a name="1425"
+      > </a
+      ><a name="1426" href="Game.Transformation.InternalExternal.html#835" class="Function"
+      >1/2</a
+      ><a name="1429" class="Symbol"
+      >)</a
+      ><a name="1430"
+      > </a
+      ><a name="1431" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="1432"
+      > </a
+      ><a name="1433" href="Data.Nat.Distance.html#177" class="Function"
+      >dist</a
+      ><a name="1437"
+      > </a
+      ><a name="1438" class="Symbol"
+      >(</a
+      ><a name="1439" href="Explore.Summable.html#519" class="Function Operator"
+      >#</a
+      ><a name="1440"
+      > </a
+      ><a name="1441" href="Game.Transformation.InternalExternal.html#527" class="Function"
+      >Y</a
+      ><a name="1442" class="Symbol"
+      >)</a
+      ><a name="1443"
+      > </a
+      ><a name="1444" class="Symbol"
+      >(</a
+      ><a name="1445" href="Explore.Summable.html#519" class="Function Operator"
+      >#</a
+      ><a name="1446"
+      > </a
+      ><a name="1447" href="Game.Transformation.InternalExternal.html#525" class="Function"
+      >X</a
+      ><a name="1448" class="Symbol"
+      >)</a
+      ><a name="1449"
+      >
+  </a
+      ><a name="1452" href="Game.Transformation.InternalExternal.html#1404" class="Function"
+      >thm</a
+      ><a name="1455"
+      > </a
+      ><a name="1456" class="Symbol"
+      >=</a
+      ><a name="1457"
+      > </a
+      ><a name="1458" href="Data.Nat.Distance.html#177" class="Function"
+      >dist</a
+      ><a name="1462"
+      > </a
+      ><a name="1463" class="Symbol"
+      >(</a
+      ><a name="1464" href="Explore.Summable.html#519" class="Function Operator"
+      >#'</a
+      ><a name="1466"
+      > </a
+      ><a name="1467" href="Game.Transformation.InternalExternal.html#710" class="Function"
+      >G</a
+      ><a name="1468" class="Symbol"
+      >)</a
+      ><a name="1469"
+      > </a
+      ><a name="1470" class="Symbol"
+      >(</a
+      ><a name="1471" href="Explore.Summable.html#519" class="Function Operator"
+      >#'</a
+      ><a name="1473"
+      > </a
+      ><a name="1474" href="Game.Transformation.InternalExternal.html#835" class="Function"
+      >1/2</a
+      ><a name="1477" class="Symbol"
+      >)</a
+      ><a name="1478"
+      >
+      </a
+      ><a name="1485" href="Relation.Binary.NP.html#1394" class="Function Operator"
+      >&#8801;&#10216;</a
+      ><a name="1487"
+      > </a
+      ><a name="1488" href="Relation.Binary.PropositionalEquality.html#1034" class="Function"
+      >cong</a
+      ><a name="1492"
+      > </a
+      ><a name="1493" class="Symbol"
+      >(</a
+      ><a name="1494" href="Data.Nat.Distance.html#177" class="Function"
+      >dist</a
+      ><a name="1498"
+      > </a
+      ><a name="1499" class="Symbol"
+      >(</a
+      ><a name="1500" href="Explore.Summable.html#519" class="Function Operator"
+      >#'</a
+      ><a name="1502"
+      > </a
+      ><a name="1503" href="Game.Transformation.InternalExternal.html#710" class="Function"
+      >G</a
+      ><a name="1504" class="Symbol"
+      >))</a
+      ><a name="1506"
+      > </a
+      ><a name="1507" href="Game.Transformation.InternalExternal.html#1861" class="Function"
+      >helper</a
+      ><a name="1513"
+      > </a
+      ><a name="1514" href="Relation.Binary.NP.html#1394" class="Function Operator"
+      >&#10217;</a
+      ><a name="1515"
+      >
+        </a
+      ><a name="1524" href="Data.Nat.Distance.html#177" class="Function"
+      >dist</a
+      ><a name="1528"
+      > </a
+      ><a name="1529" class="Symbol"
+      >(</a
+      ><a name="1530" href="Explore.Summable.html#519" class="Function Operator"
+      >#'</a
+      ><a name="1532"
+      > </a
+      ><a name="1533" href="Game.Transformation.InternalExternal.html#710" class="Function"
+      >G</a
+      ><a name="1534" class="Symbol"
+      >)</a
+      ><a name="1535"
+      > </a
+      ><a name="1536" class="Symbol"
+      >(</a
+      ><a name="1537" href="Explore.Summable.html#519" class="Function Operator"
+      >#</a
+      ><a name="1538" class="Symbol"
+      >(</a
+      ><a name="1539" href="Data.Bool.html#873" class="Function"
+      >not</a
+      ><a name="1542"
+      > </a
+      ><a name="1543" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1544"
+      > </a
+      ><a name="1545" href="Game.Transformation.InternalExternal.html#525" class="Function"
+      >X</a
+      ><a name="1546" class="Symbol"
+      >)</a
+      ><a name="1547"
+      > </a
+      ><a name="1548" href="Data.Nat.html#2239" class="Primitive Operator"
+      >+</a
+      ><a name="1549"
+      > </a
+      ><a name="1550" href="Explore.Summable.html#519" class="Function Operator"
+      >#</a
+      ><a name="1551"
+      > </a
+      ><a name="1552" href="Game.Transformation.InternalExternal.html#525" class="Function"
+      >X</a
+      ><a name="1553" class="Symbol"
+      >)</a
+      ><a name="1554"
+      >
+      </a
+      ><a name="1561" href="Relation.Binary.NP.html#1394" class="Function Operator"
+      >&#8801;&#10216;</a
+      ><a name="1563"
+      > </a
+      ><a name="1564" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="1568"
+      > </a
+      ><a name="1569" href="Relation.Binary.NP.html#1394" class="Function Operator"
+      >&#10217;</a
+      ><a name="1570"
+      > </a
+      ><a name="1571" class="Comment"
+      >-- #' definition</a
+      ><a name="1587"
+      >
+        </a
+      ><a name="1596" href="Data.Nat.Distance.html#177" class="Function"
+      >dist</a
+      ><a name="1600"
+      > </a
+      ><a name="1601" class="Symbol"
+      >(</a
+      ><a name="1602" href="Explore.Summable.html#519" class="Function Operator"
+      >#</a
+      ><a name="1603"
+      > </a
+      ><a name="1604" class="Symbol"
+      >(</a
+      ><a name="1605" href="Data.Two.html#2568" class="Function Operator"
+      >_==_</a
+      ><a name="1609"
+      > </a
+      ><a name="1610" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="1612"
+      > </a
+      ><a name="1613" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1614"
+      > </a
+      ><a name="1615" href="Game.Transformation.InternalExternal.html#525" class="Function"
+      >X</a
+      ><a name="1616" class="Symbol"
+      >)</a
+      ><a name="1617"
+      > </a
+      ><a name="1618" href="Data.Nat.html#2239" class="Primitive Operator"
+      >+</a
+      ><a name="1619"
+      > </a
+      ><a name="1620" href="Explore.Summable.html#519" class="Function Operator"
+      >#</a
+      ><a name="1621"
+      > </a
+      ><a name="1622" class="Symbol"
+      >(</a
+      ><a name="1623" href="Data.Two.html#2568" class="Function Operator"
+      >_==_</a
+      ><a name="1627"
+      > </a
+      ><a name="1628" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="1630"
+      > </a
+      ><a name="1631" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1632"
+      > </a
+      ><a name="1633" href="Game.Transformation.InternalExternal.html#527" class="Function"
+      >Y</a
+      ><a name="1634" class="Symbol"
+      >))</a
+      ><a name="1636"
+      > </a
+      ><a name="1637" class="Symbol"
+      >(</a
+      ><a name="1638" href="Explore.Summable.html#519" class="Function Operator"
+      >#</a
+      ><a name="1639"
+      > </a
+      ><a name="1640" class="Symbol"
+      >(</a
+      ><a name="1641" href="Data.Bool.html#873" class="Function"
+      >not</a
+      ><a name="1644"
+      > </a
+      ><a name="1645" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1646"
+      > </a
+      ><a name="1647" href="Game.Transformation.InternalExternal.html#525" class="Function"
+      >X</a
+      ><a name="1648" class="Symbol"
+      >)</a
+      ><a name="1649"
+      > </a
+      ><a name="1650" href="Data.Nat.html#2239" class="Primitive Operator"
+      >+</a
+      ><a name="1651"
+      > </a
+      ><a name="1652" href="Explore.Summable.html#519" class="Function Operator"
+      >#</a
+      ><a name="1653"
+      > </a
+      ><a name="1654" href="Game.Transformation.InternalExternal.html#525" class="Function"
+      >X</a
+      ><a name="1655" class="Symbol"
+      >)</a
+      ><a name="1656"
+      >
+      </a
+      ><a name="1663" href="Relation.Binary.NP.html#1394" class="Function Operator"
+      >&#8801;&#10216;</a
+      ><a name="1665"
+      > </a
+      ><a name="1666" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="1670"
+      > </a
+      ><a name="1671" href="Relation.Binary.NP.html#1394" class="Function Operator"
+      >&#10217;</a
+      ><a name="1672"
+      > </a
+      ><a name="1673" class="Comment"
+      >-- #' definition</a
+      ><a name="1689"
+      >
+        </a
+      ><a name="1698" href="Data.Nat.Distance.html#177" class="Function"
+      >dist</a
+      ><a name="1702"
+      > </a
+      ><a name="1703" class="Symbol"
+      >(</a
+      ><a name="1704" href="Explore.Summable.html#519" class="Function Operator"
+      >#</a
+      ><a name="1705"
+      > </a
+      ><a name="1706" class="Symbol"
+      >(</a
+      ><a name="1707" href="Data.Bool.html#873" class="Function"
+      >not</a
+      ><a name="1710"
+      > </a
+      ><a name="1711" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1712"
+      > </a
+      ><a name="1713" href="Game.Transformation.InternalExternal.html#525" class="Function"
+      >X</a
+      ><a name="1714" class="Symbol"
+      >)</a
+      ><a name="1715"
+      > </a
+      ><a name="1716" href="Data.Nat.html#2239" class="Primitive Operator"
+      >+</a
+      ><a name="1717"
+      > </a
+      ><a name="1718" href="Explore.Summable.html#519" class="Function Operator"
+      >#</a
+      ><a name="1719"
+      > </a
+      ><a name="1720" href="Game.Transformation.InternalExternal.html#527" class="Function"
+      >Y</a
+      ><a name="1721" class="Symbol"
+      >)</a
+      ><a name="1722"
+      > </a
+      ><a name="1723" class="Symbol"
+      >(</a
+      ><a name="1724" href="Explore.Summable.html#519" class="Function Operator"
+      >#</a
+      ><a name="1725"
+      > </a
+      ><a name="1726" class="Symbol"
+      >(</a
+      ><a name="1727" href="Data.Bool.html#873" class="Function"
+      >not</a
+      ><a name="1730"
+      > </a
+      ><a name="1731" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1732"
+      > </a
+      ><a name="1733" href="Game.Transformation.InternalExternal.html#525" class="Function"
+      >X</a
+      ><a name="1734" class="Symbol"
+      >)</a
+      ><a name="1735"
+      > </a
+      ><a name="1736" href="Data.Nat.html#2239" class="Primitive Operator"
+      >+</a
+      ><a name="1737"
+      > </a
+      ><a name="1738" href="Explore.Summable.html#519" class="Function Operator"
+      >#</a
+      ><a name="1739"
+      > </a
+      ><a name="1740" href="Game.Transformation.InternalExternal.html#525" class="Function"
+      >X</a
+      ><a name="1741" class="Symbol"
+      >)</a
+      ><a name="1742"
+      >
+      </a
+      ><a name="1749" href="Relation.Binary.NP.html#1394" class="Function Operator"
+      >&#8801;&#10216;</a
+      ><a name="1751"
+      > </a
+      ><a name="1752" href="Data.Nat.Distance.html#699" class="Function"
+      >dist-x+</a
+      ><a name="1759"
+      > </a
+      ><a name="1760" class="Symbol"
+      >(</a
+      ><a name="1761" href="Explore.Summable.html#519" class="Function Operator"
+      >#</a
+      ><a name="1762"
+      > </a
+      ><a name="1763" class="Symbol"
+      >(</a
+      ><a name="1764" href="Data.Bool.html#873" class="Function"
+      >not</a
+      ><a name="1767"
+      > </a
+      ><a name="1768" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1769"
+      > </a
+      ><a name="1770" href="Game.Transformation.InternalExternal.html#525" class="Function"
+      >X</a
+      ><a name="1771" class="Symbol"
+      >))</a
+      ><a name="1773"
+      > </a
+      ><a name="1774" class="Symbol"
+      >(</a
+      ><a name="1775" href="Explore.Summable.html#519" class="Function Operator"
+      >#</a
+      ><a name="1776"
+      > </a
+      ><a name="1777" href="Game.Transformation.InternalExternal.html#527" class="Function"
+      >Y</a
+      ><a name="1778" class="Symbol"
+      >)</a
+      ><a name="1779"
+      > </a
+      ><a name="1780" class="Symbol"
+      >(</a
+      ><a name="1781" href="Explore.Summable.html#519" class="Function Operator"
+      >#</a
+      ><a name="1782"
+      > </a
+      ><a name="1783" href="Game.Transformation.InternalExternal.html#525" class="Function"
+      >X</a
+      ><a name="1784" class="Symbol"
+      >)</a
+      ><a name="1785"
+      > </a
+      ><a name="1786" href="Relation.Binary.NP.html#1394" class="Function Operator"
+      >&#10217;</a
+      ><a name="1787"
+      >
+        </a
+      ><a name="1796" href="Data.Nat.Distance.html#177" class="Function"
+      >dist</a
+      ><a name="1800"
+      > </a
+      ><a name="1801" class="Symbol"
+      >(</a
+      ><a name="1802" href="Explore.Summable.html#519" class="Function Operator"
+      >#</a
+      ><a name="1803"
+      > </a
+      ><a name="1804" href="Game.Transformation.InternalExternal.html#527" class="Function"
+      >Y</a
+      ><a name="1805" class="Symbol"
+      >)</a
+      ><a name="1806"
+      > </a
+      ><a name="1807" class="Symbol"
+      >(</a
+      ><a name="1808" href="Explore.Summable.html#519" class="Function Operator"
+      >#</a
+      ><a name="1809"
+      > </a
+      ><a name="1810" href="Game.Transformation.InternalExternal.html#525" class="Function"
+      >X</a
+      ><a name="1811" class="Symbol"
+      >)</a
+      ><a name="1812"
+      >
+      </a
+      ><a name="1819" href="Relation.Binary.NP.html#1900" class="Function Operator"
+      >&#8718;</a
+      ><a name="1820"
+      >
+    </a
+      ><a name="1825" class="Keyword"
+      >where</a
+      ><a name="1830"
+      >
+      </a
+      ><a name="1837" class="Keyword"
+      >open</a
+      ><a name="1841"
+      > </a
+      ><a name="1842" href="Relation.Binary.PropositionalEquality.NP.html#2769" class="Module"
+      >&#8801;-Reasoning</a
+      ><a name="1853"
+      >
+
+      </a
+      ><a name="1861" href="Game.Transformation.InternalExternal.html#1861" class="Function"
+      >helper</a
+      ><a name="1867"
+      > </a
+      ><a name="1868" class="Symbol"
+      >=</a
+      ><a name="1869"
+      > </a
+      ><a name="1870" href="Explore.Summable.html#519" class="Function Operator"
+      >#'</a
+      ><a name="1872"
+      > </a
+      ><a name="1873" href="Game.Transformation.InternalExternal.html#835" class="Function"
+      >1/2</a
+      ><a name="1876"
+      >
+             </a
+      ><a name="1890" href="Relation.Binary.NP.html#1394" class="Function Operator"
+      >&#8801;&#10216;</a
+      ><a name="1892"
+      > </a
+      ><a name="1893" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="1897"
+      > </a
+      ><a name="1898" href="Relation.Binary.NP.html#1394" class="Function Operator"
+      >&#10217;</a
+      ><a name="1899"
+      >
+               </a
+      ><a name="1915" href="Game.Transformation.InternalExternal.html#450" class="Bound"
+      >sum</a
+      ><a name="1918"
+      > </a
+      ><a name="1919" class="Symbol"
+      >(</a
+      ><a name="1920" href="Function.html#1047" class="Function"
+      >const</a
+      ><a name="1925"
+      > </a
+      ><a name="1926" class="Number"
+      >0</a
+      ><a name="1927" class="Symbol"
+      >)</a
+      ><a name="1928"
+      > </a
+      ><a name="1929" href="Data.Nat.html#2239" class="Primitive Operator"
+      >+</a
+      ><a name="1930"
+      > </a
+      ><a name="1931" href="Game.Transformation.InternalExternal.html#450" class="Bound"
+      >sum</a
+      ><a name="1934"
+      > </a
+      ><a name="1935" class="Symbol"
+      >(</a
+      ><a name="1936" href="Function.html#1047" class="Function"
+      >const</a
+      ><a name="1941"
+      > </a
+      ><a name="1942" class="Number"
+      >1</a
+      ><a name="1943" class="Symbol"
+      >)</a
+      ><a name="1944"
+      >
+             </a
+      ><a name="1958" href="Relation.Binary.NP.html#1394" class="Function Operator"
+      >&#8801;&#10216;</a
+      ><a name="1960"
+      > </a
+      ><a name="1961" href="Relation.Binary.PropositionalEquality.html#1034" class="Function"
+      >cong</a
+      ><a name="1965"
+      > </a
+      ><a name="1966" class="Symbol"
+      >(&#955;</a
+      ><a name="1968"
+      > </a
+      ><a name="1969" href="Game.Transformation.InternalExternal.html#1969" class="Bound"
+      >p</a
+      ><a name="1970"
+      > </a
+      ><a name="1971" class="Symbol"
+      >&#8594;</a
+      ><a name="1972"
+      > </a
+      ><a name="1973" href="Game.Transformation.InternalExternal.html#1969" class="Bound"
+      >p</a
+      ><a name="1974"
+      > </a
+      ><a name="1975" href="Data.Nat.html#2239" class="Primitive Operator"
+      >+</a
+      ><a name="1976"
+      > </a
+      ><a name="1977" href="Game.Transformation.InternalExternal.html#450" class="Bound"
+      >sum</a
+      ><a name="1980"
+      > </a
+      ><a name="1981" class="Symbol"
+      >(</a
+      ><a name="1982" href="Function.html#1047" class="Function"
+      >const</a
+      ><a name="1987"
+      > </a
+      ><a name="1988" class="Number"
+      >1</a
+      ><a name="1989" class="Symbol"
+      >))</a
+      ><a name="1991"
+      > </a
+      ><a name="1992" href="Explore.Summable.html#1380" class="Function"
+      >sum-zero</a
+      ><a name="2000"
+      > </a
+      ><a name="2001" href="Relation.Binary.NP.html#1394" class="Function Operator"
+      >&#10217;</a
+      ><a name="2002"
+      >
+               </a
+      ><a name="2018" href="Game.Transformation.InternalExternal.html#450" class="Bound"
+      >sum</a
+      ><a name="2021"
+      > </a
+      ><a name="2022" class="Symbol"
+      >(</a
+      ><a name="2023" href="Function.html#1047" class="Function"
+      >const</a
+      ><a name="2028"
+      > </a
+      ><a name="2029" class="Number"
+      >1</a
+      ><a name="2030" class="Symbol"
+      >)</a
+      ><a name="2031"
+      >
+             </a
+      ><a name="2045" href="Relation.Binary.NP.html#1394" class="Function Operator"
+      >&#8801;&#10216;</a
+      ><a name="2047"
+      > </a
+      ><a name="2048" href="Game.Transformation.InternalExternal.html#891" class="Function"
+      >lemma</a
+      ><a name="2053"
+      > </a
+      ><a name="2054" href="Game.Transformation.InternalExternal.html#525" class="Function"
+      >X</a
+      ><a name="2055"
+      > </a
+      ><a name="2056" href="Relation.Binary.NP.html#1394" class="Function Operator"
+      >&#10217;</a
+      ><a name="2057"
+      >
+               </a
+      ><a name="2073" href="Explore.Summable.html#519" class="Function Operator"
+      >#</a
+      ><a name="2074"
+      > </a
+      ><a name="2075" class="Symbol"
+      >(</a
+      ><a name="2076" href="Data.Bool.html#873" class="Function"
+      >not</a
+      ><a name="2079"
+      > </a
+      ><a name="2080" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="2081"
+      > </a
+      ><a name="2082" href="Game.Transformation.InternalExternal.html#525" class="Function"
+      >X</a
+      ><a name="2083" class="Symbol"
+      >)</a
+      ><a name="2084"
+      > </a
+      ><a name="2085" href="Data.Nat.html#2239" class="Primitive Operator"
+      >+</a
+      ><a name="2086"
+      > </a
+      ><a name="2087" href="Explore.Summable.html#519" class="Function Operator"
+      >#</a
+      ><a name="2088"
+      > </a
+      ><a name="2089" href="Game.Transformation.InternalExternal.html#525" class="Function"
+      >X</a
+      ><a name="2090"
+      >
+             </a
+      ><a name="2104" href="Relation.Binary.NP.html#1900" class="Function Operator"
+      >&#8718;</a
+      ><a name="2105"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

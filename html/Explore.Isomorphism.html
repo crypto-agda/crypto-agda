@@ -1,0 +1,1596 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Explore.Isomorphism</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Symbol"
+      >{-#</a
+      ><a name="4"
+      > </a
+      ><a name="5" class="Keyword"
+      >OPTIONS</a
+      ><a name="12"
+      > --without-K </a
+      ><a name="25" class="Symbol"
+      >#-}</a
+      ><a name="28"
+      >
+</a
+      ><a name="29" class="Keyword"
+      >open</a
+      ><a name="33"
+      > </a
+      ><a name="34" class="Keyword"
+      >import</a
+      ><a name="40"
+      > </a
+      ><a name="41" href="Level.NP.html#1" class="Module"
+      >Level.NP</a
+      ><a name="49"
+      >
+</a
+      ><a name="50" class="Keyword"
+      >open</a
+      ><a name="54"
+      > </a
+      ><a name="55" class="Keyword"
+      >import</a
+      ><a name="61"
+      > </a
+      ><a name="62" href="Type.html#1" class="Module"
+      >Type</a
+      ><a name="66"
+      > </a
+      ><a name="67" class="Keyword"
+      >hiding</a
+      ><a name="73"
+      > </a
+      ><a name="74" class="Symbol"
+      >(</a
+      ><a name="75"
+      >&#9733;</a
+      ><a name="76" class="Symbol"
+      >)</a
+      ><a name="77"
+      >
+</a
+      ><a name="78" class="Keyword"
+      >open</a
+      ><a name="82"
+      > </a
+      ><a name="83" class="Keyword"
+      >import</a
+      ><a name="89"
+      > </a
+      ><a name="90" href="Function.NP.html#1" class="Module"
+      >Function.NP</a
+      ><a name="101"
+      >
+</a
+      ><a name="102" class="Keyword"
+      >open</a
+      ><a name="106"
+      > </a
+      ><a name="107" class="Keyword"
+      >import</a
+      ><a name="113"
+      > </a
+      ><a name="114" href="Data.Product.html#1" class="Module"
+      >Data.Product</a
+      ><a name="126"
+      >
+</a
+      ><a name="127" class="Keyword"
+      >open</a
+      ><a name="131"
+      > </a
+      ><a name="132" class="Keyword"
+      >import</a
+      ><a name="138"
+      > </a
+      ><a name="139" href="Data.Sum.html#1" class="Module"
+      >Data.Sum</a
+      ><a name="147"
+      >
+</a
+      ><a name="148" class="Keyword"
+      >import</a
+      ><a name="154"
+      > </a
+      ><a name="155" href="Relation.Binary.PropositionalEquality.html#1" class="Module"
+      >Relation.Binary.PropositionalEquality</a
+      ><a name="192"
+      > </a
+      ><a name="193" class="Symbol"
+      >as</a
+      ><a name="195"
+      > </a
+      ><a name="196" class="Module"
+      >&#8801;</a
+      ><a name="197"
+      >
+</a
+      ><a name="198" class="Keyword"
+      >open</a
+      ><a name="202"
+      > </a
+      ><a name="203" class="Keyword"
+      >import</a
+      ><a name="209"
+      > </a
+      ><a name="210" href="Function.Related.TypeIsomorphisms.NP.html#1" class="Module"
+      >Function.Related.TypeIsomorphisms.NP</a
+      ><a name="246"
+      >
+</a
+      ><a name="247" class="Keyword"
+      >import</a
+      ><a name="253"
+      > </a
+      ><a name="254" href="Function.Inverse.NP.html#1" class="Module"
+      >Function.Inverse.NP</a
+      ><a name="273"
+      > </a
+      ><a name="274" class="Symbol"
+      >as</a
+      ><a name="276"
+      > </a
+      ><a name="277" class="Module"
+      >Inv</a
+      ><a name="280"
+      >
+</a
+      ><a name="281" class="Keyword"
+      >open</a
+      ><a name="285"
+      > </a
+      ><a name="286" href="Function.Inverse.NP.html#1" class="Module"
+      >Inv</a
+      ><a name="289"
+      > </a
+      ><a name="290" class="Keyword"
+      >using</a
+      ><a name="295"
+      > </a
+      ><a name="296" class="Symbol"
+      >(</a
+      ><a name="297"
+      >_&#8596;_</a
+      ><a name="300" class="Symbol"
+      >;</a
+      ><a name="301"
+      > inverses</a
+      ><a name="310" class="Symbol"
+      >;</a
+      ><a name="311"
+      > </a
+      ><a name="312" class="Keyword"
+      >module</a
+      ><a name="318"
+      > Inverse</a
+      ><a name="326" class="Symbol"
+      >)</a
+      ><a name="327"
+      > </a
+      ><a name="328" class="Keyword"
+      >renaming</a
+      ><a name="336"
+      > </a
+      ><a name="337" class="Symbol"
+      >(</a
+      ><a name="338"
+      >_$&#8321;_ </a
+      ><a name="343" class="Symbol"
+      >to</a
+      ><a name="345"
+      > to</a
+      ><a name="348" class="Symbol"
+      >;</a
+      ><a name="349"
+      > _$&#8322;_ </a
+      ><a name="355" class="Symbol"
+      >to</a
+      ><a name="357"
+      > from</a
+      ><a name="362" class="Symbol"
+      >)</a
+      ><a name="363"
+      >
+</a
+      ><a name="364" class="Keyword"
+      >open</a
+      ><a name="368"
+      > </a
+      ><a name="369" class="Keyword"
+      >import</a
+      ><a name="375"
+      > </a
+      ><a name="376" href="Relation.Binary.NP.html#1" class="Module"
+      >Relation.Binary.NP</a
+      ><a name="394"
+      >
+
+</a
+      ><a name="396" class="Keyword"
+      >open</a
+      ><a name="400"
+      > </a
+      ><a name="401" class="Keyword"
+      >import</a
+      ><a name="407"
+      > </a
+      ><a name="408" href="Explore.Core.html#1" class="Module"
+      >Explore.Core</a
+      ><a name="420"
+      >
+</a
+      ><a name="421" class="Keyword"
+      >open</a
+      ><a name="425"
+      > </a
+      ><a name="426" class="Keyword"
+      >import</a
+      ><a name="432"
+      > </a
+      ><a name="433" href="Explore.Properties.html#1" class="Module"
+      >Explore.Properties</a
+      ><a name="451"
+      >
+</a
+      ><a name="452" class="Keyword"
+      >open</a
+      ><a name="456"
+      > </a
+      ><a name="457" class="Keyword"
+      >import</a
+      ><a name="463"
+      > </a
+      ><a name="464" href="Explore.Explorable.html#1" class="Module"
+      >Explore.Explorable</a
+      ><a name="482"
+      >
+</a
+      ><a name="483" class="Keyword"
+      >import</a
+      ><a name="489"
+      > </a
+      ><a name="490" href="Explore.Monad.html#1" class="Module"
+      >Explore.Monad</a
+      ><a name="503"
+      >
+
+</a
+      ><a name="505" class="Comment"
+      >-- NOTE: it would be nice to have another module to change the definition of an exploration</a
+      ><a name="596"
+      >
+</a
+      ><a name="597" class="Comment"
+      >-- function by an extensionally equivalent one. Combined with this module one could both</a
+      ><a name="685"
+      >
+</a
+      ><a name="686" class="Comment"
+      >-- pick the reduction behavior we want and save some proof effort.</a
+      ><a name="752"
+      >
+</a
+      ><a name="753" class="Keyword"
+      >module</a
+      ><a name="759"
+      > </a
+      ><a name="760" href="Explore.Isomorphism.html#1" class="Module"
+      >Explore.Isomorphism</a
+      ><a name="779"
+      >
+  </a
+      ><a name="782" class="Symbol"
+      >{</a
+      ><a name="783" href="Explore.Isomorphism.html#783" class="Bound"
+      >A</a
+      ><a name="784"
+      > </a
+      ><a name="785" href="Explore.Isomorphism.html#785" class="Bound"
+      >B</a
+      ><a name="786"
+      > </a
+      ><a name="787" class="Symbol"
+      >:</a
+      ><a name="788"
+      > </a
+      ><a name="789" href="Type.html#107" class="Function"
+      >&#9733;&#8320;</a
+      ><a name="791" class="Symbol"
+      >}</a
+      ><a name="792"
+      > </a
+      ><a name="793" class="Symbol"
+      >(</a
+      ><a name="794" href="Explore.Isomorphism.html#794" class="Bound"
+      >A&#8596;B</a
+      ><a name="797"
+      > </a
+      ><a name="798" class="Symbol"
+      >:</a
+      ><a name="799"
+      > </a
+      ><a name="800" href="Explore.Isomorphism.html#783" class="Bound"
+      >A</a
+      ><a name="801"
+      > </a
+      ><a name="802" href="Function.Inverse.html#1852" class="Function Operator"
+      >&#8596;</a
+      ><a name="803"
+      > </a
+      ><a name="804" href="Explore.Isomorphism.html#785" class="Bound"
+      >B</a
+      ><a name="805" class="Symbol"
+      >)</a
+      ><a name="806"
+      > </a
+      ><a name="807" class="Keyword"
+      >where</a
+      ><a name="812"
+      >
+
+</a
+      ><a name="814" class="Keyword"
+      >private</a
+      ><a name="821"
+      >
+  </a
+      ><a name="824" class="Keyword"
+      >module</a
+      ><a name="830"
+      > </a
+      ><a name="831" href="Explore.Isomorphism.html#831" class="Module"
+      >M</a
+      ><a name="832"
+      > </a
+      ><a name="833" class="Symbol"
+      >{</a
+      ><a name="834" href="Explore.Isomorphism.html#834" class="Bound"
+      >&#8467;</a
+      ><a name="835" class="Symbol"
+      >}</a
+      ><a name="836"
+      > </a
+      ><a name="837" class="Symbol"
+      >=</a
+      ><a name="838"
+      > </a
+      ><a name="839" href="Explore.Monad.html#1" class="Module"
+      >Explore.Monad</a
+      ><a name="852"
+      > </a
+      ><a name="853" href="Explore.Isomorphism.html#834" class="Bound"
+      >&#8467;</a
+      ><a name="854"
+      >
+
+</a
+      ><a name="856" class="Keyword"
+      >module</a
+      ><a name="862"
+      > </a
+      ><a name="863" href="Explore.Isomorphism.html#863" class="Module"
+      >_</a
+      ><a name="864"
+      > </a
+      ><a name="865" class="Symbol"
+      >{</a
+      ><a name="866" href="Explore.Isomorphism.html#866" class="Bound"
+      >&#8467;</a
+      ><a name="867" class="Symbol"
+      >}</a
+      ><a name="868"
+      > </a
+      ><a name="869" class="Symbol"
+      >(</a
+      ><a name="870" href="Explore.Isomorphism.html#870" class="Bound"
+      >A&#7497;</a
+      ><a name="872"
+      > </a
+      ><a name="873" class="Symbol"
+      >:</a
+      ><a name="874"
+      > </a
+      ><a name="875" href="Explore.Core.html#447" class="Function"
+      >Explore</a
+      ><a name="882"
+      > </a
+      ><a name="883" href="Explore.Isomorphism.html#866" class="Bound"
+      >&#8467;</a
+      ><a name="884"
+      > </a
+      ><a name="885" href="Explore.Isomorphism.html#783" class="Bound"
+      >A</a
+      ><a name="886" class="Symbol"
+      >)</a
+      ><a name="887"
+      > </a
+      ><a name="888" class="Keyword"
+      >where</a
+      ><a name="893"
+      >
+  </a
+      ><a name="896" href="Explore.Isomorphism.html#896" class="Function"
+      >explore-iso</a
+      ><a name="907"
+      > </a
+      ><a name="908" class="Symbol"
+      >:</a
+      ><a name="909"
+      > </a
+      ><a name="910" href="Explore.Core.html#447" class="Function"
+      >Explore</a
+      ><a name="917"
+      > </a
+      ><a name="918" href="Explore.Isomorphism.html#866" class="Bound"
+      >&#8467;</a
+      ><a name="919"
+      > </a
+      ><a name="920" href="Explore.Isomorphism.html#785" class="Bound"
+      >B</a
+      ><a name="921"
+      >
+  </a
+      ><a name="924" href="Explore.Isomorphism.html#896" class="Function"
+      >explore-iso</a
+      ><a name="935"
+      > </a
+      ><a name="936" class="Symbol"
+      >=</a
+      ><a name="937"
+      > </a
+      ><a name="938" href="Explore.Monad.html#1350" class="Function"
+      >M.map</a
+      ><a name="943"
+      > </a
+      ><a name="944" class="Symbol"
+      >(</a
+      ><a name="945" href="Function.Inverse.NP.html#1152" class="Function"
+      >to</a
+      ><a name="947"
+      > </a
+      ><a name="948" href="Explore.Isomorphism.html#794" class="Bound"
+      >A&#8596;B</a
+      ><a name="951" class="Symbol"
+      >)</a
+      ><a name="952"
+      > </a
+      ><a name="953" href="Explore.Isomorphism.html#870" class="Bound"
+      >A&#7497;</a
+      ><a name="955"
+      >
+
+</a
+      ><a name="957" class="Keyword"
+      >private</a
+      ><a name="964"
+      >
+  </a
+      ><a name="967" href="Explore.Isomorphism.html#967" class="Function"
+      >B&#7497;</a
+      ><a name="969"
+      > </a
+      ><a name="970" class="Symbol"
+      >=</a
+      ><a name="971"
+      > </a
+      ><a name="972" href="Explore.Isomorphism.html#896" class="Function"
+      >explore-iso</a
+      ><a name="983"
+      >
+
+</a
+      ><a name="985" class="Keyword"
+      >module</a
+      ><a name="991"
+      > </a
+      ><a name="992" href="Explore.Isomorphism.html#992" class="Module"
+      >_</a
+      ><a name="993"
+      > </a
+      ><a name="994" class="Symbol"
+      >{</a
+      ><a name="995" href="Explore.Isomorphism.html#995" class="Bound"
+      >&#8467;</a
+      ><a name="996"
+      > </a
+      ><a name="997" href="Explore.Isomorphism.html#997" class="Bound"
+      >p</a
+      ><a name="998" class="Symbol"
+      >}</a
+      ><a name="999"
+      > </a
+      ><a name="1000" class="Symbol"
+      >{</a
+      ><a name="1001" href="Explore.Isomorphism.html#1001" class="Bound"
+      >A&#7497;</a
+      ><a name="1003"
+      > </a
+      ><a name="1004" class="Symbol"
+      >:</a
+      ><a name="1005"
+      > </a
+      ><a name="1006" href="Explore.Core.html#447" class="Function"
+      >Explore</a
+      ><a name="1013"
+      > </a
+      ><a name="1014" href="Explore.Isomorphism.html#995" class="Bound"
+      >&#8467;</a
+      ><a name="1015"
+      > </a
+      ><a name="1016" href="Explore.Isomorphism.html#783" class="Bound"
+      >A</a
+      ><a name="1017" class="Symbol"
+      >}</a
+      ><a name="1018"
+      > </a
+      ><a name="1019" class="Symbol"
+      >(</a
+      ><a name="1020" href="Explore.Isomorphism.html#1020" class="Bound"
+      >A&#8305;</a
+      ><a name="1022"
+      > </a
+      ><a name="1023" class="Symbol"
+      >:</a
+      ><a name="1024"
+      > </a
+      ><a name="1025" href="Explore.Properties.html#1850" class="Function"
+      >ExploreInd</a
+      ><a name="1035"
+      > </a
+      ><a name="1036" href="Explore.Isomorphism.html#997" class="Bound"
+      >p</a
+      ><a name="1037"
+      > </a
+      ><a name="1038" href="Explore.Isomorphism.html#1001" class="Bound"
+      >A&#7497;</a
+      ><a name="1040" class="Symbol"
+      >)</a
+      ><a name="1041"
+      > </a
+      ><a name="1042" class="Keyword"
+      >where</a
+      ><a name="1047"
+      >
+  </a
+      ><a name="1050" href="Explore.Isomorphism.html#1050" class="Function"
+      >explore-iso-ind</a
+      ><a name="1065"
+      > </a
+      ><a name="1066" class="Symbol"
+      >:</a
+      ><a name="1067"
+      > </a
+      ><a name="1068" href="Explore.Properties.html#1850" class="Function"
+      >ExploreInd</a
+      ><a name="1078"
+      > </a
+      ><a name="1079" href="Explore.Isomorphism.html#997" class="Bound"
+      >p</a
+      ><a name="1080"
+      > </a
+      ><a name="1081" class="Symbol"
+      >(</a
+      ><a name="1082" href="Explore.Isomorphism.html#967" class="Function"
+      >B&#7497;</a
+      ><a name="1084"
+      > </a
+      ><a name="1085" href="Explore.Isomorphism.html#1001" class="Bound"
+      >A&#7497;</a
+      ><a name="1087" class="Symbol"
+      >)</a
+      ><a name="1088"
+      >
+  </a
+      ><a name="1091" href="Explore.Isomorphism.html#1050" class="Function"
+      >explore-iso-ind</a
+      ><a name="1106"
+      > </a
+      ><a name="1107" class="Symbol"
+      >=</a
+      ><a name="1108"
+      > </a
+      ><a name="1109" href="Explore.Monad.html#1412" class="Function"
+      >M.map-ind</a
+      ><a name="1118"
+      > </a
+      ><a name="1119" class="Symbol"
+      >(</a
+      ><a name="1120" href="Function.Inverse.NP.html#1152" class="Function"
+      >to</a
+      ><a name="1122"
+      > </a
+      ><a name="1123" href="Explore.Isomorphism.html#794" class="Bound"
+      >A&#8596;B</a
+      ><a name="1126" class="Symbol"
+      >)</a
+      ><a name="1127"
+      > </a
+      ><a name="1128" href="Explore.Isomorphism.html#1020" class="Bound"
+      >A&#8305;</a
+      ><a name="1130"
+      >
+
+</a
+      ><a name="1132" class="Keyword"
+      >private</a
+      ><a name="1139"
+      >
+  </a
+      ><a name="1142" href="Explore.Isomorphism.html#1142" class="Function"
+      >B&#8305;</a
+      ><a name="1144"
+      > </a
+      ><a name="1145" class="Symbol"
+      >=</a
+      ><a name="1146"
+      > </a
+      ><a name="1147" href="Explore.Isomorphism.html#1050" class="Function"
+      >explore-iso-ind</a
+      ><a name="1162"
+      >
+
+</a
+      ><a name="1164" class="Keyword"
+      >module</a
+      ><a name="1170"
+      > </a
+      ><a name="1171" href="Explore.Isomorphism.html#1171" class="Module"
+      >_</a
+      ><a name="1172"
+      > </a
+      ><a name="1173" class="Symbol"
+      >{</a
+      ><a name="1174" href="Explore.Isomorphism.html#1174" class="Bound"
+      >&#8467;</a
+      ><a name="1175" class="Symbol"
+      >}</a
+      ><a name="1176"
+      > </a
+      ><a name="1177" class="Symbol"
+      >{</a
+      ><a name="1178" href="Explore.Isomorphism.html#1178" class="Bound"
+      >A&#7497;</a
+      ><a name="1180"
+      > </a
+      ><a name="1181" class="Symbol"
+      >:</a
+      ><a name="1182"
+      > </a
+      ><a name="1183" href="Explore.Core.html#447" class="Function"
+      >Explore</a
+      ><a name="1190"
+      > </a
+      ><a name="1191" class="Symbol"
+      >(</a
+      ><a name="1192" href="Agda.Prim.html#284" class="Primitive"
+      >&#8347;</a
+      ><a name="1193"
+      > </a
+      ><a name="1194" href="Explore.Isomorphism.html#1174" class="Bound"
+      >&#8467;</a
+      ><a name="1195" class="Symbol"
+      >)</a
+      ><a name="1196"
+      > </a
+      ><a name="1197" href="Explore.Isomorphism.html#783" class="Bound"
+      >A</a
+      ><a name="1198" class="Symbol"
+      >}</a
+      ><a name="1199"
+      > </a
+      ><a name="1200" class="Symbol"
+      >(</a
+      ><a name="1201" href="Explore.Isomorphism.html#1201" class="Bound"
+      >A&#737;</a
+      ><a name="1203"
+      > </a
+      ><a name="1204" class="Symbol"
+      >:</a
+      ><a name="1205"
+      > </a
+      ><a name="1206" href="Explore.Properties.html#9476" class="Function"
+      >Lookup</a
+      ><a name="1212"
+      > </a
+      ><a name="1213" class="Symbol"
+      >{</a
+      ><a name="1214" href="Explore.Isomorphism.html#1174" class="Bound"
+      >&#8467;</a
+      ><a name="1215" class="Symbol"
+      >}</a
+      ><a name="1216"
+      > </a
+      ><a name="1217" href="Explore.Isomorphism.html#1178" class="Bound"
+      >A&#7497;</a
+      ><a name="1219" class="Symbol"
+      >)</a
+      ><a name="1220"
+      > </a
+      ><a name="1221" class="Keyword"
+      >where</a
+      ><a name="1226"
+      >
+  </a
+      ><a name="1229" href="Explore.Isomorphism.html#1229" class="Function"
+      >lookup-iso</a
+      ><a name="1239"
+      > </a
+      ><a name="1240" class="Symbol"
+      >:</a
+      ><a name="1241"
+      > </a
+      ><a name="1242" href="Explore.Properties.html#9476" class="Function"
+      >Lookup</a
+      ><a name="1248"
+      > </a
+      ><a name="1249" class="Symbol"
+      >{</a
+      ><a name="1250" href="Explore.Isomorphism.html#1174" class="Bound"
+      >&#8467;</a
+      ><a name="1251" class="Symbol"
+      >}</a
+      ><a name="1252"
+      > </a
+      ><a name="1253" class="Symbol"
+      >(</a
+      ><a name="1254" href="Explore.Isomorphism.html#967" class="Function"
+      >B&#7497;</a
+      ><a name="1256"
+      > </a
+      ><a name="1257" href="Explore.Isomorphism.html#1178" class="Bound"
+      >A&#7497;</a
+      ><a name="1259" class="Symbol"
+      >)</a
+      ><a name="1260"
+      >
+  </a
+      ><a name="1263" href="Explore.Isomorphism.html#1229" class="Function"
+      >lookup-iso</a
+      ><a name="1273"
+      > </a
+      ><a name="1274" class="Symbol"
+      >{</a
+      ><a name="1275" href="Explore.Isomorphism.html#1275" class="Bound"
+      >C</a
+      ><a name="1276" class="Symbol"
+      >}</a
+      ><a name="1277"
+      > </a
+      ><a name="1278" href="Explore.Isomorphism.html#1278" class="Bound"
+      >d</a
+      ><a name="1279"
+      > </a
+      ><a name="1280" href="Explore.Isomorphism.html#1280" class="Bound"
+      >b</a
+      ><a name="1281"
+      >
+    </a
+      ><a name="1286" class="Symbol"
+      >=</a
+      ><a name="1287"
+      > </a
+      ><a name="1288" href="Relation.Binary.PropositionalEquality.Core.html#705" class="Function"
+      >&#8801;.subst</a
+      ><a name="1295"
+      > </a
+      ><a name="1296" href="Explore.Isomorphism.html#1275" class="Bound"
+      >C</a
+      ><a name="1297"
+      > </a
+      ><a name="1298" class="Symbol"
+      >(</a
+      ><a name="1299" href="Function.Inverse.html#805" class="Function"
+      >Inverse.right-inverse-of</a
+      ><a name="1323"
+      > </a
+      ><a name="1324" href="Explore.Isomorphism.html#794" class="Bound"
+      >A&#8596;B</a
+      ><a name="1327"
+      > </a
+      ><a name="1328" href="Explore.Isomorphism.html#1280" class="Bound"
+      >b</a
+      ><a name="1329" class="Symbol"
+      >)</a
+      ><a name="1330"
+      >
+                </a
+      ><a name="1347" class="Symbol"
+      >(</a
+      ><a name="1348" href="Explore.Isomorphism.html#1201" class="Bound"
+      >A&#737;</a
+      ><a name="1350"
+      > </a
+      ><a name="1351" href="Explore.Isomorphism.html#1278" class="Bound"
+      >d</a
+      ><a name="1352"
+      > </a
+      ><a name="1353" class="Symbol"
+      >(</a
+      ><a name="1354" href="Function.Inverse.NP.html#1326" class="Function"
+      >from</a
+      ><a name="1358"
+      > </a
+      ><a name="1359" href="Explore.Isomorphism.html#794" class="Bound"
+      >A&#8596;B</a
+      ><a name="1362"
+      > </a
+      ><a name="1363" href="Explore.Isomorphism.html#1280" class="Bound"
+      >b</a
+      ><a name="1364" class="Symbol"
+      >))</a
+      ><a name="1366"
+      >
+
+</a
+      ><a name="1368" class="Keyword"
+      >module</a
+      ><a name="1374"
+      > </a
+      ><a name="1375" href="Explore.Isomorphism.html#1375" class="Module"
+      >_</a
+      ><a name="1376"
+      > </a
+      ><a name="1377" class="Symbol"
+      >{</a
+      ><a name="1378" href="Explore.Isomorphism.html#1378" class="Bound"
+      >&#8467;</a
+      ><a name="1379" class="Symbol"
+      >}</a
+      ><a name="1380"
+      > </a
+      ><a name="1381" class="Symbol"
+      >{</a
+      ><a name="1382" href="Explore.Isomorphism.html#1382" class="Bound"
+      >A&#7497;</a
+      ><a name="1384"
+      > </a
+      ><a name="1385" class="Symbol"
+      >:</a
+      ><a name="1386"
+      > </a
+      ><a name="1387" href="Explore.Core.html#447" class="Function"
+      >Explore</a
+      ><a name="1394"
+      > </a
+      ><a name="1395" class="Symbol"
+      >(</a
+      ><a name="1396" href="Agda.Prim.html#284" class="Primitive"
+      >&#8347;</a
+      ><a name="1397"
+      > </a
+      ><a name="1398" href="Explore.Isomorphism.html#1378" class="Bound"
+      >&#8467;</a
+      ><a name="1399" class="Symbol"
+      >)</a
+      ><a name="1400"
+      > </a
+      ><a name="1401" href="Explore.Isomorphism.html#783" class="Bound"
+      >A</a
+      ><a name="1402" class="Symbol"
+      >}</a
+      ><a name="1403"
+      > </a
+      ><a name="1404" class="Symbol"
+      >(</a
+      ><a name="1405" href="Explore.Isomorphism.html#1405" class="Bound"
+      >A&#7584;</a
+      ><a name="1407"
+      > </a
+      ><a name="1408" class="Symbol"
+      >:</a
+      ><a name="1409"
+      > </a
+      ><a name="1410" href="Explore.Properties.html#9767" class="Function"
+      >Focus</a
+      ><a name="1415"
+      > </a
+      ><a name="1416" class="Symbol"
+      >{</a
+      ><a name="1417" href="Explore.Isomorphism.html#1378" class="Bound"
+      >&#8467;</a
+      ><a name="1418" class="Symbol"
+      >}</a
+      ><a name="1419"
+      > </a
+      ><a name="1420" href="Explore.Isomorphism.html#1382" class="Bound"
+      >A&#7497;</a
+      ><a name="1422" class="Symbol"
+      >)</a
+      ><a name="1423"
+      > </a
+      ><a name="1424" class="Keyword"
+      >where</a
+      ><a name="1429"
+      >
+  </a
+      ><a name="1432" href="Explore.Isomorphism.html#1432" class="Function"
+      >focus-iso</a
+      ><a name="1441"
+      > </a
+      ><a name="1442" class="Symbol"
+      >:</a
+      ><a name="1443"
+      > </a
+      ><a name="1444" href="Explore.Properties.html#9767" class="Function"
+      >Focus</a
+      ><a name="1449"
+      > </a
+      ><a name="1450" class="Symbol"
+      >{</a
+      ><a name="1451" href="Explore.Isomorphism.html#1378" class="Bound"
+      >&#8467;</a
+      ><a name="1452" class="Symbol"
+      >}</a
+      ><a name="1453"
+      > </a
+      ><a name="1454" class="Symbol"
+      >(</a
+      ><a name="1455" href="Explore.Isomorphism.html#967" class="Function"
+      >B&#7497;</a
+      ><a name="1457"
+      > </a
+      ><a name="1458" href="Explore.Isomorphism.html#1382" class="Bound"
+      >A&#7497;</a
+      ><a name="1460" class="Symbol"
+      >)</a
+      ><a name="1461"
+      >
+  </a
+      ><a name="1464" href="Explore.Isomorphism.html#1432" class="Function"
+      >focus-iso</a
+      ><a name="1473"
+      > </a
+      ><a name="1474" class="Symbol"
+      >{</a
+      ><a name="1475" href="Explore.Isomorphism.html#1475" class="Bound"
+      >C</a
+      ><a name="1476" class="Symbol"
+      >}</a
+      ><a name="1477"
+      > </a
+      ><a name="1478" class="Symbol"
+      >(</a
+      ><a name="1479" href="Explore.Isomorphism.html#1479" class="Bound"
+      >b</a
+      ><a name="1480"
+      > </a
+      ><a name="1481" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1482"
+      > </a
+      ><a name="1483" href="Explore.Isomorphism.html#1483" class="Bound"
+      >c</a
+      ><a name="1484" class="Symbol"
+      >)</a
+      ><a name="1485"
+      > </a
+      ><a name="1486" class="Symbol"
+      >=</a
+      ><a name="1487"
+      > </a
+      ><a name="1488" href="Explore.Isomorphism.html#1405" class="Bound"
+      >A&#7584;</a
+      ><a name="1490"
+      > </a
+      ><a name="1491" class="Symbol"
+      >(</a
+      ><a name="1492" href="Function.Inverse.NP.html#1326" class="Function"
+      >from</a
+      ><a name="1496"
+      > </a
+      ><a name="1497" href="Explore.Isomorphism.html#794" class="Bound"
+      >A&#8596;B</a
+      ><a name="1500"
+      > </a
+      ><a name="1501" href="Explore.Isomorphism.html#1479" class="Bound"
+      >b</a
+      ><a name="1502"
+      > </a
+      ><a name="1503" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1504"
+      > </a
+      ><a name="1505" href="Explore.Isomorphism.html#1519" class="Function"
+      >c'</a
+      ><a name="1507" class="Symbol"
+      >)</a
+      ><a name="1508"
+      >
+    </a
+      ><a name="1513" class="Keyword"
+      >where</a
+      ><a name="1518"
+      > </a
+      ><a name="1519" href="Explore.Isomorphism.html#1519" class="Function"
+      >c'</a
+      ><a name="1521"
+      > </a
+      ><a name="1522" class="Symbol"
+      >=</a
+      ><a name="1523"
+      > </a
+      ><a name="1524" href="Relation.Binary.PropositionalEquality.Core.html#705" class="Function"
+      >&#8801;.subst</a
+      ><a name="1531"
+      > </a
+      ><a name="1532" href="Explore.Isomorphism.html#1475" class="Bound"
+      >C</a
+      ><a name="1533"
+      > </a
+      ><a name="1534" class="Symbol"
+      >(</a
+      ><a name="1535" href="Relation.Binary.PropositionalEquality.Core.html#565" class="Function"
+      >&#8801;.sym</a
+      ><a name="1540"
+      > </a
+      ><a name="1541" class="Symbol"
+      >(</a
+      ><a name="1542" href="Function.Inverse.html#805" class="Function"
+      >Inverse.right-inverse-of</a
+      ><a name="1566"
+      > </a
+      ><a name="1567" href="Explore.Isomorphism.html#794" class="Bound"
+      >A&#8596;B</a
+      ><a name="1570"
+      > </a
+      ><a name="1571" href="Explore.Isomorphism.html#1479" class="Bound"
+      >b</a
+      ><a name="1572" class="Symbol"
+      >))</a
+      ><a name="1574"
+      > </a
+      ><a name="1575" href="Explore.Isomorphism.html#1483" class="Bound"
+      >c</a
+      ><a name="1576"
+      >
+
+</a
+      ><a name="1578" class="Keyword"
+      >module</a
+      ><a name="1584"
+      > </a
+      ><a name="1585" href="Explore.Isomorphism.html#1585" class="Module"
+      >_</a
+      ><a name="1586"
+      > </a
+      ><a name="1587" class="Symbol"
+      >(</a
+      ><a name="1588" href="Explore.Isomorphism.html#1588" class="Bound"
+      >A&#738;</a
+      ><a name="1590"
+      > </a
+      ><a name="1591" class="Symbol"
+      >:</a
+      ><a name="1592"
+      > </a
+      ><a name="1593" href="Explore.Core.html#789" class="Function"
+      >Sum</a
+      ><a name="1596"
+      > </a
+      ><a name="1597" href="Explore.Isomorphism.html#783" class="Bound"
+      >A</a
+      ><a name="1598" class="Symbol"
+      >)</a
+      ><a name="1599"
+      > </a
+      ><a name="1600" class="Keyword"
+      >where</a
+      ><a name="1605"
+      >
+  </a
+      ><a name="1608" href="Explore.Isomorphism.html#1608" class="Function"
+      >sum-iso</a
+      ><a name="1615"
+      > </a
+      ><a name="1616" class="Symbol"
+      >:</a
+      ><a name="1617"
+      > </a
+      ><a name="1618" href="Explore.Core.html#789" class="Function"
+      >Sum</a
+      ><a name="1621"
+      > </a
+      ><a name="1622" href="Explore.Isomorphism.html#785" class="Bound"
+      >B</a
+      ><a name="1623"
+      >
+  </a
+      ><a name="1626" href="Explore.Isomorphism.html#1608" class="Function"
+      >sum-iso</a
+      ><a name="1633"
+      > </a
+      ><a name="1634" href="Explore.Isomorphism.html#1634" class="Bound"
+      >f</a
+      ><a name="1635"
+      > </a
+      ><a name="1636" class="Symbol"
+      >=</a
+      ><a name="1637"
+      > </a
+      ><a name="1638" href="Explore.Isomorphism.html#1588" class="Bound"
+      >A&#738;</a
+      ><a name="1640"
+      > </a
+      ><a name="1641" class="Symbol"
+      >(</a
+      ><a name="1642" href="Explore.Isomorphism.html#1634" class="Bound"
+      >f</a
+      ><a name="1643"
+      > </a
+      ><a name="1644" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1645"
+      > </a
+      ><a name="1646" href="Function.Inverse.NP.html#1152" class="Function"
+      >to</a
+      ><a name="1648"
+      > </a
+      ><a name="1649" href="Explore.Isomorphism.html#794" class="Bound"
+      >A&#8596;B</a
+      ><a name="1652" class="Symbol"
+      >)</a
+      ><a name="1653"
+      >
+
+</a
+      ><a name="1655" class="Keyword"
+      >module</a
+      ><a name="1661"
+      > </a
+      ><a name="1662" href="Explore.Isomorphism.html#1662" class="Module"
+      >_</a
+      ><a name="1663"
+      > </a
+      ><a name="1664" class="Symbol"
+      >(</a
+      ><a name="1665" href="Explore.Isomorphism.html#1665" class="Bound"
+      >A&#7510;</a
+      ><a name="1667"
+      > </a
+      ><a name="1668" class="Symbol"
+      >:</a
+      ><a name="1669"
+      > </a
+      ><a name="1670" href="Explore.Core.html#818" class="Function"
+      >Product</a
+      ><a name="1677"
+      > </a
+      ><a name="1678" href="Explore.Isomorphism.html#783" class="Bound"
+      >A</a
+      ><a name="1679" class="Symbol"
+      >)</a
+      ><a name="1680"
+      > </a
+      ><a name="1681" class="Keyword"
+      >where</a
+      ><a name="1686"
+      >
+  </a
+      ><a name="1689" href="Explore.Isomorphism.html#1689" class="Function"
+      >product-iso</a
+      ><a name="1700"
+      > </a
+      ><a name="1701" class="Symbol"
+      >:</a
+      ><a name="1702"
+      > </a
+      ><a name="1703" href="Explore.Core.html#818" class="Function"
+      >Product</a
+      ><a name="1710"
+      > </a
+      ><a name="1711" href="Explore.Isomorphism.html#785" class="Bound"
+      >B</a
+      ><a name="1712"
+      >
+  </a
+      ><a name="1715" href="Explore.Isomorphism.html#1689" class="Function"
+      >product-iso</a
+      ><a name="1726"
+      > </a
+      ><a name="1727" href="Explore.Isomorphism.html#1727" class="Bound"
+      >f</a
+      ><a name="1728"
+      > </a
+      ><a name="1729" class="Symbol"
+      >=</a
+      ><a name="1730"
+      > </a
+      ><a name="1731" href="Explore.Isomorphism.html#1665" class="Bound"
+      >A&#7510;</a
+      ><a name="1733"
+      > </a
+      ><a name="1734" class="Symbol"
+      >(</a
+      ><a name="1735" href="Explore.Isomorphism.html#1727" class="Bound"
+      >f</a
+      ><a name="1736"
+      > </a
+      ><a name="1737" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1738"
+      > </a
+      ><a name="1739" href="Function.Inverse.NP.html#1152" class="Function"
+      >to</a
+      ><a name="1741"
+      > </a
+      ><a name="1742" href="Explore.Isomorphism.html#794" class="Bound"
+      >A&#8596;B</a
+      ><a name="1745" class="Symbol"
+      >)</a
+      ><a name="1746"
+      >
+
+</a
+      ><a name="1748" class="Keyword"
+      >module</a
+      ><a name="1754"
+      > </a
+      ><a name="1755" href="Explore.Isomorphism.html#1755" class="Module"
+      >_</a
+      ><a name="1756"
+      > </a
+      ><a name="1757" class="Symbol"
+      >{</a
+      ><a name="1758" href="Explore.Isomorphism.html#1758" class="Bound"
+      >A&#7497;</a
+      ><a name="1760"
+      > </a
+      ><a name="1761" class="Symbol"
+      >:</a
+      ><a name="1762"
+      > </a
+      ><a name="1763" href="Explore.Core.html#748" class="Function"
+      >Explore&#8321;</a
+      ><a name="1771"
+      > </a
+      ><a name="1772" href="Explore.Isomorphism.html#783" class="Bound"
+      >A</a
+      ><a name="1773" class="Symbol"
+      >}</a
+      ><a name="1774"
+      > </a
+      ><a name="1775" class="Symbol"
+      >(</a
+      ><a name="1776" href="Explore.Isomorphism.html#1776" class="Bound"
+      >A&#8305;</a
+      ><a name="1778"
+      > </a
+      ><a name="1779" class="Symbol"
+      >:</a
+      ><a name="1780"
+      > </a
+      ><a name="1781" href="Explore.Properties.html#2980" class="Function"
+      >ExploreInd&#8320;</a
+      ><a name="1792"
+      > </a
+      ><a name="1793" href="Explore.Isomorphism.html#1758" class="Bound"
+      >A&#7497;</a
+      ><a name="1795" class="Symbol"
+      >)</a
+      ><a name="1796"
+      > </a
+      ><a name="1797" class="Keyword"
+      >where</a
+      ><a name="1802"
+      >
+  </a
+      ><a name="1805" class="Keyword"
+      >open</a
+      ><a name="1809"
+      > </a
+      ><a name="1810" href="Explore.Explorable.html#14147" class="Module"
+      >Explorable&#8321;&#8320;</a
+      ><a name="1822"
+      > </a
+      ><a name="1823" class="Symbol"
+      >(</a
+      ><a name="1824" href="Explore.Isomorphism.html#1142" class="Function"
+      >B&#8305;</a
+      ><a name="1826"
+      > </a
+      ><a name="1827" href="Explore.Isomorphism.html#1776" class="Bound"
+      >A&#8305;</a
+      ><a name="1829" class="Symbol"
+      >)</a
+      ><a name="1830"
+      > </a
+      ><a name="1831" class="Keyword"
+      >public</a
+      ><a name="1837"
+      > </a
+      ><a name="1838" class="Keyword"
+      >using</a
+      ><a name="1843"
+      > </a
+      ><a name="1844" class="Symbol"
+      >()</a
+      ><a name="1846"
+      > </a
+      ><a name="1847" class="Keyword"
+      >renaming</a
+      ><a name="1855"
+      > </a
+      ><a name="1856" class="Symbol"
+      >(</a
+      ><a name="1857"
+      >reify   </a
+      ><a name="1865" class="Symbol"
+      >to</a
+      ><a name="1867"
+      > reify-iso</a
+      ><a name="1877" class="Symbol"
+      >)</a
+      ><a name="1878"
+      >
+
+</a
+      ><a name="1880" class="Keyword"
+      >module</a
+      ><a name="1886"
+      > </a
+      ><a name="1887" href="Explore.Isomorphism.html#1887" class="Module"
+      >_</a
+      ><a name="1888"
+      > </a
+      ><a name="1889" class="Symbol"
+      >{</a
+      ><a name="1890" href="Explore.Isomorphism.html#1890" class="Bound"
+      >A&#7497;</a
+      ><a name="1892"
+      > </a
+      ><a name="1893" class="Symbol"
+      >:</a
+      ><a name="1894"
+      > </a
+      ><a name="1895" href="Explore.Core.html#748" class="Function"
+      >Explore&#8321;</a
+      ><a name="1903"
+      > </a
+      ><a name="1904" href="Explore.Isomorphism.html#783" class="Bound"
+      >A</a
+      ><a name="1905" class="Symbol"
+      >}</a
+      ><a name="1906"
+      > </a
+      ><a name="1907" class="Symbol"
+      >(</a
+      ><a name="1908" href="Explore.Isomorphism.html#1908" class="Bound"
+      >A&#8305;</a
+      ><a name="1910"
+      > </a
+      ><a name="1911" class="Symbol"
+      >:</a
+      ><a name="1912"
+      > </a
+      ><a name="1913" href="Explore.Properties.html#3050" class="Function"
+      >ExploreInd&#8321;</a
+      ><a name="1924"
+      > </a
+      ><a name="1925" href="Explore.Isomorphism.html#1890" class="Bound"
+      >A&#7497;</a
+      ><a name="1927" class="Symbol"
+      >)</a
+      ><a name="1928"
+      > </a
+      ><a name="1929" class="Keyword"
+      >where</a
+      ><a name="1934"
+      >
+  </a
+      ><a name="1937" class="Keyword"
+      >open</a
+      ><a name="1941"
+      > </a
+      ><a name="1942" href="Explore.Explorable.html#14334" class="Module"
+      >Explorable&#8321;&#8321;</a
+      ><a name="1954"
+      > </a
+      ><a name="1955" class="Symbol"
+      >(</a
+      ><a name="1956" href="Explore.Isomorphism.html#1142" class="Function"
+      >B&#8305;</a
+      ><a name="1958"
+      > </a
+      ><a name="1959" href="Explore.Isomorphism.html#1908" class="Bound"
+      >A&#8305;</a
+      ><a name="1961" class="Symbol"
+      >)</a
+      ><a name="1962"
+      > </a
+      ><a name="1963" class="Keyword"
+      >public</a
+      ><a name="1969"
+      > </a
+      ><a name="1970" class="Keyword"
+      >using</a
+      ><a name="1975"
+      > </a
+      ><a name="1976" class="Symbol"
+      >()</a
+      ><a name="1978"
+      > </a
+      ><a name="1979" class="Keyword"
+      >renaming</a
+      ><a name="1987"
+      > </a
+      ><a name="1988" class="Symbol"
+      >(</a
+      ><a name="1989"
+      >unfocus </a
+      ><a name="1997" class="Symbol"
+      >to</a
+      ><a name="1999"
+      > unfocus-iso</a
+      ><a name="2011" class="Symbol"
+      >)</a
+      ><a name="2012"
+      >
+
+</a
+      ><a name="2014" class="Keyword"
+      >module</a
+      ><a name="2020"
+      > </a
+      ><a name="2021" href="Explore.Isomorphism.html#2021" class="Module"
+      >_</a
+      ><a name="2022"
+      > </a
+      ><a name="2023" class="Symbol"
+      >{</a
+      ><a name="2024" href="Explore.Isomorphism.html#2024" class="Bound"
+      >A&#738;</a
+      ><a name="2026"
+      > </a
+      ><a name="2027" class="Symbol"
+      >:</a
+      ><a name="2028"
+      > </a
+      ><a name="2029" href="Explore.Core.html#789" class="Function"
+      >Sum</a
+      ><a name="2032"
+      > </a
+      ><a name="2033" href="Explore.Isomorphism.html#783" class="Bound"
+      >A</a
+      ><a name="2034" class="Symbol"
+      >}</a
+      ><a name="2035"
+      > </a
+      ><a name="2036" class="Symbol"
+      >(</a
+      ><a name="2037" href="Explore.Isomorphism.html#2037" class="Bound"
+      >A&#738;-ok</a
+      ><a name="2042"
+      > </a
+      ><a name="2043" class="Symbol"
+      >:</a
+      ><a name="2044"
+      > </a
+      ><a name="2045" href="Explore.Properties.html#3626" class="Function"
+      >AdequateSum</a
+      ><a name="2056"
+      > </a
+      ><a name="2057" href="Explore.Isomorphism.html#2024" class="Bound"
+      >A&#738;</a
+      ><a name="2059" class="Symbol"
+      >)</a
+      ><a name="2060"
+      > </a
+      ><a name="2061" class="Keyword"
+      >where</a
+      ><a name="2066"
+      >
+  </a
+      ><a name="2069" href="Explore.Isomorphism.html#2069" class="Function"
+      >sum-iso-ok</a
+      ><a name="2079"
+      > </a
+      ><a name="2080" class="Symbol"
+      >:</a
+      ><a name="2081"
+      > </a
+      ><a name="2082" href="Explore.Properties.html#3626" class="Function"
+      >AdequateSum</a
+      ><a name="2093"
+      > </a
+      ><a name="2094" class="Symbol"
+      >(</a
+      ><a name="2095" href="Explore.Isomorphism.html#1608" class="Function"
+      >sum-iso</a
+      ><a name="2102"
+      > </a
+      ><a name="2103" href="Explore.Isomorphism.html#2024" class="Bound"
+      >A&#738;</a
+      ><a name="2105" class="Symbol"
+      >)</a
+      ><a name="2106"
+      >
+  </a
+      ><a name="2109" href="Explore.Isomorphism.html#2069" class="Function"
+      >sum-iso-ok</a
+      ><a name="2119"
+      > </a
+      ><a name="2120" href="Explore.Isomorphism.html#2120" class="Bound"
+      >f</a
+      ><a name="2121"
+      > </a
+      ><a name="2122" class="Symbol"
+      >=</a
+      ><a name="2123"
+      > </a
+      ><a name="2124" href="Function.Related.TypeIsomorphisms.NP.html#11112" class="Function"
+      >sym-first-iso</a
+      ><a name="2137"
+      > </a
+      ><a name="2138" href="Explore.Isomorphism.html#794" class="Bound"
+      >A&#8596;B</a
+      ><a name="2141"
+      > </a
+      ><a name="2142" href="Function.Inverse.html#4151" class="Function Operator"
+      >Inv.&#8728;</a
+      ><a name="2147"
+      > </a
+      ><a name="2148" href="Explore.Isomorphism.html#2037" class="Bound"
+      >A&#738;-ok</a
+      ><a name="2153"
+      > </a
+      ><a name="2154" class="Symbol"
+      >(</a
+      ><a name="2155" href="Explore.Isomorphism.html#2120" class="Bound"
+      >f</a
+      ><a name="2156"
+      > </a
+      ><a name="2157" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="2158"
+      > </a
+      ><a name="2159" href="Function.Inverse.NP.html#1152" class="Function"
+      >to</a
+      ><a name="2161"
+      > </a
+      ><a name="2162" href="Explore.Isomorphism.html#794" class="Bound"
+      >A&#8596;B</a
+      ><a name="2165" class="Symbol"
+      >)</a
+      ><a name="2166"
+      >
+
+</a
+      ><a name="2168" class="Comment"
+      >{- requires extensional equality
+module _ {A&#7510; : Product A} (A&#7510;-ok : AdequateProduct A&#7510;) where
+  product-iso-ok : AdequateProduct (product-iso A&#7510;)
+  product-iso-ok f = arg-iso A&#8596;B Inv.&#8728; A&#7510;-ok (f &#8728; to A&#8596;B)
+-}</a
+      ><a name="2374"
+      >
+
+  </a
+      ><a name="2378" class="Comment"
+      >{-
+module _ (A&#7497; : Explore&#8321; A) where
+  focused-iso : Focused {&#8320;} (B&#7497; A&#7497;)
+  focused-iso = inverses {!!} {!!} {!(&#8658;)!} {!(&#8656;)!}
+    where &#8658; : (x : &#931; _ _) &#8594; _
+          &#8658; (b , c) = {!!}
+          &#8656; : (x : _ &#8846; _) &#8594; _
+          &#8656; (inj&#8321; x) = {!!}
+          &#8656; (inj&#8322; x) = {!!}
+-}</a
+      ><a name="2646"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

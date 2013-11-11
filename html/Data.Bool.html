@@ -1,0 +1,1027 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Data.Bool</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="73"
+      >
+</a
+      ><a name="74" class="Comment"
+      >-- The Agda standard library</a
+      ><a name="102"
+      >
+</a
+      ><a name="103" class="Comment"
+      >--</a
+      ><a name="105"
+      >
+</a
+      ><a name="106" class="Comment"
+      >-- Booleans</a
+      ><a name="117"
+      >
+</a
+      ><a name="118" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="190"
+      >
+
+</a
+      ><a name="192" class="Keyword"
+      >module</a
+      ><a name="198"
+      > </a
+      ><a name="199" href="Data.Bool.html#1" class="Module"
+      >Data.Bool</a
+      ><a name="208"
+      > </a
+      ><a name="209" class="Keyword"
+      >where</a
+      ><a name="214"
+      >
+
+</a
+      ><a name="216" class="Keyword"
+      >open</a
+      ><a name="220"
+      > </a
+      ><a name="221" class="Keyword"
+      >import</a
+      ><a name="227"
+      > </a
+      ><a name="228" href="Function.html#1" class="Module"
+      >Function</a
+      ><a name="236"
+      >
+</a
+      ><a name="237" class="Keyword"
+      >open</a
+      ><a name="241"
+      > </a
+      ><a name="242" class="Keyword"
+      >import</a
+      ><a name="248"
+      > </a
+      ><a name="249" href="Data.Unit.html#1" class="Module"
+      >Data.Unit</a
+      ><a name="258"
+      > </a
+      ><a name="259" class="Keyword"
+      >using</a
+      ><a name="264"
+      > </a
+      ><a name="265" class="Symbol"
+      >(</a
+      ><a name="266"
+      >&#8868;</a
+      ><a name="267" class="Symbol"
+      >)</a
+      ><a name="268"
+      >
+</a
+      ><a name="269" class="Keyword"
+      >open</a
+      ><a name="273"
+      > </a
+      ><a name="274" class="Keyword"
+      >import</a
+      ><a name="280"
+      > </a
+      ><a name="281" href="Data.Empty.html#1" class="Module"
+      >Data.Empty</a
+      ><a name="291"
+      >
+</a
+      ><a name="292" class="Keyword"
+      >open</a
+      ><a name="296"
+      > </a
+      ><a name="297" class="Keyword"
+      >import</a
+      ><a name="303"
+      > </a
+      ><a name="304" href="Level.html#1" class="Module"
+      >Level</a
+      ><a name="309"
+      >
+</a
+      ><a name="310" class="Keyword"
+      >open</a
+      ><a name="314"
+      > </a
+      ><a name="315" class="Keyword"
+      >import</a
+      ><a name="321"
+      > </a
+      ><a name="322" href="Relation.Nullary.html#1" class="Module"
+      >Relation.Nullary</a
+      ><a name="338"
+      >
+</a
+      ><a name="339" class="Keyword"
+      >open</a
+      ><a name="343"
+      > </a
+      ><a name="344" class="Keyword"
+      >import</a
+      ><a name="350"
+      > </a
+      ><a name="351" href="Relation.Binary.html#1" class="Module"
+      >Relation.Binary</a
+      ><a name="366"
+      >
+</a
+      ><a name="367" class="Keyword"
+      >open</a
+      ><a name="371"
+      > </a
+      ><a name="372" class="Keyword"
+      >import</a
+      ><a name="378"
+      > </a
+      ><a name="379" href="Relation.Binary.PropositionalEquality.html#1" class="Module"
+      >Relation.Binary.PropositionalEquality</a
+      ><a name="416"
+      > </a
+      ><a name="417" class="Symbol"
+      >as</a
+      ><a name="419"
+      > </a
+      ><a name="420" class="Module"
+      >PropEq</a
+      ><a name="426"
+      >
+  </a
+      ><a name="429" class="Keyword"
+      >using</a
+      ><a name="434"
+      > </a
+      ><a name="435" class="Symbol"
+      >(</a
+      ><a name="436"
+      >_&#8801;_</a
+      ><a name="439" class="Symbol"
+      >;</a
+      ><a name="440"
+      > refl</a
+      ><a name="445" class="Symbol"
+      >)</a
+      ><a name="446"
+      >
+
+</a
+      ><a name="448" class="Keyword"
+      >infixr</a
+      ><a name="454"
+      > </a
+      ><a name="455" class="Number"
+      >6</a
+      ><a name="456"
+      > _&#8743;_
+</a
+      ><a name="461" class="Keyword"
+      >infixr</a
+      ><a name="467"
+      > </a
+      ><a name="468" class="Number"
+      >5</a
+      ><a name="469"
+      > _&#8744;_ _xor_
+</a
+      ><a name="480" class="Keyword"
+      >infix</a
+      ><a name="485"
+      >  </a
+      ><a name="487" class="Number"
+      >0</a
+      ><a name="488"
+      > if_then_else_
+
+</a
+      ><a name="504" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="576"
+      >
+</a
+      ><a name="577" class="Comment"
+      >-- The boolean type</a
+      ><a name="596"
+      >
+
+</a
+      ><a name="598" class="Keyword"
+      >data</a
+      ><a name="602"
+      > </a
+      ><a name="603" href="Data.Bool.html#603" class="Datatype"
+      >Bool</a
+      ><a name="607"
+      > </a
+      ><a name="608" class="Symbol"
+      >:</a
+      ><a name="609"
+      > </a
+      ><a name="610" class="PrimitiveType"
+      >Set</a
+      ><a name="613"
+      > </a
+      ><a name="614" class="Keyword"
+      >where</a
+      ><a name="619"
+      >
+  </a
+      ><a name="622" href="Data.Bool.html#622" class="InductiveConstructor"
+      >true</a
+      ><a name="626"
+      >  </a
+      ><a name="628" class="Symbol"
+      >:</a
+      ><a name="629"
+      > </a
+      ><a name="630" href="Data.Bool.html#603" class="Datatype"
+      >Bool</a
+      ><a name="634"
+      >
+  </a
+      ><a name="637" href="Data.Bool.html#637" class="InductiveConstructor"
+      >false</a
+      ><a name="642"
+      > </a
+      ><a name="643" class="Symbol"
+      >:</a
+      ><a name="644"
+      > </a
+      ><a name="645" href="Data.Bool.html#603" class="Datatype"
+      >Bool</a
+      ><a name="649"
+      >
+
+</a
+      ><a name="651" class="Symbol"
+      >{-#</a
+      ><a name="654"
+      > </a
+      ><a name="655" class="Keyword"
+      >BUILTIN</a
+      ><a name="662"
+      > BOOL  </a
+      ><a name="669" href="Data.Bool.html#603" class="Datatype"
+      >Bool</a
+      ><a name="673"
+      >  </a
+      ><a name="675" class="Symbol"
+      >#-}</a
+      ><a name="678"
+      >
+</a
+      ><a name="679" class="Symbol"
+      >{-#</a
+      ><a name="682"
+      > </a
+      ><a name="683" class="Keyword"
+      >BUILTIN</a
+      ><a name="690"
+      > TRUE  </a
+      ><a name="697" href="Data.Bool.html#622" class="InductiveConstructor"
+      >true</a
+      ><a name="701"
+      >  </a
+      ><a name="703" class="Symbol"
+      >#-}</a
+      ><a name="706"
+      >
+</a
+      ><a name="707" class="Symbol"
+      >{-#</a
+      ><a name="710"
+      > </a
+      ><a name="711" class="Keyword"
+      >BUILTIN</a
+      ><a name="718"
+      > FALSE </a
+      ><a name="725" href="Data.Bool.html#637" class="InductiveConstructor"
+      >false</a
+      ><a name="730"
+      > </a
+      ><a name="731" class="Symbol"
+      >#-}</a
+      ><a name="734"
+      >
+
+</a
+      ><a name="736" class="Symbol"
+      >{-#</a
+      ><a name="739"
+      > </a
+      ><a name="740" class="Keyword"
+      >COMPILED_DATA</a
+      ><a name="753"
+      > </a
+      ><a name="754" href="Data.Bool.html#603" class="Datatype"
+      >Bool</a
+      ><a name="758"
+      > Bool True False </a
+      ><a name="775" class="Symbol"
+      >#-}</a
+      ><a name="778"
+      >
+
+</a
+      ><a name="780" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="852"
+      >
+</a
+      ><a name="853" class="Comment"
+      >-- Some operations</a
+      ><a name="871"
+      >
+
+</a
+      ><a name="873" href="Data.Bool.html#873" class="Function"
+      >not</a
+      ><a name="876"
+      > </a
+      ><a name="877" class="Symbol"
+      >:</a
+      ><a name="878"
+      > </a
+      ><a name="879" href="Data.Bool.html#603" class="Datatype"
+      >Bool</a
+      ><a name="883"
+      > </a
+      ><a name="884" class="Symbol"
+      >&#8594;</a
+      ><a name="885"
+      > </a
+      ><a name="886" href="Data.Bool.html#603" class="Datatype"
+      >Bool</a
+      ><a name="890"
+      >
+</a
+      ><a name="891" href="Data.Bool.html#873" class="Function"
+      >not</a
+      ><a name="894"
+      > </a
+      ><a name="895" href="Data.Bool.html#622" class="InductiveConstructor"
+      >true</a
+      ><a name="899"
+      >  </a
+      ><a name="901" class="Symbol"
+      >=</a
+      ><a name="902"
+      > </a
+      ><a name="903" href="Data.Bool.html#637" class="InductiveConstructor"
+      >false</a
+      ><a name="908"
+      >
+</a
+      ><a name="909" href="Data.Bool.html#873" class="Function"
+      >not</a
+      ><a name="912"
+      > </a
+      ><a name="913" href="Data.Bool.html#637" class="InductiveConstructor"
+      >false</a
+      ><a name="918"
+      > </a
+      ><a name="919" class="Symbol"
+      >=</a
+      ><a name="920"
+      > </a
+      ><a name="921" href="Data.Bool.html#622" class="InductiveConstructor"
+      >true</a
+      ><a name="925"
+      >
+
+</a
+      ><a name="927" class="Comment"
+      >-- A function mapping true to an inhabited type and false to an empty</a
+      ><a name="996"
+      >
+</a
+      ><a name="997" class="Comment"
+      >-- type.</a
+      ><a name="1005"
+      >
+
+</a
+      ><a name="1007" href="Data.Bool.html#1007" class="Function"
+      >T</a
+      ><a name="1008"
+      > </a
+      ><a name="1009" class="Symbol"
+      >:</a
+      ><a name="1010"
+      > </a
+      ><a name="1011" href="Data.Bool.html#603" class="Datatype"
+      >Bool</a
+      ><a name="1015"
+      > </a
+      ><a name="1016" class="Symbol"
+      >&#8594;</a
+      ><a name="1017"
+      > </a
+      ><a name="1018" class="PrimitiveType"
+      >Set</a
+      ><a name="1021"
+      >
+</a
+      ><a name="1022" href="Data.Bool.html#1007" class="Function"
+      >T</a
+      ><a name="1023"
+      > </a
+      ><a name="1024" href="Data.Bool.html#622" class="InductiveConstructor"
+      >true</a
+      ><a name="1028"
+      >  </a
+      ><a name="1030" class="Symbol"
+      >=</a
+      ><a name="1031"
+      > </a
+      ><a name="1032" href="Data.Unit.html#653" class="Record"
+      >&#8868;</a
+      ><a name="1033"
+      >
+</a
+      ><a name="1034" href="Data.Bool.html#1007" class="Function"
+      >T</a
+      ><a name="1035"
+      > </a
+      ><a name="1036" href="Data.Bool.html#637" class="InductiveConstructor"
+      >false</a
+      ><a name="1041"
+      > </a
+      ><a name="1042" class="Symbol"
+      >=</a
+      ><a name="1043"
+      > </a
+      ><a name="1044" href="Data.Empty.html#243" class="Datatype"
+      >&#8869;</a
+      ><a name="1045"
+      >
+
+</a
+      ><a name="1047" href="Data.Bool.html#1047" class="Function Operator"
+      >if_then_else_</a
+      ><a name="1060"
+      > </a
+      ><a name="1061" class="Symbol"
+      >:</a
+      ><a name="1062"
+      > </a
+      ><a name="1063" class="Symbol"
+      >&#8704;</a
+      ><a name="1064"
+      > </a
+      ><a name="1065" class="Symbol"
+      >{</a
+      ><a name="1066" href="Data.Bool.html#1066" class="Bound"
+      >a</a
+      ><a name="1067" class="Symbol"
+      >}</a
+      ><a name="1068"
+      > </a
+      ><a name="1069" class="Symbol"
+      >{</a
+      ><a name="1070" href="Data.Bool.html#1070" class="Bound"
+      >A</a
+      ><a name="1071"
+      > </a
+      ><a name="1072" class="Symbol"
+      >:</a
+      ><a name="1073"
+      > </a
+      ><a name="1074" class="PrimitiveType"
+      >Set</a
+      ><a name="1077"
+      > </a
+      ><a name="1078" href="Data.Bool.html#1066" class="Bound"
+      >a</a
+      ><a name="1079" class="Symbol"
+      >}</a
+      ><a name="1080"
+      > </a
+      ><a name="1081" class="Symbol"
+      >&#8594;</a
+      ><a name="1082"
+      > </a
+      ><a name="1083" href="Data.Bool.html#603" class="Datatype"
+      >Bool</a
+      ><a name="1087"
+      > </a
+      ><a name="1088" class="Symbol"
+      >&#8594;</a
+      ><a name="1089"
+      > </a
+      ><a name="1090" href="Data.Bool.html#1070" class="Bound"
+      >A</a
+      ><a name="1091"
+      > </a
+      ><a name="1092" class="Symbol"
+      >&#8594;</a
+      ><a name="1093"
+      > </a
+      ><a name="1094" href="Data.Bool.html#1070" class="Bound"
+      >A</a
+      ><a name="1095"
+      > </a
+      ><a name="1096" class="Symbol"
+      >&#8594;</a
+      ><a name="1097"
+      > </a
+      ><a name="1098" href="Data.Bool.html#1070" class="Bound"
+      >A</a
+      ><a name="1099"
+      >
+</a
+      ><a name="1100" href="Data.Bool.html#1047" class="Function Operator"
+      >if</a
+      ><a name="1102"
+      > </a
+      ><a name="1103" href="Data.Bool.html#622" class="InductiveConstructor"
+      >true</a
+      ><a name="1107"
+      >  </a
+      ><a name="1109" href="Data.Bool.html#1047" class="Function Operator"
+      >then</a
+      ><a name="1113"
+      > </a
+      ><a name="1114" href="Data.Bool.html#1114" class="Bound"
+      >t</a
+      ><a name="1115"
+      > </a
+      ><a name="1116" href="Data.Bool.html#1047" class="Function Operator"
+      >else</a
+      ><a name="1120"
+      > </a
+      ><a name="1121" href="Data.Bool.html#1121" class="Bound"
+      >f</a
+      ><a name="1122"
+      > </a
+      ><a name="1123" class="Symbol"
+      >=</a
+      ><a name="1124"
+      > </a
+      ><a name="1125" href="Data.Bool.html#1114" class="Bound"
+      >t</a
+      ><a name="1126"
+      >
+</a
+      ><a name="1127" href="Data.Bool.html#1047" class="Function Operator"
+      >if</a
+      ><a name="1129"
+      > </a
+      ><a name="1130" href="Data.Bool.html#637" class="InductiveConstructor"
+      >false</a
+      ><a name="1135"
+      > </a
+      ><a name="1136" href="Data.Bool.html#1047" class="Function Operator"
+      >then</a
+      ><a name="1140"
+      > </a
+      ><a name="1141" href="Data.Bool.html#1141" class="Bound"
+      >t</a
+      ><a name="1142"
+      > </a
+      ><a name="1143" href="Data.Bool.html#1047" class="Function Operator"
+      >else</a
+      ><a name="1147"
+      > </a
+      ><a name="1148" href="Data.Bool.html#1148" class="Bound"
+      >f</a
+      ><a name="1149"
+      > </a
+      ><a name="1150" class="Symbol"
+      >=</a
+      ><a name="1151"
+      > </a
+      ><a name="1152" href="Data.Bool.html#1148" class="Bound"
+      >f</a
+      ><a name="1153"
+      >
+
+</a
+      ><a name="1155" href="Data.Bool.html#1155" class="Function Operator"
+      >_&#8743;_</a
+      ><a name="1158"
+      > </a
+      ><a name="1159" class="Symbol"
+      >:</a
+      ><a name="1160"
+      > </a
+      ><a name="1161" href="Data.Bool.html#603" class="Datatype"
+      >Bool</a
+      ><a name="1165"
+      > </a
+      ><a name="1166" class="Symbol"
+      >&#8594;</a
+      ><a name="1167"
+      > </a
+      ><a name="1168" href="Data.Bool.html#603" class="Datatype"
+      >Bool</a
+      ><a name="1172"
+      > </a
+      ><a name="1173" class="Symbol"
+      >&#8594;</a
+      ><a name="1174"
+      > </a
+      ><a name="1175" href="Data.Bool.html#603" class="Datatype"
+      >Bool</a
+      ><a name="1179"
+      >
+</a
+      ><a name="1180" href="Data.Bool.html#622" class="InductiveConstructor"
+      >true</a
+      ><a name="1184"
+      >  </a
+      ><a name="1186" href="Data.Bool.html#1155" class="Function Operator"
+      >&#8743;</a
+      ><a name="1187"
+      > </a
+      ><a name="1188" href="Data.Bool.html#1188" class="Bound"
+      >b</a
+      ><a name="1189"
+      > </a
+      ><a name="1190" class="Symbol"
+      >=</a
+      ><a name="1191"
+      > </a
+      ><a name="1192" href="Data.Bool.html#1188" class="Bound"
+      >b</a
+      ><a name="1193"
+      >
+</a
+      ><a name="1194" href="Data.Bool.html#637" class="InductiveConstructor"
+      >false</a
+      ><a name="1199"
+      > </a
+      ><a name="1200" href="Data.Bool.html#1155" class="Function Operator"
+      >&#8743;</a
+      ><a name="1201"
+      > </a
+      ><a name="1202" href="Data.Bool.html#1202" class="Bound"
+      >b</a
+      ><a name="1203"
+      > </a
+      ><a name="1204" class="Symbol"
+      >=</a
+      ><a name="1205"
+      > </a
+      ><a name="1206" href="Data.Bool.html#637" class="InductiveConstructor"
+      >false</a
+      ><a name="1211"
+      >
+
+</a
+      ><a name="1213" href="Data.Bool.html#1213" class="Function Operator"
+      >_&#8744;_</a
+      ><a name="1216"
+      > </a
+      ><a name="1217" class="Symbol"
+      >:</a
+      ><a name="1218"
+      > </a
+      ><a name="1219" href="Data.Bool.html#603" class="Datatype"
+      >Bool</a
+      ><a name="1223"
+      > </a
+      ><a name="1224" class="Symbol"
+      >&#8594;</a
+      ><a name="1225"
+      > </a
+      ><a name="1226" href="Data.Bool.html#603" class="Datatype"
+      >Bool</a
+      ><a name="1230"
+      > </a
+      ><a name="1231" class="Symbol"
+      >&#8594;</a
+      ><a name="1232"
+      > </a
+      ><a name="1233" href="Data.Bool.html#603" class="Datatype"
+      >Bool</a
+      ><a name="1237"
+      >
+</a
+      ><a name="1238" href="Data.Bool.html#622" class="InductiveConstructor"
+      >true</a
+      ><a name="1242"
+      >  </a
+      ><a name="1244" href="Data.Bool.html#1213" class="Function Operator"
+      >&#8744;</a
+      ><a name="1245"
+      > </a
+      ><a name="1246" href="Data.Bool.html#1246" class="Bound"
+      >b</a
+      ><a name="1247"
+      > </a
+      ><a name="1248" class="Symbol"
+      >=</a
+      ><a name="1249"
+      > </a
+      ><a name="1250" href="Data.Bool.html#622" class="InductiveConstructor"
+      >true</a
+      ><a name="1254"
+      >
+</a
+      ><a name="1255" href="Data.Bool.html#637" class="InductiveConstructor"
+      >false</a
+      ><a name="1260"
+      > </a
+      ><a name="1261" href="Data.Bool.html#1213" class="Function Operator"
+      >&#8744;</a
+      ><a name="1262"
+      > </a
+      ><a name="1263" href="Data.Bool.html#1263" class="Bound"
+      >b</a
+      ><a name="1264"
+      > </a
+      ><a name="1265" class="Symbol"
+      >=</a
+      ><a name="1266"
+      > </a
+      ><a name="1267" href="Data.Bool.html#1263" class="Bound"
+      >b</a
+      ><a name="1268"
+      >
+
+</a
+      ><a name="1270" href="Data.Bool.html#1270" class="Function Operator"
+      >_xor_</a
+      ><a name="1275"
+      > </a
+      ><a name="1276" class="Symbol"
+      >:</a
+      ><a name="1277"
+      > </a
+      ><a name="1278" href="Data.Bool.html#603" class="Datatype"
+      >Bool</a
+      ><a name="1282"
+      > </a
+      ><a name="1283" class="Symbol"
+      >&#8594;</a
+      ><a name="1284"
+      > </a
+      ><a name="1285" href="Data.Bool.html#603" class="Datatype"
+      >Bool</a
+      ><a name="1289"
+      > </a
+      ><a name="1290" class="Symbol"
+      >&#8594;</a
+      ><a name="1291"
+      > </a
+      ><a name="1292" href="Data.Bool.html#603" class="Datatype"
+      >Bool</a
+      ><a name="1296"
+      >
+</a
+      ><a name="1297" href="Data.Bool.html#622" class="InductiveConstructor"
+      >true</a
+      ><a name="1301"
+      >  </a
+      ><a name="1303" href="Data.Bool.html#1270" class="Function Operator"
+      >xor</a
+      ><a name="1306"
+      > </a
+      ><a name="1307" href="Data.Bool.html#1307" class="Bound"
+      >b</a
+      ><a name="1308"
+      > </a
+      ><a name="1309" class="Symbol"
+      >=</a
+      ><a name="1310"
+      > </a
+      ><a name="1311" href="Data.Bool.html#873" class="Function"
+      >not</a
+      ><a name="1314"
+      > </a
+      ><a name="1315" href="Data.Bool.html#1307" class="Bound"
+      >b</a
+      ><a name="1316"
+      >
+</a
+      ><a name="1317" href="Data.Bool.html#637" class="InductiveConstructor"
+      >false</a
+      ><a name="1322"
+      > </a
+      ><a name="1323" href="Data.Bool.html#1270" class="Function Operator"
+      >xor</a
+      ><a name="1326"
+      > </a
+      ><a name="1327" href="Data.Bool.html#1327" class="Bound"
+      >b</a
+      ><a name="1328"
+      > </a
+      ><a name="1329" class="Symbol"
+      >=</a
+      ><a name="1330"
+      > </a
+      ><a name="1331" href="Data.Bool.html#1327" class="Bound"
+      >b</a
+      ><a name="1332"
+      >
+
+</a
+      ><a name="1334" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="1406"
+      >
+</a
+      ><a name="1407" class="Comment"
+      >-- Queries</a
+      ><a name="1417"
+      >
+
+</a
+      ><a name="1419" href="Data.Bool.html#1419" class="Function Operator"
+      >_&#8799;_</a
+      ><a name="1422"
+      > </a
+      ><a name="1423" class="Symbol"
+      >:</a
+      ><a name="1424"
+      > </a
+      ><a name="1425" href="Relation.Binary.Core.html#3511" class="Function"
+      >Decidable</a
+      ><a name="1434"
+      > </a
+      ><a name="1435" class="Symbol"
+      >{</a
+      ><a name="1436"
+      >A </a
+      ><a name="1438" class="Symbol"
+      >=</a
+      ><a name="1439"
+      > </a
+      ><a name="1440" href="Data.Bool.html#603" class="Datatype"
+      >Bool</a
+      ><a name="1444" class="Symbol"
+      >}</a
+      ><a name="1445"
+      > </a
+      ><a name="1446" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >_&#8801;_</a
+      ><a name="1449"
+      >
+</a
+      ><a name="1450" href="Data.Bool.html#622" class="InductiveConstructor"
+      >true</a
+      ><a name="1454"
+      >  </a
+      ><a name="1456" href="Data.Bool.html#1419" class="Function Operator"
+      >&#8799;</a
+      ><a name="1457"
+      > </a
+      ><a name="1458" href="Data.Bool.html#622" class="InductiveConstructor"
+      >true</a
+      ><a name="1462"
+      >  </a
+      ><a name="1464" class="Symbol"
+      >=</a
+      ><a name="1465"
+      > </a
+      ><a name="1466" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="1469"
+      > </a
+      ><a name="1470" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="1474"
+      >
+</a
+      ><a name="1475" href="Data.Bool.html#637" class="InductiveConstructor"
+      >false</a
+      ><a name="1480"
+      > </a
+      ><a name="1481" href="Data.Bool.html#1419" class="Function Operator"
+      >&#8799;</a
+      ><a name="1482"
+      > </a
+      ><a name="1483" href="Data.Bool.html#637" class="InductiveConstructor"
+      >false</a
+      ><a name="1488"
+      > </a
+      ><a name="1489" class="Symbol"
+      >=</a
+      ><a name="1490"
+      > </a
+      ><a name="1491" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="1494"
+      > </a
+      ><a name="1495" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="1499"
+      >
+</a
+      ><a name="1500" href="Data.Bool.html#622" class="InductiveConstructor"
+      >true</a
+      ><a name="1504"
+      >  </a
+      ><a name="1506" href="Data.Bool.html#1419" class="Function Operator"
+      >&#8799;</a
+      ><a name="1507"
+      > </a
+      ><a name="1508" href="Data.Bool.html#637" class="InductiveConstructor"
+      >false</a
+      ><a name="1513"
+      > </a
+      ><a name="1514" class="Symbol"
+      >=</a
+      ><a name="1515"
+      > </a
+      ><a name="1516" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="1518"
+      > </a
+      ><a name="1519" class="Symbol"
+      >&#955;()</a
+      ><a name="1522"
+      >
+</a
+      ><a name="1523" href="Data.Bool.html#637" class="InductiveConstructor"
+      >false</a
+      ><a name="1528"
+      > </a
+      ><a name="1529" href="Data.Bool.html#1419" class="Function Operator"
+      >&#8799;</a
+      ><a name="1530"
+      > </a
+      ><a name="1531" href="Data.Bool.html#622" class="InductiveConstructor"
+      >true</a
+      ><a name="1535"
+      >  </a
+      ><a name="1537" class="Symbol"
+      >=</a
+      ><a name="1538"
+      > </a
+      ><a name="1539" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="1541"
+      > </a
+      ><a name="1542" class="Symbol"
+      >&#955;()</a
+      ><a name="1545"
+      >
+
+</a
+      ><a name="1547" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="1619"
+      >
+</a
+      ><a name="1620" class="Comment"
+      >-- Some properties</a
+      ><a name="1638"
+      >
+
+</a
+      ><a name="1640" href="Data.Bool.html#1640" class="Function"
+      >decSetoid</a
+      ><a name="1649"
+      > </a
+      ><a name="1650" class="Symbol"
+      >:</a
+      ><a name="1651"
+      > </a
+      ><a name="1652" href="Relation.Binary.html#2921" class="Record"
+      >DecSetoid</a
+      ><a name="1661"
+      > </a
+      ><a name="1662" class="Symbol"
+      >_</a
+      ><a name="1663"
+      > </a
+      ><a name="1664" class="Symbol"
+      >_</a
+      ><a name="1665"
+      >
+</a
+      ><a name="1666" href="Data.Bool.html#1640" class="Function"
+      >decSetoid</a
+      ><a name="1675"
+      > </a
+      ><a name="1676" class="Symbol"
+      >=</a
+      ><a name="1677"
+      > </a
+      ><a name="1678" href="Relation.Binary.PropositionalEquality.html#1529" class="Function"
+      >PropEq.decSetoid</a
+      ><a name="1694"
+      > </a
+      ><a name="1695" href="Data.Bool.html#1419" class="Function Operator"
+      >_&#8799;_</a
+      ><a name="1698"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

@@ -1,0 +1,1965 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Explore.Dice</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Symbol"
+      >{-#</a
+      ><a name="4"
+      > </a
+      ><a name="5" class="Keyword"
+      >OPTIONS</a
+      ><a name="12"
+      > --without-K </a
+      ><a name="25" class="Symbol"
+      >#-}</a
+      ><a name="28"
+      >
+</a
+      ><a name="29" class="Keyword"
+      >open</a
+      ><a name="33"
+      > </a
+      ><a name="34" class="Keyword"
+      >import</a
+      ><a name="40"
+      > </a
+      ><a name="41" href="Type.html#1" class="Module"
+      >Type</a
+      ><a name="45"
+      >
+</a
+      ><a name="46" class="Keyword"
+      >open</a
+      ><a name="50"
+      > </a
+      ><a name="51" class="Keyword"
+      >import</a
+      ><a name="57"
+      > </a
+      ><a name="58" href="Data.Fin.html#1" class="Module"
+      >Data.Fin</a
+      ><a name="66"
+      > </a
+      ><a name="67" class="Keyword"
+      >using</a
+      ><a name="72"
+      > </a
+      ><a name="73" class="Symbol"
+      >(</a
+      ><a name="74"
+      >Fin</a
+      ><a name="77" class="Symbol"
+      >;</a
+      ><a name="78"
+      > zero</a
+      ><a name="83" class="Symbol"
+      >;</a
+      ><a name="84"
+      > suc</a
+      ><a name="88" class="Symbol"
+      >;</a
+      ><a name="89"
+      > #_</a
+      ><a name="92" class="Symbol"
+      >)</a
+      ><a name="93"
+      >
+</a
+      ><a name="94" class="Keyword"
+      >import</a
+      ><a name="100"
+      > </a
+      ><a name="101" href="Function.Inverse.NP.html#1" class="Module"
+      >Function.Inverse.NP</a
+      ><a name="120"
+      > </a
+      ><a name="121" class="Symbol"
+      >as</a
+      ><a name="123"
+      > </a
+      ><a name="124" class="Module"
+      >Inv</a
+      ><a name="127"
+      >
+</a
+      ><a name="128" class="Keyword"
+      >open</a
+      ><a name="132"
+      > </a
+      ><a name="133" class="Keyword"
+      >import</a
+      ><a name="139"
+      > </a
+      ><a name="140" href="Relation.Binary.PropositionalEquality.html#1" class="Module"
+      >Relation.Binary.PropositionalEquality</a
+      ><a name="177"
+      > </a
+      ><a name="178" class="Keyword"
+      >using</a
+      ><a name="183"
+      > </a
+      ><a name="184" class="Symbol"
+      >(</a
+      ><a name="185"
+      >_&#8801;_</a
+      ><a name="188" class="Symbol"
+      >;</a
+      ><a name="189"
+      > refl</a
+      ><a name="194" class="Symbol"
+      >)</a
+      ><a name="195"
+      >
+</a
+      ><a name="196" class="Keyword"
+      >open</a
+      ><a name="200"
+      > </a
+      ><a name="201" href="Function.Inverse.NP.html#1" class="Module"
+      >Inv</a
+      ><a name="204"
+      > </a
+      ><a name="205" class="Keyword"
+      >using</a
+      ><a name="210"
+      > </a
+      ><a name="211" class="Symbol"
+      >(</a
+      ><a name="212"
+      >_&#8596;_</a
+      ><a name="215" class="Symbol"
+      >)</a
+      ><a name="216"
+      >
+
+</a
+      ><a name="218" class="Keyword"
+      >open</a
+      ><a name="222"
+      > </a
+      ><a name="223" class="Keyword"
+      >import</a
+      ><a name="229"
+      > </a
+      ><a name="230" href="Explore.Core.html#1" class="Module"
+      >Explore.Core</a
+      ><a name="242"
+      >
+</a
+      ><a name="243" class="Keyword"
+      >open</a
+      ><a name="247"
+      > </a
+      ><a name="248" class="Keyword"
+      >import</a
+      ><a name="254"
+      > </a
+      ><a name="255" href="Explore.Properties.html#1" class="Module"
+      >Explore.Properties</a
+      ><a name="273"
+      >
+</a
+      ><a name="274" class="Keyword"
+      >open</a
+      ><a name="278"
+      > </a
+      ><a name="279" class="Keyword"
+      >import</a
+      ><a name="285"
+      > </a
+      ><a name="286" href="Explore.Explorable.html#1" class="Module"
+      >Explore.Explorable</a
+      ><a name="304"
+      >
+</a
+      ><a name="305" class="Keyword"
+      >open</a
+      ><a name="309"
+      > </a
+      ><a name="310" class="Keyword"
+      >import</a
+      ><a name="316"
+      > </a
+      ><a name="317" href="Explore.Universe.html#1" class="Module"
+      >Explore.Universe</a
+      ><a name="333"
+      >
+
+</a
+      ><a name="335" class="Keyword"
+      >module</a
+      ><a name="341"
+      > </a
+      ><a name="342" href="Explore.Dice.html#1" class="Module"
+      >Explore.Dice</a
+      ><a name="354"
+      > </a
+      ><a name="355" class="Keyword"
+      >where</a
+      ><a name="360"
+      >
+
+</a
+      ><a name="362" class="Keyword"
+      >data</a
+      ><a name="366"
+      > </a
+      ><a name="367" href="Explore.Dice.html#367" class="Datatype"
+      >Dice</a
+      ><a name="371"
+      > </a
+      ><a name="372" class="Symbol"
+      >:</a
+      ><a name="373"
+      > </a
+      ><a name="374" href="Type.html#107" class="Function"
+      >&#9733;&#8320;</a
+      ><a name="376"
+      > </a
+      ><a name="377" class="Keyword"
+      >where</a
+      ><a name="382"
+      >
+  </a
+      ><a name="385" href="Explore.Dice.html#385" class="InductiveConstructor"
+      >&#9856;</a
+      ><a name="386"
+      > </a
+      ><a name="387" href="Explore.Dice.html#387" class="InductiveConstructor"
+      >&#9857;</a
+      ><a name="388"
+      > </a
+      ><a name="389" href="Explore.Dice.html#389" class="InductiveConstructor"
+      >&#9858;</a
+      ><a name="390"
+      > </a
+      ><a name="391" href="Explore.Dice.html#391" class="InductiveConstructor"
+      >&#9859;</a
+      ><a name="392"
+      > </a
+      ><a name="393" href="Explore.Dice.html#393" class="InductiveConstructor"
+      >&#9860;</a
+      ><a name="394"
+      > </a
+      ><a name="395" href="Explore.Dice.html#395" class="InductiveConstructor"
+      >&#9861;</a
+      ><a name="396"
+      > </a
+      ><a name="397" class="Symbol"
+      >:</a
+      ><a name="398"
+      > </a
+      ><a name="399" href="Explore.Dice.html#367" class="Datatype"
+      >Dice</a
+      ><a name="403"
+      >
+
+</a
+      ><a name="405" class="Keyword"
+      >module</a
+      ><a name="411"
+      > </a
+      ><a name="412" href="Explore.Dice.html#412" class="Module"
+      >ByHand</a
+      ><a name="418"
+      > </a
+      ><a name="419" class="Keyword"
+      >where</a
+      ><a name="424"
+      >
+    </a
+      ><a name="429" href="Explore.Dice.html#429" class="Function"
+      >exploreDice</a
+      ><a name="440"
+      > </a
+      ><a name="441" class="Symbol"
+      >:</a
+      ><a name="442"
+      > </a
+      ><a name="443" class="Symbol"
+      >&#8704;</a
+      ><a name="444"
+      > </a
+      ><a name="445" class="Symbol"
+      >{</a
+      ><a name="446" href="Explore.Dice.html#446" class="Bound"
+      >m</a
+      ><a name="447" class="Symbol"
+      >}</a
+      ><a name="448"
+      > </a
+      ><a name="449" class="Symbol"
+      >&#8594;</a
+      ><a name="450"
+      > </a
+      ><a name="451" href="Explore.Core.html#447" class="Function"
+      >Explore</a
+      ><a name="458"
+      > </a
+      ><a name="459" href="Explore.Dice.html#446" class="Bound"
+      >m</a
+      ><a name="460"
+      > </a
+      ><a name="461" href="Explore.Dice.html#367" class="Datatype"
+      >Dice</a
+      ><a name="465"
+      >
+    </a
+      ><a name="470" href="Explore.Dice.html#429" class="Function"
+      >exploreDice</a
+      ><a name="481"
+      > </a
+      ><a name="482" href="Explore.Dice.html#482" class="Bound"
+      >&#949;</a
+      ><a name="483"
+      > </a
+      ><a name="484" href="Explore.Dice.html#484" class="Bound Operator"
+      >_&#8729;_</a
+      ><a name="487"
+      > </a
+      ><a name="488" href="Explore.Dice.html#488" class="Bound"
+      >f</a
+      ><a name="489"
+      > </a
+      ><a name="490" class="Symbol"
+      >=</a
+      ><a name="491"
+      > </a
+      ><a name="492" href="Explore.Dice.html#488" class="Bound"
+      >f</a
+      ><a name="493"
+      > </a
+      ><a name="494" href="Explore.Dice.html#385" class="InductiveConstructor"
+      >&#9856;</a
+      ><a name="495"
+      > </a
+      ><a name="496" href="Explore.Dice.html#484" class="Bound Operator"
+      >&#8729;</a
+      ><a name="497"
+      > </a
+      ><a name="498" class="Symbol"
+      >(</a
+      ><a name="499" href="Explore.Dice.html#488" class="Bound"
+      >f</a
+      ><a name="500"
+      > </a
+      ><a name="501" href="Explore.Dice.html#387" class="InductiveConstructor"
+      >&#9857;</a
+      ><a name="502"
+      > </a
+      ><a name="503" href="Explore.Dice.html#484" class="Bound Operator"
+      >&#8729;</a
+      ><a name="504"
+      > </a
+      ><a name="505" class="Symbol"
+      >(</a
+      ><a name="506" href="Explore.Dice.html#488" class="Bound"
+      >f</a
+      ><a name="507"
+      > </a
+      ><a name="508" href="Explore.Dice.html#389" class="InductiveConstructor"
+      >&#9858;</a
+      ><a name="509"
+      > </a
+      ><a name="510" href="Explore.Dice.html#484" class="Bound Operator"
+      >&#8729;</a
+      ><a name="511"
+      > </a
+      ><a name="512" class="Symbol"
+      >(</a
+      ><a name="513" href="Explore.Dice.html#488" class="Bound"
+      >f</a
+      ><a name="514"
+      > </a
+      ><a name="515" href="Explore.Dice.html#391" class="InductiveConstructor"
+      >&#9859;</a
+      ><a name="516"
+      > </a
+      ><a name="517" href="Explore.Dice.html#484" class="Bound Operator"
+      >&#8729;</a
+      ><a name="518"
+      > </a
+      ><a name="519" class="Symbol"
+      >(</a
+      ><a name="520" href="Explore.Dice.html#488" class="Bound"
+      >f</a
+      ><a name="521"
+      > </a
+      ><a name="522" href="Explore.Dice.html#393" class="InductiveConstructor"
+      >&#9860;</a
+      ><a name="523"
+      > </a
+      ><a name="524" href="Explore.Dice.html#484" class="Bound Operator"
+      >&#8729;</a
+      ><a name="525"
+      > </a
+      ><a name="526" href="Explore.Dice.html#488" class="Bound"
+      >f</a
+      ><a name="527"
+      > </a
+      ><a name="528" href="Explore.Dice.html#395" class="InductiveConstructor"
+      >&#9861;</a
+      ><a name="529" class="Symbol"
+      >))))</a
+      ><a name="533"
+      >
+
+    </a
+      ><a name="539" href="Explore.Dice.html#539" class="Function"
+      >exploreDice-ind</a
+      ><a name="554"
+      > </a
+      ><a name="555" class="Symbol"
+      >:</a
+      ><a name="556"
+      > </a
+      ><a name="557" class="Symbol"
+      >&#8704;</a
+      ><a name="558"
+      > </a
+      ><a name="559" class="Symbol"
+      >{</a
+      ><a name="560" href="Explore.Dice.html#560" class="Bound"
+      >m</a
+      ><a name="561"
+      > </a
+      ><a name="562" href="Explore.Dice.html#562" class="Bound"
+      >p</a
+      ><a name="563" class="Symbol"
+      >}</a
+      ><a name="564"
+      > </a
+      ><a name="565" class="Symbol"
+      >&#8594;</a
+      ><a name="566"
+      > </a
+      ><a name="567" href="Explore.Properties.html#1850" class="Function"
+      >ExploreInd</a
+      ><a name="577"
+      > </a
+      ><a name="578" href="Explore.Dice.html#562" class="Bound"
+      >p</a
+      ><a name="579"
+      > </a
+      ><a name="580" class="Symbol"
+      >(</a
+      ><a name="581" href="Explore.Dice.html#429" class="Function"
+      >exploreDice</a
+      ><a name="592"
+      > </a
+      ><a name="593" class="Symbol"
+      >{</a
+      ><a name="594" href="Explore.Dice.html#560" class="Bound"
+      >m</a
+      ><a name="595" class="Symbol"
+      >})</a
+      ><a name="597"
+      >
+    </a
+      ><a name="602" href="Explore.Dice.html#539" class="Function"
+      >exploreDice-ind</a
+      ><a name="617"
+      > </a
+      ><a name="618" href="Explore.Dice.html#618" class="Bound"
+      >P</a
+      ><a name="619"
+      > </a
+      ><a name="620" href="Explore.Dice.html#620" class="Bound"
+      >&#949;</a
+      ><a name="621"
+      > </a
+      ><a name="622" href="Explore.Dice.html#622" class="Bound Operator"
+      >_&#8729;_</a
+      ><a name="625"
+      > </a
+      ><a name="626" href="Explore.Dice.html#626" class="Bound"
+      >f</a
+      ><a name="627"
+      > </a
+      ><a name="628" class="Symbol"
+      >=</a
+      ><a name="629"
+      > </a
+      ><a name="630" href="Explore.Dice.html#626" class="Bound"
+      >f</a
+      ><a name="631"
+      > </a
+      ><a name="632" href="Explore.Dice.html#385" class="InductiveConstructor"
+      >&#9856;</a
+      ><a name="633"
+      > </a
+      ><a name="634" href="Explore.Dice.html#622" class="Bound Operator"
+      >&#8729;</a
+      ><a name="635"
+      > </a
+      ><a name="636" class="Symbol"
+      >(</a
+      ><a name="637" href="Explore.Dice.html#626" class="Bound"
+      >f</a
+      ><a name="638"
+      > </a
+      ><a name="639" href="Explore.Dice.html#387" class="InductiveConstructor"
+      >&#9857;</a
+      ><a name="640"
+      > </a
+      ><a name="641" href="Explore.Dice.html#622" class="Bound Operator"
+      >&#8729;</a
+      ><a name="642"
+      > </a
+      ><a name="643" class="Symbol"
+      >(</a
+      ><a name="644" href="Explore.Dice.html#626" class="Bound"
+      >f</a
+      ><a name="645"
+      > </a
+      ><a name="646" href="Explore.Dice.html#389" class="InductiveConstructor"
+      >&#9858;</a
+      ><a name="647"
+      > </a
+      ><a name="648" href="Explore.Dice.html#622" class="Bound Operator"
+      >&#8729;</a
+      ><a name="649"
+      > </a
+      ><a name="650" class="Symbol"
+      >(</a
+      ><a name="651" href="Explore.Dice.html#626" class="Bound"
+      >f</a
+      ><a name="652"
+      > </a
+      ><a name="653" href="Explore.Dice.html#391" class="InductiveConstructor"
+      >&#9859;</a
+      ><a name="654"
+      > </a
+      ><a name="655" href="Explore.Dice.html#622" class="Bound Operator"
+      >&#8729;</a
+      ><a name="656"
+      > </a
+      ><a name="657" class="Symbol"
+      >(</a
+      ><a name="658" href="Explore.Dice.html#626" class="Bound"
+      >f</a
+      ><a name="659"
+      > </a
+      ><a name="660" href="Explore.Dice.html#393" class="InductiveConstructor"
+      >&#9860;</a
+      ><a name="661"
+      > </a
+      ><a name="662" href="Explore.Dice.html#622" class="Bound Operator"
+      >&#8729;</a
+      ><a name="663"
+      > </a
+      ><a name="664" href="Explore.Dice.html#626" class="Bound"
+      >f</a
+      ><a name="665"
+      > </a
+      ><a name="666" href="Explore.Dice.html#395" class="InductiveConstructor"
+      >&#9861;</a
+      ><a name="667" class="Symbol"
+      >))))</a
+      ><a name="671"
+      >
+
+    </a
+      ><a name="677" class="Keyword"
+      >open</a
+      ><a name="681"
+      > </a
+      ><a name="682" href="Explore.Explorable.html#8850" class="Module"
+      >Explorable&#8320;</a
+      ><a name="693"
+      >  </a
+      ><a name="695" href="Explore.Dice.html#539" class="Function"
+      >exploreDice-ind</a
+      ><a name="710"
+      > </a
+      ><a name="711" class="Keyword"
+      >public</a
+      ><a name="717"
+      > </a
+      ><a name="718" class="Keyword"
+      >using</a
+      ><a name="723"
+      > </a
+      ><a name="724" class="Symbol"
+      >()</a
+      ><a name="726"
+      > </a
+      ><a name="727" class="Keyword"
+      >renaming</a
+      ><a name="735"
+      > </a
+      ><a name="736" class="Symbol"
+      >(</a
+      ><a name="737"
+      >sum     </a
+      ><a name="745" class="Symbol"
+      >to</a
+      ><a name="747"
+      > sumDice</a
+      ><a name="755" class="Symbol"
+      >;</a
+      ><a name="756"
+      > product </a
+      ><a name="765" class="Symbol"
+      >to</a
+      ><a name="767"
+      > productDice</a
+      ><a name="779" class="Symbol"
+      >)</a
+      ><a name="780"
+      >
+    </a
+      ><a name="785" class="Keyword"
+      >open</a
+      ><a name="789"
+      > </a
+      ><a name="790" href="Explore.Explorable.html#14147" class="Module"
+      >Explorable&#8321;&#8320;</a
+      ><a name="802"
+      > </a
+      ><a name="803" href="Explore.Dice.html#539" class="Function"
+      >exploreDice-ind</a
+      ><a name="818"
+      > </a
+      ><a name="819" class="Keyword"
+      >public</a
+      ><a name="825"
+      > </a
+      ><a name="826" class="Keyword"
+      >using</a
+      ><a name="831"
+      > </a
+      ><a name="832" class="Symbol"
+      >()</a
+      ><a name="834"
+      > </a
+      ><a name="835" class="Keyword"
+      >renaming</a
+      ><a name="843"
+      > </a
+      ><a name="844" class="Symbol"
+      >(</a
+      ><a name="845"
+      >reify   </a
+      ><a name="853" class="Symbol"
+      >to</a
+      ><a name="855"
+      > reifyDice</a
+      ><a name="865" class="Symbol"
+      >)</a
+      ><a name="866"
+      >
+    </a
+      ><a name="871" class="Keyword"
+      >open</a
+      ><a name="875"
+      > </a
+      ><a name="876" href="Explore.Explorable.html#14334" class="Module"
+      >Explorable&#8321;&#8321;</a
+      ><a name="888"
+      > </a
+      ><a name="889" href="Explore.Dice.html#539" class="Function"
+      >exploreDice-ind</a
+      ><a name="904"
+      > </a
+      ><a name="905" class="Keyword"
+      >public</a
+      ><a name="911"
+      > </a
+      ><a name="912" class="Keyword"
+      >using</a
+      ><a name="917"
+      > </a
+      ><a name="918" class="Symbol"
+      >()</a
+      ><a name="920"
+      > </a
+      ><a name="921" class="Keyword"
+      >renaming</a
+      ><a name="929"
+      > </a
+      ><a name="930" class="Symbol"
+      >(</a
+      ><a name="931"
+      >unfocus </a
+      ><a name="939" class="Symbol"
+      >to</a
+      ><a name="941"
+      > unfocusDice</a
+      ><a name="953" class="Symbol"
+      >)</a
+      ><a name="954"
+      >
+
+</a
+      ><a name="956" href="Explore.Dice.html#956" class="Function"
+      >Dice&#8596;Fin6</a
+      ><a name="965"
+      > </a
+      ><a name="966" class="Symbol"
+      >:</a
+      ><a name="967"
+      > </a
+      ><a name="968" href="Explore.Dice.html#367" class="Datatype"
+      >Dice</a
+      ><a name="972"
+      > </a
+      ><a name="973" href="Function.Inverse.html#1852" class="Function Operator"
+      >&#8596;</a
+      ><a name="974"
+      > </a
+      ><a name="975" href="Data.Fin.html#775" class="Datatype"
+      >Fin</a
+      ><a name="978"
+      > </a
+      ><a name="979" class="Number"
+      >6</a
+      ><a name="980"
+      >
+</a
+      ><a name="981" href="Explore.Dice.html#956" class="Function"
+      >Dice&#8596;Fin6</a
+      ><a name="990"
+      > </a
+      ><a name="991" class="Symbol"
+      >=</a
+      ><a name="992"
+      > </a
+      ><a name="993" href="Function.Inverse.NP.html#712" class="Function"
+      >Inv.inverses</a
+      ><a name="1005"
+      > </a
+      ><a name="1006" class="Symbol"
+      >(</a
+      ><a name="1007" href="Explore.Dice.html#1076" class="Function"
+      >&#8658;</a
+      ><a name="1008" class="Symbol"
+      >)</a
+      ><a name="1009"
+      > </a
+      ><a name="1010" class="Symbol"
+      >(</a
+      ><a name="1011" href="Explore.Dice.html#1174" class="Function"
+      >&#8656;</a
+      ><a name="1012" class="Symbol"
+      >)</a
+      ><a name="1013"
+      > </a
+      ><a name="1014" href="Explore.Dice.html#1413" class="Function"
+      >&#8656;&#8658;</a
+      ><a name="1016"
+      > </a
+      ><a name="1017" href="Explore.Dice.html#1536" class="Function"
+      >&#8658;&#8656;</a
+      ><a name="1019"
+      >
+  </a
+      ><a name="1022" class="Keyword"
+      >module</a
+      ><a name="1028"
+      > </a
+      ><a name="1029" href="Explore.Dice.html#1029" class="Module"
+      >Dice&#8596;Fin6</a
+      ><a name="1038"
+      > </a
+      ><a name="1039" class="Keyword"
+      >where</a
+      ><a name="1044"
+      >
+    </a
+      ><a name="1049" href="Explore.Dice.html#1049" class="Function"
+      >S</a
+      ><a name="1050"
+      > </a
+      ><a name="1051" class="Symbol"
+      >=</a
+      ><a name="1052"
+      > </a
+      ><a name="1053" href="Explore.Dice.html#367" class="Datatype"
+      >Dice</a
+      ><a name="1057"
+      >
+    </a
+      ><a name="1062" href="Explore.Dice.html#1062" class="Function"
+      >T</a
+      ><a name="1063"
+      > </a
+      ><a name="1064" class="Symbol"
+      >=</a
+      ><a name="1065"
+      > </a
+      ><a name="1066" href="Data.Fin.html#775" class="Datatype"
+      >Fin</a
+      ><a name="1069"
+      > </a
+      ><a name="1070" class="Number"
+      >6</a
+      ><a name="1071"
+      >
+    </a
+      ><a name="1076" href="Explore.Dice.html#1076" class="Function"
+      >&#8658;</a
+      ><a name="1077"
+      > </a
+      ><a name="1078" class="Symbol"
+      >:</a
+      ><a name="1079"
+      > </a
+      ><a name="1080" href="Explore.Dice.html#1049" class="Function"
+      >S</a
+      ><a name="1081"
+      > </a
+      ><a name="1082" class="Symbol"
+      >&#8594;</a
+      ><a name="1083"
+      > </a
+      ><a name="1084" href="Explore.Dice.html#1062" class="Function"
+      >T</a
+      ><a name="1085"
+      >
+    </a
+      ><a name="1090" href="Explore.Dice.html#1076" class="Function"
+      >&#8658;</a
+      ><a name="1091"
+      > </a
+      ><a name="1092" href="Explore.Dice.html#385" class="InductiveConstructor"
+      >&#9856;</a
+      ><a name="1093"
+      > </a
+      ><a name="1094" class="Symbol"
+      >=</a
+      ><a name="1095"
+      > </a
+      ><a name="1096" href="Data.Fin.html#1439" class="Function Operator"
+      >#</a
+      ><a name="1097"
+      > </a
+      ><a name="1098" class="Number"
+      >0</a
+      ><a name="1099"
+      >
+    </a
+      ><a name="1104" href="Explore.Dice.html#1076" class="Function"
+      >&#8658;</a
+      ><a name="1105"
+      > </a
+      ><a name="1106" href="Explore.Dice.html#387" class="InductiveConstructor"
+      >&#9857;</a
+      ><a name="1107"
+      > </a
+      ><a name="1108" class="Symbol"
+      >=</a
+      ><a name="1109"
+      > </a
+      ><a name="1110" href="Data.Fin.html#1439" class="Function Operator"
+      >#</a
+      ><a name="1111"
+      > </a
+      ><a name="1112" class="Number"
+      >1</a
+      ><a name="1113"
+      >
+    </a
+      ><a name="1118" href="Explore.Dice.html#1076" class="Function"
+      >&#8658;</a
+      ><a name="1119"
+      > </a
+      ><a name="1120" href="Explore.Dice.html#389" class="InductiveConstructor"
+      >&#9858;</a
+      ><a name="1121"
+      > </a
+      ><a name="1122" class="Symbol"
+      >=</a
+      ><a name="1123"
+      > </a
+      ><a name="1124" href="Data.Fin.html#1439" class="Function Operator"
+      >#</a
+      ><a name="1125"
+      > </a
+      ><a name="1126" class="Number"
+      >2</a
+      ><a name="1127"
+      >
+    </a
+      ><a name="1132" href="Explore.Dice.html#1076" class="Function"
+      >&#8658;</a
+      ><a name="1133"
+      > </a
+      ><a name="1134" href="Explore.Dice.html#391" class="InductiveConstructor"
+      >&#9859;</a
+      ><a name="1135"
+      > </a
+      ><a name="1136" class="Symbol"
+      >=</a
+      ><a name="1137"
+      > </a
+      ><a name="1138" href="Data.Fin.html#1439" class="Function Operator"
+      >#</a
+      ><a name="1139"
+      > </a
+      ><a name="1140" class="Number"
+      >3</a
+      ><a name="1141"
+      >
+    </a
+      ><a name="1146" href="Explore.Dice.html#1076" class="Function"
+      >&#8658;</a
+      ><a name="1147"
+      > </a
+      ><a name="1148" href="Explore.Dice.html#393" class="InductiveConstructor"
+      >&#9860;</a
+      ><a name="1149"
+      > </a
+      ><a name="1150" class="Symbol"
+      >=</a
+      ><a name="1151"
+      > </a
+      ><a name="1152" href="Data.Fin.html#1439" class="Function Operator"
+      >#</a
+      ><a name="1153"
+      > </a
+      ><a name="1154" class="Number"
+      >4</a
+      ><a name="1155"
+      >
+    </a
+      ><a name="1160" href="Explore.Dice.html#1076" class="Function"
+      >&#8658;</a
+      ><a name="1161"
+      > </a
+      ><a name="1162" href="Explore.Dice.html#395" class="InductiveConstructor"
+      >&#9861;</a
+      ><a name="1163"
+      > </a
+      ><a name="1164" class="Symbol"
+      >=</a
+      ><a name="1165"
+      > </a
+      ><a name="1166" href="Data.Fin.html#1439" class="Function Operator"
+      >#</a
+      ><a name="1167"
+      > </a
+      ><a name="1168" class="Number"
+      >5</a
+      ><a name="1169"
+      >
+    </a
+      ><a name="1174" href="Explore.Dice.html#1174" class="Function"
+      >&#8656;</a
+      ><a name="1175"
+      > </a
+      ><a name="1176" class="Symbol"
+      >:</a
+      ><a name="1177"
+      > </a
+      ><a name="1178" href="Explore.Dice.html#1062" class="Function"
+      >T</a
+      ><a name="1179"
+      > </a
+      ><a name="1180" class="Symbol"
+      >&#8594;</a
+      ><a name="1181"
+      > </a
+      ><a name="1182" href="Explore.Dice.html#1049" class="Function"
+      >S</a
+      ><a name="1183"
+      >
+    </a
+      ><a name="1188" href="Explore.Dice.html#1174" class="Function"
+      >&#8656;</a
+      ><a name="1189"
+      > </a
+      ><a name="1190" href="Data.Fin.html#797" class="InductiveConstructor"
+      >zero</a
+      ><a name="1194"
+      > </a
+      ><a name="1195" class="Symbol"
+      >=</a
+      ><a name="1196"
+      > </a
+      ><a name="1197" href="Explore.Dice.html#385" class="InductiveConstructor"
+      >&#9856;</a
+      ><a name="1198"
+      >
+    </a
+      ><a name="1203" href="Explore.Dice.html#1174" class="Function"
+      >&#8656;</a
+      ><a name="1204"
+      > </a
+      ><a name="1205" class="Symbol"
+      >(</a
+      ><a name="1206" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1209"
+      > </a
+      ><a name="1210" href="Data.Fin.html#797" class="InductiveConstructor"
+      >zero</a
+      ><a name="1214" class="Symbol"
+      >)</a
+      ><a name="1215"
+      > </a
+      ><a name="1216" class="Symbol"
+      >=</a
+      ><a name="1217"
+      > </a
+      ><a name="1218" href="Explore.Dice.html#387" class="InductiveConstructor"
+      >&#9857;</a
+      ><a name="1219"
+      >
+    </a
+      ><a name="1224" href="Explore.Dice.html#1174" class="Function"
+      >&#8656;</a
+      ><a name="1225"
+      > </a
+      ><a name="1226" class="Symbol"
+      >(</a
+      ><a name="1227" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1230"
+      > </a
+      ><a name="1231" class="Symbol"
+      >(</a
+      ><a name="1232" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1235"
+      > </a
+      ><a name="1236" href="Data.Fin.html#797" class="InductiveConstructor"
+      >zero</a
+      ><a name="1240" class="Symbol"
+      >))</a
+      ><a name="1242"
+      > </a
+      ><a name="1243" class="Symbol"
+      >=</a
+      ><a name="1244"
+      > </a
+      ><a name="1245" href="Explore.Dice.html#389" class="InductiveConstructor"
+      >&#9858;</a
+      ><a name="1246"
+      >
+    </a
+      ><a name="1251" href="Explore.Dice.html#1174" class="Function"
+      >&#8656;</a
+      ><a name="1252"
+      > </a
+      ><a name="1253" class="Symbol"
+      >(</a
+      ><a name="1254" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1257"
+      > </a
+      ><a name="1258" class="Symbol"
+      >(</a
+      ><a name="1259" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1262"
+      > </a
+      ><a name="1263" class="Symbol"
+      >(</a
+      ><a name="1264" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1267"
+      > </a
+      ><a name="1268" href="Data.Fin.html#797" class="InductiveConstructor"
+      >zero</a
+      ><a name="1272" class="Symbol"
+      >)))</a
+      ><a name="1275"
+      > </a
+      ><a name="1276" class="Symbol"
+      >=</a
+      ><a name="1277"
+      > </a
+      ><a name="1278" href="Explore.Dice.html#391" class="InductiveConstructor"
+      >&#9859;</a
+      ><a name="1279"
+      >
+    </a
+      ><a name="1284" href="Explore.Dice.html#1174" class="Function"
+      >&#8656;</a
+      ><a name="1285"
+      > </a
+      ><a name="1286" class="Symbol"
+      >(</a
+      ><a name="1287" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1290"
+      > </a
+      ><a name="1291" class="Symbol"
+      >(</a
+      ><a name="1292" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1295"
+      > </a
+      ><a name="1296" class="Symbol"
+      >(</a
+      ><a name="1297" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1300"
+      > </a
+      ><a name="1301" class="Symbol"
+      >(</a
+      ><a name="1302" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1305"
+      > </a
+      ><a name="1306" href="Data.Fin.html#797" class="InductiveConstructor"
+      >zero</a
+      ><a name="1310" class="Symbol"
+      >))))</a
+      ><a name="1314"
+      > </a
+      ><a name="1315" class="Symbol"
+      >=</a
+      ><a name="1316"
+      > </a
+      ><a name="1317" href="Explore.Dice.html#393" class="InductiveConstructor"
+      >&#9860;</a
+      ><a name="1318"
+      >
+    </a
+      ><a name="1323" href="Explore.Dice.html#1174" class="Function"
+      >&#8656;</a
+      ><a name="1324"
+      > </a
+      ><a name="1325" class="Symbol"
+      >(</a
+      ><a name="1326" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1329"
+      > </a
+      ><a name="1330" class="Symbol"
+      >(</a
+      ><a name="1331" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1334"
+      > </a
+      ><a name="1335" class="Symbol"
+      >(</a
+      ><a name="1336" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1339"
+      > </a
+      ><a name="1340" class="Symbol"
+      >(</a
+      ><a name="1341" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1344"
+      > </a
+      ><a name="1345" class="Symbol"
+      >(</a
+      ><a name="1346" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1349"
+      > </a
+      ><a name="1350" href="Data.Fin.html#797" class="InductiveConstructor"
+      >zero</a
+      ><a name="1354" class="Symbol"
+      >)))))</a
+      ><a name="1359"
+      > </a
+      ><a name="1360" class="Symbol"
+      >=</a
+      ><a name="1361"
+      > </a
+      ><a name="1362" href="Explore.Dice.html#395" class="InductiveConstructor"
+      >&#9861;</a
+      ><a name="1363"
+      >
+    </a
+      ><a name="1368" href="Explore.Dice.html#1174" class="Function"
+      >&#8656;</a
+      ><a name="1369"
+      > </a
+      ><a name="1370" class="Symbol"
+      >(</a
+      ><a name="1371" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1374"
+      > </a
+      ><a name="1375" class="Symbol"
+      >(</a
+      ><a name="1376" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1379"
+      > </a
+      ><a name="1380" class="Symbol"
+      >(</a
+      ><a name="1381" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1384"
+      > </a
+      ><a name="1385" class="Symbol"
+      >(</a
+      ><a name="1386" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1389"
+      > </a
+      ><a name="1390" class="Symbol"
+      >(</a
+      ><a name="1391" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1394"
+      > </a
+      ><a name="1395" class="Symbol"
+      >(</a
+      ><a name="1396" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1399"
+      > </a
+      ><a name="1400" class="Symbol"
+      >()))))))</a
+      ><a name="1408"
+      >
+    </a
+      ><a name="1413" href="Explore.Dice.html#1413" class="Function"
+      >&#8656;&#8658;</a
+      ><a name="1415"
+      > </a
+      ><a name="1416" class="Symbol"
+      >:</a
+      ><a name="1417"
+      > </a
+      ><a name="1418" class="Symbol"
+      >&#8704;</a
+      ><a name="1419"
+      > </a
+      ><a name="1420" href="Explore.Dice.html#1420" class="Bound"
+      >x</a
+      ><a name="1421"
+      > </a
+      ><a name="1422" class="Symbol"
+      >&#8594;</a
+      ><a name="1423"
+      > </a
+      ><a name="1424" href="Explore.Dice.html#1174" class="Function"
+      >&#8656;</a
+      ><a name="1425"
+      > </a
+      ><a name="1426" class="Symbol"
+      >(</a
+      ><a name="1427" href="Explore.Dice.html#1076" class="Function"
+      >&#8658;</a
+      ><a name="1428"
+      > </a
+      ><a name="1429" href="Explore.Dice.html#1420" class="Bound"
+      >x</a
+      ><a name="1430" class="Symbol"
+      >)</a
+      ><a name="1431"
+      > </a
+      ><a name="1432" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="1433"
+      > </a
+      ><a name="1434" href="Explore.Dice.html#1420" class="Bound"
+      >x</a
+      ><a name="1435"
+      >
+    </a
+      ><a name="1440" href="Explore.Dice.html#1413" class="Function"
+      >&#8656;&#8658;</a
+      ><a name="1442"
+      > </a
+      ><a name="1443" href="Explore.Dice.html#385" class="InductiveConstructor"
+      >&#9856;</a
+      ><a name="1444"
+      > </a
+      ><a name="1445" class="Symbol"
+      >=</a
+      ><a name="1446"
+      > </a
+      ><a name="1447" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="1451"
+      >
+    </a
+      ><a name="1456" href="Explore.Dice.html#1413" class="Function"
+      >&#8656;&#8658;</a
+      ><a name="1458"
+      > </a
+      ><a name="1459" href="Explore.Dice.html#387" class="InductiveConstructor"
+      >&#9857;</a
+      ><a name="1460"
+      > </a
+      ><a name="1461" class="Symbol"
+      >=</a
+      ><a name="1462"
+      > </a
+      ><a name="1463" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="1467"
+      >
+    </a
+      ><a name="1472" href="Explore.Dice.html#1413" class="Function"
+      >&#8656;&#8658;</a
+      ><a name="1474"
+      > </a
+      ><a name="1475" href="Explore.Dice.html#389" class="InductiveConstructor"
+      >&#9858;</a
+      ><a name="1476"
+      > </a
+      ><a name="1477" class="Symbol"
+      >=</a
+      ><a name="1478"
+      > </a
+      ><a name="1479" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="1483"
+      >
+    </a
+      ><a name="1488" href="Explore.Dice.html#1413" class="Function"
+      >&#8656;&#8658;</a
+      ><a name="1490"
+      > </a
+      ><a name="1491" href="Explore.Dice.html#391" class="InductiveConstructor"
+      >&#9859;</a
+      ><a name="1492"
+      > </a
+      ><a name="1493" class="Symbol"
+      >=</a
+      ><a name="1494"
+      > </a
+      ><a name="1495" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="1499"
+      >
+    </a
+      ><a name="1504" href="Explore.Dice.html#1413" class="Function"
+      >&#8656;&#8658;</a
+      ><a name="1506"
+      > </a
+      ><a name="1507" href="Explore.Dice.html#393" class="InductiveConstructor"
+      >&#9860;</a
+      ><a name="1508"
+      > </a
+      ><a name="1509" class="Symbol"
+      >=</a
+      ><a name="1510"
+      > </a
+      ><a name="1511" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="1515"
+      >
+    </a
+      ><a name="1520" href="Explore.Dice.html#1413" class="Function"
+      >&#8656;&#8658;</a
+      ><a name="1522"
+      > </a
+      ><a name="1523" href="Explore.Dice.html#395" class="InductiveConstructor"
+      >&#9861;</a
+      ><a name="1524"
+      > </a
+      ><a name="1525" class="Symbol"
+      >=</a
+      ><a name="1526"
+      > </a
+      ><a name="1527" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="1531"
+      >
+    </a
+      ><a name="1536" href="Explore.Dice.html#1536" class="Function"
+      >&#8658;&#8656;</a
+      ><a name="1538"
+      > </a
+      ><a name="1539" class="Symbol"
+      >:</a
+      ><a name="1540"
+      > </a
+      ><a name="1541" class="Symbol"
+      >&#8704;</a
+      ><a name="1542"
+      > </a
+      ><a name="1543" href="Explore.Dice.html#1543" class="Bound"
+      >x</a
+      ><a name="1544"
+      > </a
+      ><a name="1545" class="Symbol"
+      >&#8594;</a
+      ><a name="1546"
+      > </a
+      ><a name="1547" href="Explore.Dice.html#1076" class="Function"
+      >&#8658;</a
+      ><a name="1548"
+      > </a
+      ><a name="1549" class="Symbol"
+      >(</a
+      ><a name="1550" href="Explore.Dice.html#1174" class="Function"
+      >&#8656;</a
+      ><a name="1551"
+      > </a
+      ><a name="1552" href="Explore.Dice.html#1543" class="Bound"
+      >x</a
+      ><a name="1553" class="Symbol"
+      >)</a
+      ><a name="1554"
+      > </a
+      ><a name="1555" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="1556"
+      > </a
+      ><a name="1557" href="Explore.Dice.html#1543" class="Bound"
+      >x</a
+      ><a name="1558"
+      >
+    </a
+      ><a name="1563" href="Explore.Dice.html#1536" class="Function"
+      >&#8658;&#8656;</a
+      ><a name="1565"
+      > </a
+      ><a name="1566" href="Data.Fin.html#797" class="InductiveConstructor"
+      >zero</a
+      ><a name="1570"
+      > </a
+      ><a name="1571" class="Symbol"
+      >=</a
+      ><a name="1572"
+      > </a
+      ><a name="1573" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="1577"
+      >
+    </a
+      ><a name="1582" href="Explore.Dice.html#1536" class="Function"
+      >&#8658;&#8656;</a
+      ><a name="1584"
+      > </a
+      ><a name="1585" class="Symbol"
+      >(</a
+      ><a name="1586" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1589"
+      > </a
+      ><a name="1590" href="Data.Fin.html#797" class="InductiveConstructor"
+      >zero</a
+      ><a name="1594" class="Symbol"
+      >)</a
+      ><a name="1595"
+      > </a
+      ><a name="1596" class="Symbol"
+      >=</a
+      ><a name="1597"
+      > </a
+      ><a name="1598" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="1602"
+      >
+    </a
+      ><a name="1607" href="Explore.Dice.html#1536" class="Function"
+      >&#8658;&#8656;</a
+      ><a name="1609"
+      > </a
+      ><a name="1610" class="Symbol"
+      >(</a
+      ><a name="1611" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1614"
+      > </a
+      ><a name="1615" class="Symbol"
+      >(</a
+      ><a name="1616" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1619"
+      > </a
+      ><a name="1620" href="Data.Fin.html#797" class="InductiveConstructor"
+      >zero</a
+      ><a name="1624" class="Symbol"
+      >))</a
+      ><a name="1626"
+      > </a
+      ><a name="1627" class="Symbol"
+      >=</a
+      ><a name="1628"
+      > </a
+      ><a name="1629" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="1633"
+      >
+    </a
+      ><a name="1638" href="Explore.Dice.html#1536" class="Function"
+      >&#8658;&#8656;</a
+      ><a name="1640"
+      > </a
+      ><a name="1641" class="Symbol"
+      >(</a
+      ><a name="1642" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1645"
+      > </a
+      ><a name="1646" class="Symbol"
+      >(</a
+      ><a name="1647" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1650"
+      > </a
+      ><a name="1651" class="Symbol"
+      >(</a
+      ><a name="1652" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1655"
+      > </a
+      ><a name="1656" href="Data.Fin.html#797" class="InductiveConstructor"
+      >zero</a
+      ><a name="1660" class="Symbol"
+      >)))</a
+      ><a name="1663"
+      > </a
+      ><a name="1664" class="Symbol"
+      >=</a
+      ><a name="1665"
+      > </a
+      ><a name="1666" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="1670"
+      >
+    </a
+      ><a name="1675" href="Explore.Dice.html#1536" class="Function"
+      >&#8658;&#8656;</a
+      ><a name="1677"
+      > </a
+      ><a name="1678" class="Symbol"
+      >(</a
+      ><a name="1679" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1682"
+      > </a
+      ><a name="1683" class="Symbol"
+      >(</a
+      ><a name="1684" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1687"
+      > </a
+      ><a name="1688" class="Symbol"
+      >(</a
+      ><a name="1689" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1692"
+      > </a
+      ><a name="1693" class="Symbol"
+      >(</a
+      ><a name="1694" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1697"
+      > </a
+      ><a name="1698" href="Data.Fin.html#797" class="InductiveConstructor"
+      >zero</a
+      ><a name="1702" class="Symbol"
+      >))))</a
+      ><a name="1706"
+      > </a
+      ><a name="1707" class="Symbol"
+      >=</a
+      ><a name="1708"
+      > </a
+      ><a name="1709" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="1713"
+      >
+    </a
+      ><a name="1718" href="Explore.Dice.html#1536" class="Function"
+      >&#8658;&#8656;</a
+      ><a name="1720"
+      > </a
+      ><a name="1721" class="Symbol"
+      >(</a
+      ><a name="1722" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1725"
+      > </a
+      ><a name="1726" class="Symbol"
+      >(</a
+      ><a name="1727" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1730"
+      > </a
+      ><a name="1731" class="Symbol"
+      >(</a
+      ><a name="1732" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1735"
+      > </a
+      ><a name="1736" class="Symbol"
+      >(</a
+      ><a name="1737" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1740"
+      > </a
+      ><a name="1741" class="Symbol"
+      >(</a
+      ><a name="1742" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1745"
+      > </a
+      ><a name="1746" href="Data.Fin.html#797" class="InductiveConstructor"
+      >zero</a
+      ><a name="1750" class="Symbol"
+      >)))))</a
+      ><a name="1755"
+      > </a
+      ><a name="1756" class="Symbol"
+      >=</a
+      ><a name="1757"
+      > </a
+      ><a name="1758" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="1762"
+      >
+    </a
+      ><a name="1767" href="Explore.Dice.html#1536" class="Function"
+      >&#8658;&#8656;</a
+      ><a name="1769"
+      > </a
+      ><a name="1770" class="Symbol"
+      >(</a
+      ><a name="1771" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1774"
+      > </a
+      ><a name="1775" class="Symbol"
+      >(</a
+      ><a name="1776" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1779"
+      > </a
+      ><a name="1780" class="Symbol"
+      >(</a
+      ><a name="1781" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1784"
+      > </a
+      ><a name="1785" class="Symbol"
+      >(</a
+      ><a name="1786" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1789"
+      > </a
+      ><a name="1790" class="Symbol"
+      >(</a
+      ><a name="1791" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1794"
+      > </a
+      ><a name="1795" class="Symbol"
+      >(</a
+      ><a name="1796" href="Data.Fin.html#828" class="InductiveConstructor"
+      >suc</a
+      ><a name="1799"
+      > </a
+      ><a name="1800" class="Symbol"
+      >()))))))</a
+      ><a name="1808"
+      >
+
+</a
+      ><a name="1810" class="Comment"
+      >-- By using FinU' instead of FinU one get a special case for Fin 1 thus avoiding</a
+      ><a name="1890"
+      >
+</a
+      ><a name="1891" class="Comment"
+      >-- a final &#949; in the exploration function.</a
+      ><a name="1932"
+      >
+</a
+      ><a name="1933" class="Keyword"
+      >open</a
+      ><a name="1937"
+      > </a
+      ><a name="1938" href="Explore.Universe.html#587" class="Module"
+      >Explore.</a
+      ><a name="1946" href="Explore.Universe.html#595" class="Module"
+      >Universe.</a
+      ><a name="1955" href="Explore.Universe.html#3205" class="Module"
+      >Isomorphism</a
+      ><a name="1966"
+      > </a
+      ><a name="1967" class="Symbol"
+      >(</a
+      ><a name="1968" href="Explore.Universe.html#4275" class="Function"
+      >FinU'</a
+      ><a name="1973"
+      > </a
+      ><a name="1974" class="Number"
+      >6</a
+      ><a name="1975" class="Symbol"
+      >)</a
+      ><a name="1976"
+      > </a
+      ><a name="1977" class="Symbol"
+      >(</a
+      ><a name="1978" href="Function.Inverse.html#4672" class="Function"
+      >Inv.sym</a
+      ><a name="1985"
+      > </a
+      ><a name="1986" href="Explore.Dice.html#956" class="Function"
+      >Dice&#8596;Fin6</a
+      ><a name="1995"
+      > </a
+      ><a name="1996" href="Function.Inverse.html#4151" class="Function Operator"
+      >Inv.&#8728;</a
+      ><a name="2001"
+      > </a
+      ><a name="2002" href="Explore.Universe.html#4382" class="Function"
+      >FinU'&#8596;Fin</a
+      ><a name="2011"
+      > </a
+      ><a name="2012" class="Number"
+      >6</a
+      ><a name="2013" class="Symbol"
+      >)</a
+      ><a name="2014"
+      >
+  </a
+      ><a name="2017" class="Keyword"
+      >public</a
+      ><a name="2023"
+      >
+  </a
+      ><a name="2026" class="Keyword"
+      >renaming</a
+      ><a name="2034"
+      > </a
+      ><a name="2035" class="Symbol"
+      >(</a
+      ><a name="2036"
+      > iso&#7497; </a
+      ><a name="2042" class="Symbol"
+      >to</a
+      ><a name="2044"
+      > Dice&#7497;
+           </a
+      ><a name="2062" class="Symbol"
+      >;</a
+      ><a name="2063"
+      > iso&#8305; </a
+      ><a name="2069" class="Symbol"
+      >to</a
+      ><a name="2071"
+      > Dice&#8305;
+           </a
+      ><a name="2089" class="Symbol"
+      >;</a
+      ><a name="2090"
+      > iso&#737; </a
+      ><a name="2096" class="Symbol"
+      >to</a
+      ><a name="2098"
+      > Dice&#737;
+           </a
+      ><a name="2116" class="Symbol"
+      >;</a
+      ><a name="2117"
+      > iso&#7584; </a
+      ><a name="2123" class="Symbol"
+      >to</a
+      ><a name="2125"
+      > Dice&#7584;
+           </a
+      ><a name="2143" class="Symbol"
+      >;</a
+      ><a name="2144"
+      > iso&#738; </a
+      ><a name="2150" class="Symbol"
+      >to</a
+      ><a name="2152"
+      > Dice&#738;
+           </a
+      ><a name="2170" class="Symbol"
+      >;</a
+      ><a name="2171"
+      > iso&#7510; </a
+      ><a name="2177" class="Symbol"
+      >to</a
+      ><a name="2179"
+      > Dice&#7510;
+           </a
+      ><a name="2197" class="Symbol"
+      >;</a
+      ><a name="2198"
+      > iso&#691; </a
+      ><a name="2204" class="Symbol"
+      >to</a
+      ><a name="2206"
+      > Dice&#691;
+           </a
+      ><a name="2224" class="Symbol"
+      >;</a
+      ><a name="2225"
+      > iso&#7512; </a
+      ><a name="2231" class="Symbol"
+      >to</a
+      ><a name="2233"
+      > Dice&#7512;
+           </a
+      ><a name="2251" class="Symbol"
+      >;</a
+      ><a name="2252"
+      > iso&#738;-ok </a
+      ><a name="2261" class="Symbol"
+      >to</a
+      ><a name="2263"
+      > Dice&#738;-ok
+           </a
+      ><a name="2284" class="Symbol"
+      >;</a
+      ><a name="2285"
+      > iso&#738;-stableUnder </a
+      ><a name="2303" class="Symbol"
+      >to</a
+      ><a name="2305"
+      > Dice&#738;-stableUnder
+           </a
+      ><a name="2335" class="Symbol"
+      >;</a
+      ><a name="2336"
+      > &#956;iso </a
+      ><a name="2342" class="Symbol"
+      >to</a
+      ><a name="2344"
+      > &#956;Dice
+           </a
+      ><a name="2362" class="Symbol"
+      >)</a
+      ><a name="2363"
+      >
+
+</a
+      ><a name="2365" class="Keyword"
+      >module</a
+      ><a name="2371"
+      > </a
+      ><a name="2372" href="Explore.Dice.html#2372" class="Module"
+      >_</a
+      ><a name="2373"
+      > </a
+      ><a name="2374" class="Symbol"
+      >{</a
+      ><a name="2375" href="Explore.Dice.html#2375" class="Bound"
+      >m</a
+      ><a name="2376" class="Symbol"
+      >}</a
+      ><a name="2377"
+      > </a
+      ><a name="2378" class="Keyword"
+      >where</a
+      ><a name="2383"
+      >
+  </a
+      ><a name="2386" class="Keyword"
+      >open</a
+      ><a name="2390"
+      > </a
+      ><a name="2391" href="Explore.Dice.html#412" class="Module"
+      >ByHand</a
+      ><a name="2397"
+      >
+  </a
+      ><a name="2400" href="Explore.Dice.html#2400" class="Function Operator"
+      >_&#8801;&#7497;_</a
+      ><a name="2404"
+      > </a
+      ><a name="2405" class="Symbol"
+      >:</a
+      ><a name="2406"
+      > </a
+      ><a name="2407" class="Symbol"
+      >(</a
+      ><a name="2408" href="Explore.Dice.html#2408" class="Bound"
+      >e&#8320;</a
+      ><a name="2410"
+      > </a
+      ><a name="2411" href="Explore.Dice.html#2411" class="Bound"
+      >e&#8321;</a
+      ><a name="2413"
+      > </a
+      ><a name="2414" class="Symbol"
+      >:</a
+      ><a name="2415"
+      > </a
+      ><a name="2416" href="Explore.Core.html#447" class="Function"
+      >Explore</a
+      ><a name="2423"
+      > </a
+      ><a name="2424" href="Explore.Dice.html#2375" class="Bound"
+      >m</a
+      ><a name="2425"
+      > </a
+      ><a name="2426" href="Explore.Dice.html#367" class="Datatype"
+      >Dice</a
+      ><a name="2430" class="Symbol"
+      >)</a
+      ><a name="2431"
+      > </a
+      ><a name="2432" class="Symbol"
+      >&#8594;</a
+      ><a name="2433"
+      > </a
+      ><a name="2434" href="Type.html#140" class="Function Operator"
+      >&#9733;_</a
+      ><a name="2436"
+      > </a
+      ><a name="2437" class="Symbol"
+      >_</a
+      ><a name="2438"
+      >
+  </a
+      ><a name="2441" href="Explore.Dice.html#2400" class="Function Operator"
+      >_&#8801;&#7497;_</a
+      ><a name="2445"
+      > </a
+      ><a name="2446" class="Symbol"
+      >=</a
+      ><a name="2447"
+      > </a
+      ><a name="2448" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >_&#8801;_</a
+      ><a name="2451"
+      >
+
+  </a
+      ><a name="2455" href="Explore.Dice.html#2455" class="Function"
+      >same-as-by-hand</a
+      ><a name="2470"
+      > </a
+      ><a name="2471" class="Symbol"
+      >:</a
+      ><a name="2472"
+      > </a
+      ><a name="2473" href="Explore.Dice.html#429" class="Function"
+      >exploreDice</a
+      ><a name="2484"
+      > </a
+      ><a name="2485" href="Explore.Dice.html#2400" class="Function Operator"
+      >&#8801;&#7497;</a
+      ><a name="2487"
+      > </a
+      ><a name="2488" href="Explore.Universe.html#3308" class="Function"
+      >Dice&#7497;</a
+      ><a name="2493"
+      >
+  </a
+      ><a name="2496" href="Explore.Dice.html#2455" class="Function"
+      >same-as-by-hand</a
+      ><a name="2511"
+      > </a
+      ><a name="2512" class="Symbol"
+      >=</a
+      ><a name="2513"
+      > </a
+      ><a name="2514" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="2518"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

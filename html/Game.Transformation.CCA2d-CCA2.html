@@ -1,0 +1,1352 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Game.Transformation.CCA2d-CCA2</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Symbol"
+      >{-#</a
+      ><a name="4"
+      > </a
+      ><a name="5" class="Keyword"
+      >OPTIONS</a
+      ><a name="12"
+      > --without-K </a
+      ><a name="25" class="Symbol"
+      >#-}</a
+      ><a name="28"
+      >
+
+</a
+      ><a name="30" class="Keyword"
+      >open</a
+      ><a name="34"
+      > </a
+      ><a name="35" class="Keyword"
+      >import</a
+      ><a name="41"
+      > </a
+      ><a name="42" href="Type.html#1" class="Module"
+      >Type</a
+      ><a name="46"
+      >
+</a
+      ><a name="47" class="Keyword"
+      >open</a
+      ><a name="51"
+      > </a
+      ><a name="52" class="Keyword"
+      >import</a
+      ><a name="58"
+      > </a
+      ><a name="59" href="Data.Bit.html#1" class="Module"
+      >Data.Bit</a
+      ><a name="67"
+      >
+</a
+      ><a name="68" class="Keyword"
+      >open</a
+      ><a name="72"
+      > </a
+      ><a name="73" class="Keyword"
+      >import</a
+      ><a name="79"
+      > </a
+      ><a name="80" href="Data.Maybe.html#1" class="Module"
+      >Data.Maybe</a
+      ><a name="90"
+      >
+</a
+      ><a name="91" class="Keyword"
+      >open</a
+      ><a name="95"
+      > </a
+      ><a name="96" class="Keyword"
+      >import</a
+      ><a name="102"
+      > </a
+      ><a name="103" href="Data.Product.html#1" class="Module"
+      >Data.Product</a
+      ><a name="115"
+      >
+</a
+      ><a name="116" class="Keyword"
+      >open</a
+      ><a name="120"
+      > </a
+      ><a name="121" class="Keyword"
+      >import</a
+      ><a name="127"
+      > </a
+      ><a name="128" href="Control.Strategy.html#1" class="Module"
+      >Control.Strategy</a
+      ><a name="144"
+      > </a
+      ><a name="145" class="Keyword"
+      >renaming</a
+      ><a name="153"
+      > </a
+      ><a name="154" class="Symbol"
+      >(</a
+      ><a name="155"
+      >run </a
+      ><a name="159" class="Symbol"
+      >to</a
+      ><a name="161"
+      > runStrategy</a
+      ><a name="173" class="Symbol"
+      >;</a
+      ><a name="174"
+      > map </a
+      ><a name="179" class="Symbol"
+      >to</a
+      ><a name="181"
+      > mapStrategy</a
+      ><a name="193" class="Symbol"
+      >)</a
+      ><a name="194"
+      >
+
+</a
+      ><a name="196" class="Keyword"
+      >open</a
+      ><a name="200"
+      > </a
+      ><a name="201" class="Keyword"
+      >import</a
+      ><a name="207"
+      > </a
+      ><a name="208" href="Function.html#1" class="Module"
+      >Function</a
+      ><a name="216"
+      >
+
+</a
+      ><a name="218" class="Keyword"
+      >open</a
+      ><a name="222"
+      > </a
+      ><a name="223" class="Keyword"
+      >import</a
+      ><a name="229"
+      > </a
+      ><a name="230" href="Relation.Binary.PropositionalEquality.html#1" class="Module"
+      >Relation.Binary.PropositionalEquality</a
+      ><a name="267"
+      >
+
+</a
+      ><a name="269" class="Keyword"
+      >import</a
+      ><a name="275"
+      > </a
+      ><a name="276" href="Game.IND-CPA-utils.html#1" class="Module"
+      >Game.IND-CPA-utils</a
+      ><a name="294"
+      >
+</a
+      ><a name="295" class="Keyword"
+      >import</a
+      ><a name="301"
+      > </a
+      ><a name="302" href="Game.IND-CCA2-dagger.html#1" class="Module"
+      >Game.IND-CCA2-dagger</a
+      ><a name="322"
+      >
+</a
+      ><a name="323" class="Keyword"
+      >import</a
+      ><a name="329"
+      > </a
+      ><a name="330" href="Game.IND-CCA2.html#1" class="Module"
+      >Game.IND-CCA2</a
+      ><a name="343"
+      >
+</a
+      ><a name="344" class="Keyword"
+      >import</a
+      ><a name="350"
+      > </a
+      ><a name="351" href="Game.IND-CCA.html#1" class="Module"
+      >Game.IND-CCA</a
+      ><a name="363"
+      >
+
+</a
+      ><a name="365" class="Keyword"
+      >module</a
+      ><a name="371"
+      > </a
+      ><a name="372" href="Game.Transformation.CCA2d-CCA2.html#1" class="Module"
+      >Game.Transformation.CCA2d-CCA2</a
+      ><a name="402"
+      >
+  </a
+      ><a name="405" class="Symbol"
+      >(</a
+      ><a name="406" href="Game.Transformation.CCA2d-CCA2.html#406" class="Bound"
+      >PubKey</a
+      ><a name="412"
+      >    </a
+      ><a name="416" class="Symbol"
+      >:</a
+      ><a name="417"
+      > </a
+      ><a name="418" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="419" class="Symbol"
+      >)</a
+      ><a name="420"
+      >
+  </a
+      ><a name="423" class="Symbol"
+      >(</a
+      ><a name="424" href="Game.Transformation.CCA2d-CCA2.html#424" class="Bound"
+      >SecKey</a
+      ><a name="430"
+      >    </a
+      ><a name="434" class="Symbol"
+      >:</a
+      ><a name="435"
+      > </a
+      ><a name="436" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="437" class="Symbol"
+      >)</a
+      ><a name="438"
+      >
+  </a
+      ><a name="441" class="Symbol"
+      >(</a
+      ><a name="442" href="Game.Transformation.CCA2d-CCA2.html#442" class="Bound"
+      >Message</a
+      ><a name="449"
+      >   </a
+      ><a name="452" class="Symbol"
+      >:</a
+      ><a name="453"
+      > </a
+      ><a name="454" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="455" class="Symbol"
+      >)</a
+      ><a name="456"
+      >
+  </a
+      ><a name="459" class="Symbol"
+      >(</a
+      ><a name="460" href="Game.Transformation.CCA2d-CCA2.html#460" class="Bound"
+      >CipherText</a
+      ><a name="470"
+      > </a
+      ><a name="471" class="Symbol"
+      >:</a
+      ><a name="472"
+      > </a
+      ><a name="473" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="474" class="Symbol"
+      >)</a
+      ><a name="475"
+      >
+
+  </a
+      ><a name="479" class="Comment"
+      >-- randomness supply for, encryption, key-generation, adversary, adversary state</a
+      ><a name="559"
+      >
+  </a
+      ><a name="562" class="Symbol"
+      >(</a
+      ><a name="563" href="Game.Transformation.CCA2d-CCA2.html#563" class="Bound"
+      >R&#8337;</a
+      ><a name="565"
+      > </a
+      ><a name="566" href="Game.Transformation.CCA2d-CCA2.html#566" class="Bound"
+      >R&#8342;</a
+      ><a name="568"
+      > </a
+      ><a name="569" href="Game.Transformation.CCA2d-CCA2.html#569" class="Bound"
+      >R&#8336;</a
+      ><a name="571"
+      > </a
+      ><a name="572" class="Symbol"
+      >:</a
+      ><a name="573"
+      > </a
+      ><a name="574" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="575" class="Symbol"
+      >)</a
+      ><a name="576"
+      >
+  </a
+      ><a name="579" class="Symbol"
+      >(</a
+      ><a name="580" href="Game.Transformation.CCA2d-CCA2.html#580" class="Bound"
+      >KeyGen</a
+      ><a name="586"
+      > </a
+      ><a name="587" class="Symbol"
+      >:</a
+      ><a name="588"
+      > </a
+      ><a name="589" href="Game.Transformation.CCA2d-CCA2.html#566" class="Bound"
+      >R&#8342;</a
+      ><a name="591"
+      > </a
+      ><a name="592" class="Symbol"
+      >&#8594;</a
+      ><a name="593"
+      > </a
+      ><a name="594" href="Game.Transformation.CCA2d-CCA2.html#406" class="Bound"
+      >PubKey</a
+      ><a name="600"
+      > </a
+      ><a name="601" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="602"
+      > </a
+      ><a name="603" href="Game.Transformation.CCA2d-CCA2.html#424" class="Bound"
+      >SecKey</a
+      ><a name="609" class="Symbol"
+      >)</a
+      ><a name="610"
+      >
+  </a
+      ><a name="613" class="Symbol"
+      >(</a
+      ><a name="614" href="Game.Transformation.CCA2d-CCA2.html#614" class="Bound"
+      >Enc</a
+      ><a name="617"
+      >    </a
+      ><a name="621" class="Symbol"
+      >:</a
+      ><a name="622"
+      > </a
+      ><a name="623" href="Game.Transformation.CCA2d-CCA2.html#406" class="Bound"
+      >PubKey</a
+      ><a name="629"
+      > </a
+      ><a name="630" class="Symbol"
+      >&#8594;</a
+      ><a name="631"
+      > </a
+      ><a name="632" href="Game.Transformation.CCA2d-CCA2.html#442" class="Bound"
+      >Message</a
+      ><a name="639"
+      > </a
+      ><a name="640" class="Symbol"
+      >&#8594;</a
+      ><a name="641"
+      > </a
+      ><a name="642" href="Game.Transformation.CCA2d-CCA2.html#563" class="Bound"
+      >R&#8337;</a
+      ><a name="644"
+      > </a
+      ><a name="645" class="Symbol"
+      >&#8594;</a
+      ><a name="646"
+      > </a
+      ><a name="647" href="Game.Transformation.CCA2d-CCA2.html#460" class="Bound"
+      >CipherText</a
+      ><a name="657" class="Symbol"
+      >)</a
+      ><a name="658"
+      >
+  </a
+      ><a name="661" class="Symbol"
+      >(</a
+      ><a name="662" href="Game.Transformation.CCA2d-CCA2.html#662" class="Bound"
+      >Dec</a
+      ><a name="665"
+      >    </a
+      ><a name="669" class="Symbol"
+      >:</a
+      ><a name="670"
+      > </a
+      ><a name="671" href="Game.Transformation.CCA2d-CCA2.html#424" class="Bound"
+      >SecKey</a
+      ><a name="677"
+      > </a
+      ><a name="678" class="Symbol"
+      >&#8594;</a
+      ><a name="679"
+      > </a
+      ><a name="680" href="Game.Transformation.CCA2d-CCA2.html#460" class="Bound"
+      >CipherText</a
+      ><a name="690"
+      > </a
+      ><a name="691" class="Symbol"
+      >&#8594;</a
+      ><a name="692"
+      > </a
+      ><a name="693" href="Game.Transformation.CCA2d-CCA2.html#442" class="Bound"
+      >Message</a
+      ><a name="700" class="Symbol"
+      >)</a
+      ><a name="701"
+      >
+  
+</a
+      ><a name="705" class="Keyword"
+      >where</a
+      ><a name="710"
+      >
+
+</a
+      ><a name="712" class="Keyword"
+      >module</a
+      ><a name="718"
+      > </a
+      ><a name="719" href="Game.Transformation.CCA2d-CCA2.html#719" class="Module"
+      >CCA2d</a
+      ><a name="724"
+      > </a
+      ><a name="725" class="Symbol"
+      >=</a
+      ><a name="726"
+      > </a
+      ><a name="727" href="Game.IND-CCA2-dagger.html#1" class="Module"
+      >Game.IND-CCA2-dagger</a
+      ><a name="747"
+      > </a
+      ><a name="748" href="Game.Transformation.CCA2d-CCA2.html#406" class="Bound"
+      >PubKey</a
+      ><a name="754"
+      > </a
+      ><a name="755" href="Game.Transformation.CCA2d-CCA2.html#424" class="Bound"
+      >SecKey</a
+      ><a name="761"
+      > </a
+      ><a name="762" href="Game.Transformation.CCA2d-CCA2.html#442" class="Bound"
+      >Message</a
+      ><a name="769"
+      > </a
+      ><a name="770" href="Game.Transformation.CCA2d-CCA2.html#460" class="Bound"
+      >CipherText</a
+      ><a name="780"
+      > </a
+      ><a name="781" href="Game.Transformation.CCA2d-CCA2.html#563" class="Bound"
+      >R&#8337;</a
+      ><a name="783"
+      > </a
+      ><a name="784" href="Game.Transformation.CCA2d-CCA2.html#566" class="Bound"
+      >R&#8342;</a
+      ><a name="786"
+      > </a
+      ><a name="787" href="Game.Transformation.CCA2d-CCA2.html#569" class="Bound"
+      >R&#8336;</a
+      ><a name="789"
+      > </a
+      ><a name="790" href="Game.Transformation.CCA2d-CCA2.html#580" class="Bound"
+      >KeyGen</a
+      ><a name="796"
+      > </a
+      ><a name="797" href="Game.Transformation.CCA2d-CCA2.html#614" class="Bound"
+      >Enc</a
+      ><a name="800"
+      > </a
+      ><a name="801" href="Game.Transformation.CCA2d-CCA2.html#662" class="Bound"
+      >Dec</a
+      ><a name="804"
+      > 
+</a
+      ><a name="806" class="Keyword"
+      >module</a
+      ><a name="812"
+      > </a
+      ><a name="813" href="Game.Transformation.CCA2d-CCA2.html#813" class="Module"
+      >CCA2</a
+      ><a name="817"
+      >  </a
+      ><a name="819" class="Symbol"
+      >=</a
+      ><a name="820"
+      > </a
+      ><a name="821" href="Game.IND-CCA2.html#1" class="Module"
+      >Game.IND-CCA2</a
+      ><a name="834"
+      >        </a
+      ><a name="842" href="Game.Transformation.CCA2d-CCA2.html#406" class="Bound"
+      >PubKey</a
+      ><a name="848"
+      > </a
+      ><a name="849" href="Game.Transformation.CCA2d-CCA2.html#424" class="Bound"
+      >SecKey</a
+      ><a name="855"
+      > </a
+      ><a name="856" href="Game.Transformation.CCA2d-CCA2.html#442" class="Bound"
+      >Message</a
+      ><a name="863"
+      > </a
+      ><a name="864" href="Game.Transformation.CCA2d-CCA2.html#460" class="Bound"
+      >CipherText</a
+      ><a name="874"
+      > </a
+      ><a name="875" href="Game.Transformation.CCA2d-CCA2.html#563" class="Bound"
+      >R&#8337;</a
+      ><a name="877"
+      > </a
+      ><a name="878" href="Game.Transformation.CCA2d-CCA2.html#566" class="Bound"
+      >R&#8342;</a
+      ><a name="880"
+      > </a
+      ><a name="881" href="Game.Transformation.CCA2d-CCA2.html#569" class="Bound"
+      >R&#8336;</a
+      ><a name="883"
+      > </a
+      ><a name="884" href="Game.Transformation.CCA2d-CCA2.html#580" class="Bound"
+      >KeyGen</a
+      ><a name="890"
+      > </a
+      ><a name="891" href="Game.Transformation.CCA2d-CCA2.html#614" class="Bound"
+      >Enc</a
+      ><a name="894"
+      > </a
+      ><a name="895" href="Game.Transformation.CCA2d-CCA2.html#662" class="Bound"
+      >Dec</a
+      ><a name="898"
+      >
+</a
+      ><a name="899" class="Keyword"
+      >open</a
+      ><a name="903"
+      > </a
+      ><a name="904" href="Game.IND-CPA-utils.html#1" class="Module"
+      >Game.IND-CPA-utils</a
+      ><a name="922"
+      > </a
+      ><a name="923" href="Game.Transformation.CCA2d-CCA2.html#442" class="Bound"
+      >Message</a
+      ><a name="930"
+      > </a
+      ><a name="931" href="Game.Transformation.CCA2d-CCA2.html#460" class="Bound"
+      >CipherText</a
+      ><a name="941"
+      >
+</a
+      ><a name="942" class="Keyword"
+      >open</a
+      ><a name="946"
+      > </a
+      ><a name="947" href="Game.IND-CPA-utils.html#503" class="Module"
+      >TransformAdversaryResponse</a
+      ><a name="973"
+      > </a
+      ><a name="974" class="Symbol"
+      >{</a
+      ><a name="975" href="Game.IND-CPA-utils.html#210" class="Function"
+      >DecRound</a
+      ><a name="983"
+      > </a
+      ><a name="984" href="Data.Bool.html#603" class="Datatype"
+      >Bit</a
+      ><a name="987" class="Symbol"
+      >}</a
+      ><a name="988"
+      > </a
+      ><a name="989" class="Symbol"
+      >{</a
+      ><a name="990" href="Game.Transformation.CCA2d-CCA2.html#460" class="Bound"
+      >CipherText</a
+      ><a name="1000"
+      > </a
+      ><a name="1001" class="Symbol"
+      >&#8594;</a
+      ><a name="1002"
+      > </a
+      ><a name="1003" href="Game.IND-CPA-utils.html#210" class="Function"
+      >DecRound</a
+      ><a name="1011"
+      > </a
+      ><a name="1012" href="Data.Bool.html#603" class="Datatype"
+      >Bit</a
+      ><a name="1015" class="Symbol"
+      >}</a
+      ><a name="1016"
+      > </a
+      ><a name="1017" class="Symbol"
+      >(&#955;</a
+      ><a name="1019"
+      > </a
+      ><a name="1020" href="Game.Transformation.CCA2d-CCA2.html#1020" class="Bound"
+      >x</a
+      ><a name="1021"
+      > </a
+      ><a name="1022" href="Game.Transformation.CCA2d-CCA2.html#1022" class="Bound"
+      >_</a
+      ><a name="1023"
+      > </a
+      ><a name="1024" class="Symbol"
+      >&#8594;</a
+      ><a name="1025"
+      > </a
+      ><a name="1026" href="Game.Transformation.CCA2d-CCA2.html#1020" class="Bound"
+      >x</a
+      ><a name="1027" class="Symbol"
+      >)</a
+      ><a name="1028"
+      >
+
+</a
+      ><a name="1030" href="Game.Transformation.CCA2d-CCA2.html#1030" class="Function"
+      >A-transform</a
+      ><a name="1041"
+      > </a
+      ><a name="1042" class="Symbol"
+      >:</a
+      ><a name="1043"
+      > </a
+      ><a name="1044" class="Symbol"
+      >(</a
+      ><a name="1045" href="Game.Transformation.CCA2d-CCA2.html#1045" class="Bound"
+      >adv</a
+      ><a name="1048"
+      > </a
+      ><a name="1049" class="Symbol"
+      >:</a
+      ><a name="1050"
+      > </a
+      ><a name="1051" href="Game.IND-CCA2.html#1030" class="Function"
+      >CCA2.Adversary</a
+      ><a name="1065" class="Symbol"
+      >)</a
+      ><a name="1066"
+      > </a
+      ><a name="1067" class="Symbol"
+      >&#8594;</a
+      ><a name="1068"
+      > </a
+      ><a name="1069" href="Game.IND-CCA2-dagger.html#765" class="Function"
+      >CCA2d.Adversary</a
+      ><a name="1084"
+      >
+</a
+      ><a name="1085" href="Game.Transformation.CCA2d-CCA2.html#1030" class="Function"
+      >A-transform</a
+      ><a name="1096"
+      > </a
+      ><a name="1097" href="Game.Transformation.CCA2d-CCA2.html#1097" class="Bound"
+      >adv</a
+      ><a name="1100"
+      > </a
+      ><a name="1101" href="Game.Transformation.CCA2d-CCA2.html#1101" class="Bound"
+      >r&#8336;</a
+      ><a name="1103"
+      > </a
+      ><a name="1104" href="Game.Transformation.CCA2d-CCA2.html#1104" class="Bound"
+      >pk</a
+      ><a name="1106"
+      > </a
+      ><a name="1107" class="Symbol"
+      >=</a
+      ><a name="1108"
+      > </a
+      ><a name="1109" href="Control.Strategy.html#918" class="Function"
+      >mapStrategy</a
+      ><a name="1120"
+      > </a
+      ><a name="1121" href="Game.IND-CPA-utils.html#581" class="Function"
+      >A*</a
+      ><a name="1123"
+      > </a
+      ><a name="1124" class="Symbol"
+      >(</a
+      ><a name="1125" href="Game.Transformation.CCA2d-CCA2.html#1097" class="Bound"
+      >adv</a
+      ><a name="1128"
+      > </a
+      ><a name="1129" href="Game.Transformation.CCA2d-CCA2.html#1101" class="Bound"
+      >r&#8336;</a
+      ><a name="1131"
+      > </a
+      ><a name="1132" href="Game.Transformation.CCA2d-CCA2.html#1104" class="Bound"
+      >pk</a
+      ><a name="1134" class="Symbol"
+      >)</a
+      ><a name="1135"
+      >
+
+</a
+      ><a name="1137" class="Comment"
+      >{-
+If we are able to do the transformation, then we get the same advantage
+-}</a
+      ><a name="1214"
+      >
+
+</a
+      ><a name="1216" href="Game.Transformation.CCA2d-CCA2.html#1216" class="Function"
+      >decRound</a
+      ><a name="1224"
+      > </a
+      ><a name="1225" class="Symbol"
+      >=</a
+      ><a name="1226"
+      > </a
+      ><a name="1227" href="Control.Strategy.html#2221" class="Function"
+      >runStrategy</a
+      ><a name="1238"
+      > </a
+      ><a name="1239" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1240"
+      > </a
+      ><a name="1241" href="Game.Transformation.CCA2d-CCA2.html#662" class="Bound"
+      >Dec</a
+      ><a name="1244"
+      >
+
+</a
+      ><a name="1246" href="Game.Transformation.CCA2d-CCA2.html#1246" class="Function"
+      >correct</a
+      ><a name="1253"
+      > </a
+      ><a name="1254" class="Symbol"
+      >:</a
+      ><a name="1255"
+      > </a
+      ><a name="1256" class="Symbol"
+      >&#8704;</a
+      ><a name="1257"
+      > </a
+      ><a name="1258" class="Symbol"
+      >{</a
+      ><a name="1259" href="Game.Transformation.CCA2d-CCA2.html#1259" class="Bound"
+      >r&#8337;</a
+      ><a name="1261"
+      > </a
+      ><a name="1262" href="Game.Transformation.CCA2d-CCA2.html#1262" class="Bound"
+      >r&#8337;'</a
+      ><a name="1265"
+      > </a
+      ><a name="1266" href="Game.Transformation.CCA2d-CCA2.html#1266" class="Bound"
+      >r&#8342;</a
+      ><a name="1268"
+      > </a
+      ><a name="1269" href="Game.Transformation.CCA2d-CCA2.html#1269" class="Bound"
+      >r&#8336;</a
+      ><a name="1271"
+      > </a
+      ><a name="1272" class="Symbol"
+      >}</a
+      ><a name="1273"
+      > </a
+      ><a name="1274" href="Game.Transformation.CCA2d-CCA2.html#1274" class="Bound"
+      >b</a
+      ><a name="1275"
+      > </a
+      ><a name="1276" href="Game.Transformation.CCA2d-CCA2.html#1276" class="Bound"
+      >adv</a
+      ><a name="1279"
+      >
+        </a
+      ><a name="1288" class="Symbol"
+      >&#8594;</a
+      ><a name="1289"
+      > </a
+      ><a name="1290" href="Game.IND-CCA2.html#1407" class="Function"
+      >CCA2.EXP</a
+      ><a name="1298"
+      > </a
+      ><a name="1299" href="Game.Transformation.CCA2d-CCA2.html#1274" class="Bound"
+      >b</a
+      ><a name="1300"
+      > </a
+      ><a name="1301" href="Game.Transformation.CCA2d-CCA2.html#1276" class="Bound"
+      >adv</a
+      ><a name="1304"
+      >               </a
+      ><a name="1319" class="Symbol"
+      >(</a
+      ><a name="1320" href="Game.Transformation.CCA2d-CCA2.html#1269" class="Bound"
+      >r&#8336;</a
+      ><a name="1322"
+      > </a
+      ><a name="1323" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1324"
+      > </a
+      ><a name="1325" href="Game.Transformation.CCA2d-CCA2.html#1266" class="Bound"
+      >r&#8342;</a
+      ><a name="1327"
+      > </a
+      ><a name="1328" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1329"
+      > </a
+      ><a name="1330" href="Game.Transformation.CCA2d-CCA2.html#1259" class="Bound"
+      >r&#8337;</a
+      ><a name="1332" class="Symbol"
+      >)</a
+      ><a name="1333"
+      >
+        </a
+      ><a name="1342" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="1343"
+      > </a
+      ><a name="1344" href="Game.IND-CCA2-dagger.html#1311" class="Function"
+      >CCA2d.EXP</a
+      ><a name="1353"
+      > </a
+      ><a name="1354" href="Game.Transformation.CCA2d-CCA2.html#1274" class="Bound"
+      >b</a
+      ><a name="1355"
+      > </a
+      ><a name="1356" class="Symbol"
+      >(</a
+      ><a name="1357" href="Game.Transformation.CCA2d-CCA2.html#1030" class="Function"
+      >A-transform</a
+      ><a name="1368"
+      > </a
+      ><a name="1369" href="Game.Transformation.CCA2d-CCA2.html#1276" class="Bound"
+      >adv</a
+      ><a name="1372" class="Symbol"
+      >)</a
+      ><a name="1373"
+      > </a
+      ><a name="1374" class="Symbol"
+      >(</a
+      ><a name="1375" href="Game.Transformation.CCA2d-CCA2.html#1269" class="Bound"
+      >r&#8336;</a
+      ><a name="1377"
+      > </a
+      ><a name="1378" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1379"
+      > </a
+      ><a name="1380" href="Game.Transformation.CCA2d-CCA2.html#1266" class="Bound"
+      >r&#8342;</a
+      ><a name="1382"
+      > </a
+      ><a name="1383" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1384"
+      > </a
+      ><a name="1385" href="Game.Transformation.CCA2d-CCA2.html#1259" class="Bound"
+      >r&#8337;</a
+      ><a name="1387"
+      > </a
+      ><a name="1388" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1389"
+      > </a
+      ><a name="1390" href="Game.Transformation.CCA2d-CCA2.html#1262" class="Bound"
+      >r&#8337;'</a
+      ><a name="1393" class="Symbol"
+      >)</a
+      ><a name="1394"
+      >
+</a
+      ><a name="1395" href="Game.Transformation.CCA2d-CCA2.html#1246" class="Function"
+      >correct</a
+      ><a name="1402"
+      > </a
+      ><a name="1403" class="Symbol"
+      >{</a
+      ><a name="1404" href="Game.Transformation.CCA2d-CCA2.html#1404" class="Bound"
+      >r&#8337;</a
+      ><a name="1406" class="Symbol"
+      >}</a
+      ><a name="1407"
+      > </a
+      ><a name="1408" class="Symbol"
+      >{</a
+      ><a name="1409" href="Game.Transformation.CCA2d-CCA2.html#1409" class="Bound"
+      >r&#8337;'</a
+      ><a name="1412" class="Symbol"
+      >}</a
+      ><a name="1413"
+      > </a
+      ><a name="1414" class="Symbol"
+      >{</a
+      ><a name="1415" href="Game.Transformation.CCA2d-CCA2.html#1415" class="Bound"
+      >r&#8342;</a
+      ><a name="1417" class="Symbol"
+      >}</a
+      ><a name="1418"
+      > </a
+      ><a name="1419" class="Symbol"
+      >{</a
+      ><a name="1420" href="Game.Transformation.CCA2d-CCA2.html#1420" class="Bound"
+      >r&#8336;</a
+      ><a name="1422" class="Symbol"
+      >}</a
+      ><a name="1423"
+      > </a
+      ><a name="1424" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0b</a
+      ><a name="1426"
+      > </a
+      ><a name="1427" href="Game.Transformation.CCA2d-CCA2.html#1427" class="Bound"
+      >m</a
+      ><a name="1428"
+      > </a
+      ><a name="1429" class="Keyword"
+      >with</a
+      ><a name="1433"
+      > </a
+      ><a name="1434" href="Game.Transformation.CCA2d-CCA2.html#580" class="Bound"
+      >KeyGen</a
+      ><a name="1440"
+      > </a
+      ><a name="1441" href="Game.Transformation.CCA2d-CCA2.html#1415" class="Bound"
+      >r&#8342;</a
+      ><a name="1443"
+      >
+</a
+      ><a name="1444" class="Symbol"
+      >...</a
+      ><a name="1447"
+      > </a
+      ><a name="1448" class="Symbol"
+      >|</a
+      ><a name="1449"
+      > </a
+      ><a name="1450" href="Game.Transformation.CCA2d-CCA2.html#1450" class="Bound"
+      >pk</a
+      ><a name="1452"
+      > </a
+      ><a name="1453" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1454"
+      > </a
+      ><a name="1455" href="Game.Transformation.CCA2d-CCA2.html#1455" class="Bound"
+      >sk</a
+      ><a name="1457"
+      > </a
+      ><a name="1458" class="Symbol"
+      >=</a
+      ><a name="1459"
+      > </a
+      ><a name="1460" href="Relation.Binary.PropositionalEquality.html#1034" class="Function"
+      >cong</a
+      ><a name="1464"
+      > </a
+      ><a name="1465" class="Symbol"
+      >(&#955;</a
+      ><a name="1467"
+      > </a
+      ><a name="1468" href="Game.Transformation.CCA2d-CCA2.html#1468" class="Bound"
+      >x</a
+      ><a name="1469"
+      > </a
+      ><a name="1470" class="Symbol"
+      >&#8594;</a
+      ><a name="1471"
+      > </a
+      ><a name="1472" href="Game.Transformation.CCA2d-CCA2.html#1216" class="Function"
+      >decRound</a
+      ><a name="1480"
+      > </a
+      ><a name="1481" href="Game.Transformation.CCA2d-CCA2.html#1455" class="Bound"
+      >sk</a
+      ><a name="1483"
+      > </a
+      ><a name="1484" class="Symbol"
+      >(</a
+      ><a name="1485" href="Game.IND-CPA-utils.html#358" class="Field"
+      >put-c</a
+      ><a name="1490"
+      > </a
+      ><a name="1491" href="Game.Transformation.CCA2d-CCA2.html#1468" class="Bound"
+      >x</a
+      ><a name="1492"
+      > </a
+      ><a name="1493" class="Symbol"
+      >(</a
+      ><a name="1494" href="Game.Transformation.CCA2d-CCA2.html#614" class="Bound"
+      >Enc</a
+      ><a name="1497"
+      > </a
+      ><a name="1498" href="Game.Transformation.CCA2d-CCA2.html#1450" class="Bound"
+      >pk</a
+      ><a name="1500"
+      > </a
+      ><a name="1501" class="Symbol"
+      >(</a
+      ><a name="1502" href="Data.Product.html#525" class="Field"
+      >proj&#8321;</a
+      ><a name="1507"
+      > </a
+      ><a name="1508" class="Symbol"
+      >(</a
+      ><a name="1509" href="Game.IND-CPA-utils.html#328" class="Field"
+      >get-m</a
+      ><a name="1514"
+      > </a
+      ><a name="1515" href="Game.Transformation.CCA2d-CCA2.html#1468" class="Bound"
+      >x</a
+      ><a name="1516" class="Symbol"
+      >))</a
+      ><a name="1518"
+      > </a
+      ><a name="1519" href="Game.Transformation.CCA2d-CCA2.html#1404" class="Bound"
+      >r&#8337;</a
+      ><a name="1521" class="Symbol"
+      >)</a
+      ><a name="1522"
+      >
+                                                 </a
+      ><a name="1572" class="Symbol"
+      >(</a
+      ><a name="1573" href="Game.Transformation.CCA2d-CCA2.html#614" class="Bound"
+      >Enc</a
+      ><a name="1576"
+      > </a
+      ><a name="1577" href="Game.Transformation.CCA2d-CCA2.html#1450" class="Bound"
+      >pk</a
+      ><a name="1579"
+      > </a
+      ><a name="1580" class="Symbol"
+      >(</a
+      ><a name="1581" href="Data.Product.html#539" class="Field"
+      >proj&#8322;</a
+      ><a name="1586"
+      > </a
+      ><a name="1587" class="Symbol"
+      >(</a
+      ><a name="1588" href="Game.IND-CPA-utils.html#328" class="Field"
+      >get-m</a
+      ><a name="1593"
+      > </a
+      ><a name="1594" href="Game.Transformation.CCA2d-CCA2.html#1468" class="Bound"
+      >x</a
+      ><a name="1595" class="Symbol"
+      >))</a
+      ><a name="1597"
+      > </a
+      ><a name="1598" href="Game.Transformation.CCA2d-CCA2.html#1409" class="Bound"
+      >r&#8337;'</a
+      ><a name="1601" class="Symbol"
+      >)))</a
+      ><a name="1604"
+      >
+                     </a
+      ><a name="1626" class="Symbol"
+      >(</a
+      ><a name="1627" href="Relation.Binary.PropositionalEquality.Core.html#565" class="Function"
+      >sym</a
+      ><a name="1630"
+      > </a
+      ><a name="1631" class="Symbol"
+      >(</a
+      ><a name="1632" href="Control.Strategy.html#2568" class="Function"
+      >run-map</a
+      ><a name="1639"
+      > </a
+      ><a name="1640" class="Symbol"
+      >(</a
+      ><a name="1641" href="Game.Transformation.CCA2d-CCA2.html#662" class="Bound"
+      >Dec</a
+      ><a name="1644"
+      > </a
+      ><a name="1645" href="Game.Transformation.CCA2d-CCA2.html#1455" class="Bound"
+      >sk</a
+      ><a name="1647" class="Symbol"
+      >)</a
+      ><a name="1648"
+      > </a
+      ><a name="1649" href="Game.IND-CPA-utils.html#581" class="Function"
+      >A*</a
+      ><a name="1651"
+      > </a
+      ><a name="1652" class="Symbol"
+      >(</a
+      ><a name="1653" href="Game.Transformation.CCA2d-CCA2.html#1427" class="Bound"
+      >m</a
+      ><a name="1654"
+      > </a
+      ><a name="1655" href="Game.Transformation.CCA2d-CCA2.html#1420" class="Bound"
+      >r&#8336;</a
+      ><a name="1657"
+      > </a
+      ><a name="1658" href="Game.Transformation.CCA2d-CCA2.html#1450" class="Bound"
+      >pk</a
+      ><a name="1660" class="Symbol"
+      >)))</a
+      ><a name="1663"
+      >
+</a
+      ><a name="1664" href="Game.Transformation.CCA2d-CCA2.html#1246" class="Function"
+      >correct</a
+      ><a name="1671"
+      > </a
+      ><a name="1672" class="Symbol"
+      >{</a
+      ><a name="1673" href="Game.Transformation.CCA2d-CCA2.html#1673" class="Bound"
+      >r&#8337;</a
+      ><a name="1675" class="Symbol"
+      >}{</a
+      ><a name="1677" href="Game.Transformation.CCA2d-CCA2.html#1677" class="Bound"
+      >r&#8337;'</a
+      ><a name="1680" class="Symbol"
+      >}{</a
+      ><a name="1682" href="Game.Transformation.CCA2d-CCA2.html#1682" class="Bound"
+      >r&#8342;</a
+      ><a name="1684" class="Symbol"
+      >}</a
+      ><a name="1685"
+      > </a
+      ><a name="1686" class="Symbol"
+      >{</a
+      ><a name="1687" href="Game.Transformation.CCA2d-CCA2.html#1687" class="Bound"
+      >r&#8336;</a
+      ><a name="1689" class="Symbol"
+      >}</a
+      ><a name="1690"
+      > </a
+      ><a name="1691" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1b</a
+      ><a name="1693"
+      > </a
+      ><a name="1694" href="Game.Transformation.CCA2d-CCA2.html#1694" class="Bound"
+      >m</a
+      ><a name="1695"
+      > </a
+      ><a name="1696" class="Keyword"
+      >with</a
+      ><a name="1700"
+      > </a
+      ><a name="1701" href="Game.Transformation.CCA2d-CCA2.html#580" class="Bound"
+      >KeyGen</a
+      ><a name="1707"
+      > </a
+      ><a name="1708" href="Game.Transformation.CCA2d-CCA2.html#1682" class="Bound"
+      >r&#8342;</a
+      ><a name="1710"
+      >
+</a
+      ><a name="1711" class="Symbol"
+      >...</a
+      ><a name="1714"
+      > </a
+      ><a name="1715" class="Symbol"
+      >|</a
+      ><a name="1716"
+      > </a
+      ><a name="1717" href="Game.Transformation.CCA2d-CCA2.html#1717" class="Bound"
+      >pk</a
+      ><a name="1719"
+      > </a
+      ><a name="1720" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1721"
+      > </a
+      ><a name="1722" href="Game.Transformation.CCA2d-CCA2.html#1722" class="Bound"
+      >sk</a
+      ><a name="1724"
+      > </a
+      ><a name="1725" class="Symbol"
+      >=</a
+      ><a name="1726"
+      > </a
+      ><a name="1727" href="Relation.Binary.PropositionalEquality.html#1034" class="Function"
+      >cong</a
+      ><a name="1731"
+      > </a
+      ><a name="1732" class="Symbol"
+      >(&#955;</a
+      ><a name="1734"
+      > </a
+      ><a name="1735" href="Game.Transformation.CCA2d-CCA2.html#1735" class="Bound"
+      >x</a
+      ><a name="1736"
+      > </a
+      ><a name="1737" class="Symbol"
+      >&#8594;</a
+      ><a name="1738"
+      > </a
+      ><a name="1739" href="Game.Transformation.CCA2d-CCA2.html#1216" class="Function"
+      >decRound</a
+      ><a name="1747"
+      > </a
+      ><a name="1748" href="Game.Transformation.CCA2d-CCA2.html#1722" class="Bound"
+      >sk</a
+      ><a name="1750"
+      > </a
+      ><a name="1751" class="Symbol"
+      >(</a
+      ><a name="1752" href="Game.IND-CPA-utils.html#358" class="Field"
+      >put-c</a
+      ><a name="1757"
+      > </a
+      ><a name="1758" href="Game.Transformation.CCA2d-CCA2.html#1735" class="Bound"
+      >x</a
+      ><a name="1759"
+      > </a
+      ><a name="1760" class="Symbol"
+      >(</a
+      ><a name="1761" href="Game.Transformation.CCA2d-CCA2.html#614" class="Bound"
+      >Enc</a
+      ><a name="1764"
+      > </a
+      ><a name="1765" href="Game.Transformation.CCA2d-CCA2.html#1717" class="Bound"
+      >pk</a
+      ><a name="1767"
+      > </a
+      ><a name="1768" class="Symbol"
+      >(</a
+      ><a name="1769" href="Data.Product.html#539" class="Field"
+      >proj&#8322;</a
+      ><a name="1774"
+      > </a
+      ><a name="1775" class="Symbol"
+      >(</a
+      ><a name="1776" href="Game.IND-CPA-utils.html#328" class="Field"
+      >get-m</a
+      ><a name="1781"
+      > </a
+      ><a name="1782" href="Game.Transformation.CCA2d-CCA2.html#1735" class="Bound"
+      >x</a
+      ><a name="1783" class="Symbol"
+      >))</a
+      ><a name="1785"
+      > </a
+      ><a name="1786" href="Game.Transformation.CCA2d-CCA2.html#1673" class="Bound"
+      >r&#8337;</a
+      ><a name="1788" class="Symbol"
+      >)</a
+      ><a name="1789"
+      >
+                                                 </a
+      ><a name="1839" class="Symbol"
+      >(</a
+      ><a name="1840" href="Game.Transformation.CCA2d-CCA2.html#614" class="Bound"
+      >Enc</a
+      ><a name="1843"
+      > </a
+      ><a name="1844" href="Game.Transformation.CCA2d-CCA2.html#1717" class="Bound"
+      >pk</a
+      ><a name="1846"
+      > </a
+      ><a name="1847" class="Symbol"
+      >(</a
+      ><a name="1848" href="Data.Product.html#525" class="Field"
+      >proj&#8321;</a
+      ><a name="1853"
+      > </a
+      ><a name="1854" class="Symbol"
+      >(</a
+      ><a name="1855" href="Game.IND-CPA-utils.html#328" class="Field"
+      >get-m</a
+      ><a name="1860"
+      > </a
+      ><a name="1861" href="Game.Transformation.CCA2d-CCA2.html#1735" class="Bound"
+      >x</a
+      ><a name="1862" class="Symbol"
+      >))</a
+      ><a name="1864"
+      > </a
+      ><a name="1865" href="Game.Transformation.CCA2d-CCA2.html#1677" class="Bound"
+      >r&#8337;'</a
+      ><a name="1868" class="Symbol"
+      >)))</a
+      ><a name="1871"
+      >
+                     </a
+      ><a name="1893" class="Symbol"
+      >(</a
+      ><a name="1894" href="Relation.Binary.PropositionalEquality.Core.html#565" class="Function"
+      >sym</a
+      ><a name="1897"
+      > </a
+      ><a name="1898" class="Symbol"
+      >(</a
+      ><a name="1899" href="Control.Strategy.html#2568" class="Function"
+      >run-map</a
+      ><a name="1906"
+      > </a
+      ><a name="1907" class="Symbol"
+      >(</a
+      ><a name="1908" href="Game.Transformation.CCA2d-CCA2.html#662" class="Bound"
+      >Dec</a
+      ><a name="1911"
+      > </a
+      ><a name="1912" href="Game.Transformation.CCA2d-CCA2.html#1722" class="Bound"
+      >sk</a
+      ><a name="1914" class="Symbol"
+      >)</a
+      ><a name="1915"
+      > </a
+      ><a name="1916" href="Game.IND-CPA-utils.html#581" class="Function"
+      >A*</a
+      ><a name="1918"
+      > </a
+      ><a name="1919" class="Symbol"
+      >(</a
+      ><a name="1920" href="Game.Transformation.CCA2d-CCA2.html#1694" class="Bound"
+      >m</a
+      ><a name="1921"
+      > </a
+      ><a name="1922" href="Game.Transformation.CCA2d-CCA2.html#1687" class="Bound"
+      >r&#8336;</a
+      ><a name="1924"
+      > </a
+      ><a name="1925" href="Game.Transformation.CCA2d-CCA2.html#1717" class="Bound"
+      >pk</a
+      ><a name="1927" class="Symbol"
+      >)))</a
+      ><a name="1930"
+      >
+</a
+      ><a name="1931" class="Comment"
+      >{-
+
+Need to show that they are valid transformation aswell:
+
+  This is not obvious that it will always work since the original adversary might
+  ask for the ciphertext from the r&#8337;' supply.
+
+  The argument why this is unlikely (in the paper) is that the construction is
+  IND-CPA secure and therefor it is hard to predict a ciphertext.
+  suppose that A could predict the ciphertext, then it could use this power to
+  win the game. Since he can predict what Enc(m(not b)) is he could just check what the
+  ciphertext was and that he received and thereby know if he received b or not b.
+
+-}</a
+      ><a name="2518"
+      >
+
+</a
+      ><a name="2520" class="Comment"
+      >{-
+valid : &#8704; adv &#8594; CCA2.Valid-Adv adv &#8594; CCA2d.Valid-Adv (A-transform adv)
+valid adv valid = {!!} -- can't prove this strictly, but it will deviate with
+                       -- non-neg probability
+
+-- -}</a
+      ><a name="2724"
+      >
+</a
+      ><a name="2725" class="Comment"
+      >-- -}</a
+      ><a name="2730"
+      >
+</a
+      ><a name="2731" class="Comment"
+      >-- -}</a
+      ><a name="2736"
+      >
+</a
+      ><a name="2737" class="Comment"
+      >-- -}</a
+      ><a name="2742"
+      >
+</a
+      ><a name="2743" class="Comment"
+      >-- -}</a
+      ><a name="2748"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

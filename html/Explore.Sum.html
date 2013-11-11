@@ -1,0 +1,3262 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Explore.Sum</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Symbol"
+      >{-#</a
+      ><a name="4"
+      > </a
+      ><a name="5" class="Keyword"
+      >OPTIONS</a
+      ><a name="12"
+      > --without-K </a
+      ><a name="25" class="Symbol"
+      >#-}</a
+      ><a name="28"
+      >
+</a
+      ><a name="29" class="Comment"
+      >{-
+
+  The main definitions of this module are:
+
+    * explore&#8846;
+    * explore&#8846;-ind
+    * adequate-sum&#8846;
+
+-}</a
+      ><a name="134"
+      >
+</a
+      ><a name="135" class="Keyword"
+      >open</a
+      ><a name="139"
+      > </a
+      ><a name="140" class="Keyword"
+      >import</a
+      ><a name="146"
+      > </a
+      ><a name="147" href="Type.html#1" class="Module"
+      >Type</a
+      ><a name="151"
+      > </a
+      ><a name="152" class="Keyword"
+      >hiding</a
+      ><a name="158"
+      > </a
+      ><a name="159" class="Symbol"
+      >(</a
+      ><a name="160"
+      >&#9733;</a
+      ><a name="161" class="Symbol"
+      >)</a
+      ><a name="162"
+      >
+</a
+      ><a name="163" class="Keyword"
+      >open</a
+      ><a name="167"
+      > </a
+      ><a name="168" class="Keyword"
+      >import</a
+      ><a name="174"
+      > </a
+      ><a name="175" href="Function.NP.html#1" class="Module"
+      >Function.NP</a
+      ><a name="186"
+      >
+</a
+      ><a name="187" class="Keyword"
+      >open</a
+      ><a name="191"
+      > </a
+      ><a name="192" class="Keyword"
+      >import</a
+      ><a name="198"
+      > </a
+      ><a name="199" href="Data.Nat.html#1" class="Module"
+      >Data.Nat</a
+      ><a name="207"
+      > </a
+      ><a name="208" class="Keyword"
+      >using</a
+      ><a name="213"
+      > </a
+      ><a name="214" class="Symbol"
+      >(</a
+      ><a name="215"
+      >_+_</a
+      ><a name="218" class="Symbol"
+      >)</a
+      ><a name="219"
+      >
+</a
+      ><a name="220" class="Keyword"
+      >open</a
+      ><a name="224"
+      > </a
+      ><a name="225" class="Keyword"
+      >import</a
+      ><a name="231"
+      > </a
+      ><a name="232" href="Level.NP.html#1" class="Module"
+      >Level.NP</a
+      ><a name="240"
+      >
+</a
+      ><a name="241" class="Keyword"
+      >import</a
+      ><a name="247"
+      > </a
+      ><a name="248" href="Function.Inverse.NP.html#1" class="Module"
+      >Function.Inverse.NP</a
+      ><a name="267"
+      > </a
+      ><a name="268" class="Symbol"
+      >as</a
+      ><a name="270"
+      > </a
+      ><a name="271" class="Module"
+      >FI</a
+      ><a name="273"
+      >
+</a
+      ><a name="274" class="Keyword"
+      >import</a
+      ><a name="280"
+      > </a
+      ><a name="281" href="Function.Related.html#1" class="Module"
+      >Function.Related</a
+      ><a name="297"
+      > </a
+      ><a name="298" class="Symbol"
+      >as</a
+      ><a name="300"
+      > </a
+      ><a name="301" class="Module"
+      >FR</a
+      ><a name="303"
+      >
+</a
+      ><a name="304" class="Keyword"
+      >open</a
+      ><a name="308"
+      > </a
+      ><a name="309" href="Function.Inverse.NP.html#1" class="Module"
+      >FI</a
+      ><a name="311"
+      > </a
+      ><a name="312" class="Keyword"
+      >using</a
+      ><a name="317"
+      > </a
+      ><a name="318" class="Symbol"
+      >(</a
+      ><a name="319"
+      >_&#8596;_</a
+      ><a name="322" class="Symbol"
+      >;</a
+      ><a name="323"
+      > inverses</a
+      ><a name="332" class="Symbol"
+      >;</a
+      ><a name="333"
+      > </a
+      ><a name="334" class="Keyword"
+      >module</a
+      ><a name="340"
+      > Inverse</a
+      ><a name="348" class="Symbol"
+      >)</a
+      ><a name="349"
+      > </a
+      ><a name="350" class="Keyword"
+      >renaming</a
+      ><a name="358"
+      > </a
+      ><a name="359" class="Symbol"
+      >(</a
+      ><a name="360"
+      >_$&#8321;_ </a
+      ><a name="365" class="Symbol"
+      >to</a
+      ><a name="367"
+      > to</a
+      ><a name="370" class="Symbol"
+      >;</a
+      ><a name="371"
+      > _$&#8322;_ </a
+      ><a name="377" class="Symbol"
+      >to</a
+      ><a name="379"
+      > from</a
+      ><a name="384" class="Symbol"
+      >)</a
+      ><a name="385"
+      >
+</a
+      ><a name="386" class="Keyword"
+      >open</a
+      ><a name="390"
+      > </a
+      ><a name="391" class="Keyword"
+      >import</a
+      ><a name="397"
+      > </a
+      ><a name="398" href="Function.Related.TypeIsomorphisms.NP.html#1" class="Module"
+      >Function.Related.TypeIsomorphisms.NP</a
+      ><a name="434"
+      >
+</a
+      ><a name="435" class="Keyword"
+      >open</a
+      ><a name="439"
+      > </a
+      ><a name="440" class="Keyword"
+      >import</a
+      ><a name="446"
+      > </a
+      ><a name="447" href="Data.Product.NP.html#1" class="Module"
+      >Data.Product.NP</a
+      ><a name="462"
+      >
+</a
+      ><a name="463" class="Keyword"
+      >open</a
+      ><a name="467"
+      > </a
+      ><a name="468" class="Keyword"
+      >import</a
+      ><a name="474"
+      > </a
+      ><a name="475" href="Data.Sum.html#1" class="Module"
+      >Data.Sum</a
+      ><a name="483"
+      >
+</a
+      ><a name="484" class="Comment"
+      >-- open import Data.Bit</a
+      ><a name="507"
+      >
+</a
+      ><a name="508" class="Keyword"
+      >open</a
+      ><a name="512"
+      > </a
+      ><a name="513" class="Keyword"
+      >import</a
+      ><a name="519"
+      > </a
+      ><a name="520" href="Data.Fin.html#1" class="Module"
+      >Data.Fin</a
+      ><a name="528"
+      > </a
+      ><a name="529" class="Keyword"
+      >using</a
+      ><a name="534"
+      > </a
+      ><a name="535" class="Symbol"
+      >(</a
+      ><a name="536"
+      >Fin</a
+      ><a name="539" class="Symbol"
+      >)</a
+      ><a name="540"
+      >
+</a
+      ><a name="541" class="Keyword"
+      >open</a
+      ><a name="545"
+      > </a
+      ><a name="546" class="Keyword"
+      >import</a
+      ><a name="552"
+      > </a
+      ><a name="553" href="Relation.Binary.Sum.html#1" class="Module"
+      >Relation.Binary.Sum</a
+      ><a name="572"
+      >
+</a
+      ><a name="573" class="Keyword"
+      >import</a
+      ><a name="579"
+      > </a
+      ><a name="580" href="Relation.Binary.PropositionalEquality.NP.html#1" class="Module"
+      >Relation.Binary.PropositionalEquality.NP</a
+      ><a name="620"
+      > </a
+      ><a name="621" class="Symbol"
+      >as</a
+      ><a name="623"
+      > </a
+      ><a name="624" class="Module"
+      >&#8801;</a
+      ><a name="625"
+      >
+</a
+      ><a name="626" class="Keyword"
+      >open</a
+      ><a name="630"
+      > </a
+      ><a name="631" href="Relation.Binary.PropositionalEquality.NP.html#1" class="Module"
+      >&#8801;</a
+      ><a name="632"
+      > </a
+      ><a name="633" class="Keyword"
+      >using</a
+      ><a name="638"
+      > </a
+      ><a name="639" class="Symbol"
+      >(</a
+      ><a name="640"
+      >_&#8801;_ </a
+      ><a name="644" class="Symbol"
+      >;</a
+      ><a name="645"
+      > </a
+      ><a name="646" class="Keyword"
+      >module</a
+      ><a name="652"
+      > &#8801;-Reasoning</a
+      ><a name="664" class="Symbol"
+      >;</a
+      ><a name="665"
+      > cong</a
+      ><a name="670" class="Symbol"
+      >)</a
+      ><a name="671"
+      >
+
+</a
+      ><a name="673" class="Keyword"
+      >open</a
+      ><a name="677"
+      > </a
+      ><a name="678" class="Keyword"
+      >import</a
+      ><a name="684"
+      > </a
+      ><a name="685" href="Explore.Core.html#1" class="Module"
+      >Explore.Core</a
+      ><a name="697"
+      >
+</a
+      ><a name="698" class="Keyword"
+      >open</a
+      ><a name="702"
+      > </a
+      ><a name="703" class="Keyword"
+      >import</a
+      ><a name="709"
+      > </a
+      ><a name="710" href="Explore.Properties.html#1" class="Module"
+      >Explore.Properties</a
+      ><a name="728"
+      >
+</a
+      ><a name="729" class="Keyword"
+      >open</a
+      ><a name="733"
+      > </a
+      ><a name="734" class="Keyword"
+      >import</a
+      ><a name="740"
+      > </a
+      ><a name="741" href="Explore.Explorable.html#1" class="Module"
+      >Explore.Explorable</a
+      ><a name="759"
+      > </a
+      ><a name="760" class="Keyword"
+      >hiding</a
+      ><a name="766"
+      > </a
+      ><a name="767" class="Symbol"
+      >(</a
+      ><a name="768"
+      >first</a
+      ><a name="773" class="Symbol"
+      >)</a
+      ><a name="774"
+      >
+
+</a
+      ><a name="776" class="Keyword"
+      >module</a
+      ><a name="782"
+      > </a
+      ><a name="783" href="Explore.Sum.html#1" class="Module"
+      >Explore.Sum</a
+      ><a name="794"
+      > </a
+      ><a name="795" class="Keyword"
+      >where</a
+      ><a name="800"
+      >
+
+</a
+      ><a name="802" class="Keyword"
+      >module</a
+      ><a name="808"
+      > </a
+      ><a name="809" href="Explore.Sum.html#809" class="Module"
+      >_</a
+      ><a name="810"
+      > </a
+      ><a name="811" class="Symbol"
+      >{</a
+      ><a name="812" href="Explore.Sum.html#812" class="Bound"
+      >a</a
+      ><a name="813"
+      > </a
+      ><a name="814" href="Explore.Sum.html#814" class="Bound"
+      >b</a
+      ><a name="815"
+      > </a
+      ><a name="816" href="Explore.Sum.html#816" class="Bound"
+      >u</a
+      ><a name="817" class="Symbol"
+      >}</a
+      ><a name="818"
+      > </a
+      ><a name="819" class="Symbol"
+      >{</a
+      ><a name="820" href="Explore.Sum.html#820" class="Bound"
+      >A</a
+      ><a name="821"
+      > </a
+      ><a name="822" class="Symbol"
+      >:</a
+      ><a name="823"
+      > </a
+      ><a name="824" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="825"
+      > </a
+      ><a name="826" href="Explore.Sum.html#812" class="Bound"
+      >a</a
+      ><a name="827" class="Symbol"
+      >}</a
+      ><a name="828"
+      > </a
+      ><a name="829" class="Symbol"
+      >{</a
+      ><a name="830" href="Explore.Sum.html#830" class="Bound"
+      >B</a
+      ><a name="831"
+      > </a
+      ><a name="832" class="Symbol"
+      >:</a
+      ><a name="833"
+      > </a
+      ><a name="834" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="835"
+      > </a
+      ><a name="836" href="Explore.Sum.html#814" class="Bound"
+      >b</a
+      ><a name="837" class="Symbol"
+      >}</a
+      ><a name="838"
+      > </a
+      ><a name="839" class="Symbol"
+      >{</a
+      ><a name="840" href="Explore.Sum.html#840" class="Bound"
+      >U</a
+      ><a name="841"
+      > </a
+      ><a name="842" class="Symbol"
+      >:</a
+      ><a name="843"
+      > </a
+      ><a name="844" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="845"
+      > </a
+      ><a name="846" href="Explore.Sum.html#816" class="Bound"
+      >u</a
+      ><a name="847" class="Symbol"
+      >}</a
+      ><a name="848"
+      >
+         </a
+      ><a name="858" class="Symbol"
+      >(</a
+      ><a name="859" href="Explore.Sum.html#859" class="Bound Operator"
+      >_&#8729;_</a
+      ><a name="862"
+      > </a
+      ><a name="863" class="Symbol"
+      >:</a
+      ><a name="864"
+      > </a
+      ><a name="865" href="Explore.Sum.html#840" class="Bound"
+      >U</a
+      ><a name="866"
+      > </a
+      ><a name="867" class="Symbol"
+      >&#8594;</a
+      ><a name="868"
+      > </a
+      ><a name="869" href="Explore.Sum.html#840" class="Bound"
+      >U</a
+      ><a name="870"
+      > </a
+      ><a name="871" class="Symbol"
+      >&#8594;</a
+      ><a name="872"
+      > </a
+      ><a name="873" href="Explore.Sum.html#840" class="Bound"
+      >U</a
+      ><a name="874" class="Symbol"
+      >)</a
+      ><a name="875"
+      >
+         </a
+      ><a name="885" class="Symbol"
+      >(</a
+      ><a name="886" href="Explore.Sum.html#886" class="Bound"
+      >e&#8321;</a
+      ><a name="888"
+      >  </a
+      ><a name="890" class="Symbol"
+      >:</a
+      ><a name="891"
+      > </a
+      ><a name="892" class="Symbol"
+      >(</a
+      ><a name="893" href="Explore.Sum.html#820" class="Bound"
+      >A</a
+      ><a name="894"
+      > </a
+      ><a name="895" class="Symbol"
+      >&#8594;</a
+      ><a name="896"
+      > </a
+      ><a name="897" href="Explore.Sum.html#840" class="Bound"
+      >U</a
+      ><a name="898" class="Symbol"
+      >)</a
+      ><a name="899"
+      > </a
+      ><a name="900" class="Symbol"
+      >&#8594;</a
+      ><a name="901"
+      > </a
+      ><a name="902" href="Explore.Sum.html#840" class="Bound"
+      >U</a
+      ><a name="903" class="Symbol"
+      >)</a
+      ><a name="904"
+      >
+         </a
+      ><a name="914" class="Symbol"
+      >(</a
+      ><a name="915" href="Explore.Sum.html#915" class="Bound"
+      >e&#8322;</a
+      ><a name="917"
+      >  </a
+      ><a name="919" class="Symbol"
+      >:</a
+      ><a name="920"
+      > </a
+      ><a name="921" class="Symbol"
+      >(</a
+      ><a name="922" href="Explore.Sum.html#830" class="Bound"
+      >B</a
+      ><a name="923"
+      > </a
+      ><a name="924" class="Symbol"
+      >&#8594;</a
+      ><a name="925"
+      > </a
+      ><a name="926" href="Explore.Sum.html#840" class="Bound"
+      >U</a
+      ><a name="927" class="Symbol"
+      >)</a
+      ><a name="928"
+      > </a
+      ><a name="929" class="Symbol"
+      >&#8594;</a
+      ><a name="930"
+      > </a
+      ><a name="931" href="Explore.Sum.html#840" class="Bound"
+      >U</a
+      ><a name="932" class="Symbol"
+      >)</a
+      ><a name="933"
+      >
+         </a
+      ><a name="943" class="Symbol"
+      >(</a
+      ><a name="944" href="Explore.Sum.html#944" class="Bound"
+      >f</a
+      ><a name="945"
+      >   </a
+      ><a name="948" class="Symbol"
+      >:</a
+      ><a name="949"
+      > </a
+      ><a name="950" class="Symbol"
+      >(</a
+      ><a name="951" href="Explore.Sum.html#820" class="Bound"
+      >A</a
+      ><a name="952"
+      > </a
+      ><a name="953" href="Data.Sum.html#404" class="Datatype Operator"
+      >&#8846;</a
+      ><a name="954"
+      > </a
+      ><a name="955" href="Explore.Sum.html#830" class="Bound"
+      >B</a
+      ><a name="956" class="Symbol"
+      >)</a
+      ><a name="957"
+      > </a
+      ><a name="958" class="Symbol"
+      >&#8594;</a
+      ><a name="959"
+      > </a
+      ><a name="960" href="Explore.Sum.html#840" class="Bound"
+      >U</a
+      ><a name="961" class="Symbol"
+      >)</a
+      ><a name="962"
+      >
+  </a
+      ><a name="965" class="Keyword"
+      >where</a
+      ><a name="970"
+      >
+      </a
+      ><a name="977" class="Comment"
+      >-- find a better place/name for it</a
+      ><a name="1011"
+      >
+      </a
+      ><a name="1018" href="Explore.Sum.html#1018" class="Function"
+      >&#8846;&#7580;</a
+      ><a name="1020"
+      > </a
+      ><a name="1021" class="Symbol"
+      >:</a
+      ><a name="1022"
+      > </a
+      ><a name="1023" href="Explore.Sum.html#840" class="Bound"
+      >U</a
+      ><a name="1024"
+      >
+      </a
+      ><a name="1031" href="Explore.Sum.html#1018" class="Function"
+      >&#8846;&#7580;</a
+      ><a name="1033"
+      > </a
+      ><a name="1034" class="Symbol"
+      >=</a
+      ><a name="1035"
+      > </a
+      ><a name="1036" href="Explore.Sum.html#886" class="Bound"
+      >e&#8321;</a
+      ><a name="1038"
+      > </a
+      ><a name="1039" class="Symbol"
+      >(</a
+      ><a name="1040" href="Explore.Sum.html#944" class="Bound"
+      >f</a
+      ><a name="1041"
+      > </a
+      ><a name="1042" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1043"
+      > </a
+      ><a name="1044" href="Data.Sum.html#460" class="InductiveConstructor"
+      >inj&#8321;</a
+      ><a name="1048" class="Symbol"
+      >)</a
+      ><a name="1049"
+      > </a
+      ><a name="1050" href="Explore.Sum.html#859" class="Bound Operator"
+      >&#8729;</a
+      ><a name="1051"
+      > </a
+      ><a name="1052" href="Explore.Sum.html#915" class="Bound"
+      >e&#8322;</a
+      ><a name="1054"
+      > </a
+      ><a name="1055" class="Symbol"
+      >(</a
+      ><a name="1056" href="Explore.Sum.html#944" class="Bound"
+      >f</a
+      ><a name="1057"
+      > </a
+      ><a name="1058" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1059"
+      > </a
+      ><a name="1060" href="Data.Sum.html#485" class="InductiveConstructor"
+      >inj&#8322;</a
+      ><a name="1064" class="Symbol"
+      >)</a
+      ><a name="1065"
+      >
+
+</a
+      ><a name="1067" class="Keyword"
+      >module</a
+      ><a name="1073"
+      > </a
+      ><a name="1074" href="Explore.Sum.html#1074" class="Module"
+      >_</a
+      ><a name="1075"
+      > </a
+      ><a name="1076" class="Symbol"
+      >{</a
+      ><a name="1077" href="Explore.Sum.html#1077" class="Bound"
+      >m</a
+      ><a name="1078"
+      > </a
+      ><a name="1079" href="Explore.Sum.html#1079" class="Bound"
+      >A</a
+      ><a name="1080"
+      > </a
+      ><a name="1081" href="Explore.Sum.html#1081" class="Bound"
+      >B</a
+      ><a name="1082" class="Symbol"
+      >}</a
+      ><a name="1083"
+      > </a
+      ><a name="1084" class="Keyword"
+      >where</a
+      ><a name="1089"
+      >
+    </a
+      ><a name="1094" href="Explore.Sum.html#1094" class="Function"
+      >explore&#8846;</a
+      ><a name="1102"
+      > </a
+      ><a name="1103" class="Symbol"
+      >:</a
+      ><a name="1104"
+      > </a
+      ><a name="1105" href="Explore.Core.html#447" class="Function"
+      >Explore</a
+      ><a name="1112"
+      > </a
+      ><a name="1113" href="Explore.Sum.html#1077" class="Bound"
+      >m</a
+      ><a name="1114"
+      > </a
+      ><a name="1115" href="Explore.Sum.html#1079" class="Bound"
+      >A</a
+      ><a name="1116"
+      > </a
+      ><a name="1117" class="Symbol"
+      >&#8594;</a
+      ><a name="1118"
+      > </a
+      ><a name="1119" href="Explore.Core.html#447" class="Function"
+      >Explore</a
+      ><a name="1126"
+      > </a
+      ><a name="1127" href="Explore.Sum.html#1077" class="Bound"
+      >m</a
+      ><a name="1128"
+      > </a
+      ><a name="1129" href="Explore.Sum.html#1081" class="Bound"
+      >B</a
+      ><a name="1130"
+      > </a
+      ><a name="1131" class="Symbol"
+      >&#8594;</a
+      ><a name="1132"
+      > </a
+      ><a name="1133" href="Explore.Core.html#447" class="Function"
+      >Explore</a
+      ><a name="1140"
+      > </a
+      ><a name="1141" href="Explore.Sum.html#1077" class="Bound"
+      >m</a
+      ><a name="1142"
+      > </a
+      ><a name="1143" class="Symbol"
+      >(</a
+      ><a name="1144" href="Explore.Sum.html#1079" class="Bound"
+      >A</a
+      ><a name="1145"
+      > </a
+      ><a name="1146" href="Data.Sum.html#404" class="Datatype Operator"
+      >&#8846;</a
+      ><a name="1147"
+      > </a
+      ><a name="1148" href="Explore.Sum.html#1081" class="Bound"
+      >B</a
+      ><a name="1149" class="Symbol"
+      >)</a
+      ><a name="1150"
+      >
+    </a
+      ><a name="1155" href="Explore.Sum.html#1094" class="Function"
+      >explore&#8846;</a
+      ><a name="1163"
+      > </a
+      ><a name="1164" href="Explore.Sum.html#1164" class="Bound"
+      >explore&#7468;</a
+      ><a name="1172"
+      > </a
+      ><a name="1173" href="Explore.Sum.html#1173" class="Bound"
+      >explore&#7470;</a
+      ><a name="1181"
+      > </a
+      ><a name="1182" href="Explore.Sum.html#1182" class="Bound"
+      >&#949;</a
+      ><a name="1183"
+      > </a
+      ><a name="1184" href="Explore.Sum.html#1184" class="Bound Operator"
+      >_&#8729;_</a
+      ><a name="1187"
+      > </a
+      ><a name="1188" class="Symbol"
+      >=</a
+      ><a name="1189"
+      > </a
+      ><a name="1190" href="Explore.Sum.html#1018" class="Function"
+      >&#8846;&#7580;</a
+      ><a name="1192"
+      > </a
+      ><a name="1193" href="Explore.Sum.html#1184" class="Bound Operator"
+      >_&#8729;_</a
+      ><a name="1196"
+      > </a
+      ><a name="1197" class="Symbol"
+      >(</a
+      ><a name="1198" href="Explore.Sum.html#1164" class="Bound"
+      >explore&#7468;</a
+      ><a name="1206"
+      > </a
+      ><a name="1207" href="Explore.Sum.html#1182" class="Bound"
+      >&#949;</a
+      ><a name="1208"
+      > </a
+      ><a name="1209" href="Explore.Sum.html#1184" class="Bound Operator"
+      >_&#8729;_</a
+      ><a name="1212" class="Symbol"
+      >)</a
+      ><a name="1213"
+      > </a
+      ><a name="1214" class="Symbol"
+      >(</a
+      ><a name="1215" href="Explore.Sum.html#1173" class="Bound"
+      >explore&#7470;</a
+      ><a name="1223"
+      > </a
+      ><a name="1224" href="Explore.Sum.html#1182" class="Bound"
+      >&#949;</a
+      ><a name="1225"
+      > </a
+      ><a name="1226" href="Explore.Sum.html#1184" class="Bound Operator"
+      >_&#8729;_</a
+      ><a name="1229" class="Symbol"
+      >)</a
+      ><a name="1230"
+      >
+
+    </a
+      ><a name="1236" class="Keyword"
+      >module</a
+      ><a name="1242"
+      > </a
+      ><a name="1243" href="Explore.Sum.html#1243" class="Module"
+      >_</a
+      ><a name="1244"
+      > </a
+      ><a name="1245" class="Symbol"
+      >{</a
+      ><a name="1246" href="Explore.Sum.html#1246" class="Bound"
+      >p</a
+      ><a name="1247" class="Symbol"
+      >}</a
+      ><a name="1248"
+      > </a
+      ><a name="1249" class="Symbol"
+      >{</a
+      ><a name="1250" href="Explore.Sum.html#1250" class="Bound"
+      >e&#7468;</a
+      ><a name="1252"
+      > </a
+      ><a name="1253" class="Symbol"
+      >:</a
+      ><a name="1254"
+      > </a
+      ><a name="1255" href="Explore.Core.html#447" class="Function"
+      >Explore</a
+      ><a name="1262"
+      > </a
+      ><a name="1263" href="Explore.Sum.html#1077" class="Bound"
+      >m</a
+      ><a name="1264"
+      > </a
+      ><a name="1265" href="Explore.Sum.html#1079" class="Bound"
+      >A</a
+      ><a name="1266" class="Symbol"
+      >}</a
+      ><a name="1267"
+      > </a
+      ><a name="1268" class="Symbol"
+      >{</a
+      ><a name="1269" href="Explore.Sum.html#1269" class="Bound"
+      >e&#7470;</a
+      ><a name="1271"
+      > </a
+      ><a name="1272" class="Symbol"
+      >:</a
+      ><a name="1273"
+      > </a
+      ><a name="1274" href="Explore.Core.html#447" class="Function"
+      >Explore</a
+      ><a name="1281"
+      > </a
+      ><a name="1282" href="Explore.Sum.html#1077" class="Bound"
+      >m</a
+      ><a name="1283"
+      > </a
+      ><a name="1284" href="Explore.Sum.html#1081" class="Bound"
+      >B</a
+      ><a name="1285" class="Symbol"
+      >}</a
+      ><a name="1286"
+      > </a
+      ><a name="1287" class="Keyword"
+      >where</a
+      ><a name="1292"
+      >
+        </a
+      ><a name="1301" href="Explore.Sum.html#1301" class="Function"
+      >explore&#8846;-ind</a
+      ><a name="1313"
+      > </a
+      ><a name="1314" class="Symbol"
+      >:</a
+      ><a name="1315"
+      > </a
+      ><a name="1316" href="Explore.Properties.html#1850" class="Function"
+      >ExploreInd</a
+      ><a name="1326"
+      > </a
+      ><a name="1327" href="Explore.Sum.html#1246" class="Bound"
+      >p</a
+      ><a name="1328"
+      > </a
+      ><a name="1329" href="Explore.Sum.html#1250" class="Bound"
+      >e&#7468;</a
+      ><a name="1331"
+      > </a
+      ><a name="1332" class="Symbol"
+      >&#8594;</a
+      ><a name="1333"
+      > </a
+      ><a name="1334" href="Explore.Properties.html#1850" class="Function"
+      >ExploreInd</a
+      ><a name="1344"
+      > </a
+      ><a name="1345" href="Explore.Sum.html#1246" class="Bound"
+      >p</a
+      ><a name="1346"
+      > </a
+      ><a name="1347" href="Explore.Sum.html#1269" class="Bound"
+      >e&#7470;</a
+      ><a name="1349"
+      > </a
+      ><a name="1350" class="Symbol"
+      >&#8594;</a
+      ><a name="1351"
+      > </a
+      ><a name="1352" href="Explore.Properties.html#1850" class="Function"
+      >ExploreInd</a
+      ><a name="1362"
+      > </a
+      ><a name="1363" href="Explore.Sum.html#1246" class="Bound"
+      >p</a
+      ><a name="1364"
+      > </a
+      ><a name="1365" class="Symbol"
+      >(</a
+      ><a name="1366" href="Explore.Sum.html#1094" class="Function"
+      >explore&#8846;</a
+      ><a name="1374"
+      > </a
+      ><a name="1375" href="Explore.Sum.html#1250" class="Bound"
+      >e&#7468;</a
+      ><a name="1377"
+      > </a
+      ><a name="1378" href="Explore.Sum.html#1269" class="Bound"
+      >e&#7470;</a
+      ><a name="1380" class="Symbol"
+      >)</a
+      ><a name="1381"
+      >
+        </a
+      ><a name="1390" href="Explore.Sum.html#1301" class="Function"
+      >explore&#8846;-ind</a
+      ><a name="1402"
+      > </a
+      ><a name="1403" href="Explore.Sum.html#1403" class="Bound"
+      >Ps&#7468;</a
+      ><a name="1406"
+      > </a
+      ><a name="1407" href="Explore.Sum.html#1407" class="Bound"
+      >Ps&#7470;</a
+      ><a name="1410"
+      > </a
+      ><a name="1411" href="Explore.Sum.html#1411" class="Bound"
+      >P</a
+      ><a name="1412"
+      > </a
+      ><a name="1413" href="Explore.Sum.html#1413" class="Bound"
+      >P&#949;</a
+      ><a name="1415"
+      > </a
+      ><a name="1416" href="Explore.Sum.html#1416" class="Bound"
+      >P&#8729;</a
+      ><a name="1418"
+      > </a
+      ><a name="1419" href="Explore.Sum.html#1419" class="Bound"
+      >Pf</a
+      ><a name="1421"
+      >
+        </a
+      ><a name="1430" class="Comment"
+      >-- TODO clean this up:</a
+      ><a name="1452"
+      >
+          </a
+      ><a name="1463" class="Symbol"
+      >=</a
+      ><a name="1464"
+      > </a
+      ><a name="1465" href="Explore.Sum.html#1416" class="Bound"
+      >P&#8729;</a
+      ><a name="1467"
+      > </a
+      ><a name="1468" class="Symbol"
+      >(</a
+      ><a name="1469" href="Explore.Sum.html#1403" class="Bound"
+      >Ps&#7468;</a
+      ><a name="1472"
+      > </a
+      ><a name="1473" class="Symbol"
+      >(&#955;</a
+      ><a name="1475"
+      > </a
+      ><a name="1476" href="Explore.Sum.html#1476" class="Bound"
+      >s</a
+      ><a name="1477"
+      > </a
+      ><a name="1478" class="Symbol"
+      >&#8594;</a
+      ><a name="1479"
+      > </a
+      ><a name="1480" href="Explore.Sum.html#1411" class="Bound"
+      >P</a
+      ><a name="1481"
+      > </a
+      ><a name="1482" class="Symbol"
+      >(&#955;</a
+      ><a name="1484"
+      > </a
+      ><a name="1485" href="Explore.Sum.html#1485" class="Bound"
+      >_</a
+      ><a name="1486"
+      > </a
+      ><a name="1487" href="Explore.Sum.html#1487" class="Bound"
+      >_</a
+      ><a name="1488"
+      > </a
+      ><a name="1489" href="Explore.Sum.html#1489" class="Bound"
+      >f</a
+      ><a name="1490"
+      > </a
+      ><a name="1491" class="Symbol"
+      >&#8594;</a
+      ><a name="1492"
+      > </a
+      ><a name="1493" href="Explore.Sum.html#1476" class="Bound"
+      >s</a
+      ><a name="1494"
+      > </a
+      ><a name="1495" class="Symbol"
+      >_</a
+      ><a name="1496"
+      > </a
+      ><a name="1497" class="Symbol"
+      >_</a
+      ><a name="1498"
+      > </a
+      ><a name="1499" class="Symbol"
+      >(</a
+      ><a name="1500" href="Explore.Sum.html#1489" class="Bound"
+      >f</a
+      ><a name="1501"
+      > </a
+      ><a name="1502" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1503"
+      > </a
+      ><a name="1504" href="Data.Sum.html#460" class="InductiveConstructor"
+      >inj&#8321;</a
+      ><a name="1508" class="Symbol"
+      >)))</a
+      ><a name="1511"
+      > </a
+      ><a name="1512" href="Explore.Sum.html#1413" class="Bound"
+      >P&#949;</a
+      ><a name="1514"
+      > </a
+      ><a name="1515" href="Explore.Sum.html#1416" class="Bound"
+      >P&#8729;</a
+      ><a name="1517"
+      > </a
+      ><a name="1518" class="Symbol"
+      >(</a
+      ><a name="1519" href="Explore.Sum.html#1419" class="Bound"
+      >Pf</a
+      ><a name="1521"
+      > </a
+      ><a name="1522" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1523"
+      > </a
+      ><a name="1524" href="Data.Sum.html#460" class="InductiveConstructor"
+      >inj&#8321;</a
+      ><a name="1528" class="Symbol"
+      >))</a
+      ><a name="1530"
+      >
+               </a
+      ><a name="1546" class="Symbol"
+      >(</a
+      ><a name="1547" href="Explore.Sum.html#1407" class="Bound"
+      >Ps&#7470;</a
+      ><a name="1550"
+      > </a
+      ><a name="1551" class="Symbol"
+      >(&#955;</a
+      ><a name="1553"
+      > </a
+      ><a name="1554" href="Explore.Sum.html#1554" class="Bound"
+      >s</a
+      ><a name="1555"
+      > </a
+      ><a name="1556" class="Symbol"
+      >&#8594;</a
+      ><a name="1557"
+      > </a
+      ><a name="1558" href="Explore.Sum.html#1411" class="Bound"
+      >P</a
+      ><a name="1559"
+      > </a
+      ><a name="1560" class="Symbol"
+      >(&#955;</a
+      ><a name="1562"
+      > </a
+      ><a name="1563" href="Explore.Sum.html#1563" class="Bound"
+      >_</a
+      ><a name="1564"
+      > </a
+      ><a name="1565" href="Explore.Sum.html#1565" class="Bound"
+      >_</a
+      ><a name="1566"
+      > </a
+      ><a name="1567" href="Explore.Sum.html#1567" class="Bound"
+      >f</a
+      ><a name="1568"
+      > </a
+      ><a name="1569" class="Symbol"
+      >&#8594;</a
+      ><a name="1570"
+      > </a
+      ><a name="1571" href="Explore.Sum.html#1554" class="Bound"
+      >s</a
+      ><a name="1572"
+      > </a
+      ><a name="1573" class="Symbol"
+      >_</a
+      ><a name="1574"
+      > </a
+      ><a name="1575" class="Symbol"
+      >_</a
+      ><a name="1576"
+      > </a
+      ><a name="1577" class="Symbol"
+      >(</a
+      ><a name="1578" href="Explore.Sum.html#1567" class="Bound"
+      >f</a
+      ><a name="1579"
+      > </a
+      ><a name="1580" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1581"
+      > </a
+      ><a name="1582" href="Data.Sum.html#485" class="InductiveConstructor"
+      >inj&#8322;</a
+      ><a name="1586" class="Symbol"
+      >)))</a
+      ><a name="1589"
+      > </a
+      ><a name="1590" href="Explore.Sum.html#1413" class="Bound"
+      >P&#949;</a
+      ><a name="1592"
+      > </a
+      ><a name="1593" href="Explore.Sum.html#1416" class="Bound"
+      >P&#8729;</a
+      ><a name="1595"
+      > </a
+      ><a name="1596" class="Symbol"
+      >(</a
+      ><a name="1597" href="Explore.Sum.html#1419" class="Bound"
+      >Pf</a
+      ><a name="1599"
+      > </a
+      ><a name="1600" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1601"
+      > </a
+      ><a name="1602" href="Data.Sum.html#485" class="InductiveConstructor"
+      >inj&#8322;</a
+      ><a name="1606" class="Symbol"
+      >))</a
+      ><a name="1608"
+      >
+
+</a
+      ><a name="1610" class="Keyword"
+      >module</a
+      ><a name="1616"
+      > </a
+      ><a name="1617" href="Explore.Sum.html#1617" class="Module"
+      >_</a
+      ><a name="1618"
+      > </a
+      ><a name="1619" class="Symbol"
+      >{</a
+      ><a name="1620" href="Explore.Sum.html#1620" class="Bound"
+      >A</a
+      ><a name="1621"
+      > </a
+      ><a name="1622" href="Explore.Sum.html#1622" class="Bound"
+      >B</a
+      ><a name="1623" class="Symbol"
+      >}{</a
+      ><a name="1625" href="Explore.Sum.html#1625" class="Bound"
+      >e&#7468;</a
+      ><a name="1627"
+      > </a
+      ><a name="1628" class="Symbol"
+      >:</a
+      ><a name="1629"
+      > </a
+      ><a name="1630" href="Explore.Core.html#447" class="Function"
+      >Explore</a
+      ><a name="1637"
+      > </a
+      ><a name="1638" href="Agda.Prim.html#268" class="Primitive"
+      >&#8320;</a
+      ><a name="1639"
+      > </a
+      ><a name="1640" href="Explore.Sum.html#1620" class="Bound"
+      >A</a
+      ><a name="1641" class="Symbol"
+      >}{</a
+      ><a name="1643" href="Explore.Sum.html#1643" class="Bound"
+      >e&#7470;</a
+      ><a name="1645"
+      > </a
+      ><a name="1646" class="Symbol"
+      >:</a
+      ><a name="1647"
+      > </a
+      ><a name="1648" href="Explore.Core.html#447" class="Function"
+      >Explore</a
+      ><a name="1655"
+      > </a
+      ><a name="1656" href="Agda.Prim.html#268" class="Primitive"
+      >&#8320;</a
+      ><a name="1657"
+      > </a
+      ><a name="1658" href="Explore.Sum.html#1622" class="Bound"
+      >B</a
+      ><a name="1659" class="Symbol"
+      >}</a
+      ><a name="1660"
+      > </a
+      ><a name="1661" class="Keyword"
+      >where</a
+      ><a name="1666"
+      >
+   </a
+      ><a name="1670" href="Explore.Sum.html#1670" class="Function"
+      >explore&#8846;-adq</a
+      ><a name="1682"
+      > </a
+      ><a name="1683" class="Symbol"
+      >:</a
+      ><a name="1684"
+      > </a
+      ><a name="1685" href="Explore.Properties.html#3451" class="Function"
+      >AdequateExplore</a
+      ><a name="1700"
+      > </a
+      ><a name="1701" href="Explore.Sum.html#1625" class="Bound"
+      >e&#7468;</a
+      ><a name="1703"
+      > </a
+      ><a name="1704" class="Symbol"
+      >&#8594;</a
+      ><a name="1705"
+      > </a
+      ><a name="1706" href="Explore.Properties.html#3451" class="Function"
+      >AdequateExplore</a
+      ><a name="1721"
+      > </a
+      ><a name="1722" href="Explore.Sum.html#1643" class="Bound"
+      >e&#7470;</a
+      ><a name="1724"
+      > </a
+      ><a name="1725" class="Symbol"
+      >&#8594;</a
+      ><a name="1726"
+      > </a
+      ><a name="1727" href="Explore.Properties.html#3451" class="Function"
+      >AdequateExplore</a
+      ><a name="1742"
+      > </a
+      ><a name="1743" class="Symbol"
+      >(</a
+      ><a name="1744" href="Explore.Sum.html#1094" class="Function"
+      >explore&#8846;</a
+      ><a name="1752"
+      > </a
+      ><a name="1753" href="Explore.Sum.html#1625" class="Bound"
+      >e&#7468;</a
+      ><a name="1755"
+      > </a
+      ><a name="1756" href="Explore.Sum.html#1643" class="Bound"
+      >e&#7470;</a
+      ><a name="1758" class="Symbol"
+      >)</a
+      ><a name="1759"
+      >
+   </a
+      ><a name="1763" href="Explore.Sum.html#1670" class="Function"
+      >explore&#8846;-adq</a
+      ><a name="1775"
+      > </a
+      ><a name="1776" href="Explore.Sum.html#1776" class="Bound"
+      >a&#7468;</a
+      ><a name="1778"
+      > </a
+      ><a name="1779" href="Explore.Sum.html#1779" class="Bound"
+      >a&#7470;</a
+      ><a name="1781"
+      > </a
+      ><a name="1782" href="Explore.Sum.html#1782" class="Bound"
+      >F</a
+      ><a name="1783"
+      > </a
+      ><a name="1784" href="Explore.Sum.html#1784" class="Bound"
+      >&#949;</a
+      ><a name="1785"
+      > </a
+      ><a name="1786" href="Explore.Sum.html#1786" class="Bound Operator"
+      >_&#8853;_</a
+      ><a name="1789"
+      > </a
+      ><a name="1790" href="Explore.Sum.html#1790" class="Bound"
+      >f</a
+      ><a name="1791"
+      > </a
+      ><a name="1792" href="Explore.Sum.html#1792" class="Bound"
+      >F-proof</a
+      ><a name="1799"
+      >
+      </a
+      ><a name="1806" class="Symbol"
+      >=</a
+      ><a name="1807"
+      > </a
+      ><a name="1808" href="Explore.Sum.html#1782" class="Bound"
+      >F</a
+      ><a name="1809"
+      > </a
+      ><a name="1810" class="Symbol"
+      >(</a
+      ><a name="1811" href="Explore.Sum.html#2163" class="Function"
+      >big&#8853;&#7468;</a
+      ><a name="1816"
+      > </a
+      ><a name="1817" class="Symbol"
+      >(</a
+      ><a name="1818" href="Explore.Sum.html#1790" class="Bound"
+      >f</a
+      ><a name="1819"
+      > </a
+      ><a name="1820" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1821"
+      > </a
+      ><a name="1822" href="Data.Sum.html#460" class="InductiveConstructor"
+      >inj&#8321;</a
+      ><a name="1826" class="Symbol"
+      >)</a
+      ><a name="1827"
+      > </a
+      ><a name="1828" href="Explore.Sum.html#1786" class="Bound Operator"
+      >&#8853;</a
+      ><a name="1829"
+      > </a
+      ><a name="1830" href="Explore.Sum.html#2191" class="Function"
+      >big&#8853;&#7470;</a
+      ><a name="1835"
+      > </a
+      ><a name="1836" class="Symbol"
+      >(</a
+      ><a name="1837" href="Explore.Sum.html#1790" class="Bound"
+      >f</a
+      ><a name="1838"
+      > </a
+      ><a name="1839" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1840"
+      > </a
+      ><a name="1841" href="Data.Sum.html#485" class="InductiveConstructor"
+      >inj&#8322;</a
+      ><a name="1845" class="Symbol"
+      >))</a
+      ><a name="1847"
+      >
+      </a
+      ><a name="1854" href="Function.Related.html#8824" class="Function Operator"
+      >&#8596;&#10216;</a
+      ><a name="1856"
+      > </a
+      ><a name="1857" href="Explore.Sum.html#1792" class="Bound"
+      >F-proof</a
+      ><a name="1864"
+      >  </a
+      ><a name="1866" href="Function.Related.html#8824" class="Function Operator"
+      >&#10217;</a
+      ><a name="1867"
+      >
+        </a
+      ><a name="1876" class="Symbol"
+      >(</a
+      ><a name="1877" href="Explore.Sum.html#1782" class="Bound"
+      >F</a
+      ><a name="1878"
+      > </a
+      ><a name="1879" class="Symbol"
+      >(</a
+      ><a name="1880" href="Explore.Sum.html#2163" class="Function"
+      >big&#8853;&#7468;</a
+      ><a name="1885"
+      > </a
+      ><a name="1886" class="Symbol"
+      >(</a
+      ><a name="1887" href="Explore.Sum.html#1790" class="Bound"
+      >f</a
+      ><a name="1888"
+      > </a
+      ><a name="1889" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1890"
+      > </a
+      ><a name="1891" href="Data.Sum.html#460" class="InductiveConstructor"
+      >inj&#8321;</a
+      ><a name="1895" class="Symbol"
+      >))</a
+      ><a name="1897"
+      > </a
+      ><a name="1898" href="Data.Sum.html#404" class="Datatype Operator"
+      >&#8846;</a
+      ><a name="1899"
+      > </a
+      ><a name="1900" href="Explore.Sum.html#1782" class="Bound"
+      >F</a
+      ><a name="1901"
+      > </a
+      ><a name="1902" class="Symbol"
+      >(</a
+      ><a name="1903" href="Explore.Sum.html#2191" class="Function"
+      >big&#8853;&#7470;</a
+      ><a name="1908"
+      > </a
+      ><a name="1909" class="Symbol"
+      >(</a
+      ><a name="1910" href="Explore.Sum.html#1790" class="Bound"
+      >f</a
+      ><a name="1911"
+      > </a
+      ><a name="1912" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1913"
+      > </a
+      ><a name="1914" href="Data.Sum.html#485" class="InductiveConstructor"
+      >inj&#8322;</a
+      ><a name="1918" class="Symbol"
+      >)))</a
+      ><a name="1921"
+      >
+      </a
+      ><a name="1928" href="Function.Related.html#8824" class="Function Operator"
+      >&#8596;&#10216;</a
+      ><a name="1930"
+      > </a
+      ><a name="1931" href="Explore.Sum.html#1776" class="Bound"
+      >a&#7468;</a
+      ><a name="1933"
+      > </a
+      ><a name="1934" href="Explore.Sum.html#1782" class="Bound"
+      >F</a
+      ><a name="1935"
+      > </a
+      ><a name="1936" href="Explore.Sum.html#1784" class="Bound"
+      >&#949;</a
+      ><a name="1937"
+      > </a
+      ><a name="1938" href="Explore.Sum.html#1786" class="Bound Operator"
+      >_&#8853;_</a
+      ><a name="1941"
+      > </a
+      ><a name="1942" class="Symbol"
+      >(</a
+      ><a name="1943" href="Explore.Sum.html#1790" class="Bound"
+      >f</a
+      ><a name="1944"
+      > </a
+      ><a name="1945" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1946"
+      > </a
+      ><a name="1947" href="Data.Sum.html#460" class="InductiveConstructor"
+      >inj&#8321;</a
+      ><a name="1951" class="Symbol"
+      >)</a
+      ><a name="1952"
+      > </a
+      ><a name="1953" href="Explore.Sum.html#1792" class="Bound"
+      >F-proof</a
+      ><a name="1960"
+      > </a
+      ><a name="1961" href="Relation.Binary.Sum.html#21982" class="Function Operator"
+      >&#8846;-cong</a
+      ><a name="1967"
+      > </a
+      ><a name="1968" href="Explore.Sum.html#1779" class="Bound"
+      >a&#7470;</a
+      ><a name="1970"
+      > </a
+      ><a name="1971" href="Explore.Sum.html#1782" class="Bound"
+      >F</a
+      ><a name="1972"
+      > </a
+      ><a name="1973" href="Explore.Sum.html#1784" class="Bound"
+      >&#949;</a
+      ><a name="1974"
+      > </a
+      ><a name="1975" href="Explore.Sum.html#1786" class="Bound Operator"
+      >_&#8853;_</a
+      ><a name="1978"
+      > </a
+      ><a name="1979" class="Symbol"
+      >(</a
+      ><a name="1980" href="Explore.Sum.html#1790" class="Bound"
+      >f</a
+      ><a name="1981"
+      > </a
+      ><a name="1982" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1983"
+      > </a
+      ><a name="1984" href="Data.Sum.html#485" class="InductiveConstructor"
+      >inj&#8322;</a
+      ><a name="1988" class="Symbol"
+      >)</a
+      ><a name="1989"
+      > </a
+      ><a name="1990" href="Explore.Sum.html#1792" class="Bound"
+      >F-proof</a
+      ><a name="1997"
+      > </a
+      ><a name="1998" href="Function.Related.html#8824" class="Function Operator"
+      >&#10217;</a
+      ><a name="1999"
+      >
+        </a
+      ><a name="2008" class="Symbol"
+      >(</a
+      ><a name="2009" href="Data.Product.html#439" class="Record"
+      >&#931;</a
+      ><a name="2010"
+      > </a
+      ><a name="2011" href="Explore.Sum.html#1620" class="Bound"
+      >A</a
+      ><a name="2012"
+      > </a
+      ><a name="2013" class="Symbol"
+      >(</a
+      ><a name="2014" href="Explore.Sum.html#1782" class="Bound"
+      >F</a
+      ><a name="2015"
+      > </a
+      ><a name="2016" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="2017"
+      > </a
+      ><a name="2018" href="Explore.Sum.html#1790" class="Bound"
+      >f</a
+      ><a name="2019"
+      > </a
+      ><a name="2020" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="2021"
+      > </a
+      ><a name="2022" href="Data.Sum.html#460" class="InductiveConstructor"
+      >inj&#8321;</a
+      ><a name="2026" class="Symbol"
+      >)</a
+      ><a name="2027"
+      > </a
+      ><a name="2028" href="Data.Sum.html#404" class="Datatype Operator"
+      >&#8846;</a
+      ><a name="2029"
+      > </a
+      ><a name="2030" href="Data.Product.html#439" class="Record"
+      >&#931;</a
+      ><a name="2031"
+      > </a
+      ><a name="2032" href="Explore.Sum.html#1622" class="Bound"
+      >B</a
+      ><a name="2033"
+      > </a
+      ><a name="2034" class="Symbol"
+      >(</a
+      ><a name="2035" href="Explore.Sum.html#1782" class="Bound"
+      >F</a
+      ><a name="2036"
+      > </a
+      ><a name="2037" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="2038"
+      > </a
+      ><a name="2039" href="Explore.Sum.html#1790" class="Bound"
+      >f</a
+      ><a name="2040"
+      > </a
+      ><a name="2041" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="2042"
+      > </a
+      ><a name="2043" href="Data.Sum.html#485" class="InductiveConstructor"
+      >inj&#8322;</a
+      ><a name="2047" class="Symbol"
+      >))</a
+      ><a name="2049"
+      >
+      </a
+      ><a name="2056" href="Function.Related.html#8824" class="Function Operator"
+      >&#8596;&#10216;</a
+      ><a name="2058"
+      > </a
+      ><a name="2059" href="Function.Inverse.html#4672" class="Function"
+      >FI.sym</a
+      ><a name="2065"
+      > </a
+      ><a name="2066" href="Function.Related.TypeIsomorphisms.NP.html#12324" class="Function"
+      >&#931;&#8846;-distrib</a
+      ><a name="2076"
+      > </a
+      ><a name="2077" href="Function.Related.html#8824" class="Function Operator"
+      >&#10217;</a
+      ><a name="2078"
+      >
+        </a
+      ><a name="2087" href="Data.Product.html#439" class="Record"
+      >&#931;</a
+      ><a name="2088"
+      > </a
+      ><a name="2089" class="Symbol"
+      >(</a
+      ><a name="2090" href="Explore.Sum.html#1620" class="Bound"
+      >A</a
+      ><a name="2091"
+      > </a
+      ><a name="2092" href="Data.Sum.html#404" class="Datatype Operator"
+      >&#8846;</a
+      ><a name="2093"
+      > </a
+      ><a name="2094" href="Explore.Sum.html#1622" class="Bound"
+      >B</a
+      ><a name="2095" class="Symbol"
+      >)</a
+      ><a name="2096"
+      > </a
+      ><a name="2097" class="Symbol"
+      >(</a
+      ><a name="2098" href="Explore.Sum.html#1782" class="Bound"
+      >F</a
+      ><a name="2099"
+      > </a
+      ><a name="2100" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="2101"
+      > </a
+      ><a name="2102" href="Explore.Sum.html#1790" class="Bound"
+      >f</a
+      ><a name="2103" class="Symbol"
+      >)</a
+      ><a name="2104"
+      >
+      </a
+      ><a name="2111" href="Function.Related.html#9205" class="Function Operator"
+      >&#8718;</a
+      ><a name="2112"
+      >
+     </a
+      ><a name="2118" class="Keyword"
+      >where</a
+      ><a name="2123"
+      > </a
+      ><a name="2124" class="Keyword"
+      >open</a
+      ><a name="2128"
+      > </a
+      ><a name="2129" href="Function.Related.html#318" class="Module"
+      >FR.</a
+      ><a name="2132" href="Function.Related.html#7412" class="Module"
+      >EquationalReasoning</a
+      ><a name="2151"
+      >
+           </a
+      ><a name="2163" href="Explore.Sum.html#2163" class="Function"
+      >big&#8853;&#7468;</a
+      ><a name="2168"
+      > </a
+      ><a name="2169" class="Symbol"
+      >=</a
+      ><a name="2170"
+      > </a
+      ><a name="2171" href="Explore.Sum.html#1625" class="Bound"
+      >e&#7468;</a
+      ><a name="2173"
+      > </a
+      ><a name="2174" href="Explore.Sum.html#1784" class="Bound"
+      >&#949;</a
+      ><a name="2175"
+      > </a
+      ><a name="2176" href="Explore.Sum.html#1786" class="Bound Operator"
+      >_&#8853;_</a
+      ><a name="2179"
+      >
+           </a
+      ><a name="2191" href="Explore.Sum.html#2191" class="Function"
+      >big&#8853;&#7470;</a
+      ><a name="2196"
+      > </a
+      ><a name="2197" class="Symbol"
+      >=</a
+      ><a name="2198"
+      > </a
+      ><a name="2199" href="Explore.Sum.html#1643" class="Bound"
+      >e&#7470;</a
+      ><a name="2201"
+      > </a
+      ><a name="2202" href="Explore.Sum.html#1784" class="Bound"
+      >&#949;</a
+      ><a name="2203"
+      > </a
+      ><a name="2204" href="Explore.Sum.html#1786" class="Bound Operator"
+      >_&#8853;_</a
+      ><a name="2207"
+      >
+
+</a
+      ><a name="2209" class="Keyword"
+      >infixr</a
+      ><a name="2215"
+      > </a
+      ><a name="2216" class="Number"
+      >4</a
+      ><a name="2217"
+      > _&#8846;&#7497;_ _&#8846;&#8305;_ _&#8846;&#738;_
+</a
+      ><a name="2233" href="Explore.Sum.html#2233" class="Function Operator"
+      >_&#8846;&#7497;_</a
+      ><a name="2237"
+      > </a
+      ><a name="2238" class="Symbol"
+      >=</a
+      ><a name="2239"
+      > </a
+      ><a name="2240" href="Explore.Sum.html#1094" class="Function"
+      >explore&#8846;</a
+      ><a name="2248"
+      >
+</a
+      ><a name="2249" href="Explore.Sum.html#2249" class="Function Operator"
+      >_&#8846;&#8305;_</a
+      ><a name="2253"
+      > </a
+      ><a name="2254" class="Symbol"
+      >=</a
+      ><a name="2255"
+      > </a
+      ><a name="2256" href="Explore.Sum.html#1301" class="Function"
+      >explore&#8846;-ind</a
+      ><a name="2268"
+      >
+
+</a
+      ><a name="2270" href="Explore.Sum.html#2270" class="Function Operator"
+      >_&#8846;&#738;_</a
+      ><a name="2274"
+      > </a
+      ><a name="2275" class="Symbol"
+      >:</a
+      ><a name="2276"
+      > </a
+      ><a name="2277" class="Symbol"
+      >&#8704;</a
+      ><a name="2278"
+      > </a
+      ><a name="2279" class="Symbol"
+      >{</a
+      ><a name="2280" href="Explore.Sum.html#2280" class="Bound"
+      >A</a
+      ><a name="2281"
+      > </a
+      ><a name="2282" href="Explore.Sum.html#2282" class="Bound"
+      >B</a
+      ><a name="2283" class="Symbol"
+      >}</a
+      ><a name="2284"
+      > </a
+      ><a name="2285" class="Symbol"
+      >&#8594;</a
+      ><a name="2286"
+      > </a
+      ><a name="2287" href="Explore.Core.html#789" class="Function"
+      >Sum</a
+      ><a name="2290"
+      > </a
+      ><a name="2291" href="Explore.Sum.html#2280" class="Bound"
+      >A</a
+      ><a name="2292"
+      > </a
+      ><a name="2293" class="Symbol"
+      >&#8594;</a
+      ><a name="2294"
+      > </a
+      ><a name="2295" href="Explore.Core.html#789" class="Function"
+      >Sum</a
+      ><a name="2298"
+      > </a
+      ><a name="2299" href="Explore.Sum.html#2282" class="Bound"
+      >B</a
+      ><a name="2300"
+      > </a
+      ><a name="2301" class="Symbol"
+      >&#8594;</a
+      ><a name="2302"
+      > </a
+      ><a name="2303" href="Explore.Core.html#789" class="Function"
+      >Sum</a
+      ><a name="2306"
+      > </a
+      ><a name="2307" class="Symbol"
+      >(</a
+      ><a name="2308" href="Explore.Sum.html#2280" class="Bound"
+      >A</a
+      ><a name="2309"
+      > </a
+      ><a name="2310" href="Data.Sum.html#404" class="Datatype Operator"
+      >&#8846;</a
+      ><a name="2311"
+      > </a
+      ><a name="2312" href="Explore.Sum.html#2282" class="Bound"
+      >B</a
+      ><a name="2313" class="Symbol"
+      >)</a
+      ><a name="2314"
+      >
+</a
+      ><a name="2315" href="Explore.Sum.html#2270" class="Function Operator"
+      >_&#8846;&#738;_</a
+      ><a name="2319"
+      > </a
+      ><a name="2320" class="Symbol"
+      >=</a
+      ><a name="2321"
+      > </a
+      ><a name="2322" href="Explore.Sum.html#1018" class="Function"
+      >&#8846;&#7580;</a
+      ><a name="2324"
+      > </a
+      ><a name="2325" href="Data.Nat.html#2239" class="Primitive Operator"
+      >_+_</a
+      ><a name="2328"
+      >
+
+</a
+      ><a name="2330" class="Keyword"
+      >module</a
+      ><a name="2336"
+      > </a
+      ><a name="2337" href="Explore.Sum.html#2337" class="Module"
+      >_</a
+      ><a name="2338"
+      > </a
+      ><a name="2339" class="Symbol"
+      >{</a
+      ><a name="2340" href="Explore.Sum.html#2340" class="Bound"
+      >A</a
+      ><a name="2341"
+      > </a
+      ><a name="2342" href="Explore.Sum.html#2342" class="Bound"
+      >B</a
+      ><a name="2343" class="Symbol"
+      >}</a
+      ><a name="2344"
+      > </a
+      ><a name="2345" class="Symbol"
+      >{</a
+      ><a name="2346" href="Explore.Sum.html#2346" class="Bound"
+      >sum&#7468;</a
+      ><a name="2350"
+      > </a
+      ><a name="2351" class="Symbol"
+      >:</a
+      ><a name="2352"
+      > </a
+      ><a name="2353" href="Explore.Core.html#789" class="Function"
+      >Sum</a
+      ><a name="2356"
+      > </a
+      ><a name="2357" href="Explore.Sum.html#2340" class="Bound"
+      >A</a
+      ><a name="2358" class="Symbol"
+      >}</a
+      ><a name="2359"
+      > </a
+      ><a name="2360" class="Symbol"
+      >{</a
+      ><a name="2361" href="Explore.Sum.html#2361" class="Bound"
+      >sum&#7470;</a
+      ><a name="2365"
+      > </a
+      ><a name="2366" class="Symbol"
+      >:</a
+      ><a name="2367"
+      > </a
+      ><a name="2368" href="Explore.Core.html#789" class="Function"
+      >Sum</a
+      ><a name="2371"
+      > </a
+      ><a name="2372" href="Explore.Sum.html#2342" class="Bound"
+      >B</a
+      ><a name="2373" class="Symbol"
+      >}</a
+      ><a name="2374"
+      > </a
+      ><a name="2375" class="Keyword"
+      >where</a
+      ><a name="2380"
+      >
+
+    </a
+      ><a name="2386" href="Explore.Sum.html#2386" class="Function"
+      >adequate-sum&#8846;</a
+      ><a name="2399"
+      > </a
+      ><a name="2400" class="Symbol"
+      >:</a
+      ><a name="2401"
+      > </a
+      ><a name="2402" href="Explore.Properties.html#3626" class="Function"
+      >AdequateSum</a
+      ><a name="2413"
+      > </a
+      ><a name="2414" href="Explore.Sum.html#2346" class="Bound"
+      >sum&#7468;</a
+      ><a name="2418"
+      > </a
+      ><a name="2419" class="Symbol"
+      >&#8594;</a
+      ><a name="2420"
+      > </a
+      ><a name="2421" href="Explore.Properties.html#3626" class="Function"
+      >AdequateSum</a
+      ><a name="2432"
+      > </a
+      ><a name="2433" href="Explore.Sum.html#2361" class="Bound"
+      >sum&#7470;</a
+      ><a name="2437"
+      > </a
+      ><a name="2438" class="Symbol"
+      >&#8594;</a
+      ><a name="2439"
+      > </a
+      ><a name="2440" href="Explore.Properties.html#3626" class="Function"
+      >AdequateSum</a
+      ><a name="2451"
+      > </a
+      ><a name="2452" class="Symbol"
+      >(</a
+      ><a name="2453" href="Explore.Sum.html#2346" class="Bound"
+      >sum&#7468;</a
+      ><a name="2457"
+      > </a
+      ><a name="2458" href="Explore.Sum.html#2270" class="Function Operator"
+      >&#8846;&#738;</a
+      ><a name="2460"
+      > </a
+      ><a name="2461" href="Explore.Sum.html#2361" class="Bound"
+      >sum&#7470;</a
+      ><a name="2465" class="Symbol"
+      >)</a
+      ><a name="2466"
+      >
+    </a
+      ><a name="2471" href="Explore.Sum.html#2386" class="Function"
+      >adequate-sum&#8846;</a
+      ><a name="2484"
+      > </a
+      ><a name="2485" href="Explore.Sum.html#2485" class="Bound"
+      >asum&#7468;</a
+      ><a name="2490"
+      > </a
+      ><a name="2491" href="Explore.Sum.html#2491" class="Bound"
+      >asum&#7470;</a
+      ><a name="2496"
+      > </a
+      ><a name="2497" href="Explore.Sum.html#2497" class="Bound"
+      >f</a
+      ><a name="2498"
+      >    </a
+      ><a name="2502" class="Symbol"
+      >=</a
+      ><a name="2503"
+      > </a
+      ><a name="2504" class="Symbol"
+      >(</a
+      ><a name="2505" href="Data.Fin.html#775" class="Datatype"
+      >Fin</a
+      ><a name="2508"
+      > </a
+      ><a name="2509" class="Symbol"
+      >(</a
+      ><a name="2510" href="Explore.Sum.html#2346" class="Bound"
+      >sum&#7468;</a
+      ><a name="2514"
+      > </a
+      ><a name="2515" class="Symbol"
+      >(</a
+      ><a name="2516" href="Explore.Sum.html#2497" class="Bound"
+      >f</a
+      ><a name="2517"
+      > </a
+      ><a name="2518" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="2519"
+      > </a
+      ><a name="2520" href="Data.Sum.html#460" class="InductiveConstructor"
+      >inj&#8321;</a
+      ><a name="2524" class="Symbol"
+      >)</a
+      ><a name="2525"
+      > </a
+      ><a name="2526" href="Data.Nat.html#2239" class="Primitive Operator"
+      >+</a
+      ><a name="2527"
+      > </a
+      ><a name="2528" href="Explore.Sum.html#2361" class="Bound"
+      >sum&#7470;</a
+      ><a name="2532"
+      > </a
+      ><a name="2533" class="Symbol"
+      >(</a
+      ><a name="2534" href="Explore.Sum.html#2497" class="Bound"
+      >f</a
+      ><a name="2535"
+      > </a
+      ><a name="2536" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="2537"
+      > </a
+      ><a name="2538" href="Data.Sum.html#485" class="InductiveConstructor"
+      >inj&#8322;</a
+      ><a name="2542" class="Symbol"
+      >)))</a
+      ><a name="2545"
+      >
+                                   </a
+      ><a name="2581" href="Function.Related.html#8824" class="Function Operator"
+      >&#8596;&#10216;</a
+      ><a name="2583"
+      > </a
+      ><a name="2584" href="Function.Inverse.html#4672" class="Function"
+      >FI.sym</a
+      ><a name="2590"
+      > </a
+      ><a name="2591" class="Symbol"
+      >(</a
+      ><a name="2592" href="Function.Related.TypeIsomorphisms.NP.html#28388" class="Function"
+      >Fin-&#8846;-+</a
+      ><a name="2599"
+      > </a
+      ><a name="2600" class="Symbol"
+      >_</a
+      ><a name="2601"
+      > </a
+      ><a name="2602" class="Symbol"
+      >_)</a
+      ><a name="2604"
+      > </a
+      ><a name="2605" href="Function.Related.html#8824" class="Function Operator"
+      >&#10217;</a
+      ><a name="2606"
+      >
+                                     </a
+      ><a name="2644" class="Symbol"
+      >(</a
+      ><a name="2645" href="Data.Fin.html#775" class="Datatype"
+      >Fin</a
+      ><a name="2648"
+      > </a
+      ><a name="2649" class="Symbol"
+      >(</a
+      ><a name="2650" href="Explore.Sum.html#2346" class="Bound"
+      >sum&#7468;</a
+      ><a name="2654"
+      > </a
+      ><a name="2655" class="Symbol"
+      >(</a
+      ><a name="2656" href="Explore.Sum.html#2497" class="Bound"
+      >f</a
+      ><a name="2657"
+      > </a
+      ><a name="2658" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="2659"
+      > </a
+      ><a name="2660" href="Data.Sum.html#460" class="InductiveConstructor"
+      >inj&#8321;</a
+      ><a name="2664" class="Symbol"
+      >))</a
+      ><a name="2666"
+      > </a
+      ><a name="2667" href="Data.Sum.html#404" class="Datatype Operator"
+      >&#8846;</a
+      ><a name="2668"
+      > </a
+      ><a name="2669" href="Data.Fin.html#775" class="Datatype"
+      >Fin</a
+      ><a name="2672"
+      > </a
+      ><a name="2673" class="Symbol"
+      >(</a
+      ><a name="2674" href="Explore.Sum.html#2361" class="Bound"
+      >sum&#7470;</a
+      ><a name="2678"
+      > </a
+      ><a name="2679" class="Symbol"
+      >(</a
+      ><a name="2680" href="Explore.Sum.html#2497" class="Bound"
+      >f</a
+      ><a name="2681"
+      > </a
+      ><a name="2682" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="2683"
+      > </a
+      ><a name="2684" href="Data.Sum.html#485" class="InductiveConstructor"
+      >inj&#8322;</a
+      ><a name="2688" class="Symbol"
+      >)))</a
+      ><a name="2691"
+      >
+                                   </a
+      ><a name="2727" href="Function.Related.html#8824" class="Function Operator"
+      >&#8596;&#10216;</a
+      ><a name="2729"
+      > </a
+      ><a name="2730" href="Explore.Sum.html#2485" class="Bound"
+      >asum&#7468;</a
+      ><a name="2735"
+      > </a
+      ><a name="2736" class="Symbol"
+      >(</a
+      ><a name="2737" href="Explore.Sum.html#2497" class="Bound"
+      >f</a
+      ><a name="2738"
+      > </a
+      ><a name="2739" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="2740"
+      > </a
+      ><a name="2741" href="Data.Sum.html#460" class="InductiveConstructor"
+      >inj&#8321;</a
+      ><a name="2745" class="Symbol"
+      >)</a
+      ><a name="2746"
+      > </a
+      ><a name="2747" href="Relation.Binary.Sum.html#21982" class="Function Operator"
+      >&#8846;-cong</a
+      ><a name="2753"
+      > </a
+      ><a name="2754" href="Explore.Sum.html#2491" class="Bound"
+      >asum&#7470;</a
+      ><a name="2759"
+      > </a
+      ><a name="2760" class="Symbol"
+      >(</a
+      ><a name="2761" href="Explore.Sum.html#2497" class="Bound"
+      >f</a
+      ><a name="2762"
+      > </a
+      ><a name="2763" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="2764"
+      > </a
+      ><a name="2765" href="Data.Sum.html#485" class="InductiveConstructor"
+      >inj&#8322;</a
+      ><a name="2769" class="Symbol"
+      >)</a
+      ><a name="2770"
+      > </a
+      ><a name="2771" href="Function.Related.html#8824" class="Function Operator"
+      >&#10217;</a
+      ><a name="2772"
+      >
+                                     </a
+      ><a name="2810" class="Symbol"
+      >(</a
+      ><a name="2811" href="Data.Product.html#439" class="Record"
+      >&#931;</a
+      ><a name="2812"
+      > </a
+      ><a name="2813" href="Explore.Sum.html#2340" class="Bound"
+      >A</a
+      ><a name="2814"
+      > </a
+      ><a name="2815" class="Symbol"
+      >(</a
+      ><a name="2816" href="Data.Fin.html#775" class="Datatype"
+      >Fin</a
+      ><a name="2819"
+      > </a
+      ><a name="2820" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="2821"
+      > </a
+      ><a name="2822" href="Explore.Sum.html#2497" class="Bound"
+      >f</a
+      ><a name="2823"
+      > </a
+      ><a name="2824" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="2825"
+      > </a
+      ><a name="2826" href="Data.Sum.html#460" class="InductiveConstructor"
+      >inj&#8321;</a
+      ><a name="2830" class="Symbol"
+      >)</a
+      ><a name="2831"
+      > </a
+      ><a name="2832" href="Data.Sum.html#404" class="Datatype Operator"
+      >&#8846;</a
+      ><a name="2833"
+      > </a
+      ><a name="2834" href="Data.Product.html#439" class="Record"
+      >&#931;</a
+      ><a name="2835"
+      > </a
+      ><a name="2836" href="Explore.Sum.html#2342" class="Bound"
+      >B</a
+      ><a name="2837"
+      > </a
+      ><a name="2838" class="Symbol"
+      >(</a
+      ><a name="2839" href="Data.Fin.html#775" class="Datatype"
+      >Fin</a
+      ><a name="2842"
+      > </a
+      ><a name="2843" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="2844"
+      > </a
+      ><a name="2845" href="Explore.Sum.html#2497" class="Bound"
+      >f</a
+      ><a name="2846"
+      > </a
+      ><a name="2847" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="2848"
+      > </a
+      ><a name="2849" href="Data.Sum.html#485" class="InductiveConstructor"
+      >inj&#8322;</a
+      ><a name="2853" class="Symbol"
+      >))</a
+      ><a name="2855"
+      >
+                                   </a
+      ><a name="2891" href="Function.Related.html#8824" class="Function Operator"
+      >&#8596;&#10216;</a
+      ><a name="2893"
+      > </a
+      ><a name="2894" href="Function.Inverse.html#4672" class="Function"
+      >FI.sym</a
+      ><a name="2900"
+      > </a
+      ><a name="2901" href="Function.Related.TypeIsomorphisms.NP.html#12324" class="Function"
+      >&#931;&#8846;-distrib</a
+      ><a name="2911"
+      > </a
+      ><a name="2912" href="Function.Related.html#8824" class="Function Operator"
+      >&#10217;</a
+      ><a name="2913"
+      >
+                                     </a
+      ><a name="2951" href="Data.Product.html#439" class="Record"
+      >&#931;</a
+      ><a name="2952"
+      > </a
+      ><a name="2953" class="Symbol"
+      >(</a
+      ><a name="2954" href="Explore.Sum.html#2340" class="Bound"
+      >A</a
+      ><a name="2955"
+      > </a
+      ><a name="2956" href="Data.Sum.html#404" class="Datatype Operator"
+      >&#8846;</a
+      ><a name="2957"
+      > </a
+      ><a name="2958" href="Explore.Sum.html#2342" class="Bound"
+      >B</a
+      ><a name="2959" class="Symbol"
+      >)</a
+      ><a name="2960"
+      > </a
+      ><a name="2961" class="Symbol"
+      >(</a
+      ><a name="2962" href="Data.Fin.html#775" class="Datatype"
+      >Fin</a
+      ><a name="2965"
+      > </a
+      ><a name="2966" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="2967"
+      > </a
+      ><a name="2968" href="Explore.Sum.html#2497" class="Bound"
+      >f</a
+      ><a name="2969" class="Symbol"
+      >)</a
+      ><a name="2970"
+      >
+                                   </a
+      ><a name="3006" href="Function.Related.html#9205" class="Function Operator"
+      >&#8718;</a
+      ><a name="3007"
+      >
+      </a
+      ><a name="3014" class="Keyword"
+      >where</a
+      ><a name="3019"
+      > </a
+      ><a name="3020" class="Keyword"
+      >open</a
+      ><a name="3024"
+      > </a
+      ><a name="3025" href="Function.Related.html#318" class="Module"
+      >FR.</a
+      ><a name="3028" href="Function.Related.html#7412" class="Module"
+      >EquationalReasoning</a
+      ><a name="3047"
+      >
+
+    </a
+      ><a name="3053" href="Explore.Sum.html#3053" class="Function Operator"
+      >_&#8846;&#7491;_</a
+      ><a name="3057"
+      > </a
+      ><a name="3058" class="Symbol"
+      >=</a
+      ><a name="3059"
+      > </a
+      ><a name="3060" href="Explore.Sum.html#2386" class="Function"
+      >adequate-sum&#8846;</a
+      ><a name="3073"
+      >
+
+</a
+      ><a name="3075" class="Keyword"
+      >module</a
+      ><a name="3081"
+      > </a
+      ><a name="3082" href="Explore.Sum.html#3082" class="Module"
+      >_</a
+      ><a name="3083"
+      > </a
+      ><a name="3084" class="Symbol"
+      >{</a
+      ><a name="3085" href="Explore.Sum.html#3085" class="Bound"
+      >&#8467;</a
+      ><a name="3086" class="Symbol"
+      >}</a
+      ><a name="3087"
+      > </a
+      ><a name="3088" class="Symbol"
+      >{</a
+      ><a name="3089" href="Explore.Sum.html#3089" class="Bound"
+      >A</a
+      ><a name="3090"
+      > </a
+      ><a name="3091" href="Explore.Sum.html#3091" class="Bound"
+      >B</a
+      ><a name="3092" class="Symbol"
+      >}</a
+      ><a name="3093"
+      > </a
+      ><a name="3094" class="Symbol"
+      >{</a
+      ><a name="3095" href="Explore.Sum.html#3095" class="Bound"
+      >e&#7468;</a
+      ><a name="3097"
+      > </a
+      ><a name="3098" class="Symbol"
+      >:</a
+      ><a name="3099"
+      > </a
+      ><a name="3100" href="Explore.Core.html#447" class="Function"
+      >Explore</a
+      ><a name="3107"
+      > </a
+      ><a name="3108" class="Symbol"
+      >(</a
+      ><a name="3109" href="Agda.Prim.html#284" class="Primitive"
+      >&#8347;</a
+      ><a name="3110"
+      > </a
+      ><a name="3111" href="Explore.Sum.html#3085" class="Bound"
+      >&#8467;</a
+      ><a name="3112" class="Symbol"
+      >)</a
+      ><a name="3113"
+      > </a
+      ><a name="3114" href="Explore.Sum.html#3089" class="Bound"
+      >A</a
+      ><a name="3115" class="Symbol"
+      >}</a
+      ><a name="3116"
+      > </a
+      ><a name="3117" class="Symbol"
+      >{</a
+      ><a name="3118" href="Explore.Sum.html#3118" class="Bound"
+      >e&#7470;</a
+      ><a name="3120"
+      > </a
+      ><a name="3121" class="Symbol"
+      >:</a
+      ><a name="3122"
+      > </a
+      ><a name="3123" href="Explore.Core.html#447" class="Function"
+      >Explore</a
+      ><a name="3130"
+      > </a
+      ><a name="3131" class="Symbol"
+      >(</a
+      ><a name="3132" href="Agda.Prim.html#284" class="Primitive"
+      >&#8347;</a
+      ><a name="3133"
+      > </a
+      ><a name="3134" href="Explore.Sum.html#3085" class="Bound"
+      >&#8467;</a
+      ><a name="3135" class="Symbol"
+      >)</a
+      ><a name="3136"
+      > </a
+      ><a name="3137" href="Explore.Sum.html#3091" class="Bound"
+      >B</a
+      ><a name="3138" class="Symbol"
+      >}</a
+      ><a name="3139"
+      > </a
+      ><a name="3140" class="Keyword"
+      >where</a
+      ><a name="3145"
+      >
+  </a
+      ><a name="3148" href="Explore.Sum.html#3148" class="Function"
+      >s&#7468;&#8314;&#7470;</a
+      ><a name="3152"
+      > </a
+      ><a name="3153" class="Symbol"
+      >=</a
+      ><a name="3154"
+      > </a
+      ><a name="3155" href="Explore.Sum.html#3095" class="Bound"
+      >e&#7468;</a
+      ><a name="3157"
+      > </a
+      ><a name="3158" href="Explore.Sum.html#2233" class="Function Operator"
+      >&#8846;&#7497;</a
+      ><a name="3160"
+      > </a
+      ><a name="3161" href="Explore.Sum.html#3118" class="Bound"
+      >e&#7470;</a
+      ><a name="3163"
+      >
+  </a
+      ><a name="3166" href="Explore.Sum.html#3166" class="Function"
+      >focus&#8846;</a
+      ><a name="3172"
+      > </a
+      ><a name="3173" class="Symbol"
+      >:</a
+      ><a name="3174"
+      > </a
+      ><a name="3175" href="Explore.Properties.html#9767" class="Function"
+      >Focus</a
+      ><a name="3180"
+      > </a
+      ><a name="3181" href="Explore.Sum.html#3095" class="Bound"
+      >e&#7468;</a
+      ><a name="3183"
+      > </a
+      ><a name="3184" class="Symbol"
+      >&#8594;</a
+      ><a name="3185"
+      > </a
+      ><a name="3186" href="Explore.Properties.html#9767" class="Function"
+      >Focus</a
+      ><a name="3191"
+      > </a
+      ><a name="3192" href="Explore.Sum.html#3118" class="Bound"
+      >e&#7470;</a
+      ><a name="3194"
+      > </a
+      ><a name="3195" class="Symbol"
+      >&#8594;</a
+      ><a name="3196"
+      > </a
+      ><a name="3197" href="Explore.Properties.html#9767" class="Function"
+      >Focus</a
+      ><a name="3202"
+      > </a
+      ><a name="3203" href="Explore.Sum.html#3148" class="Function"
+      >s&#7468;&#8314;&#7470;</a
+      ><a name="3207"
+      >
+  </a
+      ><a name="3210" href="Explore.Sum.html#3166" class="Function"
+      >focus&#8846;</a
+      ><a name="3216"
+      > </a
+      ><a name="3217" href="Explore.Sum.html#3217" class="Bound"
+      >f&#7468;</a
+      ><a name="3219"
+      > </a
+      ><a name="3220" href="Explore.Sum.html#3220" class="Bound"
+      >f&#7470;</a
+      ><a name="3222"
+      > </a
+      ><a name="3223" class="Symbol"
+      >(</a
+      ><a name="3224" href="Data.Sum.html#460" class="InductiveConstructor"
+      >inj&#8321;</a
+      ><a name="3228"
+      > </a
+      ><a name="3229" href="Explore.Sum.html#3229" class="Bound"
+      >x</a
+      ><a name="3230"
+      > </a
+      ><a name="3231" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="3232"
+      > </a
+      ><a name="3233" href="Explore.Sum.html#3233" class="Bound"
+      >y</a
+      ><a name="3234" class="Symbol"
+      >)</a
+      ><a name="3235"
+      > </a
+      ><a name="3236" class="Symbol"
+      >=</a
+      ><a name="3237"
+      > </a
+      ><a name="3238" href="Data.Sum.html#460" class="InductiveConstructor"
+      >inj&#8321;</a
+      ><a name="3242"
+      > </a
+      ><a name="3243" class="Symbol"
+      >(</a
+      ><a name="3244" href="Explore.Sum.html#3217" class="Bound"
+      >f&#7468;</a
+      ><a name="3246"
+      > </a
+      ><a name="3247" class="Symbol"
+      >(</a
+      ><a name="3248" href="Explore.Sum.html#3229" class="Bound"
+      >x</a
+      ><a name="3249"
+      > </a
+      ><a name="3250" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="3251"
+      > </a
+      ><a name="3252" href="Explore.Sum.html#3233" class="Bound"
+      >y</a
+      ><a name="3253" class="Symbol"
+      >))</a
+      ><a name="3255"
+      >
+  </a
+      ><a name="3258" href="Explore.Sum.html#3166" class="Function"
+      >focus&#8846;</a
+      ><a name="3264"
+      > </a
+      ><a name="3265" href="Explore.Sum.html#3265" class="Bound"
+      >f&#7468;</a
+      ><a name="3267"
+      > </a
+      ><a name="3268" href="Explore.Sum.html#3268" class="Bound"
+      >f&#7470;</a
+      ><a name="3270"
+      > </a
+      ><a name="3271" class="Symbol"
+      >(</a
+      ><a name="3272" href="Data.Sum.html#485" class="InductiveConstructor"
+      >inj&#8322;</a
+      ><a name="3276"
+      > </a
+      ><a name="3277" href="Explore.Sum.html#3277" class="Bound"
+      >x</a
+      ><a name="3278"
+      > </a
+      ><a name="3279" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="3280"
+      > </a
+      ><a name="3281" href="Explore.Sum.html#3281" class="Bound"
+      >y</a
+      ><a name="3282" class="Symbol"
+      >)</a
+      ><a name="3283"
+      > </a
+      ><a name="3284" class="Symbol"
+      >=</a
+      ><a name="3285"
+      > </a
+      ><a name="3286" href="Data.Sum.html#485" class="InductiveConstructor"
+      >inj&#8322;</a
+      ><a name="3290"
+      > </a
+      ><a name="3291" class="Symbol"
+      >(</a
+      ><a name="3292" href="Explore.Sum.html#3268" class="Bound"
+      >f&#7470;</a
+      ><a name="3294"
+      > </a
+      ><a name="3295" class="Symbol"
+      >(</a
+      ><a name="3296" href="Explore.Sum.html#3277" class="Bound"
+      >x</a
+      ><a name="3297"
+      > </a
+      ><a name="3298" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="3299"
+      > </a
+      ><a name="3300" href="Explore.Sum.html#3281" class="Bound"
+      >y</a
+      ><a name="3301" class="Symbol"
+      >))</a
+      ><a name="3303"
+      >
+
+  </a
+      ><a name="3307" href="Explore.Sum.html#3307" class="Function"
+      >unfocus&#8846;</a
+      ><a name="3315"
+      > </a
+      ><a name="3316" class="Symbol"
+      >:</a
+      ><a name="3317"
+      > </a
+      ><a name="3318" href="Explore.Properties.html#9692" class="Function"
+      >Unfocus</a
+      ><a name="3325"
+      > </a
+      ><a name="3326" href="Explore.Sum.html#3095" class="Bound"
+      >e&#7468;</a
+      ><a name="3328"
+      > </a
+      ><a name="3329" class="Symbol"
+      >&#8594;</a
+      ><a name="3330"
+      > </a
+      ><a name="3331" href="Explore.Properties.html#9692" class="Function"
+      >Unfocus</a
+      ><a name="3338"
+      > </a
+      ><a name="3339" href="Explore.Sum.html#3118" class="Bound"
+      >e&#7470;</a
+      ><a name="3341"
+      > </a
+      ><a name="3342" class="Symbol"
+      >&#8594;</a
+      ><a name="3343"
+      > </a
+      ><a name="3344" href="Explore.Properties.html#9692" class="Function"
+      >Unfocus</a
+      ><a name="3351"
+      > </a
+      ><a name="3352" href="Explore.Sum.html#3148" class="Function"
+      >s&#7468;&#8314;&#7470;</a
+      ><a name="3356"
+      >
+  </a
+      ><a name="3359" href="Explore.Sum.html#3307" class="Function"
+      >unfocus&#8846;</a
+      ><a name="3367"
+      > </a
+      ><a name="3368" href="Explore.Sum.html#3368" class="Bound"
+      >f&#7468;</a
+      ><a name="3370"
+      > </a
+      ><a name="3371" href="Explore.Sum.html#3371" class="Bound"
+      >f&#7470;</a
+      ><a name="3373"
+      > </a
+      ><a name="3374" class="Symbol"
+      >(</a
+      ><a name="3375" href="Data.Sum.html#460" class="InductiveConstructor"
+      >inj&#8321;</a
+      ><a name="3379"
+      > </a
+      ><a name="3380" href="Explore.Sum.html#3380" class="Bound"
+      >x</a
+      ><a name="3381" class="Symbol"
+      >)</a
+      ><a name="3382"
+      > </a
+      ><a name="3383" class="Symbol"
+      >=</a
+      ><a name="3384"
+      > </a
+      ><a name="3385" href="Data.Product.NP.html#527" class="Function"
+      >first</a
+      ><a name="3390"
+      > </a
+      ><a name="3391" href="Data.Sum.html#460" class="InductiveConstructor"
+      >inj&#8321;</a
+      ><a name="3395"
+      > </a
+      ><a name="3396" class="Symbol"
+      >(</a
+      ><a name="3397" href="Explore.Sum.html#3368" class="Bound"
+      >f&#7468;</a
+      ><a name="3399"
+      > </a
+      ><a name="3400" href="Explore.Sum.html#3380" class="Bound"
+      >x</a
+      ><a name="3401" class="Symbol"
+      >)</a
+      ><a name="3402"
+      >
+  </a
+      ><a name="3405" href="Explore.Sum.html#3307" class="Function"
+      >unfocus&#8846;</a
+      ><a name="3413"
+      > </a
+      ><a name="3414" href="Explore.Sum.html#3414" class="Bound"
+      >f&#7468;</a
+      ><a name="3416"
+      > </a
+      ><a name="3417" href="Explore.Sum.html#3417" class="Bound"
+      >f&#7470;</a
+      ><a name="3419"
+      > </a
+      ><a name="3420" class="Symbol"
+      >(</a
+      ><a name="3421" href="Data.Sum.html#485" class="InductiveConstructor"
+      >inj&#8322;</a
+      ><a name="3425"
+      > </a
+      ><a name="3426" href="Explore.Sum.html#3426" class="Bound"
+      >y</a
+      ><a name="3427" class="Symbol"
+      >)</a
+      ><a name="3428"
+      > </a
+      ><a name="3429" class="Symbol"
+      >=</a
+      ><a name="3430"
+      > </a
+      ><a name="3431" href="Data.Product.NP.html#527" class="Function"
+      >first</a
+      ><a name="3436"
+      > </a
+      ><a name="3437" href="Data.Sum.html#485" class="InductiveConstructor"
+      >inj&#8322;</a
+      ><a name="3441"
+      > </a
+      ><a name="3442" class="Symbol"
+      >(</a
+      ><a name="3443" href="Explore.Sum.html#3417" class="Bound"
+      >f&#7470;</a
+      ><a name="3445"
+      > </a
+      ><a name="3446" href="Explore.Sum.html#3426" class="Bound"
+      >y</a
+      ><a name="3447" class="Symbol"
+      >)</a
+      ><a name="3448"
+      >
+
+  </a
+      ><a name="3452" class="Comment"
+      >{-
+  _&#8846;-focused_ : Focused e&#7468; &#8594; Focused e&#7470; &#8594; Focused {L.zero} s&#7468;&#8314;&#7470;
+  _&#8846;-focused_ f&#7468; f&#7470; {B} = inverses (to f&#7468; &#8846;-focus to f&#7470;) (from f&#7468; &#8846;-unfocus from f&#7470;) (&#8658;) (&#8656;)
+      where
+        &#8658; : (x : &#931; (A &#8846; {!!}) {!!}) &#8594; _
+        &#8658; (x , y) = {!!}
+        &#8656; : (x : e&#7468; _&#8846;_ (B &#8728; inj&#8321;) &#8846; e&#7470; _&#8846;_ (B &#8728; inj&#8322;)) &#8594; _
+        &#8656; (inj&#8321; x) = cong inj&#8321; {!!}
+        &#8656; (inj&#8322; x) = cong inj&#8322; {!!}
+  -}</a
+      ><a name="3825"
+      >
+
+  </a
+      ><a name="3829" href="Explore.Sum.html#3829" class="Function"
+      >lookup&#8846;</a
+      ><a name="3836"
+      > </a
+      ><a name="3837" class="Symbol"
+      >:</a
+      ><a name="3838"
+      > </a
+      ><a name="3839" href="Explore.Properties.html#9476" class="Function"
+      >Lookup</a
+      ><a name="3845"
+      > </a
+      ><a name="3846" href="Explore.Sum.html#3095" class="Bound"
+      >e&#7468;</a
+      ><a name="3848"
+      > </a
+      ><a name="3849" class="Symbol"
+      >&#8594;</a
+      ><a name="3850"
+      > </a
+      ><a name="3851" href="Explore.Properties.html#9476" class="Function"
+      >Lookup</a
+      ><a name="3857"
+      > </a
+      ><a name="3858" href="Explore.Sum.html#3118" class="Bound"
+      >e&#7470;</a
+      ><a name="3860"
+      > </a
+      ><a name="3861" class="Symbol"
+      >&#8594;</a
+      ><a name="3862"
+      > </a
+      ><a name="3863" href="Explore.Properties.html#9476" class="Function"
+      >Lookup</a
+      ><a name="3869"
+      > </a
+      ><a name="3870" class="Symbol"
+      >(</a
+      ><a name="3871" href="Explore.Sum.html#3095" class="Bound"
+      >e&#7468;</a
+      ><a name="3873"
+      > </a
+      ><a name="3874" href="Explore.Sum.html#2233" class="Function Operator"
+      >&#8846;&#7497;</a
+      ><a name="3876"
+      > </a
+      ><a name="3877" href="Explore.Sum.html#3118" class="Bound"
+      >e&#7470;</a
+      ><a name="3879" class="Symbol"
+      >)</a
+      ><a name="3880"
+      >
+  </a
+      ><a name="3883" href="Explore.Sum.html#3829" class="Function"
+      >lookup&#8846;</a
+      ><a name="3890"
+      > </a
+      ><a name="3891" href="Explore.Sum.html#3891" class="Bound"
+      >lookup&#7468;</a
+      ><a name="3898"
+      > </a
+      ><a name="3899" href="Explore.Sum.html#3899" class="Bound"
+      >lookup&#7470;</a
+      ><a name="3906"
+      > </a
+      ><a name="3907" class="Symbol"
+      >(</a
+      ><a name="3908" href="Explore.Sum.html#3908" class="Bound"
+      >x</a
+      ><a name="3909"
+      > </a
+      ><a name="3910" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="3911"
+      > </a
+      ><a name="3912" href="Explore.Sum.html#3912" class="Bound"
+      >y</a
+      ><a name="3913" class="Symbol"
+      >)</a
+      ><a name="3914"
+      > </a
+      ><a name="3915" class="Symbol"
+      >=</a
+      ><a name="3916"
+      > </a
+      ><a name="3917" href="Data.Sum.html#678" class="Function Operator"
+      >[</a
+      ><a name="3918"
+      > </a
+      ><a name="3919" href="Explore.Sum.html#3891" class="Bound"
+      >lookup&#7468;</a
+      ><a name="3926"
+      > </a
+      ><a name="3927" href="Explore.Sum.html#3908" class="Bound"
+      >x</a
+      ><a name="3928"
+      > </a
+      ><a name="3929" href="Data.Sum.html#678" class="Function Operator"
+      >,</a
+      ><a name="3930"
+      > </a
+      ><a name="3931" href="Explore.Sum.html#3899" class="Bound"
+      >lookup&#7470;</a
+      ><a name="3938"
+      > </a
+      ><a name="3939" href="Explore.Sum.html#3912" class="Bound"
+      >y</a
+      ><a name="3940"
+      > </a
+      ><a name="3941" href="Data.Sum.html#678" class="Function Operator"
+      >]</a
+      ><a name="3942"
+      >
+
+  </a
+      ><a name="3946" href="Explore.Sum.html#3946" class="Function"
+      >reify&#8846;</a
+      ><a name="3952"
+      > </a
+      ><a name="3953" class="Symbol"
+      >:</a
+      ><a name="3954"
+      > </a
+      ><a name="3955" href="Explore.Properties.html#9548" class="Function"
+      >Reify</a
+      ><a name="3960"
+      > </a
+      ><a name="3961" href="Explore.Sum.html#3095" class="Bound"
+      >e&#7468;</a
+      ><a name="3963"
+      > </a
+      ><a name="3964" class="Symbol"
+      >&#8594;</a
+      ><a name="3965"
+      > </a
+      ><a name="3966" href="Explore.Properties.html#9548" class="Function"
+      >Reify</a
+      ><a name="3971"
+      > </a
+      ><a name="3972" href="Explore.Sum.html#3118" class="Bound"
+      >e&#7470;</a
+      ><a name="3974"
+      > </a
+      ><a name="3975" class="Symbol"
+      >&#8594;</a
+      ><a name="3976"
+      > </a
+      ><a name="3977" href="Explore.Properties.html#9548" class="Function"
+      >Reify</a
+      ><a name="3982"
+      > </a
+      ><a name="3983" class="Symbol"
+      >(</a
+      ><a name="3984" href="Explore.Sum.html#3095" class="Bound"
+      >e&#7468;</a
+      ><a name="3986"
+      > </a
+      ><a name="3987" href="Explore.Sum.html#2233" class="Function Operator"
+      >&#8846;&#7497;</a
+      ><a name="3989"
+      > </a
+      ><a name="3990" href="Explore.Sum.html#3118" class="Bound"
+      >e&#7470;</a
+      ><a name="3992" class="Symbol"
+      >)</a
+      ><a name="3993"
+      >
+  </a
+      ><a name="3996" href="Explore.Sum.html#3946" class="Function"
+      >reify&#8846;</a
+      ><a name="4002"
+      > </a
+      ><a name="4003" href="Explore.Sum.html#4003" class="Bound"
+      >reify&#7468;</a
+      ><a name="4009"
+      > </a
+      ><a name="4010" href="Explore.Sum.html#4010" class="Bound"
+      >reify&#7470;</a
+      ><a name="4016"
+      > </a
+      ><a name="4017" href="Explore.Sum.html#4017" class="Bound"
+      >f</a
+      ><a name="4018"
+      > </a
+      ><a name="4019" class="Symbol"
+      >=</a
+      ><a name="4020"
+      > </a
+      ><a name="4021" class="Symbol"
+      >(</a
+      ><a name="4022" href="Explore.Sum.html#4003" class="Bound"
+      >reify&#7468;</a
+      ><a name="4028"
+      > </a
+      ><a name="4029" class="Symbol"
+      >(</a
+      ><a name="4030" href="Explore.Sum.html#4017" class="Bound"
+      >f</a
+      ><a name="4031"
+      > </a
+      ><a name="4032" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="4033"
+      > </a
+      ><a name="4034" href="Data.Sum.html#460" class="InductiveConstructor"
+      >inj&#8321;</a
+      ><a name="4038" class="Symbol"
+      >))</a
+      ><a name="4040"
+      > </a
+      ><a name="4041" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="4042"
+      > </a
+      ><a name="4043" class="Symbol"
+      >(</a
+      ><a name="4044" href="Explore.Sum.html#4010" class="Bound"
+      >reify&#7470;</a
+      ><a name="4050"
+      > </a
+      ><a name="4051" class="Symbol"
+      >(</a
+      ><a name="4052" href="Explore.Sum.html#4017" class="Bound"
+      >f</a
+      ><a name="4053"
+      > </a
+      ><a name="4054" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="4055"
+      > </a
+      ><a name="4056" href="Data.Sum.html#485" class="InductiveConstructor"
+      >inj&#8322;</a
+      ><a name="4060" class="Symbol"
+      >))</a
+      ><a name="4062"
+      >
+
+</a
+      ><a name="4064" class="Comment"
+      >-- DEPRECATED</a
+      ><a name="4077"
+      >
+</a
+      ><a name="4078" href="Explore.Sum.html#4078" class="Function Operator"
+      >_&#8846;-&#956;_</a
+      ><a name="4083"
+      > </a
+      ><a name="4084" class="Symbol"
+      >:</a
+      ><a name="4085"
+      > </a
+      ><a name="4086" class="Symbol"
+      >&#8704;</a
+      ><a name="4087"
+      > </a
+      ><a name="4088" class="Symbol"
+      >{</a
+      ><a name="4089" href="Explore.Sum.html#4089" class="Bound"
+      >A</a
+      ><a name="4090"
+      > </a
+      ><a name="4091" href="Explore.Sum.html#4091" class="Bound"
+      >B</a
+      ><a name="4092" class="Symbol"
+      >}</a
+      ><a name="4093"
+      > </a
+      ><a name="4094" class="Symbol"
+      >&#8594;</a
+      ><a name="4095"
+      > </a
+      ><a name="4096" href="Explore.Explorable.html#14562" class="Record"
+      >Explorable</a
+      ><a name="4106"
+      > </a
+      ><a name="4107" href="Explore.Sum.html#4089" class="Bound"
+      >A</a
+      ><a name="4108"
+      > </a
+      ><a name="4109" class="Symbol"
+      >&#8594;</a
+      ><a name="4110"
+      > </a
+      ><a name="4111" href="Explore.Explorable.html#14562" class="Record"
+      >Explorable</a
+      ><a name="4121"
+      > </a
+      ><a name="4122" href="Explore.Sum.html#4091" class="Bound"
+      >B</a
+      ><a name="4123"
+      > </a
+      ><a name="4124" class="Symbol"
+      >&#8594;</a
+      ><a name="4125"
+      > </a
+      ><a name="4126" href="Explore.Explorable.html#14562" class="Record"
+      >Explorable</a
+      ><a name="4136"
+      > </a
+      ><a name="4137" class="Symbol"
+      >(</a
+      ><a name="4138" href="Explore.Sum.html#4089" class="Bound"
+      >A</a
+      ><a name="4139"
+      > </a
+      ><a name="4140" href="Data.Sum.html#404" class="Datatype Operator"
+      >&#8846;</a
+      ><a name="4141"
+      > </a
+      ><a name="4142" href="Explore.Sum.html#4091" class="Bound"
+      >B</a
+      ><a name="4143" class="Symbol"
+      >)</a
+      ><a name="4144"
+      >
+</a
+      ><a name="4145" href="Explore.Sum.html#4145" class="Bound"
+      >&#956;A</a
+      ><a name="4147"
+      > </a
+      ><a name="4148" href="Explore.Sum.html#4078" class="Function Operator"
+      >&#8846;-&#956;</a
+      ><a name="4151"
+      > </a
+      ><a name="4152" href="Explore.Sum.html#4152" class="Bound"
+      >&#956;B</a
+      ><a name="4154"
+      > </a
+      ><a name="4155" class="Symbol"
+      >=</a
+      ><a name="4156"
+      > </a
+      ><a name="4157" href="Explore.Explorable.html#14600" class="InductiveConstructor"
+      >mk</a
+      ><a name="4159"
+      > </a
+      ><a name="4160" class="Symbol"
+      >_</a
+      ><a name="4161"
+      > </a
+      ><a name="4162" class="Symbol"
+      >(</a
+      ><a name="4163" href="Explore.Explorable.html#14644" class="Field"
+      >explore-ind</a
+      ><a name="4174"
+      > </a
+      ><a name="4175" href="Explore.Sum.html#4145" class="Bound"
+      >&#956;A</a
+      ><a name="4177"
+      > </a
+      ><a name="4178" href="Explore.Sum.html#2249" class="Function Operator"
+      >&#8846;&#8305;</a
+      ><a name="4180"
+      > </a
+      ><a name="4181" href="Explore.Explorable.html#14644" class="Field"
+      >explore-ind</a
+      ><a name="4192"
+      > </a
+      ><a name="4193" href="Explore.Sum.html#4152" class="Bound"
+      >&#956;B</a
+      ><a name="4195" class="Symbol"
+      >)</a
+      ><a name="4196"
+      >
+                 </a
+      ><a name="4214" class="Symbol"
+      >(</a
+      ><a name="4215" href="Explore.Sum.html#2386" class="Function"
+      >adequate-sum&#8846;</a
+      ><a name="4228"
+      > </a
+      ><a name="4229" class="Symbol"
+      >(</a
+      ><a name="4230" href="Explore.Explorable.html#14722" class="Field"
+      >adequate-sum</a
+      ><a name="4242"
+      > </a
+      ><a name="4243" href="Explore.Sum.html#4145" class="Bound"
+      >&#956;A</a
+      ><a name="4245" class="Symbol"
+      >)</a
+      ><a name="4246"
+      > </a
+      ><a name="4247" class="Symbol"
+      >(</a
+      ><a name="4248" href="Explore.Explorable.html#14722" class="Field"
+      >adequate-sum</a
+      ><a name="4260"
+      > </a
+      ><a name="4261" href="Explore.Sum.html#4152" class="Bound"
+      >&#956;B</a
+      ><a name="4263" class="Symbol"
+      >))</a
+      ><a name="4265"
+      >
+
+ </a
+      ><a name="4268" class="Comment"
+      >-- -}</a
+      ><a name="4273"
+      >
+ </a
+      ><a name="4275" class="Comment"
+      >-- -}</a
+      ><a name="4280"
+      >
+ </a
+      ><a name="4282" class="Comment"
+      >-- -}</a
+      ><a name="4287"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

@@ -1,0 +1,2447 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Data.Two.Equality</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Symbol"
+      >{-#</a
+      ><a name="4"
+      > </a
+      ><a name="5" class="Keyword"
+      >OPTIONS</a
+      ><a name="12"
+      > --without-K </a
+      ><a name="25" class="Symbol"
+      >#-}</a
+      ><a name="28"
+      >
+</a
+      ><a name="29" class="Keyword"
+      >open</a
+      ><a name="33"
+      > </a
+      ><a name="34" class="Keyword"
+      >import</a
+      ><a name="40"
+      > </a
+      ><a name="41" href="Data.Two.html#1" class="Module"
+      >Data.Two</a
+      ><a name="49"
+      > </a
+      ><a name="50" class="Keyword"
+      >hiding</a
+      ><a name="56"
+      > </a
+      ><a name="57" class="Symbol"
+      >(</a
+      ><a name="58"
+      >_&#8799;_</a
+      ><a name="61" class="Symbol"
+      >;</a
+      ><a name="62"
+      > decSetoid</a
+      ><a name="72" class="Symbol"
+      >)</a
+      ><a name="73"
+      >
+</a
+      ><a name="74" class="Keyword"
+      >open</a
+      ><a name="78"
+      > </a
+      ><a name="79" class="Keyword"
+      >import</a
+      ><a name="85"
+      > </a
+      ><a name="86" href="Type.html#1" class="Module"
+      >Type</a
+      ><a name="90"
+      >
+</a
+      ><a name="91" class="Keyword"
+      >open</a
+      ><a name="95"
+      > </a
+      ><a name="96" class="Keyword"
+      >import</a
+      ><a name="102"
+      > </a
+      ><a name="103" href="Relation.Binary.html#1" class="Module"
+      >Relation.Binary</a
+      ><a name="118"
+      >
+</a
+      ><a name="119" class="Keyword"
+      >open</a
+      ><a name="123"
+      > </a
+      ><a name="124" class="Keyword"
+      >import</a
+      ><a name="130"
+      > </a
+      ><a name="131" href="Relation.Nullary.html#1" class="Module"
+      >Relation.Nullary</a
+      ><a name="147"
+      >
+</a
+      ><a name="148" class="Keyword"
+      >open</a
+      ><a name="152"
+      > </a
+      ><a name="153" class="Keyword"
+      >import</a
+      ><a name="159"
+      > </a
+      ><a name="160" href="Function.html#1" class="Module"
+      >Function</a
+      ><a name="168"
+      >
+</a
+      ><a name="169" class="Keyword"
+      >import</a
+      ><a name="175"
+      > </a
+      ><a name="176" href="Relation.Binary.PropositionalEquality.html#1" class="Module"
+      >Relation.Binary.PropositionalEquality</a
+      ><a name="213"
+      > </a
+      ><a name="214" class="Symbol"
+      >as</a
+      ><a name="216"
+      > </a
+      ><a name="217" class="Module"
+      >&#8801;</a
+      ><a name="218"
+      >
+</a
+      ><a name="219" class="Keyword"
+      >open</a
+      ><a name="223"
+      > </a
+      ><a name="224" href="Relation.Binary.PropositionalEquality.html#1" class="Module"
+      >&#8801;</a
+      ><a name="225"
+      > </a
+      ><a name="226" class="Keyword"
+      >using</a
+      ><a name="231"
+      > </a
+      ><a name="232" class="Symbol"
+      >(</a
+      ><a name="233"
+      >_&#8801;_</a
+      ><a name="236" class="Symbol"
+      >)</a
+      ><a name="237"
+      >
+
+</a
+      ><a name="239" class="Keyword"
+      >module</a
+      ><a name="245"
+      > </a
+      ><a name="246" href="Data.Two.Equality.html#1" class="Module"
+      >Data.Two.Equality</a
+      ><a name="263"
+      > </a
+      ><a name="264" class="Keyword"
+      >where</a
+      ><a name="269"
+      >
+
+</a
+      ><a name="271" class="Keyword"
+      >module</a
+      ><a name="277"
+      > </a
+      ><a name="278" href="Data.Two.Equality.html#278" class="Module"
+      >&#10003;-==</a
+      ><a name="282"
+      > </a
+      ><a name="283" class="Keyword"
+      >where</a
+      ><a name="288"
+      >
+
+    </a
+      ><a name="294" href="Data.Two.Equality.html#294" class="Function"
+      >decSetoid</a
+      ><a name="303"
+      > </a
+      ><a name="304" class="Symbol"
+      >:</a
+      ><a name="305"
+      > </a
+      ><a name="306" href="Relation.Binary.html#2921" class="Record"
+      >DecSetoid</a
+      ><a name="315"
+      > </a
+      ><a name="316" class="Symbol"
+      >_</a
+      ><a name="317"
+      > </a
+      ><a name="318" class="Symbol"
+      >_</a
+      ><a name="319"
+      >
+    </a
+      ><a name="324" href="Data.Two.Equality.html#294" class="Function"
+      >decSetoid</a
+      ><a name="333"
+      > </a
+      ><a name="334" class="Symbol"
+      >=</a
+      ><a name="335"
+      > </a
+      ><a name="336" class="Keyword"
+      >record</a
+      ><a name="342"
+      > </a
+      ><a name="343" class="Symbol"
+      >{</a
+      ><a name="344"
+      > </a
+      ><a name="345" class="Field"
+      >Carrier</a
+      ><a name="352"
+      > </a
+      ><a name="353" class="Symbol"
+      >=</a
+      ><a name="354"
+      > </a
+      ><a name="355" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="356" class="Symbol"
+      >;</a
+      ><a name="357"
+      > </a
+      ><a name="358" class="Field Operator"
+      >_&#8776;_</a
+      ><a name="361"
+      > </a
+      ><a name="362" class="Symbol"
+      >=</a
+      ><a name="363"
+      > </a
+      ><a name="364" href="Data.Two.Equality.html#427" class="Function Operator"
+      >_&#8776;_</a
+      ><a name="367" class="Symbol"
+      >;</a
+      ><a name="368"
+      > </a
+      ><a name="369" class="Field"
+      >isDecEquivalence</a
+      ><a name="385"
+      > </a
+      ><a name="386" class="Symbol"
+      >=</a
+      ><a name="387"
+      > </a
+      ><a name="388" href="Data.Two.Equality.html#1294" class="Function"
+      >isDecEquivalence</a
+      ><a name="404"
+      > </a
+      ><a name="405" class="Symbol"
+      >}</a
+      ><a name="406"
+      >
+      </a
+      ><a name="413" class="Keyword"
+      >where</a
+      ><a name="418"
+      >
+        </a
+      ><a name="427" href="Data.Two.Equality.html#427" class="Function Operator"
+      >_&#8776;_</a
+      ><a name="430"
+      > </a
+      ><a name="431" class="Symbol"
+      >:</a
+      ><a name="432"
+      > </a
+      ><a name="433" class="Symbol"
+      >(</a
+      ><a name="434" href="Data.Two.Equality.html#434" class="Bound"
+      >x</a
+      ><a name="435"
+      > </a
+      ><a name="436" href="Data.Two.Equality.html#436" class="Bound"
+      >y</a
+      ><a name="437"
+      > </a
+      ><a name="438" class="Symbol"
+      >:</a
+      ><a name="439"
+      > </a
+      ><a name="440" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="441" class="Symbol"
+      >)</a
+      ><a name="442"
+      > </a
+      ><a name="443" class="Symbol"
+      >&#8594;</a
+      ><a name="444"
+      > </a
+      ><a name="445" href="Type.html#107" class="Function"
+      >&#9733;&#8320;</a
+      ><a name="447"
+      >
+        </a
+      ><a name="456" href="Data.Two.Equality.html#456" class="Bound"
+      >x</a
+      ><a name="457"
+      > </a
+      ><a name="458" href="Data.Two.Equality.html#427" class="Function Operator"
+      >&#8776;</a
+      ><a name="459"
+      > </a
+      ><a name="460" href="Data.Two.Equality.html#460" class="Bound"
+      >y</a
+      ><a name="461"
+      > </a
+      ><a name="462" class="Symbol"
+      >=</a
+      ><a name="463"
+      > </a
+      ><a name="464" href="Data.Bool.html#1007" class="Function"
+      >&#10003;</a
+      ><a name="465"
+      > </a
+      ><a name="466" class="Symbol"
+      >(</a
+      ><a name="467" href="Data.Two.Equality.html#456" class="Bound"
+      >x</a
+      ><a name="468"
+      > </a
+      ><a name="469" href="Data.Two.html#2568" class="Function Operator"
+      >==</a
+      ><a name="471"
+      > </a
+      ><a name="472" href="Data.Two.Equality.html#460" class="Bound"
+      >y</a
+      ><a name="473" class="Symbol"
+      >)</a
+      ><a name="474"
+      >
+
+        </a
+      ><a name="484" href="Data.Two.Equality.html#484" class="Function"
+      >refl</a
+      ><a name="488"
+      > </a
+      ><a name="489" class="Symbol"
+      >:</a
+      ><a name="490"
+      > </a
+      ><a name="491" href="Relation.Binary.Core.html#1891" class="Function"
+      >Reflexive</a
+      ><a name="500"
+      > </a
+      ><a name="501" href="Data.Two.Equality.html#427" class="Function Operator"
+      >_&#8776;_</a
+      ><a name="504"
+      >
+        </a
+      ><a name="513" href="Data.Two.Equality.html#484" class="Function"
+      >refl</a
+      ><a name="517"
+      > </a
+      ><a name="518" class="Symbol"
+      >{</a
+      ><a name="519" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="521" class="Symbol"
+      >}</a
+      ><a name="522"
+      > </a
+      ><a name="523" class="Symbol"
+      >=</a
+      ><a name="524"
+      > </a
+      ><a name="525" class="Symbol"
+      >_</a
+      ><a name="526"
+      >
+        </a
+      ><a name="535" href="Data.Two.Equality.html#484" class="Function"
+      >refl</a
+      ><a name="539"
+      > </a
+      ><a name="540" class="Symbol"
+      >{</a
+      ><a name="541" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="543" class="Symbol"
+      >}</a
+      ><a name="544"
+      > </a
+      ><a name="545" class="Symbol"
+      >=</a
+      ><a name="546"
+      > </a
+      ><a name="547" class="Symbol"
+      >_</a
+      ><a name="548"
+      >
+
+        </a
+      ><a name="558" href="Data.Two.Equality.html#558" class="Function"
+      >subst</a
+      ><a name="563"
+      > </a
+      ><a name="564" class="Symbol"
+      >:</a
+      ><a name="565"
+      > </a
+      ><a name="566" class="Symbol"
+      >&#8704;</a
+      ><a name="567"
+      > </a
+      ><a name="568" class="Symbol"
+      >{</a
+      ><a name="569" href="Data.Two.Equality.html#569" class="Bound"
+      >&#8467;</a
+      ><a name="570" class="Symbol"
+      >}</a
+      ><a name="571"
+      > </a
+      ><a name="572" class="Symbol"
+      >&#8594;</a
+      ><a name="573"
+      > </a
+      ><a name="574" href="Relation.Binary.Core.html#3378" class="Function"
+      >Substitutive</a
+      ><a name="586"
+      > </a
+      ><a name="587" href="Data.Two.Equality.html#427" class="Function Operator"
+      >_&#8776;_</a
+      ><a name="590"
+      > </a
+      ><a name="591" href="Data.Two.Equality.html#569" class="Bound"
+      >&#8467;</a
+      ><a name="592"
+      >
+        </a
+      ><a name="601" href="Data.Two.Equality.html#558" class="Function"
+      >subst</a
+      ><a name="606"
+      > </a
+      ><a name="607" class="Symbol"
+      >_</a
+      ><a name="608"
+      > </a
+      ><a name="609" class="Symbol"
+      >{</a
+      ><a name="610" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="612" class="Symbol"
+      >}</a
+      ><a name="613"
+      > </a
+      ><a name="614" class="Symbol"
+      >{</a
+      ><a name="615" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="617" class="Symbol"
+      >}</a
+      ><a name="618"
+      > </a
+      ><a name="619" class="Symbol"
+      >_</a
+      ><a name="620"
+      > </a
+      ><a name="621" class="Symbol"
+      >=</a
+      ><a name="622"
+      > </a
+      ><a name="623" href="Function.html#1006" class="Function"
+      >id</a
+      ><a name="625"
+      >
+        </a
+      ><a name="634" href="Data.Two.Equality.html#558" class="Function"
+      >subst</a
+      ><a name="639"
+      > </a
+      ><a name="640" class="Symbol"
+      >_</a
+      ><a name="641"
+      > </a
+      ><a name="642" class="Symbol"
+      >{</a
+      ><a name="643" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="645" class="Symbol"
+      >}</a
+      ><a name="646"
+      > </a
+      ><a name="647" class="Symbol"
+      >{</a
+      ><a name="648" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="650" class="Symbol"
+      >}</a
+      ><a name="651"
+      > </a
+      ><a name="652" class="Symbol"
+      >_</a
+      ><a name="653"
+      > </a
+      ><a name="654" class="Symbol"
+      >=</a
+      ><a name="655"
+      > </a
+      ><a name="656" href="Function.html#1006" class="Function"
+      >id</a
+      ><a name="658"
+      >
+        </a
+      ><a name="667" href="Data.Two.Equality.html#558" class="Function"
+      >subst</a
+      ><a name="672"
+      > </a
+      ><a name="673" class="Symbol"
+      >_</a
+      ><a name="674"
+      > </a
+      ><a name="675" class="Symbol"
+      >{</a
+      ><a name="676" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="678" class="Symbol"
+      >}</a
+      ><a name="679"
+      > </a
+      ><a name="680" class="Symbol"
+      >{</a
+      ><a name="681" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="683" class="Symbol"
+      >}</a
+      ><a name="684"
+      > </a
+      ><a name="685" class="Symbol"
+      >()</a
+      ><a name="687"
+      >
+        </a
+      ><a name="696" href="Data.Two.Equality.html#558" class="Function"
+      >subst</a
+      ><a name="701"
+      > </a
+      ><a name="702" class="Symbol"
+      >_</a
+      ><a name="703"
+      > </a
+      ><a name="704" class="Symbol"
+      >{</a
+      ><a name="705" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="707" class="Symbol"
+      >}</a
+      ><a name="708"
+      > </a
+      ><a name="709" class="Symbol"
+      >{</a
+      ><a name="710" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="712" class="Symbol"
+      >}</a
+      ><a name="713"
+      > </a
+      ><a name="714" class="Symbol"
+      >()</a
+      ><a name="716"
+      >
+
+        </a
+      ><a name="726" href="Data.Two.Equality.html#726" class="Function"
+      >sym</a
+      ><a name="729"
+      > </a
+      ><a name="730" class="Symbol"
+      >:</a
+      ><a name="731"
+      > </a
+      ><a name="732" href="Relation.Binary.Core.html#2314" class="Function"
+      >Symmetric</a
+      ><a name="741"
+      > </a
+      ><a name="742" href="Data.Two.Equality.html#427" class="Function Operator"
+      >_&#8776;_</a
+      ><a name="745"
+      >
+        </a
+      ><a name="754" href="Data.Two.Equality.html#726" class="Function"
+      >sym</a
+      ><a name="757"
+      > </a
+      ><a name="758" class="Symbol"
+      >{</a
+      ><a name="759" href="Data.Two.Equality.html#759" class="Bound"
+      >x</a
+      ><a name="760" class="Symbol"
+      >}</a
+      ><a name="761"
+      > </a
+      ><a name="762" class="Symbol"
+      >{</a
+      ><a name="763" href="Data.Two.Equality.html#763" class="Bound"
+      >y</a
+      ><a name="764" class="Symbol"
+      >}</a
+      ><a name="765"
+      > </a
+      ><a name="766" href="Data.Two.Equality.html#766" class="Bound"
+      >eq</a
+      ><a name="768"
+      > </a
+      ><a name="769" class="Symbol"
+      >=</a
+      ><a name="770"
+      > </a
+      ><a name="771" href="Data.Two.Equality.html#558" class="Function"
+      >subst</a
+      ><a name="776"
+      > </a
+      ><a name="777" class="Symbol"
+      >(&#955;</a
+      ><a name="779"
+      > </a
+      ><a name="780" href="Data.Two.Equality.html#780" class="Bound"
+      >y</a
+      ><a name="781"
+      > </a
+      ><a name="782" class="Symbol"
+      >&#8594;</a
+      ><a name="783"
+      > </a
+      ><a name="784" href="Data.Two.Equality.html#780" class="Bound"
+      >y</a
+      ><a name="785"
+      > </a
+      ><a name="786" href="Data.Two.Equality.html#427" class="Function Operator"
+      >&#8776;</a
+      ><a name="787"
+      > </a
+      ><a name="788" href="Data.Two.Equality.html#759" class="Bound"
+      >x</a
+      ><a name="789" class="Symbol"
+      >)</a
+      ><a name="790"
+      > </a
+      ><a name="791" class="Symbol"
+      >{</a
+      ><a name="792" href="Data.Two.Equality.html#759" class="Bound"
+      >x</a
+      ><a name="793" class="Symbol"
+      >}</a
+      ><a name="794"
+      > </a
+      ><a name="795" class="Symbol"
+      >{</a
+      ><a name="796" href="Data.Two.Equality.html#763" class="Bound"
+      >y</a
+      ><a name="797" class="Symbol"
+      >}</a
+      ><a name="798"
+      > </a
+      ><a name="799" href="Data.Two.Equality.html#766" class="Bound"
+      >eq</a
+      ><a name="801"
+      > </a
+      ><a name="802" class="Symbol"
+      >(</a
+      ><a name="803" href="Data.Two.Equality.html#484" class="Function"
+      >refl</a
+      ><a name="807"
+      > </a
+      ><a name="808" class="Symbol"
+      >{</a
+      ><a name="809" href="Data.Two.Equality.html#759" class="Bound"
+      >x</a
+      ><a name="810" class="Symbol"
+      >})</a
+      ><a name="812"
+      >
+
+        </a
+      ><a name="822" href="Data.Two.Equality.html#822" class="Function"
+      >trans</a
+      ><a name="827"
+      > </a
+      ><a name="828" class="Symbol"
+      >:</a
+      ><a name="829"
+      > </a
+      ><a name="830" href="Relation.Binary.Core.html#2793" class="Function"
+      >Transitive</a
+      ><a name="840"
+      > </a
+      ><a name="841" href="Data.Two.Equality.html#427" class="Function Operator"
+      >_&#8776;_</a
+      ><a name="844"
+      >
+        </a
+      ><a name="853" href="Data.Two.Equality.html#822" class="Function"
+      >trans</a
+      ><a name="858"
+      > </a
+      ><a name="859" class="Symbol"
+      >{</a
+      ><a name="860" href="Data.Two.Equality.html#860" class="Bound"
+      >x</a
+      ><a name="861" class="Symbol"
+      >}</a
+      ><a name="862"
+      > </a
+      ><a name="863" class="Symbol"
+      >{</a
+      ><a name="864" href="Data.Two.Equality.html#864" class="Bound"
+      >y</a
+      ><a name="865" class="Symbol"
+      >}</a
+      ><a name="866"
+      > </a
+      ><a name="867" class="Symbol"
+      >{</a
+      ><a name="868" href="Data.Two.Equality.html#868" class="Bound"
+      >z</a
+      ><a name="869" class="Symbol"
+      >}</a
+      ><a name="870"
+      > </a
+      ><a name="871" href="Data.Two.Equality.html#871" class="Bound"
+      >x&#8776;y</a
+      ><a name="874"
+      > </a
+      ><a name="875" href="Data.Two.Equality.html#875" class="Bound"
+      >y&#8776;z</a
+      ><a name="878"
+      > </a
+      ><a name="879" class="Symbol"
+      >=</a
+      ><a name="880"
+      > </a
+      ><a name="881" href="Data.Two.Equality.html#558" class="Function"
+      >subst</a
+      ><a name="886"
+      > </a
+      ><a name="887" class="Symbol"
+      >(</a
+      ><a name="888" href="Data.Two.Equality.html#427" class="Function Operator"
+      >_&#8776;_</a
+      ><a name="891"
+      > </a
+      ><a name="892" href="Data.Two.Equality.html#860" class="Bound"
+      >x</a
+      ><a name="893" class="Symbol"
+      >)</a
+      ><a name="894"
+      > </a
+      ><a name="895" class="Symbol"
+      >{</a
+      ><a name="896" href="Data.Two.Equality.html#864" class="Bound"
+      >y</a
+      ><a name="897" class="Symbol"
+      >}</a
+      ><a name="898"
+      > </a
+      ><a name="899" class="Symbol"
+      >{</a
+      ><a name="900" href="Data.Two.Equality.html#868" class="Bound"
+      >z</a
+      ><a name="901" class="Symbol"
+      >}</a
+      ><a name="902"
+      > </a
+      ><a name="903" href="Data.Two.Equality.html#875" class="Bound"
+      >y&#8776;z</a
+      ><a name="906"
+      > </a
+      ><a name="907" href="Data.Two.Equality.html#871" class="Bound"
+      >x&#8776;y</a
+      ><a name="910"
+      >
+
+        </a
+      ><a name="920" href="Data.Two.Equality.html#920" class="Function Operator"
+      >_&#8799;_</a
+      ><a name="923"
+      > </a
+      ><a name="924" class="Symbol"
+      >:</a
+      ><a name="925"
+      > </a
+      ><a name="926" href="Relation.Binary.Core.html#3511" class="Function"
+      >Decidable</a
+      ><a name="935"
+      > </a
+      ><a name="936" href="Data.Two.Equality.html#427" class="Function Operator"
+      >_&#8776;_</a
+      ><a name="939"
+      >
+        </a
+      ><a name="948" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="950"
+      > </a
+      ><a name="951" href="Data.Two.Equality.html#920" class="Function Operator"
+      >&#8799;</a
+      ><a name="952"
+      > </a
+      ><a name="953" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="955"
+      > </a
+      ><a name="956" class="Symbol"
+      >=</a
+      ><a name="957"
+      > </a
+      ><a name="958" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="961"
+      > </a
+      ><a name="962" class="Symbol"
+      >_</a
+      ><a name="963"
+      >
+        </a
+      ><a name="972" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="974"
+      > </a
+      ><a name="975" href="Data.Two.Equality.html#920" class="Function Operator"
+      >&#8799;</a
+      ><a name="976"
+      > </a
+      ><a name="977" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="979"
+      > </a
+      ><a name="980" class="Symbol"
+      >=</a
+      ><a name="981"
+      > </a
+      ><a name="982" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="985"
+      > </a
+      ><a name="986" class="Symbol"
+      >_</a
+      ><a name="987"
+      >
+        </a
+      ><a name="996" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="998"
+      > </a
+      ><a name="999" href="Data.Two.Equality.html#920" class="Function Operator"
+      >&#8799;</a
+      ><a name="1000"
+      > </a
+      ><a name="1001" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="1003"
+      > </a
+      ><a name="1004" class="Symbol"
+      >=</a
+      ><a name="1005"
+      > </a
+      ><a name="1006" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="1008"
+      > </a
+      ><a name="1009" class="Symbol"
+      >(&#955;())</a
+      ><a name="1014"
+      >
+        </a
+      ><a name="1023" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="1025"
+      > </a
+      ><a name="1026" href="Data.Two.Equality.html#920" class="Function Operator"
+      >&#8799;</a
+      ><a name="1027"
+      > </a
+      ><a name="1028" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="1030"
+      > </a
+      ><a name="1031" class="Symbol"
+      >=</a
+      ><a name="1032"
+      > </a
+      ><a name="1033" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="1035"
+      > </a
+      ><a name="1036" class="Symbol"
+      >(&#955;())</a
+      ><a name="1041"
+      >
+
+        </a
+      ><a name="1051" href="Data.Two.Equality.html#1051" class="Function"
+      >isEquivalence</a
+      ><a name="1064"
+      > </a
+      ><a name="1065" class="Symbol"
+      >:</a
+      ><a name="1066"
+      > </a
+      ><a name="1067" href="Relation.Binary.Core.html#5090" class="Record"
+      >IsEquivalence</a
+      ><a name="1080"
+      > </a
+      ><a name="1081" href="Data.Two.Equality.html#427" class="Function Operator"
+      >_&#8776;_</a
+      ><a name="1084"
+      >
+        </a
+      ><a name="1093" href="Data.Two.Equality.html#1051" class="Function"
+      >isEquivalence</a
+      ><a name="1106"
+      > </a
+      ><a name="1107" class="Symbol"
+      >=</a
+      ><a name="1108"
+      > </a
+      ><a name="1109" class="Keyword"
+      >record</a
+      ><a name="1115"
+      > </a
+      ><a name="1116" class="Symbol"
+      >{</a
+      ><a name="1117"
+      > </a
+      ><a name="1118" class="Field"
+      >refl</a
+      ><a name="1122"
+      >  </a
+      ><a name="1124" class="Symbol"
+      >=</a
+      ><a name="1125"
+      > </a
+      ><a name="1126" class="Symbol"
+      >&#955;</a
+      ><a name="1127"
+      > </a
+      ><a name="1128" class="Symbol"
+      >{</a
+      ><a name="1129" href="Data.Two.Equality.html#1129" class="Bound"
+      >x</a
+      ><a name="1130" class="Symbol"
+      >}</a
+      ><a name="1131"
+      > </a
+      ><a name="1132" class="Symbol"
+      >&#8594;</a
+      ><a name="1133"
+      > </a
+      ><a name="1134" href="Data.Two.Equality.html#484" class="Function"
+      >refl</a
+      ><a name="1138"
+      > </a
+      ><a name="1139" class="Symbol"
+      >{</a
+      ><a name="1140" href="Data.Two.Equality.html#1129" class="Bound"
+      >x</a
+      ><a name="1141" class="Symbol"
+      >}</a
+      ><a name="1142"
+      >
+                               </a
+      ><a name="1174" class="Symbol"
+      >;</a
+      ><a name="1175"
+      > </a
+      ><a name="1176" class="Field"
+      >sym</a
+      ><a name="1179"
+      >   </a
+      ><a name="1182" class="Symbol"
+      >=</a
+      ><a name="1183"
+      > </a
+      ><a name="1184" class="Symbol"
+      >&#955;</a
+      ><a name="1185"
+      > </a
+      ><a name="1186" class="Symbol"
+      >{</a
+      ><a name="1187" href="Data.Two.Equality.html#1187" class="Bound"
+      >x</a
+      ><a name="1188" class="Symbol"
+      >}</a
+      ><a name="1189"
+      > </a
+      ><a name="1190" class="Symbol"
+      >{</a
+      ><a name="1191" href="Data.Two.Equality.html#1191" class="Bound"
+      >y</a
+      ><a name="1192" class="Symbol"
+      >}</a
+      ><a name="1193"
+      > </a
+      ><a name="1194" class="Symbol"
+      >&#8594;</a
+      ><a name="1195"
+      > </a
+      ><a name="1196" href="Data.Two.Equality.html#726" class="Function"
+      >sym</a
+      ><a name="1199"
+      > </a
+      ><a name="1200" class="Symbol"
+      >{</a
+      ><a name="1201" href="Data.Two.Equality.html#1187" class="Bound"
+      >x</a
+      ><a name="1202" class="Symbol"
+      >}</a
+      ><a name="1203"
+      > </a
+      ><a name="1204" class="Symbol"
+      >{</a
+      ><a name="1205" href="Data.Two.Equality.html#1191" class="Bound"
+      >y</a
+      ><a name="1206" class="Symbol"
+      >}</a
+      ><a name="1207"
+      >
+                               </a
+      ><a name="1239" class="Symbol"
+      >;</a
+      ><a name="1240"
+      > </a
+      ><a name="1241" class="Field"
+      >trans</a
+      ><a name="1246"
+      > </a
+      ><a name="1247" class="Symbol"
+      >=</a
+      ><a name="1248"
+      > </a
+      ><a name="1249" class="Symbol"
+      >&#955;</a
+      ><a name="1250"
+      > </a
+      ><a name="1251" class="Symbol"
+      >{</a
+      ><a name="1252" href="Data.Two.Equality.html#1252" class="Bound"
+      >x</a
+      ><a name="1253" class="Symbol"
+      >}</a
+      ><a name="1254"
+      > </a
+      ><a name="1255" class="Symbol"
+      >{</a
+      ><a name="1256" href="Data.Two.Equality.html#1256" class="Bound"
+      >y</a
+      ><a name="1257" class="Symbol"
+      >}</a
+      ><a name="1258"
+      > </a
+      ><a name="1259" class="Symbol"
+      >{</a
+      ><a name="1260" href="Data.Two.Equality.html#1260" class="Bound"
+      >z</a
+      ><a name="1261" class="Symbol"
+      >}</a
+      ><a name="1262"
+      > </a
+      ><a name="1263" class="Symbol"
+      >&#8594;</a
+      ><a name="1264"
+      > </a
+      ><a name="1265" href="Data.Two.Equality.html#822" class="Function"
+      >trans</a
+      ><a name="1270"
+      > </a
+      ><a name="1271" class="Symbol"
+      >{</a
+      ><a name="1272" href="Data.Two.Equality.html#1252" class="Bound"
+      >x</a
+      ><a name="1273" class="Symbol"
+      >}</a
+      ><a name="1274"
+      > </a
+      ><a name="1275" class="Symbol"
+      >{</a
+      ><a name="1276" href="Data.Two.Equality.html#1256" class="Bound"
+      >y</a
+      ><a name="1277" class="Symbol"
+      >}</a
+      ><a name="1278"
+      > </a
+      ><a name="1279" class="Symbol"
+      >{</a
+      ><a name="1280" href="Data.Two.Equality.html#1260" class="Bound"
+      >z</a
+      ><a name="1281" class="Symbol"
+      >}</a
+      ><a name="1282"
+      > </a
+      ><a name="1283" class="Symbol"
+      >}</a
+      ><a name="1284"
+      >
+
+        </a
+      ><a name="1294" href="Data.Two.Equality.html#1294" class="Function"
+      >isDecEquivalence</a
+      ><a name="1310"
+      > </a
+      ><a name="1311" class="Symbol"
+      >:</a
+      ><a name="1312"
+      > </a
+      ><a name="1313" href="Relation.Binary.html#2681" class="Record"
+      >IsDecEquivalence</a
+      ><a name="1329"
+      > </a
+      ><a name="1330" href="Data.Two.Equality.html#427" class="Function Operator"
+      >_&#8776;_</a
+      ><a name="1333"
+      >
+        </a
+      ><a name="1342" href="Data.Two.Equality.html#1294" class="Function"
+      >isDecEquivalence</a
+      ><a name="1358"
+      > </a
+      ><a name="1359" class="Symbol"
+      >=</a
+      ><a name="1360"
+      > </a
+      ><a name="1361" class="Keyword"
+      >record</a
+      ><a name="1367"
+      > </a
+      ><a name="1368" class="Symbol"
+      >{</a
+      ><a name="1369"
+      > </a
+      ><a name="1370" class="Field"
+      >isEquivalence</a
+      ><a name="1383"
+      > </a
+      ><a name="1384" class="Symbol"
+      >=</a
+      ><a name="1385"
+      > </a
+      ><a name="1386" href="Data.Two.Equality.html#1051" class="Function"
+      >isEquivalence</a
+      ><a name="1399" class="Symbol"
+      >;</a
+      ><a name="1400"
+      > </a
+      ><a name="1401" class="Field Operator"
+      >_&#8799;_</a
+      ><a name="1404"
+      > </a
+      ><a name="1405" class="Symbol"
+      >=</a
+      ><a name="1406"
+      > </a
+      ><a name="1407" href="Data.Two.Equality.html#920" class="Function Operator"
+      >_&#8799;_</a
+      ><a name="1410"
+      > </a
+      ><a name="1411" class="Symbol"
+      >}</a
+      ><a name="1412"
+      >
+
+    </a
+      ><a name="1418" class="Keyword"
+      >open</a
+      ><a name="1422"
+      > </a
+      ><a name="1423" href="Relation.Binary.html#2921" class="Module"
+      >DecSetoid</a
+      ><a name="1432"
+      > </a
+      ><a name="1433" href="Data.Two.Equality.html#294" class="Function"
+      >decSetoid</a
+      ><a name="1442"
+      > </a
+      ><a name="1443" class="Keyword"
+      >public</a
+      ><a name="1449"
+      > </a
+      ><a name="1450" class="Keyword"
+      >hiding</a
+      ><a name="1456"
+      > </a
+      ><a name="1457" class="Symbol"
+      >(</a
+      ><a name="1458"
+      >_&#8776;_</a
+      ><a name="1461" class="Symbol"
+      >;</a
+      ><a name="1462"
+      > _&#8799;_</a
+      ><a name="1466" class="Symbol"
+      >)</a
+      ><a name="1467"
+      >
+
+</a
+      ><a name="1469" class="Keyword"
+      >module</a
+      ><a name="1475"
+      > </a
+      ><a name="1476" href="Data.Two.Equality.html#1476" class="Module"
+      >==-&#8801;1&#8322;</a
+      ><a name="1482"
+      > </a
+      ><a name="1483" class="Keyword"
+      >where</a
+      ><a name="1488"
+      >
+
+    </a
+      ><a name="1494" href="Data.Two.Equality.html#1494" class="Function"
+      >decSetoid</a
+      ><a name="1503"
+      > </a
+      ><a name="1504" class="Symbol"
+      >:</a
+      ><a name="1505"
+      > </a
+      ><a name="1506" href="Relation.Binary.html#2921" class="Record"
+      >DecSetoid</a
+      ><a name="1515"
+      > </a
+      ><a name="1516" class="Symbol"
+      >_</a
+      ><a name="1517"
+      > </a
+      ><a name="1518" class="Symbol"
+      >_</a
+      ><a name="1519"
+      >
+    </a
+      ><a name="1524" href="Data.Two.Equality.html#1494" class="Function"
+      >decSetoid</a
+      ><a name="1533"
+      > </a
+      ><a name="1534" class="Symbol"
+      >=</a
+      ><a name="1535"
+      > </a
+      ><a name="1536" class="Keyword"
+      >record</a
+      ><a name="1542"
+      > </a
+      ><a name="1543" class="Symbol"
+      >{</a
+      ><a name="1544"
+      > </a
+      ><a name="1545" class="Field"
+      >Carrier</a
+      ><a name="1552"
+      > </a
+      ><a name="1553" class="Symbol"
+      >=</a
+      ><a name="1554"
+      > </a
+      ><a name="1555" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="1556" class="Symbol"
+      >;</a
+      ><a name="1557"
+      > </a
+      ><a name="1558" class="Field Operator"
+      >_&#8776;_</a
+      ><a name="1561"
+      > </a
+      ><a name="1562" class="Symbol"
+      >=</a
+      ><a name="1563"
+      > </a
+      ><a name="1564" href="Data.Two.Equality.html#1627" class="Function Operator"
+      >_&#8776;_</a
+      ><a name="1567" class="Symbol"
+      >;</a
+      ><a name="1568"
+      > </a
+      ><a name="1569" class="Field"
+      >isDecEquivalence</a
+      ><a name="1585"
+      > </a
+      ><a name="1586" class="Symbol"
+      >=</a
+      ><a name="1587"
+      > </a
+      ><a name="1588" href="Data.Two.Equality.html#2501" class="Function"
+      >isDecEquivalence</a
+      ><a name="1604"
+      > </a
+      ><a name="1605" class="Symbol"
+      >}</a
+      ><a name="1606"
+      >
+      </a
+      ><a name="1613" class="Keyword"
+      >where</a
+      ><a name="1618"
+      >
+        </a
+      ><a name="1627" href="Data.Two.Equality.html#1627" class="Function Operator"
+      >_&#8776;_</a
+      ><a name="1630"
+      > </a
+      ><a name="1631" class="Symbol"
+      >:</a
+      ><a name="1632"
+      > </a
+      ><a name="1633" class="Symbol"
+      >(</a
+      ><a name="1634" href="Data.Two.Equality.html#1634" class="Bound"
+      >x</a
+      ><a name="1635"
+      > </a
+      ><a name="1636" href="Data.Two.Equality.html#1636" class="Bound"
+      >y</a
+      ><a name="1637"
+      > </a
+      ><a name="1638" class="Symbol"
+      >:</a
+      ><a name="1639"
+      > </a
+      ><a name="1640" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="1641" class="Symbol"
+      >)</a
+      ><a name="1642"
+      > </a
+      ><a name="1643" class="Symbol"
+      >&#8594;</a
+      ><a name="1644"
+      > </a
+      ><a name="1645" href="Type.html#107" class="Function"
+      >&#9733;&#8320;</a
+      ><a name="1647"
+      >
+        </a
+      ><a name="1656" href="Data.Two.Equality.html#1656" class="Bound"
+      >x</a
+      ><a name="1657"
+      > </a
+      ><a name="1658" href="Data.Two.Equality.html#1627" class="Function Operator"
+      >&#8776;</a
+      ><a name="1659"
+      > </a
+      ><a name="1660" href="Data.Two.Equality.html#1660" class="Bound"
+      >y</a
+      ><a name="1661"
+      > </a
+      ><a name="1662" class="Symbol"
+      >=</a
+      ><a name="1663"
+      > </a
+      ><a name="1664" class="Symbol"
+      >(</a
+      ><a name="1665" href="Data.Two.Equality.html#1656" class="Bound"
+      >x</a
+      ><a name="1666"
+      > </a
+      ><a name="1667" href="Data.Two.html#2568" class="Function Operator"
+      >==</a
+      ><a name="1669"
+      > </a
+      ><a name="1670" href="Data.Two.Equality.html#1660" class="Bound"
+      >y</a
+      ><a name="1671" class="Symbol"
+      >)</a
+      ><a name="1672"
+      > </a
+      ><a name="1673" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="1674"
+      > </a
+      ><a name="1675" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="1677"
+      >
+
+        </a
+      ><a name="1687" href="Data.Two.Equality.html#1687" class="Function"
+      >refl</a
+      ><a name="1691"
+      > </a
+      ><a name="1692" class="Symbol"
+      >:</a
+      ><a name="1693"
+      > </a
+      ><a name="1694" href="Relation.Binary.Core.html#1891" class="Function"
+      >Reflexive</a
+      ><a name="1703"
+      > </a
+      ><a name="1704" href="Data.Two.Equality.html#1627" class="Function Operator"
+      >_&#8776;_</a
+      ><a name="1707"
+      >
+        </a
+      ><a name="1716" href="Data.Two.Equality.html#1687" class="Function"
+      >refl</a
+      ><a name="1720"
+      > </a
+      ><a name="1721" class="Symbol"
+      >{</a
+      ><a name="1722" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="1724" class="Symbol"
+      >}</a
+      ><a name="1725"
+      > </a
+      ><a name="1726" class="Symbol"
+      >=</a
+      ><a name="1727"
+      > </a
+      ><a name="1728" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >&#8801;.refl</a
+      ><a name="1734"
+      >
+        </a
+      ><a name="1743" href="Data.Two.Equality.html#1687" class="Function"
+      >refl</a
+      ><a name="1747"
+      > </a
+      ><a name="1748" class="Symbol"
+      >{</a
+      ><a name="1749" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="1751" class="Symbol"
+      >}</a
+      ><a name="1752"
+      > </a
+      ><a name="1753" class="Symbol"
+      >=</a
+      ><a name="1754"
+      > </a
+      ><a name="1755" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >&#8801;.refl</a
+      ><a name="1761"
+      >
+
+        </a
+      ><a name="1771" href="Data.Two.Equality.html#1771" class="Function"
+      >subst</a
+      ><a name="1776"
+      > </a
+      ><a name="1777" class="Symbol"
+      >:</a
+      ><a name="1778"
+      > </a
+      ><a name="1779" class="Symbol"
+      >&#8704;</a
+      ><a name="1780"
+      > </a
+      ><a name="1781" class="Symbol"
+      >{</a
+      ><a name="1782" href="Data.Two.Equality.html#1782" class="Bound"
+      >&#8467;</a
+      ><a name="1783" class="Symbol"
+      >}</a
+      ><a name="1784"
+      > </a
+      ><a name="1785" class="Symbol"
+      >&#8594;</a
+      ><a name="1786"
+      > </a
+      ><a name="1787" href="Relation.Binary.Core.html#3378" class="Function"
+      >Substitutive</a
+      ><a name="1799"
+      > </a
+      ><a name="1800" href="Data.Two.Equality.html#1627" class="Function Operator"
+      >_&#8776;_</a
+      ><a name="1803"
+      > </a
+      ><a name="1804" href="Data.Two.Equality.html#1782" class="Bound"
+      >&#8467;</a
+      ><a name="1805"
+      >
+        </a
+      ><a name="1814" href="Data.Two.Equality.html#1771" class="Function"
+      >subst</a
+      ><a name="1819"
+      > </a
+      ><a name="1820" class="Symbol"
+      >_</a
+      ><a name="1821"
+      > </a
+      ><a name="1822" class="Symbol"
+      >{</a
+      ><a name="1823" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="1825" class="Symbol"
+      >}</a
+      ><a name="1826"
+      > </a
+      ><a name="1827" class="Symbol"
+      >{</a
+      ><a name="1828" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="1830" class="Symbol"
+      >}</a
+      ><a name="1831"
+      > </a
+      ><a name="1832" class="Symbol"
+      >_</a
+      ><a name="1833"
+      > </a
+      ><a name="1834" class="Symbol"
+      >=</a
+      ><a name="1835"
+      > </a
+      ><a name="1836" href="Function.html#1006" class="Function"
+      >id</a
+      ><a name="1838"
+      >
+        </a
+      ><a name="1847" href="Data.Two.Equality.html#1771" class="Function"
+      >subst</a
+      ><a name="1852"
+      > </a
+      ><a name="1853" class="Symbol"
+      >_</a
+      ><a name="1854"
+      > </a
+      ><a name="1855" class="Symbol"
+      >{</a
+      ><a name="1856" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="1858" class="Symbol"
+      >}</a
+      ><a name="1859"
+      > </a
+      ><a name="1860" class="Symbol"
+      >{</a
+      ><a name="1861" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="1863" class="Symbol"
+      >}</a
+      ><a name="1864"
+      > </a
+      ><a name="1865" class="Symbol"
+      >_</a
+      ><a name="1866"
+      > </a
+      ><a name="1867" class="Symbol"
+      >=</a
+      ><a name="1868"
+      > </a
+      ><a name="1869" href="Function.html#1006" class="Function"
+      >id</a
+      ><a name="1871"
+      >
+        </a
+      ><a name="1880" href="Data.Two.Equality.html#1771" class="Function"
+      >subst</a
+      ><a name="1885"
+      > </a
+      ><a name="1886" class="Symbol"
+      >_</a
+      ><a name="1887"
+      > </a
+      ><a name="1888" class="Symbol"
+      >{</a
+      ><a name="1889" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="1891" class="Symbol"
+      >}</a
+      ><a name="1892"
+      > </a
+      ><a name="1893" class="Symbol"
+      >{</a
+      ><a name="1894" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="1896" class="Symbol"
+      >}</a
+      ><a name="1897"
+      > </a
+      ><a name="1898" class="Symbol"
+      >()</a
+      ><a name="1900"
+      >
+        </a
+      ><a name="1909" href="Data.Two.Equality.html#1771" class="Function"
+      >subst</a
+      ><a name="1914"
+      > </a
+      ><a name="1915" class="Symbol"
+      >_</a
+      ><a name="1916"
+      > </a
+      ><a name="1917" class="Symbol"
+      >{</a
+      ><a name="1918" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="1920" class="Symbol"
+      >}</a
+      ><a name="1921"
+      > </a
+      ><a name="1922" class="Symbol"
+      >{</a
+      ><a name="1923" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="1925" class="Symbol"
+      >}</a
+      ><a name="1926"
+      > </a
+      ><a name="1927" class="Symbol"
+      >()</a
+      ><a name="1929"
+      >
+
+        </a
+      ><a name="1939" href="Data.Two.Equality.html#1939" class="Function"
+      >sym</a
+      ><a name="1942"
+      > </a
+      ><a name="1943" class="Symbol"
+      >:</a
+      ><a name="1944"
+      > </a
+      ><a name="1945" href="Relation.Binary.Core.html#2314" class="Function"
+      >Symmetric</a
+      ><a name="1954"
+      > </a
+      ><a name="1955" href="Data.Two.Equality.html#1627" class="Function Operator"
+      >_&#8776;_</a
+      ><a name="1958"
+      >
+        </a
+      ><a name="1967" href="Data.Two.Equality.html#1939" class="Function"
+      >sym</a
+      ><a name="1970"
+      > </a
+      ><a name="1971" class="Symbol"
+      >{</a
+      ><a name="1972" href="Data.Two.Equality.html#1972" class="Bound"
+      >x</a
+      ><a name="1973" class="Symbol"
+      >}</a
+      ><a name="1974"
+      > </a
+      ><a name="1975" class="Symbol"
+      >{</a
+      ><a name="1976" href="Data.Two.Equality.html#1976" class="Bound"
+      >y</a
+      ><a name="1977" class="Symbol"
+      >}</a
+      ><a name="1978"
+      > </a
+      ><a name="1979" href="Data.Two.Equality.html#1979" class="Bound"
+      >eq</a
+      ><a name="1981"
+      > </a
+      ><a name="1982" class="Symbol"
+      >=</a
+      ><a name="1983"
+      > </a
+      ><a name="1984" href="Data.Two.Equality.html#1771" class="Function"
+      >subst</a
+      ><a name="1989"
+      > </a
+      ><a name="1990" class="Symbol"
+      >(&#955;</a
+      ><a name="1992"
+      > </a
+      ><a name="1993" href="Data.Two.Equality.html#1993" class="Bound"
+      >y</a
+      ><a name="1994"
+      > </a
+      ><a name="1995" class="Symbol"
+      >&#8594;</a
+      ><a name="1996"
+      > </a
+      ><a name="1997" href="Data.Two.Equality.html#1993" class="Bound"
+      >y</a
+      ><a name="1998"
+      > </a
+      ><a name="1999" href="Data.Two.Equality.html#1627" class="Function Operator"
+      >&#8776;</a
+      ><a name="2000"
+      > </a
+      ><a name="2001" href="Data.Two.Equality.html#1972" class="Bound"
+      >x</a
+      ><a name="2002" class="Symbol"
+      >)</a
+      ><a name="2003"
+      > </a
+      ><a name="2004" class="Symbol"
+      >{</a
+      ><a name="2005" href="Data.Two.Equality.html#1972" class="Bound"
+      >x</a
+      ><a name="2006" class="Symbol"
+      >}</a
+      ><a name="2007"
+      > </a
+      ><a name="2008" class="Symbol"
+      >{</a
+      ><a name="2009" href="Data.Two.Equality.html#1976" class="Bound"
+      >y</a
+      ><a name="2010" class="Symbol"
+      >}</a
+      ><a name="2011"
+      > </a
+      ><a name="2012" href="Data.Two.Equality.html#1979" class="Bound"
+      >eq</a
+      ><a name="2014"
+      > </a
+      ><a name="2015" class="Symbol"
+      >(</a
+      ><a name="2016" href="Data.Two.Equality.html#1687" class="Function"
+      >refl</a
+      ><a name="2020"
+      > </a
+      ><a name="2021" class="Symbol"
+      >{</a
+      ><a name="2022" href="Data.Two.Equality.html#1972" class="Bound"
+      >x</a
+      ><a name="2023" class="Symbol"
+      >})</a
+      ><a name="2025"
+      >
+
+        </a
+      ><a name="2035" href="Data.Two.Equality.html#2035" class="Function"
+      >trans</a
+      ><a name="2040"
+      > </a
+      ><a name="2041" class="Symbol"
+      >:</a
+      ><a name="2042"
+      > </a
+      ><a name="2043" href="Relation.Binary.Core.html#2793" class="Function"
+      >Transitive</a
+      ><a name="2053"
+      > </a
+      ><a name="2054" href="Data.Two.Equality.html#1627" class="Function Operator"
+      >_&#8776;_</a
+      ><a name="2057"
+      >
+        </a
+      ><a name="2066" href="Data.Two.Equality.html#2035" class="Function"
+      >trans</a
+      ><a name="2071"
+      > </a
+      ><a name="2072" class="Symbol"
+      >{</a
+      ><a name="2073" href="Data.Two.Equality.html#2073" class="Bound"
+      >x</a
+      ><a name="2074" class="Symbol"
+      >}</a
+      ><a name="2075"
+      > </a
+      ><a name="2076" href="Data.Two.Equality.html#2076" class="Bound"
+      >x&#8776;y</a
+      ><a name="2079"
+      > </a
+      ><a name="2080" href="Data.Two.Equality.html#2080" class="Bound"
+      >y&#8776;z</a
+      ><a name="2083"
+      > </a
+      ><a name="2084" class="Symbol"
+      >=</a
+      ><a name="2085"
+      > </a
+      ><a name="2086" href="Data.Two.Equality.html#1771" class="Function"
+      >subst</a
+      ><a name="2091"
+      > </a
+      ><a name="2092" class="Symbol"
+      >(</a
+      ><a name="2093" href="Data.Two.Equality.html#1627" class="Function Operator"
+      >_&#8776;_</a
+      ><a name="2096"
+      > </a
+      ><a name="2097" href="Data.Two.Equality.html#2073" class="Bound"
+      >x</a
+      ><a name="2098" class="Symbol"
+      >)</a
+      ><a name="2099"
+      > </a
+      ><a name="2100" href="Data.Two.Equality.html#2080" class="Bound"
+      >y&#8776;z</a
+      ><a name="2103"
+      > </a
+      ><a name="2104" href="Data.Two.Equality.html#2076" class="Bound"
+      >x&#8776;y</a
+      ><a name="2107"
+      >
+
+        </a
+      ><a name="2117" href="Data.Two.Equality.html#2117" class="Function Operator"
+      >_&#8799;_</a
+      ><a name="2120"
+      > </a
+      ><a name="2121" class="Symbol"
+      >:</a
+      ><a name="2122"
+      > </a
+      ><a name="2123" href="Relation.Binary.Core.html#3511" class="Function"
+      >Decidable</a
+      ><a name="2132"
+      > </a
+      ><a name="2133" href="Data.Two.Equality.html#1627" class="Function Operator"
+      >_&#8776;_</a
+      ><a name="2136"
+      >
+        </a
+      ><a name="2145" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="2147"
+      > </a
+      ><a name="2148" href="Data.Two.Equality.html#2117" class="Function Operator"
+      >&#8799;</a
+      ><a name="2149"
+      > </a
+      ><a name="2150" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="2152"
+      > </a
+      ><a name="2153" class="Symbol"
+      >=</a
+      ><a name="2154"
+      > </a
+      ><a name="2155" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="2158"
+      > </a
+      ><a name="2159" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >&#8801;.refl</a
+      ><a name="2165"
+      >
+        </a
+      ><a name="2174" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="2176"
+      > </a
+      ><a name="2177" href="Data.Two.Equality.html#2117" class="Function Operator"
+      >&#8799;</a
+      ><a name="2178"
+      > </a
+      ><a name="2179" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="2181"
+      > </a
+      ><a name="2182" class="Symbol"
+      >=</a
+      ><a name="2183"
+      > </a
+      ><a name="2184" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="2187"
+      > </a
+      ><a name="2188" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >&#8801;.refl</a
+      ><a name="2194"
+      >
+        </a
+      ><a name="2203" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="2205"
+      > </a
+      ><a name="2206" href="Data.Two.Equality.html#2117" class="Function Operator"
+      >&#8799;</a
+      ><a name="2207"
+      > </a
+      ><a name="2208" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="2210"
+      > </a
+      ><a name="2211" class="Symbol"
+      >=</a
+      ><a name="2212"
+      > </a
+      ><a name="2213" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="2215"
+      > </a
+      ><a name="2216" class="Symbol"
+      >(&#955;())</a
+      ><a name="2221"
+      >
+        </a
+      ><a name="2230" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="2232"
+      > </a
+      ><a name="2233" href="Data.Two.Equality.html#2117" class="Function Operator"
+      >&#8799;</a
+      ><a name="2234"
+      > </a
+      ><a name="2235" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="2237"
+      > </a
+      ><a name="2238" class="Symbol"
+      >=</a
+      ><a name="2239"
+      > </a
+      ><a name="2240" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="2242"
+      > </a
+      ><a name="2243" class="Symbol"
+      >(&#955;())</a
+      ><a name="2248"
+      >
+
+        </a
+      ><a name="2258" href="Data.Two.Equality.html#2258" class="Function"
+      >isEquivalence</a
+      ><a name="2271"
+      > </a
+      ><a name="2272" class="Symbol"
+      >:</a
+      ><a name="2273"
+      > </a
+      ><a name="2274" href="Relation.Binary.Core.html#5090" class="Record"
+      >IsEquivalence</a
+      ><a name="2287"
+      > </a
+      ><a name="2288" href="Data.Two.Equality.html#1627" class="Function Operator"
+      >_&#8776;_</a
+      ><a name="2291"
+      >
+        </a
+      ><a name="2300" href="Data.Two.Equality.html#2258" class="Function"
+      >isEquivalence</a
+      ><a name="2313"
+      > </a
+      ><a name="2314" class="Symbol"
+      >=</a
+      ><a name="2315"
+      > </a
+      ><a name="2316" class="Keyword"
+      >record</a
+      ><a name="2322"
+      > </a
+      ><a name="2323" class="Symbol"
+      >{</a
+      ><a name="2324"
+      > </a
+      ><a name="2325" class="Field"
+      >refl</a
+      ><a name="2329"
+      >  </a
+      ><a name="2331" class="Symbol"
+      >=</a
+      ><a name="2332"
+      > </a
+      ><a name="2333" class="Symbol"
+      >&#955;</a
+      ><a name="2334"
+      > </a
+      ><a name="2335" class="Symbol"
+      >{</a
+      ><a name="2336" href="Data.Two.Equality.html#2336" class="Bound"
+      >x</a
+      ><a name="2337" class="Symbol"
+      >}</a
+      ><a name="2338"
+      > </a
+      ><a name="2339" class="Symbol"
+      >&#8594;</a
+      ><a name="2340"
+      > </a
+      ><a name="2341" href="Data.Two.Equality.html#1687" class="Function"
+      >refl</a
+      ><a name="2345"
+      > </a
+      ><a name="2346" class="Symbol"
+      >{</a
+      ><a name="2347" href="Data.Two.Equality.html#2336" class="Bound"
+      >x</a
+      ><a name="2348" class="Symbol"
+      >}</a
+      ><a name="2349"
+      >
+                               </a
+      ><a name="2381" class="Symbol"
+      >;</a
+      ><a name="2382"
+      > </a
+      ><a name="2383" class="Field"
+      >sym</a
+      ><a name="2386"
+      >   </a
+      ><a name="2389" class="Symbol"
+      >=</a
+      ><a name="2390"
+      > </a
+      ><a name="2391" class="Symbol"
+      >&#955;</a
+      ><a name="2392"
+      > </a
+      ><a name="2393" class="Symbol"
+      >{</a
+      ><a name="2394" href="Data.Two.Equality.html#2394" class="Bound"
+      >x</a
+      ><a name="2395" class="Symbol"
+      >}</a
+      ><a name="2396"
+      > </a
+      ><a name="2397" class="Symbol"
+      >{</a
+      ><a name="2398" href="Data.Two.Equality.html#2398" class="Bound"
+      >y</a
+      ><a name="2399" class="Symbol"
+      >}</a
+      ><a name="2400"
+      > </a
+      ><a name="2401" class="Symbol"
+      >&#8594;</a
+      ><a name="2402"
+      > </a
+      ><a name="2403" href="Data.Two.Equality.html#1939" class="Function"
+      >sym</a
+      ><a name="2406"
+      > </a
+      ><a name="2407" class="Symbol"
+      >{</a
+      ><a name="2408" href="Data.Two.Equality.html#2394" class="Bound"
+      >x</a
+      ><a name="2409" class="Symbol"
+      >}</a
+      ><a name="2410"
+      > </a
+      ><a name="2411" class="Symbol"
+      >{</a
+      ><a name="2412" href="Data.Two.Equality.html#2398" class="Bound"
+      >y</a
+      ><a name="2413" class="Symbol"
+      >}</a
+      ><a name="2414"
+      >
+                               </a
+      ><a name="2446" class="Symbol"
+      >;</a
+      ><a name="2447"
+      > </a
+      ><a name="2448" class="Field"
+      >trans</a
+      ><a name="2453"
+      > </a
+      ><a name="2454" class="Symbol"
+      >=</a
+      ><a name="2455"
+      > </a
+      ><a name="2456" class="Symbol"
+      >&#955;</a
+      ><a name="2457"
+      > </a
+      ><a name="2458" class="Symbol"
+      >{</a
+      ><a name="2459" href="Data.Two.Equality.html#2459" class="Bound"
+      >x</a
+      ><a name="2460" class="Symbol"
+      >}</a
+      ><a name="2461"
+      > </a
+      ><a name="2462" class="Symbol"
+      >{</a
+      ><a name="2463" href="Data.Two.Equality.html#2463" class="Bound"
+      >y</a
+      ><a name="2464" class="Symbol"
+      >}</a
+      ><a name="2465"
+      > </a
+      ><a name="2466" class="Symbol"
+      >{</a
+      ><a name="2467" href="Data.Two.Equality.html#2467" class="Bound"
+      >z</a
+      ><a name="2468" class="Symbol"
+      >}</a
+      ><a name="2469"
+      > </a
+      ><a name="2470" class="Symbol"
+      >&#8594;</a
+      ><a name="2471"
+      > </a
+      ><a name="2472" href="Data.Two.Equality.html#2035" class="Function"
+      >trans</a
+      ><a name="2477"
+      > </a
+      ><a name="2478" class="Symbol"
+      >{</a
+      ><a name="2479" href="Data.Two.Equality.html#2459" class="Bound"
+      >x</a
+      ><a name="2480" class="Symbol"
+      >}</a
+      ><a name="2481"
+      > </a
+      ><a name="2482" class="Symbol"
+      >{</a
+      ><a name="2483" href="Data.Two.Equality.html#2463" class="Bound"
+      >y</a
+      ><a name="2484" class="Symbol"
+      >}</a
+      ><a name="2485"
+      > </a
+      ><a name="2486" class="Symbol"
+      >{</a
+      ><a name="2487" href="Data.Two.Equality.html#2467" class="Bound"
+      >z</a
+      ><a name="2488" class="Symbol"
+      >}</a
+      ><a name="2489"
+      > </a
+      ><a name="2490" class="Symbol"
+      >}</a
+      ><a name="2491"
+      >
+
+        </a
+      ><a name="2501" href="Data.Two.Equality.html#2501" class="Function"
+      >isDecEquivalence</a
+      ><a name="2517"
+      > </a
+      ><a name="2518" class="Symbol"
+      >:</a
+      ><a name="2519"
+      > </a
+      ><a name="2520" href="Relation.Binary.html#2681" class="Record"
+      >IsDecEquivalence</a
+      ><a name="2536"
+      > </a
+      ><a name="2537" href="Data.Two.Equality.html#1627" class="Function Operator"
+      >_&#8776;_</a
+      ><a name="2540"
+      >
+        </a
+      ><a name="2549" href="Data.Two.Equality.html#2501" class="Function"
+      >isDecEquivalence</a
+      ><a name="2565"
+      > </a
+      ><a name="2566" class="Symbol"
+      >=</a
+      ><a name="2567"
+      > </a
+      ><a name="2568" class="Keyword"
+      >record</a
+      ><a name="2574"
+      > </a
+      ><a name="2575" class="Symbol"
+      >{</a
+      ><a name="2576"
+      > </a
+      ><a name="2577" class="Field"
+      >isEquivalence</a
+      ><a name="2590"
+      > </a
+      ><a name="2591" class="Symbol"
+      >=</a
+      ><a name="2592"
+      > </a
+      ><a name="2593" href="Data.Two.Equality.html#2258" class="Function"
+      >isEquivalence</a
+      ><a name="2606" class="Symbol"
+      >;</a
+      ><a name="2607"
+      > </a
+      ><a name="2608" class="Field Operator"
+      >_&#8799;_</a
+      ><a name="2611"
+      > </a
+      ><a name="2612" class="Symbol"
+      >=</a
+      ><a name="2613"
+      > </a
+      ><a name="2614" href="Data.Two.Equality.html#2117" class="Function Operator"
+      >_&#8799;_</a
+      ><a name="2617"
+      > </a
+      ><a name="2618" class="Symbol"
+      >}</a
+      ><a name="2619"
+      >
+
+    </a
+      ><a name="2625" class="Keyword"
+      >open</a
+      ><a name="2629"
+      > </a
+      ><a name="2630" href="Relation.Binary.html#2921" class="Module"
+      >DecSetoid</a
+      ><a name="2639"
+      > </a
+      ><a name="2640" href="Data.Two.Equality.html#1494" class="Function"
+      >decSetoid</a
+      ><a name="2649"
+      > </a
+      ><a name="2650" class="Keyword"
+      >public</a
+      ><a name="2656"
+      >
+
+</a
+      ><a name="2658" href="Data.Two.Equality.html#2658" class="Function"
+      >neg-xor</a
+      ><a name="2665"
+      > </a
+      ><a name="2666" class="Symbol"
+      >:</a
+      ><a name="2667"
+      > </a
+      ><a name="2668" class="Symbol"
+      >&#8704;</a
+      ><a name="2669"
+      > </a
+      ><a name="2670" href="Data.Two.Equality.html#2670" class="Bound"
+      >b&#8320;</a
+      ><a name="2672"
+      > </a
+      ><a name="2673" href="Data.Two.Equality.html#2673" class="Bound"
+      >b&#8321;</a
+      ><a name="2675"
+      > </a
+      ><a name="2676" class="Symbol"
+      >&#8594;</a
+      ><a name="2677"
+      > </a
+      ><a name="2678" href="Data.Two.Equality.html#2670" class="Bound"
+      >b&#8320;</a
+      ><a name="2680"
+      > </a
+      ><a name="2681" href="Data.Two.html#2568" class="Function Operator"
+      >==</a
+      ><a name="2683"
+      > </a
+      ><a name="2684" href="Data.Two.Equality.html#2673" class="Bound"
+      >b&#8321;</a
+      ><a name="2686"
+      > </a
+      ><a name="2687" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="2688"
+      > </a
+      ><a name="2689" href="Data.Bool.html#873" class="Function"
+      >not</a
+      ><a name="2692"
+      > </a
+      ><a name="2693" class="Symbol"
+      >(</a
+      ><a name="2694" href="Data.Two.Equality.html#2670" class="Bound"
+      >b&#8320;</a
+      ><a name="2696"
+      > </a
+      ><a name="2697" href="Data.Bool.html#1270" class="Function Operator"
+      >xor</a
+      ><a name="2700"
+      > </a
+      ><a name="2701" href="Data.Two.Equality.html#2673" class="Bound"
+      >b&#8321;</a
+      ><a name="2703" class="Symbol"
+      >)</a
+      ><a name="2704"
+      >
+</a
+      ><a name="2705" href="Data.Two.Equality.html#2658" class="Function"
+      >neg-xor</a
+      ><a name="2712"
+      > </a
+      ><a name="2713" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="2715"
+      > </a
+      ><a name="2716" href="Data.Two.Equality.html#2716" class="Bound"
+      >b</a
+      ><a name="2717"
+      > </a
+      ><a name="2718" class="Symbol"
+      >=</a
+      ><a name="2719"
+      > </a
+      ><a name="2720" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >&#8801;.refl</a
+      ><a name="2726"
+      >
+</a
+      ><a name="2727" href="Data.Two.Equality.html#2658" class="Function"
+      >neg-xor</a
+      ><a name="2734"
+      > </a
+      ><a name="2735" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="2737"
+      > </a
+      ><a name="2738" href="Data.Two.Equality.html#2738" class="Bound"
+      >b</a
+      ><a name="2739"
+      > </a
+      ><a name="2740" class="Symbol"
+      >=</a
+      ><a name="2741"
+      > </a
+      ><a name="2742" href="Relation.Binary.PropositionalEquality.Core.html#565" class="Function"
+      >&#8801;.sym</a
+      ><a name="2747"
+      > </a
+      ><a name="2748" class="Symbol"
+      >(</a
+      ><a name="2749" href="Data.Bool.Properties.html#7088" class="Function"
+      >not-involutive</a
+      ><a name="2763"
+      > </a
+      ><a name="2764" href="Data.Two.Equality.html#2738" class="Bound"
+      >b</a
+      ><a name="2765" class="Symbol"
+      >)</a
+      ><a name="2766"
+      >
+
+</a
+      ><a name="2768" href="Data.Two.Equality.html#2768" class="Function"
+      >comm</a
+      ><a name="2772"
+      > </a
+      ><a name="2773" class="Symbol"
+      >:</a
+      ><a name="2774"
+      > </a
+      ><a name="2775" class="Symbol"
+      >&#8704;</a
+      ><a name="2776"
+      > </a
+      ><a name="2777" href="Data.Two.Equality.html#2777" class="Bound"
+      >b&#8320;</a
+      ><a name="2779"
+      > </a
+      ><a name="2780" href="Data.Two.Equality.html#2780" class="Bound"
+      >b&#8321;</a
+      ><a name="2782"
+      > </a
+      ><a name="2783" class="Symbol"
+      >&#8594;</a
+      ><a name="2784"
+      > </a
+      ><a name="2785" href="Data.Two.Equality.html#2777" class="Bound"
+      >b&#8320;</a
+      ><a name="2787"
+      > </a
+      ><a name="2788" href="Data.Two.html#2568" class="Function Operator"
+      >==</a
+      ><a name="2790"
+      > </a
+      ><a name="2791" href="Data.Two.Equality.html#2780" class="Bound"
+      >b&#8321;</a
+      ><a name="2793"
+      > </a
+      ><a name="2794" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="2795"
+      > </a
+      ><a name="2796" href="Data.Two.Equality.html#2780" class="Bound"
+      >b&#8321;</a
+      ><a name="2798"
+      > </a
+      ><a name="2799" href="Data.Two.html#2568" class="Function Operator"
+      >==</a
+      ><a name="2801"
+      > </a
+      ><a name="2802" href="Data.Two.Equality.html#2777" class="Bound"
+      >b&#8320;</a
+      ><a name="2804"
+      >
+</a
+      ><a name="2805" href="Data.Two.Equality.html#2768" class="Function"
+      >comm</a
+      ><a name="2809"
+      > </a
+      ><a name="2810" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="2812"
+      > </a
+      ><a name="2813" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="2815"
+      > </a
+      ><a name="2816" class="Symbol"
+      >=</a
+      ><a name="2817"
+      > </a
+      ><a name="2818" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >&#8801;.refl</a
+      ><a name="2824"
+      >
+</a
+      ><a name="2825" href="Data.Two.Equality.html#2768" class="Function"
+      >comm</a
+      ><a name="2829"
+      > </a
+      ><a name="2830" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="2832"
+      > </a
+      ><a name="2833" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="2835"
+      > </a
+      ><a name="2836" class="Symbol"
+      >=</a
+      ><a name="2837"
+      > </a
+      ><a name="2838" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >&#8801;.refl</a
+      ><a name="2844"
+      >
+</a
+      ><a name="2845" href="Data.Two.Equality.html#2768" class="Function"
+      >comm</a
+      ><a name="2849"
+      > </a
+      ><a name="2850" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="2852"
+      > </a
+      ><a name="2853" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="2855"
+      > </a
+      ><a name="2856" class="Symbol"
+      >=</a
+      ><a name="2857"
+      > </a
+      ><a name="2858" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >&#8801;.refl</a
+      ><a name="2864"
+      >
+</a
+      ><a name="2865" href="Data.Two.Equality.html#2768" class="Function"
+      >comm</a
+      ><a name="2869"
+      > </a
+      ><a name="2870" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="2872"
+      > </a
+      ><a name="2873" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="2875"
+      > </a
+      ><a name="2876" class="Symbol"
+      >=</a
+      ><a name="2877"
+      > </a
+      ><a name="2878" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >&#8801;.refl</a
+      ><a name="2884"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

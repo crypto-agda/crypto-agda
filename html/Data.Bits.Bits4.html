@@ -1,0 +1,548 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Data.Bits.Bits4</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Symbol"
+      >{-#</a
+      ><a name="4"
+      > </a
+      ><a name="5" class="Keyword"
+      >OPTIONS</a
+      ><a name="12"
+      > --without-K </a
+      ><a name="25" class="Symbol"
+      >#-}</a
+      ><a name="28"
+      >
+</a
+      ><a name="29" class="Keyword"
+      >module</a
+      ><a name="35"
+      > </a
+      ><a name="36" href="Data.Bits.Bits4.html#1" class="Module"
+      >Data.Bits.Bits4</a
+      ><a name="51"
+      > </a
+      ><a name="52" class="Keyword"
+      >where</a
+      ><a name="57"
+      > 
+
+</a
+      ><a name="60" class="Keyword"
+      >open</a
+      ><a name="64"
+      > </a
+      ><a name="65" class="Keyword"
+      >import</a
+      ><a name="71"
+      > </a
+      ><a name="72" href="Data.Bits.html#1" class="Module"
+      >Data.Bits</a
+      ><a name="81"
+      >
+</a
+      ><a name="82" class="Keyword"
+      >open</a
+      ><a name="86"
+      > </a
+      ><a name="87" class="Keyword"
+      >import</a
+      ><a name="93"
+      > </a
+      ><a name="94" href="Data.Nat.html#1" class="Module"
+      >Data.Nat</a
+      ><a name="102"
+      >
+</a
+      ><a name="103" class="Keyword"
+      >open</a
+      ><a name="107"
+      > </a
+      ><a name="108" class="Keyword"
+      >import</a
+      ><a name="114"
+      > </a
+      ><a name="115" href="Data.Fin.html#1" class="Module"
+      >Data.Fin</a
+      ><a name="123"
+      >
+</a
+      ><a name="124" class="Keyword"
+      >open</a
+      ><a name="128"
+      > </a
+      ><a name="129" class="Keyword"
+      >import</a
+      ><a name="135"
+      > </a
+      ><a name="136" href="Data.Vec.html#1" class="Module"
+      >Data.Vec</a
+      ><a name="144"
+      >
+
+</a
+      ><a name="146" href="Data.Bits.Bits4.html#146" class="Function"
+      >bits&#8308;</a
+      ><a name="151"
+      > </a
+      ><a name="152" class="Symbol"
+      >:</a
+      ><a name="153"
+      > </a
+      ><a name="154" href="Data.Vec.html#604" class="Datatype"
+      >Vec</a
+      ><a name="157"
+      > </a
+      ><a name="158" class="Symbol"
+      >(</a
+      ><a name="159" href="Data.Bits.html#572" class="Function"
+      >Bits</a
+      ><a name="163"
+      > </a
+      ><a name="164" class="Number"
+      >4</a
+      ><a name="165" class="Symbol"
+      >)</a
+      ><a name="166"
+      > </a
+      ><a name="167" class="Number"
+      >16</a
+      ><a name="169"
+      >
+</a
+      ><a name="170" href="Data.Bits.Bits4.html#146" class="Function"
+      >bits&#8308;</a
+      ><a name="175"
+      > </a
+      ><a name="176" class="Symbol"
+      >=</a
+      ><a name="177"
+      > </a
+      ><a name="178" href="Data.Bits.html#2048" class="Function"
+      >allBits</a
+      ><a name="185"
+      > </a
+      ><a name="186" class="Number"
+      >4</a
+      ><a name="187"
+      >
+
+</a
+      ><a name="189" href="Data.Bits.Bits4.html#189" class="Function"
+      >0000b</a
+      ><a name="194"
+      > </a
+      ><a name="195" class="Symbol"
+      >=</a
+      ><a name="196"
+      > </a
+      ><a name="197" href="Data.Bits.Bits4.html#146" class="Function"
+      >bits&#8308;</a
+      ><a name="202"
+      > </a
+      ><a name="203" href="Data.Bits.html#939" class="Function Operator"
+      >!</a
+      ><a name="204"
+      > </a
+      ><a name="205" href="Data.Fin.html#1439" class="Function Operator"
+      >#</a
+      ><a name="206"
+      > </a
+      ><a name="207" class="Number"
+      >0</a
+      ><a name="208"
+      >
+</a
+      ><a name="209" href="Data.Bits.Bits4.html#209" class="Function"
+      >0001b</a
+      ><a name="214"
+      > </a
+      ><a name="215" class="Symbol"
+      >=</a
+      ><a name="216"
+      > </a
+      ><a name="217" href="Data.Bits.Bits4.html#146" class="Function"
+      >bits&#8308;</a
+      ><a name="222"
+      > </a
+      ><a name="223" href="Data.Bits.html#939" class="Function Operator"
+      >!</a
+      ><a name="224"
+      > </a
+      ><a name="225" href="Data.Fin.html#1439" class="Function Operator"
+      >#</a
+      ><a name="226"
+      > </a
+      ><a name="227" class="Number"
+      >1</a
+      ><a name="228"
+      >
+</a
+      ><a name="229" href="Data.Bits.Bits4.html#229" class="Function"
+      >0010b</a
+      ><a name="234"
+      > </a
+      ><a name="235" class="Symbol"
+      >=</a
+      ><a name="236"
+      > </a
+      ><a name="237" href="Data.Bits.Bits4.html#146" class="Function"
+      >bits&#8308;</a
+      ><a name="242"
+      > </a
+      ><a name="243" href="Data.Bits.html#939" class="Function Operator"
+      >!</a
+      ><a name="244"
+      > </a
+      ><a name="245" href="Data.Fin.html#1439" class="Function Operator"
+      >#</a
+      ><a name="246"
+      > </a
+      ><a name="247" class="Number"
+      >2</a
+      ><a name="248"
+      >
+</a
+      ><a name="249" href="Data.Bits.Bits4.html#249" class="Function"
+      >0011b</a
+      ><a name="254"
+      > </a
+      ><a name="255" class="Symbol"
+      >=</a
+      ><a name="256"
+      > </a
+      ><a name="257" href="Data.Bits.Bits4.html#146" class="Function"
+      >bits&#8308;</a
+      ><a name="262"
+      > </a
+      ><a name="263" href="Data.Bits.html#939" class="Function Operator"
+      >!</a
+      ><a name="264"
+      > </a
+      ><a name="265" href="Data.Fin.html#1439" class="Function Operator"
+      >#</a
+      ><a name="266"
+      > </a
+      ><a name="267" class="Number"
+      >3</a
+      ><a name="268"
+      >
+</a
+      ><a name="269" href="Data.Bits.Bits4.html#269" class="Function"
+      >0100b</a
+      ><a name="274"
+      > </a
+      ><a name="275" class="Symbol"
+      >=</a
+      ><a name="276"
+      > </a
+      ><a name="277" href="Data.Bits.Bits4.html#146" class="Function"
+      >bits&#8308;</a
+      ><a name="282"
+      > </a
+      ><a name="283" href="Data.Bits.html#939" class="Function Operator"
+      >!</a
+      ><a name="284"
+      > </a
+      ><a name="285" href="Data.Fin.html#1439" class="Function Operator"
+      >#</a
+      ><a name="286"
+      > </a
+      ><a name="287" class="Number"
+      >4</a
+      ><a name="288"
+      >
+</a
+      ><a name="289" href="Data.Bits.Bits4.html#289" class="Function"
+      >0101b</a
+      ><a name="294"
+      > </a
+      ><a name="295" class="Symbol"
+      >=</a
+      ><a name="296"
+      > </a
+      ><a name="297" href="Data.Bits.Bits4.html#146" class="Function"
+      >bits&#8308;</a
+      ><a name="302"
+      > </a
+      ><a name="303" href="Data.Bits.html#939" class="Function Operator"
+      >!</a
+      ><a name="304"
+      > </a
+      ><a name="305" href="Data.Fin.html#1439" class="Function Operator"
+      >#</a
+      ><a name="306"
+      > </a
+      ><a name="307" class="Number"
+      >5</a
+      ><a name="308"
+      >
+</a
+      ><a name="309" href="Data.Bits.Bits4.html#309" class="Function"
+      >0110b</a
+      ><a name="314"
+      > </a
+      ><a name="315" class="Symbol"
+      >=</a
+      ><a name="316"
+      > </a
+      ><a name="317" href="Data.Bits.Bits4.html#146" class="Function"
+      >bits&#8308;</a
+      ><a name="322"
+      > </a
+      ><a name="323" href="Data.Bits.html#939" class="Function Operator"
+      >!</a
+      ><a name="324"
+      > </a
+      ><a name="325" href="Data.Fin.html#1439" class="Function Operator"
+      >#</a
+      ><a name="326"
+      > </a
+      ><a name="327" class="Number"
+      >6</a
+      ><a name="328"
+      >
+</a
+      ><a name="329" href="Data.Bits.Bits4.html#329" class="Function"
+      >0111b</a
+      ><a name="334"
+      > </a
+      ><a name="335" class="Symbol"
+      >=</a
+      ><a name="336"
+      > </a
+      ><a name="337" href="Data.Bits.Bits4.html#146" class="Function"
+      >bits&#8308;</a
+      ><a name="342"
+      > </a
+      ><a name="343" href="Data.Bits.html#939" class="Function Operator"
+      >!</a
+      ><a name="344"
+      > </a
+      ><a name="345" href="Data.Fin.html#1439" class="Function Operator"
+      >#</a
+      ><a name="346"
+      > </a
+      ><a name="347" class="Number"
+      >7</a
+      ><a name="348"
+      >
+</a
+      ><a name="349" href="Data.Bits.Bits4.html#349" class="Function"
+      >1000b</a
+      ><a name="354"
+      > </a
+      ><a name="355" class="Symbol"
+      >=</a
+      ><a name="356"
+      > </a
+      ><a name="357" href="Data.Bits.Bits4.html#146" class="Function"
+      >bits&#8308;</a
+      ><a name="362"
+      > </a
+      ><a name="363" href="Data.Bits.html#939" class="Function Operator"
+      >!</a
+      ><a name="364"
+      > </a
+      ><a name="365" href="Data.Fin.html#1439" class="Function Operator"
+      >#</a
+      ><a name="366"
+      > </a
+      ><a name="367" class="Number"
+      >8</a
+      ><a name="368"
+      >
+</a
+      ><a name="369" href="Data.Bits.Bits4.html#369" class="Function"
+      >1001b</a
+      ><a name="374"
+      > </a
+      ><a name="375" class="Symbol"
+      >=</a
+      ><a name="376"
+      > </a
+      ><a name="377" href="Data.Bits.Bits4.html#146" class="Function"
+      >bits&#8308;</a
+      ><a name="382"
+      > </a
+      ><a name="383" href="Data.Bits.html#939" class="Function Operator"
+      >!</a
+      ><a name="384"
+      > </a
+      ><a name="385" href="Data.Fin.html#1439" class="Function Operator"
+      >#</a
+      ><a name="386"
+      > </a
+      ><a name="387" class="Number"
+      >9</a
+      ><a name="388"
+      >
+</a
+      ><a name="389" href="Data.Bits.Bits4.html#389" class="Function"
+      >1010b</a
+      ><a name="394"
+      > </a
+      ><a name="395" class="Symbol"
+      >=</a
+      ><a name="396"
+      > </a
+      ><a name="397" href="Data.Bits.Bits4.html#146" class="Function"
+      >bits&#8308;</a
+      ><a name="402"
+      > </a
+      ><a name="403" href="Data.Bits.html#939" class="Function Operator"
+      >!</a
+      ><a name="404"
+      > </a
+      ><a name="405" href="Data.Fin.html#1439" class="Function Operator"
+      >#</a
+      ><a name="406"
+      > </a
+      ><a name="407" class="Number"
+      >10</a
+      ><a name="409"
+      >
+</a
+      ><a name="410" href="Data.Bits.Bits4.html#410" class="Function"
+      >1011b</a
+      ><a name="415"
+      > </a
+      ><a name="416" class="Symbol"
+      >=</a
+      ><a name="417"
+      > </a
+      ><a name="418" href="Data.Bits.Bits4.html#146" class="Function"
+      >bits&#8308;</a
+      ><a name="423"
+      > </a
+      ><a name="424" href="Data.Bits.html#939" class="Function Operator"
+      >!</a
+      ><a name="425"
+      > </a
+      ><a name="426" href="Data.Fin.html#1439" class="Function Operator"
+      >#</a
+      ><a name="427"
+      > </a
+      ><a name="428" class="Number"
+      >11</a
+      ><a name="430"
+      >
+</a
+      ><a name="431" href="Data.Bits.Bits4.html#431" class="Function"
+      >1100b</a
+      ><a name="436"
+      > </a
+      ><a name="437" class="Symbol"
+      >=</a
+      ><a name="438"
+      > </a
+      ><a name="439" href="Data.Bits.Bits4.html#146" class="Function"
+      >bits&#8308;</a
+      ><a name="444"
+      > </a
+      ><a name="445" href="Data.Bits.html#939" class="Function Operator"
+      >!</a
+      ><a name="446"
+      > </a
+      ><a name="447" href="Data.Fin.html#1439" class="Function Operator"
+      >#</a
+      ><a name="448"
+      > </a
+      ><a name="449" class="Number"
+      >12</a
+      ><a name="451"
+      >
+</a
+      ><a name="452" href="Data.Bits.Bits4.html#452" class="Function"
+      >1101b</a
+      ><a name="457"
+      > </a
+      ><a name="458" class="Symbol"
+      >=</a
+      ><a name="459"
+      > </a
+      ><a name="460" href="Data.Bits.Bits4.html#146" class="Function"
+      >bits&#8308;</a
+      ><a name="465"
+      > </a
+      ><a name="466" href="Data.Bits.html#939" class="Function Operator"
+      >!</a
+      ><a name="467"
+      > </a
+      ><a name="468" href="Data.Fin.html#1439" class="Function Operator"
+      >#</a
+      ><a name="469"
+      > </a
+      ><a name="470" class="Number"
+      >13</a
+      ><a name="472"
+      >
+</a
+      ><a name="473" href="Data.Bits.Bits4.html#473" class="Function"
+      >1110b</a
+      ><a name="478"
+      > </a
+      ><a name="479" class="Symbol"
+      >=</a
+      ><a name="480"
+      > </a
+      ><a name="481" href="Data.Bits.Bits4.html#146" class="Function"
+      >bits&#8308;</a
+      ><a name="486"
+      > </a
+      ><a name="487" href="Data.Bits.html#939" class="Function Operator"
+      >!</a
+      ><a name="488"
+      > </a
+      ><a name="489" href="Data.Fin.html#1439" class="Function Operator"
+      >#</a
+      ><a name="490"
+      > </a
+      ><a name="491" class="Number"
+      >14</a
+      ><a name="493"
+      >
+</a
+      ><a name="494" href="Data.Bits.Bits4.html#494" class="Function"
+      >1111b</a
+      ><a name="499"
+      > </a
+      ><a name="500" class="Symbol"
+      >=</a
+      ><a name="501"
+      > </a
+      ><a name="502" href="Data.Bits.Bits4.html#146" class="Function"
+      >bits&#8308;</a
+      ><a name="507"
+      > </a
+      ><a name="508" href="Data.Bits.html#939" class="Function Operator"
+      >!</a
+      ><a name="509"
+      > </a
+      ><a name="510" href="Data.Fin.html#1439" class="Function Operator"
+      >#</a
+      ><a name="511"
+      > </a
+      ><a name="512" class="Number"
+      >15</a
+      ><a name="514"
+      >
+
+</a
+      ><a name="516" class="Comment"
+      >-- 1000b &#8801; parse &quot;1000&quot;</a
+      ><a name="539"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

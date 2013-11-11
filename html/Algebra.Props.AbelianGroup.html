@@ -1,0 +1,1211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Algebra.Props.AbelianGroup</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="73"
+      >
+</a
+      ><a name="74" class="Comment"
+      >-- The Agda standard library</a
+      ><a name="102"
+      >
+</a
+      ><a name="103" class="Comment"
+      >--</a
+      ><a name="105"
+      >
+</a
+      ><a name="106" class="Comment"
+      >-- Some derivable properties</a
+      ><a name="134"
+      >
+</a
+      ><a name="135" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="207"
+      >
+
+</a
+      ><a name="209" class="Keyword"
+      >open</a
+      ><a name="213"
+      > </a
+      ><a name="214" class="Keyword"
+      >import</a
+      ><a name="220"
+      > </a
+      ><a name="221" href="Algebra.html#1" class="Module"
+      >Algebra</a
+      ><a name="228"
+      >
+
+</a
+      ><a name="230" class="Keyword"
+      >module</a
+      ><a name="236"
+      > </a
+      ><a name="237" href="Algebra.Props.AbelianGroup.html#1" class="Module"
+      >Algebra.Props.AbelianGroup</a
+      ><a name="263"
+      >
+         </a
+      ><a name="273" class="Symbol"
+      >{</a
+      ><a name="274" href="Algebra.Props.AbelianGroup.html#274" class="Bound"
+      >g&#8321;</a
+      ><a name="276"
+      > </a
+      ><a name="277" href="Algebra.Props.AbelianGroup.html#277" class="Bound"
+      >g&#8322;</a
+      ><a name="279" class="Symbol"
+      >}</a
+      ><a name="280"
+      > </a
+      ><a name="281" class="Symbol"
+      >(</a
+      ><a name="282" href="Algebra.Props.AbelianGroup.html#282" class="Bound"
+      >G</a
+      ><a name="283"
+      > </a
+      ><a name="284" class="Symbol"
+      >:</a
+      ><a name="285"
+      > </a
+      ><a name="286" href="Algebra.html#2533" class="Record"
+      >AbelianGroup</a
+      ><a name="298"
+      > </a
+      ><a name="299" href="Algebra.Props.AbelianGroup.html#274" class="Bound"
+      >g&#8321;</a
+      ><a name="301"
+      > </a
+      ><a name="302" href="Algebra.Props.AbelianGroup.html#277" class="Bound"
+      >g&#8322;</a
+      ><a name="304" class="Symbol"
+      >)</a
+      ><a name="305"
+      > </a
+      ><a name="306" class="Keyword"
+      >where</a
+      ><a name="311"
+      >
+
+</a
+      ><a name="313" class="Keyword"
+      >import</a
+      ><a name="319"
+      > </a
+      ><a name="320" href="Algebra.Props.Group.html#1" class="Module"
+      >Algebra.Props.Group</a
+      ><a name="339"
+      > </a
+      ><a name="340" class="Symbol"
+      >as</a
+      ><a name="342"
+      > </a
+      ><a name="343" class="Module"
+      >GP</a
+      ><a name="345"
+      >
+</a
+      ><a name="346" class="Keyword"
+      >open</a
+      ><a name="350"
+      > </a
+      ><a name="351" class="Keyword"
+      >import</a
+      ><a name="357"
+      > </a
+      ><a name="358" href="Data.Product.html#1" class="Module"
+      >Data.Product</a
+      ><a name="370"
+      >
+</a
+      ><a name="371" class="Keyword"
+      >open</a
+      ><a name="375"
+      > </a
+      ><a name="376" class="Keyword"
+      >import</a
+      ><a name="382"
+      > </a
+      ><a name="383" href="Function.html#1" class="Module"
+      >Function</a
+      ><a name="391"
+      >
+</a
+      ><a name="392" class="Keyword"
+      >import</a
+      ><a name="398"
+      > </a
+      ><a name="399" href="Relation.Binary.EqReasoning.html#1" class="Module"
+      >Relation.Binary.EqReasoning</a
+      ><a name="426"
+      > </a
+      ><a name="427" class="Symbol"
+      >as</a
+      ><a name="429"
+      > </a
+      ><a name="430" class="Module"
+      >EqR</a
+      ><a name="433"
+      >
+
+</a
+      ><a name="435" class="Keyword"
+      >open</a
+      ><a name="439"
+      > </a
+      ><a name="440" href="Algebra.html#2533" class="Module"
+      >AbelianGroup</a
+      ><a name="452"
+      > </a
+      ><a name="453" href="Algebra.Props.AbelianGroup.html#282" class="Bound"
+      >G</a
+      ><a name="454"
+      >
+</a
+      ><a name="455" class="Keyword"
+      >open</a
+      ><a name="459"
+      > </a
+      ><a name="460" href="Relation.Binary.EqReasoning.html#1" class="Module"
+      >EqR</a
+      ><a name="463"
+      > </a
+      ><a name="464" href="Algebra.html#845" class="Function"
+      >setoid</a
+      ><a name="470"
+      >
+
+</a
+      ><a name="472" class="Keyword"
+      >open</a
+      ><a name="476"
+      > </a
+      ><a name="477" href="Algebra.Props.Group.html#1" class="Module"
+      >GP</a
+      ><a name="479"
+      > </a
+      ><a name="480" href="Algebra.html#2884" class="Function"
+      >group</a
+      ><a name="485"
+      > </a
+      ><a name="486" class="Keyword"
+      >public</a
+      ><a name="492"
+      >
+
+</a
+      ><a name="494" class="Keyword"
+      >private</a
+      ><a name="501"
+      >
+  </a
+      ><a name="504" href="Algebra.Props.AbelianGroup.html#504" class="Function"
+      >lemma</a
+      ><a name="509"
+      > </a
+      ><a name="510" class="Symbol"
+      >:</a
+      ><a name="511"
+      > </a
+      ><a name="512" class="Symbol"
+      >&#8704;</a
+      ><a name="513"
+      > </a
+      ><a name="514" href="Algebra.Props.AbelianGroup.html#514" class="Bound"
+      >x</a
+      ><a name="515"
+      > </a
+      ><a name="516" href="Algebra.Props.AbelianGroup.html#516" class="Bound"
+      >y</a
+      ><a name="517"
+      > </a
+      ><a name="518" class="Symbol"
+      >&#8594;</a
+      ><a name="519"
+      > </a
+      ><a name="520" href="Algebra.Props.AbelianGroup.html#514" class="Bound"
+      >x</a
+      ><a name="521"
+      > </a
+      ><a name="522" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="523"
+      > </a
+      ><a name="524" href="Algebra.Props.AbelianGroup.html#516" class="Bound"
+      >y</a
+      ><a name="525"
+      > </a
+      ><a name="526" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="527"
+      > </a
+      ><a name="528" href="Algebra.Props.AbelianGroup.html#514" class="Bound"
+      >x</a
+      ><a name="529"
+      > </a
+      ><a name="530" href="Algebra.html#2757" class="Function Operator"
+      >&#8315;&#185;</a
+      ><a name="532"
+      > </a
+      ><a name="533" href="Algebra.html#2660" class="Function Operator"
+      >&#8776;</a
+      ><a name="534"
+      > </a
+      ><a name="535" href="Algebra.Props.AbelianGroup.html#516" class="Bound"
+      >y</a
+      ><a name="536"
+      >
+  </a
+      ><a name="539" href="Algebra.Props.AbelianGroup.html#504" class="Function"
+      >lemma</a
+      ><a name="544"
+      > </a
+      ><a name="545" href="Algebra.Props.AbelianGroup.html#545" class="Bound"
+      >x</a
+      ><a name="546"
+      > </a
+      ><a name="547" href="Algebra.Props.AbelianGroup.html#547" class="Bound"
+      >y</a
+      ><a name="548"
+      > </a
+      ><a name="549" class="Symbol"
+      >=</a
+      ><a name="550"
+      > </a
+      ><a name="551" href="Relation.Binary.PreorderReasoning.html#1154" class="Function Operator"
+      >begin</a
+      ><a name="556"
+      >
+    </a
+      ><a name="561" href="Algebra.Props.AbelianGroup.html#545" class="Bound"
+      >x</a
+      ><a name="562"
+      > </a
+      ><a name="563" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="564"
+      > </a
+      ><a name="565" href="Algebra.Props.AbelianGroup.html#547" class="Bound"
+      >y</a
+      ><a name="566"
+      > </a
+      ><a name="567" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="568"
+      > </a
+      ><a name="569" href="Algebra.Props.AbelianGroup.html#545" class="Bound"
+      >x</a
+      ><a name="570"
+      > </a
+      ><a name="571" href="Algebra.html#2757" class="Function Operator"
+      >&#8315;&#185;</a
+      ><a name="573"
+      >    </a
+      ><a name="577" href="Relation.Binary.PreorderReasoning.html#1220" class="Function Operator"
+      >&#8776;&#10216;</a
+      ><a name="579"
+      > </a
+      ><a name="580" href="Algebra.Structures.html#2415" class="Function"
+      >comm</a
+      ><a name="584"
+      > </a
+      ><a name="585" class="Symbol"
+      >_</a
+      ><a name="586"
+      > </a
+      ><a name="587" class="Symbol"
+      >_</a
+      ><a name="588"
+      > </a
+      ><a name="589" href="Function.html#1926" class="Function Operator"
+      >&#10216;</a
+      ><a name="590"
+      > </a
+      ><a name="591" href="Algebra.Structures.html#845" class="Function"
+      >&#8729;-cong</a
+      ><a name="597"
+      > </a
+      ><a name="598" href="Function.html#1926" class="Function Operator"
+      >&#10217;</a
+      ><a name="599"
+      > </a
+      ><a name="600" href="Relation.Binary.Core.html#5191" class="Function"
+      >refl</a
+      ><a name="604"
+      > </a
+      ><a name="605" href="Relation.Binary.PreorderReasoning.html#1220" class="Function Operator"
+      >&#10217;</a
+      ><a name="606"
+      >
+    </a
+      ><a name="611" href="Algebra.Props.AbelianGroup.html#547" class="Bound"
+      >y</a
+      ><a name="612"
+      > </a
+      ><a name="613" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="614"
+      > </a
+      ><a name="615" href="Algebra.Props.AbelianGroup.html#545" class="Bound"
+      >x</a
+      ><a name="616"
+      > </a
+      ><a name="617" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="618"
+      > </a
+      ><a name="619" href="Algebra.Props.AbelianGroup.html#545" class="Bound"
+      >x</a
+      ><a name="620"
+      > </a
+      ><a name="621" href="Algebra.html#2757" class="Function Operator"
+      >&#8315;&#185;</a
+      ><a name="623"
+      >    </a
+      ><a name="627" href="Relation.Binary.PreorderReasoning.html#1220" class="Function Operator"
+      >&#8776;&#10216;</a
+      ><a name="629"
+      > </a
+      ><a name="630" href="Algebra.Structures.html#811" class="Function"
+      >assoc</a
+      ><a name="635"
+      > </a
+      ><a name="636" class="Symbol"
+      >_</a
+      ><a name="637"
+      > </a
+      ><a name="638" class="Symbol"
+      >_</a
+      ><a name="639"
+      > </a
+      ><a name="640" class="Symbol"
+      >_</a
+      ><a name="641"
+      > </a
+      ><a name="642" href="Relation.Binary.PreorderReasoning.html#1220" class="Function Operator"
+      >&#10217;</a
+      ><a name="643"
+      >
+    </a
+      ><a name="648" href="Algebra.Props.AbelianGroup.html#547" class="Bound"
+      >y</a
+      ><a name="649"
+      > </a
+      ><a name="650" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="651"
+      > </a
+      ><a name="652" class="Symbol"
+      >(</a
+      ><a name="653" href="Algebra.Props.AbelianGroup.html#545" class="Bound"
+      >x</a
+      ><a name="654"
+      > </a
+      ><a name="655" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="656"
+      > </a
+      ><a name="657" href="Algebra.Props.AbelianGroup.html#545" class="Bound"
+      >x</a
+      ><a name="658"
+      > </a
+      ><a name="659" href="Algebra.html#2757" class="Function Operator"
+      >&#8315;&#185;</a
+      ><a name="661" class="Symbol"
+      >)</a
+      ><a name="662"
+      >  </a
+      ><a name="664" href="Relation.Binary.PreorderReasoning.html#1220" class="Function Operator"
+      >&#8776;&#10216;</a
+      ><a name="666"
+      > </a
+      ><a name="667" href="Relation.Binary.Core.html#5191" class="Function"
+      >refl</a
+      ><a name="671"
+      > </a
+      ><a name="672" href="Function.html#1926" class="Function Operator"
+      >&#10216;</a
+      ><a name="673"
+      > </a
+      ><a name="674" href="Algebra.Structures.html#845" class="Function"
+      >&#8729;-cong</a
+      ><a name="680"
+      > </a
+      ><a name="681" href="Function.html#1926" class="Function Operator"
+      >&#10217;</a
+      ><a name="682"
+      > </a
+      ><a name="683" href="Data.Product.html#539" class="Field"
+      >proj&#8322;</a
+      ><a name="688"
+      > </a
+      ><a name="689" href="Algebra.Structures.html#2083" class="Function"
+      >inverse</a
+      ><a name="696"
+      > </a
+      ><a name="697" class="Symbol"
+      >_</a
+      ><a name="698"
+      > </a
+      ><a name="699" href="Relation.Binary.PreorderReasoning.html#1220" class="Function Operator"
+      >&#10217;</a
+      ><a name="700"
+      >
+    </a
+      ><a name="705" href="Algebra.Props.AbelianGroup.html#547" class="Bound"
+      >y</a
+      ><a name="706"
+      > </a
+      ><a name="707" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="708"
+      > </a
+      ><a name="709" href="Algebra.html#2728" class="Function"
+      >&#949;</a
+      ><a name="710"
+      >           </a
+      ><a name="721" href="Relation.Binary.PreorderReasoning.html#1220" class="Function Operator"
+      >&#8776;&#10216;</a
+      ><a name="723"
+      > </a
+      ><a name="724" href="Data.Product.html#539" class="Field"
+      >proj&#8322;</a
+      ><a name="729"
+      > </a
+      ><a name="730" href="Algebra.Structures.html#1106" class="Function"
+      >identity</a
+      ><a name="738"
+      > </a
+      ><a name="739" class="Symbol"
+      >_</a
+      ><a name="740"
+      > </a
+      ><a name="741" href="Relation.Binary.PreorderReasoning.html#1220" class="Function Operator"
+      >&#10217;</a
+      ><a name="742"
+      >
+    </a
+      ><a name="747" href="Algebra.Props.AbelianGroup.html#547" class="Bound"
+      >y</a
+      ><a name="748"
+      >               </a
+      ><a name="763" href="Relation.Binary.PreorderReasoning.html#1519" class="Function Operator"
+      >&#8718;</a
+      ><a name="764"
+      >
+
+</a
+      ><a name="766" href="Algebra.Props.AbelianGroup.html#766" class="Function"
+      >&#8315;&#185;-&#8729;-comm</a
+      ><a name="775"
+      > </a
+      ><a name="776" class="Symbol"
+      >:</a
+      ><a name="777"
+      > </a
+      ><a name="778" class="Symbol"
+      >&#8704;</a
+      ><a name="779"
+      > </a
+      ><a name="780" href="Algebra.Props.AbelianGroup.html#780" class="Bound"
+      >x</a
+      ><a name="781"
+      > </a
+      ><a name="782" href="Algebra.Props.AbelianGroup.html#782" class="Bound"
+      >y</a
+      ><a name="783"
+      > </a
+      ><a name="784" class="Symbol"
+      >&#8594;</a
+      ><a name="785"
+      > </a
+      ><a name="786" href="Algebra.Props.AbelianGroup.html#780" class="Bound"
+      >x</a
+      ><a name="787"
+      > </a
+      ><a name="788" href="Algebra.html#2757" class="Function Operator"
+      >&#8315;&#185;</a
+      ><a name="790"
+      > </a
+      ><a name="791" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="792"
+      > </a
+      ><a name="793" href="Algebra.Props.AbelianGroup.html#782" class="Bound"
+      >y</a
+      ><a name="794"
+      > </a
+      ><a name="795" href="Algebra.html#2757" class="Function Operator"
+      >&#8315;&#185;</a
+      ><a name="797"
+      > </a
+      ><a name="798" href="Algebra.html#2660" class="Function Operator"
+      >&#8776;</a
+      ><a name="799"
+      > </a
+      ><a name="800" class="Symbol"
+      >(</a
+      ><a name="801" href="Algebra.Props.AbelianGroup.html#780" class="Bound"
+      >x</a
+      ><a name="802"
+      > </a
+      ><a name="803" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="804"
+      > </a
+      ><a name="805" href="Algebra.Props.AbelianGroup.html#782" class="Bound"
+      >y</a
+      ><a name="806" class="Symbol"
+      >)</a
+      ><a name="807"
+      > </a
+      ><a name="808" href="Algebra.html#2757" class="Function Operator"
+      >&#8315;&#185;</a
+      ><a name="810"
+      >
+</a
+      ><a name="811" href="Algebra.Props.AbelianGroup.html#766" class="Function"
+      >&#8315;&#185;-&#8729;-comm</a
+      ><a name="820"
+      > </a
+      ><a name="821" href="Algebra.Props.AbelianGroup.html#821" class="Bound"
+      >x</a
+      ><a name="822"
+      > </a
+      ><a name="823" href="Algebra.Props.AbelianGroup.html#823" class="Bound"
+      >y</a
+      ><a name="824"
+      > </a
+      ><a name="825" class="Symbol"
+      >=</a
+      ><a name="826"
+      > </a
+      ><a name="827" href="Relation.Binary.PreorderReasoning.html#1154" class="Function Operator"
+      >begin</a
+      ><a name="832"
+      >
+  </a
+      ><a name="835" href="Algebra.Props.AbelianGroup.html#821" class="Bound"
+      >x</a
+      ><a name="836"
+      > </a
+      ><a name="837" href="Algebra.html#2757" class="Function Operator"
+      >&#8315;&#185;</a
+      ><a name="839"
+      > </a
+      ><a name="840" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="841"
+      > </a
+      ><a name="842" href="Algebra.Props.AbelianGroup.html#823" class="Bound"
+      >y</a
+      ><a name="843"
+      > </a
+      ><a name="844" href="Algebra.html#2757" class="Function Operator"
+      >&#8315;&#185;</a
+      ><a name="846"
+      >                         </a
+      ><a name="871" href="Relation.Binary.PreorderReasoning.html#1220" class="Function Operator"
+      >&#8776;&#10216;</a
+      ><a name="873"
+      > </a
+      ><a name="874" href="Algebra.Structures.html#2415" class="Function"
+      >comm</a
+      ><a name="878"
+      > </a
+      ><a name="879" class="Symbol"
+      >_</a
+      ><a name="880"
+      > </a
+      ><a name="881" class="Symbol"
+      >_</a
+      ><a name="882"
+      > </a
+      ><a name="883" href="Relation.Binary.PreorderReasoning.html#1220" class="Function Operator"
+      >&#10217;</a
+      ><a name="884"
+      >
+  </a
+      ><a name="887" href="Algebra.Props.AbelianGroup.html#823" class="Bound"
+      >y</a
+      ><a name="888"
+      > </a
+      ><a name="889" href="Algebra.html#2757" class="Function Operator"
+      >&#8315;&#185;</a
+      ><a name="891"
+      > </a
+      ><a name="892" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="893"
+      > </a
+      ><a name="894" href="Algebra.Props.AbelianGroup.html#821" class="Bound"
+      >x</a
+      ><a name="895"
+      > </a
+      ><a name="896" href="Algebra.html#2757" class="Function Operator"
+      >&#8315;&#185;</a
+      ><a name="898"
+      >                         </a
+      ><a name="923" href="Relation.Binary.PreorderReasoning.html#1220" class="Function Operator"
+      >&#8776;&#10216;</a
+      ><a name="925"
+      > </a
+      ><a name="926" href="Relation.Binary.Core.html#5217" class="Function"
+      >sym</a
+      ><a name="929"
+      > </a
+      ><a name="930" href="Function.html#1829" class="Function Operator"
+      >$</a
+      ><a name="931"
+      > </a
+      ><a name="932" href="Algebra.Props.AbelianGroup.html#1110" class="Function"
+      >lem</a
+      ><a name="935"
+      > </a
+      ><a name="936" href="Function.html#1926" class="Function Operator"
+      >&#10216;</a
+      ><a name="937"
+      > </a
+      ><a name="938" href="Algebra.Structures.html#845" class="Function"
+      >&#8729;-cong</a
+      ><a name="944"
+      > </a
+      ><a name="945" href="Function.html#1926" class="Function Operator"
+      >&#10217;</a
+      ><a name="946"
+      > </a
+      ><a name="947" href="Relation.Binary.Core.html#5191" class="Function"
+      >refl</a
+      ><a name="951"
+      > </a
+      ><a name="952" href="Relation.Binary.PreorderReasoning.html#1220" class="Function Operator"
+      >&#10217;</a
+      ><a name="953"
+      >
+  </a
+      ><a name="956" href="Algebra.Props.AbelianGroup.html#821" class="Bound"
+      >x</a
+      ><a name="957"
+      > </a
+      ><a name="958" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="959"
+      > </a
+      ><a name="960" class="Symbol"
+      >(</a
+      ><a name="961" href="Algebra.Props.AbelianGroup.html#823" class="Bound"
+      >y</a
+      ><a name="962"
+      > </a
+      ><a name="963" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="964"
+      > </a
+      ><a name="965" class="Symbol"
+      >(</a
+      ><a name="966" href="Algebra.Props.AbelianGroup.html#821" class="Bound"
+      >x</a
+      ><a name="967"
+      > </a
+      ><a name="968" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="969"
+      > </a
+      ><a name="970" href="Algebra.Props.AbelianGroup.html#823" class="Bound"
+      >y</a
+      ><a name="971" class="Symbol"
+      >)</a
+      ><a name="972"
+      > </a
+      ><a name="973" href="Algebra.html#2757" class="Function Operator"
+      >&#8315;&#185;</a
+      ><a name="975"
+      > </a
+      ><a name="976" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="977"
+      > </a
+      ><a name="978" href="Algebra.Props.AbelianGroup.html#823" class="Bound"
+      >y</a
+      ><a name="979"
+      > </a
+      ><a name="980" href="Algebra.html#2757" class="Function Operator"
+      >&#8315;&#185;</a
+      ><a name="982" class="Symbol"
+      >)</a
+      ><a name="983"
+      > </a
+      ><a name="984" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="985"
+      > </a
+      ><a name="986" href="Algebra.Props.AbelianGroup.html#821" class="Bound"
+      >x</a
+      ><a name="987"
+      > </a
+      ><a name="988" href="Algebra.html#2757" class="Function Operator"
+      >&#8315;&#185;</a
+      ><a name="990"
+      >  </a
+      ><a name="992" href="Relation.Binary.PreorderReasoning.html#1220" class="Function Operator"
+      >&#8776;&#10216;</a
+      ><a name="994"
+      > </a
+      ><a name="995" href="Algebra.Props.AbelianGroup.html#504" class="Function"
+      >lemma</a
+      ><a name="1000"
+      > </a
+      ><a name="1001" class="Symbol"
+      >_</a
+      ><a name="1002"
+      > </a
+      ><a name="1003" class="Symbol"
+      >_</a
+      ><a name="1004"
+      > </a
+      ><a name="1005" href="Relation.Binary.PreorderReasoning.html#1220" class="Function Operator"
+      >&#10217;</a
+      ><a name="1006"
+      >
+  </a
+      ><a name="1009" href="Algebra.Props.AbelianGroup.html#823" class="Bound"
+      >y</a
+      ><a name="1010"
+      > </a
+      ><a name="1011" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="1012"
+      > </a
+      ><a name="1013" class="Symbol"
+      >(</a
+      ><a name="1014" href="Algebra.Props.AbelianGroup.html#821" class="Bound"
+      >x</a
+      ><a name="1015"
+      > </a
+      ><a name="1016" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="1017"
+      > </a
+      ><a name="1018" href="Algebra.Props.AbelianGroup.html#823" class="Bound"
+      >y</a
+      ><a name="1019" class="Symbol"
+      >)</a
+      ><a name="1020"
+      > </a
+      ><a name="1021" href="Algebra.html#2757" class="Function Operator"
+      >&#8315;&#185;</a
+      ><a name="1023"
+      > </a
+      ><a name="1024" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="1025"
+      > </a
+      ><a name="1026" href="Algebra.Props.AbelianGroup.html#823" class="Bound"
+      >y</a
+      ><a name="1027"
+      > </a
+      ><a name="1028" href="Algebra.html#2757" class="Function Operator"
+      >&#8315;&#185;</a
+      ><a name="1030"
+      >               </a
+      ><a name="1045" href="Relation.Binary.PreorderReasoning.html#1220" class="Function Operator"
+      >&#8776;&#10216;</a
+      ><a name="1047"
+      > </a
+      ><a name="1048" href="Algebra.Props.AbelianGroup.html#504" class="Function"
+      >lemma</a
+      ><a name="1053"
+      > </a
+      ><a name="1054" class="Symbol"
+      >_</a
+      ><a name="1055"
+      > </a
+      ><a name="1056" class="Symbol"
+      >_</a
+      ><a name="1057"
+      > </a
+      ><a name="1058" href="Relation.Binary.PreorderReasoning.html#1220" class="Function Operator"
+      >&#10217;</a
+      ><a name="1059"
+      >
+  </a
+      ><a name="1062" class="Symbol"
+      >(</a
+      ><a name="1063" href="Algebra.Props.AbelianGroup.html#821" class="Bound"
+      >x</a
+      ><a name="1064"
+      > </a
+      ><a name="1065" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="1066"
+      > </a
+      ><a name="1067" href="Algebra.Props.AbelianGroup.html#823" class="Bound"
+      >y</a
+      ><a name="1068" class="Symbol"
+      >)</a
+      ><a name="1069"
+      > </a
+      ><a name="1070" href="Algebra.html#2757" class="Function Operator"
+      >&#8315;&#185;</a
+      ><a name="1072"
+      >                          </a
+      ><a name="1098" href="Relation.Binary.PreorderReasoning.html#1519" class="Function Operator"
+      >&#8718;</a
+      ><a name="1099"
+      >
+  </a
+      ><a name="1102" class="Keyword"
+      >where</a
+      ><a name="1107"
+      >
+  </a
+      ><a name="1110" href="Algebra.Props.AbelianGroup.html#1110" class="Function"
+      >lem</a
+      ><a name="1113"
+      > </a
+      ><a name="1114" class="Symbol"
+      >=</a
+      ><a name="1115"
+      > </a
+      ><a name="1116" href="Relation.Binary.PreorderReasoning.html#1154" class="Function Operator"
+      >begin</a
+      ><a name="1121"
+      >
+    </a
+      ><a name="1126" href="Algebra.Props.AbelianGroup.html#821" class="Bound"
+      >x</a
+      ><a name="1127"
+      > </a
+      ><a name="1128" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="1129"
+      > </a
+      ><a name="1130" class="Symbol"
+      >(</a
+      ><a name="1131" href="Algebra.Props.AbelianGroup.html#823" class="Bound"
+      >y</a
+      ><a name="1132"
+      > </a
+      ><a name="1133" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="1134"
+      > </a
+      ><a name="1135" class="Symbol"
+      >(</a
+      ><a name="1136" href="Algebra.Props.AbelianGroup.html#821" class="Bound"
+      >x</a
+      ><a name="1137"
+      > </a
+      ><a name="1138" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="1139"
+      > </a
+      ><a name="1140" href="Algebra.Props.AbelianGroup.html#823" class="Bound"
+      >y</a
+      ><a name="1141" class="Symbol"
+      >)</a
+      ><a name="1142"
+      > </a
+      ><a name="1143" href="Algebra.html#2757" class="Function Operator"
+      >&#8315;&#185;</a
+      ><a name="1145"
+      > </a
+      ><a name="1146" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="1147"
+      > </a
+      ><a name="1148" href="Algebra.Props.AbelianGroup.html#823" class="Bound"
+      >y</a
+      ><a name="1149"
+      > </a
+      ><a name="1150" href="Algebra.html#2757" class="Function Operator"
+      >&#8315;&#185;</a
+      ><a name="1152" class="Symbol"
+      >)</a
+      ><a name="1153"
+      >  </a
+      ><a name="1155" href="Relation.Binary.PreorderReasoning.html#1220" class="Function Operator"
+      >&#8776;&#10216;</a
+      ><a name="1157"
+      > </a
+      ><a name="1158" href="Relation.Binary.Core.html#5217" class="Function"
+      >sym</a
+      ><a name="1161"
+      > </a
+      ><a name="1162" href="Function.html#1829" class="Function Operator"
+      >$</a
+      ><a name="1163"
+      > </a
+      ><a name="1164" href="Algebra.Structures.html#811" class="Function"
+      >assoc</a
+      ><a name="1169"
+      > </a
+      ><a name="1170" class="Symbol"
+      >_</a
+      ><a name="1171"
+      > </a
+      ><a name="1172" class="Symbol"
+      >_</a
+      ><a name="1173"
+      > </a
+      ><a name="1174" class="Symbol"
+      >_</a
+      ><a name="1175"
+      > </a
+      ><a name="1176" href="Relation.Binary.PreorderReasoning.html#1220" class="Function Operator"
+      >&#10217;</a
+      ><a name="1177"
+      >
+    </a
+      ><a name="1182" href="Algebra.Props.AbelianGroup.html#821" class="Bound"
+      >x</a
+      ><a name="1183"
+      > </a
+      ><a name="1184" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="1185"
+      > </a
+      ><a name="1186" class="Symbol"
+      >(</a
+      ><a name="1187" href="Algebra.Props.AbelianGroup.html#823" class="Bound"
+      >y</a
+      ><a name="1188"
+      > </a
+      ><a name="1189" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="1190"
+      > </a
+      ><a name="1191" class="Symbol"
+      >(</a
+      ><a name="1192" href="Algebra.Props.AbelianGroup.html#821" class="Bound"
+      >x</a
+      ><a name="1193"
+      > </a
+      ><a name="1194" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="1195"
+      > </a
+      ><a name="1196" href="Algebra.Props.AbelianGroup.html#823" class="Bound"
+      >y</a
+      ><a name="1197" class="Symbol"
+      >)</a
+      ><a name="1198"
+      > </a
+      ><a name="1199" href="Algebra.html#2757" class="Function Operator"
+      >&#8315;&#185;</a
+      ><a name="1201" class="Symbol"
+      >)</a
+      ><a name="1202"
+      > </a
+      ><a name="1203" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="1204"
+      > </a
+      ><a name="1205" href="Algebra.Props.AbelianGroup.html#823" class="Bound"
+      >y</a
+      ><a name="1206"
+      > </a
+      ><a name="1207" href="Algebra.html#2757" class="Function Operator"
+      >&#8315;&#185;</a
+      ><a name="1209"
+      >  </a
+      ><a name="1211" href="Relation.Binary.PreorderReasoning.html#1220" class="Function Operator"
+      >&#8776;&#10216;</a
+      ><a name="1213"
+      > </a
+      ><a name="1214" href="Relation.Binary.Core.html#5217" class="Function"
+      >sym</a
+      ><a name="1217"
+      > </a
+      ><a name="1218" href="Function.html#1829" class="Function Operator"
+      >$</a
+      ><a name="1219"
+      > </a
+      ><a name="1220" href="Algebra.Structures.html#811" class="Function"
+      >assoc</a
+      ><a name="1225"
+      > </a
+      ><a name="1226" class="Symbol"
+      >_</a
+      ><a name="1227"
+      > </a
+      ><a name="1228" class="Symbol"
+      >_</a
+      ><a name="1229"
+      > </a
+      ><a name="1230" class="Symbol"
+      >_</a
+      ><a name="1231"
+      > </a
+      ><a name="1232" href="Function.html#1926" class="Function Operator"
+      >&#10216;</a
+      ><a name="1233"
+      > </a
+      ><a name="1234" href="Algebra.Structures.html#845" class="Function"
+      >&#8729;-cong</a
+      ><a name="1240"
+      > </a
+      ><a name="1241" href="Function.html#1926" class="Function Operator"
+      >&#10217;</a
+      ><a name="1242"
+      > </a
+      ><a name="1243" href="Relation.Binary.Core.html#5191" class="Function"
+      >refl</a
+      ><a name="1247"
+      > </a
+      ><a name="1248" href="Relation.Binary.PreorderReasoning.html#1220" class="Function Operator"
+      >&#10217;</a
+      ><a name="1249"
+      >
+    </a
+      ><a name="1254" href="Algebra.Props.AbelianGroup.html#821" class="Bound"
+      >x</a
+      ><a name="1255"
+      > </a
+      ><a name="1256" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="1257"
+      > </a
+      ><a name="1258" href="Algebra.Props.AbelianGroup.html#823" class="Bound"
+      >y</a
+      ><a name="1259"
+      > </a
+      ><a name="1260" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="1261"
+      > </a
+      ><a name="1262" class="Symbol"
+      >(</a
+      ><a name="1263" href="Algebra.Props.AbelianGroup.html#821" class="Bound"
+      >x</a
+      ><a name="1264"
+      > </a
+      ><a name="1265" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="1266"
+      > </a
+      ><a name="1267" href="Algebra.Props.AbelianGroup.html#823" class="Bound"
+      >y</a
+      ><a name="1268" class="Symbol"
+      >)</a
+      ><a name="1269"
+      > </a
+      ><a name="1270" href="Algebra.html#2757" class="Function Operator"
+      >&#8315;&#185;</a
+      ><a name="1272"
+      > </a
+      ><a name="1273" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="1274"
+      > </a
+      ><a name="1275" href="Algebra.Props.AbelianGroup.html#823" class="Bound"
+      >y</a
+      ><a name="1276"
+      > </a
+      ><a name="1277" href="Algebra.html#2757" class="Function Operator"
+      >&#8315;&#185;</a
+      ><a name="1279"
+      >    </a
+      ><a name="1283" href="Relation.Binary.PreorderReasoning.html#1220" class="Function Operator"
+      >&#8776;&#10216;</a
+      ><a name="1285"
+      > </a
+      ><a name="1286" href="Data.Product.html#539" class="Field"
+      >proj&#8322;</a
+      ><a name="1291"
+      > </a
+      ><a name="1292" href="Algebra.Structures.html#2083" class="Function"
+      >inverse</a
+      ><a name="1299"
+      > </a
+      ><a name="1300" class="Symbol"
+      >_</a
+      ><a name="1301"
+      > </a
+      ><a name="1302" href="Function.html#1926" class="Function Operator"
+      >&#10216;</a
+      ><a name="1303"
+      > </a
+      ><a name="1304" href="Algebra.Structures.html#845" class="Function"
+      >&#8729;-cong</a
+      ><a name="1310"
+      > </a
+      ><a name="1311" href="Function.html#1926" class="Function Operator"
+      >&#10217;</a
+      ><a name="1312"
+      > </a
+      ><a name="1313" href="Relation.Binary.Core.html#5191" class="Function"
+      >refl</a
+      ><a name="1317"
+      > </a
+      ><a name="1318" href="Relation.Binary.PreorderReasoning.html#1220" class="Function Operator"
+      >&#10217;</a
+      ><a name="1319"
+      >
+    </a
+      ><a name="1324" href="Algebra.html#2728" class="Function"
+      >&#949;</a
+      ><a name="1325"
+      > </a
+      ><a name="1326" href="Algebra.html#2695" class="Function Operator"
+      >&#8729;</a
+      ><a name="1327"
+      > </a
+      ><a name="1328" href="Algebra.Props.AbelianGroup.html#823" class="Bound"
+      >y</a
+      ><a name="1329"
+      > </a
+      ><a name="1330" href="Algebra.html#2757" class="Function Operator"
+      >&#8315;&#185;</a
+      ><a name="1332"
+      >                     </a
+      ><a name="1353" href="Relation.Binary.PreorderReasoning.html#1220" class="Function Operator"
+      >&#8776;&#10216;</a
+      ><a name="1355"
+      > </a
+      ><a name="1356" href="Data.Product.html#525" class="Field"
+      >proj&#8321;</a
+      ><a name="1361"
+      > </a
+      ><a name="1362" href="Algebra.Structures.html#1106" class="Function"
+      >identity</a
+      ><a name="1370"
+      > </a
+      ><a name="1371" class="Symbol"
+      >_</a
+      ><a name="1372"
+      > </a
+      ><a name="1373" href="Relation.Binary.PreorderReasoning.html#1220" class="Function Operator"
+      >&#10217;</a
+      ><a name="1374"
+      >
+    </a
+      ><a name="1379" href="Algebra.Props.AbelianGroup.html#823" class="Bound"
+      >y</a
+      ><a name="1380"
+      > </a
+      ><a name="1381" href="Algebra.html#2757" class="Function Operator"
+      >&#8315;&#185;</a
+      ><a name="1383"
+      >                         </a
+      ><a name="1408" href="Relation.Binary.PreorderReasoning.html#1519" class="Function Operator"
+      >&#8718;</a
+      ><a name="1409"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

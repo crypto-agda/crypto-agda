@@ -1,0 +1,856 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Attack.Reencryption.OneBitMessage</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Symbol"
+      >{-#</a
+      ><a name="4"
+      > </a
+      ><a name="5" class="Keyword"
+      >OPTIONS</a
+      ><a name="12"
+      > --without-K --copatterns </a
+      ><a name="38" class="Symbol"
+      >#-}</a
+      ><a name="41"
+      >
+</a
+      ><a name="42" class="Comment"
+      >-- Assuming the message space is only one bit the attack can be made even simpler.</a
+      ><a name="124"
+      >
+
+</a
+      ><a name="126" class="Keyword"
+      >open</a
+      ><a name="130"
+      > </a
+      ><a name="131" class="Keyword"
+      >import</a
+      ><a name="137"
+      > </a
+      ><a name="138" href="Function.html#1" class="Module"
+      >Function</a
+      ><a name="146"
+      >
+</a
+      ><a name="147" class="Keyword"
+      >open</a
+      ><a name="151"
+      > </a
+      ><a name="152" class="Keyword"
+      >import</a
+      ><a name="158"
+      > </a
+      ><a name="159" href="Type.html#1" class="Module"
+      >Type</a
+      ><a name="163"
+      > </a
+      ><a name="164" class="Keyword"
+      >using</a
+      ><a name="169"
+      > </a
+      ><a name="170" class="Symbol"
+      >(</a
+      ><a name="171"
+      >&#9733;</a
+      ><a name="172" class="Symbol"
+      >)</a
+      ><a name="173"
+      >
+</a
+      ><a name="174" class="Keyword"
+      >open</a
+      ><a name="178"
+      > </a
+      ><a name="179" class="Keyword"
+      >import</a
+      ><a name="185"
+      > </a
+      ><a name="186" href="Data.Product.html#1" class="Module"
+      >Data.Product</a
+      ><a name="198"
+      >
+</a
+      ><a name="199" class="Keyword"
+      >open</a
+      ><a name="203"
+      > </a
+      ><a name="204" class="Keyword"
+      >import</a
+      ><a name="210"
+      > </a
+      ><a name="211" href="Data.Two.html#1" class="Module"
+      >Data.Two</a
+      ><a name="219"
+      >
+</a
+      ><a name="220" class="Keyword"
+      >open</a
+      ><a name="224"
+      > </a
+      ><a name="225" class="Keyword"
+      >import</a
+      ><a name="231"
+      > </a
+      ><a name="232" href="Relation.Binary.PropositionalEquality.NP.html#1" class="Module"
+      >Relation.Binary.PropositionalEquality.NP</a
+      ><a name="272"
+      >
+</a
+      ><a name="273" class="Keyword"
+      >open</a
+      ><a name="277"
+      > </a
+      ><a name="278" class="Keyword"
+      >import</a
+      ><a name="284"
+      > </a
+      ><a name="285" href="Control.Strategy.html#1" class="Module"
+      >Control.Strategy</a
+      ><a name="301"
+      >
+
+</a
+      ><a name="303" class="Keyword"
+      >import</a
+      ><a name="309"
+      > </a
+      ><a name="310" href="Game.IND-CCA2.html#1" class="Module"
+      >Game.IND-CCA2</a
+      ><a name="323"
+      >
+
+</a
+      ><a name="325" class="Keyword"
+      >module</a
+      ><a name="331"
+      > </a
+      ><a name="332" href="Attack.Reencryption.OneBitMessage.html#1" class="Module"
+      >Attack.Reencryption.OneBitMessage</a
+      ><a name="365"
+      >
+  </a
+      ><a name="368" class="Symbol"
+      >(</a
+      ><a name="369" href="Attack.Reencryption.OneBitMessage.html#369" class="Bound"
+      >PubKey</a
+      ><a name="375"
+      > </a
+      ><a name="376" href="Attack.Reencryption.OneBitMessage.html#376" class="Bound"
+      >SecKey</a
+      ><a name="382"
+      > </a
+      ><a name="383" href="Attack.Reencryption.OneBitMessage.html#383" class="Bound"
+      >CipherText</a
+      ><a name="393"
+      > </a
+      ><a name="394" href="Attack.Reencryption.OneBitMessage.html#394" class="Bound"
+      >R&#8337;</a
+      ><a name="396"
+      > </a
+      ><a name="397" href="Attack.Reencryption.OneBitMessage.html#397" class="Bound"
+      >R&#8342;</a
+      ><a name="399"
+      > </a
+      ><a name="400" class="Symbol"
+      >:</a
+      ><a name="401"
+      > </a
+      ><a name="402" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="403" class="Symbol"
+      >)</a
+      ><a name="404"
+      >
+
+  </a
+      ><a name="408" class="Symbol"
+      >(</a
+      ><a name="409" href="Attack.Reencryption.OneBitMessage.html#409" class="Bound"
+      >KeyGen</a
+      ><a name="415"
+      > </a
+      ><a name="416" class="Symbol"
+      >:</a
+      ><a name="417"
+      > </a
+      ><a name="418" href="Attack.Reencryption.OneBitMessage.html#397" class="Bound"
+      >R&#8342;</a
+      ><a name="420"
+      > </a
+      ><a name="421" class="Symbol"
+      >&#8594;</a
+      ><a name="422"
+      > </a
+      ><a name="423" href="Attack.Reencryption.OneBitMessage.html#369" class="Bound"
+      >PubKey</a
+      ><a name="429"
+      > </a
+      ><a name="430" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="431"
+      > </a
+      ><a name="432" href="Attack.Reencryption.OneBitMessage.html#376" class="Bound"
+      >SecKey</a
+      ><a name="438" class="Symbol"
+      >)</a
+      ><a name="439"
+      >
+  </a
+      ><a name="442" class="Symbol"
+      >(</a
+      ><a name="443" href="Attack.Reencryption.OneBitMessage.html#443" class="Bound"
+      >Enc</a
+      ><a name="446"
+      >    </a
+      ><a name="450" class="Symbol"
+      >:</a
+      ><a name="451"
+      > </a
+      ><a name="452" href="Attack.Reencryption.OneBitMessage.html#369" class="Bound"
+      >PubKey</a
+      ><a name="458"
+      > </a
+      ><a name="459" class="Symbol"
+      >&#8594;</a
+      ><a name="460"
+      > </a
+      ><a name="461" class="Comment"
+      >{-Message-}</a
+      ><a name="472" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="473"
+      > </a
+      ><a name="474" class="Symbol"
+      >&#8594;</a
+      ><a name="475"
+      > </a
+      ><a name="476" href="Attack.Reencryption.OneBitMessage.html#394" class="Bound"
+      >R&#8337;</a
+      ><a name="478"
+      > </a
+      ><a name="479" class="Symbol"
+      >&#8594;</a
+      ><a name="480"
+      > </a
+      ><a name="481" href="Attack.Reencryption.OneBitMessage.html#383" class="Bound"
+      >CipherText</a
+      ><a name="491" class="Symbol"
+      >)</a
+      ><a name="492"
+      >
+  </a
+      ><a name="495" class="Symbol"
+      >(</a
+      ><a name="496" href="Attack.Reencryption.OneBitMessage.html#496" class="Bound"
+      >Dec</a
+      ><a name="499"
+      >    </a
+      ><a name="503" class="Symbol"
+      >:</a
+      ><a name="504"
+      > </a
+      ><a name="505" href="Attack.Reencryption.OneBitMessage.html#376" class="Bound"
+      >SecKey</a
+      ><a name="511"
+      > </a
+      ><a name="512" class="Symbol"
+      >&#8594;</a
+      ><a name="513"
+      > </a
+      ><a name="514" href="Attack.Reencryption.OneBitMessage.html#383" class="Bound"
+      >CipherText</a
+      ><a name="524"
+      > </a
+      ><a name="525" class="Symbol"
+      >&#8594;</a
+      ><a name="526"
+      > </a
+      ><a name="527" class="Comment"
+      >{-Message-}</a
+      ><a name="538" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="539" class="Symbol"
+      >)</a
+      ><a name="540"
+      >
+  </a
+      ><a name="543" class="Symbol"
+      >(</a
+      ><a name="544" href="Attack.Reencryption.OneBitMessage.html#544" class="Bound"
+      >Reenc</a
+      ><a name="549"
+      >  </a
+      ><a name="551" class="Symbol"
+      >:</a
+      ><a name="552"
+      > </a
+      ><a name="553" href="Attack.Reencryption.OneBitMessage.html#369" class="Bound"
+      >PubKey</a
+      ><a name="559"
+      > </a
+      ><a name="560" class="Symbol"
+      >&#8594;</a
+      ><a name="561"
+      > </a
+      ><a name="562" href="Attack.Reencryption.OneBitMessage.html#383" class="Bound"
+      >CipherText</a
+      ><a name="572"
+      > </a
+      ><a name="573" class="Symbol"
+      >&#8594;</a
+      ><a name="574"
+      > </a
+      ><a name="575" href="Attack.Reencryption.OneBitMessage.html#394" class="Bound"
+      >R&#8337;</a
+      ><a name="577"
+      > </a
+      ><a name="578" class="Symbol"
+      >&#8594;</a
+      ><a name="579"
+      > </a
+      ><a name="580" href="Attack.Reencryption.OneBitMessage.html#383" class="Bound"
+      >CipherText</a
+      ><a name="590" class="Symbol"
+      >)</a
+      ><a name="591"
+      >
+  </a
+      ><a name="594" class="Symbol"
+      >(</a
+      ><a name="595" href="Attack.Reencryption.OneBitMessage.html#595" class="Bound"
+      >Reenc-correct</a
+      ><a name="608"
+      > </a
+      ><a name="609" class="Symbol"
+      >:</a
+      ><a name="610"
+      > </a
+      ><a name="611" class="Symbol"
+      >&#8704;</a
+      ><a name="612"
+      > </a
+      ><a name="613" href="Attack.Reencryption.OneBitMessage.html#613" class="Bound"
+      >r&#8342;</a
+      ><a name="615"
+      > </a
+      ><a name="616" href="Attack.Reencryption.OneBitMessage.html#616" class="Bound"
+      >m</a
+      ><a name="617"
+      > </a
+      ><a name="618" href="Attack.Reencryption.OneBitMessage.html#618" class="Bound"
+      >r&#8320;</a
+      ><a name="620"
+      > </a
+      ><a name="621" href="Attack.Reencryption.OneBitMessage.html#621" class="Bound"
+      >r&#8321;</a
+      ><a name="623"
+      > </a
+      ><a name="624" class="Symbol"
+      >&#8594;</a
+      ><a name="625"
+      >
+                      </a
+      ><a name="648" href="Function.html#2755" class="Function Operator"
+      >case</a
+      ><a name="652"
+      > </a
+      ><a name="653" href="Attack.Reencryption.OneBitMessage.html#409" class="Bound"
+      >KeyGen</a
+      ><a name="659"
+      > </a
+      ><a name="660" href="Attack.Reencryption.OneBitMessage.html#613" class="Bound"
+      >r&#8342;</a
+      ><a name="662"
+      > </a
+      ><a name="663" href="Function.html#2755" class="Function Operator"
+      >of</a
+      ><a name="665"
+      > </a
+      ><a name="666" class="Symbol"
+      >&#955;</a
+      ><a name="667"
+      >
+                      </a
+      ><a name="690" class="Symbol"
+      >{</a
+      ><a name="691"
+      > </a
+      ><a name="692" class="Symbol"
+      >(</a
+      ><a name="693" href="Attack.Reencryption.OneBitMessage.html#693" class="Bound"
+      >pk</a
+      ><a name="695"
+      > </a
+      ><a name="696" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="697"
+      > </a
+      ><a name="698" href="Attack.Reencryption.OneBitMessage.html#698" class="Bound"
+      >sk</a
+      ><a name="700" class="Symbol"
+      >)</a
+      ><a name="701"
+      > </a
+      ><a name="702" class="Symbol"
+      >&#8594;</a
+      ><a name="703"
+      >
+                        </a
+      ><a name="728" href="Attack.Reencryption.OneBitMessage.html#496" class="Bound"
+      >Dec</a
+      ><a name="731"
+      > </a
+      ><a name="732" href="Attack.Reencryption.OneBitMessage.html#698" class="Bound"
+      >sk</a
+      ><a name="734"
+      > </a
+      ><a name="735" class="Symbol"
+      >(</a
+      ><a name="736" href="Attack.Reencryption.OneBitMessage.html#544" class="Bound"
+      >Reenc</a
+      ><a name="741"
+      > </a
+      ><a name="742" href="Attack.Reencryption.OneBitMessage.html#693" class="Bound"
+      >pk</a
+      ><a name="744"
+      > </a
+      ><a name="745" class="Symbol"
+      >(</a
+      ><a name="746" href="Attack.Reencryption.OneBitMessage.html#443" class="Bound"
+      >Enc</a
+      ><a name="749"
+      > </a
+      ><a name="750" href="Attack.Reencryption.OneBitMessage.html#693" class="Bound"
+      >pk</a
+      ><a name="752"
+      > </a
+      ><a name="753" href="Attack.Reencryption.OneBitMessage.html#616" class="Bound"
+      >m</a
+      ><a name="754"
+      > </a
+      ><a name="755" href="Attack.Reencryption.OneBitMessage.html#618" class="Bound"
+      >r&#8320;</a
+      ><a name="757" class="Symbol"
+      >)</a
+      ><a name="758"
+      > </a
+      ><a name="759" href="Attack.Reencryption.OneBitMessage.html#621" class="Bound"
+      >r&#8321;</a
+      ><a name="761" class="Symbol"
+      >)</a
+      ><a name="762"
+      > </a
+      ><a name="763" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="764"
+      > </a
+      ><a name="765" href="Attack.Reencryption.OneBitMessage.html#616" class="Bound"
+      >m</a
+      ><a name="766"
+      >
+                      </a
+      ><a name="789" class="Symbol"
+      >})</a
+      ><a name="791"
+      >
+  </a
+      ><a name="794" class="Keyword"
+      >where</a
+      ><a name="799"
+      >
+
+</a
+      ><a name="801" class="Keyword"
+      >module</a
+      ><a name="807"
+      > </a
+      ><a name="808" href="Attack.Reencryption.OneBitMessage.html#808" class="Module"
+      >IND-CCA2</a
+      ><a name="816"
+      > </a
+      ><a name="817" class="Symbol"
+      >=</a
+      ><a name="818"
+      > </a
+      ><a name="819" href="Game.IND-CCA2.html#1" class="Module"
+      >Game.IND-CCA2</a
+      ><a name="832"
+      > </a
+      ><a name="833" href="Attack.Reencryption.OneBitMessage.html#369" class="Bound"
+      >PubKey</a
+      ><a name="839"
+      > </a
+      ><a name="840" href="Attack.Reencryption.OneBitMessage.html#376" class="Bound"
+      >SecKey</a
+      ><a name="846"
+      > </a
+      ><a name="847" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="848"
+      > </a
+      ><a name="849" href="Attack.Reencryption.OneBitMessage.html#383" class="Bound"
+      >CipherText</a
+      ><a name="859"
+      > </a
+      ><a name="860" href="Attack.Reencryption.OneBitMessage.html#394" class="Bound"
+      >R&#8337;</a
+      ><a name="862"
+      > </a
+      ><a name="863" href="Attack.Reencryption.OneBitMessage.html#397" class="Bound"
+      >R&#8342;</a
+      ><a name="865"
+      > </a
+      ><a name="866" href="Attack.Reencryption.OneBitMessage.html#394" class="Bound"
+      >R&#8337;</a
+      ><a name="868"
+      > </a
+      ><a name="869" href="Attack.Reencryption.OneBitMessage.html#409" class="Bound"
+      >KeyGen</a
+      ><a name="875"
+      > </a
+      ><a name="876" href="Attack.Reencryption.OneBitMessage.html#443" class="Bound"
+      >Enc</a
+      ><a name="879"
+      > </a
+      ><a name="880" href="Attack.Reencryption.OneBitMessage.html#496" class="Bound"
+      >Dec</a
+      ><a name="883"
+      >
+</a
+      ><a name="884" class="Keyword"
+      >open</a
+      ><a name="888"
+      > </a
+      ><a name="889" href="Attack.Reencryption.OneBitMessage.html#808" class="Module"
+      >IND-CCA2</a
+      ><a name="897"
+      >
+
+</a
+      ><a name="899" class="Keyword"
+      >module</a
+      ><a name="905"
+      > </a
+      ><a name="906" href="Attack.Reencryption.OneBitMessage.html#906" class="Module"
+      >_</a
+      ><a name="907"
+      > </a
+      ><a name="908" class="Symbol"
+      >(</a
+      ><a name="909" href="Attack.Reencryption.OneBitMessage.html#909" class="Bound"
+      >r&#8336;</a
+      ><a name="911"
+      > </a
+      ><a name="912" class="Symbol"
+      >:</a
+      ><a name="913"
+      > </a
+      ><a name="914" href="Attack.Reencryption.OneBitMessage.html#394" class="Bound"
+      >R&#8337;</a
+      ><a name="916" class="Symbol"
+      >)</a
+      ><a name="917"
+      > </a
+      ><a name="918" class="Symbol"
+      >(</a
+      ><a name="919" href="Attack.Reencryption.OneBitMessage.html#919" class="Bound"
+      >pk</a
+      ><a name="921"
+      > </a
+      ><a name="922" class="Symbol"
+      >:</a
+      ><a name="923"
+      > </a
+      ><a name="924" href="Attack.Reencryption.OneBitMessage.html#369" class="Bound"
+      >PubKey</a
+      ><a name="930" class="Symbol"
+      >)</a
+      ><a name="931"
+      > </a
+      ><a name="932" class="Keyword"
+      >where</a
+      ><a name="937"
+      >
+    </a
+      ><a name="942" href="Attack.Reencryption.OneBitMessage.html#942" class="Function"
+      >CPA-adversary</a
+      ><a name="955"
+      > </a
+      ><a name="956" class="Symbol"
+      >:</a
+      ><a name="957"
+      > </a
+      ><a name="958" href="Game.IND-CPA-utils.html#282" class="Record"
+      >CPAAdversary</a
+      ><a name="970"
+      > </a
+      ><a name="971" class="Symbol"
+      >(</a
+      ><a name="972" href="Game.IND-CPA-utils.html#210" class="Function"
+      >DecRound</a
+      ><a name="980"
+      > </a
+      ><a name="981" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="982" class="Symbol"
+      >)</a
+      ><a name="983"
+      >
+    </a
+      ><a name="988" href="Game.IND-CPA-utils.html#328" class="Field"
+      >get-m</a
+      ><a name="993"
+      > </a
+      ><a name="994" href="Attack.Reencryption.OneBitMessage.html#942" class="Function"
+      >CPA-adversary</a
+      ><a name="1007"
+      >   </a
+      ><a name="1010" class="Symbol"
+      >=</a
+      ><a name="1011"
+      > </a
+      ><a name="1012" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="1014"
+      > </a
+      ><a name="1015" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1016"
+      > </a
+      ><a name="1017" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="1019"
+      >
+    </a
+      ><a name="1024" href="Game.IND-CPA-utils.html#358" class="Field"
+      >put-c</a
+      ><a name="1029"
+      > </a
+      ><a name="1030" href="Attack.Reencryption.OneBitMessage.html#942" class="Function"
+      >CPA-adversary</a
+      ><a name="1043"
+      > </a
+      ><a name="1044" href="Attack.Reencryption.OneBitMessage.html#1044" class="Bound"
+      >c</a
+      ><a name="1045"
+      > </a
+      ><a name="1046" class="Symbol"
+      >=</a
+      ><a name="1047"
+      > </a
+      ><a name="1048" href="Control.Strategy.html#253" class="InductiveConstructor"
+      >ask</a
+      ><a name="1051"
+      > </a
+      ><a name="1052" class="Symbol"
+      >(</a
+      ><a name="1053" href="Attack.Reencryption.OneBitMessage.html#544" class="Bound"
+      >Reenc</a
+      ><a name="1058"
+      > </a
+      ><a name="1059" href="Attack.Reencryption.OneBitMessage.html#919" class="Bound"
+      >pk</a
+      ><a name="1061"
+      > </a
+      ><a name="1062" href="Attack.Reencryption.OneBitMessage.html#1044" class="Bound"
+      >c</a
+      ><a name="1063"
+      > </a
+      ><a name="1064" href="Attack.Reencryption.OneBitMessage.html#909" class="Bound"
+      >r&#8336;</a
+      ><a name="1066" class="Symbol"
+      >)</a
+      ><a name="1067"
+      > </a
+      ><a name="1068" href="Control.Strategy.html#319" class="InductiveConstructor"
+      >done</a
+      ><a name="1072"
+      >
+
+</a
+      ><a name="1074" href="Attack.Reencryption.OneBitMessage.html#1074" class="Function"
+      >adversary</a
+      ><a name="1083"
+      > </a
+      ><a name="1084" class="Symbol"
+      >:</a
+      ><a name="1085"
+      > </a
+      ><a name="1086" href="Game.IND-CCA2.html#1030" class="Function"
+      >IND-CCA2.Adversary</a
+      ><a name="1104"
+      >
+</a
+      ><a name="1105" href="Attack.Reencryption.OneBitMessage.html#1074" class="Function"
+      >adversary</a
+      ><a name="1114"
+      > </a
+      ><a name="1115" href="Attack.Reencryption.OneBitMessage.html#1115" class="Bound"
+      >r&#8336;</a
+      ><a name="1117"
+      > </a
+      ><a name="1118" href="Attack.Reencryption.OneBitMessage.html#1118" class="Bound"
+      >pk</a
+      ><a name="1120"
+      > </a
+      ><a name="1121" class="Symbol"
+      >=</a
+      ><a name="1122"
+      > </a
+      ><a name="1123" href="Control.Strategy.html#319" class="InductiveConstructor"
+      >done</a
+      ><a name="1127"
+      > </a
+      ><a name="1128" class="Symbol"
+      >(</a
+      ><a name="1129" href="Attack.Reencryption.OneBitMessage.html#942" class="Function"
+      >CPA-adversary</a
+      ><a name="1142"
+      > </a
+      ><a name="1143" href="Attack.Reencryption.OneBitMessage.html#1115" class="Bound"
+      >r&#8336;</a
+      ><a name="1145"
+      > </a
+      ><a name="1146" href="Attack.Reencryption.OneBitMessage.html#1118" class="Bound"
+      >pk</a
+      ><a name="1148" class="Symbol"
+      >)</a
+      ><a name="1149"
+      >
+
+</a
+      ><a name="1151" href="Attack.Reencryption.OneBitMessage.html#1151" class="Function"
+      >adversary-always-win</a
+      ><a name="1171"
+      > </a
+      ><a name="1172" class="Symbol"
+      >:</a
+      ><a name="1173"
+      > </a
+      ><a name="1174" class="Symbol"
+      >&#8704;</a
+      ><a name="1175"
+      > </a
+      ><a name="1176" href="Attack.Reencryption.OneBitMessage.html#1176" class="Bound"
+      >b</a
+      ><a name="1177"
+      > </a
+      ><a name="1178" href="Attack.Reencryption.OneBitMessage.html#1178" class="Bound"
+      >r</a
+      ><a name="1179"
+      > </a
+      ><a name="1180" class="Symbol"
+      >&#8594;</a
+      ><a name="1181"
+      > </a
+      ><a name="1182" href="Game.IND-CCA2.html#1407" class="Function"
+      >IND-CCA2.EXP</a
+      ><a name="1194"
+      > </a
+      ><a name="1195" href="Attack.Reencryption.OneBitMessage.html#1176" class="Bound"
+      >b</a
+      ><a name="1196"
+      > </a
+      ><a name="1197" href="Attack.Reencryption.OneBitMessage.html#1074" class="Function"
+      >adversary</a
+      ><a name="1206"
+      > </a
+      ><a name="1207" href="Attack.Reencryption.OneBitMessage.html#1178" class="Bound"
+      >r</a
+      ><a name="1208"
+      > </a
+      ><a name="1209" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="1210"
+      > </a
+      ><a name="1211" href="Attack.Reencryption.OneBitMessage.html#1176" class="Bound"
+      >b</a
+      ><a name="1212"
+      >
+</a
+      ><a name="1213" href="Attack.Reencryption.OneBitMessage.html#1151" class="Function"
+      >adversary-always-win</a
+      ><a name="1233"
+      > </a
+      ><a name="1234" href="Attack.Reencryption.OneBitMessage.html#1234" class="Bound"
+      >b</a
+      ><a name="1235"
+      > </a
+      ><a name="1236" class="Symbol"
+      >(</a
+      ><a name="1237" href="Attack.Reencryption.OneBitMessage.html#1237" class="Bound"
+      >r&#8336;</a
+      ><a name="1239"
+      > </a
+      ><a name="1240" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1241"
+      > </a
+      ><a name="1242" href="Attack.Reencryption.OneBitMessage.html#1242" class="Bound"
+      >r&#8342;</a
+      ><a name="1244"
+      > </a
+      ><a name="1245" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1246"
+      > </a
+      ><a name="1247" href="Attack.Reencryption.OneBitMessage.html#1247" class="Bound"
+      >r&#8337;</a
+      ><a name="1249" class="Symbol"
+      >)</a
+      ><a name="1250"
+      > </a
+      ><a name="1251" class="Keyword"
+      >rewrite</a
+      ><a name="1258"
+      > </a
+      ><a name="1259" href="Data.Two.html#1778" class="Function"
+      >&#951;-[0:1:]</a
+      ><a name="1267"
+      > </a
+      ><a name="1268" href="Function.html#1006" class="Function"
+      >id</a
+      ><a name="1270"
+      > </a
+      ><a name="1271" href="Attack.Reencryption.OneBitMessage.html#1234" class="Bound"
+      >b</a
+      ><a name="1272"
+      > </a
+      ><a name="1273" class="Symbol"
+      >=</a
+      ><a name="1274"
+      > </a
+      ><a name="1275" href="Attack.Reencryption.OneBitMessage.html#595" class="Bound"
+      >Reenc-correct</a
+      ><a name="1288"
+      > </a
+      ><a name="1289" href="Attack.Reencryption.OneBitMessage.html#1242" class="Bound"
+      >r&#8342;</a
+      ><a name="1291"
+      > </a
+      ><a name="1292" href="Attack.Reencryption.OneBitMessage.html#1234" class="Bound"
+      >b</a
+      ><a name="1293"
+      > </a
+      ><a name="1294" href="Attack.Reencryption.OneBitMessage.html#1247" class="Bound"
+      >r&#8337;</a
+      ><a name="1296"
+      > </a
+      ><a name="1297" href="Attack.Reencryption.OneBitMessage.html#1237" class="Bound"
+      >r&#8336;</a
+      ><a name="1299"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

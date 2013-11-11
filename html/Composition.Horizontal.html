@@ -1,0 +1,3340 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Composition.Horizontal</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Symbol"
+      >{-#</a
+      ><a name="4"
+      > </a
+      ><a name="5" class="Keyword"
+      >OPTIONS</a
+      ><a name="12"
+      > --without-K </a
+      ><a name="25" class="Symbol"
+      >#-}</a
+      ><a name="28"
+      >
+</a
+      ><a name="29" class="Keyword"
+      >module</a
+      ><a name="35"
+      > </a
+      ><a name="36" href="Composition.Horizontal.html#1" class="Module"
+      >Composition.Horizontal</a
+      ><a name="58"
+      > </a
+      ><a name="59" class="Keyword"
+      >where</a
+      ><a name="64"
+      >
+
+</a
+      ><a name="66" class="Keyword"
+      >open</a
+      ><a name="70"
+      > </a
+      ><a name="71" class="Keyword"
+      >import</a
+      ><a name="77"
+      > </a
+      ><a name="78" href="Level.html#1" class="Module"
+      >Level</a
+      ><a name="83"
+      >
+</a
+      ><a name="84" class="Keyword"
+      >open</a
+      ><a name="88"
+      > </a
+      ><a name="89" class="Keyword"
+      >import</a
+      ><a name="95"
+      > </a
+      ><a name="96" href="Type.html#1" class="Module"
+      >Type</a
+      ><a name="100"
+      > </a
+      ><a name="101" class="Keyword"
+      >hiding</a
+      ><a name="107"
+      > </a
+      ><a name="108" class="Symbol"
+      >(</a
+      ><a name="109"
+      >&#9733;</a
+      ><a name="110" class="Symbol"
+      >)</a
+      ><a name="111"
+      >
+</a
+      ><a name="112" class="Keyword"
+      >open</a
+      ><a name="116"
+      > </a
+      ><a name="117" class="Keyword"
+      >import</a
+      ><a name="123"
+      > </a
+      ><a name="124" href="Function.html#1" class="Module"
+      >Function</a
+      ><a name="132"
+      >
+</a
+      ><a name="133" class="Keyword"
+      >open</a
+      ><a name="137"
+      > </a
+      ><a name="138" class="Keyword"
+      >import</a
+      ><a name="144"
+      > </a
+      ><a name="145" href="Relation.Binary.html#1" class="Module"
+      >Relation.Binary</a
+      ><a name="160"
+      >
+
+</a
+      ><a name="162" href="Composition.Horizontal.html#162" class="Function"
+      >Arrow</a
+      ><a name="167"
+      > </a
+      ><a name="168" class="Symbol"
+      >:</a
+      ><a name="169"
+      > </a
+      ><a name="170" class="Symbol"
+      >&#8704;</a
+      ><a name="171"
+      > </a
+      ><a name="172" class="Symbol"
+      >{</a
+      ><a name="173" href="Composition.Horizontal.html#173" class="Bound"
+      >i</a
+      ><a name="174" class="Symbol"
+      >}</a
+      ><a name="175"
+      > </a
+      ><a name="176" class="Symbol"
+      >&#8594;</a
+      ><a name="177"
+      > </a
+      ><a name="178" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="179"
+      > </a
+      ><a name="180" href="Composition.Horizontal.html#173" class="Bound"
+      >i</a
+      ><a name="181"
+      > </a
+      ><a name="182" class="Symbol"
+      >&#8594;</a
+      ><a name="183"
+      > </a
+      ><a name="184" class="Symbol"
+      >&#8704;</a
+      ><a name="185"
+      > </a
+      ><a name="186" href="Composition.Horizontal.html#186" class="Bound"
+      >j</a
+      ><a name="187"
+      > </a
+      ><a name="188" class="Symbol"
+      >&#8594;</a
+      ><a name="189"
+      > </a
+      ><a name="190" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="191"
+      > </a
+      ><a name="192" class="Symbol"
+      >(</a
+      ><a name="193" href="Agda.Prim.html#284" class="Primitive"
+      >suc</a
+      ><a name="196"
+      > </a
+      ><a name="197" href="Composition.Horizontal.html#186" class="Bound"
+      >j</a
+      ><a name="198"
+      > </a
+      ><a name="199" href="Agda.Prim.html#314" class="Primitive Operator"
+      >&#8852;</a
+      ><a name="200"
+      > </a
+      ><a name="201" href="Composition.Horizontal.html#173" class="Bound"
+      >i</a
+      ><a name="202" class="Symbol"
+      >)</a
+      ><a name="203"
+      >
+</a
+      ><a name="204" href="Composition.Horizontal.html#162" class="Function"
+      >Arrow</a
+      ><a name="209"
+      > </a
+      ><a name="210" class="Symbol"
+      >=</a
+      ><a name="211"
+      > </a
+      ><a name="212" href="Relation.Binary.Core.html#761" class="Function"
+      >Rel</a
+      ><a name="215"
+      >
+
+</a
+      ><a name="217" href="Composition.Horizontal.html#217" class="Function"
+      >HComposition</a
+      ><a name="229"
+      > </a
+      ><a name="230" class="Symbol"
+      >:</a
+      ><a name="231"
+      > </a
+      ><a name="232" class="Symbol"
+      >&#8704;</a
+      ><a name="233"
+      > </a
+      ><a name="234" class="Symbol"
+      >{</a
+      ><a name="235" href="Composition.Horizontal.html#235" class="Bound"
+      >a</a
+      ><a name="236"
+      > </a
+      ><a name="237" href="Composition.Horizontal.html#237" class="Bound"
+      >&#8467;</a
+      ><a name="238" class="Symbol"
+      >}</a
+      ><a name="239"
+      > </a
+      ><a name="240" class="Symbol"
+      >{</a
+      ><a name="241" href="Composition.Horizontal.html#241" class="Bound"
+      >A</a
+      ><a name="242"
+      > </a
+      ><a name="243" class="Symbol"
+      >:</a
+      ><a name="244"
+      > </a
+      ><a name="245" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="246"
+      > </a
+      ><a name="247" href="Composition.Horizontal.html#235" class="Bound"
+      >a</a
+      ><a name="248" class="Symbol"
+      >}</a
+      ><a name="249"
+      > </a
+      ><a name="250" class="Symbol"
+      >&#8594;</a
+      ><a name="251"
+      > </a
+      ><a name="252" href="Composition.Horizontal.html#162" class="Function"
+      >Arrow</a
+      ><a name="257"
+      > </a
+      ><a name="258" href="Composition.Horizontal.html#241" class="Bound"
+      >A</a
+      ><a name="259"
+      > </a
+      ><a name="260" href="Composition.Horizontal.html#237" class="Bound"
+      >&#8467;</a
+      ><a name="261"
+      > </a
+      ><a name="262" class="Symbol"
+      >&#8594;</a
+      ><a name="263"
+      > </a
+      ><a name="264" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="265"
+      > </a
+      ><a name="266" class="Symbol"
+      >_</a
+      ><a name="267"
+      >
+</a
+      ><a name="268" href="Composition.Horizontal.html#217" class="Function"
+      >HComposition</a
+      ><a name="280"
+      > </a
+      ><a name="281" class="Symbol"
+      >=</a
+      ><a name="282"
+      > </a
+      ><a name="283" href="Relation.Binary.Core.html#2793" class="Function"
+      >Transitive</a
+      ><a name="293"
+      >
+
+</a
+      ><a name="295" href="Composition.Horizontal.html#295" class="Function"
+      >Identity</a
+      ><a name="303"
+      > </a
+      ><a name="304" class="Symbol"
+      >:</a
+      ><a name="305"
+      > </a
+      ><a name="306" class="Symbol"
+      >&#8704;</a
+      ><a name="307"
+      > </a
+      ><a name="308" class="Symbol"
+      >{</a
+      ><a name="309" href="Composition.Horizontal.html#309" class="Bound"
+      >a</a
+      ><a name="310"
+      > </a
+      ><a name="311" href="Composition.Horizontal.html#311" class="Bound"
+      >&#8467;</a
+      ><a name="312" class="Symbol"
+      >}</a
+      ><a name="313"
+      > </a
+      ><a name="314" class="Symbol"
+      >{</a
+      ><a name="315" href="Composition.Horizontal.html#315" class="Bound"
+      >A</a
+      ><a name="316"
+      > </a
+      ><a name="317" class="Symbol"
+      >:</a
+      ><a name="318"
+      > </a
+      ><a name="319" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="320"
+      > </a
+      ><a name="321" href="Composition.Horizontal.html#309" class="Bound"
+      >a</a
+      ><a name="322" class="Symbol"
+      >}</a
+      ><a name="323"
+      > </a
+      ><a name="324" class="Symbol"
+      >&#8594;</a
+      ><a name="325"
+      > </a
+      ><a name="326" href="Composition.Horizontal.html#162" class="Function"
+      >Arrow</a
+      ><a name="331"
+      > </a
+      ><a name="332" href="Composition.Horizontal.html#315" class="Bound"
+      >A</a
+      ><a name="333"
+      > </a
+      ><a name="334" href="Composition.Horizontal.html#311" class="Bound"
+      >&#8467;</a
+      ><a name="335"
+      > </a
+      ><a name="336" class="Symbol"
+      >&#8594;</a
+      ><a name="337"
+      > </a
+      ><a name="338" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="339"
+      > </a
+      ><a name="340" class="Symbol"
+      >_</a
+      ><a name="341"
+      >
+</a
+      ><a name="342" href="Composition.Horizontal.html#295" class="Function"
+      >Identity</a
+      ><a name="350"
+      > </a
+      ><a name="351" class="Symbol"
+      >=</a
+      ><a name="352"
+      > </a
+      ><a name="353" href="Relation.Binary.Core.html#1891" class="Function"
+      >Reflexive</a
+      ><a name="362"
+      >
+
+</a
+      ><a name="364" href="Composition.Horizontal.html#364" class="Function"
+      >IArrow</a
+      ><a name="370"
+      > </a
+      ><a name="371" class="Symbol"
+      >:</a
+      ><a name="372"
+      > </a
+      ><a name="373" class="Symbol"
+      >&#8704;</a
+      ><a name="374"
+      > </a
+      ><a name="375" class="Symbol"
+      >{</a
+      ><a name="376" href="Composition.Horizontal.html#376" class="Bound"
+      >i</a
+      ><a name="377"
+      > </a
+      ><a name="378" href="Composition.Horizontal.html#378" class="Bound"
+      >j</a
+      ><a name="379"
+      > </a
+      ><a name="380" href="Composition.Horizontal.html#380" class="Bound"
+      >t</a
+      ><a name="381" class="Symbol"
+      >}</a
+      ><a name="382"
+      > </a
+      ><a name="383" class="Symbol"
+      >{</a
+      ><a name="384" href="Composition.Horizontal.html#384" class="Bound"
+      >I</a
+      ><a name="385"
+      > </a
+      ><a name="386" class="Symbol"
+      >:</a
+      ><a name="387"
+      > </a
+      ><a name="388" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="389"
+      > </a
+      ><a name="390" href="Composition.Horizontal.html#376" class="Bound"
+      >i</a
+      ><a name="391" class="Symbol"
+      >}</a
+      ><a name="392"
+      > </a
+      ><a name="393" class="Symbol"
+      >(</a
+      ><a name="394" href="Composition.Horizontal.html#394" class="Bound Operator"
+      >_&#8605;&#7522;_</a
+      ><a name="398"
+      > </a
+      ><a name="399" class="Symbol"
+      >:</a
+      ><a name="400"
+      > </a
+      ><a name="401" href="Composition.Horizontal.html#162" class="Function"
+      >Arrow</a
+      ><a name="406"
+      > </a
+      ><a name="407" href="Composition.Horizontal.html#384" class="Bound"
+      >I</a
+      ><a name="408"
+      > </a
+      ><a name="409" href="Composition.Horizontal.html#378" class="Bound"
+      >j</a
+      ><a name="410" class="Symbol"
+      >)</a
+      ><a name="411"
+      > </a
+      ><a name="412" class="Symbol"
+      >(</a
+      ><a name="413" href="Composition.Horizontal.html#413" class="Bound"
+      >T</a
+      ><a name="414"
+      > </a
+      ><a name="415" class="Symbol"
+      >:</a
+      ><a name="416"
+      > </a
+      ><a name="417" href="Composition.Horizontal.html#384" class="Bound"
+      >I</a
+      ><a name="418"
+      > </a
+      ><a name="419" class="Symbol"
+      >&#8594;</a
+      ><a name="420"
+      > </a
+      ><a name="421" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="422"
+      > </a
+      ><a name="423" href="Composition.Horizontal.html#380" class="Bound"
+      >t</a
+      ><a name="424" class="Symbol"
+      >)</a
+      ><a name="425"
+      > </a
+      ><a name="426" href="Composition.Horizontal.html#426" class="Bound"
+      >a</a
+      ><a name="427"
+      > </a
+      ><a name="428" class="Symbol"
+      >&#8594;</a
+      ><a name="429"
+      > </a
+      ><a name="430" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="431"
+      > </a
+      ><a name="432" class="Symbol"
+      >_</a
+      ><a name="433"
+      >
+</a
+      ><a name="434" href="Composition.Horizontal.html#364" class="Function"
+      >IArrow</a
+      ><a name="440"
+      > </a
+      ><a name="441" href="Composition.Horizontal.html#441" class="Bound Operator"
+      >_&#8605;&#7522;_</a
+      ><a name="445"
+      > </a
+      ><a name="446" href="Composition.Horizontal.html#446" class="Bound"
+      >T</a
+      ><a name="447"
+      > </a
+      ><a name="448" href="Composition.Horizontal.html#448" class="Bound"
+      >a</a
+      ><a name="449"
+      > </a
+      ><a name="450" class="Symbol"
+      >=</a
+      ><a name="451"
+      > </a
+      ><a name="452" class="Symbol"
+      >&#8704;</a
+      ><a name="453"
+      > </a
+      ><a name="454" class="Symbol"
+      >{</a
+      ><a name="455" href="Composition.Horizontal.html#455" class="Bound"
+      >i&#8320;</a
+      ><a name="457"
+      > </a
+      ><a name="458" href="Composition.Horizontal.html#458" class="Bound"
+      >i&#8321;</a
+      ><a name="460" class="Symbol"
+      >}</a
+      ><a name="461"
+      > </a
+      ><a name="462" class="Symbol"
+      >&#8594;</a
+      ><a name="463"
+      > </a
+      ><a name="464" href="Composition.Horizontal.html#455" class="Bound"
+      >i&#8320;</a
+      ><a name="466"
+      > </a
+      ><a name="467" href="Composition.Horizontal.html#441" class="Bound Operator"
+      >&#8605;&#7522;</a
+      ><a name="469"
+      > </a
+      ><a name="470" href="Composition.Horizontal.html#458" class="Bound"
+      >i&#8321;</a
+      ><a name="472"
+      > </a
+      ><a name="473" class="Symbol"
+      >&#8594;</a
+      ><a name="474"
+      > </a
+      ><a name="475" href="Composition.Horizontal.html#446" class="Bound"
+      >T</a
+      ><a name="476"
+      > </a
+      ><a name="477" href="Composition.Horizontal.html#455" class="Bound"
+      >i&#8320;</a
+      ><a name="479"
+      > </a
+      ><a name="480" class="Symbol"
+      >&#8594;</a
+      ><a name="481"
+      > </a
+      ><a name="482" href="Composition.Horizontal.html#446" class="Bound"
+      >T</a
+      ><a name="483"
+      > </a
+      ><a name="484" href="Composition.Horizontal.html#458" class="Bound"
+      >i&#8321;</a
+      ><a name="486"
+      > </a
+      ><a name="487" class="Symbol"
+      >&#8594;</a
+      ><a name="488"
+      > </a
+      ><a name="489" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="490"
+      > </a
+      ><a name="491" href="Composition.Horizontal.html#448" class="Bound"
+      >a</a
+      ><a name="492"
+      >
+
+</a
+      ><a name="494" href="Composition.Horizontal.html#494" class="Function"
+      >IReflexivity</a
+      ><a name="506"
+      > </a
+      ><a name="507" class="Symbol"
+      >:</a
+      ><a name="508"
+      > </a
+      ><a name="509" class="Symbol"
+      >&#8704;</a
+      ><a name="510"
+      > </a
+      ><a name="511" class="Symbol"
+      >{</a
+      ><a name="512" href="Composition.Horizontal.html#512" class="Bound"
+      >a</a
+      ><a name="513"
+      > </a
+      ><a name="514" href="Composition.Horizontal.html#514" class="Bound"
+      >i</a
+      ><a name="515"
+      > </a
+      ><a name="516" href="Composition.Horizontal.html#516" class="Bound"
+      >j</a
+      ><a name="517"
+      > </a
+      ><a name="518" href="Composition.Horizontal.html#518" class="Bound"
+      >t</a
+      ><a name="519" class="Symbol"
+      >}</a
+      ><a name="520"
+      > </a
+      ><a name="521" class="Symbol"
+      >{</a
+      ><a name="522" href="Composition.Horizontal.html#522" class="Bound"
+      >I</a
+      ><a name="523"
+      > </a
+      ><a name="524" class="Symbol"
+      >:</a
+      ><a name="525"
+      > </a
+      ><a name="526" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="527"
+      > </a
+      ><a name="528" href="Composition.Horizontal.html#514" class="Bound"
+      >i</a
+      ><a name="529" class="Symbol"
+      >}</a
+      ><a name="530"
+      > </a
+      ><a name="531" class="Symbol"
+      >{</a
+      ><a name="532" href="Composition.Horizontal.html#532" class="Bound"
+      >R</a
+      ><a name="533"
+      > </a
+      ><a name="534" class="Symbol"
+      >:</a
+      ><a name="535"
+      > </a
+      ><a name="536" href="Relation.Binary.Core.html#761" class="Function"
+      >Rel</a
+      ><a name="539"
+      > </a
+      ><a name="540" href="Composition.Horizontal.html#522" class="Bound"
+      >I</a
+      ><a name="541"
+      > </a
+      ><a name="542" href="Composition.Horizontal.html#516" class="Bound"
+      >j</a
+      ><a name="543" class="Symbol"
+      >}</a
+      ><a name="544"
+      > </a
+      ><a name="545" class="Symbol"
+      >{</a
+      ><a name="546" href="Composition.Horizontal.html#546" class="Bound"
+      >T</a
+      ><a name="547"
+      > </a
+      ><a name="548" class="Symbol"
+      >:</a
+      ><a name="549"
+      > </a
+      ><a name="550" href="Composition.Horizontal.html#522" class="Bound"
+      >I</a
+      ><a name="551"
+      > </a
+      ><a name="552" class="Symbol"
+      >&#8594;</a
+      ><a name="553"
+      > </a
+      ><a name="554" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="555"
+      > </a
+      ><a name="556" href="Composition.Horizontal.html#518" class="Bound"
+      >t</a
+      ><a name="557" class="Symbol"
+      >}</a
+      ><a name="558"
+      > </a
+      ><a name="559" class="Symbol"
+      >&#8594;</a
+      ><a name="560"
+      > </a
+      ><a name="561" href="Relation.Binary.Core.html#1891" class="Function"
+      >Reflexive</a
+      ><a name="570"
+      > </a
+      ><a name="571" href="Composition.Horizontal.html#532" class="Bound"
+      >R</a
+      ><a name="572"
+      > </a
+      ><a name="573" class="Symbol"
+      >&#8594;</a
+      ><a name="574"
+      > </a
+      ><a name="575" href="Composition.Horizontal.html#364" class="Function"
+      >IArrow</a
+      ><a name="581"
+      > </a
+      ><a name="582" href="Composition.Horizontal.html#532" class="Bound"
+      >R</a
+      ><a name="583"
+      > </a
+      ><a name="584" href="Composition.Horizontal.html#546" class="Bound"
+      >T</a
+      ><a name="585"
+      > </a
+      ><a name="586" href="Composition.Horizontal.html#512" class="Bound"
+      >a</a
+      ><a name="587"
+      > </a
+      ><a name="588" class="Symbol"
+      >&#8594;</a
+      ><a name="589"
+      > </a
+      ><a name="590" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="591"
+      > </a
+      ><a name="592" class="Symbol"
+      >_</a
+      ><a name="593"
+      >
+</a
+      ><a name="594" href="Composition.Horizontal.html#494" class="Function"
+      >IReflexivity</a
+      ><a name="606"
+      > </a
+      ><a name="607" href="Composition.Horizontal.html#607" class="Bound"
+      >R-refl</a
+      ><a name="613"
+      > </a
+      ><a name="614" href="Composition.Horizontal.html#614" class="Bound"
+      >Arr</a
+      ><a name="617"
+      > </a
+      ><a name="618" class="Symbol"
+      >=</a
+      ><a name="619"
+      > </a
+      ><a name="620" class="Symbol"
+      >&#8704;</a
+      ><a name="621"
+      > </a
+      ><a name="622" class="Symbol"
+      >{</a
+      ><a name="623" href="Composition.Horizontal.html#623" class="Bound"
+      >i</a
+      ><a name="624"
+      > </a
+      ><a name="625" href="Composition.Horizontal.html#625" class="Bound"
+      >A</a
+      ><a name="626" class="Symbol"
+      >}</a
+      ><a name="627"
+      > </a
+      ><a name="628" class="Symbol"
+      >&#8594;</a
+      ><a name="629"
+      > </a
+      ><a name="630" href="Composition.Horizontal.html#614" class="Bound"
+      >Arr</a
+      ><a name="633"
+      > </a
+      ><a name="634" class="Symbol"
+      >(</a
+      ><a name="635" href="Composition.Horizontal.html#607" class="Bound"
+      >R-refl</a
+      ><a name="641"
+      > </a
+      ><a name="642" class="Symbol"
+      >{</a
+      ><a name="643" href="Composition.Horizontal.html#623" class="Bound"
+      >i</a
+      ><a name="644" class="Symbol"
+      >})</a
+      ><a name="646"
+      > </a
+      ><a name="647" href="Composition.Horizontal.html#625" class="Bound"
+      >A</a
+      ><a name="648"
+      > </a
+      ><a name="649" href="Composition.Horizontal.html#625" class="Bound"
+      >A</a
+      ><a name="650"
+      >
+
+</a
+      ><a name="652" href="Composition.Horizontal.html#652" class="Function"
+      >IIdentity</a
+      ><a name="661"
+      > </a
+      ><a name="662" class="Symbol"
+      >:</a
+      ><a name="663"
+      > </a
+      ><a name="664" class="Symbol"
+      >&#8704;</a
+      ><a name="665"
+      > </a
+      ><a name="666" class="Symbol"
+      >{</a
+      ><a name="667" href="Composition.Horizontal.html#667" class="Bound"
+      >a</a
+      ><a name="668"
+      > </a
+      ><a name="669" href="Composition.Horizontal.html#669" class="Bound"
+      >i</a
+      ><a name="670"
+      > </a
+      ><a name="671" href="Composition.Horizontal.html#671" class="Bound"
+      >j</a
+      ><a name="672"
+      > </a
+      ><a name="673" href="Composition.Horizontal.html#673" class="Bound"
+      >t</a
+      ><a name="674" class="Symbol"
+      >}</a
+      ><a name="675"
+      > </a
+      ><a name="676" class="Symbol"
+      >{</a
+      ><a name="677" href="Composition.Horizontal.html#677" class="Bound"
+      >I</a
+      ><a name="678"
+      > </a
+      ><a name="679" class="Symbol"
+      >:</a
+      ><a name="680"
+      > </a
+      ><a name="681" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="682"
+      > </a
+      ><a name="683" href="Composition.Horizontal.html#669" class="Bound"
+      >i</a
+      ><a name="684" class="Symbol"
+      >}</a
+      ><a name="685"
+      > </a
+      ><a name="686" class="Symbol"
+      >{</a
+      ><a name="687" href="Composition.Horizontal.html#687" class="Bound Operator"
+      >_&#8605;&#7522;_</a
+      ><a name="691"
+      > </a
+      ><a name="692" class="Symbol"
+      >:</a
+      ><a name="693"
+      > </a
+      ><a name="694" href="Composition.Horizontal.html#162" class="Function"
+      >Arrow</a
+      ><a name="699"
+      > </a
+      ><a name="700" href="Composition.Horizontal.html#677" class="Bound"
+      >I</a
+      ><a name="701"
+      > </a
+      ><a name="702" href="Composition.Horizontal.html#671" class="Bound"
+      >j</a
+      ><a name="703" class="Symbol"
+      >}</a
+      ><a name="704"
+      > </a
+      ><a name="705" class="Symbol"
+      >{</a
+      ><a name="706" href="Composition.Horizontal.html#706" class="Bound"
+      >T</a
+      ><a name="707"
+      > </a
+      ><a name="708" class="Symbol"
+      >:</a
+      ><a name="709"
+      > </a
+      ><a name="710" href="Composition.Horizontal.html#677" class="Bound"
+      >I</a
+      ><a name="711"
+      > </a
+      ><a name="712" class="Symbol"
+      >&#8594;</a
+      ><a name="713"
+      > </a
+      ><a name="714" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="715"
+      > </a
+      ><a name="716" href="Composition.Horizontal.html#673" class="Bound"
+      >t</a
+      ><a name="717" class="Symbol"
+      >}</a
+      ><a name="718"
+      > </a
+      ><a name="719" class="Symbol"
+      >&#8594;</a
+      ><a name="720"
+      > </a
+      ><a name="721" href="Composition.Horizontal.html#295" class="Function"
+      >Identity</a
+      ><a name="729"
+      > </a
+      ><a name="730" href="Composition.Horizontal.html#687" class="Bound Operator"
+      >_&#8605;&#7522;_</a
+      ><a name="734"
+      > </a
+      ><a name="735" class="Symbol"
+      >&#8594;</a
+      ><a name="736"
+      > </a
+      ><a name="737" href="Composition.Horizontal.html#364" class="Function"
+      >IArrow</a
+      ><a name="743"
+      > </a
+      ><a name="744" href="Composition.Horizontal.html#687" class="Bound Operator"
+      >_&#8605;&#7522;_</a
+      ><a name="748"
+      > </a
+      ><a name="749" href="Composition.Horizontal.html#706" class="Bound"
+      >T</a
+      ><a name="750"
+      > </a
+      ><a name="751" href="Composition.Horizontal.html#667" class="Bound"
+      >a</a
+      ><a name="752"
+      > </a
+      ><a name="753" class="Symbol"
+      >&#8594;</a
+      ><a name="754"
+      > </a
+      ><a name="755" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="756"
+      > </a
+      ><a name="757" class="Symbol"
+      >_</a
+      ><a name="758"
+      >
+</a
+      ><a name="759" href="Composition.Horizontal.html#652" class="Function"
+      >IIdentity</a
+      ><a name="768"
+      > </a
+      ><a name="769" class="Symbol"
+      >=</a
+      ><a name="770"
+      > </a
+      ><a name="771" href="Composition.Horizontal.html#494" class="Function"
+      >IReflexivity</a
+      ><a name="783"
+      >
+
+</a
+      ><a name="785" href="Composition.Horizontal.html#785" class="Function"
+      >ITrans</a
+      ><a name="791"
+      > </a
+      ><a name="792" class="Symbol"
+      >:</a
+      ><a name="793"
+      > </a
+      ><a name="794" class="Symbol"
+      >&#8704;</a
+      ><a name="795"
+      > </a
+      ><a name="796" class="Symbol"
+      >{</a
+      ><a name="797" href="Composition.Horizontal.html#797" class="Bound"
+      >i</a
+      ><a name="798"
+      > </a
+      ><a name="799" href="Composition.Horizontal.html#799" class="Bound"
+      >j</a
+      ><a name="800"
+      > </a
+      ><a name="801" href="Composition.Horizontal.html#801" class="Bound"
+      >t</a
+      ><a name="802"
+      > </a
+      ><a name="803" href="Composition.Horizontal.html#803" class="Bound"
+      >a</a
+      ><a name="804" class="Symbol"
+      >}</a
+      ><a name="805"
+      > </a
+      ><a name="806" class="Symbol"
+      >{</a
+      ><a name="807" href="Composition.Horizontal.html#807" class="Bound"
+      >I</a
+      ><a name="808"
+      > </a
+      ><a name="809" class="Symbol"
+      >:</a
+      ><a name="810"
+      > </a
+      ><a name="811" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="812"
+      > </a
+      ><a name="813" href="Composition.Horizontal.html#797" class="Bound"
+      >i</a
+      ><a name="814" class="Symbol"
+      >}</a
+      ><a name="815"
+      >
+           </a
+      ><a name="827" class="Symbol"
+      >{</a
+      ><a name="828" href="Composition.Horizontal.html#828" class="Bound"
+      >R&#8320;</a
+      ><a name="830"
+      > </a
+      ><a name="831" href="Composition.Horizontal.html#831" class="Bound"
+      >R&#8321;</a
+      ><a name="833"
+      > </a
+      ><a name="834" href="Composition.Horizontal.html#834" class="Bound"
+      >R&#8322;</a
+      ><a name="836"
+      > </a
+      ><a name="837" class="Symbol"
+      >:</a
+      ><a name="838"
+      > </a
+      ><a name="839" href="Relation.Binary.Core.html#761" class="Function"
+      >Rel</a
+      ><a name="842"
+      > </a
+      ><a name="843" href="Composition.Horizontal.html#807" class="Bound"
+      >I</a
+      ><a name="844"
+      > </a
+      ><a name="845" href="Composition.Horizontal.html#799" class="Bound"
+      >j</a
+      ><a name="846" class="Symbol"
+      >}</a
+      ><a name="847"
+      >
+           </a
+      ><a name="859" class="Symbol"
+      >{</a
+      ><a name="860" href="Composition.Horizontal.html#860" class="Bound"
+      >T</a
+      ><a name="861"
+      > </a
+      ><a name="862" class="Symbol"
+      >:</a
+      ><a name="863"
+      > </a
+      ><a name="864" href="Composition.Horizontal.html#807" class="Bound"
+      >I</a
+      ><a name="865"
+      > </a
+      ><a name="866" class="Symbol"
+      >&#8594;</a
+      ><a name="867"
+      > </a
+      ><a name="868" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="869"
+      > </a
+      ><a name="870" href="Composition.Horizontal.html#801" class="Bound"
+      >t</a
+      ><a name="871" class="Symbol"
+      >}</a
+      ><a name="872"
+      >
+           </a
+      ><a name="884" class="Symbol"
+      >(</a
+      ><a name="885" href="Composition.Horizontal.html#885" class="Bound"
+      >R-trans</a
+      ><a name="892"
+      > </a
+      ><a name="893" class="Symbol"
+      >:</a
+      ><a name="894"
+      > </a
+      ><a name="895" href="Relation.Binary.Core.html#2423" class="Function"
+      >Trans</a
+      ><a name="900"
+      > </a
+      ><a name="901" href="Composition.Horizontal.html#828" class="Bound"
+      >R&#8320;</a
+      ><a name="903"
+      > </a
+      ><a name="904" href="Composition.Horizontal.html#831" class="Bound"
+      >R&#8321;</a
+      ><a name="906"
+      > </a
+      ><a name="907" href="Composition.Horizontal.html#834" class="Bound"
+      >R&#8322;</a
+      ><a name="909" class="Symbol"
+      >)</a
+      ><a name="910"
+      >
+           </a
+      ><a name="922" class="Symbol"
+      >(</a
+      ><a name="923" href="Composition.Horizontal.html#923" class="Bound"
+      >Arr&#8320;</a
+      ><a name="927"
+      > </a
+      ><a name="928" class="Symbol"
+      >:</a
+      ><a name="929"
+      > </a
+      ><a name="930" href="Composition.Horizontal.html#364" class="Function"
+      >IArrow</a
+      ><a name="936"
+      > </a
+      ><a name="937" href="Composition.Horizontal.html#828" class="Bound"
+      >R&#8320;</a
+      ><a name="939"
+      > </a
+      ><a name="940" href="Composition.Horizontal.html#860" class="Bound"
+      >T</a
+      ><a name="941"
+      > </a
+      ><a name="942" href="Composition.Horizontal.html#803" class="Bound"
+      >a</a
+      ><a name="943" class="Symbol"
+      >)</a
+      ><a name="944"
+      >
+           </a
+      ><a name="956" class="Symbol"
+      >(</a
+      ><a name="957" href="Composition.Horizontal.html#957" class="Bound"
+      >Arr&#8320;</a
+      ><a name="961"
+      > </a
+      ><a name="962" class="Symbol"
+      >:</a
+      ><a name="963"
+      > </a
+      ><a name="964" href="Composition.Horizontal.html#364" class="Function"
+      >IArrow</a
+      ><a name="970"
+      > </a
+      ><a name="971" href="Composition.Horizontal.html#831" class="Bound"
+      >R&#8321;</a
+      ><a name="973"
+      > </a
+      ><a name="974" href="Composition.Horizontal.html#860" class="Bound"
+      >T</a
+      ><a name="975"
+      > </a
+      ><a name="976" href="Composition.Horizontal.html#803" class="Bound"
+      >a</a
+      ><a name="977" class="Symbol"
+      >)</a
+      ><a name="978"
+      >
+           </a
+      ><a name="990" class="Symbol"
+      >(</a
+      ><a name="991" href="Composition.Horizontal.html#991" class="Bound"
+      >Arr&#8320;</a
+      ><a name="995"
+      > </a
+      ><a name="996" class="Symbol"
+      >:</a
+      ><a name="997"
+      > </a
+      ><a name="998" href="Composition.Horizontal.html#364" class="Function"
+      >IArrow</a
+      ><a name="1004"
+      > </a
+      ><a name="1005" href="Composition.Horizontal.html#834" class="Bound"
+      >R&#8322;</a
+      ><a name="1007"
+      > </a
+      ><a name="1008" href="Composition.Horizontal.html#860" class="Bound"
+      >T</a
+      ><a name="1009"
+      > </a
+      ><a name="1010" href="Composition.Horizontal.html#803" class="Bound"
+      >a</a
+      ><a name="1011" class="Symbol"
+      >)</a
+      ><a name="1012"
+      >
+         </a
+      ><a name="1022" class="Symbol"
+      >&#8594;</a
+      ><a name="1023"
+      > </a
+      ><a name="1024" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="1025"
+      > </a
+      ><a name="1026" class="Symbol"
+      >_</a
+      ><a name="1027"
+      >
+</a
+      ><a name="1028" href="Composition.Horizontal.html#785" class="Function"
+      >ITrans</a
+      ><a name="1034"
+      > </a
+      ><a name="1035" href="Composition.Horizontal.html#1035" class="Bound"
+      >R-trans</a
+      ><a name="1042"
+      > </a
+      ><a name="1043" href="Composition.Horizontal.html#1043" class="Bound"
+      >Arr&#8320;</a
+      ><a name="1047"
+      > </a
+      ><a name="1048" href="Composition.Horizontal.html#1048" class="Bound"
+      >Arr&#8321;</a
+      ><a name="1052"
+      > </a
+      ><a name="1053" href="Composition.Horizontal.html#1053" class="Bound"
+      >Arr&#8322;</a
+      ><a name="1057"
+      >
+  </a
+      ><a name="1060" class="Symbol"
+      >=</a
+      ><a name="1061"
+      > </a
+      ><a name="1062" class="Symbol"
+      >&#8704;</a
+      ><a name="1063"
+      > </a
+      ><a name="1064" class="Symbol"
+      >{</a
+      ><a name="1065" href="Composition.Horizontal.html#1065" class="Bound"
+      >i&#8320;</a
+      ><a name="1067"
+      > </a
+      ><a name="1068" href="Composition.Horizontal.html#1068" class="Bound"
+      >i&#8321;</a
+      ><a name="1070"
+      > </a
+      ><a name="1071" href="Composition.Horizontal.html#1071" class="Bound"
+      >i&#8322;</a
+      ><a name="1073"
+      > </a
+      ><a name="1074" href="Composition.Horizontal.html#1074" class="Bound"
+      >j&#8320;</a
+      ><a name="1076"
+      > </a
+      ><a name="1077" href="Composition.Horizontal.html#1077" class="Bound"
+      >j&#8321;</a
+      ><a name="1079" class="Symbol"
+      >}</a
+      ><a name="1080"
+      > </a
+      ><a name="1081" class="Symbol"
+      >&#8594;</a
+      ><a name="1082"
+      > </a
+      ><a name="1083" href="Relation.Binary.Core.html#2423" class="Function"
+      >Trans</a
+      ><a name="1088"
+      > </a
+      ><a name="1089" class="Symbol"
+      >(</a
+      ><a name="1090" href="Composition.Horizontal.html#1043" class="Bound"
+      >Arr&#8320;</a
+      ><a name="1094"
+      > </a
+      ><a name="1095" href="Composition.Horizontal.html#1074" class="Bound"
+      >j&#8320;</a
+      ><a name="1097" class="Symbol"
+      >)</a
+      ><a name="1098"
+      > </a
+      ><a name="1099" class="Symbol"
+      >(</a
+      ><a name="1100" href="Composition.Horizontal.html#1048" class="Bound"
+      >Arr&#8321;</a
+      ><a name="1104"
+      > </a
+      ><a name="1105" href="Composition.Horizontal.html#1077" class="Bound"
+      >j&#8321;</a
+      ><a name="1107" class="Symbol"
+      >)</a
+      ><a name="1108"
+      >
+                           </a
+      ><a name="1136" class="Symbol"
+      >(</a
+      ><a name="1137" href="Composition.Horizontal.html#1053" class="Bound"
+      >Arr&#8322;</a
+      ><a name="1141"
+      > </a
+      ><a name="1142" class="Symbol"
+      >(</a
+      ><a name="1143" href="Composition.Horizontal.html#1035" class="Bound"
+      >R-trans</a
+      ><a name="1150"
+      > </a
+      ><a name="1151" class="Symbol"
+      >{</a
+      ><a name="1152" href="Composition.Horizontal.html#1065" class="Bound"
+      >i&#8320;</a
+      ><a name="1154" class="Symbol"
+      >}</a
+      ><a name="1155"
+      > </a
+      ><a name="1156" class="Symbol"
+      >{</a
+      ><a name="1157" href="Composition.Horizontal.html#1068" class="Bound"
+      >i&#8321;</a
+      ><a name="1159" class="Symbol"
+      >}</a
+      ><a name="1160"
+      > </a
+      ><a name="1161" class="Symbol"
+      >{</a
+      ><a name="1162" href="Composition.Horizontal.html#1071" class="Bound"
+      >i&#8322;</a
+      ><a name="1164" class="Symbol"
+      >}</a
+      ><a name="1165"
+      > </a
+      ><a name="1166" href="Composition.Horizontal.html#1074" class="Bound"
+      >j&#8320;</a
+      ><a name="1168"
+      > </a
+      ><a name="1169" href="Composition.Horizontal.html#1077" class="Bound"
+      >j&#8321;</a
+      ><a name="1171" class="Symbol"
+      >))</a
+      ><a name="1173"
+      >
+
+</a
+      ><a name="1175" href="Composition.Horizontal.html#1175" class="Function"
+      >ITransitive</a
+      ><a name="1186"
+      > </a
+      ><a name="1187" class="Symbol"
+      >:</a
+      ><a name="1188"
+      > </a
+      ><a name="1189" class="Symbol"
+      >&#8704;</a
+      ><a name="1190"
+      > </a
+      ><a name="1191" class="Symbol"
+      >{</a
+      ><a name="1192" href="Composition.Horizontal.html#1192" class="Bound"
+      >i</a
+      ><a name="1193"
+      > </a
+      ><a name="1194" href="Composition.Horizontal.html#1194" class="Bound"
+      >j</a
+      ><a name="1195"
+      > </a
+      ><a name="1196" href="Composition.Horizontal.html#1196" class="Bound"
+      >t</a
+      ><a name="1197"
+      > </a
+      ><a name="1198" href="Composition.Horizontal.html#1198" class="Bound"
+      >a</a
+      ><a name="1199" class="Symbol"
+      >}</a
+      ><a name="1200"
+      > </a
+      ><a name="1201" class="Symbol"
+      >{</a
+      ><a name="1202" href="Composition.Horizontal.html#1202" class="Bound"
+      >I</a
+      ><a name="1203"
+      > </a
+      ><a name="1204" class="Symbol"
+      >:</a
+      ><a name="1205"
+      > </a
+      ><a name="1206" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="1207"
+      > </a
+      ><a name="1208" href="Composition.Horizontal.html#1192" class="Bound"
+      >i</a
+      ><a name="1209" class="Symbol"
+      >}</a
+      ><a name="1210"
+      > </a
+      ><a name="1211" class="Symbol"
+      >{</a
+      ><a name="1212" href="Composition.Horizontal.html#1212" class="Bound"
+      >R</a
+      ><a name="1213"
+      > </a
+      ><a name="1214" class="Symbol"
+      >:</a
+      ><a name="1215"
+      > </a
+      ><a name="1216" href="Relation.Binary.Core.html#761" class="Function"
+      >Rel</a
+      ><a name="1219"
+      > </a
+      ><a name="1220" href="Composition.Horizontal.html#1202" class="Bound"
+      >I</a
+      ><a name="1221"
+      > </a
+      ><a name="1222" href="Composition.Horizontal.html#1194" class="Bound"
+      >j</a
+      ><a name="1223" class="Symbol"
+      >}</a
+      ><a name="1224"
+      >
+                </a
+      ><a name="1241" class="Symbol"
+      >{</a
+      ><a name="1242" href="Composition.Horizontal.html#1242" class="Bound"
+      >T</a
+      ><a name="1243"
+      > </a
+      ><a name="1244" class="Symbol"
+      >:</a
+      ><a name="1245"
+      > </a
+      ><a name="1246" href="Composition.Horizontal.html#1202" class="Bound"
+      >I</a
+      ><a name="1247"
+      > </a
+      ><a name="1248" class="Symbol"
+      >&#8594;</a
+      ><a name="1249"
+      > </a
+      ><a name="1250" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="1251"
+      > </a
+      ><a name="1252" href="Composition.Horizontal.html#1196" class="Bound"
+      >t</a
+      ><a name="1253" class="Symbol"
+      >}</a
+      ><a name="1254"
+      >
+              </a
+      ><a name="1269" class="Symbol"
+      >&#8594;</a
+      ><a name="1270"
+      > </a
+      ><a name="1271" href="Relation.Binary.Core.html#2793" class="Function"
+      >Transitive</a
+      ><a name="1281"
+      > </a
+      ><a name="1282" href="Composition.Horizontal.html#1212" class="Bound"
+      >R</a
+      ><a name="1283"
+      > </a
+      ><a name="1284" class="Symbol"
+      >&#8594;</a
+      ><a name="1285"
+      > </a
+      ><a name="1286" href="Composition.Horizontal.html#364" class="Function"
+      >IArrow</a
+      ><a name="1292"
+      > </a
+      ><a name="1293" href="Composition.Horizontal.html#1212" class="Bound"
+      >R</a
+      ><a name="1294"
+      > </a
+      ><a name="1295" href="Composition.Horizontal.html#1242" class="Bound"
+      >T</a
+      ><a name="1296"
+      > </a
+      ><a name="1297" href="Composition.Horizontal.html#1198" class="Bound"
+      >a</a
+      ><a name="1298"
+      > </a
+      ><a name="1299" class="Symbol"
+      >&#8594;</a
+      ><a name="1300"
+      > </a
+      ><a name="1301" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="1302"
+      > </a
+      ><a name="1303" class="Symbol"
+      >_</a
+      ><a name="1304"
+      >
+</a
+      ><a name="1305" href="Composition.Horizontal.html#1175" class="Function"
+      >ITransitive</a
+      ><a name="1316"
+      > </a
+      ><a name="1317" class="Symbol"
+      >{</a
+      ><a name="1318"
+      >R </a
+      ><a name="1320" class="Symbol"
+      >=</a
+      ><a name="1321"
+      > </a
+      ><a name="1322" href="Composition.Horizontal.html#1322" class="Bound"
+      >R</a
+      ><a name="1323" class="Symbol"
+      >}</a
+      ><a name="1324"
+      > </a
+      ><a name="1325" href="Composition.Horizontal.html#1325" class="Bound"
+      >R-trans</a
+      ><a name="1332"
+      > </a
+      ><a name="1333" href="Composition.Horizontal.html#1333" class="Bound"
+      >Arr</a
+      ><a name="1336"
+      >
+  </a
+      ><a name="1339" class="Symbol"
+      >=</a
+      ><a name="1340"
+      > </a
+      ><a name="1341" href="Composition.Horizontal.html#785" class="Function"
+      >ITrans</a
+      ><a name="1347"
+      > </a
+      ><a name="1348" class="Symbol"
+      >{</a
+      ><a name="1349"
+      >R&#8320; </a
+      ><a name="1352" class="Symbol"
+      >=</a
+      ><a name="1353"
+      > </a
+      ><a name="1354" href="Composition.Horizontal.html#1322" class="Bound"
+      >R</a
+      ><a name="1355" class="Symbol"
+      >}</a
+      ><a name="1356"
+      > </a
+      ><a name="1357" href="Composition.Horizontal.html#1325" class="Bound"
+      >R-trans</a
+      ><a name="1364"
+      > </a
+      ><a name="1365" href="Composition.Horizontal.html#1333" class="Bound"
+      >Arr</a
+      ><a name="1368"
+      > </a
+      ><a name="1369" href="Composition.Horizontal.html#1333" class="Bound"
+      >Arr</a
+      ><a name="1372"
+      > </a
+      ><a name="1373" href="Composition.Horizontal.html#1333" class="Bound"
+      >Arr</a
+      ><a name="1376"
+      >
+
+</a
+      ><a name="1378" href="Composition.Horizontal.html#1378" class="Function"
+      >IHComposition</a
+      ><a name="1391"
+      > </a
+      ><a name="1392" class="Symbol"
+      >:</a
+      ><a name="1393"
+      > </a
+      ><a name="1394" class="Symbol"
+      >&#8704;</a
+      ><a name="1395"
+      > </a
+      ><a name="1396" class="Symbol"
+      >{</a
+      ><a name="1397" href="Composition.Horizontal.html#1397" class="Bound"
+      >i</a
+      ><a name="1398"
+      > </a
+      ><a name="1399" href="Composition.Horizontal.html#1399" class="Bound"
+      >j</a
+      ><a name="1400"
+      > </a
+      ><a name="1401" href="Composition.Horizontal.html#1401" class="Bound"
+      >t</a
+      ><a name="1402"
+      > </a
+      ><a name="1403" href="Composition.Horizontal.html#1403" class="Bound"
+      >a</a
+      ><a name="1404" class="Symbol"
+      >}</a
+      ><a name="1405"
+      > </a
+      ><a name="1406" class="Symbol"
+      >{</a
+      ><a name="1407" href="Composition.Horizontal.html#1407" class="Bound"
+      >I</a
+      ><a name="1408"
+      > </a
+      ><a name="1409" class="Symbol"
+      >:</a
+      ><a name="1410"
+      > </a
+      ><a name="1411" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="1412"
+      > </a
+      ><a name="1413" href="Composition.Horizontal.html#1397" class="Bound"
+      >i</a
+      ><a name="1414" class="Symbol"
+      >}</a
+      ><a name="1415"
+      >
+                 </a
+      ><a name="1433" class="Symbol"
+      >{</a
+      ><a name="1434" href="Composition.Horizontal.html#1434" class="Bound Operator"
+      >_&#8605;&#7522;_</a
+      ><a name="1438"
+      > </a
+      ><a name="1439" class="Symbol"
+      >:</a
+      ><a name="1440"
+      > </a
+      ><a name="1441" href="Composition.Horizontal.html#162" class="Function"
+      >Arrow</a
+      ><a name="1446"
+      > </a
+      ><a name="1447" href="Composition.Horizontal.html#1407" class="Bound"
+      >I</a
+      ><a name="1448"
+      > </a
+      ><a name="1449" href="Composition.Horizontal.html#1399" class="Bound"
+      >j</a
+      ><a name="1450" class="Symbol"
+      >}</a
+      ><a name="1451"
+      > </a
+      ><a name="1452" class="Symbol"
+      >{</a
+      ><a name="1453" href="Composition.Horizontal.html#1453" class="Bound"
+      >T</a
+      ><a name="1454"
+      > </a
+      ><a name="1455" class="Symbol"
+      >:</a
+      ><a name="1456"
+      > </a
+      ><a name="1457" href="Composition.Horizontal.html#1407" class="Bound"
+      >I</a
+      ><a name="1458"
+      > </a
+      ><a name="1459" class="Symbol"
+      >&#8594;</a
+      ><a name="1460"
+      > </a
+      ><a name="1461" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="1462"
+      > </a
+      ><a name="1463" href="Composition.Horizontal.html#1401" class="Bound"
+      >t</a
+      ><a name="1464" class="Symbol"
+      >}</a
+      ><a name="1465"
+      >
+                 </a
+      ><a name="1483" class="Symbol"
+      >(</a
+      ><a name="1484" href="Composition.Horizontal.html#1484" class="Bound Operator"
+      >_&#183;_</a
+      ><a name="1487"
+      > </a
+      ><a name="1488" class="Symbol"
+      >:</a
+      ><a name="1489"
+      > </a
+      ><a name="1490" href="Composition.Horizontal.html#217" class="Function"
+      >HComposition</a
+      ><a name="1502"
+      > </a
+      ><a name="1503" href="Composition.Horizontal.html#1434" class="Bound Operator"
+      >_&#8605;&#7522;_</a
+      ><a name="1507" class="Symbol"
+      >)</a
+      ><a name="1508"
+      >
+                 </a
+      ><a name="1526" class="Symbol"
+      >(</a
+      ><a name="1527" href="Composition.Horizontal.html#1527" class="Bound Operator"
+      >&#10216;_&#10217;_&#8605;_</a
+      ><a name="1533"
+      > </a
+      ><a name="1534" class="Symbol"
+      >:</a
+      ><a name="1535"
+      > </a
+      ><a name="1536" href="Composition.Horizontal.html#364" class="Function"
+      >IArrow</a
+      ><a name="1542"
+      > </a
+      ><a name="1543" href="Composition.Horizontal.html#1434" class="Bound Operator"
+      >_&#8605;&#7522;_</a
+      ><a name="1547"
+      > </a
+      ><a name="1548" href="Composition.Horizontal.html#1453" class="Bound"
+      >T</a
+      ><a name="1549"
+      > </a
+      ><a name="1550" href="Composition.Horizontal.html#1403" class="Bound"
+      >a</a
+      ><a name="1551" class="Symbol"
+      >)</a
+      ><a name="1552"
+      > </a
+      ><a name="1553" class="Symbol"
+      >&#8594;</a
+      ><a name="1554"
+      > </a
+      ><a name="1555" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="1556"
+      > </a
+      ><a name="1557" class="Symbol"
+      >_</a
+      ><a name="1558"
+      >
+</a
+      ><a name="1559" href="Composition.Horizontal.html#1378" class="Function"
+      >IHComposition</a
+      ><a name="1572"
+      > </a
+      ><a name="1573" class="Symbol"
+      >=</a
+      ><a name="1574"
+      > </a
+      ><a name="1575" href="Composition.Horizontal.html#1175" class="Function"
+      >ITransitive</a
+      ><a name="1586"
+      >
+
+</a
+      ><a name="1588" class="Keyword"
+      >record</a
+      ><a name="1594"
+      > </a
+      ><a name="1595" href="Composition.Horizontal.html#1595" class="Record"
+      >IHComposable</a
+      ><a name="1607"
+      > </a
+      ><a name="1608" class="Symbol"
+      >{</a
+      ><a name="1609" href="Composition.Horizontal.html#1609" class="Bound"
+      >i</a
+      ><a name="1610"
+      > </a
+      ><a name="1611" href="Composition.Horizontal.html#1611" class="Bound"
+      >j</a
+      ><a name="1612"
+      > </a
+      ><a name="1613" href="Composition.Horizontal.html#1613" class="Bound"
+      >t</a
+      ><a name="1614"
+      > </a
+      ><a name="1615" href="Composition.Horizontal.html#1615" class="Bound"
+      >a</a
+      ><a name="1616" class="Symbol"
+      >}</a
+      ><a name="1617"
+      > </a
+      ><a name="1618" class="Symbol"
+      >{</a
+      ><a name="1619" href="Composition.Horizontal.html#1619" class="Bound"
+      >I</a
+      ><a name="1620"
+      > </a
+      ><a name="1621" class="Symbol"
+      >:</a
+      ><a name="1622"
+      > </a
+      ><a name="1623" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="1624"
+      > </a
+      ><a name="1625" href="Composition.Horizontal.html#1609" class="Bound"
+      >i</a
+      ><a name="1626" class="Symbol"
+      >}</a
+      ><a name="1627"
+      >
+                    </a
+      ><a name="1648" class="Symbol"
+      >{</a
+      ><a name="1649" href="Composition.Horizontal.html#1649" class="Bound Operator"
+      >_&#8605;&#7522;_</a
+      ><a name="1653"
+      > </a
+      ><a name="1654" class="Symbol"
+      >:</a
+      ><a name="1655"
+      > </a
+      ><a name="1656" href="Composition.Horizontal.html#162" class="Function"
+      >Arrow</a
+      ><a name="1661"
+      > </a
+      ><a name="1662" href="Composition.Horizontal.html#1619" class="Bound"
+      >I</a
+      ><a name="1663"
+      > </a
+      ><a name="1664" href="Composition.Horizontal.html#1611" class="Bound"
+      >j</a
+      ><a name="1665" class="Symbol"
+      >}</a
+      ><a name="1666"
+      > </a
+      ><a name="1667" class="Symbol"
+      >{</a
+      ><a name="1668" href="Composition.Horizontal.html#1668" class="Bound"
+      >T</a
+      ><a name="1669"
+      > </a
+      ><a name="1670" class="Symbol"
+      >:</a
+      ><a name="1671"
+      > </a
+      ><a name="1672" href="Composition.Horizontal.html#1619" class="Bound"
+      >I</a
+      ><a name="1673"
+      > </a
+      ><a name="1674" class="Symbol"
+      >&#8594;</a
+      ><a name="1675"
+      > </a
+      ><a name="1676" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="1677"
+      > </a
+      ><a name="1678" href="Composition.Horizontal.html#1613" class="Bound"
+      >t</a
+      ><a name="1679" class="Symbol"
+      >}</a
+      ><a name="1680"
+      >
+                    </a
+      ><a name="1701" class="Symbol"
+      >(</a
+      ><a name="1702" href="Composition.Horizontal.html#1702" class="Bound Operator"
+      >_&#183;_</a
+      ><a name="1705"
+      > </a
+      ><a name="1706" class="Symbol"
+      >:</a
+      ><a name="1707"
+      > </a
+      ><a name="1708" href="Composition.Horizontal.html#217" class="Function"
+      >HComposition</a
+      ><a name="1720"
+      > </a
+      ><a name="1721" href="Composition.Horizontal.html#1649" class="Bound Operator"
+      >_&#8605;&#7522;_</a
+      ><a name="1725" class="Symbol"
+      >)</a
+      ><a name="1726"
+      >
+                    </a
+      ><a name="1747" class="Symbol"
+      >(</a
+      ><a name="1748" href="Composition.Horizontal.html#1748" class="Bound Operator"
+      >&#10216;_&#10217;_&#8605;_</a
+      ><a name="1754"
+      > </a
+      ><a name="1755" class="Symbol"
+      >:</a
+      ><a name="1756"
+      > </a
+      ><a name="1757" href="Composition.Horizontal.html#364" class="Function"
+      >IArrow</a
+      ><a name="1763"
+      > </a
+      ><a name="1764" href="Composition.Horizontal.html#1649" class="Bound Operator"
+      >_&#8605;&#7522;_</a
+      ><a name="1768"
+      > </a
+      ><a name="1769" href="Composition.Horizontal.html#1668" class="Bound"
+      >T</a
+      ><a name="1770"
+      > </a
+      ><a name="1771" href="Composition.Horizontal.html#1615" class="Bound"
+      >a</a
+      ><a name="1772" class="Symbol"
+      >)</a
+      ><a name="1773"
+      >
+                  </a
+      ><a name="1792" class="Symbol"
+      >:</a
+      ><a name="1793"
+      > </a
+      ><a name="1794" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="1795"
+      > </a
+      ><a name="1796" class="Symbol"
+      >(</a
+      ><a name="1797" href="Composition.Horizontal.html#1615" class="Bound"
+      >a</a
+      ><a name="1798"
+      > </a
+      ><a name="1799" href="Agda.Prim.html#314" class="Primitive Operator"
+      >&#8852;</a
+      ><a name="1800"
+      > </a
+      ><a name="1801" href="Composition.Horizontal.html#1613" class="Bound"
+      >t</a
+      ><a name="1802"
+      > </a
+      ><a name="1803" href="Agda.Prim.html#314" class="Primitive Operator"
+      >&#8852;</a
+      ><a name="1804"
+      > </a
+      ><a name="1805" href="Composition.Horizontal.html#1609" class="Bound"
+      >i</a
+      ><a name="1806"
+      > </a
+      ><a name="1807" href="Agda.Prim.html#314" class="Primitive Operator"
+      >&#8852;</a
+      ><a name="1808"
+      > </a
+      ><a name="1809" href="Composition.Horizontal.html#1611" class="Bound"
+      >j</a
+      ><a name="1810" class="Symbol"
+      >)</a
+      ><a name="1811"
+      > </a
+      ><a name="1812" class="Keyword"
+      >where</a
+      ><a name="1817"
+      >
+  </a
+      ><a name="1820" class="Keyword"
+      >constructor</a
+      ><a name="1831"
+      > </a
+      ><a name="1832" href="Composition.Horizontal.html#1832" class="InductiveConstructor"
+      >mk</a
+      ><a name="1834"
+      >
+  </a
+      ><a name="1837" class="Keyword"
+      >infixr</a
+      ><a name="1843"
+      > </a
+      ><a name="1844" class="Number"
+      >1</a
+      ><a name="1845"
+      > _&gt;&gt;&gt;_
+  </a
+      ><a name="1854" class="Keyword"
+      >field</a
+      ><a name="1859"
+      >
+    </a
+      ><a name="1864" href="Composition.Horizontal.html#1864" class="Field Operator"
+      >_&gt;&gt;&gt;_</a
+      ><a name="1869"
+      > </a
+      ><a name="1870" class="Symbol"
+      >:</a
+      ><a name="1871"
+      > </a
+      ><a name="1872" href="Composition.Horizontal.html#1378" class="Function"
+      >IHComposition</a
+      ><a name="1885"
+      > </a
+      ><a name="1886" class="Symbol"
+      >(&#955;</a
+      ><a name="1888"
+      > </a
+      ><a name="1889" class="Symbol"
+      >{</a
+      ><a name="1890" href="Composition.Horizontal.html#1890" class="Bound"
+      >&#951;</a
+      ><a name="1891" class="Symbol"
+      >}</a
+      ><a name="1892"
+      > </a
+      ><a name="1893" class="Symbol"
+      >&#8594;</a
+      ><a name="1894"
+      > </a
+      ><a name="1895" href="Composition.Horizontal.html#1702" class="Bound Operator"
+      >_&#183;_</a
+      ><a name="1898"
+      > </a
+      ><a name="1899" class="Symbol"
+      >{</a
+      ><a name="1900" href="Composition.Horizontal.html#1890" class="Bound"
+      >&#951;</a
+      ><a name="1901" class="Symbol"
+      >})</a
+      ><a name="1903"
+      > </a
+      ><a name="1904" href="Composition.Horizontal.html#1748" class="Bound Operator"
+      >&#10216;_&#10217;_&#8605;_</a
+      ><a name="1910"
+      >
+
+</a
+      ><a name="1912" class="Keyword"
+      >open</a
+      ><a name="1916"
+      > </a
+      ><a name="1917" class="Keyword"
+      >import</a
+      ><a name="1923"
+      > </a
+      ><a name="1924" href="Relation.Binary.PropositionalEquality.html#1" class="Module"
+      >Relation.Binary.PropositionalEquality</a
+      ><a name="1961"
+      >
+</a
+      ><a name="1962" href="Composition.Horizontal.html#1962" class="Function"
+      >Refl-Unit</a
+      ><a name="1971"
+      > </a
+      ><a name="1972" class="Symbol"
+      >:</a
+      ><a name="1973"
+      > </a
+      ><a name="1974" class="Symbol"
+      >&#8704;</a
+      ><a name="1975"
+      > </a
+      ><a name="1976" class="Symbol"
+      >{</a
+      ><a name="1977" href="Composition.Horizontal.html#1977" class="Bound"
+      >&#8467;</a
+      ><a name="1978"
+      > </a
+      ><a name="1979" href="Composition.Horizontal.html#1979" class="Bound"
+      >a</a
+      ><a name="1980" class="Symbol"
+      >}</a
+      ><a name="1981"
+      > </a
+      ><a name="1982" class="Symbol"
+      >{</a
+      ><a name="1983" href="Composition.Horizontal.html#1983" class="Bound"
+      >A</a
+      ><a name="1984"
+      > </a
+      ><a name="1985" class="Symbol"
+      >:</a
+      ><a name="1986"
+      > </a
+      ><a name="1987" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="1988"
+      > </a
+      ><a name="1989" href="Composition.Horizontal.html#1979" class="Bound"
+      >a</a
+      ><a name="1990" class="Symbol"
+      >}</a
+      ><a name="1991"
+      > </a
+      ><a name="1992" class="Symbol"
+      >{</a
+      ><a name="1993" href="Composition.Horizontal.html#1993" class="Bound"
+      >R</a
+      ><a name="1994"
+      > </a
+      ><a name="1995" class="Symbol"
+      >:</a
+      ><a name="1996"
+      > </a
+      ><a name="1997" href="Relation.Binary.Core.html#761" class="Function"
+      >Rel</a
+      ><a name="2000"
+      > </a
+      ><a name="2001" href="Composition.Horizontal.html#1983" class="Bound"
+      >A</a
+      ><a name="2002"
+      > </a
+      ><a name="2003" href="Composition.Horizontal.html#1977" class="Bound"
+      >&#8467;</a
+      ><a name="2004" class="Symbol"
+      >}</a
+      ><a name="2005"
+      > </a
+      ><a name="2006" class="Symbol"
+      >&#8594;</a
+      ><a name="2007"
+      > </a
+      ><a name="2008" href="Relation.Binary.Core.html#1891" class="Function"
+      >Reflexive</a
+      ><a name="2017"
+      > </a
+      ><a name="2018" href="Composition.Horizontal.html#1993" class="Bound"
+      >R</a
+      ><a name="2019"
+      > </a
+      ><a name="2020" class="Symbol"
+      >&#8594;</a
+      ><a name="2021"
+      > </a
+      ><a name="2022" href="Relation.Binary.Core.html#2793" class="Function"
+      >Transitive</a
+      ><a name="2032"
+      > </a
+      ><a name="2033" href="Composition.Horizontal.html#1993" class="Bound"
+      >R</a
+      ><a name="2034"
+      > </a
+      ><a name="2035" class="Symbol"
+      >&#8594;</a
+      ><a name="2036"
+      > </a
+      ><a name="2037" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="2038"
+      > </a
+      ><a name="2039" class="Symbol"
+      >_</a
+      ><a name="2040"
+      >
+</a
+      ><a name="2041" href="Composition.Horizontal.html#1962" class="Function"
+      >Refl-Unit</a
+      ><a name="2050"
+      > </a
+      ><a name="2051" class="Symbol"
+      >{</a
+      ><a name="2052"
+      >R </a
+      ><a name="2054" class="Symbol"
+      >=</a
+      ><a name="2055"
+      > </a
+      ><a name="2056" href="Composition.Horizontal.html#2056" class="Bound"
+      >R</a
+      ><a name="2057" class="Symbol"
+      >}</a
+      ><a name="2058"
+      > </a
+      ><a name="2059" href="Composition.Horizontal.html#2059" class="Bound"
+      >R-refl</a
+      ><a name="2065"
+      > </a
+      ><a name="2066" href="Composition.Horizontal.html#2066" class="Bound"
+      >R-trans</a
+      ><a name="2073"
+      > </a
+      ><a name="2074" class="Symbol"
+      >=</a
+      ><a name="2075"
+      > </a
+      ><a name="2076" class="Symbol"
+      >&#8704;</a
+      ><a name="2077"
+      > </a
+      ><a name="2078" class="Symbol"
+      >{</a
+      ><a name="2079" href="Composition.Horizontal.html#2079" class="Bound"
+      >x</a
+      ><a name="2080"
+      > </a
+      ><a name="2081" href="Composition.Horizontal.html#2081" class="Bound"
+      >y</a
+      ><a name="2082" class="Symbol"
+      >}</a
+      ><a name="2083"
+      > </a
+      ><a name="2084" class="Symbol"
+      >(</a
+      ><a name="2085" href="Composition.Horizontal.html#2085" class="Bound"
+      >p</a
+      ><a name="2086"
+      > </a
+      ><a name="2087" class="Symbol"
+      >:</a
+      ><a name="2088"
+      > </a
+      ><a name="2089" href="Composition.Horizontal.html#2056" class="Bound"
+      >R</a
+      ><a name="2090"
+      > </a
+      ><a name="2091" href="Composition.Horizontal.html#2079" class="Bound"
+      >x</a
+      ><a name="2092"
+      > </a
+      ><a name="2093" href="Composition.Horizontal.html#2081" class="Bound"
+      >y</a
+      ><a name="2094" class="Symbol"
+      >)</a
+      ><a name="2095"
+      > </a
+      ><a name="2096" class="Symbol"
+      >&#8594;</a
+      ><a name="2097"
+      > </a
+      ><a name="2098" href="Composition.Horizontal.html#2066" class="Bound"
+      >R-trans</a
+      ><a name="2105"
+      > </a
+      ><a name="2106" href="Composition.Horizontal.html#2059" class="Bound"
+      >R-refl</a
+      ><a name="2112"
+      > </a
+      ><a name="2113" href="Composition.Horizontal.html#2085" class="Bound"
+      >p</a
+      ><a name="2114"
+      > </a
+      ><a name="2115" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="2116"
+      > </a
+      ><a name="2117" href="Composition.Horizontal.html#2085" class="Bound"
+      >p</a
+      ><a name="2118"
+      >
+
+</a
+      ><a name="2120" class="Keyword"
+      >open</a
+      ><a name="2124"
+      > </a
+      ><a name="2125" class="Keyword"
+      >import</a
+      ><a name="2131"
+      > </a
+      ><a name="2132" href="Data.One.html#1" class="Module"
+      >Data.One</a
+      ><a name="2140"
+      > </a
+      ><a name="2141" class="Keyword"
+      >using</a
+      ><a name="2146"
+      > </a
+      ><a name="2147" class="Symbol"
+      >(</a
+      ><a name="2148"
+      >&#120793;</a
+      ><a name="2149" class="Symbol"
+      >)</a
+      ><a name="2150"
+      >
+</a
+      ><a name="2151" href="Composition.Horizontal.html#2151" class="Function"
+      >ConstArr</a
+      ><a name="2159"
+      > </a
+      ><a name="2160" class="Symbol"
+      >:</a
+      ><a name="2161"
+      > </a
+      ><a name="2162" class="Symbol"
+      >&#8704;</a
+      ><a name="2163"
+      > </a
+      ><a name="2164" class="Symbol"
+      >{</a
+      ><a name="2165" href="Composition.Horizontal.html#2165" class="Bound"
+      >a</a
+      ><a name="2166" class="Symbol"
+      >}</a
+      ><a name="2167"
+      > </a
+      ><a name="2168" class="Symbol"
+      >(</a
+      ><a name="2169" href="Composition.Horizontal.html#2169" class="Bound"
+      >A</a
+      ><a name="2170"
+      > </a
+      ><a name="2171" class="Symbol"
+      >:</a
+      ><a name="2172"
+      > </a
+      ><a name="2173" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="2174"
+      > </a
+      ><a name="2175" href="Composition.Horizontal.html#2165" class="Bound"
+      >a</a
+      ><a name="2176" class="Symbol"
+      >)</a
+      ><a name="2177"
+      > </a
+      ><a name="2178" class="Symbol"
+      >&#8594;</a
+      ><a name="2179"
+      > </a
+      ><a name="2180" href="Data.Unit.html#653" class="Record"
+      >&#120793;</a
+      ><a name="2181"
+      > </a
+      ><a name="2182" class="Symbol"
+      >&#8594;</a
+      ><a name="2183"
+      > </a
+      ><a name="2184" href="Data.Unit.html#653" class="Record"
+      >&#120793;</a
+      ><a name="2185"
+      > </a
+      ><a name="2186" class="Symbol"
+      >&#8594;</a
+      ><a name="2187"
+      > </a
+      ><a name="2188" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="2189"
+      > </a
+      ><a name="2190" href="Composition.Horizontal.html#2165" class="Bound"
+      >a</a
+      ><a name="2191"
+      >
+</a
+      ><a name="2192" href="Composition.Horizontal.html#2151" class="Function"
+      >ConstArr</a
+      ><a name="2200"
+      > </a
+      ><a name="2201" href="Composition.Horizontal.html#2201" class="Bound"
+      >A</a
+      ><a name="2202"
+      > </a
+      ><a name="2203" class="Symbol"
+      >_</a
+      ><a name="2204"
+      > </a
+      ><a name="2205" class="Symbol"
+      >_</a
+      ><a name="2206"
+      > </a
+      ><a name="2207" class="Symbol"
+      >=</a
+      ><a name="2208"
+      > </a
+      ><a name="2209" href="Composition.Horizontal.html#2201" class="Bound"
+      >A</a
+      ><a name="2210"
+      >
+
+</a
+      ><a name="2212" href="Composition.Horizontal.html#2212" class="Function"
+      >HComposable</a
+      ><a name="2223"
+      > </a
+      ><a name="2224" class="Symbol"
+      >:</a
+      ><a name="2225"
+      > </a
+      ><a name="2226" class="Symbol"
+      >&#8704;</a
+      ><a name="2227"
+      > </a
+      ><a name="2228" class="Symbol"
+      >{</a
+      ><a name="2229" href="Composition.Horizontal.html#2229" class="Bound"
+      >t</a
+      ><a name="2230"
+      > </a
+      ><a name="2231" href="Composition.Horizontal.html#2231" class="Bound"
+      >a</a
+      ><a name="2232" class="Symbol"
+      >}</a
+      ><a name="2233"
+      > </a
+      ><a name="2234" class="Symbol"
+      >{</a
+      ><a name="2235" href="Composition.Horizontal.html#2235" class="Bound"
+      >T</a
+      ><a name="2236"
+      > </a
+      ><a name="2237" class="Symbol"
+      >:</a
+      ><a name="2238"
+      > </a
+      ><a name="2239" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="2240"
+      > </a
+      ><a name="2241" href="Composition.Horizontal.html#2229" class="Bound"
+      >t</a
+      ><a name="2242" class="Symbol"
+      >}</a
+      ><a name="2243"
+      > </a
+      ><a name="2244" class="Symbol"
+      >(</a
+      ><a name="2245" href="Composition.Horizontal.html#2245" class="Bound Operator"
+      >_&#8605;_</a
+      ><a name="2248"
+      > </a
+      ><a name="2249" class="Symbol"
+      >:</a
+      ><a name="2250"
+      > </a
+      ><a name="2251" href="Composition.Horizontal.html#2235" class="Bound"
+      >T</a
+      ><a name="2252"
+      > </a
+      ><a name="2253" class="Symbol"
+      >&#8594;</a
+      ><a name="2254"
+      > </a
+      ><a name="2255" href="Composition.Horizontal.html#2235" class="Bound"
+      >T</a
+      ><a name="2256"
+      > </a
+      ><a name="2257" class="Symbol"
+      >&#8594;</a
+      ><a name="2258"
+      > </a
+      ><a name="2259" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="2260"
+      > </a
+      ><a name="2261" href="Composition.Horizontal.html#2231" class="Bound"
+      >a</a
+      ><a name="2262" class="Symbol"
+      >)</a
+      ><a name="2263"
+      > </a
+      ><a name="2264" class="Symbol"
+      >&#8594;</a
+      ><a name="2265"
+      > </a
+      ><a name="2266" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="2267"
+      > </a
+      ><a name="2268" class="Symbol"
+      >(</a
+      ><a name="2269" href="Composition.Horizontal.html#2229" class="Bound"
+      >t</a
+      ><a name="2270"
+      > </a
+      ><a name="2271" href="Agda.Prim.html#314" class="Primitive Operator"
+      >&#8852;</a
+      ><a name="2272"
+      > </a
+      ><a name="2273" href="Composition.Horizontal.html#2231" class="Bound"
+      >a</a
+      ><a name="2274" class="Symbol"
+      >)</a
+      ><a name="2275"
+      >
+</a
+      ><a name="2276" href="Composition.Horizontal.html#2212" class="Function"
+      >HComposable</a
+      ><a name="2287"
+      > </a
+      ><a name="2288" href="Composition.Horizontal.html#2288" class="Bound Operator"
+      >_&#8605;_</a
+      ><a name="2291"
+      > </a
+      ><a name="2292" class="Symbol"
+      >=</a
+      ><a name="2293"
+      > </a
+      ><a name="2294" href="Composition.Horizontal.html#1595" class="Record"
+      >IHComposable</a
+      ><a name="2306"
+      > </a
+      ><a name="2307" class="Symbol"
+      >{</a
+      ><a name="2308"
+      >i </a
+      ><a name="2310" class="Symbol"
+      >=</a
+      ><a name="2311"
+      > </a
+      ><a name="2312" href="Agda.Prim.html#268" class="Primitive"
+      >zero</a
+      ><a name="2316" class="Symbol"
+      >}</a
+      ><a name="2317"
+      > </a
+      ><a name="2318" class="Symbol"
+      >{</a
+      ><a name="2319"
+      >_&#8605;&#7522;_ </a
+      ><a name="2324" class="Symbol"
+      >=</a
+      ><a name="2325"
+      > </a
+      ><a name="2326" href="Composition.Horizontal.html#2151" class="Function"
+      >ConstArr</a
+      ><a name="2334"
+      > </a
+      ><a name="2335" href="Data.Unit.html#653" class="Record"
+      >&#120793;</a
+      ><a name="2336" class="Symbol"
+      >}</a
+      ><a name="2337"
+      > </a
+      ><a name="2338" class="Symbol"
+      >_</a
+      ><a name="2339"
+      > </a
+      ><a name="2340" class="Symbol"
+      >(</a
+      ><a name="2341" href="Function.html#1047" class="Function"
+      >const</a
+      ><a name="2346"
+      > </a
+      ><a name="2347" href="Composition.Horizontal.html#2288" class="Bound Operator"
+      >_&#8605;_</a
+      ><a name="2350" class="Symbol"
+      >)</a
+      ><a name="2351"
+      >
+
+</a
+      ><a name="2353" class="Comment"
+      >{- Composable, unfolded:
+record HComposable {t a} {T : &#9733; t} (_&#8605;_ : T &#8594; T &#8594; &#9733; a) : &#9733; (t &#8852; a) where
+  constructor mk
+  infixr 1 _&gt;&gt;&gt;_
+  field
+    _&gt;&gt;&gt;_ : &#8704; {A B C} &#8594; (A &#8605; B) &#8594; (B &#8605; C) &#8594; (A &#8605; C)
+-}</a
+      ><a name="2547"
+      >
+
+</a
+      ><a name="2549" href="Composition.Horizontal.html#2549" class="Function"
+      >constHComp'</a
+      ><a name="2560"
+      > </a
+      ><a name="2561" class="Symbol"
+      >:</a
+      ><a name="2562"
+      > </a
+      ><a name="2563" class="Symbol"
+      >&#8704;</a
+      ><a name="2564"
+      > </a
+      ><a name="2565" class="Symbol"
+      >{</a
+      ><a name="2566" href="Composition.Horizontal.html#2566" class="Bound"
+      >a</a
+      ><a name="2567" class="Symbol"
+      >}</a
+      ><a name="2568"
+      > </a
+      ><a name="2569" class="Symbol"
+      >{</a
+      ><a name="2570" href="Composition.Horizontal.html#2570" class="Bound"
+      >A</a
+      ><a name="2571"
+      > </a
+      ><a name="2572" class="Symbol"
+      >:</a
+      ><a name="2573"
+      > </a
+      ><a name="2574" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="2575"
+      > </a
+      ><a name="2576" href="Composition.Horizontal.html#2566" class="Bound"
+      >a</a
+      ><a name="2577" class="Symbol"
+      >}</a
+      ><a name="2578"
+      > </a
+      ><a name="2579" class="Symbol"
+      >(</a
+      ><a name="2580" href="Composition.Horizontal.html#2580" class="Bound Operator"
+      >_&#183;_</a
+      ><a name="2583"
+      > </a
+      ><a name="2584" class="Symbol"
+      >:</a
+      ><a name="2585"
+      > </a
+      ><a name="2586" href="Composition.Horizontal.html#2570" class="Bound"
+      >A</a
+      ><a name="2587"
+      > </a
+      ><a name="2588" class="Symbol"
+      >&#8594;</a
+      ><a name="2589"
+      > </a
+      ><a name="2590" href="Composition.Horizontal.html#2570" class="Bound"
+      >A</a
+      ><a name="2591"
+      > </a
+      ><a name="2592" class="Symbol"
+      >&#8594;</a
+      ><a name="2593"
+      > </a
+      ><a name="2594" href="Composition.Horizontal.html#2570" class="Bound"
+      >A</a
+      ><a name="2595" class="Symbol"
+      >)</a
+      ><a name="2596"
+      > </a
+      ><a name="2597" class="Symbol"
+      >&#8594;</a
+      ><a name="2598"
+      > </a
+      ><a name="2599" href="Composition.Horizontal.html#217" class="Function"
+      >HComposition</a
+      ><a name="2611"
+      > </a
+      ><a name="2612" class="Symbol"
+      >(</a
+      ><a name="2613" href="Composition.Horizontal.html#2151" class="Function"
+      >ConstArr</a
+      ><a name="2621"
+      > </a
+      ><a name="2622" href="Composition.Horizontal.html#2570" class="Bound"
+      >A</a
+      ><a name="2623" class="Symbol"
+      >)</a
+      ><a name="2624"
+      >
+</a
+      ><a name="2625" href="Composition.Horizontal.html#2549" class="Function"
+      >constHComp'</a
+      ><a name="2636"
+      > </a
+      ><a name="2637" href="Composition.Horizontal.html#2637" class="Bound Operator"
+      >_&#183;_</a
+      ><a name="2640"
+      > </a
+      ><a name="2641" class="Symbol"
+      >=</a
+      ><a name="2642"
+      > </a
+      ><a name="2643" href="Composition.Horizontal.html#2637" class="Bound Operator"
+      >_&#183;_</a
+      ><a name="2646"
+      >
+
+</a
+      ><a name="2648" href="Composition.Horizontal.html#2648" class="Function"
+      >constHComp</a
+      ><a name="2658"
+      > </a
+      ><a name="2659" class="Symbol"
+      >:</a
+      ><a name="2660"
+      > </a
+      ><a name="2661" class="Symbol"
+      >&#8704;</a
+      ><a name="2662"
+      > </a
+      ><a name="2663" class="Symbol"
+      >{</a
+      ><a name="2664" href="Composition.Horizontal.html#2664" class="Bound"
+      >a</a
+      ><a name="2665" class="Symbol"
+      >}</a
+      ><a name="2666"
+      > </a
+      ><a name="2667" class="Symbol"
+      >{</a
+      ><a name="2668" href="Composition.Horizontal.html#2668" class="Bound"
+      >A</a
+      ><a name="2669"
+      > </a
+      ><a name="2670" class="Symbol"
+      >:</a
+      ><a name="2671"
+      > </a
+      ><a name="2672" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="2673"
+      > </a
+      ><a name="2674" href="Composition.Horizontal.html#2664" class="Bound"
+      >a</a
+      ><a name="2675" class="Symbol"
+      >}</a
+      ><a name="2676"
+      > </a
+      ><a name="2677" class="Symbol"
+      >(</a
+      ><a name="2678" href="Composition.Horizontal.html#2678" class="Bound Operator"
+      >_&#183;_</a
+      ><a name="2681"
+      > </a
+      ><a name="2682" class="Symbol"
+      >:</a
+      ><a name="2683"
+      > </a
+      ><a name="2684" href="Composition.Horizontal.html#2668" class="Bound"
+      >A</a
+      ><a name="2685"
+      > </a
+      ><a name="2686" class="Symbol"
+      >&#8594;</a
+      ><a name="2687"
+      > </a
+      ><a name="2688" href="Composition.Horizontal.html#2668" class="Bound"
+      >A</a
+      ><a name="2689"
+      > </a
+      ><a name="2690" class="Symbol"
+      >&#8594;</a
+      ><a name="2691"
+      > </a
+      ><a name="2692" href="Composition.Horizontal.html#2668" class="Bound"
+      >A</a
+      ><a name="2693" class="Symbol"
+      >)</a
+      ><a name="2694"
+      > </a
+      ><a name="2695" class="Symbol"
+      >&#8594;</a
+      ><a name="2696"
+      > </a
+      ><a name="2697" href="Composition.Horizontal.html#2212" class="Function"
+      >HComposable</a
+      ><a name="2708"
+      > </a
+      ><a name="2709" class="Symbol"
+      >(</a
+      ><a name="2710" href="Composition.Horizontal.html#2151" class="Function"
+      >ConstArr</a
+      ><a name="2718"
+      > </a
+      ><a name="2719" href="Composition.Horizontal.html#2668" class="Bound"
+      >A</a
+      ><a name="2720" class="Symbol"
+      >)</a
+      ><a name="2721"
+      >
+</a
+      ><a name="2722" href="Composition.Horizontal.html#2648" class="Function"
+      >constHComp</a
+      ><a name="2732"
+      > </a
+      ><a name="2733" href="Composition.Horizontal.html#2733" class="Bound Operator"
+      >_&#183;_</a
+      ><a name="2736"
+      > </a
+      ><a name="2737" class="Symbol"
+      >=</a
+      ><a name="2738"
+      > </a
+      ><a name="2739" href="Composition.Horizontal.html#1832" class="InductiveConstructor"
+      >mk</a
+      ><a name="2741"
+      > </a
+      ><a name="2742" href="Composition.Horizontal.html#2733" class="Bound Operator"
+      >_&#183;_</a
+      ><a name="2745"
+      >
+
+</a
+      ><a name="2747" class="Keyword"
+      >module</a
+      ><a name="2753"
+      > </a
+      ><a name="2754" href="Composition.Horizontal.html#2754" class="Module"
+      >HComposable</a
+      ><a name="2765"
+      > </a
+      ><a name="2766" class="Symbol"
+      >=</a
+      ><a name="2767"
+      > </a
+      ><a name="2768" href="Composition.Horizontal.html#1595" class="Module"
+      >IHComposable</a
+      ><a name="2780"
+      >
+
+</a
+      ><a name="2782" href="Composition.Horizontal.html#2782" class="Function"
+      >ixFunHComp</a
+      ><a name="2792"
+      > </a
+      ><a name="2793" class="Symbol"
+      >:</a
+      ><a name="2794"
+      > </a
+      ><a name="2795" class="Symbol"
+      >&#8704;</a
+      ><a name="2796"
+      > </a
+      ><a name="2797" class="Symbol"
+      >{</a
+      ><a name="2798" href="Composition.Horizontal.html#2798" class="Bound"
+      >ix</a
+      ><a name="2800"
+      > </a
+      ><a name="2801" href="Composition.Horizontal.html#2801" class="Bound"
+      >t</a
+      ><a name="2802" class="Symbol"
+      >}</a
+      ><a name="2803"
+      > </a
+      ><a name="2804" class="Symbol"
+      >{</a
+      ><a name="2805" href="Composition.Horizontal.html#2805" class="Bound"
+      >Ix</a
+      ><a name="2807"
+      > </a
+      ><a name="2808" class="Symbol"
+      >:</a
+      ><a name="2809"
+      > </a
+      ><a name="2810" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="2811"
+      > </a
+      ><a name="2812" href="Composition.Horizontal.html#2798" class="Bound"
+      >ix</a
+      ><a name="2814" class="Symbol"
+      >}</a
+      ><a name="2815"
+      > </a
+      ><a name="2816" class="Symbol"
+      >(</a
+      ><a name="2817" href="Composition.Horizontal.html#2817" class="Bound"
+      >F</a
+      ><a name="2818"
+      > </a
+      ><a name="2819" class="Symbol"
+      >:</a
+      ><a name="2820"
+      > </a
+      ><a name="2821" href="Composition.Horizontal.html#2805" class="Bound"
+      >Ix</a
+      ><a name="2823"
+      > </a
+      ><a name="2824" class="Symbol"
+      >&#8594;</a
+      ><a name="2825"
+      > </a
+      ><a name="2826" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="2827"
+      > </a
+      ><a name="2828" href="Composition.Horizontal.html#2801" class="Bound"
+      >t</a
+      ><a name="2829" class="Symbol"
+      >)</a
+      ><a name="2830"
+      > </a
+      ><a name="2831" class="Symbol"
+      >&#8594;</a
+      ><a name="2832"
+      > </a
+      ><a name="2833" href="Composition.Horizontal.html#2212" class="Function"
+      >HComposable</a
+      ><a name="2844"
+      > </a
+      ><a name="2845" class="Symbol"
+      >(&#955;</a
+      ><a name="2847"
+      > </a
+      ><a name="2848" href="Composition.Horizontal.html#2848" class="Bound"
+      >i</a
+      ><a name="2849"
+      > </a
+      ><a name="2850" href="Composition.Horizontal.html#2850" class="Bound"
+      >o</a
+      ><a name="2851"
+      > </a
+      ><a name="2852" class="Symbol"
+      >&#8594;</a
+      ><a name="2853"
+      > </a
+      ><a name="2854" href="Composition.Horizontal.html#2817" class="Bound"
+      >F</a
+      ><a name="2855"
+      > </a
+      ><a name="2856" href="Composition.Horizontal.html#2848" class="Bound"
+      >i</a
+      ><a name="2857"
+      > </a
+      ><a name="2858" class="Symbol"
+      >&#8594;</a
+      ><a name="2859"
+      > </a
+      ><a name="2860" href="Composition.Horizontal.html#2817" class="Bound"
+      >F</a
+      ><a name="2861"
+      > </a
+      ><a name="2862" href="Composition.Horizontal.html#2850" class="Bound"
+      >o</a
+      ><a name="2863" class="Symbol"
+      >)</a
+      ><a name="2864"
+      >
+</a
+      ><a name="2865" href="Composition.Horizontal.html#2782" class="Function"
+      >ixFunHComp</a
+      ><a name="2875"
+      > </a
+      ><a name="2876" class="Symbol"
+      >_</a
+      ><a name="2877"
+      > </a
+      ><a name="2878" class="Symbol"
+      >=</a
+      ><a name="2879"
+      > </a
+      ><a name="2880" href="Composition.Horizontal.html#1832" class="InductiveConstructor"
+      >mk</a
+      ><a name="2882"
+      > </a
+      ><a name="2883" class="Symbol"
+      >(&#955;</a
+      ><a name="2885"
+      > </a
+      ><a name="2886" href="Composition.Horizontal.html#2886" class="Bound"
+      >f</a
+      ><a name="2887"
+      > </a
+      ><a name="2888" href="Composition.Horizontal.html#2888" class="Bound"
+      >g</a
+      ><a name="2889"
+      > </a
+      ><a name="2890" href="Composition.Horizontal.html#2890" class="Bound"
+      >x</a
+      ><a name="2891"
+      > </a
+      ><a name="2892" class="Symbol"
+      >&#8594;</a
+      ><a name="2893"
+      > </a
+      ><a name="2894" href="Composition.Horizontal.html#2888" class="Bound"
+      >g</a
+      ><a name="2895"
+      > </a
+      ><a name="2896" class="Symbol"
+      >(</a
+      ><a name="2897" href="Composition.Horizontal.html#2886" class="Bound"
+      >f</a
+      ><a name="2898"
+      > </a
+      ><a name="2899" href="Composition.Horizontal.html#2890" class="Bound"
+      >x</a
+      ><a name="2900" class="Symbol"
+      >))</a
+      ><a name="2902"
+      >
+
+</a
+      ><a name="2904" href="Composition.Horizontal.html#2904" class="Function"
+      >funHComp</a
+      ><a name="2912"
+      > </a
+      ><a name="2913" class="Symbol"
+      >:</a
+      ><a name="2914"
+      > </a
+      ><a name="2915" class="Symbol"
+      >&#8704;</a
+      ><a name="2916"
+      > </a
+      ><a name="2917" class="Symbol"
+      >{</a
+      ><a name="2918" href="Composition.Horizontal.html#2918" class="Bound"
+      >t</a
+      ><a name="2919" class="Symbol"
+      >}</a
+      ><a name="2920"
+      > </a
+      ><a name="2921" class="Symbol"
+      >&#8594;</a
+      ><a name="2922"
+      > </a
+      ><a name="2923" href="Composition.Horizontal.html#2212" class="Function"
+      >HComposable</a
+      ><a name="2934"
+      > </a
+      ><a name="2935" class="Symbol"
+      >(&#955;</a
+      ><a name="2937"
+      > </a
+      ><a name="2938" class="Symbol"
+      >(</a
+      ><a name="2939" href="Composition.Horizontal.html#2939" class="Bound"
+      >A</a
+      ><a name="2940"
+      > </a
+      ><a name="2941" href="Composition.Horizontal.html#2941" class="Bound"
+      >B</a
+      ><a name="2942"
+      > </a
+      ><a name="2943" class="Symbol"
+      >:</a
+      ><a name="2944"
+      > </a
+      ><a name="2945" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="2946"
+      > </a
+      ><a name="2947" href="Composition.Horizontal.html#2918" class="Bound"
+      >t</a
+      ><a name="2948" class="Symbol"
+      >)</a
+      ><a name="2949"
+      > </a
+      ><a name="2950" class="Symbol"
+      >&#8594;</a
+      ><a name="2951"
+      > </a
+      ><a name="2952" href="Composition.Horizontal.html#2939" class="Bound"
+      >A</a
+      ><a name="2953"
+      > </a
+      ><a name="2954" class="Symbol"
+      >&#8594;</a
+      ><a name="2955"
+      > </a
+      ><a name="2956" href="Composition.Horizontal.html#2941" class="Bound"
+      >B</a
+      ><a name="2957" class="Symbol"
+      >)</a
+      ><a name="2958"
+      >
+</a
+      ><a name="2959" href="Composition.Horizontal.html#2904" class="Function"
+      >funHComp</a
+      ><a name="2967"
+      > </a
+      ><a name="2968" class="Symbol"
+      >=</a
+      ><a name="2969"
+      > </a
+      ><a name="2970" href="Composition.Horizontal.html#2782" class="Function"
+      >ixFunHComp</a
+      ><a name="2980"
+      > </a
+      ><a name="2981" href="Function.html#1006" class="Function"
+      >id</a
+      ><a name="2983"
+      >
+
+</a
+      ><a name="2985" href="Composition.Horizontal.html#2985" class="Function"
+      >opHComp</a
+      ><a name="2992"
+      > </a
+      ><a name="2993" class="Symbol"
+      >:</a
+      ><a name="2994"
+      > </a
+      ><a name="2995" class="Symbol"
+      >&#8704;</a
+      ><a name="2996"
+      > </a
+      ><a name="2997" class="Symbol"
+      >{</a
+      ><a name="2998" href="Composition.Horizontal.html#2998" class="Bound"
+      >t</a
+      ><a name="2999"
+      > </a
+      ><a name="3000" href="Composition.Horizontal.html#3000" class="Bound"
+      >a</a
+      ><a name="3001" class="Symbol"
+      >}</a
+      ><a name="3002"
+      > </a
+      ><a name="3003" class="Symbol"
+      >{</a
+      ><a name="3004" href="Composition.Horizontal.html#3004" class="Bound"
+      >T</a
+      ><a name="3005"
+      > </a
+      ><a name="3006" class="Symbol"
+      >:</a
+      ><a name="3007"
+      > </a
+      ><a name="3008" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="3009"
+      > </a
+      ><a name="3010" href="Composition.Horizontal.html#2998" class="Bound"
+      >t</a
+      ><a name="3011" class="Symbol"
+      >}</a
+      ><a name="3012"
+      > </a
+      ><a name="3013" class="Symbol"
+      >{</a
+      ><a name="3014" href="Composition.Horizontal.html#3014" class="Bound Operator"
+      >_&#8605;_</a
+      ><a name="3017"
+      > </a
+      ><a name="3018" class="Symbol"
+      >:</a
+      ><a name="3019"
+      > </a
+      ><a name="3020" href="Composition.Horizontal.html#3004" class="Bound"
+      >T</a
+      ><a name="3021"
+      > </a
+      ><a name="3022" class="Symbol"
+      >&#8594;</a
+      ><a name="3023"
+      > </a
+      ><a name="3024" href="Composition.Horizontal.html#3004" class="Bound"
+      >T</a
+      ><a name="3025"
+      > </a
+      ><a name="3026" class="Symbol"
+      >&#8594;</a
+      ><a name="3027"
+      > </a
+      ><a name="3028" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="3029"
+      > </a
+      ><a name="3030" href="Composition.Horizontal.html#3000" class="Bound"
+      >a</a
+      ><a name="3031" class="Symbol"
+      >}</a
+      ><a name="3032"
+      > </a
+      ><a name="3033" class="Symbol"
+      >&#8594;</a
+      ><a name="3034"
+      > </a
+      ><a name="3035" href="Composition.Horizontal.html#2212" class="Function"
+      >HComposable</a
+      ><a name="3046"
+      > </a
+      ><a name="3047" href="Composition.Horizontal.html#3014" class="Bound Operator"
+      >_&#8605;_</a
+      ><a name="3050"
+      > </a
+      ><a name="3051" class="Symbol"
+      >&#8594;</a
+      ><a name="3052"
+      > </a
+      ><a name="3053" href="Composition.Horizontal.html#2212" class="Function"
+      >HComposable</a
+      ><a name="3064"
+      > </a
+      ><a name="3065" class="Symbol"
+      >(</a
+      ><a name="3066" href="Function.html#1474" class="Function"
+      >flip</a
+      ><a name="3070"
+      > </a
+      ><a name="3071" href="Composition.Horizontal.html#3014" class="Bound Operator"
+      >_&#8605;_</a
+      ><a name="3074" class="Symbol"
+      >)</a
+      ><a name="3075"
+      >
+</a
+      ><a name="3076" href="Composition.Horizontal.html#2985" class="Function"
+      >opHComp</a
+      ><a name="3083"
+      > </a
+      ><a name="3084" class="Symbol"
+      >(</a
+      ><a name="3085" href="Composition.Horizontal.html#1832" class="InductiveConstructor"
+      >mk</a
+      ><a name="3087"
+      > </a
+      ><a name="3088" href="Composition.Horizontal.html#3088" class="Bound Operator"
+      >_&gt;&gt;&gt;_</a
+      ><a name="3093" class="Symbol"
+      >)</a
+      ><a name="3094"
+      > </a
+      ><a name="3095" class="Symbol"
+      >=</a
+      ><a name="3096"
+      > </a
+      ><a name="3097" href="Composition.Horizontal.html#1832" class="InductiveConstructor"
+      >mk</a
+      ><a name="3099"
+      > </a
+      ><a name="3100" class="Symbol"
+      >(</a
+      ><a name="3101" href="Function.html#1474" class="Function"
+      >flip</a
+      ><a name="3105"
+      > </a
+      ><a name="3106" href="Composition.Horizontal.html#3088" class="Bound Operator"
+      >_&gt;&gt;&gt;_</a
+      ><a name="3111" class="Symbol"
+      >)</a
+      ><a name="3112"
+      >
+
+</a
+      ><a name="3114" class="Keyword"
+      >module</a
+      ><a name="3120"
+      > </a
+      ><a name="3121" href="Composition.Horizontal.html#3121" class="Module"
+      >_</a
+      ><a name="3122"
+      > </a
+      ><a name="3123" class="Symbol"
+      >{</a
+      ><a name="3124" href="Composition.Horizontal.html#3124" class="Bound"
+      >a</a
+      ><a name="3125" class="Symbol"
+      >}</a
+      ><a name="3126"
+      > </a
+      ><a name="3127" class="Symbol"
+      >(</a
+      ><a name="3128" href="Composition.Horizontal.html#3128" class="Bound"
+      >A</a
+      ><a name="3129"
+      > </a
+      ><a name="3130" class="Symbol"
+      >:</a
+      ><a name="3131"
+      > </a
+      ><a name="3132" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="3133"
+      > </a
+      ><a name="3134" href="Composition.Horizontal.html#3124" class="Bound"
+      >a</a
+      ><a name="3135" class="Symbol"
+      >)</a
+      ><a name="3136"
+      > </a
+      ><a name="3137" class="Keyword"
+      >where</a
+      ><a name="3142"
+      >
+    </a
+      ><a name="3147" class="Keyword"
+      >open</a
+      ><a name="3151"
+      > </a
+      ><a name="3152" class="Keyword"
+      >import</a
+      ><a name="3158"
+      > </a
+      ><a name="3159" href="Data.Vec.NP.html#1" class="Module"
+      >Data.Vec.NP</a
+      ><a name="3170"
+      >
+    </a
+      ><a name="3175" class="Keyword"
+      >open</a
+      ><a name="3179"
+      > </a
+      ><a name="3180" href="Data.Vec.NP.html#572" class="Module"
+      >FunVec</a
+      ><a name="3186"
+      > </a
+      ><a name="3187" class="Symbol"
+      >{</a
+      ><a name="3188"
+      >A </a
+      ><a name="3190" class="Symbol"
+      >=</a
+      ><a name="3191"
+      > </a
+      ><a name="3192" href="Composition.Horizontal.html#3128" class="Bound"
+      >A</a
+      ><a name="3193" class="Symbol"
+      >}</a
+      ><a name="3194"
+      >
+    </a
+      ><a name="3199" href="Composition.Horizontal.html#3199" class="Function"
+      >vecFunHComp</a
+      ><a name="3210"
+      > </a
+      ><a name="3211" class="Symbol"
+      >:</a
+      ><a name="3212"
+      > </a
+      ><a name="3213" href="Composition.Horizontal.html#2212" class="Function"
+      >HComposable</a
+      ><a name="3224"
+      > </a
+      ><a name="3225" href="Data.Vec.NP.html#603" class="Function Operator"
+      >_&#8594;&#7515;_</a
+      ><a name="3229"
+      >
+    </a
+      ><a name="3234" href="Composition.Horizontal.html#3199" class="Function"
+      >vecFunHComp</a
+      ><a name="3245"
+      > </a
+      ><a name="3246" class="Symbol"
+      >=</a
+      ><a name="3247"
+      > </a
+      ><a name="3248" href="Composition.Horizontal.html#2782" class="Function"
+      >ixFunHComp</a
+      ><a name="3258"
+      > </a
+      ><a name="3259" class="Symbol"
+      >(</a
+      ><a name="3260" href="Data.Vec.html#604" class="Datatype"
+      >Vec</a
+      ><a name="3263"
+      > </a
+      ><a name="3264" href="Composition.Horizontal.html#3128" class="Bound"
+      >A</a
+      ><a name="3265" class="Symbol"
+      >)</a
+      ><a name="3266"
+      >
+
+</a
+      ><a name="3268" class="Keyword"
+      >open</a
+      ><a name="3272"
+      > </a
+      ><a name="3273" class="Keyword"
+      >import</a
+      ><a name="3279"
+      > </a
+      ><a name="3280" href="Data.Bits.html#1" class="Module"
+      >Data.Bits</a
+      ><a name="3289"
+      >
+</a
+      ><a name="3290" href="Composition.Horizontal.html#3290" class="Function"
+      >bitsFunHComp</a
+      ><a name="3302"
+      > </a
+      ><a name="3303" class="Symbol"
+      >:</a
+      ><a name="3304"
+      > </a
+      ><a name="3305" href="Composition.Horizontal.html#2212" class="Function"
+      >HComposable</a
+      ><a name="3316"
+      > </a
+      ><a name="3317" href="Data.Bits.html#602" class="Function Operator"
+      >_&#8594;&#7495;_</a
+      ><a name="3321"
+      >
+</a
+      ><a name="3322" href="Composition.Horizontal.html#3290" class="Function"
+      >bitsFunHComp</a
+      ><a name="3334"
+      > </a
+      ><a name="3335" class="Symbol"
+      >=</a
+      ><a name="3336"
+      > </a
+      ><a name="3337" href="Composition.Horizontal.html#2782" class="Function"
+      >ixFunHComp</a
+      ><a name="3347"
+      > </a
+      ><a name="3348" href="Data.Bits.html#572" class="Function"
+      >Bits</a
+      ><a name="3352"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

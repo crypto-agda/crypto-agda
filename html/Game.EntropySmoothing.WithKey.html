@@ -1,0 +1,672 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Game.EntropySmoothing.WithKey</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Symbol"
+      >{-#</a
+      ><a name="4"
+      > </a
+      ><a name="5" class="Keyword"
+      >OPTIONS</a
+      ><a name="12"
+      > --without-K </a
+      ><a name="25" class="Symbol"
+      >#-}</a
+      ><a name="28"
+      >
+</a
+      ><a name="29" class="Keyword"
+      >open</a
+      ><a name="33"
+      > </a
+      ><a name="34" class="Keyword"
+      >import</a
+      ><a name="40"
+      > </a
+      ><a name="41" href="Type.html#1" class="Module"
+      >Type</a
+      ><a name="45"
+      >
+</a
+      ><a name="46" class="Keyword"
+      >open</a
+      ><a name="50"
+      > </a
+      ><a name="51" class="Keyword"
+      >import</a
+      ><a name="57"
+      > </a
+      ><a name="58" href="Data.Two.html#1" class="Module"
+      >Data.Two</a
+      ><a name="66"
+      >
+</a
+      ><a name="67" class="Keyword"
+      >open</a
+      ><a name="71"
+      > </a
+      ><a name="72" class="Keyword"
+      >import</a
+      ><a name="78"
+      > </a
+      ><a name="79" href="Data.Product.html#1" class="Module"
+      >Data.Product</a
+      ><a name="91"
+      >
+
+</a
+      ><a name="93" class="Keyword"
+      >module</a
+      ><a name="99"
+      > </a
+      ><a name="100" href="Game.EntropySmoothing.WithKey.html#1" class="Module"
+      >Game.EntropySmoothing.WithKey</a
+      ><a name="129"
+      >
+  </a
+      ><a name="132" class="Symbol"
+      >(</a
+      ><a name="133" href="Game.EntropySmoothing.WithKey.html#133" class="Bound"
+      >M</a
+      ><a name="134"
+      >    </a
+      ><a name="138" class="Symbol"
+      >:</a
+      ><a name="139"
+      > </a
+      ><a name="140" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="141" class="Symbol"
+      >)</a
+      ><a name="142"
+      >
+  </a
+      ><a name="145" class="Symbol"
+      >(</a
+      ><a name="146" href="Game.EntropySmoothing.WithKey.html#146" class="Bound"
+      >Key</a
+      ><a name="149"
+      >  </a
+      ><a name="151" class="Symbol"
+      >:</a
+      ><a name="152"
+      > </a
+      ><a name="153" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="154" class="Symbol"
+      >)</a
+      ><a name="155"
+      >
+  </a
+      ><a name="158" class="Symbol"
+      >(</a
+      ><a name="159" href="Game.EntropySmoothing.WithKey.html#159" class="Bound"
+      >Hash</a
+      ><a name="163"
+      > </a
+      ><a name="164" class="Symbol"
+      >:</a
+      ><a name="165"
+      > </a
+      ><a name="166" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="167" class="Symbol"
+      >)</a
+      ><a name="168"
+      >
+  </a
+      ><a name="171" class="Symbol"
+      >(</a
+      ><a name="172" href="Game.EntropySmoothing.WithKey.html#172" class="Bound"
+      >&#8459;</a
+      ><a name="173"
+      >   </a
+      ><a name="176" class="Symbol"
+      >:</a
+      ><a name="177"
+      > </a
+      ><a name="178" href="Game.EntropySmoothing.WithKey.html#146" class="Bound"
+      >Key</a
+      ><a name="181"
+      > </a
+      ><a name="182" class="Symbol"
+      >&#8594;</a
+      ><a name="183"
+      > </a
+      ><a name="184" href="Game.EntropySmoothing.WithKey.html#133" class="Bound"
+      >M</a
+      ><a name="185"
+      > </a
+      ><a name="186" class="Symbol"
+      >&#8594;</a
+      ><a name="187"
+      > </a
+      ><a name="188" href="Game.EntropySmoothing.WithKey.html#159" class="Bound"
+      >Hash</a
+      ><a name="192" class="Symbol"
+      >)</a
+      ><a name="193"
+      > </a
+      ><a name="194" class="Comment"
+      >-- Hashing function</a
+      ><a name="213"
+      >
+  </a
+      ><a name="216" class="Symbol"
+      >(</a
+      ><a name="217" href="Game.EntropySmoothing.WithKey.html#217" class="Bound"
+      >R&#8336;</a
+      ><a name="219"
+      >   </a
+      ><a name="222" class="Symbol"
+      >:</a
+      ><a name="223"
+      > </a
+      ><a name="224" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="225" class="Symbol"
+      >)</a
+      ><a name="226"
+      >              </a
+      ><a name="240" class="Comment"
+      >-- Adversary randomness</a
+      ><a name="263"
+      >
+  </a
+      ><a name="266" class="Keyword"
+      >where</a
+      ><a name="271"
+      >
+
+</a
+      ><a name="273" class="Comment"
+      >-- Entropy smoothing adversary</a
+      ><a name="303"
+      >
+</a
+      ><a name="304" href="Game.EntropySmoothing.WithKey.html#304" class="Function"
+      >Adversary</a
+      ><a name="313"
+      > </a
+      ><a name="314" class="Symbol"
+      >:</a
+      ><a name="315"
+      > </a
+      ><a name="316" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="317"
+      >
+</a
+      ><a name="318" href="Game.EntropySmoothing.WithKey.html#304" class="Function"
+      >Adversary</a
+      ><a name="327"
+      > </a
+      ><a name="328" class="Symbol"
+      >=</a
+      ><a name="329"
+      > </a
+      ><a name="330" href="Game.EntropySmoothing.WithKey.html#217" class="Bound"
+      >R&#8336;</a
+      ><a name="332"
+      > </a
+      ><a name="333" class="Symbol"
+      >&#8594;</a
+      ><a name="334"
+      > </a
+      ><a name="335" href="Game.EntropySmoothing.WithKey.html#146" class="Bound"
+      >Key</a
+      ><a name="338"
+      > </a
+      ><a name="339" class="Symbol"
+      >&#8594;</a
+      ><a name="340"
+      > </a
+      ><a name="341" href="Game.EntropySmoothing.WithKey.html#159" class="Bound"
+      >Hash</a
+      ><a name="345"
+      > </a
+      ><a name="346" class="Symbol"
+      >&#8594;</a
+      ><a name="347"
+      > </a
+      ><a name="348" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="349"
+      >
+
+</a
+      ><a name="351" class="Comment"
+      >-- The randomness supply needed for the entropy</a
+      ><a name="398"
+      >
+</a
+      ><a name="399" class="Comment"
+      >-- smoothing games</a
+      ><a name="417"
+      >
+</a
+      ><a name="418" href="Game.EntropySmoothing.WithKey.html#418" class="Function"
+      >R</a
+      ><a name="419"
+      > </a
+      ><a name="420" class="Symbol"
+      >:</a
+      ><a name="421"
+      > </a
+      ><a name="422" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="423"
+      >
+</a
+      ><a name="424" href="Game.EntropySmoothing.WithKey.html#418" class="Function"
+      >R</a
+      ><a name="425"
+      > </a
+      ><a name="426" class="Symbol"
+      >=</a
+      ><a name="427"
+      > </a
+      ><a name="428" href="Game.EntropySmoothing.WithKey.html#146" class="Bound"
+      >Key</a
+      ><a name="431"
+      > </a
+      ><a name="432" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="433"
+      > </a
+      ><a name="434" href="Game.EntropySmoothing.WithKey.html#133" class="Bound"
+      >M</a
+      ><a name="435"
+      > </a
+      ><a name="436" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="437"
+      > </a
+      ><a name="438" href="Game.EntropySmoothing.WithKey.html#159" class="Bound"
+      >Hash</a
+      ><a name="442"
+      > </a
+      ><a name="443" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="444"
+      > </a
+      ><a name="445" href="Game.EntropySmoothing.WithKey.html#217" class="Bound"
+      >R&#8336;</a
+      ><a name="447"
+      >
+
+</a
+      ><a name="449" class="Comment"
+      >-- Entropy smoothing game:</a
+      ><a name="475"
+      >
+</a
+      ><a name="476" class="Comment"
+      >--   * input: adversary and randomness supply</a
+      ><a name="521"
+      >
+</a
+      ><a name="522" class="Comment"
+      >--   * output b: adversary claims we are in game EXP b</a
+      ><a name="576"
+      >
+</a
+      ><a name="577" href="Game.EntropySmoothing.WithKey.html#577" class="Function"
+      >Experiment</a
+      ><a name="587"
+      > </a
+      ><a name="588" class="Symbol"
+      >:</a
+      ><a name="589"
+      > </a
+      ><a name="590" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="591"
+      >
+</a
+      ><a name="592" href="Game.EntropySmoothing.WithKey.html#577" class="Function"
+      >Experiment</a
+      ><a name="602"
+      > </a
+      ><a name="603" class="Symbol"
+      >=</a
+      ><a name="604"
+      > </a
+      ><a name="605" href="Game.EntropySmoothing.WithKey.html#304" class="Function"
+      >Adversary</a
+      ><a name="614"
+      > </a
+      ><a name="615" class="Symbol"
+      >&#8594;</a
+      ><a name="616"
+      > </a
+      ><a name="617" href="Game.EntropySmoothing.WithKey.html#418" class="Function"
+      >R</a
+      ><a name="618"
+      > </a
+      ><a name="619" class="Symbol"
+      >&#8594;</a
+      ><a name="620"
+      > </a
+      ><a name="621" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="622"
+      >
+
+</a
+      ><a name="624" class="Comment"
+      >-- In this game we always use &#8459; on a random message</a
+      ><a name="675"
+      >
+</a
+      ><a name="676" href="Game.EntropySmoothing.WithKey.html#676" class="Function"
+      >EXP&#8320;</a
+      ><a name="680"
+      > </a
+      ><a name="681" class="Symbol"
+      >:</a
+      ><a name="682"
+      > </a
+      ><a name="683" href="Game.EntropySmoothing.WithKey.html#577" class="Function"
+      >Experiment</a
+      ><a name="693"
+      >
+</a
+      ><a name="694" href="Game.EntropySmoothing.WithKey.html#676" class="Function"
+      >EXP&#8320;</a
+      ><a name="698"
+      > </a
+      ><a name="699" href="Game.EntropySmoothing.WithKey.html#699" class="Bound"
+      >A</a
+      ><a name="700"
+      > </a
+      ><a name="701" class="Symbol"
+      >(</a
+      ><a name="702" href="Game.EntropySmoothing.WithKey.html#702" class="Bound"
+      >k</a
+      ><a name="703"
+      > </a
+      ><a name="704" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="705"
+      > </a
+      ><a name="706" href="Game.EntropySmoothing.WithKey.html#706" class="Bound"
+      >m</a
+      ><a name="707"
+      > </a
+      ><a name="708" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="709"
+      > </a
+      ><a name="710" class="Symbol"
+      >_</a
+      ><a name="711"
+      > </a
+      ><a name="712" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="713"
+      > </a
+      ><a name="714" href="Game.EntropySmoothing.WithKey.html#714" class="Bound"
+      >r&#8336;</a
+      ><a name="716" class="Symbol"
+      >)</a
+      ><a name="717"
+      > </a
+      ><a name="718" class="Symbol"
+      >=</a
+      ><a name="719"
+      > </a
+      ><a name="720" href="Game.EntropySmoothing.WithKey.html#699" class="Bound"
+      >A</a
+      ><a name="721"
+      > </a
+      ><a name="722" href="Game.EntropySmoothing.WithKey.html#714" class="Bound"
+      >r&#8336;</a
+      ><a name="724"
+      > </a
+      ><a name="725" href="Game.EntropySmoothing.WithKey.html#702" class="Bound"
+      >k</a
+      ><a name="726"
+      > </a
+      ><a name="727" class="Symbol"
+      >(</a
+      ><a name="728" href="Game.EntropySmoothing.WithKey.html#172" class="Bound"
+      >&#8459;</a
+      ><a name="729"
+      > </a
+      ><a name="730" href="Game.EntropySmoothing.WithKey.html#702" class="Bound"
+      >k</a
+      ><a name="731"
+      > </a
+      ><a name="732" href="Game.EntropySmoothing.WithKey.html#706" class="Bound"
+      >m</a
+      ><a name="733" class="Symbol"
+      >)</a
+      ><a name="734"
+      >
+
+</a
+      ><a name="736" class="Comment"
+      >-- In this game we just retrun a random Hash value</a
+      ><a name="786"
+      >
+</a
+      ><a name="787" href="Game.EntropySmoothing.WithKey.html#787" class="Function"
+      >EXP&#8321;</a
+      ><a name="791"
+      > </a
+      ><a name="792" class="Symbol"
+      >:</a
+      ><a name="793"
+      > </a
+      ><a name="794" href="Game.EntropySmoothing.WithKey.html#577" class="Function"
+      >Experiment</a
+      ><a name="804"
+      >
+</a
+      ><a name="805" href="Game.EntropySmoothing.WithKey.html#787" class="Function"
+      >EXP&#8321;</a
+      ><a name="809"
+      > </a
+      ><a name="810" href="Game.EntropySmoothing.WithKey.html#810" class="Bound"
+      >A</a
+      ><a name="811"
+      > </a
+      ><a name="812" class="Symbol"
+      >(</a
+      ><a name="813" href="Game.EntropySmoothing.WithKey.html#813" class="Bound"
+      >k</a
+      ><a name="814"
+      > </a
+      ><a name="815" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="816"
+      > </a
+      ><a name="817" class="Symbol"
+      >_</a
+      ><a name="818"
+      > </a
+      ><a name="819" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="820"
+      > </a
+      ><a name="821" href="Game.EntropySmoothing.WithKey.html#821" class="Bound"
+      >h</a
+      ><a name="822"
+      > </a
+      ><a name="823" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="824"
+      > </a
+      ><a name="825" href="Game.EntropySmoothing.WithKey.html#825" class="Bound"
+      >r&#8336;</a
+      ><a name="827" class="Symbol"
+      >)</a
+      ><a name="828"
+      > </a
+      ><a name="829" class="Symbol"
+      >=</a
+      ><a name="830"
+      > </a
+      ><a name="831" href="Game.EntropySmoothing.WithKey.html#810" class="Bound"
+      >A</a
+      ><a name="832"
+      > </a
+      ><a name="833" href="Game.EntropySmoothing.WithKey.html#825" class="Bound"
+      >r&#8336;</a
+      ><a name="835"
+      > </a
+      ><a name="836" href="Game.EntropySmoothing.WithKey.html#813" class="Bound"
+      >k</a
+      ><a name="837"
+      > </a
+      ><a name="838" href="Game.EntropySmoothing.WithKey.html#821" class="Bound"
+      >h</a
+      ><a name="839"
+      >
+
+</a
+      ><a name="841" href="Game.EntropySmoothing.WithKey.html#841" class="Function"
+      >EXP</a
+      ><a name="844"
+      > </a
+      ><a name="845" class="Symbol"
+      >:</a
+      ><a name="846"
+      > </a
+      ><a name="847" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="848"
+      > </a
+      ><a name="849" class="Symbol"
+      >&#8594;</a
+      ><a name="850"
+      > </a
+      ><a name="851" href="Game.EntropySmoothing.WithKey.html#577" class="Function"
+      >Experiment</a
+      ><a name="861"
+      >
+</a
+      ><a name="862" href="Game.EntropySmoothing.WithKey.html#841" class="Function"
+      >EXP</a
+      ><a name="865"
+      > </a
+      ><a name="866" class="Symbol"
+      >=</a
+      ><a name="867"
+      > </a
+      ><a name="868" href="Data.Two.html#1897" class="Function"
+      >proj</a
+      ><a name="872"
+      > </a
+      ><a name="873" class="Symbol"
+      >(</a
+      ><a name="874" href="Game.EntropySmoothing.WithKey.html#676" class="Function"
+      >EXP&#8320;</a
+      ><a name="878"
+      > </a
+      ><a name="879" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="880"
+      > </a
+      ><a name="881" href="Game.EntropySmoothing.WithKey.html#787" class="Function"
+      >EXP&#8321;</a
+      ><a name="885" class="Symbol"
+      >)</a
+      ><a name="886"
+      >
+
+</a
+      ><a name="888" href="Game.EntropySmoothing.WithKey.html#888" class="Function"
+      >game</a
+      ><a name="892"
+      > </a
+      ><a name="893" class="Symbol"
+      >:</a
+      ><a name="894"
+      > </a
+      ><a name="895" href="Game.EntropySmoothing.WithKey.html#304" class="Function"
+      >Adversary</a
+      ><a name="904"
+      > </a
+      ><a name="905" class="Symbol"
+      >&#8594;</a
+      ><a name="906"
+      > </a
+      ><a name="907" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="908"
+      > </a
+      ><a name="909" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="910"
+      > </a
+      ><a name="911" href="Game.EntropySmoothing.WithKey.html#418" class="Function"
+      >R</a
+      ><a name="912"
+      > </a
+      ><a name="913" class="Symbol"
+      >&#8594;</a
+      ><a name="914"
+      > </a
+      ><a name="915" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="916"
+      >
+</a
+      ><a name="917" href="Game.EntropySmoothing.WithKey.html#888" class="Function"
+      >game</a
+      ><a name="921"
+      > </a
+      ><a name="922" href="Game.EntropySmoothing.WithKey.html#922" class="Bound"
+      >A</a
+      ><a name="923"
+      > </a
+      ><a name="924" class="Symbol"
+      >(</a
+      ><a name="925" href="Game.EntropySmoothing.WithKey.html#925" class="Bound"
+      >b</a
+      ><a name="926"
+      > </a
+      ><a name="927" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="928"
+      > </a
+      ><a name="929" href="Game.EntropySmoothing.WithKey.html#929" class="Bound"
+      >r</a
+      ><a name="930" class="Symbol"
+      >)</a
+      ><a name="931"
+      > </a
+      ><a name="932" class="Symbol"
+      >=</a
+      ><a name="933"
+      > </a
+      ><a name="934" href="Game.EntropySmoothing.WithKey.html#841" class="Function"
+      >EXP</a
+      ><a name="937"
+      > </a
+      ><a name="938" href="Game.EntropySmoothing.WithKey.html#925" class="Bound"
+      >b</a
+      ><a name="939"
+      > </a
+      ><a name="940" href="Game.EntropySmoothing.WithKey.html#922" class="Bound"
+      >A</a
+      ><a name="941"
+      > </a
+      ><a name="942" href="Game.EntropySmoothing.WithKey.html#929" class="Bound"
+      >r</a
+      ><a name="943"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

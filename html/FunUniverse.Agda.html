@@ -1,0 +1,1211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >FunUniverse.Agda</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Symbol"
+      >{-#</a
+      ><a name="4"
+      > </a
+      ><a name="5" class="Keyword"
+      >OPTIONS</a
+      ><a name="12"
+      > --without-K </a
+      ><a name="25" class="Symbol"
+      >#-}</a
+      ><a name="28"
+      >
+</a
+      ><a name="29" class="Keyword"
+      >module</a
+      ><a name="35"
+      > </a
+      ><a name="36" href="FunUniverse.Agda.html#1" class="Module"
+      >FunUniverse.Agda</a
+      ><a name="52"
+      > </a
+      ><a name="53" class="Keyword"
+      >where</a
+      ><a name="58"
+      >
+
+</a
+      ><a name="60" class="Keyword"
+      >open</a
+      ><a name="64"
+      > </a
+      ><a name="65" class="Keyword"
+      >import</a
+      ><a name="71"
+      > </a
+      ><a name="72" href="Type.html#1" class="Module"
+      >Type</a
+      ><a name="76"
+      >
+</a
+      ><a name="77" class="Keyword"
+      >open</a
+      ><a name="81"
+      > </a
+      ><a name="82" class="Keyword"
+      >import</a
+      ><a name="88"
+      > </a
+      ><a name="89" href="Data.Two.html#1" class="Module"
+      >Data.Two</a
+      ><a name="97"
+      > </a
+      ><a name="98" class="Keyword"
+      >using</a
+      ><a name="103"
+      > </a
+      ><a name="104" class="Symbol"
+      >(</a
+      ><a name="105"
+      >proj&#8242;</a
+      ><a name="110" class="Symbol"
+      >)</a
+      ><a name="111"
+      >
+</a
+      ><a name="112" class="Keyword"
+      >import</a
+      ><a name="118"
+      > </a
+      ><a name="119" href="Data.Vec.NP.html#1" class="Module"
+      >Data.Vec.NP</a
+      ><a name="130"
+      > </a
+      ><a name="131" class="Symbol"
+      >as</a
+      ><a name="133"
+      > </a
+      ><a name="134" class="Module"
+      >V</a
+      ><a name="135"
+      >
+</a
+      ><a name="136" class="Keyword"
+      >import</a
+      ><a name="142"
+      > </a
+      ><a name="143" href="Function.html#1" class="Module"
+      >Function</a
+      ><a name="151"
+      > </a
+      ><a name="152" class="Symbol"
+      >as</a
+      ><a name="154"
+      > </a
+      ><a name="155" class="Module"
+      >F</a
+      ><a name="156"
+      >
+</a
+      ><a name="157" class="Keyword"
+      >import</a
+      ><a name="163"
+      > </a
+      ><a name="164" href="Data.Product.html#1" class="Module"
+      >Data.Product</a
+      ><a name="176"
+      > </a
+      ><a name="177" class="Symbol"
+      >as</a
+      ><a name="179"
+      > </a
+      ><a name="180" class="Module"
+      >&#215;</a
+      ><a name="181"
+      >
+</a
+      ><a name="182" class="Keyword"
+      >open</a
+      ><a name="186"
+      > </a
+      ><a name="187" href="Function.html#1" class="Module"
+      >F</a
+      ><a name="188"
+      > </a
+      ><a name="189" class="Keyword"
+      >using</a
+      ><a name="194"
+      > </a
+      ><a name="195" class="Symbol"
+      >(</a
+      ><a name="196"
+      >const</a
+      ><a name="201" class="Symbol"
+      >;</a
+      ><a name="202"
+      > _&#8728;&#8242;_</a
+      ><a name="207" class="Symbol"
+      >)</a
+      ><a name="208"
+      >
+</a
+      ><a name="209" class="Keyword"
+      >open</a
+      ><a name="213"
+      > </a
+      ><a name="214" href="Data.Vec.NP.html#1" class="Module"
+      >V</a
+      ><a name="215"
+      > </a
+      ><a name="216" class="Keyword"
+      >using</a
+      ><a name="221"
+      > </a
+      ><a name="222" class="Symbol"
+      >(</a
+      ><a name="223"
+      >[]</a
+      ><a name="225" class="Symbol"
+      >;</a
+      ><a name="226"
+      > _&#8759;_</a
+      ><a name="230" class="Symbol"
+      >)</a
+      ><a name="231"
+      >
+</a
+      ><a name="232" class="Keyword"
+      >open</a
+      ><a name="236"
+      > </a
+      ><a name="237" href="Data.Product.html#1" class="Module"
+      >&#215;</a
+      ><a name="238"
+      > </a
+      ><a name="239" class="Keyword"
+      >using</a
+      ><a name="244"
+      > </a
+      ><a name="245" class="Symbol"
+      >(</a
+      ><a name="246"
+      >_&#215;_</a
+      ><a name="249" class="Symbol"
+      >;</a
+      ><a name="250"
+      > _,_</a
+      ><a name="254" class="Symbol"
+      >;</a
+      ><a name="255"
+      > proj&#8321;</a
+      ><a name="261" class="Symbol"
+      >;</a
+      ><a name="262"
+      > proj&#8322;</a
+      ><a name="268" class="Symbol"
+      >;</a
+      ><a name="269"
+      > uncurry</a
+      ><a name="277" class="Symbol"
+      >)</a
+      ><a name="278"
+      >
+
+</a
+      ><a name="280" class="Keyword"
+      >open</a
+      ><a name="284"
+      > </a
+      ><a name="285" class="Keyword"
+      >import</a
+      ><a name="291"
+      > </a
+      ><a name="292" href="Data.One.html#1" class="Module"
+      >Data.One</a
+      ><a name="300"
+      > </a
+      ><a name="301" class="Keyword"
+      >using</a
+      ><a name="306"
+      > </a
+      ><a name="307" class="Symbol"
+      >(</a
+      ><a name="308"
+      >&#120793;</a
+      ><a name="309" class="Symbol"
+      >)</a
+      ><a name="310"
+      >
+</a
+      ><a name="311" class="Keyword"
+      >open</a
+      ><a name="315"
+      > </a
+      ><a name="316" class="Keyword"
+      >import</a
+      ><a name="322"
+      > </a
+      ><a name="323" href="Data.Two.html#1" class="Module"
+      >Data.Two</a
+      ><a name="331"
+      > </a
+      ><a name="332" class="Keyword"
+      >using</a
+      ><a name="337"
+      > </a
+      ><a name="338" class="Symbol"
+      >(</a
+      ><a name="339"
+      >&#120794;</a
+      ><a name="340" class="Symbol"
+      >)</a
+      ><a name="341"
+      >
+</a
+      ><a name="342" class="Keyword"
+      >open</a
+      ><a name="346"
+      > </a
+      ><a name="347" class="Keyword"
+      >import</a
+      ><a name="353"
+      > </a
+      ><a name="354" href="Data.Vec.html#1" class="Module"
+      >Data.Vec</a
+      ><a name="362"
+      > </a
+      ><a name="363" class="Keyword"
+      >using</a
+      ><a name="368"
+      > </a
+      ><a name="369" class="Symbol"
+      >(</a
+      ><a name="370"
+      >Vec</a
+      ><a name="373" class="Symbol"
+      >)</a
+      ><a name="374"
+      >
+</a
+      ><a name="375" class="Keyword"
+      >open</a
+      ><a name="379"
+      > </a
+      ><a name="380" class="Keyword"
+      >import</a
+      ><a name="386"
+      > </a
+      ><a name="387" href="Data.Bit.html#1" class="Module"
+      >Data.Bit</a
+      ><a name="395"
+      > </a
+      ><a name="396" class="Keyword"
+      >using</a
+      ><a name="401"
+      > </a
+      ><a name="402" class="Symbol"
+      >(</a
+      ><a name="403"
+      >0b</a
+      ><a name="405" class="Symbol"
+      >;</a
+      ><a name="406"
+      > 1b</a
+      ><a name="409" class="Symbol"
+      >)</a
+      ><a name="410"
+      >
+
+</a
+      ><a name="412" class="Keyword"
+      >open</a
+      ><a name="416"
+      > </a
+      ><a name="417" class="Keyword"
+      >import</a
+      ><a name="423"
+      > </a
+      ><a name="424" href="FunUniverse.Data.html#1" class="Module"
+      >FunUniverse.Data</a
+      ><a name="440"
+      >
+</a
+      ><a name="441" class="Keyword"
+      >open</a
+      ><a name="445"
+      > </a
+      ><a name="446" class="Keyword"
+      >import</a
+      ><a name="452"
+      > </a
+      ><a name="453" href="FunUniverse.Category.html#1" class="Module"
+      >FunUniverse.Category</a
+      ><a name="473"
+      >
+</a
+      ><a name="474" class="Keyword"
+      >open</a
+      ><a name="478"
+      > </a
+      ><a name="479" class="Keyword"
+      >import</a
+      ><a name="485"
+      > </a
+      ><a name="486" href="FunUniverse.Rewiring.Linear.html#1" class="Module"
+      >FunUniverse.Rewiring.Linear</a
+      ><a name="513"
+      >
+</a
+      ><a name="514" class="Keyword"
+      >open</a
+      ><a name="518"
+      > </a
+      ><a name="519" class="Keyword"
+      >import</a
+      ><a name="525"
+      > </a
+      ><a name="526" href="FunUniverse.Core.html#1" class="Module"
+      >FunUniverse.Core</a
+      ><a name="542"
+      >
+
+</a
+      ><a name="544" href="FunUniverse.Agda.html#544" class="Function"
+      >-&#8594;-</a
+      ><a name="547"
+      > </a
+      ><a name="548" class="Symbol"
+      >:</a
+      ><a name="549"
+      > </a
+      ><a name="550" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="551"
+      > </a
+      ><a name="552" class="Symbol"
+      >&#8594;</a
+      ><a name="553"
+      > </a
+      ><a name="554" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="555"
+      > </a
+      ><a name="556" class="Symbol"
+      >&#8594;</a
+      ><a name="557"
+      > </a
+      ><a name="558" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="559"
+      >
+</a
+      ><a name="560" href="FunUniverse.Agda.html#544" class="Function"
+      >-&#8594;-</a
+      ><a name="563"
+      > </a
+      ><a name="564" href="FunUniverse.Agda.html#564" class="Bound"
+      >A</a
+      ><a name="565"
+      > </a
+      ><a name="566" href="FunUniverse.Agda.html#566" class="Bound"
+      >B</a
+      ><a name="567"
+      > </a
+      ><a name="568" class="Symbol"
+      >=</a
+      ><a name="569"
+      > </a
+      ><a name="570" href="FunUniverse.Agda.html#564" class="Bound"
+      >A</a
+      ><a name="571"
+      > </a
+      ><a name="572" class="Symbol"
+      >&#8594;</a
+      ><a name="573"
+      > </a
+      ><a name="574" href="FunUniverse.Agda.html#566" class="Bound"
+      >B</a
+      ><a name="575"
+      >
+
+</a
+      ><a name="577" href="FunUniverse.Agda.html#577" class="Function"
+      >funCat</a
+      ><a name="583"
+      > </a
+      ><a name="584" class="Symbol"
+      >:</a
+      ><a name="585"
+      > </a
+      ><a name="586" href="FunUniverse.Category.html#556" class="Record"
+      >Category</a
+      ><a name="594"
+      > </a
+      ><a name="595" href="FunUniverse.Agda.html#544" class="Function"
+      >-&#8594;-</a
+      ><a name="598"
+      >
+</a
+      ><a name="599" href="FunUniverse.Agda.html#577" class="Function"
+      >funCat</a
+      ><a name="605"
+      > </a
+      ><a name="606" class="Symbol"
+      >=</a
+      ><a name="607"
+      > </a
+      ><a name="608" href="Function.html#1006" class="Function"
+      >F.id</a
+      ><a name="612"
+      > </a
+      ><a name="613" href="FunUniverse.Category.html#597" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="614"
+      > </a
+      ><a name="615" href="Function.html#898" class="Function Operator"
+      >_&#8728;&#8242;_</a
+      ><a name="619"
+      >
+
+</a
+      ><a name="621" class="Keyword"
+      >module</a
+      ><a name="627"
+      > </a
+      ><a name="628" href="FunUniverse.Agda.html#628" class="Module"
+      >Abstract&#120794;</a
+      ><a name="637"
+      > </a
+      ><a name="638" class="Symbol"
+      >(</a
+      ><a name="639" href="FunUniverse.Agda.html#639" class="Bound"
+      >some&#120794;</a
+      ><a name="644"
+      > </a
+      ><a name="645" class="Symbol"
+      >:</a
+      ><a name="646"
+      > </a
+      ><a name="647" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="648" class="Symbol"
+      >)</a
+      ><a name="649"
+      > </a
+      ><a name="650" class="Keyword"
+      >where</a
+      ><a name="655"
+      >
+
+    </a
+      ><a name="661" class="Keyword"
+      >private</a
+      ><a name="668"
+      >
+        </a
+      ><a name="677" href="FunUniverse.Agda.html#677" class="Function"
+      >&#9733;-U'</a
+      ><a name="681"
+      > </a
+      ><a name="682" class="Symbol"
+      >:</a
+      ><a name="683"
+      > </a
+      ><a name="684" href="FunUniverse.Data.html#535" class="Record"
+      >Universe</a
+      ><a name="692"
+      > </a
+      ><a name="693" href="Type.html#107" class="Function"
+      >&#9733;&#8320;</a
+      ><a name="695"
+      >
+        </a
+      ><a name="704" href="FunUniverse.Agda.html#677" class="Function"
+      >&#9733;-U'</a
+      ><a name="708"
+      > </a
+      ><a name="709" class="Symbol"
+      >=</a
+      ><a name="710"
+      > </a
+      ><a name="711" href="FunUniverse.Data.html#584" class="InductiveConstructor"
+      >mk</a
+      ><a name="713"
+      > </a
+      ><a name="714" href="Data.Unit.html#653" class="Record"
+      >&#120793;</a
+      ><a name="715"
+      > </a
+      ><a name="716" href="FunUniverse.Agda.html#639" class="Bound"
+      >some&#120794;</a
+      ><a name="721"
+      > </a
+      ><a name="722" href="Data.Product.html#1055" class="Function Operator"
+      >_&#215;_</a
+      ><a name="725"
+      > </a
+      ><a name="726" href="Data.Vec.html#604" class="Datatype"
+      >Vec</a
+      ><a name="729"
+      >
+
+    </a
+      ><a name="735" href="FunUniverse.Agda.html#735" class="Function"
+      >agdaFunU</a
+      ><a name="743"
+      > </a
+      ><a name="744" class="Symbol"
+      >:</a
+      ><a name="745"
+      > </a
+      ><a name="746" href="FunUniverse.Types.html#203" class="Record"
+      >FunUniverse</a
+      ><a name="757"
+      > </a
+      ><a name="758" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="759"
+      >
+    </a
+      ><a name="764" href="FunUniverse.Agda.html#735" class="Function"
+      >agdaFunU</a
+      ><a name="772"
+      > </a
+      ><a name="773" class="Symbol"
+      >=</a
+      ><a name="774"
+      > </a
+      ><a name="775" href="FunUniverse.Agda.html#677" class="Function"
+      >&#9733;-U'</a
+      ><a name="779"
+      > </a
+      ><a name="780" href="FunUniverse.Types.html#259" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="781"
+      > </a
+      ><a name="782" href="FunUniverse.Agda.html#544" class="Function"
+      >-&#8594;-</a
+      ><a name="785"
+      >
+
+    </a
+      ><a name="791" class="Keyword"
+      >module</a
+      ><a name="797"
+      > </a
+      ><a name="798" href="FunUniverse.Agda.html#798" class="Module"
+      >AgdaFunUniverse</a
+      ><a name="813"
+      > </a
+      ><a name="814" class="Symbol"
+      >=</a
+      ><a name="815"
+      > </a
+      ><a name="816" href="FunUniverse.Types.html#203" class="Module"
+      >FunUniverse</a
+      ><a name="827"
+      > </a
+      ><a name="828" href="FunUniverse.Agda.html#735" class="Function"
+      >agdaFunU</a
+      ><a name="836"
+      >
+ 
+    </a
+      ><a name="843" href="FunUniverse.Agda.html#843" class="Function"
+      >funLin</a
+      ><a name="849"
+      > </a
+      ><a name="850" class="Symbol"
+      >:</a
+      ><a name="851"
+      > </a
+      ><a name="852" href="FunUniverse.Rewiring.Linear.html#377" class="Record"
+      >LinRewiring</a
+      ><a name="863"
+      > </a
+      ><a name="864" href="FunUniverse.Agda.html#735" class="Function"
+      >agdaFunU</a
+      ><a name="872"
+      >
+    </a
+      ><a name="877" href="FunUniverse.Agda.html#843" class="Function"
+      >funLin</a
+      ><a name="883"
+      > </a
+      ><a name="884" class="Symbol"
+      >=</a
+      ><a name="885"
+      > </a
+      ><a name="886" href="FunUniverse.Rewiring.Linear.html#454" class="InductiveConstructor"
+      >mk</a
+      ><a name="888"
+      > </a
+      ><a name="889" href="FunUniverse.Agda.html#577" class="Function"
+      >funCat</a
+      ><a name="895"
+      >
+                </a
+      ><a name="912" class="Symbol"
+      >(&#955;</a
+      ><a name="914"
+      > </a
+      ><a name="915" href="FunUniverse.Agda.html#915" class="Bound"
+      >f</a
+      ><a name="916"
+      > </a
+      ><a name="917" class="Symbol"
+      >&#8594;</a
+      ><a name="918"
+      > </a
+      ><a name="919" href="Data.Product.html#1854" class="Function"
+      >&#215;.map</a
+      ><a name="924"
+      > </a
+      ><a name="925" href="FunUniverse.Agda.html#915" class="Bound"
+      >f</a
+      ><a name="926"
+      > </a
+      ><a name="927" href="Function.html#1006" class="Function"
+      >F.id</a
+      ><a name="931" class="Symbol"
+      >)</a
+      ><a name="932"
+      >
+                </a
+      ><a name="949" href="Data.Product.html#2302" class="Function"
+      >&#215;.swap</a
+      ><a name="955"
+      > </a
+      ><a name="956" class="Symbol"
+      >(&#955;</a
+      ><a name="958"
+      > </a
+      ><a name="959" class="Symbol"
+      >{((</a
+      ><a name="962" href="FunUniverse.Agda.html#962" class="Bound"
+      >x</a
+      ><a name="963"
+      > </a
+      ><a name="964" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="965"
+      > </a
+      ><a name="966" href="FunUniverse.Agda.html#966" class="Bound"
+      >y</a
+      ><a name="967" class="Symbol"
+      >)</a
+      ><a name="968"
+      > </a
+      ><a name="969" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="970"
+      > </a
+      ><a name="971" href="FunUniverse.Agda.html#971" class="Bound"
+      >z</a
+      ><a name="972" class="Symbol"
+      >)</a
+      ><a name="973"
+      > </a
+      ><a name="974" class="Symbol"
+      >&#8594;</a
+      ><a name="975"
+      > </a
+      ><a name="976" href="FunUniverse.Agda.html#962" class="Bound"
+      >x</a
+      ><a name="977"
+      > </a
+      ><a name="978" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="979"
+      > </a
+      ><a name="980" class="Symbol"
+      >(</a
+      ><a name="981" href="FunUniverse.Agda.html#966" class="Bound"
+      >y</a
+      ><a name="982"
+      > </a
+      ><a name="983" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="984"
+      > </a
+      ><a name="985" href="FunUniverse.Agda.html#971" class="Bound"
+      >z</a
+      ><a name="986" class="Symbol"
+      >)</a
+      ><a name="987"
+      > </a
+      ><a name="988" class="Symbol"
+      >})</a
+      ><a name="990"
+      > </a
+      ><a name="991" class="Symbol"
+      >(&#955;</a
+      ><a name="993"
+      > </a
+      ><a name="994" href="FunUniverse.Agda.html#994" class="Bound"
+      >x</a
+      ><a name="995"
+      > </a
+      ><a name="996" class="Symbol"
+      >&#8594;</a
+      ><a name="997"
+      > </a
+      ><a name="998" class="Symbol"
+      >_</a
+      ><a name="999"
+      > </a
+      ><a name="1000" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1001"
+      > </a
+      ><a name="1002" href="FunUniverse.Agda.html#994" class="Bound"
+      >x</a
+      ><a name="1003" class="Symbol"
+      >)</a
+      ><a name="1004"
+      > </a
+      ><a name="1005" href="Data.Product.html#539" class="Field"
+      >proj&#8322;</a
+      ><a name="1010"
+      >
+                </a
+      ><a name="1027" class="Symbol"
+      >(&#955;</a
+      ><a name="1029"
+      > </a
+      ><a name="1030" href="FunUniverse.Agda.html#1030" class="Bound"
+      >f</a
+      ><a name="1031"
+      > </a
+      ><a name="1032" href="FunUniverse.Agda.html#1032" class="Bound"
+      >g</a
+      ><a name="1033"
+      > </a
+      ><a name="1034" class="Symbol"
+      >&#8594;</a
+      ><a name="1035"
+      > </a
+      ><a name="1036" href="Data.Product.html#1854" class="Function"
+      >&#215;.map</a
+      ><a name="1041"
+      > </a
+      ><a name="1042" href="FunUniverse.Agda.html#1030" class="Bound"
+      >f</a
+      ><a name="1043"
+      > </a
+      ><a name="1044" href="FunUniverse.Agda.html#1032" class="Bound"
+      >g</a
+      ><a name="1045" class="Symbol"
+      >)</a
+      ><a name="1046"
+      > </a
+      ><a name="1047" class="Symbol"
+      >(&#955;</a
+      ><a name="1049"
+      > </a
+      ><a name="1050" href="FunUniverse.Agda.html#1050" class="Bound"
+      >f</a
+      ><a name="1051"
+      > </a
+      ><a name="1052" class="Symbol"
+      >&#8594;</a
+      ><a name="1053"
+      > </a
+      ><a name="1054" href="Data.Product.html#1854" class="Function"
+      >&#215;.map</a
+      ><a name="1059"
+      > </a
+      ><a name="1060" href="Function.html#1006" class="Function"
+      >F.id</a
+      ><a name="1064"
+      > </a
+      ><a name="1065" href="FunUniverse.Agda.html#1050" class="Bound"
+      >f</a
+      ><a name="1066" class="Symbol"
+      >)</a
+      ><a name="1067"
+      >
+                </a
+      ><a name="1084" class="Symbol"
+      >(</a
+      ><a name="1085" href="Function.html#1047" class="Function"
+      >F.const</a
+      ><a name="1092"
+      > </a
+      ><a name="1093" href="Data.Vec.html#644" class="InductiveConstructor"
+      >[]</a
+      ><a name="1095" class="Symbol"
+      >)</a
+      ><a name="1096"
+      > </a
+      ><a name="1097" class="Symbol"
+      >_</a
+      ><a name="1098"
+      > </a
+      ><a name="1099" class="Symbol"
+      >(</a
+      ><a name="1100" href="Data.Product.html#2824" class="Function"
+      >uncurry</a
+      ><a name="1107"
+      > </a
+      ><a name="1108" href="Data.Vec.html#663" class="InductiveConstructor Operator"
+      >_&#8759;_</a
+      ><a name="1111" class="Symbol"
+      >)</a
+      ><a name="1112"
+      > </a
+      ><a name="1113" href="Data.Vec.NP.html#5568" class="Function"
+      >V.uncons</a
+      ><a name="1121"
+      >
+
+    </a
+      ><a name="1127" href="FunUniverse.Agda.html#1127" class="Function"
+      >funRewiring</a
+      ><a name="1138"
+      > </a
+      ><a name="1139" class="Symbol"
+      >:</a
+      ><a name="1140"
+      > </a
+      ><a name="1141" href="FunUniverse.Core.html#2100" class="Record"
+      >Rewiring</a
+      ><a name="1149"
+      > </a
+      ><a name="1150" href="FunUniverse.Agda.html#735" class="Function"
+      >agdaFunU</a
+      ><a name="1158"
+      >
+    </a
+      ><a name="1163" href="FunUniverse.Agda.html#1127" class="Function"
+      >funRewiring</a
+      ><a name="1174"
+      > </a
+      ><a name="1175" class="Symbol"
+      >=</a
+      ><a name="1176"
+      > </a
+      ><a name="1177" href="FunUniverse.Core.html#2176" class="InductiveConstructor"
+      >mk</a
+      ><a name="1179"
+      > </a
+      ><a name="1180" href="FunUniverse.Agda.html#843" class="Function"
+      >funLin</a
+      ><a name="1186"
+      > </a
+      ><a name="1187" class="Symbol"
+      >_</a
+      ><a name="1188"
+      > </a
+      ><a name="1189" class="Symbol"
+      >(&#955;</a
+      ><a name="1191"
+      > </a
+      ><a name="1192" href="FunUniverse.Agda.html#1192" class="Bound"
+      >x</a
+      ><a name="1193"
+      > </a
+      ><a name="1194" class="Symbol"
+      >&#8594;</a
+      ><a name="1195"
+      > </a
+      ><a name="1196" href="FunUniverse.Agda.html#1192" class="Bound"
+      >x</a
+      ><a name="1197"
+      > </a
+      ><a name="1198" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1199"
+      > </a
+      ><a name="1200" href="FunUniverse.Agda.html#1192" class="Bound"
+      >x</a
+      ><a name="1201" class="Symbol"
+      >)</a
+      ><a name="1202"
+      > </a
+      ><a name="1203" class="Symbol"
+      >(</a
+      ><a name="1204" href="Function.html#1047" class="Function"
+      >F.const</a
+      ><a name="1211"
+      > </a
+      ><a name="1212" href="Data.Vec.html#644" class="InductiveConstructor"
+      >[]</a
+      ><a name="1214" class="Symbol"
+      >)</a
+      ><a name="1215"
+      > </a
+      ><a name="1216" href="Data.Product.html#1673" class="Function Operator"
+      >&#215;.&lt;_,_&gt;</a
+      ><a name="1223"
+      > </a
+      ><a name="1224" href="Data.Product.html#525" class="Field"
+      >proj&#8321;</a
+      ><a name="1229"
+      > </a
+      ><a name="1230" href="Data.Product.html#539" class="Field"
+      >proj&#8322;</a
+      ><a name="1235"
+      >
+                     </a
+      ><a name="1257" href="Data.Vec.NP.html#8950" class="Function"
+      >V.rewire</a
+      ><a name="1265"
+      > </a
+      ><a name="1266" href="Data.Vec.NP.html#9118" class="Function"
+      >V.rewireTbl</a
+      ><a name="1277"
+      >
+
+</a
+      ><a name="1279" class="Keyword"
+      >open</a
+      ><a name="1283"
+      > </a
+      ><a name="1284" href="FunUniverse.Agda.html#628" class="Module"
+      >Abstract&#120794;</a
+      ><a name="1293"
+      > </a
+      ><a name="1294" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="1295"
+      > </a
+      ><a name="1296" class="Keyword"
+      >public</a
+      ><a name="1302"
+      >
+
+</a
+      ><a name="1304" href="FunUniverse.Agda.html#1304" class="Function"
+      >funFork</a
+      ><a name="1311"
+      > </a
+      ><a name="1312" class="Symbol"
+      >:</a
+      ><a name="1313"
+      > </a
+      ><a name="1314" href="FunUniverse.Core.html#1138" class="Record"
+      >HasFork</a
+      ><a name="1321"
+      > </a
+      ><a name="1322" href="FunUniverse.Agda.html#735" class="Function"
+      >agdaFunU</a
+      ><a name="1330"
+      >
+</a
+      ><a name="1331" href="FunUniverse.Agda.html#1304" class="Function"
+      >funFork</a
+      ><a name="1338"
+      > </a
+      ><a name="1339" class="Symbol"
+      >=</a
+      ><a name="1340"
+      > </a
+      ><a name="1341" class="Symbol"
+      >(&#955;</a
+      ><a name="1343"
+      > </a
+      ><a name="1344" class="Symbol"
+      >{</a
+      ><a name="1345"
+      > </a
+      ><a name="1346" class="Symbol"
+      >(</a
+      ><a name="1347" href="FunUniverse.Agda.html#1347" class="Bound"
+      >b</a
+      ><a name="1348"
+      > </a
+      ><a name="1349" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1350"
+      > </a
+      ><a name="1351" href="FunUniverse.Agda.html#1351" class="Bound"
+      >xy</a
+      ><a name="1353" class="Symbol"
+      >)</a
+      ><a name="1354"
+      >    </a
+      ><a name="1358" class="Symbol"
+      >&#8594;</a
+      ><a name="1359"
+      > </a
+      ><a name="1360" href="Data.Two.html#2257" class="Function"
+      >proj&#8242;</a
+      ><a name="1365"
+      > </a
+      ><a name="1366" href="FunUniverse.Agda.html#1351" class="Bound"
+      >xy</a
+      ><a name="1368"
+      > </a
+      ><a name="1369" href="FunUniverse.Agda.html#1347" class="Bound"
+      >b</a
+      ><a name="1370"
+      > </a
+      ><a name="1371" class="Symbol"
+      >})</a
+      ><a name="1373"
+      >
+        </a
+      ><a name="1382" href="FunUniverse.Core.html#1213" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1383"
+      > </a
+      ><a name="1384" class="Symbol"
+      >(&#955;</a
+      ><a name="1386"
+      > </a
+      ><a name="1387" class="Symbol"
+      >{</a
+      ><a name="1388"
+      > </a
+      ><a name="1389" href="FunUniverse.Agda.html#1389" class="Bound"
+      >f</a
+      ><a name="1390"
+      > </a
+      ><a name="1391" href="FunUniverse.Agda.html#1391" class="Bound"
+      >g</a
+      ><a name="1392"
+      > </a
+      ><a name="1393" class="Symbol"
+      >(</a
+      ><a name="1394" href="FunUniverse.Agda.html#1394" class="Bound"
+      >b</a
+      ><a name="1395"
+      > </a
+      ><a name="1396" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1397"
+      > </a
+      ><a name="1398" href="FunUniverse.Agda.html#1398" class="Bound"
+      >x</a
+      ><a name="1399" class="Symbol"
+      >)</a
+      ><a name="1400"
+      > </a
+      ><a name="1401" class="Symbol"
+      >&#8594;</a
+      ><a name="1402"
+      > </a
+      ><a name="1403" href="Data.Two.html#2257" class="Function"
+      >proj&#8242;</a
+      ><a name="1408"
+      > </a
+      ><a name="1409" class="Symbol"
+      >(</a
+      ><a name="1410" href="FunUniverse.Agda.html#1389" class="Bound"
+      >f</a
+      ><a name="1411"
+      > </a
+      ><a name="1412" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1413"
+      > </a
+      ><a name="1414" href="FunUniverse.Agda.html#1391" class="Bound"
+      >g</a
+      ><a name="1415" class="Symbol"
+      >)</a
+      ><a name="1416"
+      > </a
+      ><a name="1417" href="FunUniverse.Agda.html#1394" class="Bound"
+      >b</a
+      ><a name="1418"
+      > </a
+      ><a name="1419" href="FunUniverse.Agda.html#1398" class="Bound"
+      >x</a
+      ><a name="1420"
+      > </a
+      ><a name="1421" class="Symbol"
+      >})</a
+      ><a name="1423"
+      >
+
+</a
+      ><a name="1425" href="FunUniverse.Agda.html#1425" class="Function"
+      >agdaFunOps</a
+      ><a name="1435"
+      > </a
+      ><a name="1436" class="Symbol"
+      >:</a
+      ><a name="1437"
+      > </a
+      ><a name="1438" href="FunUniverse.Core.html#3911" class="Record"
+      >FunOps</a
+      ><a name="1444"
+      > </a
+      ><a name="1445" href="FunUniverse.Agda.html#735" class="Function"
+      >agdaFunU</a
+      ><a name="1453"
+      >
+</a
+      ><a name="1454" href="FunUniverse.Agda.html#1425" class="Function"
+      >agdaFunOps</a
+      ><a name="1464"
+      > </a
+      ><a name="1465" class="Symbol"
+      >=</a
+      ><a name="1466"
+      > </a
+      ><a name="1467" href="FunUniverse.Core.html#3985" class="InductiveConstructor"
+      >mk</a
+      ><a name="1469"
+      > </a
+      ><a name="1470" href="FunUniverse.Agda.html#1127" class="Function"
+      >funRewiring</a
+      ><a name="1481"
+      > </a
+      ><a name="1482" href="FunUniverse.Agda.html#1304" class="Function"
+      >funFork</a
+      ><a name="1489"
+      > </a
+      ><a name="1490" class="Symbol"
+      >(</a
+      ><a name="1491" href="Function.html#1047" class="Function"
+      >F.const</a
+      ><a name="1498"
+      > </a
+      ><a name="1499" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0b</a
+      ><a name="1501" class="Symbol"
+      >)</a
+      ><a name="1502"
+      > </a
+      ><a name="1503" class="Symbol"
+      >(</a
+      ><a name="1504" href="Function.html#1047" class="Function"
+      >F.const</a
+      ><a name="1511"
+      > </a
+      ><a name="1512" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1b</a
+      ><a name="1514" class="Symbol"
+      >)</a
+      ><a name="1515"
+      >
+
+</a
+      ><a name="1517" class="Keyword"
+      >module</a
+      ><a name="1523"
+      > </a
+      ><a name="1524" href="FunUniverse.Agda.html#1524" class="Module"
+      >AgdaFunOps</a
+      ><a name="1534"
+      > </a
+      ><a name="1535" class="Symbol"
+      >=</a
+      ><a name="1536"
+      > </a
+      ><a name="1537" href="FunUniverse.Core.html#3911" class="Module"
+      >FunOps</a
+      ><a name="1543"
+      > </a
+      ><a name="1544" href="FunUniverse.Agda.html#1425" class="Function"
+      >agdaFunOps</a
+      ><a name="1554"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

@@ -1,0 +1,487 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Explore.BinTree</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Symbol"
+      >{-#</a
+      ><a name="4"
+      > </a
+      ><a name="5" class="Keyword"
+      >OPTIONS</a
+      ><a name="12"
+      > --without-K </a
+      ><a name="25" class="Symbol"
+      >#-}</a
+      ><a name="28"
+      >
+</a
+      ><a name="29" class="Keyword"
+      >module</a
+      ><a name="35"
+      > </a
+      ><a name="36" href="Explore.BinTree.html#1" class="Module"
+      >Explore.BinTree</a
+      ><a name="51"
+      > </a
+      ><a name="52" class="Keyword"
+      >where</a
+      ><a name="57"
+      >
+
+</a
+      ><a name="59" class="Keyword"
+      >open</a
+      ><a name="63"
+      > </a
+      ><a name="64" class="Keyword"
+      >import</a
+      ><a name="70"
+      > </a
+      ><a name="71" href="Data.Tree.Binary.html#1" class="Module"
+      >Data.Tree.Binary</a
+      ><a name="87"
+      >
+
+</a
+      ><a name="89" class="Keyword"
+      >open</a
+      ><a name="93"
+      > </a
+      ><a name="94" class="Keyword"
+      >import</a
+      ><a name="100"
+      > </a
+      ><a name="101" href="Explore.Core.html#1" class="Module"
+      >Explore.Core</a
+      ><a name="113"
+      >
+</a
+      ><a name="114" class="Keyword"
+      >open</a
+      ><a name="118"
+      > </a
+      ><a name="119" class="Keyword"
+      >import</a
+      ><a name="125"
+      > </a
+      ><a name="126" href="Explore.Properties.html#1" class="Module"
+      >Explore.Properties</a
+      ><a name="144"
+      >
+
+</a
+      ><a name="146" href="Explore.BinTree.html#146" class="Function"
+      >fromBinTree</a
+      ><a name="157"
+      > </a
+      ><a name="158" class="Symbol"
+      >:</a
+      ><a name="159"
+      > </a
+      ><a name="160" class="Symbol"
+      >&#8704;</a
+      ><a name="161"
+      > </a
+      ><a name="162" class="Symbol"
+      >{</a
+      ><a name="163" href="Explore.BinTree.html#163" class="Bound"
+      >m</a
+      ><a name="164"
+      > </a
+      ><a name="165" href="Explore.BinTree.html#165" class="Bound"
+      >A</a
+      ><a name="166" class="Symbol"
+      >}</a
+      ><a name="167"
+      > </a
+      ><a name="168" class="Symbol"
+      >&#8594;</a
+      ><a name="169"
+      > </a
+      ><a name="170" href="Data.Tree.Binary.html#94" class="Datatype"
+      >BinTree</a
+      ><a name="177"
+      > </a
+      ><a name="178" href="Explore.BinTree.html#165" class="Bound"
+      >A</a
+      ><a name="179"
+      > </a
+      ><a name="180" class="Symbol"
+      >&#8594;</a
+      ><a name="181"
+      > </a
+      ><a name="182" href="Explore.Core.html#447" class="Function"
+      >Explore</a
+      ><a name="189"
+      > </a
+      ><a name="190" href="Explore.BinTree.html#163" class="Bound"
+      >m</a
+      ><a name="191"
+      > </a
+      ><a name="192" href="Explore.BinTree.html#165" class="Bound"
+      >A</a
+      ><a name="193"
+      >
+</a
+      ><a name="194" href="Explore.BinTree.html#146" class="Function"
+      >fromBinTree</a
+      ><a name="205"
+      > </a
+      ><a name="206" class="Symbol"
+      >(</a
+      ><a name="207" href="Data.Tree.Binary.html#130" class="InductiveConstructor"
+      >leaf</a
+      ><a name="211"
+      > </a
+      ><a name="212" href="Explore.BinTree.html#212" class="Bound"
+      >x</a
+      ><a name="213" class="Symbol"
+      >)</a
+      ><a name="214"
+      >   </a
+      ><a name="217" class="Symbol"
+      >_</a
+      ><a name="218"
+      > </a
+      ><a name="219" class="Symbol"
+      >_</a
+      ><a name="220"
+      >   </a
+      ><a name="223" href="Explore.BinTree.html#223" class="Bound"
+      >f</a
+      ><a name="224"
+      > </a
+      ><a name="225" class="Symbol"
+      >=</a
+      ><a name="226"
+      > </a
+      ><a name="227" href="Explore.BinTree.html#223" class="Bound"
+      >f</a
+      ><a name="228"
+      > </a
+      ><a name="229" href="Explore.BinTree.html#212" class="Bound"
+      >x</a
+      ><a name="230"
+      >
+</a
+      ><a name="231" href="Explore.BinTree.html#146" class="Function"
+      >fromBinTree</a
+      ><a name="242"
+      > </a
+      ><a name="243" class="Symbol"
+      >(</a
+      ><a name="244" href="Data.Tree.Binary.html#153" class="InductiveConstructor"
+      >fork</a
+      ><a name="248"
+      > </a
+      ><a name="249" href="Explore.BinTree.html#249" class="Bound"
+      >&#8467;</a
+      ><a name="250"
+      > </a
+      ><a name="251" href="Explore.BinTree.html#251" class="Bound"
+      >r</a
+      ><a name="252" class="Symbol"
+      >)</a
+      ><a name="253"
+      > </a
+      ><a name="254" href="Explore.BinTree.html#254" class="Bound"
+      >&#949;</a
+      ><a name="255"
+      > </a
+      ><a name="256" href="Explore.BinTree.html#256" class="Bound Operator"
+      >_&#8729;_</a
+      ><a name="259"
+      > </a
+      ><a name="260" href="Explore.BinTree.html#260" class="Bound"
+      >f</a
+      ><a name="261"
+      > </a
+      ><a name="262" class="Symbol"
+      >=</a
+      ><a name="263"
+      > </a
+      ><a name="264" href="Explore.BinTree.html#146" class="Function"
+      >fromBinTree</a
+      ><a name="275"
+      > </a
+      ><a name="276" href="Explore.BinTree.html#249" class="Bound"
+      >&#8467;</a
+      ><a name="277"
+      > </a
+      ><a name="278" href="Explore.BinTree.html#254" class="Bound"
+      >&#949;</a
+      ><a name="279"
+      > </a
+      ><a name="280" href="Explore.BinTree.html#256" class="Bound Operator"
+      >_&#8729;_</a
+      ><a name="283"
+      > </a
+      ><a name="284" href="Explore.BinTree.html#260" class="Bound"
+      >f</a
+      ><a name="285"
+      > </a
+      ><a name="286" href="Explore.BinTree.html#256" class="Bound Operator"
+      >&#8729;</a
+      ><a name="287"
+      > </a
+      ><a name="288" href="Explore.BinTree.html#146" class="Function"
+      >fromBinTree</a
+      ><a name="299"
+      > </a
+      ><a name="300" href="Explore.BinTree.html#251" class="Bound"
+      >r</a
+      ><a name="301"
+      > </a
+      ><a name="302" href="Explore.BinTree.html#254" class="Bound"
+      >&#949;</a
+      ><a name="303"
+      > </a
+      ><a name="304" href="Explore.BinTree.html#256" class="Bound Operator"
+      >_&#8729;_</a
+      ><a name="307"
+      > </a
+      ><a name="308" href="Explore.BinTree.html#260" class="Bound"
+      >f</a
+      ><a name="309"
+      >
+
+</a
+      ><a name="311" href="Explore.BinTree.html#311" class="Function"
+      >fromBinTree-ind</a
+      ><a name="326"
+      > </a
+      ><a name="327" class="Symbol"
+      >:</a
+      ><a name="328"
+      > </a
+      ><a name="329" class="Symbol"
+      >&#8704;</a
+      ><a name="330"
+      > </a
+      ><a name="331" class="Symbol"
+      >{</a
+      ><a name="332" href="Explore.BinTree.html#332" class="Bound"
+      >m</a
+      ><a name="333"
+      > </a
+      ><a name="334" href="Explore.BinTree.html#334" class="Bound"
+      >p</a
+      ><a name="335"
+      > </a
+      ><a name="336" href="Explore.BinTree.html#336" class="Bound"
+      >A</a
+      ><a name="337" class="Symbol"
+      >}</a
+      ><a name="338"
+      > </a
+      ><a name="339" class="Symbol"
+      >(</a
+      ><a name="340" href="Explore.BinTree.html#340" class="Bound"
+      >t</a
+      ><a name="341"
+      > </a
+      ><a name="342" class="Symbol"
+      >:</a
+      ><a name="343"
+      > </a
+      ><a name="344" href="Data.Tree.Binary.html#94" class="Datatype"
+      >BinTree</a
+      ><a name="351"
+      > </a
+      ><a name="352" href="Explore.BinTree.html#336" class="Bound"
+      >A</a
+      ><a name="353" class="Symbol"
+      >)</a
+      ><a name="354"
+      > </a
+      ><a name="355" class="Symbol"
+      >&#8594;</a
+      ><a name="356"
+      > </a
+      ><a name="357" href="Explore.Properties.html#1850" class="Function"
+      >ExploreInd</a
+      ><a name="367"
+      > </a
+      ><a name="368" href="Explore.BinTree.html#334" class="Bound"
+      >p</a
+      ><a name="369"
+      > </a
+      ><a name="370" class="Symbol"
+      >(</a
+      ><a name="371" href="Explore.BinTree.html#146" class="Function"
+      >fromBinTree</a
+      ><a name="382"
+      > </a
+      ><a name="383" class="Symbol"
+      >{</a
+      ><a name="384" href="Explore.BinTree.html#332" class="Bound"
+      >m</a
+      ><a name="385" class="Symbol"
+      >}</a
+      ><a name="386"
+      > </a
+      ><a name="387" href="Explore.BinTree.html#340" class="Bound"
+      >t</a
+      ><a name="388" class="Symbol"
+      >)</a
+      ><a name="389"
+      >
+</a
+      ><a name="390" href="Explore.BinTree.html#311" class="Function"
+      >fromBinTree-ind</a
+      ><a name="405"
+      > </a
+      ><a name="406" class="Symbol"
+      >(</a
+      ><a name="407" href="Data.Tree.Binary.html#130" class="InductiveConstructor"
+      >leaf</a
+      ><a name="411"
+      > </a
+      ><a name="412" href="Explore.BinTree.html#412" class="Bound"
+      >x</a
+      ><a name="413" class="Symbol"
+      >)</a
+      ><a name="414"
+      >   </a
+      ><a name="417" href="Explore.BinTree.html#417" class="Bound"
+      >P</a
+      ><a name="418"
+      > </a
+      ><a name="419" class="Symbol"
+      >_</a
+      ><a name="420"
+      >  </a
+      ><a name="422" href="Explore.BinTree.html#422" class="Bound"
+      >P&#8729;</a
+      ><a name="424"
+      > </a
+      ><a name="425" href="Explore.BinTree.html#425" class="Bound"
+      >Pf</a
+      ><a name="427"
+      > </a
+      ><a name="428" class="Symbol"
+      >=</a
+      ><a name="429"
+      > </a
+      ><a name="430" href="Explore.BinTree.html#425" class="Bound"
+      >Pf</a
+      ><a name="432"
+      > </a
+      ><a name="433" href="Explore.BinTree.html#412" class="Bound"
+      >x</a
+      ><a name="434"
+      >
+</a
+      ><a name="435" href="Explore.BinTree.html#311" class="Function"
+      >fromBinTree-ind</a
+      ><a name="450"
+      > </a
+      ><a name="451" class="Symbol"
+      >(</a
+      ><a name="452" href="Data.Tree.Binary.html#153" class="InductiveConstructor"
+      >fork</a
+      ><a name="456"
+      > </a
+      ><a name="457" href="Explore.BinTree.html#457" class="Bound"
+      >&#8467;</a
+      ><a name="458"
+      > </a
+      ><a name="459" href="Explore.BinTree.html#459" class="Bound"
+      >r</a
+      ><a name="460" class="Symbol"
+      >)</a
+      ><a name="461"
+      > </a
+      ><a name="462" href="Explore.BinTree.html#462" class="Bound"
+      >P</a
+      ><a name="463"
+      > </a
+      ><a name="464" href="Explore.BinTree.html#464" class="Bound"
+      >P&#949;</a
+      ><a name="466"
+      > </a
+      ><a name="467" href="Explore.BinTree.html#467" class="Bound"
+      >P&#8729;</a
+      ><a name="469"
+      > </a
+      ><a name="470" href="Explore.BinTree.html#470" class="Bound"
+      >Pf</a
+      ><a name="472"
+      > </a
+      ><a name="473" class="Symbol"
+      >=</a
+      ><a name="474"
+      > </a
+      ><a name="475" href="Explore.BinTree.html#467" class="Bound"
+      >P&#8729;</a
+      ><a name="477"
+      > </a
+      ><a name="478" class="Symbol"
+      >(</a
+      ><a name="479" href="Explore.BinTree.html#311" class="Function"
+      >fromBinTree-ind</a
+      ><a name="494"
+      > </a
+      ><a name="495" href="Explore.BinTree.html#457" class="Bound"
+      >&#8467;</a
+      ><a name="496"
+      > </a
+      ><a name="497" href="Explore.BinTree.html#462" class="Bound"
+      >P</a
+      ><a name="498"
+      > </a
+      ><a name="499" href="Explore.BinTree.html#464" class="Bound"
+      >P&#949;</a
+      ><a name="501"
+      > </a
+      ><a name="502" href="Explore.BinTree.html#467" class="Bound"
+      >P&#8729;</a
+      ><a name="504"
+      > </a
+      ><a name="505" href="Explore.BinTree.html#470" class="Bound"
+      >Pf</a
+      ><a name="507" class="Symbol"
+      >)</a
+      ><a name="508"
+      >
+                                           </a
+      ><a name="552" class="Symbol"
+      >(</a
+      ><a name="553" href="Explore.BinTree.html#311" class="Function"
+      >fromBinTree-ind</a
+      ><a name="568"
+      > </a
+      ><a name="569" href="Explore.BinTree.html#459" class="Bound"
+      >r</a
+      ><a name="570"
+      > </a
+      ><a name="571" href="Explore.BinTree.html#462" class="Bound"
+      >P</a
+      ><a name="572"
+      > </a
+      ><a name="573" href="Explore.BinTree.html#464" class="Bound"
+      >P&#949;</a
+      ><a name="575"
+      > </a
+      ><a name="576" href="Explore.BinTree.html#467" class="Bound"
+      >P&#8729;</a
+      ><a name="578"
+      > </a
+      ><a name="579" href="Explore.BinTree.html#470" class="Bound"
+      >Pf</a
+      ><a name="581" class="Symbol"
+      >)</a
+      ><a name="582"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

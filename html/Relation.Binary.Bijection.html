@@ -1,0 +1,1012 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Relation.Binary.Bijection</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Symbol"
+      >{-#</a
+      ><a name="4"
+      > </a
+      ><a name="5" class="Keyword"
+      >OPTIONS</a
+      ><a name="12"
+      > --without-K </a
+      ><a name="25" class="Symbol"
+      >#-}</a
+      ><a name="28"
+      >
+</a
+      ><a name="29" class="Symbol"
+      >{-#</a
+      ><a name="32"
+      > </a
+      ><a name="33" class="Keyword"
+      >OPTIONS</a
+      ><a name="40"
+      > --universe-polymorphism </a
+      ><a name="65" class="Symbol"
+      >#-}</a
+      ><a name="68"
+      >
+</a
+      ><a name="69" class="Keyword"
+      >module</a
+      ><a name="75"
+      > </a
+      ><a name="76" href="Relation.Binary.Bijection.html#1" class="Module"
+      >Relation.Binary.Bijection</a
+      ><a name="101"
+      > </a
+      ><a name="102" class="Keyword"
+      >where</a
+      ><a name="107"
+      >
+
+</a
+      ><a name="109" class="Keyword"
+      >open</a
+      ><a name="113"
+      > </a
+      ><a name="114" class="Keyword"
+      >import</a
+      ><a name="120"
+      > </a
+      ><a name="121" href="Level.html#1" class="Module"
+      >Level</a
+      ><a name="126"
+      >
+</a
+      ><a name="127" class="Keyword"
+      >open</a
+      ><a name="131"
+      > </a
+      ><a name="132" class="Keyword"
+      >import</a
+      ><a name="138"
+      > </a
+      ><a name="139" href="Function.html#1" class="Module"
+      >Function</a
+      ><a name="147"
+      >
+</a
+      ><a name="148" class="Keyword"
+      >open</a
+      ><a name="152"
+      > </a
+      ><a name="153" class="Keyword"
+      >import</a
+      ><a name="159"
+      > </a
+      ><a name="160" href="Data.Sum.html#1" class="Module"
+      >Data.Sum</a
+      ><a name="168"
+      >
+</a
+      ><a name="169" class="Keyword"
+      >open</a
+      ><a name="173"
+      > </a
+      ><a name="174" class="Keyword"
+      >import</a
+      ><a name="180"
+      > </a
+      ><a name="181" href="Relation.Binary.html#1" class="Module"
+      >Relation.Binary</a
+      ><a name="196"
+      >
+</a
+      ><a name="197" class="Keyword"
+      >import</a
+      ><a name="203"
+      > </a
+      ><a name="204" href="Relation.Binary.PropositionalEquality.html#1" class="Module"
+      >Relation.Binary.PropositionalEquality</a
+      ><a name="241"
+      > </a
+      ><a name="242" class="Symbol"
+      >as</a
+      ><a name="244"
+      > </a
+      ><a name="245" class="Module"
+      >&#8801;</a
+      ><a name="246"
+      >
+</a
+      ><a name="247" class="Keyword"
+      >open</a
+      ><a name="251"
+      > </a
+      ><a name="252" href="Relation.Binary.PropositionalEquality.html#1" class="Module"
+      >&#8801;</a
+      ><a name="253"
+      > </a
+      ><a name="254" class="Keyword"
+      >using</a
+      ><a name="259"
+      > </a
+      ><a name="260" class="Symbol"
+      >(</a
+      ><a name="261"
+      >_&#8801;_</a
+      ><a name="264" class="Symbol"
+      >;</a
+      ><a name="265"
+      >_&#8802;_</a
+      ><a name="268" class="Symbol"
+      >)</a
+      ><a name="269"
+      >
+
+</a
+      ><a name="271" href="Relation.Binary.Bijection.html#271" class="Function"
+      >InjectiveREL</a
+      ><a name="283"
+      > </a
+      ><a name="284" class="Symbol"
+      >:</a
+      ><a name="285"
+      > </a
+      ><a name="286" class="Symbol"
+      >&#8704;</a
+      ><a name="287"
+      > </a
+      ><a name="288" class="Symbol"
+      >{</a
+      ><a name="289" href="Relation.Binary.Bijection.html#289" class="Bound"
+      >a</a
+      ><a name="290"
+      > </a
+      ><a name="291" href="Relation.Binary.Bijection.html#291" class="Bound"
+      >b</a
+      ><a name="292"
+      > </a
+      ><a name="293" href="Relation.Binary.Bijection.html#293" class="Bound"
+      >&#8467;</a
+      ><a name="294" class="Symbol"
+      >}</a
+      ><a name="295"
+      > </a
+      ><a name="296" class="Symbol"
+      >(</a
+      ><a name="297" href="Relation.Binary.Bijection.html#297" class="Bound"
+      >A</a
+      ><a name="298"
+      > </a
+      ><a name="299" class="Symbol"
+      >:</a
+      ><a name="300"
+      > </a
+      ><a name="301" class="PrimitiveType"
+      >Set</a
+      ><a name="304"
+      > </a
+      ><a name="305" href="Relation.Binary.Bijection.html#289" class="Bound"
+      >a</a
+      ><a name="306" class="Symbol"
+      >)</a
+      ><a name="307"
+      > </a
+      ><a name="308" class="Symbol"
+      >(</a
+      ><a name="309" href="Relation.Binary.Bijection.html#309" class="Bound"
+      >B</a
+      ><a name="310"
+      > </a
+      ><a name="311" class="Symbol"
+      >:</a
+      ><a name="312"
+      > </a
+      ><a name="313" class="PrimitiveType"
+      >Set</a
+      ><a name="316"
+      > </a
+      ><a name="317" href="Relation.Binary.Bijection.html#291" class="Bound"
+      >b</a
+      ><a name="318" class="Symbol"
+      >)</a
+      ><a name="319"
+      > </a
+      ><a name="320" class="Symbol"
+      >&#8594;</a
+      ><a name="321"
+      > </a
+      ><a name="322" href="Relation.Binary.Core.html#635" class="Function"
+      >REL</a
+      ><a name="325"
+      > </a
+      ><a name="326" href="Relation.Binary.Bijection.html#297" class="Bound"
+      >A</a
+      ><a name="327"
+      > </a
+      ><a name="328" href="Relation.Binary.Bijection.html#309" class="Bound"
+      >B</a
+      ><a name="329"
+      > </a
+      ><a name="330" href="Relation.Binary.Bijection.html#293" class="Bound"
+      >&#8467;</a
+      ><a name="331"
+      > </a
+      ><a name="332" class="Symbol"
+      >&#8594;</a
+      ><a name="333"
+      > </a
+      ><a name="334" class="PrimitiveType"
+      >Set</a
+      ><a name="337"
+      > </a
+      ><a name="338" class="Symbol"
+      >_</a
+      ><a name="339"
+      >
+</a
+      ><a name="340" href="Relation.Binary.Bijection.html#271" class="Function"
+      >InjectiveREL</a
+      ><a name="352"
+      > </a
+      ><a name="353" class="Symbol"
+      >_</a
+      ><a name="354"
+      > </a
+      ><a name="355" class="Symbol"
+      >_</a
+      ><a name="356"
+      > </a
+      ><a name="357" href="Relation.Binary.Bijection.html#357" class="Bound Operator"
+      >_&#8764;_</a
+      ><a name="360"
+      > </a
+      ><a name="361" class="Symbol"
+      >=</a
+      ><a name="362"
+      > </a
+      ><a name="363" class="Symbol"
+      >&#8704;</a
+      ><a name="364"
+      > </a
+      ><a name="365" class="Symbol"
+      >{</a
+      ><a name="366" href="Relation.Binary.Bijection.html#366" class="Bound"
+      >x</a
+      ><a name="367"
+      > </a
+      ><a name="368" href="Relation.Binary.Bijection.html#368" class="Bound"
+      >y</a
+      ><a name="369"
+      > </a
+      ><a name="370" href="Relation.Binary.Bijection.html#370" class="Bound"
+      >z</a
+      ><a name="371" class="Symbol"
+      >}</a
+      ><a name="372"
+      > </a
+      ><a name="373" class="Symbol"
+      >&#8594;</a
+      ><a name="374"
+      > </a
+      ><a name="375" href="Relation.Binary.Bijection.html#366" class="Bound"
+      >x</a
+      ><a name="376"
+      > </a
+      ><a name="377" href="Relation.Binary.Bijection.html#357" class="Bound Operator"
+      >&#8764;</a
+      ><a name="378"
+      > </a
+      ><a name="379" href="Relation.Binary.Bijection.html#370" class="Bound"
+      >z</a
+      ><a name="380"
+      > </a
+      ><a name="381" class="Symbol"
+      >&#8594;</a
+      ><a name="382"
+      > </a
+      ><a name="383" href="Relation.Binary.Bijection.html#368" class="Bound"
+      >y</a
+      ><a name="384"
+      > </a
+      ><a name="385" href="Relation.Binary.Bijection.html#357" class="Bound Operator"
+      >&#8764;</a
+      ><a name="386"
+      > </a
+      ><a name="387" href="Relation.Binary.Bijection.html#370" class="Bound"
+      >z</a
+      ><a name="388"
+      > </a
+      ><a name="389" class="Symbol"
+      >&#8594;</a
+      ><a name="390"
+      > </a
+      ><a name="391" href="Relation.Binary.Bijection.html#366" class="Bound"
+      >x</a
+      ><a name="392"
+      > </a
+      ><a name="393" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="394"
+      > </a
+      ><a name="395" href="Relation.Binary.Bijection.html#368" class="Bound"
+      >y</a
+      ><a name="396"
+      >
+
+</a
+      ><a name="398" href="Relation.Binary.Bijection.html#398" class="Function"
+      >InjectiveRel</a
+      ><a name="410"
+      > </a
+      ><a name="411" class="Symbol"
+      >:</a
+      ><a name="412"
+      > </a
+      ><a name="413" class="Symbol"
+      >&#8704;</a
+      ><a name="414"
+      > </a
+      ><a name="415" class="Symbol"
+      >{</a
+      ><a name="416" href="Relation.Binary.Bijection.html#416" class="Bound"
+      >a</a
+      ><a name="417"
+      > </a
+      ><a name="418" href="Relation.Binary.Bijection.html#418" class="Bound"
+      >&#8467;</a
+      ><a name="419" class="Symbol"
+      >}</a
+      ><a name="420"
+      > </a
+      ><a name="421" class="Symbol"
+      >(</a
+      ><a name="422" href="Relation.Binary.Bijection.html#422" class="Bound"
+      >A</a
+      ><a name="423"
+      > </a
+      ><a name="424" class="Symbol"
+      >:</a
+      ><a name="425"
+      > </a
+      ><a name="426" class="PrimitiveType"
+      >Set</a
+      ><a name="429"
+      > </a
+      ><a name="430" href="Relation.Binary.Bijection.html#416" class="Bound"
+      >a</a
+      ><a name="431" class="Symbol"
+      >)</a
+      ><a name="432"
+      > </a
+      ><a name="433" class="Symbol"
+      >&#8594;</a
+      ><a name="434"
+      > </a
+      ><a name="435" href="Relation.Binary.Core.html#761" class="Function"
+      >Rel</a
+      ><a name="438"
+      > </a
+      ><a name="439" href="Relation.Binary.Bijection.html#422" class="Bound"
+      >A</a
+      ><a name="440"
+      > </a
+      ><a name="441" href="Relation.Binary.Bijection.html#418" class="Bound"
+      >&#8467;</a
+      ><a name="442"
+      > </a
+      ><a name="443" class="Symbol"
+      >&#8594;</a
+      ><a name="444"
+      > </a
+      ><a name="445" class="PrimitiveType"
+      >Set</a
+      ><a name="448"
+      > </a
+      ><a name="449" class="Symbol"
+      >_</a
+      ><a name="450"
+      >
+</a
+      ><a name="451" href="Relation.Binary.Bijection.html#398" class="Function"
+      >InjectiveRel</a
+      ><a name="463"
+      > </a
+      ><a name="464" href="Relation.Binary.Bijection.html#464" class="Bound"
+      >A</a
+      ><a name="465"
+      > </a
+      ><a name="466" class="Symbol"
+      >=</a
+      ><a name="467"
+      > </a
+      ><a name="468" href="Relation.Binary.Bijection.html#271" class="Function"
+      >InjectiveREL</a
+      ><a name="480"
+      > </a
+      ><a name="481" href="Relation.Binary.Bijection.html#464" class="Bound"
+      >A</a
+      ><a name="482"
+      > </a
+      ><a name="483" href="Relation.Binary.Bijection.html#464" class="Bound"
+      >A</a
+      ><a name="484"
+      >
+
+</a
+      ><a name="486" href="Relation.Binary.Bijection.html#486" class="Function"
+      >SurjectiveREL</a
+      ><a name="499"
+      > </a
+      ><a name="500" class="Symbol"
+      >:</a
+      ><a name="501"
+      > </a
+      ><a name="502" class="Symbol"
+      >&#8704;</a
+      ><a name="503"
+      > </a
+      ><a name="504" class="Symbol"
+      >{</a
+      ><a name="505" href="Relation.Binary.Bijection.html#505" class="Bound"
+      >a</a
+      ><a name="506"
+      > </a
+      ><a name="507" href="Relation.Binary.Bijection.html#507" class="Bound"
+      >b</a
+      ><a name="508"
+      > </a
+      ><a name="509" href="Relation.Binary.Bijection.html#509" class="Bound"
+      >&#8467;</a
+      ><a name="510" class="Symbol"
+      >}</a
+      ><a name="511"
+      > </a
+      ><a name="512" class="Symbol"
+      >(</a
+      ><a name="513" href="Relation.Binary.Bijection.html#513" class="Bound"
+      >A</a
+      ><a name="514"
+      > </a
+      ><a name="515" class="Symbol"
+      >:</a
+      ><a name="516"
+      > </a
+      ><a name="517" class="PrimitiveType"
+      >Set</a
+      ><a name="520"
+      > </a
+      ><a name="521" href="Relation.Binary.Bijection.html#505" class="Bound"
+      >a</a
+      ><a name="522" class="Symbol"
+      >)</a
+      ><a name="523"
+      > </a
+      ><a name="524" class="Symbol"
+      >(</a
+      ><a name="525" href="Relation.Binary.Bijection.html#525" class="Bound"
+      >B</a
+      ><a name="526"
+      > </a
+      ><a name="527" class="Symbol"
+      >:</a
+      ><a name="528"
+      > </a
+      ><a name="529" class="PrimitiveType"
+      >Set</a
+      ><a name="532"
+      > </a
+      ><a name="533" href="Relation.Binary.Bijection.html#507" class="Bound"
+      >b</a
+      ><a name="534" class="Symbol"
+      >)</a
+      ><a name="535"
+      > </a
+      ><a name="536" class="Symbol"
+      >&#8594;</a
+      ><a name="537"
+      > </a
+      ><a name="538" href="Relation.Binary.Core.html#635" class="Function"
+      >REL</a
+      ><a name="541"
+      > </a
+      ><a name="542" href="Relation.Binary.Bijection.html#513" class="Bound"
+      >A</a
+      ><a name="543"
+      > </a
+      ><a name="544" href="Relation.Binary.Bijection.html#525" class="Bound"
+      >B</a
+      ><a name="545"
+      > </a
+      ><a name="546" href="Relation.Binary.Bijection.html#509" class="Bound"
+      >&#8467;</a
+      ><a name="547"
+      > </a
+      ><a name="548" class="Symbol"
+      >&#8594;</a
+      ><a name="549"
+      > </a
+      ><a name="550" class="PrimitiveType"
+      >Set</a
+      ><a name="553"
+      > </a
+      ><a name="554" class="Symbol"
+      >_</a
+      ><a name="555"
+      >
+</a
+      ><a name="556" href="Relation.Binary.Bijection.html#486" class="Function"
+      >SurjectiveREL</a
+      ><a name="569"
+      > </a
+      ><a name="570" href="Relation.Binary.Bijection.html#570" class="Bound"
+      >A</a
+      ><a name="571"
+      > </a
+      ><a name="572" href="Relation.Binary.Bijection.html#572" class="Bound"
+      >B</a
+      ><a name="573"
+      > </a
+      ><a name="574" href="Relation.Binary.Bijection.html#574" class="Bound"
+      >&#8764;</a
+      ><a name="575"
+      > </a
+      ><a name="576" class="Symbol"
+      >=</a
+      ><a name="577"
+      > </a
+      ><a name="578" href="Relation.Binary.Bijection.html#271" class="Function"
+      >InjectiveREL</a
+      ><a name="590"
+      > </a
+      ><a name="591" href="Relation.Binary.Bijection.html#572" class="Bound"
+      >B</a
+      ><a name="592"
+      > </a
+      ><a name="593" href="Relation.Binary.Bijection.html#570" class="Bound"
+      >A</a
+      ><a name="594"
+      > </a
+      ><a name="595" class="Symbol"
+      >(</a
+      ><a name="596" href="Function.html#1474" class="Function"
+      >flip</a
+      ><a name="600"
+      > </a
+      ><a name="601" href="Relation.Binary.Bijection.html#574" class="Bound"
+      >&#8764;</a
+      ><a name="602" class="Symbol"
+      >)</a
+      ><a name="603"
+      >
+
+</a
+      ><a name="605" href="Relation.Binary.Bijection.html#605" class="Function"
+      >SurjectiveRel</a
+      ><a name="618"
+      > </a
+      ><a name="619" class="Symbol"
+      >:</a
+      ><a name="620"
+      > </a
+      ><a name="621" class="Symbol"
+      >&#8704;</a
+      ><a name="622"
+      > </a
+      ><a name="623" class="Symbol"
+      >{</a
+      ><a name="624" href="Relation.Binary.Bijection.html#624" class="Bound"
+      >a</a
+      ><a name="625"
+      > </a
+      ><a name="626" href="Relation.Binary.Bijection.html#626" class="Bound"
+      >&#8467;</a
+      ><a name="627" class="Symbol"
+      >}</a
+      ><a name="628"
+      > </a
+      ><a name="629" class="Symbol"
+      >(</a
+      ><a name="630" href="Relation.Binary.Bijection.html#630" class="Bound"
+      >A</a
+      ><a name="631"
+      > </a
+      ><a name="632" class="Symbol"
+      >:</a
+      ><a name="633"
+      > </a
+      ><a name="634" class="PrimitiveType"
+      >Set</a
+      ><a name="637"
+      > </a
+      ><a name="638" href="Relation.Binary.Bijection.html#624" class="Bound"
+      >a</a
+      ><a name="639" class="Symbol"
+      >)</a
+      ><a name="640"
+      > </a
+      ><a name="641" class="Symbol"
+      >&#8594;</a
+      ><a name="642"
+      > </a
+      ><a name="643" href="Relation.Binary.Core.html#761" class="Function"
+      >Rel</a
+      ><a name="646"
+      > </a
+      ><a name="647" href="Relation.Binary.Bijection.html#630" class="Bound"
+      >A</a
+      ><a name="648"
+      > </a
+      ><a name="649" href="Relation.Binary.Bijection.html#626" class="Bound"
+      >&#8467;</a
+      ><a name="650"
+      > </a
+      ><a name="651" class="Symbol"
+      >&#8594;</a
+      ><a name="652"
+      > </a
+      ><a name="653" class="PrimitiveType"
+      >Set</a
+      ><a name="656"
+      > </a
+      ><a name="657" class="Symbol"
+      >_</a
+      ><a name="658"
+      >
+</a
+      ><a name="659" href="Relation.Binary.Bijection.html#605" class="Function"
+      >SurjectiveRel</a
+      ><a name="672"
+      > </a
+      ><a name="673" href="Relation.Binary.Bijection.html#673" class="Bound"
+      >A</a
+      ><a name="674"
+      > </a
+      ><a name="675" class="Symbol"
+      >=</a
+      ><a name="676"
+      > </a
+      ><a name="677" href="Relation.Binary.Bijection.html#486" class="Function"
+      >SurjectiveREL</a
+      ><a name="690"
+      > </a
+      ><a name="691" href="Relation.Binary.Bijection.html#673" class="Bound"
+      >A</a
+      ><a name="692"
+      > </a
+      ><a name="693" href="Relation.Binary.Bijection.html#673" class="Bound"
+      >A</a
+      ><a name="694"
+      >
+
+</a
+      ><a name="696" class="Keyword"
+      >record</a
+      ><a name="702"
+      > </a
+      ><a name="703" href="Relation.Binary.Bijection.html#703" class="Record"
+      >BijectiveREL</a
+      ><a name="715"
+      > </a
+      ><a name="716" class="Symbol"
+      >{</a
+      ><a name="717" href="Relation.Binary.Bijection.html#717" class="Bound"
+      >a</a
+      ><a name="718"
+      > </a
+      ><a name="719" href="Relation.Binary.Bijection.html#719" class="Bound"
+      >b</a
+      ><a name="720"
+      > </a
+      ><a name="721" href="Relation.Binary.Bijection.html#721" class="Bound"
+      >&#8467;</a
+      ><a name="722" class="Symbol"
+      >}</a
+      ><a name="723"
+      > </a
+      ><a name="724" class="Symbol"
+      >(</a
+      ><a name="725" href="Relation.Binary.Bijection.html#725" class="Bound"
+      >A</a
+      ><a name="726"
+      > </a
+      ><a name="727" class="Symbol"
+      >:</a
+      ><a name="728"
+      > </a
+      ><a name="729" class="PrimitiveType"
+      >Set</a
+      ><a name="732"
+      > </a
+      ><a name="733" href="Relation.Binary.Bijection.html#717" class="Bound"
+      >a</a
+      ><a name="734" class="Symbol"
+      >)</a
+      ><a name="735"
+      > </a
+      ><a name="736" class="Symbol"
+      >(</a
+      ><a name="737" href="Relation.Binary.Bijection.html#737" class="Bound"
+      >B</a
+      ><a name="738"
+      > </a
+      ><a name="739" class="Symbol"
+      >:</a
+      ><a name="740"
+      > </a
+      ><a name="741" class="PrimitiveType"
+      >Set</a
+      ><a name="744"
+      > </a
+      ><a name="745" href="Relation.Binary.Bijection.html#719" class="Bound"
+      >b</a
+      ><a name="746" class="Symbol"
+      >)</a
+      ><a name="747"
+      > </a
+      ><a name="748" class="Symbol"
+      >(</a
+      ><a name="749" href="Relation.Binary.Bijection.html#749" class="Bound"
+      >&#8764;</a
+      ><a name="750"
+      > </a
+      ><a name="751" class="Symbol"
+      >:</a
+      ><a name="752"
+      > </a
+      ><a name="753" href="Relation.Binary.Core.html#635" class="Function"
+      >REL</a
+      ><a name="756"
+      > </a
+      ><a name="757" href="Relation.Binary.Bijection.html#725" class="Bound"
+      >A</a
+      ><a name="758"
+      > </a
+      ><a name="759" href="Relation.Binary.Bijection.html#737" class="Bound"
+      >B</a
+      ><a name="760"
+      > </a
+      ><a name="761" href="Relation.Binary.Bijection.html#721" class="Bound"
+      >&#8467;</a
+      ><a name="762" class="Symbol"
+      >)</a
+      ><a name="763"
+      > </a
+      ><a name="764" class="Symbol"
+      >:</a
+      ><a name="765"
+      > </a
+      ><a name="766" class="PrimitiveType"
+      >Set</a
+      ><a name="769"
+      > </a
+      ><a name="770" class="Symbol"
+      >(</a
+      ><a name="771" href="Relation.Binary.Bijection.html#721" class="Bound"
+      >&#8467;</a
+      ><a name="772"
+      > </a
+      ><a name="773" href="Agda.Prim.html#314" class="Primitive Operator"
+      >&#8852;</a
+      ><a name="774"
+      > </a
+      ><a name="775" href="Relation.Binary.Bijection.html#717" class="Bound"
+      >a</a
+      ><a name="776"
+      > </a
+      ><a name="777" href="Agda.Prim.html#314" class="Primitive Operator"
+      >&#8852;</a
+      ><a name="778"
+      > </a
+      ><a name="779" href="Relation.Binary.Bijection.html#719" class="Bound"
+      >b</a
+      ><a name="780" class="Symbol"
+      >)</a
+      ><a name="781"
+      > </a
+      ><a name="782" class="Keyword"
+      >where</a
+      ><a name="787"
+      >
+  </a
+      ><a name="790" class="Keyword"
+      >constructor</a
+      ><a name="801"
+      > </a
+      ><a name="802" href="Relation.Binary.Bijection.html#802" class="InductiveConstructor"
+      >mkBijectiveREL</a
+      ><a name="816"
+      >
+  </a
+      ><a name="819" class="Keyword"
+      >field</a
+      ><a name="824"
+      >
+    </a
+      ><a name="829" href="Relation.Binary.Bijection.html#829" class="Field"
+      >injectiveREL</a
+      ><a name="841"
+      >  </a
+      ><a name="843" class="Symbol"
+      >:</a
+      ><a name="844"
+      > </a
+      ><a name="845" href="Relation.Binary.Bijection.html#271" class="Function"
+      >InjectiveREL</a
+      ><a name="857"
+      > </a
+      ><a name="858" href="Relation.Binary.Bijection.html#725" class="Bound"
+      >A</a
+      ><a name="859"
+      > </a
+      ><a name="860" href="Relation.Binary.Bijection.html#737" class="Bound"
+      >B</a
+      ><a name="861"
+      > </a
+      ><a name="862" href="Relation.Binary.Bijection.html#749" class="Bound"
+      >&#8764;</a
+      ><a name="863"
+      >
+    </a
+      ><a name="868" href="Relation.Binary.Bijection.html#868" class="Field"
+      >surjectiveREL</a
+      ><a name="881"
+      > </a
+      ><a name="882" class="Symbol"
+      >:</a
+      ><a name="883"
+      > </a
+      ><a name="884" href="Relation.Binary.Bijection.html#486" class="Function"
+      >SurjectiveREL</a
+      ><a name="897"
+      > </a
+      ><a name="898" href="Relation.Binary.Bijection.html#725" class="Bound"
+      >A</a
+      ><a name="899"
+      > </a
+      ><a name="900" href="Relation.Binary.Bijection.html#737" class="Bound"
+      >B</a
+      ><a name="901"
+      > </a
+      ><a name="902" href="Relation.Binary.Bijection.html#749" class="Bound"
+      >&#8764;</a
+      ><a name="903"
+      >
+
+</a
+      ><a name="905" href="Relation.Binary.Bijection.html#905" class="Function"
+      >BijectiveRel</a
+      ><a name="917"
+      > </a
+      ><a name="918" class="Symbol"
+      >:</a
+      ><a name="919"
+      > </a
+      ><a name="920" class="Symbol"
+      >&#8704;</a
+      ><a name="921"
+      > </a
+      ><a name="922" class="Symbol"
+      >{</a
+      ><a name="923" href="Relation.Binary.Bijection.html#923" class="Bound"
+      >a</a
+      ><a name="924"
+      > </a
+      ><a name="925" href="Relation.Binary.Bijection.html#925" class="Bound"
+      >&#8467;</a
+      ><a name="926" class="Symbol"
+      >}</a
+      ><a name="927"
+      > </a
+      ><a name="928" class="Symbol"
+      >(</a
+      ><a name="929" href="Relation.Binary.Bijection.html#929" class="Bound"
+      >A</a
+      ><a name="930"
+      > </a
+      ><a name="931" class="Symbol"
+      >:</a
+      ><a name="932"
+      > </a
+      ><a name="933" class="PrimitiveType"
+      >Set</a
+      ><a name="936"
+      > </a
+      ><a name="937" href="Relation.Binary.Bijection.html#923" class="Bound"
+      >a</a
+      ><a name="938" class="Symbol"
+      >)</a
+      ><a name="939"
+      > </a
+      ><a name="940" class="Symbol"
+      >(</a
+      ><a name="941" href="Relation.Binary.Bijection.html#941" class="Bound"
+      >&#8764;</a
+      ><a name="942"
+      > </a
+      ><a name="943" class="Symbol"
+      >:</a
+      ><a name="944"
+      > </a
+      ><a name="945" href="Relation.Binary.Core.html#761" class="Function"
+      >Rel</a
+      ><a name="948"
+      > </a
+      ><a name="949" href="Relation.Binary.Bijection.html#929" class="Bound"
+      >A</a
+      ><a name="950"
+      > </a
+      ><a name="951" href="Relation.Binary.Bijection.html#925" class="Bound"
+      >&#8467;</a
+      ><a name="952" class="Symbol"
+      >)</a
+      ><a name="953"
+      > </a
+      ><a name="954" class="Symbol"
+      >&#8594;</a
+      ><a name="955"
+      > </a
+      ><a name="956" class="PrimitiveType"
+      >Set</a
+      ><a name="959"
+      > </a
+      ><a name="960" class="Symbol"
+      >_</a
+      ><a name="961"
+      >
+</a
+      ><a name="962" href="Relation.Binary.Bijection.html#905" class="Function"
+      >BijectiveRel</a
+      ><a name="974"
+      > </a
+      ><a name="975" href="Relation.Binary.Bijection.html#975" class="Bound"
+      >A</a
+      ><a name="976"
+      > </a
+      ><a name="977" class="Symbol"
+      >=</a
+      ><a name="978"
+      > </a
+      ><a name="979" href="Relation.Binary.Bijection.html#703" class="Record"
+      >BijectiveREL</a
+      ><a name="991"
+      > </a
+      ><a name="992" href="Relation.Binary.Bijection.html#975" class="Bound"
+      >A</a
+      ><a name="993"
+      > </a
+      ><a name="994" href="Relation.Binary.Bijection.html#975" class="Bound"
+      >A</a
+      ><a name="995"
+      >
+
+</a
+      ><a name="997" class="Comment"
+      >{-
+private
+  -- probably already defined somewhere
+  _`on`_ : &#8704; {a &#8467;} {A : Set a} (f : A &#8594; A) &#8594; Rel A &#8467; &#8594; Rel A &#8467;
+  _`on`_ f _&#8764;_ i j = f i &#8764; f j
+
+module Pres-Bij-Props
+                 {a} {A : Set a}
+                 (f : A &#8594; A)
+                 (f-inj : &#8704; {i j} &#8594; f i &#8801; f j &#8594; i &#8801; j) where
+  pres-bij : &#8704; {&#8467;} {&#945; : Rel A &#8467;} &#8594; BijectiveREL A A &#945; &#8594; BijectiveREL A A (f `on` &#945;)
+  pres-bij {_} {&#945;} &#945;-bij
+     = record { injectiveREL = &#955; {x} {y} {z} &#8594; &#945;+-inj {x} {y} {z}
+              ; surjectiveREL = &#955; {x} {y} {z} &#8594; &#945;+-sur {x} {y} {z} }
+     where
+       open BijectiveREL &#945;-bij renaming (injectiveREL to &#945;-inj; surjectiveREL to &#945;-sur)
+       &#945;+-inj : InjectiveREL A A (f `on` &#945;)
+       &#945;+-inj fx&#10216;&#945;&#10217;fz fy&#10216;&#945;&#10217;fz = f-inj (&#945;-inj fx&#10216;&#945;&#10217;fz fy&#10216;&#945;&#10217;fz)
+       &#945;+-sur : SurjectiveREL A A (f `on` &#945;)
+       &#945;+-sur fx&#10216;&#945;&#10217;fz fy&#10216;&#945;&#10217;fz = f-inj (&#945;-sur fx&#10216;&#945;&#10217;fz fy&#10216;&#945;&#10217;fz)
+-}</a
+      ><a name="1846"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

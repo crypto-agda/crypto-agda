@@ -1,0 +1,4909 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Data.Nat</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="73"
+      >
+</a
+      ><a name="74" class="Comment"
+      >-- The Agda standard library</a
+      ><a name="102"
+      >
+</a
+      ><a name="103" class="Comment"
+      >--</a
+      ><a name="105"
+      >
+</a
+      ><a name="106" class="Comment"
+      >-- Natural numbers</a
+      ><a name="124"
+      >
+</a
+      ><a name="125" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="197"
+      >
+
+</a
+      ><a name="199" class="Keyword"
+      >module</a
+      ><a name="205"
+      > </a
+      ><a name="206" href="Data.Nat.html#1" class="Module"
+      >Data.Nat</a
+      ><a name="214"
+      > </a
+      ><a name="215" class="Keyword"
+      >where</a
+      ><a name="220"
+      >
+
+</a
+      ><a name="222" class="Keyword"
+      >open</a
+      ><a name="226"
+      > </a
+      ><a name="227" class="Keyword"
+      >import</a
+      ><a name="233"
+      > </a
+      ><a name="234" href="Function.html#1" class="Module"
+      >Function</a
+      ><a name="242"
+      >
+</a
+      ><a name="243" class="Keyword"
+      >open</a
+      ><a name="247"
+      > </a
+      ><a name="248" class="Keyword"
+      >import</a
+      ><a name="254"
+      > </a
+      ><a name="255" href="Function.Equality.html#1" class="Module"
+      >Function.Equality</a
+      ><a name="272"
+      > </a
+      ><a name="273" class="Symbol"
+      >as</a
+      ><a name="275"
+      > </a
+      ><a name="276" class="Module"
+      >F</a
+      ><a name="277"
+      > </a
+      ><a name="278" class="Keyword"
+      >using</a
+      ><a name="283"
+      > </a
+      ><a name="284" class="Symbol"
+      >(</a
+      ><a name="285"
+      >_&#10216;$&#10217;_</a
+      ><a name="290" class="Symbol"
+      >)</a
+      ><a name="291"
+      >
+</a
+      ><a name="292" class="Keyword"
+      >open</a
+      ><a name="296"
+      > </a
+      ><a name="297" class="Keyword"
+      >import</a
+      ><a name="303"
+      > </a
+      ><a name="304" href="Function.Injection.html#1" class="Module"
+      >Function.Injection</a
+      ><a name="322"
+      > </a
+      ><a name="323" class="Keyword"
+      >using</a
+      ><a name="328"
+      > </a
+      ><a name="329" class="Symbol"
+      >(</a
+      ><a name="330"
+      >_&#8611;_</a
+      ><a name="333" class="Symbol"
+      >)</a
+      ><a name="334"
+      >
+</a
+      ><a name="335" class="Keyword"
+      >open</a
+      ><a name="339"
+      > </a
+      ><a name="340" class="Keyword"
+      >import</a
+      ><a name="346"
+      > </a
+      ><a name="347" href="Data.Sum.html#1" class="Module"
+      >Data.Sum</a
+      ><a name="355"
+      >
+</a
+      ><a name="356" class="Keyword"
+      >open</a
+      ><a name="360"
+      > </a
+      ><a name="361" class="Keyword"
+      >import</a
+      ><a name="367"
+      > </a
+      ><a name="368" href="Data.Empty.html#1" class="Module"
+      >Data.Empty</a
+      ><a name="378"
+      >
+</a
+      ><a name="379" class="Keyword"
+      >import</a
+      ><a name="385"
+      > </a
+      ><a name="386" href="Level.html#1" class="Module"
+      >Level</a
+      ><a name="391"
+      >
+</a
+      ><a name="392" class="Keyword"
+      >open</a
+      ><a name="396"
+      > </a
+      ><a name="397" class="Keyword"
+      >import</a
+      ><a name="403"
+      > </a
+      ><a name="404" href="Relation.Nullary.html#1" class="Module"
+      >Relation.Nullary</a
+      ><a name="420"
+      >
+</a
+      ><a name="421" class="Keyword"
+      >import</a
+      ><a name="427"
+      > </a
+      ><a name="428" href="Relation.Nullary.Decidable.html#1" class="Module"
+      >Relation.Nullary.Decidable</a
+      ><a name="454"
+      > </a
+      ><a name="455" class="Symbol"
+      >as</a
+      ><a name="457"
+      > </a
+      ><a name="458" class="Module"
+      >Dec</a
+      ><a name="461"
+      >
+</a
+      ><a name="462" class="Keyword"
+      >open</a
+      ><a name="466"
+      > </a
+      ><a name="467" class="Keyword"
+      >import</a
+      ><a name="473"
+      > </a
+      ><a name="474" href="Relation.Binary.html#1" class="Module"
+      >Relation.Binary</a
+      ><a name="489"
+      >
+</a
+      ><a name="490" class="Keyword"
+      >open</a
+      ><a name="494"
+      > </a
+      ><a name="495" class="Keyword"
+      >import</a
+      ><a name="501"
+      > </a
+      ><a name="502" href="Relation.Binary.PropositionalEquality.html#1" class="Module"
+      >Relation.Binary.PropositionalEquality</a
+      ><a name="539"
+      > </a
+      ><a name="540" class="Symbol"
+      >as</a
+      ><a name="542"
+      > </a
+      ><a name="543" class="Module"
+      >PropEq</a
+      ><a name="549"
+      >
+  </a
+      ><a name="552" class="Keyword"
+      >using</a
+      ><a name="557"
+      > </a
+      ><a name="558" class="Symbol"
+      >(</a
+      ><a name="559"
+      >_&#8801;_</a
+      ><a name="562" class="Symbol"
+      >;</a
+      ><a name="563"
+      > refl</a
+      ><a name="568" class="Symbol"
+      >)</a
+      ><a name="569"
+      >
+
+</a
+      ><a name="571" class="Keyword"
+      >infixl</a
+      ><a name="577"
+      > </a
+      ><a name="578" class="Number"
+      >7</a
+      ><a name="579"
+      > _*_ _&#8851;_
+</a
+      ><a name="588" class="Keyword"
+      >infixl</a
+      ><a name="594"
+      > </a
+      ><a name="595" class="Number"
+      >6</a
+      ><a name="596"
+      > _&#8760;_ _&#8852;_
+
+</a
+      ><a name="606" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="678"
+      >
+</a
+      ><a name="679" class="Comment"
+      >-- The types</a
+      ><a name="691"
+      >
+
+</a
+      ><a name="693" class="Keyword"
+      >data</a
+      ><a name="697"
+      > </a
+      ><a name="698" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="699"
+      > </a
+      ><a name="700" class="Symbol"
+      >:</a
+      ><a name="701"
+      > </a
+      ><a name="702" class="PrimitiveType"
+      >Set</a
+      ><a name="705"
+      > </a
+      ><a name="706" class="Keyword"
+      >where</a
+      ><a name="711"
+      >
+  </a
+      ><a name="714" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="718"
+      > </a
+      ><a name="719" class="Symbol"
+      >:</a
+      ><a name="720"
+      > </a
+      ><a name="721" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="722"
+      >
+  </a
+      ><a name="725" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="728"
+      >  </a
+      ><a name="730" class="Symbol"
+      >:</a
+      ><a name="731"
+      > </a
+      ><a name="732" class="Symbol"
+      >(</a
+      ><a name="733" href="Data.Nat.html#733" class="Bound"
+      >n</a
+      ><a name="734"
+      > </a
+      ><a name="735" class="Symbol"
+      >:</a
+      ><a name="736"
+      > </a
+      ><a name="737" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="738" class="Symbol"
+      >)</a
+      ><a name="739"
+      > </a
+      ><a name="740" class="Symbol"
+      >&#8594;</a
+      ><a name="741"
+      > </a
+      ><a name="742" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="743"
+      >
+
+</a
+      ><a name="745" class="Symbol"
+      >{-#</a
+      ><a name="748"
+      > </a
+      ><a name="749" class="Keyword"
+      >BUILTIN</a
+      ><a name="756"
+      > NATURAL </a
+      ><a name="765" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="766"
+      >    </a
+      ><a name="770" class="Symbol"
+      >#-}</a
+      ><a name="773"
+      >
+</a
+      ><a name="774" class="Symbol"
+      >{-#</a
+      ><a name="777"
+      > </a
+      ><a name="778" class="Keyword"
+      >BUILTIN</a
+      ><a name="785"
+      > ZERO    </a
+      ><a name="794" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="798"
+      > </a
+      ><a name="799" class="Symbol"
+      >#-}</a
+      ><a name="802"
+      >
+</a
+      ><a name="803" class="Symbol"
+      >{-#</a
+      ><a name="806"
+      > </a
+      ><a name="807" class="Keyword"
+      >BUILTIN</a
+      ><a name="814"
+      > SUC     </a
+      ><a name="823" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="826"
+      >  </a
+      ><a name="828" class="Symbol"
+      >#-}</a
+      ><a name="831"
+      >
+
+</a
+      ><a name="833" class="Keyword"
+      >infix</a
+      ><a name="838"
+      > </a
+      ><a name="839" class="Number"
+      >4</a
+      ><a name="840"
+      > _&#8804;_ _&lt;_ _&#8805;_ _&gt;_ _&#8816;_ _&#8814;_ _&#8817;_ _&#8815;_
+
+</a
+      ><a name="874" class="Keyword"
+      >data</a
+      ><a name="878"
+      > </a
+      ><a name="879" href="Data.Nat.html#879" class="Datatype Operator"
+      >_&#8804;_</a
+      ><a name="882"
+      > </a
+      ><a name="883" class="Symbol"
+      >:</a
+      ><a name="884"
+      > </a
+      ><a name="885" href="Relation.Binary.Core.html#761" class="Function"
+      >Rel</a
+      ><a name="888"
+      > </a
+      ><a name="889" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="890"
+      > </a
+      ><a name="891" href="Agda.Prim.html#268" class="Primitive"
+      >Level.zero</a
+      ><a name="901"
+      > </a
+      ><a name="902" class="Keyword"
+      >where</a
+      ><a name="907"
+      >
+  </a
+      ><a name="910" href="Data.Nat.html#910" class="InductiveConstructor"
+      >z&#8804;n</a
+      ><a name="913"
+      > </a
+      ><a name="914" class="Symbol"
+      >:</a
+      ><a name="915"
+      > </a
+      ><a name="916" class="Symbol"
+      >&#8704;</a
+      ><a name="917"
+      > </a
+      ><a name="918" class="Symbol"
+      >{</a
+      ><a name="919" href="Data.Nat.html#919" class="Bound"
+      >n</a
+      ><a name="920" class="Symbol"
+      >}</a
+      ><a name="921"
+      >                 </a
+      ><a name="938" class="Symbol"
+      >&#8594;</a
+      ><a name="939"
+      > </a
+      ><a name="940" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="944"
+      >  </a
+      ><a name="946" href="Data.Nat.html#879" class="Datatype Operator"
+      >&#8804;</a
+      ><a name="947"
+      > </a
+      ><a name="948" href="Data.Nat.html#919" class="Bound"
+      >n</a
+      ><a name="949"
+      >
+  </a
+      ><a name="952" href="Data.Nat.html#952" class="InductiveConstructor"
+      >s&#8804;s</a
+      ><a name="955"
+      > </a
+      ><a name="956" class="Symbol"
+      >:</a
+      ><a name="957"
+      > </a
+      ><a name="958" class="Symbol"
+      >&#8704;</a
+      ><a name="959"
+      > </a
+      ><a name="960" class="Symbol"
+      >{</a
+      ><a name="961" href="Data.Nat.html#961" class="Bound"
+      >m</a
+      ><a name="962"
+      > </a
+      ><a name="963" href="Data.Nat.html#963" class="Bound"
+      >n</a
+      ><a name="964" class="Symbol"
+      >}</a
+      ><a name="965"
+      > </a
+      ><a name="966" class="Symbol"
+      >(</a
+      ><a name="967" href="Data.Nat.html#967" class="Bound"
+      >m&#8804;n</a
+      ><a name="970"
+      > </a
+      ><a name="971" class="Symbol"
+      >:</a
+      ><a name="972"
+      > </a
+      ><a name="973" href="Data.Nat.html#961" class="Bound"
+      >m</a
+      ><a name="974"
+      > </a
+      ><a name="975" href="Data.Nat.html#879" class="Datatype Operator"
+      >&#8804;</a
+      ><a name="976"
+      > </a
+      ><a name="977" href="Data.Nat.html#963" class="Bound"
+      >n</a
+      ><a name="978" class="Symbol"
+      >)</a
+      ><a name="979"
+      > </a
+      ><a name="980" class="Symbol"
+      >&#8594;</a
+      ><a name="981"
+      > </a
+      ><a name="982" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="985"
+      > </a
+      ><a name="986" href="Data.Nat.html#961" class="Bound"
+      >m</a
+      ><a name="987"
+      > </a
+      ><a name="988" href="Data.Nat.html#879" class="Datatype Operator"
+      >&#8804;</a
+      ><a name="989"
+      > </a
+      ><a name="990" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="993"
+      > </a
+      ><a name="994" href="Data.Nat.html#963" class="Bound"
+      >n</a
+      ><a name="995"
+      >
+
+</a
+      ><a name="997" href="Data.Nat.html#997" class="Function Operator"
+      >_&lt;_</a
+      ><a name="1000"
+      > </a
+      ><a name="1001" class="Symbol"
+      >:</a
+      ><a name="1002"
+      > </a
+      ><a name="1003" href="Relation.Binary.Core.html#761" class="Function"
+      >Rel</a
+      ><a name="1006"
+      > </a
+      ><a name="1007" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="1008"
+      > </a
+      ><a name="1009" href="Agda.Prim.html#268" class="Primitive"
+      >Level.zero</a
+      ><a name="1019"
+      >
+</a
+      ><a name="1020" href="Data.Nat.html#1020" class="Bound"
+      >m</a
+      ><a name="1021"
+      > </a
+      ><a name="1022" href="Data.Nat.html#997" class="Function Operator"
+      >&lt;</a
+      ><a name="1023"
+      > </a
+      ><a name="1024" href="Data.Nat.html#1024" class="Bound"
+      >n</a
+      ><a name="1025"
+      > </a
+      ><a name="1026" class="Symbol"
+      >=</a
+      ><a name="1027"
+      > </a
+      ><a name="1028" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="1031"
+      > </a
+      ><a name="1032" href="Data.Nat.html#1020" class="Bound"
+      >m</a
+      ><a name="1033"
+      > </a
+      ><a name="1034" href="Data.Nat.html#879" class="Datatype Operator"
+      >&#8804;</a
+      ><a name="1035"
+      > </a
+      ><a name="1036" href="Data.Nat.html#1024" class="Bound"
+      >n</a
+      ><a name="1037"
+      >
+
+</a
+      ><a name="1039" href="Data.Nat.html#1039" class="Function Operator"
+      >_&#8805;_</a
+      ><a name="1042"
+      > </a
+      ><a name="1043" class="Symbol"
+      >:</a
+      ><a name="1044"
+      > </a
+      ><a name="1045" href="Relation.Binary.Core.html#761" class="Function"
+      >Rel</a
+      ><a name="1048"
+      > </a
+      ><a name="1049" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="1050"
+      > </a
+      ><a name="1051" href="Agda.Prim.html#268" class="Primitive"
+      >Level.zero</a
+      ><a name="1061"
+      >
+</a
+      ><a name="1062" href="Data.Nat.html#1062" class="Bound"
+      >m</a
+      ><a name="1063"
+      > </a
+      ><a name="1064" href="Data.Nat.html#1039" class="Function Operator"
+      >&#8805;</a
+      ><a name="1065"
+      > </a
+      ><a name="1066" href="Data.Nat.html#1066" class="Bound"
+      >n</a
+      ><a name="1067"
+      > </a
+      ><a name="1068" class="Symbol"
+      >=</a
+      ><a name="1069"
+      > </a
+      ><a name="1070" href="Data.Nat.html#1066" class="Bound"
+      >n</a
+      ><a name="1071"
+      > </a
+      ><a name="1072" href="Data.Nat.html#879" class="Datatype Operator"
+      >&#8804;</a
+      ><a name="1073"
+      > </a
+      ><a name="1074" href="Data.Nat.html#1062" class="Bound"
+      >m</a
+      ><a name="1075"
+      >
+
+</a
+      ><a name="1077" href="Data.Nat.html#1077" class="Function Operator"
+      >_&gt;_</a
+      ><a name="1080"
+      > </a
+      ><a name="1081" class="Symbol"
+      >:</a
+      ><a name="1082"
+      > </a
+      ><a name="1083" href="Relation.Binary.Core.html#761" class="Function"
+      >Rel</a
+      ><a name="1086"
+      > </a
+      ><a name="1087" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="1088"
+      > </a
+      ><a name="1089" href="Agda.Prim.html#268" class="Primitive"
+      >Level.zero</a
+      ><a name="1099"
+      >
+</a
+      ><a name="1100" href="Data.Nat.html#1100" class="Bound"
+      >m</a
+      ><a name="1101"
+      > </a
+      ><a name="1102" href="Data.Nat.html#1077" class="Function Operator"
+      >&gt;</a
+      ><a name="1103"
+      > </a
+      ><a name="1104" href="Data.Nat.html#1104" class="Bound"
+      >n</a
+      ><a name="1105"
+      > </a
+      ><a name="1106" class="Symbol"
+      >=</a
+      ><a name="1107"
+      > </a
+      ><a name="1108" href="Data.Nat.html#1104" class="Bound"
+      >n</a
+      ><a name="1109"
+      > </a
+      ><a name="1110" href="Data.Nat.html#997" class="Function Operator"
+      >&lt;</a
+      ><a name="1111"
+      > </a
+      ><a name="1112" href="Data.Nat.html#1100" class="Bound"
+      >m</a
+      ><a name="1113"
+      >
+
+</a
+      ><a name="1115" href="Data.Nat.html#1115" class="Function Operator"
+      >_&#8816;_</a
+      ><a name="1118"
+      > </a
+      ><a name="1119" class="Symbol"
+      >:</a
+      ><a name="1120"
+      > </a
+      ><a name="1121" href="Relation.Binary.Core.html#761" class="Function"
+      >Rel</a
+      ><a name="1124"
+      > </a
+      ><a name="1125" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="1126"
+      > </a
+      ><a name="1127" href="Agda.Prim.html#268" class="Primitive"
+      >Level.zero</a
+      ><a name="1137"
+      >
+</a
+      ><a name="1138" href="Data.Nat.html#1138" class="Bound"
+      >a</a
+      ><a name="1139"
+      > </a
+      ><a name="1140" href="Data.Nat.html#1115" class="Function Operator"
+      >&#8816;</a
+      ><a name="1141"
+      > </a
+      ><a name="1142" href="Data.Nat.html#1142" class="Bound"
+      >b</a
+      ><a name="1143"
+      > </a
+      ><a name="1144" class="Symbol"
+      >=</a
+      ><a name="1145"
+      > </a
+      ><a name="1146" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="1147"
+      > </a
+      ><a name="1148" href="Data.Nat.html#1138" class="Bound"
+      >a</a
+      ><a name="1149"
+      > </a
+      ><a name="1150" href="Data.Nat.html#879" class="Datatype Operator"
+      >&#8804;</a
+      ><a name="1151"
+      > </a
+      ><a name="1152" href="Data.Nat.html#1142" class="Bound"
+      >b</a
+      ><a name="1153"
+      >
+
+</a
+      ><a name="1155" href="Data.Nat.html#1155" class="Function Operator"
+      >_&#8814;_</a
+      ><a name="1158"
+      > </a
+      ><a name="1159" class="Symbol"
+      >:</a
+      ><a name="1160"
+      > </a
+      ><a name="1161" href="Relation.Binary.Core.html#761" class="Function"
+      >Rel</a
+      ><a name="1164"
+      > </a
+      ><a name="1165" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="1166"
+      > </a
+      ><a name="1167" href="Agda.Prim.html#268" class="Primitive"
+      >Level.zero</a
+      ><a name="1177"
+      >
+</a
+      ><a name="1178" href="Data.Nat.html#1178" class="Bound"
+      >a</a
+      ><a name="1179"
+      > </a
+      ><a name="1180" href="Data.Nat.html#1155" class="Function Operator"
+      >&#8814;</a
+      ><a name="1181"
+      > </a
+      ><a name="1182" href="Data.Nat.html#1182" class="Bound"
+      >b</a
+      ><a name="1183"
+      > </a
+      ><a name="1184" class="Symbol"
+      >=</a
+      ><a name="1185"
+      > </a
+      ><a name="1186" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="1187"
+      > </a
+      ><a name="1188" href="Data.Nat.html#1178" class="Bound"
+      >a</a
+      ><a name="1189"
+      > </a
+      ><a name="1190" href="Data.Nat.html#997" class="Function Operator"
+      >&lt;</a
+      ><a name="1191"
+      > </a
+      ><a name="1192" href="Data.Nat.html#1182" class="Bound"
+      >b</a
+      ><a name="1193"
+      >
+
+</a
+      ><a name="1195" href="Data.Nat.html#1195" class="Function Operator"
+      >_&#8817;_</a
+      ><a name="1198"
+      > </a
+      ><a name="1199" class="Symbol"
+      >:</a
+      ><a name="1200"
+      > </a
+      ><a name="1201" href="Relation.Binary.Core.html#761" class="Function"
+      >Rel</a
+      ><a name="1204"
+      > </a
+      ><a name="1205" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="1206"
+      > </a
+      ><a name="1207" href="Agda.Prim.html#268" class="Primitive"
+      >Level.zero</a
+      ><a name="1217"
+      >
+</a
+      ><a name="1218" href="Data.Nat.html#1218" class="Bound"
+      >a</a
+      ><a name="1219"
+      > </a
+      ><a name="1220" href="Data.Nat.html#1195" class="Function Operator"
+      >&#8817;</a
+      ><a name="1221"
+      > </a
+      ><a name="1222" href="Data.Nat.html#1222" class="Bound"
+      >b</a
+      ><a name="1223"
+      > </a
+      ><a name="1224" class="Symbol"
+      >=</a
+      ><a name="1225"
+      > </a
+      ><a name="1226" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="1227"
+      > </a
+      ><a name="1228" href="Data.Nat.html#1218" class="Bound"
+      >a</a
+      ><a name="1229"
+      > </a
+      ><a name="1230" href="Data.Nat.html#1039" class="Function Operator"
+      >&#8805;</a
+      ><a name="1231"
+      > </a
+      ><a name="1232" href="Data.Nat.html#1222" class="Bound"
+      >b</a
+      ><a name="1233"
+      >
+
+</a
+      ><a name="1235" href="Data.Nat.html#1235" class="Function Operator"
+      >_&#8815;_</a
+      ><a name="1238"
+      > </a
+      ><a name="1239" class="Symbol"
+      >:</a
+      ><a name="1240"
+      > </a
+      ><a name="1241" href="Relation.Binary.Core.html#761" class="Function"
+      >Rel</a
+      ><a name="1244"
+      > </a
+      ><a name="1245" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="1246"
+      > </a
+      ><a name="1247" href="Agda.Prim.html#268" class="Primitive"
+      >Level.zero</a
+      ><a name="1257"
+      >
+</a
+      ><a name="1258" href="Data.Nat.html#1258" class="Bound"
+      >a</a
+      ><a name="1259"
+      > </a
+      ><a name="1260" href="Data.Nat.html#1235" class="Function Operator"
+      >&#8815;</a
+      ><a name="1261"
+      > </a
+      ><a name="1262" href="Data.Nat.html#1262" class="Bound"
+      >b</a
+      ><a name="1263"
+      > </a
+      ><a name="1264" class="Symbol"
+      >=</a
+      ><a name="1265"
+      > </a
+      ><a name="1266" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="1267"
+      > </a
+      ><a name="1268" href="Data.Nat.html#1258" class="Bound"
+      >a</a
+      ><a name="1269"
+      > </a
+      ><a name="1270" href="Data.Nat.html#1077" class="Function Operator"
+      >&gt;</a
+      ><a name="1271"
+      > </a
+      ><a name="1272" href="Data.Nat.html#1262" class="Bound"
+      >b</a
+      ><a name="1273"
+      >
+
+</a
+      ><a name="1275" class="Comment"
+      >-- The following, alternative definition of _&#8804;_ is more suitable for</a
+      ><a name="1343"
+      >
+</a
+      ><a name="1344" class="Comment"
+      >-- well-founded induction (see Induction.Nat).</a
+      ><a name="1390"
+      >
+
+</a
+      ><a name="1392" class="Keyword"
+      >infix</a
+      ><a name="1397"
+      > </a
+      ><a name="1398" class="Number"
+      >4</a
+      ><a name="1399"
+      > _&#8804;&#8242;_ _&lt;&#8242;_ _&#8805;&#8242;_ _&gt;&#8242;_
+
+</a
+      ><a name="1421" class="Keyword"
+      >data</a
+      ><a name="1425"
+      > </a
+      ><a name="1426" href="Data.Nat.html#1426" class="Datatype Operator"
+      >_&#8804;&#8242;_</a
+      ><a name="1430"
+      > </a
+      ><a name="1431" class="Symbol"
+      >(</a
+      ><a name="1432" href="Data.Nat.html#1432" class="Bound"
+      >m</a
+      ><a name="1433"
+      > </a
+      ><a name="1434" class="Symbol"
+      >:</a
+      ><a name="1435"
+      > </a
+      ><a name="1436" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="1437" class="Symbol"
+      >)</a
+      ><a name="1438"
+      > </a
+      ><a name="1439" class="Symbol"
+      >:</a
+      ><a name="1440"
+      > </a
+      ><a name="1441" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="1442"
+      > </a
+      ><a name="1443" class="Symbol"
+      >&#8594;</a
+      ><a name="1444"
+      > </a
+      ><a name="1445" class="PrimitiveType"
+      >Set</a
+      ><a name="1448"
+      > </a
+      ><a name="1449" class="Keyword"
+      >where</a
+      ><a name="1454"
+      >
+  </a
+      ><a name="1457" href="Data.Nat.html#1457" class="InductiveConstructor"
+      >&#8804;&#8242;-refl</a
+      ><a name="1464"
+      > </a
+      ><a name="1465" class="Symbol"
+      >:</a
+      ><a name="1466"
+      >                         </a
+      ><a name="1491" href="Data.Nat.html#1432" class="Bound"
+      >m</a
+      ><a name="1492"
+      > </a
+      ><a name="1493" href="Data.Nat.html#1426" class="Datatype Operator"
+      >&#8804;&#8242;</a
+      ><a name="1495"
+      > </a
+      ><a name="1496" href="Data.Nat.html#1432" class="Bound"
+      >m</a
+      ><a name="1497"
+      >
+  </a
+      ><a name="1500" href="Data.Nat.html#1500" class="InductiveConstructor"
+      >&#8804;&#8242;-step</a
+      ><a name="1507"
+      > </a
+      ><a name="1508" class="Symbol"
+      >:</a
+      ><a name="1509"
+      > </a
+      ><a name="1510" class="Symbol"
+      >&#8704;</a
+      ><a name="1511"
+      > </a
+      ><a name="1512" class="Symbol"
+      >{</a
+      ><a name="1513" href="Data.Nat.html#1513" class="Bound"
+      >n</a
+      ><a name="1514" class="Symbol"
+      >}</a
+      ><a name="1515"
+      > </a
+      ><a name="1516" class="Symbol"
+      >(</a
+      ><a name="1517" href="Data.Nat.html#1517" class="Bound"
+      >m&#8804;&#8242;n</a
+      ><a name="1521"
+      > </a
+      ><a name="1522" class="Symbol"
+      >:</a
+      ><a name="1523"
+      > </a
+      ><a name="1524" href="Data.Nat.html#1432" class="Bound"
+      >m</a
+      ><a name="1525"
+      > </a
+      ><a name="1526" href="Data.Nat.html#1426" class="Datatype Operator"
+      >&#8804;&#8242;</a
+      ><a name="1528"
+      > </a
+      ><a name="1529" href="Data.Nat.html#1513" class="Bound"
+      >n</a
+      ><a name="1530" class="Symbol"
+      >)</a
+      ><a name="1531"
+      > </a
+      ><a name="1532" class="Symbol"
+      >&#8594;</a
+      ><a name="1533"
+      > </a
+      ><a name="1534" href="Data.Nat.html#1432" class="Bound"
+      >m</a
+      ><a name="1535"
+      > </a
+      ><a name="1536" href="Data.Nat.html#1426" class="Datatype Operator"
+      >&#8804;&#8242;</a
+      ><a name="1538"
+      > </a
+      ><a name="1539" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="1542"
+      > </a
+      ><a name="1543" href="Data.Nat.html#1513" class="Bound"
+      >n</a
+      ><a name="1544"
+      >
+
+</a
+      ><a name="1546" href="Data.Nat.html#1546" class="Function Operator"
+      >_&lt;&#8242;_</a
+      ><a name="1550"
+      > </a
+      ><a name="1551" class="Symbol"
+      >:</a
+      ><a name="1552"
+      > </a
+      ><a name="1553" href="Relation.Binary.Core.html#761" class="Function"
+      >Rel</a
+      ><a name="1556"
+      > </a
+      ><a name="1557" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="1558"
+      > </a
+      ><a name="1559" href="Agda.Prim.html#268" class="Primitive"
+      >Level.zero</a
+      ><a name="1569"
+      >
+</a
+      ><a name="1570" href="Data.Nat.html#1570" class="Bound"
+      >m</a
+      ><a name="1571"
+      > </a
+      ><a name="1572" href="Data.Nat.html#1546" class="Function Operator"
+      >&lt;&#8242;</a
+      ><a name="1574"
+      > </a
+      ><a name="1575" href="Data.Nat.html#1575" class="Bound"
+      >n</a
+      ><a name="1576"
+      > </a
+      ><a name="1577" class="Symbol"
+      >=</a
+      ><a name="1578"
+      > </a
+      ><a name="1579" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="1582"
+      > </a
+      ><a name="1583" href="Data.Nat.html#1570" class="Bound"
+      >m</a
+      ><a name="1584"
+      > </a
+      ><a name="1585" href="Data.Nat.html#1426" class="Datatype Operator"
+      >&#8804;&#8242;</a
+      ><a name="1587"
+      > </a
+      ><a name="1588" href="Data.Nat.html#1575" class="Bound"
+      >n</a
+      ><a name="1589"
+      >
+
+</a
+      ><a name="1591" href="Data.Nat.html#1591" class="Function Operator"
+      >_&#8805;&#8242;_</a
+      ><a name="1595"
+      > </a
+      ><a name="1596" class="Symbol"
+      >:</a
+      ><a name="1597"
+      > </a
+      ><a name="1598" href="Relation.Binary.Core.html#761" class="Function"
+      >Rel</a
+      ><a name="1601"
+      > </a
+      ><a name="1602" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="1603"
+      > </a
+      ><a name="1604" href="Agda.Prim.html#268" class="Primitive"
+      >Level.zero</a
+      ><a name="1614"
+      >
+</a
+      ><a name="1615" href="Data.Nat.html#1615" class="Bound"
+      >m</a
+      ><a name="1616"
+      > </a
+      ><a name="1617" href="Data.Nat.html#1591" class="Function Operator"
+      >&#8805;&#8242;</a
+      ><a name="1619"
+      > </a
+      ><a name="1620" href="Data.Nat.html#1620" class="Bound"
+      >n</a
+      ><a name="1621"
+      > </a
+      ><a name="1622" class="Symbol"
+      >=</a
+      ><a name="1623"
+      > </a
+      ><a name="1624" href="Data.Nat.html#1620" class="Bound"
+      >n</a
+      ><a name="1625"
+      > </a
+      ><a name="1626" href="Data.Nat.html#1426" class="Datatype Operator"
+      >&#8804;&#8242;</a
+      ><a name="1628"
+      > </a
+      ><a name="1629" href="Data.Nat.html#1615" class="Bound"
+      >m</a
+      ><a name="1630"
+      >
+
+</a
+      ><a name="1632" href="Data.Nat.html#1632" class="Function Operator"
+      >_&gt;&#8242;_</a
+      ><a name="1636"
+      > </a
+      ><a name="1637" class="Symbol"
+      >:</a
+      ><a name="1638"
+      > </a
+      ><a name="1639" href="Relation.Binary.Core.html#761" class="Function"
+      >Rel</a
+      ><a name="1642"
+      > </a
+      ><a name="1643" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="1644"
+      > </a
+      ><a name="1645" href="Agda.Prim.html#268" class="Primitive"
+      >Level.zero</a
+      ><a name="1655"
+      >
+</a
+      ><a name="1656" href="Data.Nat.html#1656" class="Bound"
+      >m</a
+      ><a name="1657"
+      > </a
+      ><a name="1658" href="Data.Nat.html#1632" class="Function Operator"
+      >&gt;&#8242;</a
+      ><a name="1660"
+      > </a
+      ><a name="1661" href="Data.Nat.html#1661" class="Bound"
+      >n</a
+      ><a name="1662"
+      > </a
+      ><a name="1663" class="Symbol"
+      >=</a
+      ><a name="1664"
+      > </a
+      ><a name="1665" href="Data.Nat.html#1661" class="Bound"
+      >n</a
+      ><a name="1666"
+      > </a
+      ><a name="1667" href="Data.Nat.html#1546" class="Function Operator"
+      >&lt;&#8242;</a
+      ><a name="1669"
+      > </a
+      ><a name="1670" href="Data.Nat.html#1656" class="Bound"
+      >m</a
+      ><a name="1671"
+      >
+
+</a
+      ><a name="1673" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="1745"
+      >
+</a
+      ><a name="1746" class="Comment"
+      >-- A generalisation of the arithmetic operations</a
+      ><a name="1794"
+      >
+
+</a
+      ><a name="1796" href="Data.Nat.html#1796" class="Function"
+      >fold</a
+      ><a name="1800"
+      > </a
+      ><a name="1801" class="Symbol"
+      >:</a
+      ><a name="1802"
+      > </a
+      ><a name="1803" class="Symbol"
+      >{</a
+      ><a name="1804" href="Data.Nat.html#1804" class="Bound"
+      >a</a
+      ><a name="1805"
+      > </a
+      ><a name="1806" class="Symbol"
+      >:</a
+      ><a name="1807"
+      > </a
+      ><a name="1808" class="PrimitiveType"
+      >Set</a
+      ><a name="1811" class="Symbol"
+      >}</a
+      ><a name="1812"
+      > </a
+      ><a name="1813" class="Symbol"
+      >&#8594;</a
+      ><a name="1814"
+      > </a
+      ><a name="1815" href="Data.Nat.html#1804" class="Bound"
+      >a</a
+      ><a name="1816"
+      > </a
+      ><a name="1817" class="Symbol"
+      >&#8594;</a
+      ><a name="1818"
+      > </a
+      ><a name="1819" class="Symbol"
+      >(</a
+      ><a name="1820" href="Data.Nat.html#1804" class="Bound"
+      >a</a
+      ><a name="1821"
+      > </a
+      ><a name="1822" class="Symbol"
+      >&#8594;</a
+      ><a name="1823"
+      > </a
+      ><a name="1824" href="Data.Nat.html#1804" class="Bound"
+      >a</a
+      ><a name="1825" class="Symbol"
+      >)</a
+      ><a name="1826"
+      > </a
+      ><a name="1827" class="Symbol"
+      >&#8594;</a
+      ><a name="1828"
+      > </a
+      ><a name="1829" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="1830"
+      > </a
+      ><a name="1831" class="Symbol"
+      >&#8594;</a
+      ><a name="1832"
+      > </a
+      ><a name="1833" href="Data.Nat.html#1804" class="Bound"
+      >a</a
+      ><a name="1834"
+      >
+</a
+      ><a name="1835" href="Data.Nat.html#1796" class="Function"
+      >fold</a
+      ><a name="1839"
+      > </a
+      ><a name="1840" href="Data.Nat.html#1840" class="Bound"
+      >z</a
+      ><a name="1841"
+      > </a
+      ><a name="1842" href="Data.Nat.html#1842" class="Bound"
+      >s</a
+      ><a name="1843"
+      > </a
+      ><a name="1844" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="1848"
+      >    </a
+      ><a name="1852" class="Symbol"
+      >=</a
+      ><a name="1853"
+      > </a
+      ><a name="1854" href="Data.Nat.html#1840" class="Bound"
+      >z</a
+      ><a name="1855"
+      >
+</a
+      ><a name="1856" href="Data.Nat.html#1796" class="Function"
+      >fold</a
+      ><a name="1860"
+      > </a
+      ><a name="1861" href="Data.Nat.html#1861" class="Bound"
+      >z</a
+      ><a name="1862"
+      > </a
+      ><a name="1863" href="Data.Nat.html#1863" class="Bound"
+      >s</a
+      ><a name="1864"
+      > </a
+      ><a name="1865" class="Symbol"
+      >(</a
+      ><a name="1866" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="1869"
+      > </a
+      ><a name="1870" href="Data.Nat.html#1870" class="Bound"
+      >n</a
+      ><a name="1871" class="Symbol"
+      >)</a
+      ><a name="1872"
+      > </a
+      ><a name="1873" class="Symbol"
+      >=</a
+      ><a name="1874"
+      > </a
+      ><a name="1875" href="Data.Nat.html#1863" class="Bound"
+      >s</a
+      ><a name="1876"
+      > </a
+      ><a name="1877" class="Symbol"
+      >(</a
+      ><a name="1878" href="Data.Nat.html#1796" class="Function"
+      >fold</a
+      ><a name="1882"
+      > </a
+      ><a name="1883" href="Data.Nat.html#1861" class="Bound"
+      >z</a
+      ><a name="1884"
+      > </a
+      ><a name="1885" href="Data.Nat.html#1863" class="Bound"
+      >s</a
+      ><a name="1886"
+      > </a
+      ><a name="1887" href="Data.Nat.html#1870" class="Bound"
+      >n</a
+      ><a name="1888" class="Symbol"
+      >)</a
+      ><a name="1889"
+      >
+
+</a
+      ><a name="1891" class="Keyword"
+      >module</a
+      ><a name="1897"
+      > </a
+      ><a name="1898" href="Data.Nat.html#1898" class="Module"
+      >GeneralisedArithmetic</a
+      ><a name="1919"
+      > </a
+      ><a name="1920" class="Symbol"
+      >{</a
+      ><a name="1921" href="Data.Nat.html#1921" class="Bound"
+      >a</a
+      ><a name="1922"
+      > </a
+      ><a name="1923" class="Symbol"
+      >:</a
+      ><a name="1924"
+      > </a
+      ><a name="1925" class="PrimitiveType"
+      >Set</a
+      ><a name="1928" class="Symbol"
+      >}</a
+      ><a name="1929"
+      > </a
+      ><a name="1930" class="Symbol"
+      >(</a
+      ><a name="1931" href="Data.Nat.html#1931" class="Bound"
+      >0#</a
+      ><a name="1933"
+      > </a
+      ><a name="1934" class="Symbol"
+      >:</a
+      ><a name="1935"
+      > </a
+      ><a name="1936" href="Data.Nat.html#1921" class="Bound"
+      >a</a
+      ><a name="1937" class="Symbol"
+      >)</a
+      ><a name="1938"
+      > </a
+      ><a name="1939" class="Symbol"
+      >(</a
+      ><a name="1940" href="Data.Nat.html#1940" class="Bound"
+      >1+</a
+      ><a name="1942"
+      > </a
+      ><a name="1943" class="Symbol"
+      >:</a
+      ><a name="1944"
+      > </a
+      ><a name="1945" href="Data.Nat.html#1921" class="Bound"
+      >a</a
+      ><a name="1946"
+      > </a
+      ><a name="1947" class="Symbol"
+      >&#8594;</a
+      ><a name="1948"
+      > </a
+      ><a name="1949" href="Data.Nat.html#1921" class="Bound"
+      >a</a
+      ><a name="1950" class="Symbol"
+      >)</a
+      ><a name="1951"
+      > </a
+      ><a name="1952" class="Keyword"
+      >where</a
+      ><a name="1957"
+      >
+
+  </a
+      ><a name="1961" href="Data.Nat.html#1961" class="Function"
+      >add</a
+      ><a name="1964"
+      > </a
+      ><a name="1965" class="Symbol"
+      >:</a
+      ><a name="1966"
+      > </a
+      ><a name="1967" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="1968"
+      > </a
+      ><a name="1969" class="Symbol"
+      >&#8594;</a
+      ><a name="1970"
+      > </a
+      ><a name="1971" href="Data.Nat.html#1921" class="Bound"
+      >a</a
+      ><a name="1972"
+      > </a
+      ><a name="1973" class="Symbol"
+      >&#8594;</a
+      ><a name="1974"
+      > </a
+      ><a name="1975" href="Data.Nat.html#1921" class="Bound"
+      >a</a
+      ><a name="1976"
+      >
+  </a
+      ><a name="1979" href="Data.Nat.html#1961" class="Function"
+      >add</a
+      ><a name="1982"
+      > </a
+      ><a name="1983" href="Data.Nat.html#1983" class="Bound"
+      >n</a
+      ><a name="1984"
+      > </a
+      ><a name="1985" href="Data.Nat.html#1985" class="Bound"
+      >z</a
+      ><a name="1986"
+      > </a
+      ><a name="1987" class="Symbol"
+      >=</a
+      ><a name="1988"
+      > </a
+      ><a name="1989" href="Data.Nat.html#1796" class="Function"
+      >fold</a
+      ><a name="1993"
+      > </a
+      ><a name="1994" href="Data.Nat.html#1985" class="Bound"
+      >z</a
+      ><a name="1995"
+      > </a
+      ><a name="1996" href="Data.Nat.html#1940" class="Bound"
+      >1+</a
+      ><a name="1998"
+      > </a
+      ><a name="1999" href="Data.Nat.html#1983" class="Bound"
+      >n</a
+      ><a name="2000"
+      >
+
+  </a
+      ><a name="2004" href="Data.Nat.html#2004" class="Function"
+      >mul</a
+      ><a name="2007"
+      > </a
+      ><a name="2008" class="Symbol"
+      >:</a
+      ><a name="2009"
+      > </a
+      ><a name="2010" class="Symbol"
+      >(</a
+      ><a name="2011" href="Data.Nat.html#2011" class="Bound"
+      >+</a
+      ><a name="2012"
+      > </a
+      ><a name="2013" class="Symbol"
+      >:</a
+      ><a name="2014"
+      > </a
+      ><a name="2015" href="Data.Nat.html#1921" class="Bound"
+      >a</a
+      ><a name="2016"
+      > </a
+      ><a name="2017" class="Symbol"
+      >&#8594;</a
+      ><a name="2018"
+      > </a
+      ><a name="2019" href="Data.Nat.html#1921" class="Bound"
+      >a</a
+      ><a name="2020"
+      > </a
+      ><a name="2021" class="Symbol"
+      >&#8594;</a
+      ><a name="2022"
+      > </a
+      ><a name="2023" href="Data.Nat.html#1921" class="Bound"
+      >a</a
+      ><a name="2024" class="Symbol"
+      >)</a
+      ><a name="2025"
+      > </a
+      ><a name="2026" class="Symbol"
+      >&#8594;</a
+      ><a name="2027"
+      > </a
+      ><a name="2028" class="Symbol"
+      >(</a
+      ><a name="2029" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="2030"
+      > </a
+      ><a name="2031" class="Symbol"
+      >&#8594;</a
+      ><a name="2032"
+      > </a
+      ><a name="2033" href="Data.Nat.html#1921" class="Bound"
+      >a</a
+      ><a name="2034"
+      > </a
+      ><a name="2035" class="Symbol"
+      >&#8594;</a
+      ><a name="2036"
+      > </a
+      ><a name="2037" href="Data.Nat.html#1921" class="Bound"
+      >a</a
+      ><a name="2038" class="Symbol"
+      >)</a
+      ><a name="2039"
+      >
+  </a
+      ><a name="2042" href="Data.Nat.html#2004" class="Function"
+      >mul</a
+      ><a name="2045"
+      > </a
+      ><a name="2046" href="Data.Nat.html#2046" class="Bound Operator"
+      >_+_</a
+      ><a name="2049"
+      > </a
+      ><a name="2050" href="Data.Nat.html#2050" class="Bound"
+      >n</a
+      ><a name="2051"
+      > </a
+      ><a name="2052" href="Data.Nat.html#2052" class="Bound"
+      >x</a
+      ><a name="2053"
+      > </a
+      ><a name="2054" class="Symbol"
+      >=</a
+      ><a name="2055"
+      > </a
+      ><a name="2056" href="Data.Nat.html#1796" class="Function"
+      >fold</a
+      ><a name="2060"
+      > </a
+      ><a name="2061" href="Data.Nat.html#1931" class="Bound"
+      >0#</a
+      ><a name="2063"
+      > </a
+      ><a name="2064" class="Symbol"
+      >(&#955;</a
+      ><a name="2066"
+      > </a
+      ><a name="2067" href="Data.Nat.html#2067" class="Bound"
+      >s</a
+      ><a name="2068"
+      > </a
+      ><a name="2069" class="Symbol"
+      >&#8594;</a
+      ><a name="2070"
+      > </a
+      ><a name="2071" href="Data.Nat.html#2052" class="Bound"
+      >x</a
+      ><a name="2072"
+      > </a
+      ><a name="2073" href="Data.Nat.html#2046" class="Bound Operator"
+      >+</a
+      ><a name="2074"
+      > </a
+      ><a name="2075" href="Data.Nat.html#2067" class="Bound"
+      >s</a
+      ><a name="2076" class="Symbol"
+      >)</a
+      ><a name="2077"
+      > </a
+      ><a name="2078" href="Data.Nat.html#2050" class="Bound"
+      >n</a
+      ><a name="2079"
+      >
+
+</a
+      ><a name="2081" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="2153"
+      >
+</a
+      ><a name="2154" class="Comment"
+      >-- Arithmetic</a
+      ><a name="2167"
+      >
+
+</a
+      ><a name="2169" href="Data.Nat.html#2169" class="Function"
+      >pred</a
+      ><a name="2173"
+      > </a
+      ><a name="2174" class="Symbol"
+      >:</a
+      ><a name="2175"
+      > </a
+      ><a name="2176" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="2177"
+      > </a
+      ><a name="2178" class="Symbol"
+      >&#8594;</a
+      ><a name="2179"
+      > </a
+      ><a name="2180" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="2181"
+      >
+</a
+      ><a name="2182" href="Data.Nat.html#2169" class="Function"
+      >pred</a
+      ><a name="2186"
+      > </a
+      ><a name="2187" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="2191"
+      >    </a
+      ><a name="2195" class="Symbol"
+      >=</a
+      ><a name="2196"
+      > </a
+      ><a name="2197" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="2201"
+      >
+</a
+      ><a name="2202" href="Data.Nat.html#2169" class="Function"
+      >pred</a
+      ><a name="2206"
+      > </a
+      ><a name="2207" class="Symbol"
+      >(</a
+      ><a name="2208" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="2211"
+      > </a
+      ><a name="2212" href="Data.Nat.html#2212" class="Bound"
+      >n</a
+      ><a name="2213" class="Symbol"
+      >)</a
+      ><a name="2214"
+      > </a
+      ><a name="2215" class="Symbol"
+      >=</a
+      ><a name="2216"
+      > </a
+      ><a name="2217" href="Data.Nat.html#2212" class="Bound"
+      >n</a
+      ><a name="2218"
+      >
+
+</a
+      ><a name="2220" class="Keyword"
+      >infixl</a
+      ><a name="2226"
+      > </a
+      ><a name="2227" class="Number"
+      >6</a
+      ><a name="2228"
+      > _+_ _+&#8910;_
+
+</a
+      ><a name="2239" href="Data.Nat.html#2239" class="Function Operator"
+      >_+_</a
+      ><a name="2242"
+      > </a
+      ><a name="2243" class="Symbol"
+      >:</a
+      ><a name="2244"
+      > </a
+      ><a name="2245" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="2246"
+      > </a
+      ><a name="2247" class="Symbol"
+      >&#8594;</a
+      ><a name="2248"
+      > </a
+      ><a name="2249" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="2250"
+      > </a
+      ><a name="2251" class="Symbol"
+      >&#8594;</a
+      ><a name="2252"
+      > </a
+      ><a name="2253" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="2254"
+      >
+</a
+      ><a name="2255" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="2259"
+      >  </a
+      ><a name="2261" href="Data.Nat.html#2239" class="Function Operator"
+      >+</a
+      ><a name="2262"
+      > </a
+      ><a name="2263" href="Data.Nat.html#2263" class="Bound"
+      >n</a
+      ><a name="2264"
+      > </a
+      ><a name="2265" class="Symbol"
+      >=</a
+      ><a name="2266"
+      > </a
+      ><a name="2267" href="Data.Nat.html#2263" class="Bound"
+      >n</a
+      ><a name="2268"
+      >
+</a
+      ><a name="2269" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="2272"
+      > </a
+      ><a name="2273" href="Data.Nat.html#2273" class="Bound"
+      >m</a
+      ><a name="2274"
+      > </a
+      ><a name="2275" href="Data.Nat.html#2239" class="Function Operator"
+      >+</a
+      ><a name="2276"
+      > </a
+      ><a name="2277" href="Data.Nat.html#2277" class="Bound"
+      >n</a
+      ><a name="2278"
+      > </a
+      ><a name="2279" class="Symbol"
+      >=</a
+      ><a name="2280"
+      > </a
+      ><a name="2281" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="2284"
+      > </a
+      ><a name="2285" class="Symbol"
+      >(</a
+      ><a name="2286" href="Data.Nat.html#2273" class="Bound"
+      >m</a
+      ><a name="2287"
+      > </a
+      ><a name="2288" href="Data.Nat.html#2239" class="Function Operator"
+      >+</a
+      ><a name="2289"
+      > </a
+      ><a name="2290" href="Data.Nat.html#2277" class="Bound"
+      >n</a
+      ><a name="2291" class="Symbol"
+      >)</a
+      ><a name="2292"
+      >
+
+</a
+      ><a name="2294" class="Symbol"
+      >{-#</a
+      ><a name="2297"
+      > </a
+      ><a name="2298" class="Keyword"
+      >BUILTIN</a
+      ><a name="2305"
+      > NATPLUS </a
+      ><a name="2314" href="Data.Nat.html#2239" class="Primitive Operator"
+      >_+_</a
+      ><a name="2317"
+      > </a
+      ><a name="2318" class="Symbol"
+      >#-}</a
+      ><a name="2321"
+      >
+
+</a
+      ><a name="2323" class="Comment"
+      >-- Argument-swapping addition. Used by Data.Vec._&#8910;_.</a
+      ><a name="2375"
+      >
+
+</a
+      ><a name="2377" href="Data.Nat.html#2377" class="Function Operator"
+      >_+&#8910;_</a
+      ><a name="2381"
+      > </a
+      ><a name="2382" class="Symbol"
+      >:</a
+      ><a name="2383"
+      > </a
+      ><a name="2384" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="2385"
+      > </a
+      ><a name="2386" class="Symbol"
+      >&#8594;</a
+      ><a name="2387"
+      > </a
+      ><a name="2388" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="2389"
+      > </a
+      ><a name="2390" class="Symbol"
+      >&#8594;</a
+      ><a name="2391"
+      > </a
+      ><a name="2392" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="2393"
+      >
+</a
+      ><a name="2394" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="2398"
+      >  </a
+      ><a name="2400" href="Data.Nat.html#2377" class="Function Operator"
+      >+&#8910;</a
+      ><a name="2402"
+      > </a
+      ><a name="2403" href="Data.Nat.html#2403" class="Bound"
+      >n</a
+      ><a name="2404"
+      > </a
+      ><a name="2405" class="Symbol"
+      >=</a
+      ><a name="2406"
+      > </a
+      ><a name="2407" href="Data.Nat.html#2403" class="Bound"
+      >n</a
+      ><a name="2408"
+      >
+</a
+      ><a name="2409" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="2412"
+      > </a
+      ><a name="2413" href="Data.Nat.html#2413" class="Bound"
+      >m</a
+      ><a name="2414"
+      > </a
+      ><a name="2415" href="Data.Nat.html#2377" class="Function Operator"
+      >+&#8910;</a
+      ><a name="2417"
+      > </a
+      ><a name="2418" href="Data.Nat.html#2418" class="Bound"
+      >n</a
+      ><a name="2419"
+      > </a
+      ><a name="2420" class="Symbol"
+      >=</a
+      ><a name="2421"
+      > </a
+      ><a name="2422" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="2425"
+      > </a
+      ><a name="2426" class="Symbol"
+      >(</a
+      ><a name="2427" href="Data.Nat.html#2418" class="Bound"
+      >n</a
+      ><a name="2428"
+      > </a
+      ><a name="2429" href="Data.Nat.html#2377" class="Function Operator"
+      >+&#8910;</a
+      ><a name="2431"
+      > </a
+      ><a name="2432" href="Data.Nat.html#2413" class="Bound"
+      >m</a
+      ><a name="2433" class="Symbol"
+      >)</a
+      ><a name="2434"
+      >
+
+</a
+      ><a name="2436" href="Data.Nat.html#2436" class="Function Operator"
+      >_&#8760;_</a
+      ><a name="2439"
+      > </a
+      ><a name="2440" class="Symbol"
+      >:</a
+      ><a name="2441"
+      > </a
+      ><a name="2442" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="2443"
+      > </a
+      ><a name="2444" class="Symbol"
+      >&#8594;</a
+      ><a name="2445"
+      > </a
+      ><a name="2446" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="2447"
+      > </a
+      ><a name="2448" class="Symbol"
+      >&#8594;</a
+      ><a name="2449"
+      > </a
+      ><a name="2450" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="2451"
+      >
+</a
+      ><a name="2452" href="Data.Nat.html#2452" class="Bound"
+      >m</a
+      ><a name="2453"
+      >     </a
+      ><a name="2458" href="Data.Nat.html#2436" class="Function Operator"
+      >&#8760;</a
+      ><a name="2459"
+      > </a
+      ><a name="2460" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="2464"
+      >  </a
+      ><a name="2466" class="Symbol"
+      >=</a
+      ><a name="2467"
+      > </a
+      ><a name="2468" href="Data.Nat.html#2452" class="Bound"
+      >m</a
+      ><a name="2469"
+      >
+</a
+      ><a name="2470" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="2474"
+      >  </a
+      ><a name="2476" href="Data.Nat.html#2436" class="Function Operator"
+      >&#8760;</a
+      ><a name="2477"
+      > </a
+      ><a name="2478" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="2481"
+      > </a
+      ><a name="2482" href="Data.Nat.html#2482" class="Bound"
+      >n</a
+      ><a name="2483"
+      > </a
+      ><a name="2484" class="Symbol"
+      >=</a
+      ><a name="2485"
+      > </a
+      ><a name="2486" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="2490"
+      >
+</a
+      ><a name="2491" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="2494"
+      > </a
+      ><a name="2495" href="Data.Nat.html#2495" class="Bound"
+      >m</a
+      ><a name="2496"
+      > </a
+      ><a name="2497" href="Data.Nat.html#2436" class="Function Operator"
+      >&#8760;</a
+      ><a name="2498"
+      > </a
+      ><a name="2499" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="2502"
+      > </a
+      ><a name="2503" href="Data.Nat.html#2503" class="Bound"
+      >n</a
+      ><a name="2504"
+      > </a
+      ><a name="2505" class="Symbol"
+      >=</a
+      ><a name="2506"
+      > </a
+      ><a name="2507" href="Data.Nat.html#2495" class="Bound"
+      >m</a
+      ><a name="2508"
+      > </a
+      ><a name="2509" href="Data.Nat.html#2436" class="Function Operator"
+      >&#8760;</a
+      ><a name="2510"
+      > </a
+      ><a name="2511" href="Data.Nat.html#2503" class="Bound"
+      >n</a
+      ><a name="2512"
+      >
+
+</a
+      ><a name="2514" class="Symbol"
+      >{-#</a
+      ><a name="2517"
+      > </a
+      ><a name="2518" class="Keyword"
+      >BUILTIN</a
+      ><a name="2525"
+      > NATMINUS </a
+      ><a name="2535" href="Data.Nat.html#2436" class="Primitive Operator"
+      >_&#8760;_</a
+      ><a name="2538"
+      > </a
+      ><a name="2539" class="Symbol"
+      >#-}</a
+      ><a name="2542"
+      >
+
+</a
+      ><a name="2544" href="Data.Nat.html#2544" class="Function Operator"
+      >_*_</a
+      ><a name="2547"
+      > </a
+      ><a name="2548" class="Symbol"
+      >:</a
+      ><a name="2549"
+      > </a
+      ><a name="2550" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="2551"
+      > </a
+      ><a name="2552" class="Symbol"
+      >&#8594;</a
+      ><a name="2553"
+      > </a
+      ><a name="2554" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="2555"
+      > </a
+      ><a name="2556" class="Symbol"
+      >&#8594;</a
+      ><a name="2557"
+      > </a
+      ><a name="2558" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="2559"
+      >
+</a
+      ><a name="2560" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="2564"
+      >  </a
+      ><a name="2566" href="Data.Nat.html#2544" class="Function Operator"
+      >*</a
+      ><a name="2567"
+      > </a
+      ><a name="2568" href="Data.Nat.html#2568" class="Bound"
+      >n</a
+      ><a name="2569"
+      > </a
+      ><a name="2570" class="Symbol"
+      >=</a
+      ><a name="2571"
+      > </a
+      ><a name="2572" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="2576"
+      >
+</a
+      ><a name="2577" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="2580"
+      > </a
+      ><a name="2581" href="Data.Nat.html#2581" class="Bound"
+      >m</a
+      ><a name="2582"
+      > </a
+      ><a name="2583" href="Data.Nat.html#2544" class="Function Operator"
+      >*</a
+      ><a name="2584"
+      > </a
+      ><a name="2585" href="Data.Nat.html#2585" class="Bound"
+      >n</a
+      ><a name="2586"
+      > </a
+      ><a name="2587" class="Symbol"
+      >=</a
+      ><a name="2588"
+      > </a
+      ><a name="2589" href="Data.Nat.html#2585" class="Bound"
+      >n</a
+      ><a name="2590"
+      > </a
+      ><a name="2591" href="Data.Nat.html#2239" class="Primitive Operator"
+      >+</a
+      ><a name="2592"
+      > </a
+      ><a name="2593" href="Data.Nat.html#2581" class="Bound"
+      >m</a
+      ><a name="2594"
+      > </a
+      ><a name="2595" href="Data.Nat.html#2544" class="Function Operator"
+      >*</a
+      ><a name="2596"
+      > </a
+      ><a name="2597" href="Data.Nat.html#2585" class="Bound"
+      >n</a
+      ><a name="2598"
+      >
+
+</a
+      ><a name="2600" class="Symbol"
+      >{-#</a
+      ><a name="2603"
+      > </a
+      ><a name="2604" class="Keyword"
+      >BUILTIN</a
+      ><a name="2611"
+      > NATTIMES </a
+      ><a name="2621" href="Data.Nat.html#2544" class="Primitive Operator"
+      >_*_</a
+      ><a name="2624"
+      > </a
+      ><a name="2625" class="Symbol"
+      >#-}</a
+      ><a name="2628"
+      >
+
+</a
+      ><a name="2630" class="Comment"
+      >-- Max.</a
+      ><a name="2637"
+      >
+
+</a
+      ><a name="2639" href="Data.Nat.html#2639" class="Function Operator"
+      >_&#8852;_</a
+      ><a name="2642"
+      > </a
+      ><a name="2643" class="Symbol"
+      >:</a
+      ><a name="2644"
+      > </a
+      ><a name="2645" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="2646"
+      > </a
+      ><a name="2647" class="Symbol"
+      >&#8594;</a
+      ><a name="2648"
+      > </a
+      ><a name="2649" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="2650"
+      > </a
+      ><a name="2651" class="Symbol"
+      >&#8594;</a
+      ><a name="2652"
+      > </a
+      ><a name="2653" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="2654"
+      >
+</a
+      ><a name="2655" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="2659"
+      >  </a
+      ><a name="2661" href="Data.Nat.html#2639" class="Function Operator"
+      >&#8852;</a
+      ><a name="2662"
+      > </a
+      ><a name="2663" href="Data.Nat.html#2663" class="Bound"
+      >n</a
+      ><a name="2664"
+      >     </a
+      ><a name="2669" class="Symbol"
+      >=</a
+      ><a name="2670"
+      > </a
+      ><a name="2671" href="Data.Nat.html#2663" class="Bound"
+      >n</a
+      ><a name="2672"
+      >
+</a
+      ><a name="2673" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="2676"
+      > </a
+      ><a name="2677" href="Data.Nat.html#2677" class="Bound"
+      >m</a
+      ><a name="2678"
+      > </a
+      ><a name="2679" href="Data.Nat.html#2639" class="Function Operator"
+      >&#8852;</a
+      ><a name="2680"
+      > </a
+      ><a name="2681" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="2685"
+      >  </a
+      ><a name="2687" class="Symbol"
+      >=</a
+      ><a name="2688"
+      > </a
+      ><a name="2689" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="2692"
+      > </a
+      ><a name="2693" href="Data.Nat.html#2677" class="Bound"
+      >m</a
+      ><a name="2694"
+      >
+</a
+      ><a name="2695" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="2698"
+      > </a
+      ><a name="2699" href="Data.Nat.html#2699" class="Bound"
+      >m</a
+      ><a name="2700"
+      > </a
+      ><a name="2701" href="Data.Nat.html#2639" class="Function Operator"
+      >&#8852;</a
+      ><a name="2702"
+      > </a
+      ><a name="2703" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="2706"
+      > </a
+      ><a name="2707" href="Data.Nat.html#2707" class="Bound"
+      >n</a
+      ><a name="2708"
+      > </a
+      ><a name="2709" class="Symbol"
+      >=</a
+      ><a name="2710"
+      > </a
+      ><a name="2711" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="2714"
+      > </a
+      ><a name="2715" class="Symbol"
+      >(</a
+      ><a name="2716" href="Data.Nat.html#2699" class="Bound"
+      >m</a
+      ><a name="2717"
+      > </a
+      ><a name="2718" href="Data.Nat.html#2639" class="Function Operator"
+      >&#8852;</a
+      ><a name="2719"
+      > </a
+      ><a name="2720" href="Data.Nat.html#2707" class="Bound"
+      >n</a
+      ><a name="2721" class="Symbol"
+      >)</a
+      ><a name="2722"
+      >
+
+</a
+      ><a name="2724" class="Comment"
+      >-- Min.</a
+      ><a name="2731"
+      >
+
+</a
+      ><a name="2733" href="Data.Nat.html#2733" class="Function Operator"
+      >_&#8851;_</a
+      ><a name="2736"
+      > </a
+      ><a name="2737" class="Symbol"
+      >:</a
+      ><a name="2738"
+      > </a
+      ><a name="2739" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="2740"
+      > </a
+      ><a name="2741" class="Symbol"
+      >&#8594;</a
+      ><a name="2742"
+      > </a
+      ><a name="2743" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="2744"
+      > </a
+      ><a name="2745" class="Symbol"
+      >&#8594;</a
+      ><a name="2746"
+      > </a
+      ><a name="2747" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="2748"
+      >
+</a
+      ><a name="2749" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="2753"
+      >  </a
+      ><a name="2755" href="Data.Nat.html#2733" class="Function Operator"
+      >&#8851;</a
+      ><a name="2756"
+      > </a
+      ><a name="2757" href="Data.Nat.html#2757" class="Bound"
+      >n</a
+      ><a name="2758"
+      >     </a
+      ><a name="2763" class="Symbol"
+      >=</a
+      ><a name="2764"
+      > </a
+      ><a name="2765" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="2769"
+      >
+</a
+      ><a name="2770" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="2773"
+      > </a
+      ><a name="2774" href="Data.Nat.html#2774" class="Bound"
+      >m</a
+      ><a name="2775"
+      > </a
+      ><a name="2776" href="Data.Nat.html#2733" class="Function Operator"
+      >&#8851;</a
+      ><a name="2777"
+      > </a
+      ><a name="2778" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="2782"
+      >  </a
+      ><a name="2784" class="Symbol"
+      >=</a
+      ><a name="2785"
+      > </a
+      ><a name="2786" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="2790"
+      >
+</a
+      ><a name="2791" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="2794"
+      > </a
+      ><a name="2795" href="Data.Nat.html#2795" class="Bound"
+      >m</a
+      ><a name="2796"
+      > </a
+      ><a name="2797" href="Data.Nat.html#2733" class="Function Operator"
+      >&#8851;</a
+      ><a name="2798"
+      > </a
+      ><a name="2799" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="2802"
+      > </a
+      ><a name="2803" href="Data.Nat.html#2803" class="Bound"
+      >n</a
+      ><a name="2804"
+      > </a
+      ><a name="2805" class="Symbol"
+      >=</a
+      ><a name="2806"
+      > </a
+      ><a name="2807" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="2810"
+      > </a
+      ><a name="2811" class="Symbol"
+      >(</a
+      ><a name="2812" href="Data.Nat.html#2795" class="Bound"
+      >m</a
+      ><a name="2813"
+      > </a
+      ><a name="2814" href="Data.Nat.html#2733" class="Function Operator"
+      >&#8851;</a
+      ><a name="2815"
+      > </a
+      ><a name="2816" href="Data.Nat.html#2803" class="Bound"
+      >n</a
+      ><a name="2817" class="Symbol"
+      >)</a
+      ><a name="2818"
+      >
+
+</a
+      ><a name="2820" class="Comment"
+      >-- Division by 2, rounded downwards.</a
+      ><a name="2856"
+      >
+
+</a
+      ><a name="2858" href="Data.Nat.html#2858" class="Function Operator"
+      >&#8970;_/2&#8971;</a
+      ><a name="2863"
+      > </a
+      ><a name="2864" class="Symbol"
+      >:</a
+      ><a name="2865"
+      > </a
+      ><a name="2866" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="2867"
+      > </a
+      ><a name="2868" class="Symbol"
+      >&#8594;</a
+      ><a name="2869"
+      > </a
+      ><a name="2870" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="2871"
+      >
+</a
+      ><a name="2872" href="Data.Nat.html#2858" class="Function Operator"
+      >&#8970;</a
+      ><a name="2873"
+      > </a
+      ><a name="2874" href="Data.Nat.html#714" class="InductiveConstructor"
+      >0</a
+      ><a name="2875"
+      > </a
+      ><a name="2876" href="Data.Nat.html#2858" class="Function Operator"
+      >/2&#8971;</a
+      ><a name="2879"
+      >           </a
+      ><a name="2890" class="Symbol"
+      >=</a
+      ><a name="2891"
+      > </a
+      ><a name="2892" class="Number"
+      >0</a
+      ><a name="2893"
+      >
+</a
+      ><a name="2894" href="Data.Nat.html#2858" class="Function Operator"
+      >&#8970;</a
+      ><a name="2895"
+      > </a
+      ><a name="2896" href="Data.Nat.html#725" class="InductiveConstructor"
+      >1</a
+      ><a name="2897"
+      > </a
+      ><a name="2898" href="Data.Nat.html#2858" class="Function Operator"
+      >/2&#8971;</a
+      ><a name="2901"
+      >           </a
+      ><a name="2912" class="Symbol"
+      >=</a
+      ><a name="2913"
+      > </a
+      ><a name="2914" class="Number"
+      >0</a
+      ><a name="2915"
+      >
+</a
+      ><a name="2916" href="Data.Nat.html#2858" class="Function Operator"
+      >&#8970;</a
+      ><a name="2917"
+      > </a
+      ><a name="2918" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="2921"
+      > </a
+      ><a name="2922" class="Symbol"
+      >(</a
+      ><a name="2923" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="2926"
+      > </a
+      ><a name="2927" href="Data.Nat.html#2927" class="Bound"
+      >n</a
+      ><a name="2928" class="Symbol"
+      >)</a
+      ><a name="2929"
+      > </a
+      ><a name="2930" href="Data.Nat.html#2858" class="Function Operator"
+      >/2&#8971;</a
+      ><a name="2933"
+      > </a
+      ><a name="2934" class="Symbol"
+      >=</a
+      ><a name="2935"
+      > </a
+      ><a name="2936" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="2939"
+      > </a
+      ><a name="2940" href="Data.Nat.html#2858" class="Function Operator"
+      >&#8970;</a
+      ><a name="2941"
+      > </a
+      ><a name="2942" href="Data.Nat.html#2927" class="Bound"
+      >n</a
+      ><a name="2943"
+      > </a
+      ><a name="2944" href="Data.Nat.html#2858" class="Function Operator"
+      >/2&#8971;</a
+      ><a name="2947"
+      >
+
+</a
+      ><a name="2949" class="Comment"
+      >-- Division by 2, rounded upwards.</a
+      ><a name="2983"
+      >
+
+</a
+      ><a name="2985" href="Data.Nat.html#2985" class="Function Operator"
+      >&#8968;_/2&#8969;</a
+      ><a name="2990"
+      > </a
+      ><a name="2991" class="Symbol"
+      >:</a
+      ><a name="2992"
+      > </a
+      ><a name="2993" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="2994"
+      > </a
+      ><a name="2995" class="Symbol"
+      >&#8594;</a
+      ><a name="2996"
+      > </a
+      ><a name="2997" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="2998"
+      >
+</a
+      ><a name="2999" href="Data.Nat.html#2985" class="Function Operator"
+      >&#8968;</a
+      ><a name="3000"
+      > </a
+      ><a name="3001" href="Data.Nat.html#3001" class="Bound"
+      >n</a
+      ><a name="3002"
+      > </a
+      ><a name="3003" href="Data.Nat.html#2985" class="Function Operator"
+      >/2&#8969;</a
+      ><a name="3006"
+      > </a
+      ><a name="3007" class="Symbol"
+      >=</a
+      ><a name="3008"
+      > </a
+      ><a name="3009" href="Data.Nat.html#2858" class="Function Operator"
+      >&#8970;</a
+      ><a name="3010"
+      > </a
+      ><a name="3011" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="3014"
+      > </a
+      ><a name="3015" href="Data.Nat.html#3001" class="Bound"
+      >n</a
+      ><a name="3016"
+      > </a
+      ><a name="3017" href="Data.Nat.html#2858" class="Function Operator"
+      >/2&#8971;</a
+      ><a name="3020"
+      >
+
+</a
+      ><a name="3022" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="3094"
+      >
+</a
+      ><a name="3095" class="Comment"
+      >-- Queries</a
+      ><a name="3105"
+      >
+
+</a
+      ><a name="3107" class="Keyword"
+      >infix</a
+      ><a name="3112"
+      > </a
+      ><a name="3113" class="Number"
+      >4</a
+      ><a name="3114"
+      > _&#8799;_
+
+</a
+      ><a name="3120" href="Data.Nat.html#3120" class="Function Operator"
+      >_&#8799;_</a
+      ><a name="3123"
+      > </a
+      ><a name="3124" class="Symbol"
+      >:</a
+      ><a name="3125"
+      > </a
+      ><a name="3126" href="Relation.Binary.Core.html#3511" class="Function"
+      >Decidable</a
+      ><a name="3135"
+      > </a
+      ><a name="3136" class="Symbol"
+      >{</a
+      ><a name="3137"
+      >A </a
+      ><a name="3139" class="Symbol"
+      >=</a
+      ><a name="3140"
+      > </a
+      ><a name="3141" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="3142" class="Symbol"
+      >}</a
+      ><a name="3143"
+      > </a
+      ><a name="3144" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >_&#8801;_</a
+      ><a name="3147"
+      >
+</a
+      ><a name="3148" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="3152"
+      >  </a
+      ><a name="3154" href="Data.Nat.html#3120" class="Function Operator"
+      >&#8799;</a
+      ><a name="3155"
+      > </a
+      ><a name="3156" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="3160"
+      >   </a
+      ><a name="3163" class="Symbol"
+      >=</a
+      ><a name="3164"
+      > </a
+      ><a name="3165" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="3168"
+      > </a
+      ><a name="3169" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="3173"
+      >
+</a
+      ><a name="3174" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="3177"
+      > </a
+      ><a name="3178" href="Data.Nat.html#3178" class="Bound"
+      >m</a
+      ><a name="3179"
+      > </a
+      ><a name="3180" href="Data.Nat.html#3120" class="Function Operator"
+      >&#8799;</a
+      ><a name="3181"
+      > </a
+      ><a name="3182" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="3185"
+      > </a
+      ><a name="3186" href="Data.Nat.html#3186" class="Bound"
+      >n</a
+      ><a name="3187"
+      >  </a
+      ><a name="3189" class="Keyword"
+      >with</a
+      ><a name="3193"
+      > </a
+      ><a name="3194" href="Data.Nat.html#3178" class="Bound"
+      >m</a
+      ><a name="3195"
+      > </a
+      ><a name="3196" href="Data.Nat.html#3120" class="Function Operator"
+      >&#8799;</a
+      ><a name="3197"
+      > </a
+      ><a name="3198" href="Data.Nat.html#3186" class="Bound"
+      >n</a
+      ><a name="3199"
+      >
+</a
+      ><a name="3200" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="3203"
+      > </a
+      ><a name="3204" href="Data.Nat.html#3204" class="Bound"
+      >m</a
+      ><a name="3205"
+      > </a
+      ><a name="3206" href="Data.Nat.html#3120" class="Function Operator"
+      >&#8799;</a
+      ><a name="3207"
+      > </a
+      ><a name="3208" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="3211"
+      > </a
+      ><a name="3212" class="DottedPattern Symbol"
+      >.</a
+      ><a name="3213" href="Data.Nat.html#3204" class="DottedPattern Bound"
+      >m</a
+      ><a name="3214"
+      > </a
+      ><a name="3215" class="Symbol"
+      >|</a
+      ><a name="3216"
+      > </a
+      ><a name="3217" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="3220"
+      > </a
+      ><a name="3221" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="3225"
+      > </a
+      ><a name="3226" class="Symbol"
+      >=</a
+      ><a name="3227"
+      > </a
+      ><a name="3228" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="3231"
+      > </a
+      ><a name="3232" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="3236"
+      >
+</a
+      ><a name="3237" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="3240"
+      > </a
+      ><a name="3241" href="Data.Nat.html#3241" class="Bound"
+      >m</a
+      ><a name="3242"
+      > </a
+      ><a name="3243" href="Data.Nat.html#3120" class="Function Operator"
+      >&#8799;</a
+      ><a name="3244"
+      > </a
+      ><a name="3245" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="3248"
+      > </a
+      ><a name="3249" href="Data.Nat.html#3249" class="Bound"
+      >n</a
+      ><a name="3250"
+      >  </a
+      ><a name="3252" class="Symbol"
+      >|</a
+      ><a name="3253"
+      > </a
+      ><a name="3254" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="3256"
+      > </a
+      ><a name="3257" href="Data.Nat.html#3257" class="Bound"
+      >prf</a
+      ><a name="3260"
+      >   </a
+      ><a name="3263" class="Symbol"
+      >=</a
+      ><a name="3264"
+      > </a
+      ><a name="3265" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="3267"
+      > </a
+      ><a name="3268" class="Symbol"
+      >(</a
+      ><a name="3269" href="Data.Nat.html#3257" class="Bound"
+      >prf</a
+      ><a name="3272"
+      > </a
+      ><a name="3273" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="3274"
+      > </a
+      ><a name="3275" href="Relation.Binary.PropositionalEquality.html#1034" class="Function"
+      >PropEq.cong</a
+      ><a name="3286"
+      > </a
+      ><a name="3287" href="Data.Nat.html#2169" class="Function"
+      >pred</a
+      ><a name="3291" class="Symbol"
+      >)</a
+      ><a name="3292"
+      >
+</a
+      ><a name="3293" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="3297"
+      >  </a
+      ><a name="3299" href="Data.Nat.html#3120" class="Function Operator"
+      >&#8799;</a
+      ><a name="3300"
+      > </a
+      ><a name="3301" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="3304"
+      > </a
+      ><a name="3305" href="Data.Nat.html#3305" class="Bound"
+      >n</a
+      ><a name="3306"
+      >  </a
+      ><a name="3308" class="Symbol"
+      >=</a
+      ><a name="3309"
+      > </a
+      ><a name="3310" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="3312"
+      > </a
+      ><a name="3313" class="Symbol"
+      >&#955;()</a
+      ><a name="3316"
+      >
+</a
+      ><a name="3317" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="3320"
+      > </a
+      ><a name="3321" href="Data.Nat.html#3321" class="Bound"
+      >m</a
+      ><a name="3322"
+      > </a
+      ><a name="3323" href="Data.Nat.html#3120" class="Function Operator"
+      >&#8799;</a
+      ><a name="3324"
+      > </a
+      ><a name="3325" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="3329"
+      >   </a
+      ><a name="3332" class="Symbol"
+      >=</a
+      ><a name="3333"
+      > </a
+      ><a name="3334" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="3336"
+      > </a
+      ><a name="3337" class="Symbol"
+      >&#955;()</a
+      ><a name="3340"
+      >
+
+</a
+      ><a name="3342" href="Data.Nat.html#3342" class="Function"
+      >&#8804;-pred</a
+      ><a name="3348"
+      > </a
+      ><a name="3349" class="Symbol"
+      >:</a
+      ><a name="3350"
+      > </a
+      ><a name="3351" class="Symbol"
+      >&#8704;</a
+      ><a name="3352"
+      > </a
+      ><a name="3353" class="Symbol"
+      >{</a
+      ><a name="3354" href="Data.Nat.html#3354" class="Bound"
+      >m</a
+      ><a name="3355"
+      > </a
+      ><a name="3356" href="Data.Nat.html#3356" class="Bound"
+      >n</a
+      ><a name="3357" class="Symbol"
+      >}</a
+      ><a name="3358"
+      > </a
+      ><a name="3359" class="Symbol"
+      >&#8594;</a
+      ><a name="3360"
+      > </a
+      ><a name="3361" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="3364"
+      > </a
+      ><a name="3365" href="Data.Nat.html#3354" class="Bound"
+      >m</a
+      ><a name="3366"
+      > </a
+      ><a name="3367" href="Data.Nat.html#879" class="Datatype Operator"
+      >&#8804;</a
+      ><a name="3368"
+      > </a
+      ><a name="3369" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="3372"
+      > </a
+      ><a name="3373" href="Data.Nat.html#3356" class="Bound"
+      >n</a
+      ><a name="3374"
+      > </a
+      ><a name="3375" class="Symbol"
+      >&#8594;</a
+      ><a name="3376"
+      > </a
+      ><a name="3377" href="Data.Nat.html#3354" class="Bound"
+      >m</a
+      ><a name="3378"
+      > </a
+      ><a name="3379" href="Data.Nat.html#879" class="Datatype Operator"
+      >&#8804;</a
+      ><a name="3380"
+      > </a
+      ><a name="3381" href="Data.Nat.html#3356" class="Bound"
+      >n</a
+      ><a name="3382"
+      >
+</a
+      ><a name="3383" href="Data.Nat.html#3342" class="Function"
+      >&#8804;-pred</a
+      ><a name="3389"
+      > </a
+      ><a name="3390" class="Symbol"
+      >(</a
+      ><a name="3391" href="Data.Nat.html#952" class="InductiveConstructor"
+      >s&#8804;s</a
+      ><a name="3394"
+      > </a
+      ><a name="3395" href="Data.Nat.html#3395" class="Bound"
+      >m&#8804;n</a
+      ><a name="3398" class="Symbol"
+      >)</a
+      ><a name="3399"
+      > </a
+      ><a name="3400" class="Symbol"
+      >=</a
+      ><a name="3401"
+      > </a
+      ><a name="3402" href="Data.Nat.html#3395" class="Bound"
+      >m&#8804;n</a
+      ><a name="3405"
+      >
+
+</a
+      ><a name="3407" href="Data.Nat.html#3407" class="Function Operator"
+      >_&#8804;?_</a
+      ><a name="3411"
+      > </a
+      ><a name="3412" class="Symbol"
+      >:</a
+      ><a name="3413"
+      > </a
+      ><a name="3414" href="Relation.Binary.Core.html#3511" class="Function"
+      >Decidable</a
+      ><a name="3423"
+      > </a
+      ><a name="3424" href="Data.Nat.html#879" class="Datatype Operator"
+      >_&#8804;_</a
+      ><a name="3427"
+      >
+</a
+      ><a name="3428" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="3432"
+      >  </a
+      ><a name="3434" href="Data.Nat.html#3407" class="Function Operator"
+      >&#8804;?</a
+      ><a name="3436"
+      > </a
+      ><a name="3437" class="Symbol"
+      >_</a
+      ><a name="3438"
+      >     </a
+      ><a name="3443" class="Symbol"
+      >=</a
+      ><a name="3444"
+      > </a
+      ><a name="3445" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="3448"
+      > </a
+      ><a name="3449" href="Data.Nat.html#910" class="InductiveConstructor"
+      >z&#8804;n</a
+      ><a name="3452"
+      >
+</a
+      ><a name="3453" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="3456"
+      > </a
+      ><a name="3457" href="Data.Nat.html#3457" class="Bound"
+      >m</a
+      ><a name="3458"
+      > </a
+      ><a name="3459" href="Data.Nat.html#3407" class="Function Operator"
+      >&#8804;?</a
+      ><a name="3461"
+      > </a
+      ><a name="3462" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="3466"
+      >  </a
+      ><a name="3468" class="Symbol"
+      >=</a
+      ><a name="3469"
+      > </a
+      ><a name="3470" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="3472"
+      > </a
+      ><a name="3473" class="Symbol"
+      >&#955;()</a
+      ><a name="3476"
+      >
+</a
+      ><a name="3477" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="3480"
+      > </a
+      ><a name="3481" href="Data.Nat.html#3481" class="Bound"
+      >m</a
+      ><a name="3482"
+      > </a
+      ><a name="3483" href="Data.Nat.html#3407" class="Function Operator"
+      >&#8804;?</a
+      ><a name="3485"
+      > </a
+      ><a name="3486" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="3489"
+      > </a
+      ><a name="3490" href="Data.Nat.html#3490" class="Bound"
+      >n</a
+      ><a name="3491"
+      > </a
+      ><a name="3492" class="Keyword"
+      >with</a
+      ><a name="3496"
+      > </a
+      ><a name="3497" href="Data.Nat.html#3481" class="Bound"
+      >m</a
+      ><a name="3498"
+      > </a
+      ><a name="3499" href="Data.Nat.html#3407" class="Function Operator"
+      >&#8804;?</a
+      ><a name="3501"
+      > </a
+      ><a name="3502" href="Data.Nat.html#3490" class="Bound"
+      >n</a
+      ><a name="3503"
+      >
+</a
+      ><a name="3504" class="Symbol"
+      >...</a
+      ><a name="3507"
+      >            </a
+      ><a name="3519" class="Symbol"
+      >|</a
+      ><a name="3520"
+      > </a
+      ><a name="3521" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="3524"
+      > </a
+      ><a name="3525" href="Data.Nat.html#3525" class="Bound"
+      >m&#8804;n</a
+      ><a name="3528"
+      > </a
+      ><a name="3529" class="Symbol"
+      >=</a
+      ><a name="3530"
+      > </a
+      ><a name="3531" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="3534"
+      > </a
+      ><a name="3535" class="Symbol"
+      >(</a
+      ><a name="3536" href="Data.Nat.html#952" class="InductiveConstructor"
+      >s&#8804;s</a
+      ><a name="3539"
+      > </a
+      ><a name="3540" href="Data.Nat.html#3525" class="Bound"
+      >m&#8804;n</a
+      ><a name="3543" class="Symbol"
+      >)</a
+      ><a name="3544"
+      >
+</a
+      ><a name="3545" class="Symbol"
+      >...</a
+      ><a name="3548"
+      >            </a
+      ><a name="3560" class="Symbol"
+      >|</a
+      ><a name="3561"
+      > </a
+      ><a name="3562" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="3564"
+      >  </a
+      ><a name="3566" href="Data.Nat.html#3566" class="Bound"
+      >m&#8816;n</a
+      ><a name="3569"
+      > </a
+      ><a name="3570" class="Symbol"
+      >=</a
+      ><a name="3571"
+      > </a
+      ><a name="3572" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="3574"
+      >  </a
+      ><a name="3576" class="Symbol"
+      >(</a
+      ><a name="3577" href="Data.Nat.html#3566" class="Bound"
+      >m&#8816;n</a
+      ><a name="3580"
+      > </a
+      ><a name="3581" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="3582"
+      > </a
+      ><a name="3583" href="Data.Nat.html#3342" class="Function"
+      >&#8804;-pred</a
+      ><a name="3589" class="Symbol"
+      >)</a
+      ><a name="3590"
+      >
+
+</a
+      ><a name="3592" class="Comment"
+      >-- A comparison view. Taken from &quot;View from the left&quot;</a
+      ><a name="3645"
+      >
+</a
+      ><a name="3646" class="Comment"
+      >-- (McBride/McKinna); details may differ.</a
+      ><a name="3687"
+      >
+
+</a
+      ><a name="3689" class="Keyword"
+      >data</a
+      ><a name="3693"
+      > </a
+      ><a name="3694" href="Data.Nat.html#3694" class="Datatype"
+      >Ordering</a
+      ><a name="3702"
+      > </a
+      ><a name="3703" class="Symbol"
+      >:</a
+      ><a name="3704"
+      > </a
+      ><a name="3705" href="Relation.Binary.Core.html#761" class="Function"
+      >Rel</a
+      ><a name="3708"
+      > </a
+      ><a name="3709" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="3710"
+      > </a
+      ><a name="3711" href="Agda.Prim.html#268" class="Primitive"
+      >Level.zero</a
+      ><a name="3721"
+      > </a
+      ><a name="3722" class="Keyword"
+      >where</a
+      ><a name="3727"
+      >
+  </a
+      ><a name="3730" href="Data.Nat.html#3730" class="InductiveConstructor"
+      >less</a
+      ><a name="3734"
+      >    </a
+      ><a name="3738" class="Symbol"
+      >:</a
+      ><a name="3739"
+      > </a
+      ><a name="3740" class="Symbol"
+      >&#8704;</a
+      ><a name="3741"
+      > </a
+      ><a name="3742" href="Data.Nat.html#3742" class="Bound"
+      >m</a
+      ><a name="3743"
+      > </a
+      ><a name="3744" href="Data.Nat.html#3744" class="Bound"
+      >k</a
+      ><a name="3745"
+      > </a
+      ><a name="3746" class="Symbol"
+      >&#8594;</a
+      ><a name="3747"
+      > </a
+      ><a name="3748" href="Data.Nat.html#3694" class="Datatype"
+      >Ordering</a
+      ><a name="3756"
+      > </a
+      ><a name="3757" href="Data.Nat.html#3742" class="Bound"
+      >m</a
+      ><a name="3758"
+      > </a
+      ><a name="3759" class="Symbol"
+      >(</a
+      ><a name="3760" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="3763"
+      > </a
+      ><a name="3764" class="Symbol"
+      >(</a
+      ><a name="3765" href="Data.Nat.html#3742" class="Bound"
+      >m</a
+      ><a name="3766"
+      > </a
+      ><a name="3767" href="Data.Nat.html#2239" class="Primitive Operator"
+      >+</a
+      ><a name="3768"
+      > </a
+      ><a name="3769" href="Data.Nat.html#3744" class="Bound"
+      >k</a
+      ><a name="3770" class="Symbol"
+      >))</a
+      ><a name="3772"
+      >
+  </a
+      ><a name="3775" href="Data.Nat.html#3775" class="InductiveConstructor"
+      >equal</a
+      ><a name="3780"
+      >   </a
+      ><a name="3783" class="Symbol"
+      >:</a
+      ><a name="3784"
+      > </a
+      ><a name="3785" class="Symbol"
+      >&#8704;</a
+      ><a name="3786"
+      > </a
+      ><a name="3787" href="Data.Nat.html#3787" class="Bound"
+      >m</a
+      ><a name="3788"
+      >   </a
+      ><a name="3791" class="Symbol"
+      >&#8594;</a
+      ><a name="3792"
+      > </a
+      ><a name="3793" href="Data.Nat.html#3694" class="Datatype"
+      >Ordering</a
+      ><a name="3801"
+      > </a
+      ><a name="3802" href="Data.Nat.html#3787" class="Bound"
+      >m</a
+      ><a name="3803"
+      > </a
+      ><a name="3804" href="Data.Nat.html#3787" class="Bound"
+      >m</a
+      ><a name="3805"
+      >
+  </a
+      ><a name="3808" href="Data.Nat.html#3808" class="InductiveConstructor"
+      >greater</a
+      ><a name="3815"
+      > </a
+      ><a name="3816" class="Symbol"
+      >:</a
+      ><a name="3817"
+      > </a
+      ><a name="3818" class="Symbol"
+      >&#8704;</a
+      ><a name="3819"
+      > </a
+      ><a name="3820" href="Data.Nat.html#3820" class="Bound"
+      >m</a
+      ><a name="3821"
+      > </a
+      ><a name="3822" href="Data.Nat.html#3822" class="Bound"
+      >k</a
+      ><a name="3823"
+      > </a
+      ><a name="3824" class="Symbol"
+      >&#8594;</a
+      ><a name="3825"
+      > </a
+      ><a name="3826" href="Data.Nat.html#3694" class="Datatype"
+      >Ordering</a
+      ><a name="3834"
+      > </a
+      ><a name="3835" class="Symbol"
+      >(</a
+      ><a name="3836" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="3839"
+      > </a
+      ><a name="3840" class="Symbol"
+      >(</a
+      ><a name="3841" href="Data.Nat.html#3820" class="Bound"
+      >m</a
+      ><a name="3842"
+      > </a
+      ><a name="3843" href="Data.Nat.html#2239" class="Primitive Operator"
+      >+</a
+      ><a name="3844"
+      > </a
+      ><a name="3845" href="Data.Nat.html#3822" class="Bound"
+      >k</a
+      ><a name="3846" class="Symbol"
+      >))</a
+      ><a name="3848"
+      > </a
+      ><a name="3849" href="Data.Nat.html#3820" class="Bound"
+      >m</a
+      ><a name="3850"
+      >
+
+</a
+      ><a name="3852" href="Data.Nat.html#3852" class="Function"
+      >compare</a
+      ><a name="3859"
+      > </a
+      ><a name="3860" class="Symbol"
+      >:</a
+      ><a name="3861"
+      > </a
+      ><a name="3862" class="Symbol"
+      >&#8704;</a
+      ><a name="3863"
+      > </a
+      ><a name="3864" href="Data.Nat.html#3864" class="Bound"
+      >m</a
+      ><a name="3865"
+      > </a
+      ><a name="3866" href="Data.Nat.html#3866" class="Bound"
+      >n</a
+      ><a name="3867"
+      > </a
+      ><a name="3868" class="Symbol"
+      >&#8594;</a
+      ><a name="3869"
+      > </a
+      ><a name="3870" href="Data.Nat.html#3694" class="Datatype"
+      >Ordering</a
+      ><a name="3878"
+      > </a
+      ><a name="3879" href="Data.Nat.html#3864" class="Bound"
+      >m</a
+      ><a name="3880"
+      > </a
+      ><a name="3881" href="Data.Nat.html#3866" class="Bound"
+      >n</a
+      ><a name="3882"
+      >
+</a
+      ><a name="3883" href="Data.Nat.html#3852" class="Function"
+      >compare</a
+      ><a name="3890"
+      > </a
+      ><a name="3891" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="3895"
+      >    </a
+      ><a name="3899" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="3903"
+      >    </a
+      ><a name="3907" class="Symbol"
+      >=</a
+      ><a name="3908"
+      > </a
+      ><a name="3909" href="Data.Nat.html#3775" class="InductiveConstructor"
+      >equal</a
+      ><a name="3914"
+      >   </a
+      ><a name="3917" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="3921"
+      >
+</a
+      ><a name="3922" href="Data.Nat.html#3852" class="Function"
+      >compare</a
+      ><a name="3929"
+      > </a
+      ><a name="3930" class="Symbol"
+      >(</a
+      ><a name="3931" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="3934"
+      > </a
+      ><a name="3935" href="Data.Nat.html#3935" class="Bound"
+      >m</a
+      ><a name="3936" class="Symbol"
+      >)</a
+      ><a name="3937"
+      > </a
+      ><a name="3938" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="3942"
+      >    </a
+      ><a name="3946" class="Symbol"
+      >=</a
+      ><a name="3947"
+      > </a
+      ><a name="3948" href="Data.Nat.html#3808" class="InductiveConstructor"
+      >greater</a
+      ><a name="3955"
+      > </a
+      ><a name="3956" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="3960"
+      > </a
+      ><a name="3961" href="Data.Nat.html#3935" class="Bound"
+      >m</a
+      ><a name="3962"
+      >
+</a
+      ><a name="3963" href="Data.Nat.html#3852" class="Function"
+      >compare</a
+      ><a name="3970"
+      > </a
+      ><a name="3971" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="3975"
+      >    </a
+      ><a name="3979" class="Symbol"
+      >(</a
+      ><a name="3980" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="3983"
+      > </a
+      ><a name="3984" href="Data.Nat.html#3984" class="Bound"
+      >n</a
+      ><a name="3985" class="Symbol"
+      >)</a
+      ><a name="3986"
+      > </a
+      ><a name="3987" class="Symbol"
+      >=</a
+      ><a name="3988"
+      > </a
+      ><a name="3989" href="Data.Nat.html#3730" class="InductiveConstructor"
+      >less</a
+      ><a name="3993"
+      >    </a
+      ><a name="3997" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="4001"
+      > </a
+      ><a name="4002" href="Data.Nat.html#3984" class="Bound"
+      >n</a
+      ><a name="4003"
+      >
+</a
+      ><a name="4004" href="Data.Nat.html#3852" class="Function"
+      >compare</a
+      ><a name="4011"
+      > </a
+      ><a name="4012" class="Symbol"
+      >(</a
+      ><a name="4013" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="4016"
+      > </a
+      ><a name="4017" href="Data.Nat.html#4017" class="Bound"
+      >m</a
+      ><a name="4018" class="Symbol"
+      >)</a
+      ><a name="4019"
+      > </a
+      ><a name="4020" class="Symbol"
+      >(</a
+      ><a name="4021" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="4024"
+      > </a
+      ><a name="4025" href="Data.Nat.html#4025" class="Bound"
+      >n</a
+      ><a name="4026" class="Symbol"
+      >)</a
+      ><a name="4027"
+      > </a
+      ><a name="4028" class="Keyword"
+      >with</a
+      ><a name="4032"
+      > </a
+      ><a name="4033" href="Data.Nat.html#3852" class="Function"
+      >compare</a
+      ><a name="4040"
+      > </a
+      ><a name="4041" href="Data.Nat.html#4017" class="Bound"
+      >m</a
+      ><a name="4042"
+      > </a
+      ><a name="4043" href="Data.Nat.html#4025" class="Bound"
+      >n</a
+      ><a name="4044"
+      >
+</a
+      ><a name="4045" href="Data.Nat.html#3852" class="Function"
+      >compare</a
+      ><a name="4052"
+      > </a
+      ><a name="4053" class="Symbol"
+      >(</a
+      ><a name="4054" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="4057"
+      > </a
+      ><a name="4058" class="DottedPattern Symbol"
+      >.</a
+      ><a name="4059" href="Data.Nat.html#4101" class="DottedPattern Bound"
+      >m</a
+      ><a name="4060" class="Symbol"
+      >)</a
+      ><a name="4061"
+      >           </a
+      ><a name="4072" class="Symbol"
+      >(</a
+      ><a name="4073" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="4076"
+      > </a
+      ><a name="4077" class="DottedPattern Symbol"
+      >.(</a
+      ><a name="4079" href="Data.Nat.html#725" class="DottedPattern InductiveConstructor"
+      >suc</a
+      ><a name="4082"
+      > </a
+      ><a name="4083" href="Data.Nat.html#4101" class="DottedPattern Bound"
+      >m</a
+      ><a name="4084"
+      > </a
+      ><a name="4085" href="Data.Nat.html#2239" class="DottedPattern Primitive Operator"
+      >+</a
+      ><a name="4086"
+      > </a
+      ><a name="4087" href="Data.Nat.html#4103" class="DottedPattern Bound"
+      >k</a
+      ><a name="4088" class="DottedPattern Symbol"
+      >)</a
+      ><a name="4089" class="Symbol"
+      >)</a
+      ><a name="4090"
+      > </a
+      ><a name="4091" class="Symbol"
+      >|</a
+      ><a name="4092"
+      > </a
+      ><a name="4093" href="Data.Nat.html#3730" class="InductiveConstructor"
+      >less</a
+      ><a name="4097"
+      >    </a
+      ><a name="4101" href="Data.Nat.html#4101" class="Bound"
+      >m</a
+      ><a name="4102"
+      > </a
+      ><a name="4103" href="Data.Nat.html#4103" class="Bound"
+      >k</a
+      ><a name="4104"
+      > </a
+      ><a name="4105" class="Symbol"
+      >=</a
+      ><a name="4106"
+      > </a
+      ><a name="4107" href="Data.Nat.html#3730" class="InductiveConstructor"
+      >less</a
+      ><a name="4111"
+      >    </a
+      ><a name="4115" class="Symbol"
+      >(</a
+      ><a name="4116" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="4119"
+      > </a
+      ><a name="4120" href="Data.Nat.html#4101" class="Bound"
+      >m</a
+      ><a name="4121" class="Symbol"
+      >)</a
+      ><a name="4122"
+      > </a
+      ><a name="4123" href="Data.Nat.html#4103" class="Bound"
+      >k</a
+      ><a name="4124"
+      >
+</a
+      ><a name="4125" href="Data.Nat.html#3852" class="Function"
+      >compare</a
+      ><a name="4132"
+      > </a
+      ><a name="4133" class="Symbol"
+      >(</a
+      ><a name="4134" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="4137"
+      > </a
+      ><a name="4138" class="DottedPattern Symbol"
+      >.</a
+      ><a name="4139" href="Data.Nat.html#4181" class="DottedPattern Bound"
+      >m</a
+      ><a name="4140" class="Symbol"
+      >)</a
+      ><a name="4141"
+      >           </a
+      ><a name="4152" class="Symbol"
+      >(</a
+      ><a name="4153" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="4156"
+      > </a
+      ><a name="4157" class="DottedPattern Symbol"
+      >.</a
+      ><a name="4158" href="Data.Nat.html#4181" class="DottedPattern Bound"
+      >m</a
+      ><a name="4159" class="Symbol"
+      >)</a
+      ><a name="4160"
+      >           </a
+      ><a name="4171" class="Symbol"
+      >|</a
+      ><a name="4172"
+      > </a
+      ><a name="4173" href="Data.Nat.html#3775" class="InductiveConstructor"
+      >equal</a
+      ><a name="4178"
+      >   </a
+      ><a name="4181" href="Data.Nat.html#4181" class="Bound"
+      >m</a
+      ><a name="4182"
+      >   </a
+      ><a name="4185" class="Symbol"
+      >=</a
+      ><a name="4186"
+      > </a
+      ><a name="4187" href="Data.Nat.html#3775" class="InductiveConstructor"
+      >equal</a
+      ><a name="4192"
+      >   </a
+      ><a name="4195" class="Symbol"
+      >(</a
+      ><a name="4196" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="4199"
+      > </a
+      ><a name="4200" href="Data.Nat.html#4181" class="Bound"
+      >m</a
+      ><a name="4201" class="Symbol"
+      >)</a
+      ><a name="4202"
+      >
+</a
+      ><a name="4203" href="Data.Nat.html#3852" class="Function"
+      >compare</a
+      ><a name="4210"
+      > </a
+      ><a name="4211" class="Symbol"
+      >(</a
+      ><a name="4212" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="4215"
+      > </a
+      ><a name="4216" class="DottedPattern Symbol"
+      >.(</a
+      ><a name="4218" href="Data.Nat.html#725" class="DottedPattern InductiveConstructor"
+      >suc</a
+      ><a name="4221"
+      > </a
+      ><a name="4222" href="Data.Nat.html#4259" class="DottedPattern Bound"
+      >m</a
+      ><a name="4223"
+      > </a
+      ><a name="4224" href="Data.Nat.html#2239" class="DottedPattern Primitive Operator"
+      >+</a
+      ><a name="4225"
+      > </a
+      ><a name="4226" href="Data.Nat.html#4261" class="DottedPattern Bound"
+      >k</a
+      ><a name="4227" class="DottedPattern Symbol"
+      >)</a
+      ><a name="4228" class="Symbol"
+      >)</a
+      ><a name="4229"
+      > </a
+      ><a name="4230" class="Symbol"
+      >(</a
+      ><a name="4231" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="4234"
+      > </a
+      ><a name="4235" class="DottedPattern Symbol"
+      >.</a
+      ><a name="4236" href="Data.Nat.html#4259" class="DottedPattern Bound"
+      >m</a
+      ><a name="4237" class="Symbol"
+      >)</a
+      ><a name="4238"
+      >           </a
+      ><a name="4249" class="Symbol"
+      >|</a
+      ><a name="4250"
+      > </a
+      ><a name="4251" href="Data.Nat.html#3808" class="InductiveConstructor"
+      >greater</a
+      ><a name="4258"
+      > </a
+      ><a name="4259" href="Data.Nat.html#4259" class="Bound"
+      >m</a
+      ><a name="4260"
+      > </a
+      ><a name="4261" href="Data.Nat.html#4261" class="Bound"
+      >k</a
+      ><a name="4262"
+      > </a
+      ><a name="4263" class="Symbol"
+      >=</a
+      ><a name="4264"
+      > </a
+      ><a name="4265" href="Data.Nat.html#3808" class="InductiveConstructor"
+      >greater</a
+      ><a name="4272"
+      > </a
+      ><a name="4273" class="Symbol"
+      >(</a
+      ><a name="4274" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="4277"
+      > </a
+      ><a name="4278" href="Data.Nat.html#4259" class="Bound"
+      >m</a
+      ><a name="4279" class="Symbol"
+      >)</a
+      ><a name="4280"
+      > </a
+      ><a name="4281" href="Data.Nat.html#4261" class="Bound"
+      >k</a
+      ><a name="4282"
+      >
+
+</a
+      ><a name="4284" class="Comment"
+      >-- If there is an injection from a type to &#8469;, then the type has</a
+      ><a name="4347"
+      >
+</a
+      ><a name="4348" class="Comment"
+      >-- decidable equality.</a
+      ><a name="4370"
+      >
+
+</a
+      ><a name="4372" href="Data.Nat.html#4372" class="Function"
+      >eq?</a
+      ><a name="4375"
+      > </a
+      ><a name="4376" class="Symbol"
+      >:</a
+      ><a name="4377"
+      > </a
+      ><a name="4378" class="Symbol"
+      >&#8704;</a
+      ><a name="4379"
+      > </a
+      ><a name="4380" class="Symbol"
+      >{</a
+      ><a name="4381" href="Data.Nat.html#4381" class="Bound"
+      >a</a
+      ><a name="4382" class="Symbol"
+      >}</a
+      ><a name="4383"
+      > </a
+      ><a name="4384" class="Symbol"
+      >{</a
+      ><a name="4385" href="Data.Nat.html#4385" class="Bound"
+      >A</a
+      ><a name="4386"
+      > </a
+      ><a name="4387" class="Symbol"
+      >:</a
+      ><a name="4388"
+      > </a
+      ><a name="4389" class="PrimitiveType"
+      >Set</a
+      ><a name="4392"
+      > </a
+      ><a name="4393" href="Data.Nat.html#4381" class="Bound"
+      >a</a
+      ><a name="4394" class="Symbol"
+      >}</a
+      ><a name="4395"
+      > </a
+      ><a name="4396" class="Symbol"
+      >&#8594;</a
+      ><a name="4397"
+      > </a
+      ><a name="4398" href="Data.Nat.html#4385" class="Bound"
+      >A</a
+      ><a name="4399"
+      > </a
+      ><a name="4400" href="Function.Injection.html#1057" class="Function Operator"
+      >&#8611;</a
+      ><a name="4401"
+      > </a
+      ><a name="4402" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="4403"
+      > </a
+      ><a name="4404" class="Symbol"
+      >&#8594;</a
+      ><a name="4405"
+      > </a
+      ><a name="4406" href="Relation.Binary.Core.html#3511" class="Function"
+      >Decidable</a
+      ><a name="4415"
+      > </a
+      ><a name="4416" class="Symbol"
+      >{</a
+      ><a name="4417"
+      >A </a
+      ><a name="4419" class="Symbol"
+      >=</a
+      ><a name="4420"
+      > </a
+      ><a name="4421" href="Data.Nat.html#4385" class="Bound"
+      >A</a
+      ><a name="4422" class="Symbol"
+      >}</a
+      ><a name="4423"
+      > </a
+      ><a name="4424" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >_&#8801;_</a
+      ><a name="4427"
+      >
+</a
+      ><a name="4428" href="Data.Nat.html#4372" class="Function"
+      >eq?</a
+      ><a name="4431"
+      > </a
+      ><a name="4432" href="Data.Nat.html#4432" class="Bound"
+      >inj</a
+      ><a name="4435"
+      > </a
+      ><a name="4436" class="Symbol"
+      >=</a
+      ><a name="4437"
+      > </a
+      ><a name="4438" href="Relation.Nullary.Decidable.html#2249" class="Function"
+      >Dec.via-injection</a
+      ><a name="4455"
+      > </a
+      ><a name="4456" href="Data.Nat.html#4432" class="Bound"
+      >inj</a
+      ><a name="4459"
+      > </a
+      ><a name="4460" href="Data.Nat.html#3120" class="Function Operator"
+      >_&#8799;_</a
+      ><a name="4463"
+      >
+
+</a
+      ><a name="4465" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="4537"
+      >
+</a
+      ><a name="4538" class="Comment"
+      >-- Some properties</a
+      ><a name="4556"
+      >
+
+</a
+      ><a name="4558" href="Data.Nat.html#4558" class="Function"
+      >decTotalOrder</a
+      ><a name="4571"
+      > </a
+      ><a name="4572" class="Symbol"
+      >:</a
+      ><a name="4573"
+      > </a
+      ><a name="4574" href="Relation.Binary.html#7587" class="Record"
+      >DecTotalOrder</a
+      ><a name="4587"
+      > </a
+      ><a name="4588" class="Symbol"
+      >_</a
+      ><a name="4589"
+      > </a
+      ><a name="4590" class="Symbol"
+      >_</a
+      ><a name="4591"
+      > </a
+      ><a name="4592" class="Symbol"
+      >_</a
+      ><a name="4593"
+      >
+</a
+      ><a name="4594" href="Data.Nat.html#4558" class="Function"
+      >decTotalOrder</a
+      ><a name="4607"
+      > </a
+      ><a name="4608" class="Symbol"
+      >=</a
+      ><a name="4609"
+      > </a
+      ><a name="4610" class="Keyword"
+      >record</a
+      ><a name="4616"
+      >
+  </a
+      ><a name="4619" class="Symbol"
+      >{</a
+      ><a name="4620"
+      > </a
+      ><a name="4621" class="Field"
+      >Carrier</a
+      ><a name="4628"
+      >         </a
+      ><a name="4637" class="Symbol"
+      >=</a
+      ><a name="4638"
+      > </a
+      ><a name="4639" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="4640"
+      >
+  </a
+      ><a name="4643" class="Symbol"
+      >;</a
+      ><a name="4644"
+      > </a
+      ><a name="4645" class="Field Operator"
+      >_&#8776;_</a
+      ><a name="4648"
+      >             </a
+      ><a name="4661" class="Symbol"
+      >=</a
+      ><a name="4662"
+      > </a
+      ><a name="4663" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >_&#8801;_</a
+      ><a name="4666"
+      >
+  </a
+      ><a name="4669" class="Symbol"
+      >;</a
+      ><a name="4670"
+      > </a
+      ><a name="4671" class="Field Operator"
+      >_&#8804;_</a
+      ><a name="4674"
+      >             </a
+      ><a name="4687" class="Symbol"
+      >=</a
+      ><a name="4688"
+      > </a
+      ><a name="4689" href="Data.Nat.html#879" class="Datatype Operator"
+      >_&#8804;_</a
+      ><a name="4692"
+      >
+  </a
+      ><a name="4695" class="Symbol"
+      >;</a
+      ><a name="4696"
+      > </a
+      ><a name="4697" class="Field"
+      >isDecTotalOrder</a
+      ><a name="4712"
+      > </a
+      ><a name="4713" class="Symbol"
+      >=</a
+      ><a name="4714"
+      > </a
+      ><a name="4715" class="Keyword"
+      >record</a
+      ><a name="4721"
+      >
+      </a
+      ><a name="4728" class="Symbol"
+      >{</a
+      ><a name="4729"
+      > </a
+      ><a name="4730" class="Field"
+      >isTotalOrder</a
+      ><a name="4742"
+      > </a
+      ><a name="4743" class="Symbol"
+      >=</a
+      ><a name="4744"
+      > </a
+      ><a name="4745" class="Keyword"
+      >record</a
+      ><a name="4751"
+      >
+          </a
+      ><a name="4762" class="Symbol"
+      >{</a
+      ><a name="4763"
+      > </a
+      ><a name="4764" class="Field"
+      >isPartialOrder</a
+      ><a name="4778"
+      > </a
+      ><a name="4779" class="Symbol"
+      >=</a
+      ><a name="4780"
+      > </a
+      ><a name="4781" class="Keyword"
+      >record</a
+      ><a name="4787"
+      >
+              </a
+      ><a name="4802" class="Symbol"
+      >{</a
+      ><a name="4803"
+      > </a
+      ><a name="4804" class="Field"
+      >isPreorder</a
+      ><a name="4814"
+      > </a
+      ><a name="4815" class="Symbol"
+      >=</a
+      ><a name="4816"
+      > </a
+      ><a name="4817" class="Keyword"
+      >record</a
+      ><a name="4823"
+      >
+                  </a
+      ><a name="4842" class="Symbol"
+      >{</a
+      ><a name="4843"
+      > </a
+      ><a name="4844" class="Field"
+      >isEquivalence</a
+      ><a name="4857"
+      > </a
+      ><a name="4858" class="Symbol"
+      >=</a
+      ><a name="4859"
+      > </a
+      ><a name="4860" href="Relation.Binary.PropositionalEquality.Core.html#879" class="Function"
+      >PropEq.isEquivalence</a
+      ><a name="4880"
+      >
+                  </a
+      ><a name="4899" class="Symbol"
+      >;</a
+      ><a name="4900"
+      > </a
+      ><a name="4901" class="Field"
+      >reflexive</a
+      ><a name="4910"
+      >     </a
+      ><a name="4915" class="Symbol"
+      >=</a
+      ><a name="4916"
+      > </a
+      ><a name="4917" href="Data.Nat.html#5135" class="Function"
+      >refl&#8242;</a
+      ><a name="4922"
+      >
+                  </a
+      ><a name="4941" class="Symbol"
+      >;</a
+      ><a name="4942"
+      > </a
+      ><a name="4943" class="Field"
+      >trans</a
+      ><a name="4948"
+      >         </a
+      ><a name="4957" class="Symbol"
+      >=</a
+      ><a name="4958"
+      > </a
+      ><a name="4959" href="Data.Nat.html#5390" class="Function"
+      >trans</a
+      ><a name="4964"
+      >
+                  </a
+      ><a name="4983" class="Symbol"
+      >}</a
+      ><a name="4984"
+      >
+              </a
+      ><a name="4999" class="Symbol"
+      >;</a
+      ><a name="5000"
+      > </a
+      ><a name="5001" class="Field"
+      >antisym</a
+      ><a name="5008"
+      >  </a
+      ><a name="5010" class="Symbol"
+      >=</a
+      ><a name="5011"
+      > </a
+      ><a name="5012" href="Data.Nat.html#5223" class="Function"
+      >antisym</a
+      ><a name="5019"
+      >
+              </a
+      ><a name="5034" class="Symbol"
+      >}</a
+      ><a name="5035"
+      >
+          </a
+      ><a name="5046" class="Symbol"
+      >;</a
+      ><a name="5047"
+      > </a
+      ><a name="5048" class="Field"
+      >total</a
+      ><a name="5053"
+      > </a
+      ><a name="5054" class="Symbol"
+      >=</a
+      ><a name="5055"
+      > </a
+      ><a name="5056" href="Data.Nat.html#5500" class="Function"
+      >total</a
+      ><a name="5061"
+      >
+          </a
+      ><a name="5072" class="Symbol"
+      >}</a
+      ><a name="5073"
+      >
+      </a
+      ><a name="5080" class="Symbol"
+      >;</a
+      ><a name="5081"
+      > </a
+      ><a name="5082" class="Field Operator"
+      >_&#8799;_</a
+      ><a name="5085"
+      >  </a
+      ><a name="5087" class="Symbol"
+      >=</a
+      ><a name="5088"
+      > </a
+      ><a name="5089" href="Data.Nat.html#3120" class="Function Operator"
+      >_&#8799;_</a
+      ><a name="5092"
+      >
+      </a
+      ><a name="5099" class="Symbol"
+      >;</a
+      ><a name="5100"
+      > </a
+      ><a name="5101" class="Field Operator"
+      >_&#8804;?_</a
+      ><a name="5105"
+      > </a
+      ><a name="5106" class="Symbol"
+      >=</a
+      ><a name="5107"
+      > </a
+      ><a name="5108" href="Data.Nat.html#3407" class="Function Operator"
+      >_&#8804;?_</a
+      ><a name="5112"
+      >
+      </a
+      ><a name="5119" class="Symbol"
+      >}</a
+      ><a name="5120"
+      >
+  </a
+      ><a name="5123" class="Symbol"
+      >}</a
+      ><a name="5124"
+      >
+  </a
+      ><a name="5127" class="Keyword"
+      >where</a
+      ><a name="5132"
+      >
+  </a
+      ><a name="5135" href="Data.Nat.html#5135" class="Function"
+      >refl&#8242;</a
+      ><a name="5140"
+      > </a
+      ><a name="5141" class="Symbol"
+      >:</a
+      ><a name="5142"
+      > </a
+      ><a name="5143" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >_&#8801;_</a
+      ><a name="5146"
+      > </a
+      ><a name="5147" href="Relation.Binary.Core.html#1025" class="Function Operator"
+      >&#8658;</a
+      ><a name="5148"
+      > </a
+      ><a name="5149" href="Data.Nat.html#879" class="Datatype Operator"
+      >_&#8804;_</a
+      ><a name="5152"
+      >
+  </a
+      ><a name="5155" href="Data.Nat.html#5135" class="Function"
+      >refl&#8242;</a
+      ><a name="5160"
+      > </a
+      ><a name="5161" class="Symbol"
+      >{</a
+      ><a name="5162" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="5166" class="Symbol"
+      >}</a
+      ><a name="5167"
+      >  </a
+      ><a name="5169" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="5173"
+      > </a
+      ><a name="5174" class="Symbol"
+      >=</a
+      ><a name="5175"
+      > </a
+      ><a name="5176" href="Data.Nat.html#910" class="InductiveConstructor"
+      >z&#8804;n</a
+      ><a name="5179"
+      >
+  </a
+      ><a name="5182" href="Data.Nat.html#5135" class="Function"
+      >refl&#8242;</a
+      ><a name="5187"
+      > </a
+      ><a name="5188" class="Symbol"
+      >{</a
+      ><a name="5189" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="5192"
+      > </a
+      ><a name="5193" href="Data.Nat.html#5193" class="Bound"
+      >m</a
+      ><a name="5194" class="Symbol"
+      >}</a
+      ><a name="5195"
+      > </a
+      ><a name="5196" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="5200"
+      > </a
+      ><a name="5201" class="Symbol"
+      >=</a
+      ><a name="5202"
+      > </a
+      ><a name="5203" href="Data.Nat.html#952" class="InductiveConstructor"
+      >s&#8804;s</a
+      ><a name="5206"
+      > </a
+      ><a name="5207" class="Symbol"
+      >(</a
+      ><a name="5208" href="Data.Nat.html#5135" class="Function"
+      >refl&#8242;</a
+      ><a name="5213"
+      > </a
+      ><a name="5214" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="5218" class="Symbol"
+      >)</a
+      ><a name="5219"
+      >
+
+  </a
+      ><a name="5223" href="Data.Nat.html#5223" class="Function"
+      >antisym</a
+      ><a name="5230"
+      > </a
+      ><a name="5231" class="Symbol"
+      >:</a
+      ><a name="5232"
+      > </a
+      ><a name="5233" href="Relation.Binary.Core.html#2880" class="Function"
+      >Antisymmetric</a
+      ><a name="5246"
+      > </a
+      ><a name="5247" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >_&#8801;_</a
+      ><a name="5250"
+      > </a
+      ><a name="5251" href="Data.Nat.html#879" class="Datatype Operator"
+      >_&#8804;_</a
+      ><a name="5254"
+      >
+  </a
+      ><a name="5257" href="Data.Nat.html#5223" class="Function"
+      >antisym</a
+      ><a name="5264"
+      > </a
+      ><a name="5265" href="Data.Nat.html#910" class="InductiveConstructor"
+      >z&#8804;n</a
+      ><a name="5268"
+      >       </a
+      ><a name="5275" href="Data.Nat.html#910" class="InductiveConstructor"
+      >z&#8804;n</a
+      ><a name="5278"
+      >       </a
+      ><a name="5285" class="Symbol"
+      >=</a
+      ><a name="5286"
+      > </a
+      ><a name="5287" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="5291"
+      >
+  </a
+      ><a name="5294" href="Data.Nat.html#5223" class="Function"
+      >antisym</a
+      ><a name="5301"
+      > </a
+      ><a name="5302" class="Symbol"
+      >(</a
+      ><a name="5303" href="Data.Nat.html#952" class="InductiveConstructor"
+      >s&#8804;s</a
+      ><a name="5306"
+      > </a
+      ><a name="5307" href="Data.Nat.html#5307" class="Bound"
+      >m&#8804;n</a
+      ><a name="5310" class="Symbol"
+      >)</a
+      ><a name="5311"
+      > </a
+      ><a name="5312" class="Symbol"
+      >(</a
+      ><a name="5313" href="Data.Nat.html#952" class="InductiveConstructor"
+      >s&#8804;s</a
+      ><a name="5316"
+      > </a
+      ><a name="5317" href="Data.Nat.html#5317" class="Bound"
+      >n&#8804;m</a
+      ><a name="5320" class="Symbol"
+      >)</a
+      ><a name="5321"
+      > </a
+      ><a name="5322" class="Keyword"
+      >with</a
+      ><a name="5326"
+      > </a
+      ><a name="5327" href="Data.Nat.html#5223" class="Function"
+      >antisym</a
+      ><a name="5334"
+      > </a
+      ><a name="5335" href="Data.Nat.html#5307" class="Bound"
+      >m&#8804;n</a
+      ><a name="5338"
+      > </a
+      ><a name="5339" href="Data.Nat.html#5317" class="Bound"
+      >n&#8804;m</a
+      ><a name="5342"
+      >
+  </a
+      ><a name="5345" class="Symbol"
+      >...</a
+      ><a name="5348"
+      >                         </a
+      ><a name="5373" class="Symbol"
+      >|</a
+      ><a name="5374"
+      > </a
+      ><a name="5375" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="5379"
+      > </a
+      ><a name="5380" class="Symbol"
+      >=</a
+      ><a name="5381"
+      > </a
+      ><a name="5382" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="5386"
+      >
+
+  </a
+      ><a name="5390" href="Data.Nat.html#5390" class="Function"
+      >trans</a
+      ><a name="5395"
+      > </a
+      ><a name="5396" class="Symbol"
+      >:</a
+      ><a name="5397"
+      > </a
+      ><a name="5398" href="Relation.Binary.Core.html#2793" class="Function"
+      >Transitive</a
+      ><a name="5408"
+      > </a
+      ><a name="5409" href="Data.Nat.html#879" class="Datatype Operator"
+      >_&#8804;_</a
+      ><a name="5412"
+      >
+  </a
+      ><a name="5415" href="Data.Nat.html#5390" class="Function"
+      >trans</a
+      ><a name="5420"
+      > </a
+      ><a name="5421" href="Data.Nat.html#910" class="InductiveConstructor"
+      >z&#8804;n</a
+      ><a name="5424"
+      >       </a
+      ><a name="5431" class="Symbol"
+      >_</a
+      ><a name="5432"
+      >         </a
+      ><a name="5441" class="Symbol"
+      >=</a
+      ><a name="5442"
+      > </a
+      ><a name="5443" href="Data.Nat.html#910" class="InductiveConstructor"
+      >z&#8804;n</a
+      ><a name="5446"
+      >
+  </a
+      ><a name="5449" href="Data.Nat.html#5390" class="Function"
+      >trans</a
+      ><a name="5454"
+      > </a
+      ><a name="5455" class="Symbol"
+      >(</a
+      ><a name="5456" href="Data.Nat.html#952" class="InductiveConstructor"
+      >s&#8804;s</a
+      ><a name="5459"
+      > </a
+      ><a name="5460" href="Data.Nat.html#5460" class="Bound"
+      >m&#8804;n</a
+      ><a name="5463" class="Symbol"
+      >)</a
+      ><a name="5464"
+      > </a
+      ><a name="5465" class="Symbol"
+      >(</a
+      ><a name="5466" href="Data.Nat.html#952" class="InductiveConstructor"
+      >s&#8804;s</a
+      ><a name="5469"
+      > </a
+      ><a name="5470" href="Data.Nat.html#5470" class="Bound"
+      >n&#8804;o</a
+      ><a name="5473" class="Symbol"
+      >)</a
+      ><a name="5474"
+      > </a
+      ><a name="5475" class="Symbol"
+      >=</a
+      ><a name="5476"
+      > </a
+      ><a name="5477" href="Data.Nat.html#952" class="InductiveConstructor"
+      >s&#8804;s</a
+      ><a name="5480"
+      > </a
+      ><a name="5481" class="Symbol"
+      >(</a
+      ><a name="5482" href="Data.Nat.html#5390" class="Function"
+      >trans</a
+      ><a name="5487"
+      > </a
+      ><a name="5488" href="Data.Nat.html#5460" class="Bound"
+      >m&#8804;n</a
+      ><a name="5491"
+      > </a
+      ><a name="5492" href="Data.Nat.html#5470" class="Bound"
+      >n&#8804;o</a
+      ><a name="5495" class="Symbol"
+      >)</a
+      ><a name="5496"
+      >
+
+  </a
+      ><a name="5500" href="Data.Nat.html#5500" class="Function"
+      >total</a
+      ><a name="5505"
+      > </a
+      ><a name="5506" class="Symbol"
+      >:</a
+      ><a name="5507"
+      > </a
+      ><a name="5508" href="Relation.Binary.Core.html#3614" class="Function"
+      >Total</a
+      ><a name="5513"
+      > </a
+      ><a name="5514" href="Data.Nat.html#879" class="Datatype Operator"
+      >_&#8804;_</a
+      ><a name="5517"
+      >
+  </a
+      ><a name="5520" href="Data.Nat.html#5500" class="Function"
+      >total</a
+      ><a name="5525"
+      > </a
+      ><a name="5526" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="5530"
+      >    </a
+      ><a name="5534" class="Symbol"
+      >_</a
+      ><a name="5535"
+      >       </a
+      ><a name="5542" class="Symbol"
+      >=</a
+      ><a name="5543"
+      > </a
+      ><a name="5544" href="Data.Sum.html#460" class="InductiveConstructor"
+      >inj&#8321;</a
+      ><a name="5548"
+      > </a
+      ><a name="5549" href="Data.Nat.html#910" class="InductiveConstructor"
+      >z&#8804;n</a
+      ><a name="5552"
+      >
+  </a
+      ><a name="5555" href="Data.Nat.html#5500" class="Function"
+      >total</a
+      ><a name="5560"
+      > </a
+      ><a name="5561" class="Symbol"
+      >_</a
+      ><a name="5562"
+      >       </a
+      ><a name="5569" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="5573"
+      >    </a
+      ><a name="5577" class="Symbol"
+      >=</a
+      ><a name="5578"
+      > </a
+      ><a name="5579" href="Data.Sum.html#485" class="InductiveConstructor"
+      >inj&#8322;</a
+      ><a name="5583"
+      > </a
+      ><a name="5584" href="Data.Nat.html#910" class="InductiveConstructor"
+      >z&#8804;n</a
+      ><a name="5587"
+      >
+  </a
+      ><a name="5590" href="Data.Nat.html#5500" class="Function"
+      >total</a
+      ><a name="5595"
+      > </a
+      ><a name="5596" class="Symbol"
+      >(</a
+      ><a name="5597" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="5600"
+      > </a
+      ><a name="5601" href="Data.Nat.html#5601" class="Bound"
+      >m</a
+      ><a name="5602" class="Symbol"
+      >)</a
+      ><a name="5603"
+      > </a
+      ><a name="5604" class="Symbol"
+      >(</a
+      ><a name="5605" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="5608"
+      > </a
+      ><a name="5609" href="Data.Nat.html#5609" class="Bound"
+      >n</a
+      ><a name="5610" class="Symbol"
+      >)</a
+      ><a name="5611"
+      > </a
+      ><a name="5612" class="Keyword"
+      >with</a
+      ><a name="5616"
+      > </a
+      ><a name="5617" href="Data.Nat.html#5500" class="Function"
+      >total</a
+      ><a name="5622"
+      > </a
+      ><a name="5623" href="Data.Nat.html#5601" class="Bound"
+      >m</a
+      ><a name="5624"
+      > </a
+      ><a name="5625" href="Data.Nat.html#5609" class="Bound"
+      >n</a
+      ><a name="5626"
+      >
+  </a
+      ><a name="5629" class="Symbol"
+      >...</a
+      ><a name="5632"
+      >                   </a
+      ><a name="5651" class="Symbol"
+      >|</a
+      ><a name="5652"
+      > </a
+      ><a name="5653" href="Data.Sum.html#460" class="InductiveConstructor"
+      >inj&#8321;</a
+      ><a name="5657"
+      > </a
+      ><a name="5658" href="Data.Nat.html#5658" class="Bound"
+      >m&#8804;n</a
+      ><a name="5661"
+      > </a
+      ><a name="5662" class="Symbol"
+      >=</a
+      ><a name="5663"
+      > </a
+      ><a name="5664" href="Data.Sum.html#460" class="InductiveConstructor"
+      >inj&#8321;</a
+      ><a name="5668"
+      > </a
+      ><a name="5669" class="Symbol"
+      >(</a
+      ><a name="5670" href="Data.Nat.html#952" class="InductiveConstructor"
+      >s&#8804;s</a
+      ><a name="5673"
+      > </a
+      ><a name="5674" href="Data.Nat.html#5658" class="Bound"
+      >m&#8804;n</a
+      ><a name="5677" class="Symbol"
+      >)</a
+      ><a name="5678"
+      >
+  </a
+      ><a name="5681" class="Symbol"
+      >...</a
+      ><a name="5684"
+      >                   </a
+      ><a name="5703" class="Symbol"
+      >|</a
+      ><a name="5704"
+      > </a
+      ><a name="5705" href="Data.Sum.html#485" class="InductiveConstructor"
+      >inj&#8322;</a
+      ><a name="5709"
+      > </a
+      ><a name="5710" href="Data.Nat.html#5710" class="Bound"
+      >n&#8804;m</a
+      ><a name="5713"
+      > </a
+      ><a name="5714" class="Symbol"
+      >=</a
+      ><a name="5715"
+      > </a
+      ><a name="5716" href="Data.Sum.html#485" class="InductiveConstructor"
+      >inj&#8322;</a
+      ><a name="5720"
+      > </a
+      ><a name="5721" class="Symbol"
+      >(</a
+      ><a name="5722" href="Data.Nat.html#952" class="InductiveConstructor"
+      >s&#8804;s</a
+      ><a name="5725"
+      > </a
+      ><a name="5726" href="Data.Nat.html#5710" class="Bound"
+      >n&#8804;m</a
+      ><a name="5729" class="Symbol"
+      >)</a
+      ><a name="5730"
+      >
+
+</a
+      ><a name="5732" class="Keyword"
+      >import</a
+      ><a name="5738"
+      > </a
+      ><a name="5739" href="Relation.Binary.PartialOrderReasoning.html#1" class="Module"
+      >Relation.Binary.PartialOrderReasoning</a
+      ><a name="5776"
+      > </a
+      ><a name="5777" class="Symbol"
+      >as</a
+      ><a name="5779"
+      > </a
+      ><a name="5780" class="Module"
+      >POR</a
+      ><a name="5783"
+      >
+</a
+      ><a name="5784" class="Keyword"
+      >module</a
+      ><a name="5790"
+      > </a
+      ><a name="5791" href="Data.Nat.html#5791" class="Module"
+      >&#8804;-Reasoning</a
+      ><a name="5802"
+      > </a
+      ><a name="5803" class="Keyword"
+      >where</a
+      ><a name="5808"
+      >
+  </a
+      ><a name="5811" class="Keyword"
+      >open</a
+      ><a name="5815"
+      > </a
+      ><a name="5816" href="Relation.Binary.PartialOrderReasoning.html#1" class="Module"
+      >POR</a
+      ><a name="5819"
+      > </a
+      ><a name="5820" class="Symbol"
+      >(</a
+      ><a name="5821" href="Relation.Binary.html#6764" class="Function"
+      >DecTotalOrder.poset</a
+      ><a name="5840"
+      > </a
+      ><a name="5841" href="Data.Nat.html#4558" class="Function"
+      >decTotalOrder</a
+      ><a name="5854" class="Symbol"
+      >)</a
+      ><a name="5855"
+      > </a
+      ><a name="5856" class="Keyword"
+      >public</a
+      ><a name="5862"
+      >
+    </a
+      ><a name="5867" class="Keyword"
+      >renaming</a
+      ><a name="5875"
+      > </a
+      ><a name="5876" class="Symbol"
+      >(</a
+      ><a name="5877"
+      >_&#8776;&#10216;_&#10217;_ </a
+      ><a name="5884" class="Symbol"
+      >to</a
+      ><a name="5886"
+      > _&#8801;&#10216;_&#10217;_</a
+      ><a name="5893" class="Symbol"
+      >)</a
+      ><a name="5894"
+      >
+
+  </a
+      ><a name="5898" class="Keyword"
+      >infixr</a
+      ><a name="5904"
+      > </a
+      ><a name="5905" class="Number"
+      >2</a
+      ><a name="5906"
+      > _&lt;&#10216;_&#10217;_
+
+  </a
+      ><a name="5917" href="Data.Nat.html#5917" class="Function Operator"
+      >_&lt;&#10216;_&#10217;_</a
+      ><a name="5923"
+      > </a
+      ><a name="5924" class="Symbol"
+      >:</a
+      ><a name="5925"
+      > </a
+      ><a name="5926" class="Symbol"
+      >&#8704;</a
+      ><a name="5927"
+      > </a
+      ><a name="5928" href="Data.Nat.html#5928" class="Bound"
+      >x</a
+      ><a name="5929"
+      > </a
+      ><a name="5930" class="Symbol"
+      >{</a
+      ><a name="5931" href="Data.Nat.html#5931" class="Bound"
+      >y</a
+      ><a name="5932"
+      > </a
+      ><a name="5933" href="Data.Nat.html#5933" class="Bound"
+      >z</a
+      ><a name="5934" class="Symbol"
+      >}</a
+      ><a name="5935"
+      > </a
+      ><a name="5936" class="Symbol"
+      >&#8594;</a
+      ><a name="5937"
+      > </a
+      ><a name="5938" href="Data.Nat.html#5928" class="Bound"
+      >x</a
+      ><a name="5939"
+      > </a
+      ><a name="5940" href="Data.Nat.html#997" class="Function Operator"
+      >&lt;</a
+      ><a name="5941"
+      > </a
+      ><a name="5942" href="Data.Nat.html#5931" class="Bound"
+      >y</a
+      ><a name="5943"
+      > </a
+      ><a name="5944" class="Symbol"
+      >&#8594;</a
+      ><a name="5945"
+      > </a
+      ><a name="5946" href="Data.Nat.html#5931" class="Bound"
+      >y</a
+      ><a name="5947"
+      > </a
+      ><a name="5948" href="Relation.Binary.PreorderReasoning.html#1066" class="Datatype Operator"
+      >IsRelatedTo</a
+      ><a name="5959"
+      > </a
+      ><a name="5960" href="Data.Nat.html#5933" class="Bound"
+      >z</a
+      ><a name="5961"
+      > </a
+      ><a name="5962" class="Symbol"
+      >&#8594;</a
+      ><a name="5963"
+      > </a
+      ><a name="5964" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="5967"
+      > </a
+      ><a name="5968" href="Data.Nat.html#5928" class="Bound"
+      >x</a
+      ><a name="5969"
+      > </a
+      ><a name="5970" href="Relation.Binary.PreorderReasoning.html#1066" class="Datatype Operator"
+      >IsRelatedTo</a
+      ><a name="5981"
+      > </a
+      ><a name="5982" href="Data.Nat.html#5933" class="Bound"
+      >z</a
+      ><a name="5983"
+      >
+  </a
+      ><a name="5986" href="Data.Nat.html#5986" class="Bound"
+      >x</a
+      ><a name="5987"
+      > </a
+      ><a name="5988" href="Data.Nat.html#5917" class="Function Operator"
+      >&lt;&#10216;</a
+      ><a name="5990"
+      > </a
+      ><a name="5991" href="Data.Nat.html#5991" class="Bound"
+      >x&lt;y</a
+      ><a name="5994"
+      > </a
+      ><a name="5995" href="Data.Nat.html#5917" class="Function Operator"
+      >&#10217;</a
+      ><a name="5996"
+      > </a
+      ><a name="5997" href="Data.Nat.html#5997" class="Bound"
+      >y&#8804;z</a
+      ><a name="6000"
+      > </a
+      ><a name="6001" class="Symbol"
+      >=</a
+      ><a name="6002"
+      > </a
+      ><a name="6003" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="6006"
+      > </a
+      ><a name="6007" href="Data.Nat.html#5986" class="Bound"
+      >x</a
+      ><a name="6008"
+      > </a
+      ><a name="6009" href="Relation.Binary.PreorderReasoning.html#1220" class="Function Operator"
+      >&#8804;&#10216;</a
+      ><a name="6011"
+      > </a
+      ><a name="6012" href="Data.Nat.html#5991" class="Bound"
+      >x&lt;y</a
+      ><a name="6015"
+      > </a
+      ><a name="6016" href="Relation.Binary.PreorderReasoning.html#1220" class="Function Operator"
+      >&#10217;</a
+      ><a name="6017"
+      > </a
+      ><a name="6018" href="Data.Nat.html#5997" class="Bound"
+      >y&#8804;z</a
+      ><a name="6021"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

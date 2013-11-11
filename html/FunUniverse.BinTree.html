@@ -1,0 +1,4520 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >FunUniverse.BinTree</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Symbol"
+      >{-#</a
+      ><a name="4"
+      > </a
+      ><a name="5" class="Keyword"
+      >OPTIONS</a
+      ><a name="12"
+      > --without-K </a
+      ><a name="25" class="Symbol"
+      >#-}</a
+      ><a name="28"
+      >
+</a
+      ><a name="29" class="Keyword"
+      >module</a
+      ><a name="35"
+      > </a
+      ><a name="36" href="FunUniverse.BinTree.html#1" class="Module"
+      >FunUniverse.BinTree</a
+      ><a name="55"
+      > </a
+      ><a name="56" class="Keyword"
+      >where</a
+      ><a name="61"
+      >
+
+</a
+      ><a name="63" class="Keyword"
+      >open</a
+      ><a name="67"
+      > </a
+      ><a name="68" class="Keyword"
+      >import</a
+      ><a name="74"
+      > </a
+      ><a name="75" href="Type.html#1" class="Module"
+      >Type</a
+      ><a name="79"
+      > </a
+      ><a name="80" class="Keyword"
+      >hiding</a
+      ><a name="86"
+      > </a
+      ><a name="87" class="Symbol"
+      >(</a
+      ><a name="88"
+      >&#9733;</a
+      ><a name="89" class="Symbol"
+      >)</a
+      ><a name="90"
+      >
+</a
+      ><a name="91" class="Keyword"
+      >open</a
+      ><a name="95"
+      > </a
+      ><a name="96" class="Keyword"
+      >import</a
+      ><a name="102"
+      > </a
+      ><a name="103" href="Function.html#1" class="Module"
+      >Function</a
+      ><a name="111"
+      >
+</a
+      ><a name="112" class="Keyword"
+      >open</a
+      ><a name="116"
+      > </a
+      ><a name="117" class="Keyword"
+      >import</a
+      ><a name="123"
+      > </a
+      ><a name="124" href="Data.Nat.NP.html#1" class="Module"
+      >Data.Nat.NP</a
+      ><a name="135"
+      > </a
+      ><a name="136" class="Keyword"
+      >using</a
+      ><a name="141"
+      > </a
+      ><a name="142" class="Symbol"
+      >(</a
+      ><a name="143"
+      >&#8469;</a
+      ><a name="144" class="Symbol"
+      >;</a
+      ><a name="145"
+      > zero</a
+      ><a name="150" class="Symbol"
+      >;</a
+      ><a name="151"
+      > suc</a
+      ><a name="155" class="Symbol"
+      >;</a
+      ><a name="156"
+      > _&#8804;_</a
+      ><a name="160" class="Symbol"
+      >;</a
+      ><a name="161"
+      > s&#8804;s</a
+      ><a name="165" class="Symbol"
+      >;</a
+      ><a name="166"
+      > _+_</a
+      ><a name="170" class="Symbol"
+      >;</a
+      ><a name="171"
+      > </a
+      ><a name="172" class="Keyword"
+      >module</a
+      ><a name="178"
+      > &#8469;&#8804;</a
+      ><a name="181" class="Symbol"
+      >;</a
+      ><a name="182"
+      > </a
+      ><a name="183" class="Keyword"
+      >module</a
+      ><a name="189"
+      > &#8469;&#176;</a
+      ><a name="192" class="Symbol"
+      >)</a
+      ><a name="193"
+      >
+</a
+      ><a name="194" class="Keyword"
+      >open</a
+      ><a name="198"
+      > </a
+      ><a name="199" class="Keyword"
+      >import</a
+      ><a name="205"
+      > </a
+      ><a name="206" href="Data.Nat.Properties.html#1" class="Module"
+      >Data.Nat.Properties</a
+      ><a name="225"
+      >
+</a
+      ><a name="226" class="Keyword"
+      >open</a
+      ><a name="230"
+      > </a
+      ><a name="231" class="Keyword"
+      >import</a
+      ><a name="237"
+      > </a
+      ><a name="238" href="Data.Bool.html#1" class="Module"
+      >Data.Bool</a
+      ><a name="247"
+      >
+</a
+      ><a name="248" class="Keyword"
+      >open</a
+      ><a name="252"
+      > </a
+      ><a name="253" class="Keyword"
+      >import</a
+      ><a name="259"
+      > </a
+      ><a name="260" href="Data.Vec.html#1" class="Module"
+      >Data.Vec</a
+      ><a name="268"
+      > </a
+      ><a name="269" class="Keyword"
+      >using</a
+      ><a name="274"
+      > </a
+      ><a name="275" class="Symbol"
+      >(</a
+      ><a name="276"
+      >_++_</a
+      ><a name="280" class="Symbol"
+      >)</a
+      ><a name="281"
+      >
+</a
+      ><a name="282" class="Keyword"
+      >open</a
+      ><a name="286"
+      > </a
+      ><a name="287" class="Keyword"
+      >import</a
+      ><a name="293"
+      > </a
+      ><a name="294" href="Data.Bits.html#1" class="Module"
+      >Data.Bits</a
+      ><a name="303"
+      > </a
+      ><a name="304" class="Keyword"
+      >hiding</a
+      ><a name="310"
+      > </a
+      ><a name="311" class="Symbol"
+      >(</a
+      ><a name="312"
+      >map</a
+      ><a name="315" class="Symbol"
+      >)</a
+      ><a name="316"
+      >
+</a
+      ><a name="317" class="Comment"
+      >--import Data.Bits.Search as Search</a
+      ><a name="352"
+      >
+</a
+      ><a name="353" class="Comment"
+      >--open Search.SimpleSearch</a
+      ><a name="379"
+      >
+</a
+      ><a name="380" class="Keyword"
+      >open</a
+      ><a name="384"
+      > </a
+      ><a name="385" class="Keyword"
+      >import</a
+      ><a name="391"
+      > </a
+      ><a name="392" href="Relation.Binary.html#1" class="Module"
+      >Relation.Binary</a
+      ><a name="407"
+      >
+</a
+      ><a name="408" class="Keyword"
+      >open</a
+      ><a name="412"
+      > </a
+      ><a name="413" class="Keyword"
+      >import</a
+      ><a name="419"
+      > </a
+      ><a name="420" href="Relation.Binary.PropositionalEquality.html#1" class="Module"
+      >Relation.Binary.PropositionalEquality</a
+      ><a name="457"
+      >
+</a
+      ><a name="458" class="Keyword"
+      >open</a
+      ><a name="462"
+      > </a
+      ><a name="463" class="Keyword"
+      >import</a
+      ><a name="469"
+      > </a
+      ><a name="470" href="Composition.Horizontal.html#1" class="Module"
+      >Composition.Horizontal</a
+      ><a name="492"
+      >
+</a
+      ><a name="493" class="Keyword"
+      >open</a
+      ><a name="497"
+      > </a
+      ><a name="498" class="Keyword"
+      >import</a
+      ><a name="504"
+      > </a
+      ><a name="505" href="Composition.Vertical.html#1" class="Module"
+      >Composition.Vertical</a
+      ><a name="525"
+      >
+</a
+      ><a name="526" class="Keyword"
+      >open</a
+      ><a name="530"
+      > </a
+      ><a name="531" class="Keyword"
+      >import</a
+      ><a name="537"
+      > </a
+      ><a name="538" href="Composition.Forkable.html#1" class="Module"
+      >Composition.Forkable</a
+      ><a name="558"
+      >
+
+</a
+      ><a name="560" class="Keyword"
+      >data</a
+      ><a name="564"
+      > </a
+      ><a name="565" href="FunUniverse.BinTree.html#565" class="Datatype"
+      >Tree</a
+      ><a name="569"
+      > </a
+      ><a name="570" class="Symbol"
+      >{</a
+      ><a name="571" href="FunUniverse.BinTree.html#571" class="Bound"
+      >a</a
+      ><a name="572" class="Symbol"
+      >}</a
+      ><a name="573"
+      > </a
+      ><a name="574" class="Symbol"
+      >(</a
+      ><a name="575" href="FunUniverse.BinTree.html#575" class="Bound"
+      >A</a
+      ><a name="576"
+      > </a
+      ><a name="577" class="Symbol"
+      >:</a
+      ><a name="578"
+      > </a
+      ><a name="579" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="580"
+      > </a
+      ><a name="581" href="FunUniverse.BinTree.html#571" class="Bound"
+      >a</a
+      ><a name="582" class="Symbol"
+      >)</a
+      ><a name="583"
+      > </a
+      ><a name="584" class="Symbol"
+      >:</a
+      ><a name="585"
+      > </a
+      ><a name="586" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="587"
+      > </a
+      ><a name="588" class="Symbol"
+      >&#8594;</a
+      ><a name="589"
+      > </a
+      ><a name="590" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="591"
+      > </a
+      ><a name="592" href="FunUniverse.BinTree.html#571" class="Bound"
+      >a</a
+      ><a name="593"
+      > </a
+      ><a name="594" class="Keyword"
+      >where</a
+      ><a name="599"
+      >
+  </a
+      ><a name="602" href="FunUniverse.BinTree.html#602" class="InductiveConstructor"
+      >leaf</a
+      ><a name="606"
+      > </a
+      ><a name="607" class="Symbol"
+      >:</a
+      ><a name="608"
+      > </a
+      ><a name="609" class="Symbol"
+      >&#8704;</a
+      ><a name="610"
+      > </a
+      ><a name="611" class="Symbol"
+      >{</a
+      ><a name="612" href="FunUniverse.BinTree.html#612" class="Bound"
+      >n</a
+      ><a name="613" class="Symbol"
+      >}</a
+      ><a name="614"
+      > </a
+      ><a name="615" class="Symbol"
+      >&#8594;</a
+      ><a name="616"
+      > </a
+      ><a name="617" href="FunUniverse.BinTree.html#575" class="Bound"
+      >A</a
+      ><a name="618"
+      > </a
+      ><a name="619" class="Symbol"
+      >&#8594;</a
+      ><a name="620"
+      > </a
+      ><a name="621" href="FunUniverse.BinTree.html#565" class="Datatype"
+      >Tree</a
+      ><a name="625"
+      > </a
+      ><a name="626" href="FunUniverse.BinTree.html#575" class="Bound"
+      >A</a
+      ><a name="627"
+      > </a
+      ><a name="628" href="FunUniverse.BinTree.html#612" class="Bound"
+      >n</a
+      ><a name="629"
+      >
+  </a
+      ><a name="632" href="FunUniverse.BinTree.html#632" class="InductiveConstructor"
+      >fork</a
+      ><a name="636"
+      > </a
+      ><a name="637" class="Symbol"
+      >:</a
+      ><a name="638"
+      > </a
+      ><a name="639" class="Symbol"
+      >&#8704;</a
+      ><a name="640"
+      > </a
+      ><a name="641" class="Symbol"
+      >{</a
+      ><a name="642" href="FunUniverse.BinTree.html#642" class="Bound"
+      >n</a
+      ><a name="643" class="Symbol"
+      >}</a
+      ><a name="644"
+      > </a
+      ><a name="645" class="Symbol"
+      >(</a
+      ><a name="646" href="FunUniverse.BinTree.html#646" class="Bound"
+      >left</a
+      ><a name="650"
+      > </a
+      ><a name="651" href="FunUniverse.BinTree.html#651" class="Bound"
+      >right</a
+      ><a name="656"
+      > </a
+      ><a name="657" class="Symbol"
+      >:</a
+      ><a name="658"
+      > </a
+      ><a name="659" href="FunUniverse.BinTree.html#565" class="Datatype"
+      >Tree</a
+      ><a name="663"
+      > </a
+      ><a name="664" href="FunUniverse.BinTree.html#575" class="Bound"
+      >A</a
+      ><a name="665"
+      > </a
+      ><a name="666" href="FunUniverse.BinTree.html#642" class="Bound"
+      >n</a
+      ><a name="667" class="Symbol"
+      >)</a
+      ><a name="668"
+      > </a
+      ><a name="669" class="Symbol"
+      >&#8594;</a
+      ><a name="670"
+      > </a
+      ><a name="671" href="FunUniverse.BinTree.html#565" class="Datatype"
+      >Tree</a
+      ><a name="675"
+      > </a
+      ><a name="676" href="FunUniverse.BinTree.html#575" class="Bound"
+      >A</a
+      ><a name="677"
+      > </a
+      ><a name="678" class="Symbol"
+      >(</a
+      ><a name="679" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="682"
+      > </a
+      ><a name="683" href="FunUniverse.BinTree.html#642" class="Bound"
+      >n</a
+      ><a name="684" class="Symbol"
+      >)</a
+      ><a name="685"
+      >
+
+</a
+      ><a name="687" href="FunUniverse.BinTree.html#687" class="Function"
+      >fromFun</a
+      ><a name="694"
+      > </a
+      ><a name="695" class="Symbol"
+      >:</a
+      ><a name="696"
+      > </a
+      ><a name="697" class="Symbol"
+      >&#8704;</a
+      ><a name="698"
+      > </a
+      ><a name="699" class="Symbol"
+      >{</a
+      ><a name="700" href="FunUniverse.BinTree.html#700" class="Bound"
+      >n</a
+      ><a name="701"
+      > </a
+      ><a name="702" href="FunUniverse.BinTree.html#702" class="Bound"
+      >a</a
+      ><a name="703" class="Symbol"
+      >}</a
+      ><a name="704"
+      > </a
+      ><a name="705" class="Symbol"
+      >{</a
+      ><a name="706" href="FunUniverse.BinTree.html#706" class="Bound"
+      >A</a
+      ><a name="707"
+      > </a
+      ><a name="708" class="Symbol"
+      >:</a
+      ><a name="709"
+      > </a
+      ><a name="710" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="711"
+      > </a
+      ><a name="712" href="FunUniverse.BinTree.html#702" class="Bound"
+      >a</a
+      ><a name="713" class="Symbol"
+      >}</a
+      ><a name="714"
+      > </a
+      ><a name="715" class="Symbol"
+      >&#8594;</a
+      ><a name="716"
+      > </a
+      ><a name="717" class="Symbol"
+      >(</a
+      ><a name="718" href="Data.Bits.html#572" class="Function"
+      >Bits</a
+      ><a name="722"
+      > </a
+      ><a name="723" href="FunUniverse.BinTree.html#700" class="Bound"
+      >n</a
+      ><a name="724"
+      > </a
+      ><a name="725" class="Symbol"
+      >&#8594;</a
+      ><a name="726"
+      > </a
+      ><a name="727" href="FunUniverse.BinTree.html#706" class="Bound"
+      >A</a
+      ><a name="728" class="Symbol"
+      >)</a
+      ><a name="729"
+      > </a
+      ><a name="730" class="Symbol"
+      >&#8594;</a
+      ><a name="731"
+      > </a
+      ><a name="732" href="FunUniverse.BinTree.html#565" class="Datatype"
+      >Tree</a
+      ><a name="736"
+      > </a
+      ><a name="737" href="FunUniverse.BinTree.html#706" class="Bound"
+      >A</a
+      ><a name="738"
+      > </a
+      ><a name="739" href="FunUniverse.BinTree.html#700" class="Bound"
+      >n</a
+      ><a name="740"
+      >
+</a
+      ><a name="741" href="FunUniverse.BinTree.html#687" class="Function"
+      >fromFun</a
+      ><a name="748"
+      > </a
+      ><a name="749" class="Symbol"
+      >{</a
+      ><a name="750" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="754" class="Symbol"
+      >}</a
+      ><a name="755"
+      >  </a
+      ><a name="757" href="FunUniverse.BinTree.html#757" class="Bound"
+      >f</a
+      ><a name="758"
+      > </a
+      ><a name="759" class="Symbol"
+      >=</a
+      ><a name="760"
+      > </a
+      ><a name="761" href="FunUniverse.BinTree.html#602" class="InductiveConstructor"
+      >leaf</a
+      ><a name="765"
+      > </a
+      ><a name="766" class="Symbol"
+      >(</a
+      ><a name="767" href="FunUniverse.BinTree.html#757" class="Bound"
+      >f</a
+      ><a name="768"
+      > </a
+      ><a name="769" href="Data.Vec.html#644" class="InductiveConstructor"
+      >[]</a
+      ><a name="771" class="Symbol"
+      >)</a
+      ><a name="772"
+      >
+</a
+      ><a name="773" href="FunUniverse.BinTree.html#687" class="Function"
+      >fromFun</a
+      ><a name="780"
+      > </a
+      ><a name="781" class="Symbol"
+      >{</a
+      ><a name="782" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="785"
+      > </a
+      ><a name="786" href="FunUniverse.BinTree.html#786" class="Bound"
+      >n</a
+      ><a name="787" class="Symbol"
+      >}</a
+      ><a name="788"
+      > </a
+      ><a name="789" href="FunUniverse.BinTree.html#789" class="Bound"
+      >f</a
+      ><a name="790"
+      > </a
+      ><a name="791" class="Symbol"
+      >=</a
+      ><a name="792"
+      > </a
+      ><a name="793" href="FunUniverse.BinTree.html#632" class="InductiveConstructor"
+      >fork</a
+      ><a name="797"
+      > </a
+      ><a name="798" class="Symbol"
+      >(</a
+      ><a name="799" href="FunUniverse.BinTree.html#687" class="Function"
+      >fromFun</a
+      ><a name="806"
+      > </a
+      ><a name="807" class="Symbol"
+      >(</a
+      ><a name="808" href="FunUniverse.BinTree.html#789" class="Bound"
+      >f</a
+      ><a name="809"
+      > </a
+      ><a name="810" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="811"
+      > </a
+      ><a name="812" href="Data.Bits.html#793" class="Function Operator"
+      >0&#8759;_</a
+      ><a name="815" class="Symbol"
+      >))</a
+      ><a name="817"
+      > </a
+      ><a name="818" class="Symbol"
+      >(</a
+      ><a name="819" href="FunUniverse.BinTree.html#687" class="Function"
+      >fromFun</a
+      ><a name="826"
+      > </a
+      ><a name="827" class="Symbol"
+      >(</a
+      ><a name="828" href="FunUniverse.BinTree.html#789" class="Bound"
+      >f</a
+      ><a name="829"
+      > </a
+      ><a name="830" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="831"
+      > </a
+      ><a name="832" href="Data.Bits.html#886" class="Function Operator"
+      >1&#8759;_</a
+      ><a name="835" class="Symbol"
+      >))</a
+      ><a name="837"
+      >
+
+</a
+      ><a name="839" href="FunUniverse.BinTree.html#839" class="Function"
+      >toFun</a
+      ><a name="844"
+      > </a
+      ><a name="845" class="Symbol"
+      >:</a
+      ><a name="846"
+      > </a
+      ><a name="847" class="Symbol"
+      >&#8704;</a
+      ><a name="848"
+      > </a
+      ><a name="849" class="Symbol"
+      >{</a
+      ><a name="850" href="FunUniverse.BinTree.html#850" class="Bound"
+      >n</a
+      ><a name="851"
+      > </a
+      ><a name="852" href="FunUniverse.BinTree.html#852" class="Bound"
+      >a</a
+      ><a name="853" class="Symbol"
+      >}</a
+      ><a name="854"
+      > </a
+      ><a name="855" class="Symbol"
+      >{</a
+      ><a name="856" href="FunUniverse.BinTree.html#856" class="Bound"
+      >A</a
+      ><a name="857"
+      > </a
+      ><a name="858" class="Symbol"
+      >:</a
+      ><a name="859"
+      > </a
+      ><a name="860" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="861"
+      > </a
+      ><a name="862" href="FunUniverse.BinTree.html#852" class="Bound"
+      >a</a
+      ><a name="863" class="Symbol"
+      >}</a
+      ><a name="864"
+      > </a
+      ><a name="865" class="Symbol"
+      >&#8594;</a
+      ><a name="866"
+      > </a
+      ><a name="867" href="FunUniverse.BinTree.html#565" class="Datatype"
+      >Tree</a
+      ><a name="871"
+      > </a
+      ><a name="872" href="FunUniverse.BinTree.html#856" class="Bound"
+      >A</a
+      ><a name="873"
+      > </a
+      ><a name="874" href="FunUniverse.BinTree.html#850" class="Bound"
+      >n</a
+      ><a name="875"
+      > </a
+      ><a name="876" class="Symbol"
+      >&#8594;</a
+      ><a name="877"
+      > </a
+      ><a name="878" href="Data.Bits.html#572" class="Function"
+      >Bits</a
+      ><a name="882"
+      > </a
+      ><a name="883" href="FunUniverse.BinTree.html#850" class="Bound"
+      >n</a
+      ><a name="884"
+      > </a
+      ><a name="885" class="Symbol"
+      >&#8594;</a
+      ><a name="886"
+      > </a
+      ><a name="887" href="FunUniverse.BinTree.html#856" class="Bound"
+      >A</a
+      ><a name="888"
+      >
+</a
+      ><a name="889" href="FunUniverse.BinTree.html#839" class="Function"
+      >toFun</a
+      ><a name="894"
+      > </a
+      ><a name="895" class="Symbol"
+      >(</a
+      ><a name="896" href="FunUniverse.BinTree.html#602" class="InductiveConstructor"
+      >leaf</a
+      ><a name="900"
+      > </a
+      ><a name="901" href="FunUniverse.BinTree.html#901" class="Bound"
+      >x</a
+      ><a name="902" class="Symbol"
+      >)</a
+      ><a name="903"
+      > </a
+      ><a name="904" class="Symbol"
+      >_</a
+      ><a name="905"
+      > </a
+      ><a name="906" class="Symbol"
+      >=</a
+      ><a name="907"
+      > </a
+      ><a name="908" href="FunUniverse.BinTree.html#901" class="Bound"
+      >x</a
+      ><a name="909"
+      >
+</a
+      ><a name="910" href="FunUniverse.BinTree.html#839" class="Function"
+      >toFun</a
+      ><a name="915"
+      > </a
+      ><a name="916" class="Symbol"
+      >(</a
+      ><a name="917" href="FunUniverse.BinTree.html#632" class="InductiveConstructor"
+      >fork</a
+      ><a name="921"
+      > </a
+      ><a name="922" href="FunUniverse.BinTree.html#922" class="Bound"
+      >left</a
+      ><a name="926"
+      > </a
+      ><a name="927" href="FunUniverse.BinTree.html#927" class="Bound"
+      >right</a
+      ><a name="932" class="Symbol"
+      >)</a
+      ><a name="933"
+      > </a
+      ><a name="934" class="Symbol"
+      >(</a
+      ><a name="935" href="FunUniverse.BinTree.html#935" class="Bound"
+      >b</a
+      ><a name="936"
+      > </a
+      ><a name="937" href="Data.Vec.html#663" class="InductiveConstructor Operator"
+      >&#8759;</a
+      ><a name="938"
+      > </a
+      ><a name="939" href="FunUniverse.BinTree.html#939" class="Bound"
+      >bs</a
+      ><a name="941" class="Symbol"
+      >)</a
+      ><a name="942"
+      > </a
+      ><a name="943" class="Symbol"
+      >=</a
+      ><a name="944"
+      > </a
+      ><a name="945" href="FunUniverse.BinTree.html#839" class="Function"
+      >toFun</a
+      ><a name="950"
+      > </a
+      ><a name="951" class="Symbol"
+      >(</a
+      ><a name="952" href="Data.Bool.html#1047" class="Function Operator"
+      >if</a
+      ><a name="954"
+      > </a
+      ><a name="955" href="FunUniverse.BinTree.html#935" class="Bound"
+      >b</a
+      ><a name="956"
+      > </a
+      ><a name="957" href="Data.Bool.html#1047" class="Function Operator"
+      >then</a
+      ><a name="961"
+      > </a
+      ><a name="962" href="FunUniverse.BinTree.html#927" class="Bound"
+      >right</a
+      ><a name="967"
+      > </a
+      ><a name="968" href="Data.Bool.html#1047" class="Function Operator"
+      >else</a
+      ><a name="972"
+      > </a
+      ><a name="973" href="FunUniverse.BinTree.html#922" class="Bound"
+      >left</a
+      ><a name="977" class="Symbol"
+      >)</a
+      ><a name="978"
+      > </a
+      ><a name="979" href="FunUniverse.BinTree.html#939" class="Bound"
+      >bs</a
+      ><a name="981"
+      >
+
+</a
+      ><a name="983" href="FunUniverse.BinTree.html#983" class="Function"
+      >toFun&#8728;fromFun</a
+      ><a name="996"
+      > </a
+      ><a name="997" class="Symbol"
+      >:</a
+      ><a name="998"
+      > </a
+      ><a name="999" class="Symbol"
+      >&#8704;</a
+      ><a name="1000"
+      > </a
+      ><a name="1001" class="Symbol"
+      >{</a
+      ><a name="1002" href="FunUniverse.BinTree.html#1002" class="Bound"
+      >n</a
+      ><a name="1003"
+      > </a
+      ><a name="1004" href="FunUniverse.BinTree.html#1004" class="Bound"
+      >a</a
+      ><a name="1005" class="Symbol"
+      >}</a
+      ><a name="1006"
+      > </a
+      ><a name="1007" class="Symbol"
+      >{</a
+      ><a name="1008" href="FunUniverse.BinTree.html#1008" class="Bound"
+      >A</a
+      ><a name="1009"
+      > </a
+      ><a name="1010" class="Symbol"
+      >:</a
+      ><a name="1011"
+      > </a
+      ><a name="1012" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="1013"
+      > </a
+      ><a name="1014" href="FunUniverse.BinTree.html#1004" class="Bound"
+      >a</a
+      ><a name="1015" class="Symbol"
+      >}</a
+      ><a name="1016"
+      > </a
+      ><a name="1017" class="Symbol"
+      >(</a
+      ><a name="1018" href="FunUniverse.BinTree.html#1018" class="Bound"
+      >f</a
+      ><a name="1019"
+      > </a
+      ><a name="1020" class="Symbol"
+      >:</a
+      ><a name="1021"
+      > </a
+      ><a name="1022" href="Data.Bits.html#572" class="Function"
+      >Bits</a
+      ><a name="1026"
+      > </a
+      ><a name="1027" href="FunUniverse.BinTree.html#1002" class="Bound"
+      >n</a
+      ><a name="1028"
+      > </a
+      ><a name="1029" class="Symbol"
+      >&#8594;</a
+      ><a name="1030"
+      > </a
+      ><a name="1031" href="FunUniverse.BinTree.html#1008" class="Bound"
+      >A</a
+      ><a name="1032" class="Symbol"
+      >)</a
+      ><a name="1033"
+      > </a
+      ><a name="1034" class="Symbol"
+      >&#8594;</a
+      ><a name="1035"
+      > </a
+      ><a name="1036" href="FunUniverse.BinTree.html#839" class="Function"
+      >toFun</a
+      ><a name="1041"
+      > </a
+      ><a name="1042" class="Symbol"
+      >(</a
+      ><a name="1043" href="FunUniverse.BinTree.html#687" class="Function"
+      >fromFun</a
+      ><a name="1050"
+      > </a
+      ><a name="1051" href="FunUniverse.BinTree.html#1018" class="Bound"
+      >f</a
+      ><a name="1052" class="Symbol"
+      >)</a
+      ><a name="1053"
+      > </a
+      ><a name="1054" href="Relation.Binary.PropositionalEquality.html#2312" class="Function Operator"
+      >&#8791;</a
+      ><a name="1055"
+      > </a
+      ><a name="1056" href="FunUniverse.BinTree.html#1018" class="Bound"
+      >f</a
+      ><a name="1057"
+      >
+</a
+      ><a name="1058" href="FunUniverse.BinTree.html#983" class="Function"
+      >toFun&#8728;fromFun</a
+      ><a name="1071"
+      > </a
+      ><a name="1072" class="Symbol"
+      >{</a
+      ><a name="1073" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="1077" class="Symbol"
+      >}</a
+      ><a name="1078"
+      >  </a
+      ><a name="1080" href="FunUniverse.BinTree.html#1080" class="Bound"
+      >f</a
+      ><a name="1081"
+      > </a
+      ><a name="1082" href="Data.Vec.html#644" class="InductiveConstructor"
+      >[]</a
+      ><a name="1084"
+      >        </a
+      ><a name="1092" class="Symbol"
+      >=</a
+      ><a name="1093"
+      > </a
+      ><a name="1094" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="1098"
+      >
+</a
+      ><a name="1099" href="FunUniverse.BinTree.html#983" class="Function"
+      >toFun&#8728;fromFun</a
+      ><a name="1112"
+      > </a
+      ><a name="1113" class="Symbol"
+      >{</a
+      ><a name="1114" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="1117"
+      > </a
+      ><a name="1118" href="FunUniverse.BinTree.html#1118" class="Bound"
+      >n</a
+      ><a name="1119" class="Symbol"
+      >}</a
+      ><a name="1120"
+      > </a
+      ><a name="1121" href="FunUniverse.BinTree.html#1121" class="Bound"
+      >f</a
+      ><a name="1122"
+      > </a
+      ><a name="1123" class="Symbol"
+      >(</a
+      ><a name="1124" href="Data.Bool.html#637" class="InductiveConstructor"
+      >false</a
+      ><a name="1129"
+      > </a
+      ><a name="1130" class="Comment"
+      >{-0b-}</a
+      ><a name="1136"
+      > </a
+      ><a name="1137" href="Data.Vec.html#663" class="InductiveConstructor Operator"
+      >&#8759;</a
+      ><a name="1138"
+      > </a
+      ><a name="1139" href="FunUniverse.BinTree.html#1139" class="Bound"
+      >bs</a
+      ><a name="1141" class="Symbol"
+      >)</a
+      ><a name="1142"
+      > </a
+      ><a name="1143" class="Symbol"
+      >=</a
+      ><a name="1144"
+      > </a
+      ><a name="1145" href="FunUniverse.BinTree.html#983" class="Function"
+      >toFun&#8728;fromFun</a
+      ><a name="1158"
+      > </a
+      ><a name="1159" class="Symbol"
+      >{</a
+      ><a name="1160" href="FunUniverse.BinTree.html#1118" class="Bound"
+      >n</a
+      ><a name="1161" class="Symbol"
+      >}</a
+      ><a name="1162"
+      > </a
+      ><a name="1163" class="Symbol"
+      >(</a
+      ><a name="1164" href="FunUniverse.BinTree.html#1121" class="Bound"
+      >f</a
+      ><a name="1165"
+      > </a
+      ><a name="1166" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1167"
+      > </a
+      ><a name="1168" href="Data.Bits.html#793" class="Function Operator"
+      >0&#8759;_</a
+      ><a name="1171" class="Symbol"
+      >)</a
+      ><a name="1172"
+      > </a
+      ><a name="1173" href="FunUniverse.BinTree.html#1139" class="Bound"
+      >bs</a
+      ><a name="1175"
+      >
+</a
+      ><a name="1176" href="FunUniverse.BinTree.html#983" class="Function"
+      >toFun&#8728;fromFun</a
+      ><a name="1189"
+      > </a
+      ><a name="1190" class="Symbol"
+      >{</a
+      ><a name="1191" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="1194"
+      > </a
+      ><a name="1195" href="FunUniverse.BinTree.html#1195" class="Bound"
+      >n</a
+      ><a name="1196" class="Symbol"
+      >}</a
+      ><a name="1197"
+      > </a
+      ><a name="1198" href="FunUniverse.BinTree.html#1198" class="Bound"
+      >f</a
+      ><a name="1199"
+      > </a
+      ><a name="1200" class="Symbol"
+      >(</a
+      ><a name="1201" href="Data.Bool.html#622" class="InductiveConstructor"
+      >true</a
+      ><a name="1205"
+      >  </a
+      ><a name="1207" class="Comment"
+      >{-1b-}</a
+      ><a name="1213"
+      > </a
+      ><a name="1214" href="Data.Vec.html#663" class="InductiveConstructor Operator"
+      >&#8759;</a
+      ><a name="1215"
+      > </a
+      ><a name="1216" href="FunUniverse.BinTree.html#1216" class="Bound"
+      >bs</a
+      ><a name="1218" class="Symbol"
+      >)</a
+      ><a name="1219"
+      > </a
+      ><a name="1220" class="Symbol"
+      >=</a
+      ><a name="1221"
+      > </a
+      ><a name="1222" href="FunUniverse.BinTree.html#983" class="Function"
+      >toFun&#8728;fromFun</a
+      ><a name="1235"
+      > </a
+      ><a name="1236" class="Symbol"
+      >{</a
+      ><a name="1237" href="FunUniverse.BinTree.html#1195" class="Bound"
+      >n</a
+      ><a name="1238" class="Symbol"
+      >}</a
+      ><a name="1239"
+      > </a
+      ><a name="1240" class="Symbol"
+      >(</a
+      ><a name="1241" href="FunUniverse.BinTree.html#1198" class="Bound"
+      >f</a
+      ><a name="1242"
+      > </a
+      ><a name="1243" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1244"
+      > </a
+      ><a name="1245" href="Data.Bits.html#886" class="Function Operator"
+      >1&#8759;_</a
+      ><a name="1248" class="Symbol"
+      >)</a
+      ><a name="1249"
+      > </a
+      ><a name="1250" href="FunUniverse.BinTree.html#1216" class="Bound"
+      >bs</a
+      ><a name="1252"
+      >
+
+</a
+      ><a name="1254" href="FunUniverse.BinTree.html#1254" class="Function"
+      >fold</a
+      ><a name="1258"
+      > </a
+      ><a name="1259" class="Symbol"
+      >:</a
+      ><a name="1260"
+      > </a
+      ><a name="1261" class="Symbol"
+      >&#8704;</a
+      ><a name="1262"
+      > </a
+      ><a name="1263" class="Symbol"
+      >{</a
+      ><a name="1264" href="FunUniverse.BinTree.html#1264" class="Bound"
+      >n</a
+      ><a name="1265"
+      > </a
+      ><a name="1266" href="FunUniverse.BinTree.html#1266" class="Bound"
+      >a</a
+      ><a name="1267" class="Symbol"
+      >}</a
+      ><a name="1268"
+      > </a
+      ><a name="1269" class="Symbol"
+      >{</a
+      ><a name="1270" href="FunUniverse.BinTree.html#1270" class="Bound"
+      >A</a
+      ><a name="1271"
+      > </a
+      ><a name="1272" class="Symbol"
+      >:</a
+      ><a name="1273"
+      > </a
+      ><a name="1274" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="1275"
+      > </a
+      ><a name="1276" href="FunUniverse.BinTree.html#1266" class="Bound"
+      >a</a
+      ><a name="1277" class="Symbol"
+      >}</a
+      ><a name="1278"
+      > </a
+      ><a name="1279" class="Symbol"
+      >(</a
+      ><a name="1280" href="FunUniverse.BinTree.html#1280" class="Bound"
+      >op</a
+      ><a name="1282"
+      > </a
+      ><a name="1283" class="Symbol"
+      >:</a
+      ><a name="1284"
+      > </a
+      ><a name="1285" href="FunUniverse.BinTree.html#1270" class="Bound"
+      >A</a
+      ><a name="1286"
+      > </a
+      ><a name="1287" class="Symbol"
+      >&#8594;</a
+      ><a name="1288"
+      > </a
+      ><a name="1289" href="FunUniverse.BinTree.html#1270" class="Bound"
+      >A</a
+      ><a name="1290"
+      > </a
+      ><a name="1291" class="Symbol"
+      >&#8594;</a
+      ><a name="1292"
+      > </a
+      ><a name="1293" href="FunUniverse.BinTree.html#1270" class="Bound"
+      >A</a
+      ><a name="1294" class="Symbol"
+      >)</a
+      ><a name="1295"
+      > </a
+      ><a name="1296" class="Symbol"
+      >&#8594;</a
+      ><a name="1297"
+      > </a
+      ><a name="1298" href="FunUniverse.BinTree.html#565" class="Datatype"
+      >Tree</a
+      ><a name="1302"
+      > </a
+      ><a name="1303" href="FunUniverse.BinTree.html#1270" class="Bound"
+      >A</a
+      ><a name="1304"
+      > </a
+      ><a name="1305" href="FunUniverse.BinTree.html#1264" class="Bound"
+      >n</a
+      ><a name="1306"
+      > </a
+      ><a name="1307" class="Symbol"
+      >&#8594;</a
+      ><a name="1308"
+      > </a
+      ><a name="1309" href="FunUniverse.BinTree.html#1270" class="Bound"
+      >A</a
+      ><a name="1310"
+      >
+</a
+      ><a name="1311" href="FunUniverse.BinTree.html#1254" class="Function"
+      >fold</a
+      ><a name="1315"
+      > </a
+      ><a name="1316" class="Symbol"
+      >_</a
+      ><a name="1317"
+      >   </a
+      ><a name="1320" class="Symbol"
+      >(</a
+      ><a name="1321" href="FunUniverse.BinTree.html#602" class="InductiveConstructor"
+      >leaf</a
+      ><a name="1325"
+      > </a
+      ><a name="1326" href="FunUniverse.BinTree.html#1326" class="Bound"
+      >x</a
+      ><a name="1327" class="Symbol"
+      >)</a
+      ><a name="1328"
+      > </a
+      ><a name="1329" class="Symbol"
+      >=</a
+      ><a name="1330"
+      > </a
+      ><a name="1331" href="FunUniverse.BinTree.html#1326" class="Bound"
+      >x</a
+      ><a name="1332"
+      >
+</a
+      ><a name="1333" href="FunUniverse.BinTree.html#1254" class="Function"
+      >fold</a
+      ><a name="1337"
+      > </a
+      ><a name="1338" href="FunUniverse.BinTree.html#1338" class="Bound Operator"
+      >_&#183;_</a
+      ><a name="1341"
+      > </a
+      ><a name="1342" class="Symbol"
+      >(</a
+      ><a name="1343" href="FunUniverse.BinTree.html#632" class="InductiveConstructor"
+      >fork</a
+      ><a name="1347"
+      > </a
+      ><a name="1348" href="FunUniverse.BinTree.html#1348" class="Bound"
+      >t&#8320;</a
+      ><a name="1350"
+      > </a
+      ><a name="1351" href="FunUniverse.BinTree.html#1351" class="Bound"
+      >t&#8321;</a
+      ><a name="1353" class="Symbol"
+      >)</a
+      ><a name="1354"
+      > </a
+      ><a name="1355" class="Symbol"
+      >=</a
+      ><a name="1356"
+      > </a
+      ><a name="1357" href="FunUniverse.BinTree.html#1254" class="Function"
+      >fold</a
+      ><a name="1361"
+      > </a
+      ><a name="1362" href="FunUniverse.BinTree.html#1338" class="Bound Operator"
+      >_&#183;_</a
+      ><a name="1365"
+      > </a
+      ><a name="1366" href="FunUniverse.BinTree.html#1348" class="Bound"
+      >t&#8320;</a
+      ><a name="1368"
+      > </a
+      ><a name="1369" href="FunUniverse.BinTree.html#1338" class="Bound Operator"
+      >&#183;</a
+      ><a name="1370"
+      > </a
+      ><a name="1371" href="FunUniverse.BinTree.html#1254" class="Function"
+      >fold</a
+      ><a name="1375"
+      > </a
+      ><a name="1376" href="FunUniverse.BinTree.html#1338" class="Bound Operator"
+      >_&#183;_</a
+      ><a name="1379"
+      > </a
+      ><a name="1380" href="FunUniverse.BinTree.html#1351" class="Bound"
+      >t&#8321;</a
+      ><a name="1382"
+      >
+
+</a
+      ><a name="1384" class="Comment"
+      >{-
+search&#8801;fold&#8728;fromFun : &#8704; {n a} {A : &#9733; a} op (f : Bits n &#8594; A) &#8594; search op f &#8801; fold op (fromFun f)
+search&#8801;fold&#8728;fromFun {zero}  op f = refl
+search&#8801;fold&#8728;fromFun {suc n} op f
+  rewrite search&#8801;fold&#8728;fromFun op (f &#8728; 0&#8759;_)
+        | search&#8801;fold&#8728;fromFun op (f &#8728; 1&#8759;_) = refl
+-}</a
+      ><a name="1651"
+      >
+
+</a
+      ><a name="1653" href="FunUniverse.BinTree.html#1653" class="Function"
+      >leaf&#8319;</a
+      ><a name="1658"
+      > </a
+      ><a name="1659" class="Symbol"
+      >:</a
+      ><a name="1660"
+      > </a
+      ><a name="1661" class="Symbol"
+      >&#8704;</a
+      ><a name="1662"
+      > </a
+      ><a name="1663" class="Symbol"
+      >{</a
+      ><a name="1664" href="FunUniverse.BinTree.html#1664" class="Bound"
+      >n</a
+      ><a name="1665"
+      > </a
+      ><a name="1666" href="FunUniverse.BinTree.html#1666" class="Bound"
+      >a</a
+      ><a name="1667" class="Symbol"
+      >}</a
+      ><a name="1668"
+      > </a
+      ><a name="1669" class="Symbol"
+      >{</a
+      ><a name="1670" href="FunUniverse.BinTree.html#1670" class="Bound"
+      >A</a
+      ><a name="1671"
+      > </a
+      ><a name="1672" class="Symbol"
+      >:</a
+      ><a name="1673"
+      > </a
+      ><a name="1674" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="1675"
+      > </a
+      ><a name="1676" href="FunUniverse.BinTree.html#1666" class="Bound"
+      >a</a
+      ><a name="1677" class="Symbol"
+      >}</a
+      ><a name="1678"
+      > </a
+      ><a name="1679" class="Symbol"
+      >&#8594;</a
+      ><a name="1680"
+      > </a
+      ><a name="1681" href="FunUniverse.BinTree.html#1670" class="Bound"
+      >A</a
+      ><a name="1682"
+      > </a
+      ><a name="1683" class="Symbol"
+      >&#8594;</a
+      ><a name="1684"
+      > </a
+      ><a name="1685" href="FunUniverse.BinTree.html#565" class="Datatype"
+      >Tree</a
+      ><a name="1689"
+      > </a
+      ><a name="1690" href="FunUniverse.BinTree.html#1670" class="Bound"
+      >A</a
+      ><a name="1691"
+      > </a
+      ><a name="1692" href="FunUniverse.BinTree.html#1664" class="Bound"
+      >n</a
+      ><a name="1693"
+      >
+</a
+      ><a name="1694" href="FunUniverse.BinTree.html#1653" class="Function"
+      >leaf&#8319;</a
+      ><a name="1699"
+      > </a
+      ><a name="1700" class="Symbol"
+      >{</a
+      ><a name="1701" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="1705" class="Symbol"
+      >}</a
+      ><a name="1706"
+      >  </a
+      ><a name="1708" href="FunUniverse.BinTree.html#1708" class="Bound"
+      >x</a
+      ><a name="1709"
+      > </a
+      ><a name="1710" class="Symbol"
+      >=</a
+      ><a name="1711"
+      > </a
+      ><a name="1712" href="FunUniverse.BinTree.html#602" class="InductiveConstructor"
+      >leaf</a
+      ><a name="1716"
+      > </a
+      ><a name="1717" href="FunUniverse.BinTree.html#1708" class="Bound"
+      >x</a
+      ><a name="1718"
+      >
+</a
+      ><a name="1719" href="FunUniverse.BinTree.html#1653" class="Function"
+      >leaf&#8319;</a
+      ><a name="1724"
+      > </a
+      ><a name="1725" class="Symbol"
+      >{</a
+      ><a name="1726" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="1729"
+      > </a
+      ><a name="1730" href="FunUniverse.BinTree.html#1730" class="Bound"
+      >n</a
+      ><a name="1731" class="Symbol"
+      >}</a
+      ><a name="1732"
+      > </a
+      ><a name="1733" href="FunUniverse.BinTree.html#1733" class="Bound"
+      >x</a
+      ><a name="1734"
+      > </a
+      ><a name="1735" class="Symbol"
+      >=</a
+      ><a name="1736"
+      > </a
+      ><a name="1737" href="FunUniverse.BinTree.html#632" class="InductiveConstructor"
+      >fork</a
+      ><a name="1741"
+      > </a
+      ><a name="1742" href="FunUniverse.BinTree.html#1752" class="Function"
+      >t</a
+      ><a name="1743"
+      > </a
+      ><a name="1744" href="FunUniverse.BinTree.html#1752" class="Function"
+      >t</a
+      ><a name="1745"
+      > </a
+      ><a name="1746" class="Keyword"
+      >where</a
+      ><a name="1751"
+      > </a
+      ><a name="1752" href="FunUniverse.BinTree.html#1752" class="Function"
+      >t</a
+      ><a name="1753"
+      > </a
+      ><a name="1754" class="Symbol"
+      >=</a
+      ><a name="1755"
+      > </a
+      ><a name="1756" href="FunUniverse.BinTree.html#1653" class="Function"
+      >leaf&#8319;</a
+      ><a name="1761"
+      > </a
+      ><a name="1762" href="FunUniverse.BinTree.html#1733" class="Bound"
+      >x</a
+      ><a name="1763"
+      >
+
+</a
+      ><a name="1765" href="FunUniverse.BinTree.html#1765" class="Function"
+      >expand</a
+      ><a name="1771"
+      > </a
+      ><a name="1772" class="Symbol"
+      >:</a
+      ><a name="1773"
+      > </a
+      ><a name="1774" class="Symbol"
+      >&#8704;</a
+      ><a name="1775"
+      > </a
+      ><a name="1776" class="Symbol"
+      >{</a
+      ><a name="1777" href="FunUniverse.BinTree.html#1777" class="Bound"
+      >n</a
+      ><a name="1778"
+      > </a
+      ><a name="1779" href="FunUniverse.BinTree.html#1779" class="Bound"
+      >a</a
+      ><a name="1780" class="Symbol"
+      >}</a
+      ><a name="1781"
+      > </a
+      ><a name="1782" class="Symbol"
+      >{</a
+      ><a name="1783" href="FunUniverse.BinTree.html#1783" class="Bound"
+      >A</a
+      ><a name="1784"
+      > </a
+      ><a name="1785" class="Symbol"
+      >:</a
+      ><a name="1786"
+      > </a
+      ><a name="1787" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="1788"
+      > </a
+      ><a name="1789" href="FunUniverse.BinTree.html#1779" class="Bound"
+      >a</a
+      ><a name="1790" class="Symbol"
+      >}</a
+      ><a name="1791"
+      > </a
+      ><a name="1792" class="Symbol"
+      >&#8594;</a
+      ><a name="1793"
+      > </a
+      ><a name="1794" href="FunUniverse.BinTree.html#565" class="Datatype"
+      >Tree</a
+      ><a name="1798"
+      > </a
+      ><a name="1799" href="FunUniverse.BinTree.html#1783" class="Bound"
+      >A</a
+      ><a name="1800"
+      > </a
+      ><a name="1801" href="FunUniverse.BinTree.html#1777" class="Bound"
+      >n</a
+      ><a name="1802"
+      > </a
+      ><a name="1803" class="Symbol"
+      >&#8594;</a
+      ><a name="1804"
+      > </a
+      ><a name="1805" href="FunUniverse.BinTree.html#565" class="Datatype"
+      >Tree</a
+      ><a name="1809"
+      > </a
+      ><a name="1810" href="FunUniverse.BinTree.html#1783" class="Bound"
+      >A</a
+      ><a name="1811"
+      > </a
+      ><a name="1812" href="FunUniverse.BinTree.html#1777" class="Bound"
+      >n</a
+      ><a name="1813"
+      >
+</a
+      ><a name="1814" href="FunUniverse.BinTree.html#1765" class="Function"
+      >expand</a
+      ><a name="1820"
+      > </a
+      ><a name="1821" class="Symbol"
+      >(</a
+      ><a name="1822" href="FunUniverse.BinTree.html#602" class="InductiveConstructor"
+      >leaf</a
+      ><a name="1826"
+      > </a
+      ><a name="1827" href="FunUniverse.BinTree.html#1827" class="Bound"
+      >x</a
+      ><a name="1828" class="Symbol"
+      >)</a
+      ><a name="1829"
+      > </a
+      ><a name="1830" class="Symbol"
+      >=</a
+      ><a name="1831"
+      > </a
+      ><a name="1832" href="FunUniverse.BinTree.html#1653" class="Function"
+      >leaf&#8319;</a
+      ><a name="1837"
+      > </a
+      ><a name="1838" href="FunUniverse.BinTree.html#1827" class="Bound"
+      >x</a
+      ><a name="1839"
+      >
+</a
+      ><a name="1840" href="FunUniverse.BinTree.html#1765" class="Function"
+      >expand</a
+      ><a name="1846"
+      > </a
+      ><a name="1847" class="Symbol"
+      >(</a
+      ><a name="1848" href="FunUniverse.BinTree.html#632" class="InductiveConstructor"
+      >fork</a
+      ><a name="1852"
+      > </a
+      ><a name="1853" href="FunUniverse.BinTree.html#1853" class="Bound"
+      >t&#8320;</a
+      ><a name="1855"
+      > </a
+      ><a name="1856" href="FunUniverse.BinTree.html#1856" class="Bound"
+      >t&#8321;</a
+      ><a name="1858" class="Symbol"
+      >)</a
+      ><a name="1859"
+      > </a
+      ><a name="1860" class="Symbol"
+      >=</a
+      ><a name="1861"
+      > </a
+      ><a name="1862" href="FunUniverse.BinTree.html#632" class="InductiveConstructor"
+      >fork</a
+      ><a name="1866"
+      > </a
+      ><a name="1867" class="Symbol"
+      >(</a
+      ><a name="1868" href="FunUniverse.BinTree.html#1765" class="Function"
+      >expand</a
+      ><a name="1874"
+      > </a
+      ><a name="1875" href="FunUniverse.BinTree.html#1853" class="Bound"
+      >t&#8320;</a
+      ><a name="1877" class="Symbol"
+      >)</a
+      ><a name="1878"
+      > </a
+      ><a name="1879" class="Symbol"
+      >(</a
+      ><a name="1880" href="FunUniverse.BinTree.html#1765" class="Function"
+      >expand</a
+      ><a name="1886"
+      > </a
+      ><a name="1887" href="FunUniverse.BinTree.html#1856" class="Bound"
+      >t&#8321;</a
+      ><a name="1889" class="Symbol"
+      >)</a
+      ><a name="1890"
+      >
+
+</a
+      ><a name="1892" href="FunUniverse.BinTree.html#1892" class="Function"
+      >fromConst&#8801;leaf&#8319;</a
+      ><a name="1907"
+      > </a
+      ><a name="1908" class="Symbol"
+      >:</a
+      ><a name="1909"
+      > </a
+      ><a name="1910" class="Symbol"
+      >&#8704;</a
+      ><a name="1911"
+      > </a
+      ><a name="1912" class="Symbol"
+      >{</a
+      ><a name="1913" href="FunUniverse.BinTree.html#1913" class="Bound"
+      >n</a
+      ><a name="1914"
+      > </a
+      ><a name="1915" href="FunUniverse.BinTree.html#1915" class="Bound"
+      >a</a
+      ><a name="1916" class="Symbol"
+      >}</a
+      ><a name="1917"
+      > </a
+      ><a name="1918" class="Symbol"
+      >{</a
+      ><a name="1919" href="FunUniverse.BinTree.html#1919" class="Bound"
+      >A</a
+      ><a name="1920"
+      > </a
+      ><a name="1921" class="Symbol"
+      >:</a
+      ><a name="1922"
+      > </a
+      ><a name="1923" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="1924"
+      > </a
+      ><a name="1925" href="FunUniverse.BinTree.html#1915" class="Bound"
+      >a</a
+      ><a name="1926" class="Symbol"
+      >}</a
+      ><a name="1927"
+      > </a
+      ><a name="1928" class="Symbol"
+      >(</a
+      ><a name="1929" href="FunUniverse.BinTree.html#1929" class="Bound"
+      >x</a
+      ><a name="1930"
+      > </a
+      ><a name="1931" class="Symbol"
+      >:</a
+      ><a name="1932"
+      > </a
+      ><a name="1933" href="FunUniverse.BinTree.html#1919" class="Bound"
+      >A</a
+      ><a name="1934" class="Symbol"
+      >)</a
+      ><a name="1935"
+      > </a
+      ><a name="1936" class="Symbol"
+      >&#8594;</a
+      ><a name="1937"
+      > </a
+      ><a name="1938" href="FunUniverse.BinTree.html#687" class="Function"
+      >fromFun</a
+      ><a name="1945"
+      > </a
+      ><a name="1946" class="Symbol"
+      >(</a
+      ><a name="1947" href="Function.html#1047" class="Function"
+      >const</a
+      ><a name="1952"
+      > </a
+      ><a name="1953" href="FunUniverse.BinTree.html#1929" class="Bound"
+      >x</a
+      ><a name="1954" class="Symbol"
+      >)</a
+      ><a name="1955"
+      > </a
+      ><a name="1956" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="1957"
+      > </a
+      ><a name="1958" href="FunUniverse.BinTree.html#1653" class="Function"
+      >leaf&#8319;</a
+      ><a name="1963"
+      > </a
+      ><a name="1964" class="Symbol"
+      >{</a
+      ><a name="1965" href="FunUniverse.BinTree.html#1913" class="Bound"
+      >n</a
+      ><a name="1966" class="Symbol"
+      >}</a
+      ><a name="1967"
+      > </a
+      ><a name="1968" href="FunUniverse.BinTree.html#1929" class="Bound"
+      >x</a
+      ><a name="1969"
+      >
+</a
+      ><a name="1970" href="FunUniverse.BinTree.html#1892" class="Function"
+      >fromConst&#8801;leaf&#8319;</a
+      ><a name="1985"
+      > </a
+      ><a name="1986" class="Symbol"
+      >{</a
+      ><a name="1987" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="1991" class="Symbol"
+      >}</a
+      ><a name="1992"
+      >  </a
+      ><a name="1994" class="Symbol"
+      >_</a
+      ><a name="1995"
+      > </a
+      ><a name="1996" class="Symbol"
+      >=</a
+      ><a name="1997"
+      > </a
+      ><a name="1998" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="2002"
+      >
+</a
+      ><a name="2003" href="FunUniverse.BinTree.html#1892" class="Function"
+      >fromConst&#8801;leaf&#8319;</a
+      ><a name="2018"
+      > </a
+      ><a name="2019" class="Symbol"
+      >{</a
+      ><a name="2020" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="2023"
+      > </a
+      ><a name="2024" href="FunUniverse.BinTree.html#2024" class="Bound"
+      >n</a
+      ><a name="2025" class="Symbol"
+      >}</a
+      ><a name="2026"
+      > </a
+      ><a name="2027" href="FunUniverse.BinTree.html#2027" class="Bound"
+      >x</a
+      ><a name="2028"
+      > </a
+      ><a name="2029" class="Symbol"
+      >=</a
+      ><a name="2030"
+      > </a
+      ><a name="2031" href="Relation.Binary.PropositionalEquality.html#1138" class="Function"
+      >cong&#8322;</a
+      ><a name="2036"
+      > </a
+      ><a name="2037" href="FunUniverse.BinTree.html#632" class="InductiveConstructor"
+      >fork</a
+      ><a name="2041"
+      > </a
+      ><a name="2042" class="Symbol"
+      >(</a
+      ><a name="2043" href="FunUniverse.BinTree.html#1892" class="Function"
+      >fromConst&#8801;leaf&#8319;</a
+      ><a name="2058"
+      > </a
+      ><a name="2059" href="FunUniverse.BinTree.html#2027" class="Bound"
+      >x</a
+      ><a name="2060" class="Symbol"
+      >)</a
+      ><a name="2061"
+      > </a
+      ><a name="2062" class="Symbol"
+      >(</a
+      ><a name="2063" href="FunUniverse.BinTree.html#1892" class="Function"
+      >fromConst&#8801;leaf&#8319;</a
+      ><a name="2078"
+      > </a
+      ><a name="2079" href="FunUniverse.BinTree.html#2027" class="Bound"
+      >x</a
+      ><a name="2080" class="Symbol"
+      >)</a
+      ><a name="2081"
+      >
+
+</a
+      ><a name="2083" href="FunUniverse.BinTree.html#2083" class="Function"
+      >fromFun&#8728;toFun</a
+      ><a name="2096"
+      > </a
+      ><a name="2097" class="Symbol"
+      >:</a
+      ><a name="2098"
+      > </a
+      ><a name="2099" class="Symbol"
+      >&#8704;</a
+      ><a name="2100"
+      > </a
+      ><a name="2101" class="Symbol"
+      >{</a
+      ><a name="2102" href="FunUniverse.BinTree.html#2102" class="Bound"
+      >n</a
+      ><a name="2103"
+      > </a
+      ><a name="2104" href="FunUniverse.BinTree.html#2104" class="Bound"
+      >a</a
+      ><a name="2105" class="Symbol"
+      >}</a
+      ><a name="2106"
+      > </a
+      ><a name="2107" class="Symbol"
+      >{</a
+      ><a name="2108" href="FunUniverse.BinTree.html#2108" class="Bound"
+      >A</a
+      ><a name="2109"
+      > </a
+      ><a name="2110" class="Symbol"
+      >:</a
+      ><a name="2111"
+      > </a
+      ><a name="2112" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="2113"
+      > </a
+      ><a name="2114" href="FunUniverse.BinTree.html#2104" class="Bound"
+      >a</a
+      ><a name="2115" class="Symbol"
+      >}</a
+      ><a name="2116"
+      > </a
+      ><a name="2117" class="Symbol"
+      >(</a
+      ><a name="2118" href="FunUniverse.BinTree.html#2118" class="Bound"
+      >t</a
+      ><a name="2119"
+      > </a
+      ><a name="2120" class="Symbol"
+      >:</a
+      ><a name="2121"
+      > </a
+      ><a name="2122" href="FunUniverse.BinTree.html#565" class="Datatype"
+      >Tree</a
+      ><a name="2126"
+      > </a
+      ><a name="2127" href="FunUniverse.BinTree.html#2108" class="Bound"
+      >A</a
+      ><a name="2128"
+      > </a
+      ><a name="2129" href="FunUniverse.BinTree.html#2102" class="Bound"
+      >n</a
+      ><a name="2130" class="Symbol"
+      >)</a
+      ><a name="2131"
+      > </a
+      ><a name="2132" class="Symbol"
+      >&#8594;</a
+      ><a name="2133"
+      > </a
+      ><a name="2134" href="FunUniverse.BinTree.html#687" class="Function"
+      >fromFun</a
+      ><a name="2141"
+      > </a
+      ><a name="2142" class="Symbol"
+      >(</a
+      ><a name="2143" href="FunUniverse.BinTree.html#839" class="Function"
+      >toFun</a
+      ><a name="2148"
+      > </a
+      ><a name="2149" href="FunUniverse.BinTree.html#2118" class="Bound"
+      >t</a
+      ><a name="2150" class="Symbol"
+      >)</a
+      ><a name="2151"
+      > </a
+      ><a name="2152" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="2153"
+      > </a
+      ><a name="2154" href="FunUniverse.BinTree.html#1765" class="Function"
+      >expand</a
+      ><a name="2160"
+      > </a
+      ><a name="2161" href="FunUniverse.BinTree.html#2118" class="Bound"
+      >t</a
+      ><a name="2162"
+      >
+</a
+      ><a name="2163" href="FunUniverse.BinTree.html#2083" class="Function"
+      >fromFun&#8728;toFun</a
+      ><a name="2176"
+      > </a
+      ><a name="2177" class="Symbol"
+      >(</a
+      ><a name="2178" href="FunUniverse.BinTree.html#602" class="InductiveConstructor"
+      >leaf</a
+      ><a name="2182"
+      > </a
+      ><a name="2183" href="FunUniverse.BinTree.html#2183" class="Bound"
+      >x</a
+      ><a name="2184" class="Symbol"
+      >)</a
+      ><a name="2185"
+      >     </a
+      ><a name="2190" class="Symbol"
+      >=</a
+      ><a name="2191"
+      > </a
+      ><a name="2192" href="FunUniverse.BinTree.html#1892" class="Function"
+      >fromConst&#8801;leaf&#8319;</a
+      ><a name="2207"
+      > </a
+      ><a name="2208" href="FunUniverse.BinTree.html#2183" class="Bound"
+      >x</a
+      ><a name="2209"
+      >
+</a
+      ><a name="2210" href="FunUniverse.BinTree.html#2083" class="Function"
+      >fromFun&#8728;toFun</a
+      ><a name="2223"
+      > </a
+      ><a name="2224" class="Symbol"
+      >(</a
+      ><a name="2225" href="FunUniverse.BinTree.html#632" class="InductiveConstructor"
+      >fork</a
+      ><a name="2229"
+      > </a
+      ><a name="2230" href="FunUniverse.BinTree.html#2230" class="Bound"
+      >t&#8320;</a
+      ><a name="2232"
+      > </a
+      ><a name="2233" href="FunUniverse.BinTree.html#2233" class="Bound"
+      >t&#8321;</a
+      ><a name="2235" class="Symbol"
+      >)</a
+      ><a name="2236"
+      > </a
+      ><a name="2237" class="Symbol"
+      >=</a
+      ><a name="2238"
+      > </a
+      ><a name="2239" href="Relation.Binary.PropositionalEquality.html#1138" class="Function"
+      >cong&#8322;</a
+      ><a name="2244"
+      > </a
+      ><a name="2245" href="FunUniverse.BinTree.html#632" class="InductiveConstructor"
+      >fork</a
+      ><a name="2249"
+      > </a
+      ><a name="2250" class="Symbol"
+      >(</a
+      ><a name="2251" href="FunUniverse.BinTree.html#2083" class="Function"
+      >fromFun&#8728;toFun</a
+      ><a name="2264"
+      > </a
+      ><a name="2265" href="FunUniverse.BinTree.html#2230" class="Bound"
+      >t&#8320;</a
+      ><a name="2267" class="Symbol"
+      >)</a
+      ><a name="2268"
+      > </a
+      ><a name="2269" class="Symbol"
+      >(</a
+      ><a name="2270" href="FunUniverse.BinTree.html#2083" class="Function"
+      >fromFun&#8728;toFun</a
+      ><a name="2283"
+      > </a
+      ><a name="2284" href="FunUniverse.BinTree.html#2233" class="Bound"
+      >t&#8321;</a
+      ><a name="2286" class="Symbol"
+      >)</a
+      ><a name="2287"
+      >
+
+</a
+      ><a name="2289" href="FunUniverse.BinTree.html#2289" class="Function"
+      >lookup</a
+      ><a name="2295"
+      > </a
+      ><a name="2296" class="Symbol"
+      >:</a
+      ><a name="2297"
+      > </a
+      ><a name="2298" class="Symbol"
+      >&#8704;</a
+      ><a name="2299"
+      > </a
+      ><a name="2300" class="Symbol"
+      >{</a
+      ><a name="2301" href="FunUniverse.BinTree.html#2301" class="Bound"
+      >n</a
+      ><a name="2302"
+      > </a
+      ><a name="2303" href="FunUniverse.BinTree.html#2303" class="Bound"
+      >a</a
+      ><a name="2304" class="Symbol"
+      >}</a
+      ><a name="2305"
+      > </a
+      ><a name="2306" class="Symbol"
+      >{</a
+      ><a name="2307" href="FunUniverse.BinTree.html#2307" class="Bound"
+      >A</a
+      ><a name="2308"
+      > </a
+      ><a name="2309" class="Symbol"
+      >:</a
+      ><a name="2310"
+      > </a
+      ><a name="2311" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="2312"
+      > </a
+      ><a name="2313" href="FunUniverse.BinTree.html#2303" class="Bound"
+      >a</a
+      ><a name="2314" class="Symbol"
+      >}</a
+      ><a name="2315"
+      > </a
+      ><a name="2316" class="Symbol"
+      >&#8594;</a
+      ><a name="2317"
+      > </a
+      ><a name="2318" href="Data.Bits.html#572" class="Function"
+      >Bits</a
+      ><a name="2322"
+      > </a
+      ><a name="2323" href="FunUniverse.BinTree.html#2301" class="Bound"
+      >n</a
+      ><a name="2324"
+      > </a
+      ><a name="2325" class="Symbol"
+      >&#8594;</a
+      ><a name="2326"
+      > </a
+      ><a name="2327" href="FunUniverse.BinTree.html#565" class="Datatype"
+      >Tree</a
+      ><a name="2331"
+      > </a
+      ><a name="2332" href="FunUniverse.BinTree.html#2307" class="Bound"
+      >A</a
+      ><a name="2333"
+      > </a
+      ><a name="2334" href="FunUniverse.BinTree.html#2301" class="Bound"
+      >n</a
+      ><a name="2335"
+      > </a
+      ><a name="2336" class="Symbol"
+      >&#8594;</a
+      ><a name="2337"
+      > </a
+      ><a name="2338" href="FunUniverse.BinTree.html#2307" class="Bound"
+      >A</a
+      ><a name="2339"
+      >
+</a
+      ><a name="2340" href="FunUniverse.BinTree.html#2289" class="Function"
+      >lookup</a
+      ><a name="2346"
+      > </a
+      ><a name="2347" class="Symbol"
+      >=</a
+      ><a name="2348"
+      > </a
+      ><a name="2349" href="Function.html#1474" class="Function"
+      >flip</a
+      ><a name="2353"
+      > </a
+      ><a name="2354" href="FunUniverse.BinTree.html#839" class="Function"
+      >toFun</a
+      ><a name="2359"
+      >
+
+</a
+      ><a name="2361" href="FunUniverse.BinTree.html#2361" class="Function"
+      >map</a
+      ><a name="2364"
+      > </a
+      ><a name="2365" class="Symbol"
+      >:</a
+      ><a name="2366"
+      > </a
+      ><a name="2367" class="Symbol"
+      >&#8704;</a
+      ><a name="2368"
+      > </a
+      ><a name="2369" class="Symbol"
+      >{</a
+      ><a name="2370" href="FunUniverse.BinTree.html#2370" class="Bound"
+      >n</a
+      ><a name="2371"
+      > </a
+      ><a name="2372" href="FunUniverse.BinTree.html#2372" class="Bound"
+      >a</a
+      ><a name="2373"
+      > </a
+      ><a name="2374" href="FunUniverse.BinTree.html#2374" class="Bound"
+      >b</a
+      ><a name="2375" class="Symbol"
+      >}</a
+      ><a name="2376"
+      > </a
+      ><a name="2377" class="Symbol"
+      >{</a
+      ><a name="2378" href="FunUniverse.BinTree.html#2378" class="Bound"
+      >A</a
+      ><a name="2379"
+      > </a
+      ><a name="2380" class="Symbol"
+      >:</a
+      ><a name="2381"
+      > </a
+      ><a name="2382" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="2383"
+      > </a
+      ><a name="2384" href="FunUniverse.BinTree.html#2372" class="Bound"
+      >a</a
+      ><a name="2385" class="Symbol"
+      >}</a
+      ><a name="2386"
+      > </a
+      ><a name="2387" class="Symbol"
+      >{</a
+      ><a name="2388" href="FunUniverse.BinTree.html#2388" class="Bound"
+      >B</a
+      ><a name="2389"
+      > </a
+      ><a name="2390" class="Symbol"
+      >:</a
+      ><a name="2391"
+      > </a
+      ><a name="2392" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="2393"
+      > </a
+      ><a name="2394" href="FunUniverse.BinTree.html#2374" class="Bound"
+      >b</a
+      ><a name="2395" class="Symbol"
+      >}</a
+      ><a name="2396"
+      > </a
+      ><a name="2397" class="Symbol"
+      >&#8594;</a
+      ><a name="2398"
+      > </a
+      ><a name="2399" class="Symbol"
+      >(</a
+      ><a name="2400" href="FunUniverse.BinTree.html#2378" class="Bound"
+      >A</a
+      ><a name="2401"
+      > </a
+      ><a name="2402" class="Symbol"
+      >&#8594;</a
+      ><a name="2403"
+      > </a
+      ><a name="2404" href="FunUniverse.BinTree.html#2388" class="Bound"
+      >B</a
+      ><a name="2405" class="Symbol"
+      >)</a
+      ><a name="2406"
+      > </a
+      ><a name="2407" class="Symbol"
+      >&#8594;</a
+      ><a name="2408"
+      > </a
+      ><a name="2409" href="FunUniverse.BinTree.html#565" class="Datatype"
+      >Tree</a
+      ><a name="2413"
+      > </a
+      ><a name="2414" href="FunUniverse.BinTree.html#2378" class="Bound"
+      >A</a
+      ><a name="2415"
+      > </a
+      ><a name="2416" href="FunUniverse.BinTree.html#2370" class="Bound"
+      >n</a
+      ><a name="2417"
+      > </a
+      ><a name="2418" class="Symbol"
+      >&#8594;</a
+      ><a name="2419"
+      > </a
+      ><a name="2420" href="FunUniverse.BinTree.html#565" class="Datatype"
+      >Tree</a
+      ><a name="2424"
+      > </a
+      ><a name="2425" href="FunUniverse.BinTree.html#2388" class="Bound"
+      >B</a
+      ><a name="2426"
+      > </a
+      ><a name="2427" href="FunUniverse.BinTree.html#2370" class="Bound"
+      >n</a
+      ><a name="2428"
+      >
+</a
+      ><a name="2429" href="FunUniverse.BinTree.html#2361" class="Function"
+      >map</a
+      ><a name="2432"
+      > </a
+      ><a name="2433" href="FunUniverse.BinTree.html#2433" class="Bound"
+      >f</a
+      ><a name="2434"
+      > </a
+      ><a name="2435" class="Symbol"
+      >(</a
+      ><a name="2436" href="FunUniverse.BinTree.html#602" class="InductiveConstructor"
+      >leaf</a
+      ><a name="2440"
+      > </a
+      ><a name="2441" href="FunUniverse.BinTree.html#2441" class="Bound"
+      >x</a
+      ><a name="2442" class="Symbol"
+      >)</a
+      ><a name="2443"
+      > </a
+      ><a name="2444" class="Symbol"
+      >=</a
+      ><a name="2445"
+      > </a
+      ><a name="2446" href="FunUniverse.BinTree.html#602" class="InductiveConstructor"
+      >leaf</a
+      ><a name="2450"
+      > </a
+      ><a name="2451" class="Symbol"
+      >(</a
+      ><a name="2452" href="FunUniverse.BinTree.html#2433" class="Bound"
+      >f</a
+      ><a name="2453"
+      > </a
+      ><a name="2454" href="FunUniverse.BinTree.html#2441" class="Bound"
+      >x</a
+      ><a name="2455" class="Symbol"
+      >)</a
+      ><a name="2456"
+      >
+</a
+      ><a name="2457" href="FunUniverse.BinTree.html#2361" class="Function"
+      >map</a
+      ><a name="2460"
+      > </a
+      ><a name="2461" href="FunUniverse.BinTree.html#2461" class="Bound"
+      >f</a
+      ><a name="2462"
+      > </a
+      ><a name="2463" class="Symbol"
+      >(</a
+      ><a name="2464" href="FunUniverse.BinTree.html#632" class="InductiveConstructor"
+      >fork</a
+      ><a name="2468"
+      > </a
+      ><a name="2469" href="FunUniverse.BinTree.html#2469" class="Bound"
+      >t&#8320;</a
+      ><a name="2471"
+      > </a
+      ><a name="2472" href="FunUniverse.BinTree.html#2472" class="Bound"
+      >t&#8321;</a
+      ><a name="2474" class="Symbol"
+      >)</a
+      ><a name="2475"
+      > </a
+      ><a name="2476" class="Symbol"
+      >=</a
+      ><a name="2477"
+      > </a
+      ><a name="2478" href="FunUniverse.BinTree.html#632" class="InductiveConstructor"
+      >fork</a
+      ><a name="2482"
+      > </a
+      ><a name="2483" class="Symbol"
+      >(</a
+      ><a name="2484" href="FunUniverse.BinTree.html#2361" class="Function"
+      >map</a
+      ><a name="2487"
+      > </a
+      ><a name="2488" href="FunUniverse.BinTree.html#2461" class="Bound"
+      >f</a
+      ><a name="2489"
+      > </a
+      ><a name="2490" href="FunUniverse.BinTree.html#2469" class="Bound"
+      >t&#8320;</a
+      ><a name="2492" class="Symbol"
+      >)</a
+      ><a name="2493"
+      > </a
+      ><a name="2494" class="Symbol"
+      >(</a
+      ><a name="2495" href="FunUniverse.BinTree.html#2361" class="Function"
+      >map</a
+      ><a name="2498"
+      > </a
+      ><a name="2499" href="FunUniverse.BinTree.html#2461" class="Bound"
+      >f</a
+      ><a name="2500"
+      > </a
+      ><a name="2501" href="FunUniverse.BinTree.html#2472" class="Bound"
+      >t&#8321;</a
+      ><a name="2503" class="Symbol"
+      >)</a
+      ><a name="2504"
+      >
+
+</a
+      ><a name="2506" href="FunUniverse.BinTree.html#2506" class="Function"
+      >weaken&#8804;</a
+      ><a name="2513"
+      > </a
+      ><a name="2514" class="Symbol"
+      >:</a
+      ><a name="2515"
+      > </a
+      ><a name="2516" class="Symbol"
+      >&#8704;</a
+      ><a name="2517"
+      > </a
+      ><a name="2518" class="Symbol"
+      >{</a
+      ><a name="2519" href="FunUniverse.BinTree.html#2519" class="Bound"
+      >m</a
+      ><a name="2520"
+      > </a
+      ><a name="2521" href="FunUniverse.BinTree.html#2521" class="Bound"
+      >n</a
+      ><a name="2522"
+      > </a
+      ><a name="2523" href="FunUniverse.BinTree.html#2523" class="Bound"
+      >a</a
+      ><a name="2524" class="Symbol"
+      >}</a
+      ><a name="2525"
+      > </a
+      ><a name="2526" class="Symbol"
+      >{</a
+      ><a name="2527" href="FunUniverse.BinTree.html#2527" class="Bound"
+      >A</a
+      ><a name="2528"
+      > </a
+      ><a name="2529" class="Symbol"
+      >:</a
+      ><a name="2530"
+      > </a
+      ><a name="2531" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="2532"
+      > </a
+      ><a name="2533" href="FunUniverse.BinTree.html#2523" class="Bound"
+      >a</a
+      ><a name="2534" class="Symbol"
+      >}</a
+      ><a name="2535"
+      > </a
+      ><a name="2536" class="Symbol"
+      >&#8594;</a
+      ><a name="2537"
+      > </a
+      ><a name="2538" href="FunUniverse.BinTree.html#2519" class="Bound"
+      >m</a
+      ><a name="2539"
+      > </a
+      ><a name="2540" href="Data.Nat.html#879" class="Datatype Operator"
+      >&#8804;</a
+      ><a name="2541"
+      > </a
+      ><a name="2542" href="FunUniverse.BinTree.html#2521" class="Bound"
+      >n</a
+      ><a name="2543"
+      > </a
+      ><a name="2544" class="Symbol"
+      >&#8594;</a
+      ><a name="2545"
+      > </a
+      ><a name="2546" href="FunUniverse.BinTree.html#565" class="Datatype"
+      >Tree</a
+      ><a name="2550"
+      > </a
+      ><a name="2551" href="FunUniverse.BinTree.html#2527" class="Bound"
+      >A</a
+      ><a name="2552"
+      > </a
+      ><a name="2553" href="FunUniverse.BinTree.html#2519" class="Bound"
+      >m</a
+      ><a name="2554"
+      > </a
+      ><a name="2555" class="Symbol"
+      >&#8594;</a
+      ><a name="2556"
+      > </a
+      ><a name="2557" href="FunUniverse.BinTree.html#565" class="Datatype"
+      >Tree</a
+      ><a name="2561"
+      > </a
+      ><a name="2562" href="FunUniverse.BinTree.html#2527" class="Bound"
+      >A</a
+      ><a name="2563"
+      > </a
+      ><a name="2564" href="FunUniverse.BinTree.html#2521" class="Bound"
+      >n</a
+      ><a name="2565"
+      >
+</a
+      ><a name="2566" href="FunUniverse.BinTree.html#2506" class="Function"
+      >weaken&#8804;</a
+      ><a name="2573"
+      > </a
+      ><a name="2574" class="Symbol"
+      >_</a
+      ><a name="2575"
+      >       </a
+      ><a name="2582" class="Symbol"
+      >(</a
+      ><a name="2583" href="FunUniverse.BinTree.html#602" class="InductiveConstructor"
+      >leaf</a
+      ><a name="2587"
+      > </a
+      ><a name="2588" href="FunUniverse.BinTree.html#2588" class="Bound"
+      >x</a
+      ><a name="2589" class="Symbol"
+      >)</a
+      ><a name="2590"
+      >          </a
+      ><a name="2600" class="Symbol"
+      >=</a
+      ><a name="2601"
+      > </a
+      ><a name="2602" href="FunUniverse.BinTree.html#602" class="InductiveConstructor"
+      >leaf</a
+      ><a name="2606"
+      > </a
+      ><a name="2607" href="FunUniverse.BinTree.html#2588" class="Bound"
+      >x</a
+      ><a name="2608"
+      >
+</a
+      ><a name="2609" href="FunUniverse.BinTree.html#2506" class="Function"
+      >weaken&#8804;</a
+      ><a name="2616"
+      > </a
+      ><a name="2617" class="Symbol"
+      >(</a
+      ><a name="2618" href="Data.Nat.html#952" class="InductiveConstructor"
+      >s&#8804;s</a
+      ><a name="2621"
+      > </a
+      ><a name="2622" href="FunUniverse.BinTree.html#2622" class="Bound"
+      >p</a
+      ><a name="2623" class="Symbol"
+      >)</a
+      ><a name="2624"
+      > </a
+      ><a name="2625" class="Symbol"
+      >(</a
+      ><a name="2626" href="FunUniverse.BinTree.html#632" class="InductiveConstructor"
+      >fork</a
+      ><a name="2630"
+      > </a
+      ><a name="2631" href="FunUniverse.BinTree.html#2631" class="Bound"
+      >left</a
+      ><a name="2635"
+      > </a
+      ><a name="2636" href="FunUniverse.BinTree.html#2636" class="Bound"
+      >right</a
+      ><a name="2641" class="Symbol"
+      >)</a
+      ><a name="2642"
+      > </a
+      ><a name="2643" class="Symbol"
+      >=</a
+      ><a name="2644"
+      > </a
+      ><a name="2645" href="FunUniverse.BinTree.html#632" class="InductiveConstructor"
+      >fork</a
+      ><a name="2649"
+      > </a
+      ><a name="2650" class="Symbol"
+      >(</a
+      ><a name="2651" href="FunUniverse.BinTree.html#2506" class="Function"
+      >weaken&#8804;</a
+      ><a name="2658"
+      > </a
+      ><a name="2659" href="FunUniverse.BinTree.html#2622" class="Bound"
+      >p</a
+      ><a name="2660"
+      > </a
+      ><a name="2661" href="FunUniverse.BinTree.html#2631" class="Bound"
+      >left</a
+      ><a name="2665" class="Symbol"
+      >)</a
+      ><a name="2666"
+      > </a
+      ><a name="2667" class="Symbol"
+      >(</a
+      ><a name="2668" href="FunUniverse.BinTree.html#2506" class="Function"
+      >weaken&#8804;</a
+      ><a name="2675"
+      > </a
+      ><a name="2676" href="FunUniverse.BinTree.html#2622" class="Bound"
+      >p</a
+      ><a name="2677"
+      > </a
+      ><a name="2678" href="FunUniverse.BinTree.html#2636" class="Bound"
+      >right</a
+      ><a name="2683" class="Symbol"
+      >)</a
+      ><a name="2684"
+      >
+
+</a
+      ><a name="2686" href="FunUniverse.BinTree.html#2686" class="Function"
+      >m&#8804;n+m</a
+      ><a name="2691"
+      > </a
+      ><a name="2692" class="Symbol"
+      >:</a
+      ><a name="2693"
+      > </a
+      ><a name="2694" class="Symbol"
+      >&#8704;</a
+      ><a name="2695"
+      > </a
+      ><a name="2696" href="FunUniverse.BinTree.html#2696" class="Bound"
+      >m</a
+      ><a name="2697"
+      > </a
+      ><a name="2698" href="FunUniverse.BinTree.html#2698" class="Bound"
+      >n</a
+      ><a name="2699"
+      > </a
+      ><a name="2700" class="Symbol"
+      >&#8594;</a
+      ><a name="2701"
+      > </a
+      ><a name="2702" href="FunUniverse.BinTree.html#2696" class="Bound"
+      >m</a
+      ><a name="2703"
+      > </a
+      ><a name="2704" href="Data.Nat.html#879" class="Datatype Operator"
+      >&#8804;</a
+      ><a name="2705"
+      > </a
+      ><a name="2706" href="FunUniverse.BinTree.html#2698" class="Bound"
+      >n</a
+      ><a name="2707"
+      > </a
+      ><a name="2708" href="Data.Nat.html#2239" class="Primitive Operator"
+      >+</a
+      ><a name="2709"
+      > </a
+      ><a name="2710" href="FunUniverse.BinTree.html#2696" class="Bound"
+      >m</a
+      ><a name="2711"
+      >
+</a
+      ><a name="2712" href="FunUniverse.BinTree.html#2686" class="Function"
+      >m&#8804;n+m</a
+      ><a name="2717"
+      > </a
+      ><a name="2718" href="FunUniverse.BinTree.html#2718" class="Bound"
+      >m</a
+      ><a name="2719"
+      > </a
+      ><a name="2720" href="FunUniverse.BinTree.html#2720" class="Bound"
+      >n</a
+      ><a name="2721"
+      > </a
+      ><a name="2722" class="Symbol"
+      >=</a
+      ><a name="2723"
+      > </a
+      ><a name="2724" href="Relation.Binary.html#1134" class="Function"
+      >&#8469;&#8804;.trans</a
+      ><a name="2732"
+      > </a
+      ><a name="2733" class="Symbol"
+      >(</a
+      ><a name="2734" href="Data.Nat.Properties.html#9965" class="Function"
+      >m&#8804;m+n</a
+      ><a name="2739"
+      > </a
+      ><a name="2740" href="FunUniverse.BinTree.html#2718" class="Bound"
+      >m</a
+      ><a name="2741"
+      > </a
+      ><a name="2742" href="FunUniverse.BinTree.html#2720" class="Bound"
+      >n</a
+      ><a name="2743" class="Symbol"
+      >)</a
+      ><a name="2744"
+      > </a
+      ><a name="2745" class="Symbol"
+      >(</a
+      ><a name="2746" href="Relation.Binary.html#1104" class="Function"
+      >&#8469;&#8804;.reflexive</a
+      ><a name="2758"
+      > </a
+      ><a name="2759" class="Symbol"
+      >(</a
+      ><a name="2760" href="Algebra.Structures.html#1414" class="Function"
+      >&#8469;&#176;.+-comm</a
+      ><a name="2769"
+      > </a
+      ><a name="2770" href="FunUniverse.BinTree.html#2718" class="Bound"
+      >m</a
+      ><a name="2771"
+      > </a
+      ><a name="2772" href="FunUniverse.BinTree.html#2720" class="Bound"
+      >n</a
+      ><a name="2773" class="Symbol"
+      >))</a
+      ><a name="2775"
+      >
+
+</a
+      ><a name="2777" href="FunUniverse.BinTree.html#2777" class="Function"
+      >weaken+</a
+      ><a name="2784"
+      > </a
+      ><a name="2785" class="Symbol"
+      >:</a
+      ><a name="2786"
+      > </a
+      ><a name="2787" class="Symbol"
+      >&#8704;</a
+      ><a name="2788"
+      > </a
+      ><a name="2789" href="FunUniverse.BinTree.html#2789" class="Bound"
+      >n</a
+      ><a name="2790"
+      > </a
+      ><a name="2791" class="Symbol"
+      >{</a
+      ><a name="2792" href="FunUniverse.BinTree.html#2792" class="Bound"
+      >m</a
+      ><a name="2793"
+      > </a
+      ><a name="2794" href="FunUniverse.BinTree.html#2794" class="Bound"
+      >a</a
+      ><a name="2795" class="Symbol"
+      >}</a
+      ><a name="2796"
+      > </a
+      ><a name="2797" class="Symbol"
+      >{</a
+      ><a name="2798" href="FunUniverse.BinTree.html#2798" class="Bound"
+      >A</a
+      ><a name="2799"
+      > </a
+      ><a name="2800" class="Symbol"
+      >:</a
+      ><a name="2801"
+      > </a
+      ><a name="2802" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="2803"
+      > </a
+      ><a name="2804" href="FunUniverse.BinTree.html#2794" class="Bound"
+      >a</a
+      ><a name="2805" class="Symbol"
+      >}</a
+      ><a name="2806"
+      > </a
+      ><a name="2807" class="Symbol"
+      >&#8594;</a
+      ><a name="2808"
+      > </a
+      ><a name="2809" href="FunUniverse.BinTree.html#565" class="Datatype"
+      >Tree</a
+      ><a name="2813"
+      > </a
+      ><a name="2814" href="FunUniverse.BinTree.html#2798" class="Bound"
+      >A</a
+      ><a name="2815"
+      > </a
+      ><a name="2816" href="FunUniverse.BinTree.html#2792" class="Bound"
+      >m</a
+      ><a name="2817"
+      > </a
+      ><a name="2818" class="Symbol"
+      >&#8594;</a
+      ><a name="2819"
+      > </a
+      ><a name="2820" href="FunUniverse.BinTree.html#565" class="Datatype"
+      >Tree</a
+      ><a name="2824"
+      > </a
+      ><a name="2825" href="FunUniverse.BinTree.html#2798" class="Bound"
+      >A</a
+      ><a name="2826"
+      > </a
+      ><a name="2827" class="Symbol"
+      >(</a
+      ><a name="2828" href="FunUniverse.BinTree.html#2789" class="Bound"
+      >n</a
+      ><a name="2829"
+      > </a
+      ><a name="2830" href="Data.Nat.html#2239" class="Primitive Operator"
+      >+</a
+      ><a name="2831"
+      > </a
+      ><a name="2832" href="FunUniverse.BinTree.html#2792" class="Bound"
+      >m</a
+      ><a name="2833" class="Symbol"
+      >)</a
+      ><a name="2834"
+      >
+</a
+      ><a name="2835" href="FunUniverse.BinTree.html#2777" class="Function"
+      >weaken+</a
+      ><a name="2842"
+      > </a
+      ><a name="2843" href="FunUniverse.BinTree.html#2843" class="Bound"
+      >n</a
+      ><a name="2844"
+      > </a
+      ><a name="2845" class="Symbol"
+      >=</a
+      ><a name="2846"
+      > </a
+      ><a name="2847" href="FunUniverse.BinTree.html#2506" class="Function"
+      >weaken&#8804;</a
+      ><a name="2854"
+      > </a
+      ><a name="2855" class="Symbol"
+      >(</a
+      ><a name="2856" href="FunUniverse.BinTree.html#2686" class="Function"
+      >m&#8804;n+m</a
+      ><a name="2861"
+      > </a
+      ><a name="2862" class="Symbol"
+      >_</a
+      ><a name="2863"
+      > </a
+      ><a name="2864" href="FunUniverse.BinTree.html#2843" class="Bound"
+      >n</a
+      ><a name="2865" class="Symbol"
+      >)</a
+      ><a name="2866"
+      >
+
+</a
+      ><a name="2868" href="FunUniverse.BinTree.html#2868" class="Function Operator"
+      >_&gt;&gt;=_</a
+      ><a name="2873"
+      > </a
+      ><a name="2874" class="Symbol"
+      >:</a
+      ><a name="2875"
+      > </a
+      ><a name="2876" class="Symbol"
+      >&#8704;</a
+      ><a name="2877"
+      > </a
+      ><a name="2878" class="Symbol"
+      >{</a
+      ><a name="2879" href="FunUniverse.BinTree.html#2879" class="Bound"
+      >n&#8321;</a
+      ><a name="2881"
+      > </a
+      ><a name="2882" href="FunUniverse.BinTree.html#2882" class="Bound"
+      >n&#8322;</a
+      ><a name="2884"
+      > </a
+      ><a name="2885" href="FunUniverse.BinTree.html#2885" class="Bound"
+      >a</a
+      ><a name="2886"
+      > </a
+      ><a name="2887" href="FunUniverse.BinTree.html#2887" class="Bound"
+      >b</a
+      ><a name="2888" class="Symbol"
+      >}</a
+      ><a name="2889"
+      > </a
+      ><a name="2890" class="Symbol"
+      >{</a
+      ><a name="2891" href="FunUniverse.BinTree.html#2891" class="Bound"
+      >A</a
+      ><a name="2892"
+      > </a
+      ><a name="2893" class="Symbol"
+      >:</a
+      ><a name="2894"
+      > </a
+      ><a name="2895" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="2896"
+      > </a
+      ><a name="2897" href="FunUniverse.BinTree.html#2885" class="Bound"
+      >a</a
+      ><a name="2898" class="Symbol"
+      >}</a
+      ><a name="2899"
+      > </a
+      ><a name="2900" class="Symbol"
+      >{</a
+      ><a name="2901" href="FunUniverse.BinTree.html#2901" class="Bound"
+      >B</a
+      ><a name="2902"
+      > </a
+      ><a name="2903" class="Symbol"
+      >:</a
+      ><a name="2904"
+      > </a
+      ><a name="2905" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="2906"
+      > </a
+      ><a name="2907" href="FunUniverse.BinTree.html#2887" class="Bound"
+      >b</a
+      ><a name="2908" class="Symbol"
+      >}</a
+      ><a name="2909"
+      >
+        </a
+      ><a name="2918" class="Symbol"
+      >&#8594;</a
+      ><a name="2919"
+      > </a
+      ><a name="2920" href="FunUniverse.BinTree.html#565" class="Datatype"
+      >Tree</a
+      ><a name="2924"
+      > </a
+      ><a name="2925" href="FunUniverse.BinTree.html#2891" class="Bound"
+      >A</a
+      ><a name="2926"
+      > </a
+      ><a name="2927" href="FunUniverse.BinTree.html#2879" class="Bound"
+      >n&#8321;</a
+      ><a name="2929"
+      > </a
+      ><a name="2930" class="Symbol"
+      >&#8594;</a
+      ><a name="2931"
+      > </a
+      ><a name="2932" class="Symbol"
+      >(</a
+      ><a name="2933" href="FunUniverse.BinTree.html#2891" class="Bound"
+      >A</a
+      ><a name="2934"
+      > </a
+      ><a name="2935" class="Symbol"
+      >&#8594;</a
+      ><a name="2936"
+      > </a
+      ><a name="2937" href="FunUniverse.BinTree.html#565" class="Datatype"
+      >Tree</a
+      ><a name="2941"
+      > </a
+      ><a name="2942" href="FunUniverse.BinTree.html#2901" class="Bound"
+      >B</a
+      ><a name="2943"
+      > </a
+      ><a name="2944" href="FunUniverse.BinTree.html#2882" class="Bound"
+      >n&#8322;</a
+      ><a name="2946" class="Symbol"
+      >)</a
+      ><a name="2947"
+      > </a
+      ><a name="2948" class="Symbol"
+      >&#8594;</a
+      ><a name="2949"
+      > </a
+      ><a name="2950" href="FunUniverse.BinTree.html#565" class="Datatype"
+      >Tree</a
+      ><a name="2954"
+      > </a
+      ><a name="2955" href="FunUniverse.BinTree.html#2901" class="Bound"
+      >B</a
+      ><a name="2956"
+      > </a
+      ><a name="2957" class="Symbol"
+      >(</a
+      ><a name="2958" href="FunUniverse.BinTree.html#2879" class="Bound"
+      >n&#8321;</a
+      ><a name="2960"
+      > </a
+      ><a name="2961" href="Data.Nat.html#2239" class="Primitive Operator"
+      >+</a
+      ><a name="2962"
+      > </a
+      ><a name="2963" href="FunUniverse.BinTree.html#2882" class="Bound"
+      >n&#8322;</a
+      ><a name="2965" class="Symbol"
+      >)</a
+      ><a name="2966"
+      >
+</a
+      ><a name="2967" href="FunUniverse.BinTree.html#602" class="InductiveConstructor"
+      >leaf</a
+      ><a name="2971"
+      > </a
+      ><a name="2972" class="Symbol"
+      >{</a
+      ><a name="2973" href="FunUniverse.BinTree.html#2973" class="Bound"
+      >n</a
+      ><a name="2974" class="Symbol"
+      >}</a
+      ><a name="2975"
+      > </a
+      ><a name="2976" href="FunUniverse.BinTree.html#2976" class="Bound"
+      >x</a
+      ><a name="2977"
+      > </a
+      ><a name="2978" href="FunUniverse.BinTree.html#2868" class="Function Operator"
+      >&gt;&gt;=</a
+      ><a name="2981"
+      > </a
+      ><a name="2982" href="FunUniverse.BinTree.html#2982" class="Bound"
+      >f</a
+      ><a name="2983"
+      > </a
+      ><a name="2984" class="Symbol"
+      >=</a
+      ><a name="2985"
+      > </a
+      ><a name="2986" href="FunUniverse.BinTree.html#2777" class="Function"
+      >weaken+</a
+      ><a name="2993"
+      > </a
+      ><a name="2994" href="FunUniverse.BinTree.html#2973" class="Bound"
+      >n</a
+      ><a name="2995"
+      > </a
+      ><a name="2996" class="Symbol"
+      >(</a
+      ><a name="2997" href="FunUniverse.BinTree.html#2982" class="Bound"
+      >f</a
+      ><a name="2998"
+      > </a
+      ><a name="2999" href="FunUniverse.BinTree.html#2976" class="Bound"
+      >x</a
+      ><a name="3000" class="Symbol"
+      >)</a
+      ><a name="3001"
+      >
+</a
+      ><a name="3002" href="FunUniverse.BinTree.html#632" class="InductiveConstructor"
+      >fork</a
+      ><a name="3006"
+      > </a
+      ><a name="3007" href="FunUniverse.BinTree.html#3007" class="Bound"
+      >&#8467;</a
+      ><a name="3008"
+      > </a
+      ><a name="3009" href="FunUniverse.BinTree.html#3009" class="Bound"
+      >r</a
+      ><a name="3010"
+      >   </a
+      ><a name="3013" href="FunUniverse.BinTree.html#2868" class="Function Operator"
+      >&gt;&gt;=</a
+      ><a name="3016"
+      > </a
+      ><a name="3017" href="FunUniverse.BinTree.html#3017" class="Bound"
+      >f</a
+      ><a name="3018"
+      > </a
+      ><a name="3019" class="Symbol"
+      >=</a
+      ><a name="3020"
+      > </a
+      ><a name="3021" href="FunUniverse.BinTree.html#632" class="InductiveConstructor"
+      >fork</a
+      ><a name="3025"
+      > </a
+      ><a name="3026" class="Symbol"
+      >(</a
+      ><a name="3027" href="FunUniverse.BinTree.html#3007" class="Bound"
+      >&#8467;</a
+      ><a name="3028"
+      > </a
+      ><a name="3029" href="FunUniverse.BinTree.html#2868" class="Function Operator"
+      >&gt;&gt;=</a
+      ><a name="3032"
+      > </a
+      ><a name="3033" href="FunUniverse.BinTree.html#3017" class="Bound"
+      >f</a
+      ><a name="3034" class="Symbol"
+      >)</a
+      ><a name="3035"
+      > </a
+      ><a name="3036" class="Symbol"
+      >(</a
+      ><a name="3037" href="FunUniverse.BinTree.html#3009" class="Bound"
+      >r</a
+      ><a name="3038"
+      > </a
+      ><a name="3039" href="FunUniverse.BinTree.html#2868" class="Function Operator"
+      >&gt;&gt;=</a
+      ><a name="3042"
+      > </a
+      ><a name="3043" href="FunUniverse.BinTree.html#3017" class="Bound"
+      >f</a
+      ><a name="3044" class="Symbol"
+      >)</a
+      ><a name="3045"
+      >
+
+</a
+      ><a name="3047" href="FunUniverse.BinTree.html#3047" class="Function"
+      >join</a
+      ><a name="3051"
+      > </a
+      ><a name="3052" class="Symbol"
+      >:</a
+      ><a name="3053"
+      > </a
+      ><a name="3054" class="Symbol"
+      >&#8704;</a
+      ><a name="3055"
+      > </a
+      ><a name="3056" class="Symbol"
+      >{</a
+      ><a name="3057" href="FunUniverse.BinTree.html#3057" class="Bound"
+      >c&#8321;</a
+      ><a name="3059"
+      > </a
+      ><a name="3060" href="FunUniverse.BinTree.html#3060" class="Bound"
+      >c&#8322;</a
+      ><a name="3062"
+      > </a
+      ><a name="3063" href="FunUniverse.BinTree.html#3063" class="Bound"
+      >a</a
+      ><a name="3064" class="Symbol"
+      >}</a
+      ><a name="3065"
+      > </a
+      ><a name="3066" class="Symbol"
+      >{</a
+      ><a name="3067" href="FunUniverse.BinTree.html#3067" class="Bound"
+      >A</a
+      ><a name="3068"
+      > </a
+      ><a name="3069" class="Symbol"
+      >:</a
+      ><a name="3070"
+      > </a
+      ><a name="3071" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="3072"
+      > </a
+      ><a name="3073" href="FunUniverse.BinTree.html#3063" class="Bound"
+      >a</a
+      ><a name="3074" class="Symbol"
+      >}</a
+      ><a name="3075"
+      > </a
+      ><a name="3076" class="Symbol"
+      >&#8594;</a
+      ><a name="3077"
+      > </a
+      ><a name="3078" href="FunUniverse.BinTree.html#565" class="Datatype"
+      >Tree</a
+      ><a name="3082"
+      > </a
+      ><a name="3083" class="Symbol"
+      >(</a
+      ><a name="3084" href="FunUniverse.BinTree.html#565" class="Datatype"
+      >Tree</a
+      ><a name="3088"
+      > </a
+      ><a name="3089" href="FunUniverse.BinTree.html#3067" class="Bound"
+      >A</a
+      ><a name="3090"
+      > </a
+      ><a name="3091" href="FunUniverse.BinTree.html#3060" class="Bound"
+      >c&#8322;</a
+      ><a name="3093" class="Symbol"
+      >)</a
+      ><a name="3094"
+      > </a
+      ><a name="3095" href="FunUniverse.BinTree.html#3057" class="Bound"
+      >c&#8321;</a
+      ><a name="3097"
+      > </a
+      ><a name="3098" class="Symbol"
+      >&#8594;</a
+      ><a name="3099"
+      > </a
+      ><a name="3100" href="FunUniverse.BinTree.html#565" class="Datatype"
+      >Tree</a
+      ><a name="3104"
+      > </a
+      ><a name="3105" href="FunUniverse.BinTree.html#3067" class="Bound"
+      >A</a
+      ><a name="3106"
+      > </a
+      ><a name="3107" class="Symbol"
+      >(</a
+      ><a name="3108" href="FunUniverse.BinTree.html#3057" class="Bound"
+      >c&#8321;</a
+      ><a name="3110"
+      > </a
+      ><a name="3111" href="Data.Nat.html#2239" class="Primitive Operator"
+      >+</a
+      ><a name="3112"
+      > </a
+      ><a name="3113" href="FunUniverse.BinTree.html#3060" class="Bound"
+      >c&#8322;</a
+      ><a name="3115" class="Symbol"
+      >)</a
+      ><a name="3116"
+      >
+</a
+      ><a name="3117" href="FunUniverse.BinTree.html#3047" class="Function"
+      >join</a
+      ><a name="3121"
+      > </a
+      ><a name="3122" href="FunUniverse.BinTree.html#3122" class="Bound"
+      >t</a
+      ><a name="3123"
+      > </a
+      ><a name="3124" class="Symbol"
+      >=</a
+      ><a name="3125"
+      > </a
+      ><a name="3126" href="FunUniverse.BinTree.html#3122" class="Bound"
+      >t</a
+      ><a name="3127"
+      > </a
+      ><a name="3128" href="FunUniverse.BinTree.html#2868" class="Function Operator"
+      >&gt;&gt;=</a
+      ><a name="3131"
+      > </a
+      ><a name="3132" href="Function.html#1006" class="Function"
+      >id</a
+      ><a name="3134"
+      >
+
+</a
+      ><a name="3136" href="FunUniverse.BinTree.html#3136" class="Function Operator"
+      >_&#8594;&#7511;_</a
+      ><a name="3140"
+      > </a
+      ><a name="3141" class="Symbol"
+      >:</a
+      ><a name="3142"
+      > </a
+      ><a name="3143" class="Symbol"
+      >(</a
+      ><a name="3144" href="FunUniverse.BinTree.html#3144" class="Bound"
+      >i</a
+      ><a name="3145"
+      > </a
+      ><a name="3146" href="FunUniverse.BinTree.html#3146" class="Bound"
+      >o</a
+      ><a name="3147"
+      > </a
+      ><a name="3148" class="Symbol"
+      >:</a
+      ><a name="3149"
+      > </a
+      ><a name="3150" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="3151" class="Symbol"
+      >)</a
+      ><a name="3152"
+      > </a
+      ><a name="3153" class="Symbol"
+      >&#8594;</a
+      ><a name="3154"
+      > </a
+      ><a name="3155" href="Type.html#107" class="Function"
+      >&#9733;&#8320;</a
+      ><a name="3157"
+      >
+</a
+      ><a name="3158" href="FunUniverse.BinTree.html#3158" class="Bound"
+      >i</a
+      ><a name="3159"
+      > </a
+      ><a name="3160" href="FunUniverse.BinTree.html#3136" class="Function Operator"
+      >&#8594;&#7511;</a
+      ><a name="3162"
+      > </a
+      ><a name="3163" href="FunUniverse.BinTree.html#3163" class="Bound"
+      >o</a
+      ><a name="3164"
+      > </a
+      ><a name="3165" class="Symbol"
+      >=</a
+      ><a name="3166"
+      > </a
+      ><a name="3167" href="FunUniverse.BinTree.html#565" class="Datatype"
+      >Tree</a
+      ><a name="3171"
+      > </a
+      ><a name="3172" class="Symbol"
+      >(</a
+      ><a name="3173" href="Data.Bits.html#572" class="Function"
+      >Bits</a
+      ><a name="3177"
+      > </a
+      ><a name="3178" href="FunUniverse.BinTree.html#3163" class="Bound"
+      >o</a
+      ><a name="3179" class="Symbol"
+      >)</a
+      ><a name="3180"
+      > </a
+      ><a name="3181" href="FunUniverse.BinTree.html#3158" class="Bound"
+      >i</a
+      ><a name="3182"
+      >
+
+</a
+      ><a name="3184" href="FunUniverse.BinTree.html#3184" class="Function Operator"
+      >_&gt;&gt;&gt;_</a
+      ><a name="3189"
+      > </a
+      ><a name="3190" class="Symbol"
+      >:</a
+      ><a name="3191"
+      > </a
+      ><a name="3192" class="Symbol"
+      >&#8704;</a
+      ><a name="3193"
+      > </a
+      ><a name="3194" class="Symbol"
+      >{</a
+      ><a name="3195" href="FunUniverse.BinTree.html#3195" class="Bound"
+      >m</a
+      ><a name="3196"
+      > </a
+      ><a name="3197" href="FunUniverse.BinTree.html#3197" class="Bound"
+      >n</a
+      ><a name="3198"
+      > </a
+      ><a name="3199" href="FunUniverse.BinTree.html#3199" class="Bound"
+      >a</a
+      ><a name="3200" class="Symbol"
+      >}</a
+      ><a name="3201"
+      > </a
+      ><a name="3202" class="Symbol"
+      >{</a
+      ><a name="3203" href="FunUniverse.BinTree.html#3203" class="Bound"
+      >A</a
+      ><a name="3204"
+      > </a
+      ><a name="3205" class="Symbol"
+      >:</a
+      ><a name="3206"
+      > </a
+      ><a name="3207" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="3208"
+      > </a
+      ><a name="3209" href="FunUniverse.BinTree.html#3199" class="Bound"
+      >a</a
+      ><a name="3210" class="Symbol"
+      >}</a
+      ><a name="3211"
+      > </a
+      ><a name="3212" class="Symbol"
+      >&#8594;</a
+      ><a name="3213"
+      > </a
+      ><a name="3214" href="FunUniverse.BinTree.html#565" class="Datatype"
+      >Tree</a
+      ><a name="3218"
+      > </a
+      ><a name="3219" class="Symbol"
+      >(</a
+      ><a name="3220" href="Data.Bits.html#572" class="Function"
+      >Bits</a
+      ><a name="3224"
+      > </a
+      ><a name="3225" href="FunUniverse.BinTree.html#3195" class="Bound"
+      >m</a
+      ><a name="3226" class="Symbol"
+      >)</a
+      ><a name="3227"
+      > </a
+      ><a name="3228" href="FunUniverse.BinTree.html#3197" class="Bound"
+      >n</a
+      ><a name="3229"
+      > </a
+      ><a name="3230" class="Symbol"
+      >&#8594;</a
+      ><a name="3231"
+      > </a
+      ><a name="3232" href="FunUniverse.BinTree.html#565" class="Datatype"
+      >Tree</a
+      ><a name="3236"
+      > </a
+      ><a name="3237" href="FunUniverse.BinTree.html#3203" class="Bound"
+      >A</a
+      ><a name="3238"
+      > </a
+      ><a name="3239" href="FunUniverse.BinTree.html#3195" class="Bound"
+      >m</a
+      ><a name="3240"
+      > </a
+      ><a name="3241" class="Symbol"
+      >&#8594;</a
+      ><a name="3242"
+      > </a
+      ><a name="3243" href="FunUniverse.BinTree.html#565" class="Datatype"
+      >Tree</a
+      ><a name="3247"
+      > </a
+      ><a name="3248" href="FunUniverse.BinTree.html#3203" class="Bound"
+      >A</a
+      ><a name="3249"
+      > </a
+      ><a name="3250" href="FunUniverse.BinTree.html#3197" class="Bound"
+      >n</a
+      ><a name="3251"
+      >
+</a
+      ><a name="3252" href="FunUniverse.BinTree.html#3252" class="Bound"
+      >f</a
+      ><a name="3253"
+      > </a
+      ><a name="3254" href="FunUniverse.BinTree.html#3184" class="Function Operator"
+      >&gt;&gt;&gt;</a
+      ><a name="3257"
+      > </a
+      ><a name="3258" href="FunUniverse.BinTree.html#3258" class="Bound"
+      >g</a
+      ><a name="3259"
+      > </a
+      ><a name="3260" class="Symbol"
+      >=</a
+      ><a name="3261"
+      > </a
+      ><a name="3262" href="FunUniverse.BinTree.html#2361" class="Function"
+      >map</a
+      ><a name="3265"
+      > </a
+      ><a name="3266" class="Symbol"
+      >(</a
+      ><a name="3267" href="Function.html#1474" class="Function"
+      >flip</a
+      ><a name="3271"
+      > </a
+      ><a name="3272" href="FunUniverse.BinTree.html#2289" class="Function"
+      >lookup</a
+      ><a name="3278"
+      > </a
+      ><a name="3279" href="FunUniverse.BinTree.html#3258" class="Bound"
+      >g</a
+      ><a name="3280" class="Symbol"
+      >)</a
+      ><a name="3281"
+      > </a
+      ><a name="3282" href="FunUniverse.BinTree.html#3252" class="Bound"
+      >f</a
+      ><a name="3283"
+      >
+
+</a
+      ><a name="3285" href="FunUniverse.BinTree.html#3285" class="Function Operator"
+      >_***_</a
+      ><a name="3290"
+      > </a
+      ><a name="3291" class="Symbol"
+      >:</a
+      ><a name="3292"
+      > </a
+      ><a name="3293" class="Symbol"
+      >&#8704;</a
+      ><a name="3294"
+      > </a
+      ><a name="3295" class="Symbol"
+      >{</a
+      ><a name="3296" href="FunUniverse.BinTree.html#3296" class="Bound"
+      >i&#8320;</a
+      ><a name="3298"
+      > </a
+      ><a name="3299" href="FunUniverse.BinTree.html#3299" class="Bound"
+      >i&#8321;</a
+      ><a name="3301"
+      > </a
+      ><a name="3302" href="FunUniverse.BinTree.html#3302" class="Bound"
+      >o&#8320;</a
+      ><a name="3304"
+      > </a
+      ><a name="3305" href="FunUniverse.BinTree.html#3305" class="Bound"
+      >o&#8321;</a
+      ><a name="3307" class="Symbol"
+      >}</a
+      ><a name="3308"
+      > </a
+      ><a name="3309" class="Symbol"
+      >&#8594;</a
+      ><a name="3310"
+      > </a
+      ><a name="3311" href="FunUniverse.BinTree.html#3296" class="Bound"
+      >i&#8320;</a
+      ><a name="3313"
+      > </a
+      ><a name="3314" href="FunUniverse.BinTree.html#3136" class="Function Operator"
+      >&#8594;&#7511;</a
+      ><a name="3316"
+      > </a
+      ><a name="3317" href="FunUniverse.BinTree.html#3302" class="Bound"
+      >o&#8320;</a
+      ><a name="3319"
+      > </a
+      ><a name="3320" class="Symbol"
+      >&#8594;</a
+      ><a name="3321"
+      > </a
+      ><a name="3322" href="FunUniverse.BinTree.html#3299" class="Bound"
+      >i&#8321;</a
+      ><a name="3324"
+      > </a
+      ><a name="3325" href="FunUniverse.BinTree.html#3136" class="Function Operator"
+      >&#8594;&#7511;</a
+      ><a name="3327"
+      > </a
+      ><a name="3328" href="FunUniverse.BinTree.html#3305" class="Bound"
+      >o&#8321;</a
+      ><a name="3330"
+      > </a
+      ><a name="3331" class="Symbol"
+      >&#8594;</a
+      ><a name="3332"
+      > </a
+      ><a name="3333" class="Symbol"
+      >(</a
+      ><a name="3334" href="FunUniverse.BinTree.html#3296" class="Bound"
+      >i&#8320;</a
+      ><a name="3336"
+      > </a
+      ><a name="3337" href="Data.Nat.html#2239" class="Primitive Operator"
+      >+</a
+      ><a name="3338"
+      > </a
+      ><a name="3339" href="FunUniverse.BinTree.html#3299" class="Bound"
+      >i&#8321;</a
+      ><a name="3341" class="Symbol"
+      >)</a
+      ><a name="3342"
+      > </a
+      ><a name="3343" href="FunUniverse.BinTree.html#3136" class="Function Operator"
+      >&#8594;&#7511;</a
+      ><a name="3345"
+      > </a
+      ><a name="3346" class="Symbol"
+      >(</a
+      ><a name="3347" href="FunUniverse.BinTree.html#3302" class="Bound"
+      >o&#8320;</a
+      ><a name="3349"
+      > </a
+      ><a name="3350" href="Data.Nat.html#2239" class="Primitive Operator"
+      >+</a
+      ><a name="3351"
+      > </a
+      ><a name="3352" href="FunUniverse.BinTree.html#3305" class="Bound"
+      >o&#8321;</a
+      ><a name="3354" class="Symbol"
+      >)</a
+      ><a name="3355"
+      >
+</a
+      ><a name="3356" class="Symbol"
+      >(</a
+      ><a name="3357" href="FunUniverse.BinTree.html#3357" class="Bound"
+      >f</a
+      ><a name="3358"
+      > </a
+      ><a name="3359" href="FunUniverse.BinTree.html#3285" class="Function Operator"
+      >***</a
+      ><a name="3362"
+      > </a
+      ><a name="3363" href="FunUniverse.BinTree.html#3363" class="Bound"
+      >g</a
+      ><a name="3364" class="Symbol"
+      >)</a
+      ><a name="3365"
+      > </a
+      ><a name="3366" class="Symbol"
+      >=</a
+      ><a name="3367"
+      > </a
+      ><a name="3368" href="FunUniverse.BinTree.html#3047" class="Function"
+      >join</a
+      ><a name="3372"
+      > </a
+      ><a name="3373" class="Symbol"
+      >(</a
+      ><a name="3374" href="FunUniverse.BinTree.html#2361" class="Function"
+      >map</a
+      ><a name="3377"
+      > </a
+      ><a name="3378" class="Symbol"
+      >(&#955;</a
+      ><a name="3380"
+      > </a
+      ><a name="3381" href="FunUniverse.BinTree.html#3381" class="Bound"
+      >xs</a
+      ><a name="3383"
+      > </a
+      ><a name="3384" class="Symbol"
+      >&#8594;</a
+      ><a name="3385"
+      > </a
+      ><a name="3386" href="FunUniverse.BinTree.html#2361" class="Function"
+      >map</a
+      ><a name="3389"
+      > </a
+      ><a name="3390" class="Symbol"
+      >(</a
+      ><a name="3391" href="Data.Vec.html#1471" class="Function Operator"
+      >_++_</a
+      ><a name="3395"
+      > </a
+      ><a name="3396" href="FunUniverse.BinTree.html#3381" class="Bound"
+      >xs</a
+      ><a name="3398" class="Symbol"
+      >)</a
+      ><a name="3399"
+      > </a
+      ><a name="3400" href="FunUniverse.BinTree.html#3363" class="Bound"
+      >g</a
+      ><a name="3401" class="Symbol"
+      >)</a
+      ><a name="3402"
+      > </a
+      ><a name="3403" href="FunUniverse.BinTree.html#3357" class="Bound"
+      >f</a
+      ><a name="3404" class="Symbol"
+      >)</a
+      ><a name="3405"
+      >
+
+</a
+      ><a name="3407" href="FunUniverse.BinTree.html#3407" class="Function"
+      >hcomposable</a
+      ><a name="3418"
+      > </a
+      ><a name="3419" class="Symbol"
+      >:</a
+      ><a name="3420"
+      > </a
+      ><a name="3421" href="Composition.Horizontal.html#2212" class="Function"
+      >HComposable</a
+      ><a name="3432"
+      > </a
+      ><a name="3433" href="FunUniverse.BinTree.html#3136" class="Function Operator"
+      >_&#8594;&#7511;_</a
+      ><a name="3437"
+      >
+</a
+      ><a name="3438" href="FunUniverse.BinTree.html#3407" class="Function"
+      >hcomposable</a
+      ><a name="3449"
+      > </a
+      ><a name="3450" class="Symbol"
+      >=</a
+      ><a name="3451"
+      > </a
+      ><a name="3452" href="Composition.Horizontal.html#1832" class="InductiveConstructor"
+      >mk</a
+      ><a name="3454"
+      > </a
+      ><a name="3455" href="FunUniverse.BinTree.html#3184" class="Function Operator"
+      >_&gt;&gt;&gt;_</a
+      ><a name="3460"
+      >
+
+</a
+      ><a name="3462" href="FunUniverse.BinTree.html#3462" class="Function"
+      >vcomposable</a
+      ><a name="3473"
+      > </a
+      ><a name="3474" class="Symbol"
+      >:</a
+      ><a name="3475"
+      > </a
+      ><a name="3476" href="Composition.Vertical.html#1711" class="Function"
+      >VComposable</a
+      ><a name="3487"
+      > </a
+      ><a name="3488" href="Data.Nat.html#2239" class="Primitive Operator"
+      >_+_</a
+      ><a name="3491"
+      > </a
+      ><a name="3492" href="FunUniverse.BinTree.html#3136" class="Function Operator"
+      >_&#8594;&#7511;_</a
+      ><a name="3496"
+      >
+</a
+      ><a name="3497" href="FunUniverse.BinTree.html#3462" class="Function"
+      >vcomposable</a
+      ><a name="3508"
+      > </a
+      ><a name="3509" class="Symbol"
+      >=</a
+      ><a name="3510"
+      > </a
+      ><a name="3511" href="Composition.Vertical.html#1017" class="InductiveConstructor"
+      >mk</a
+      ><a name="3513"
+      > </a
+      ><a name="3514" href="FunUniverse.BinTree.html#3285" class="Function Operator"
+      >_***_</a
+      ><a name="3519"
+      >
+
+</a
+      ><a name="3521" href="FunUniverse.BinTree.html#3521" class="Function"
+      >forkable</a
+      ><a name="3529"
+      > </a
+      ><a name="3530" class="Symbol"
+      >:</a
+      ><a name="3531"
+      > </a
+      ><a name="3532" href="Composition.Forkable.html#131" class="Record"
+      >Forkable</a
+      ><a name="3540"
+      > </a
+      ><a name="3541" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="3544"
+      > </a
+      ><a name="3545" href="FunUniverse.BinTree.html#3136" class="Function Operator"
+      >_&#8594;&#7511;_</a
+      ><a name="3549"
+      >
+</a
+      ><a name="3550" href="FunUniverse.BinTree.html#3521" class="Function"
+      >forkable</a
+      ><a name="3558"
+      > </a
+      ><a name="3559" class="Symbol"
+      >=</a
+      ><a name="3560"
+      > </a
+      ><a name="3561" href="Composition.Forkable.html#253" class="InductiveConstructor"
+      >mk</a
+      ><a name="3563"
+      > </a
+      ><a name="3564" href="FunUniverse.BinTree.html#632" class="InductiveConstructor"
+      >fork</a
+      ><a name="3568"
+      >
+
+</a
+      ><a name="3570" class="Comment"
+      >-- This is probably useless by now</a
+      ><a name="3604"
+      >
+</a
+      ><a name="3605" class="Keyword"
+      >data</a
+      ><a name="3609"
+      > </a
+      ><a name="3610" href="FunUniverse.BinTree.html#3610" class="Datatype"
+      >Rot</a
+      ><a name="3613"
+      > </a
+      ><a name="3614" class="Symbol"
+      >{</a
+      ><a name="3615" href="FunUniverse.BinTree.html#3615" class="Bound"
+      >a</a
+      ><a name="3616" class="Symbol"
+      >}</a
+      ><a name="3617"
+      > </a
+      ><a name="3618" class="Symbol"
+      >{</a
+      ><a name="3619" href="FunUniverse.BinTree.html#3619" class="Bound"
+      >A</a
+      ><a name="3620"
+      > </a
+      ><a name="3621" class="Symbol"
+      >:</a
+      ><a name="3622"
+      > </a
+      ><a name="3623" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="3624"
+      > </a
+      ><a name="3625" href="FunUniverse.BinTree.html#3615" class="Bound"
+      >a</a
+      ><a name="3626" class="Symbol"
+      >}</a
+      ><a name="3627"
+      > </a
+      ><a name="3628" class="Symbol"
+      >:</a
+      ><a name="3629"
+      > </a
+      ><a name="3630" class="Symbol"
+      >&#8704;</a
+      ><a name="3631"
+      > </a
+      ><a name="3632" class="Symbol"
+      >{</a
+      ><a name="3633" href="FunUniverse.BinTree.html#3633" class="Bound"
+      >n</a
+      ><a name="3634" class="Symbol"
+      >}</a
+      ><a name="3635"
+      > </a
+      ><a name="3636" class="Symbol"
+      >(</a
+      ><a name="3637" href="FunUniverse.BinTree.html#3637" class="Bound"
+      >left</a
+      ><a name="3641"
+      > </a
+      ><a name="3642" href="FunUniverse.BinTree.html#3642" class="Bound"
+      >right</a
+      ><a name="3647"
+      > </a
+      ><a name="3648" class="Symbol"
+      >:</a
+      ><a name="3649"
+      > </a
+      ><a name="3650" href="FunUniverse.BinTree.html#565" class="Datatype"
+      >Tree</a
+      ><a name="3654"
+      > </a
+      ><a name="3655" href="FunUniverse.BinTree.html#3619" class="Bound"
+      >A</a
+      ><a name="3656"
+      > </a
+      ><a name="3657" href="FunUniverse.BinTree.html#3633" class="Bound"
+      >n</a
+      ><a name="3658" class="Symbol"
+      >)</a
+      ><a name="3659"
+      > </a
+      ><a name="3660" class="Symbol"
+      >&#8594;</a
+      ><a name="3661"
+      > </a
+      ><a name="3662" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="3663"
+      > </a
+      ><a name="3664" href="FunUniverse.BinTree.html#3615" class="Bound"
+      >a</a
+      ><a name="3665"
+      > </a
+      ><a name="3666" class="Keyword"
+      >where</a
+      ><a name="3671"
+      >
+  </a
+      ><a name="3674" href="FunUniverse.BinTree.html#3674" class="InductiveConstructor"
+      >leaf</a
+      ><a name="3678"
+      > </a
+      ><a name="3679" class="Symbol"
+      >:</a
+      ><a name="3680"
+      > </a
+      ><a name="3681" class="Symbol"
+      >&#8704;</a
+      ><a name="3682"
+      > </a
+      ><a name="3683" class="Symbol"
+      >{</a
+      ><a name="3684" href="FunUniverse.BinTree.html#3684" class="Bound"
+      >n</a
+      ><a name="3685" class="Symbol"
+      >}</a
+      ><a name="3686"
+      > </a
+      ><a name="3687" href="FunUniverse.BinTree.html#3687" class="Bound"
+      >x</a
+      ><a name="3688"
+      > </a
+      ><a name="3689" class="Symbol"
+      >&#8594;</a
+      ><a name="3690"
+      > </a
+      ><a name="3691" href="FunUniverse.BinTree.html#3610" class="Datatype"
+      >Rot</a
+      ><a name="3694"
+      > </a
+      ><a name="3695" class="Symbol"
+      >{</a
+      ><a name="3696"
+      >n </a
+      ><a name="3698" class="Symbol"
+      >=</a
+      ><a name="3699"
+      > </a
+      ><a name="3700" href="FunUniverse.BinTree.html#3684" class="Bound"
+      >n</a
+      ><a name="3701" class="Symbol"
+      >}</a
+      ><a name="3702"
+      > </a
+      ><a name="3703" class="Symbol"
+      >(</a
+      ><a name="3704" href="FunUniverse.BinTree.html#602" class="InductiveConstructor"
+      >leaf</a
+      ><a name="3708"
+      > </a
+      ><a name="3709" href="FunUniverse.BinTree.html#3687" class="Bound"
+      >x</a
+      ><a name="3710" class="Symbol"
+      >)</a
+      ><a name="3711"
+      > </a
+      ><a name="3712" class="Symbol"
+      >(</a
+      ><a name="3713" href="FunUniverse.BinTree.html#602" class="InductiveConstructor"
+      >leaf</a
+      ><a name="3717"
+      > </a
+      ><a name="3718" href="FunUniverse.BinTree.html#3687" class="Bound"
+      >x</a
+      ><a name="3719" class="Symbol"
+      >)</a
+      ><a name="3720"
+      >
+  </a
+      ><a name="3723" href="FunUniverse.BinTree.html#3723" class="InductiveConstructor"
+      >fork</a
+      ><a name="3727"
+      > </a
+      ><a name="3728" class="Symbol"
+      >:</a
+      ><a name="3729"
+      > </a
+      ><a name="3730" class="Symbol"
+      >&#8704;</a
+      ><a name="3731"
+      > </a
+      ><a name="3732" class="Symbol"
+      >{</a
+      ><a name="3733" href="FunUniverse.BinTree.html#3733" class="Bound"
+      >n</a
+      ><a name="3734" class="Symbol"
+      >}</a
+      ><a name="3735"
+      > </a
+      ><a name="3736" class="Symbol"
+      >{</a
+      ><a name="3737" href="FunUniverse.BinTree.html#3737" class="Bound"
+      >left&#8320;</a
+      ><a name="3742"
+      > </a
+      ><a name="3743" href="FunUniverse.BinTree.html#3743" class="Bound"
+      >left&#8321;</a
+      ><a name="3748"
+      > </a
+      ><a name="3749" href="FunUniverse.BinTree.html#3749" class="Bound"
+      >right&#8320;</a
+      ><a name="3755"
+      > </a
+      ><a name="3756" href="FunUniverse.BinTree.html#3756" class="Bound"
+      >right&#8321;</a
+      ><a name="3762"
+      > </a
+      ><a name="3763" class="Symbol"
+      >:</a
+      ><a name="3764"
+      > </a
+      ><a name="3765" href="FunUniverse.BinTree.html#565" class="Datatype"
+      >Tree</a
+      ><a name="3769"
+      > </a
+      ><a name="3770" href="FunUniverse.BinTree.html#3619" class="Bound"
+      >A</a
+      ><a name="3771"
+      > </a
+      ><a name="3772" href="FunUniverse.BinTree.html#3733" class="Bound"
+      >n</a
+      ><a name="3773" class="Symbol"
+      >}</a
+      ><a name="3774"
+      > </a
+      ><a name="3775" class="Symbol"
+      >&#8594;</a
+      ><a name="3776"
+      >
+         </a
+      ><a name="3786" href="FunUniverse.BinTree.html#3610" class="Datatype"
+      >Rot</a
+      ><a name="3789"
+      > </a
+      ><a name="3790" href="FunUniverse.BinTree.html#3737" class="Bound"
+      >left&#8320;</a
+      ><a name="3795"
+      > </a
+      ><a name="3796" href="FunUniverse.BinTree.html#3743" class="Bound"
+      >left&#8321;</a
+      ><a name="3801"
+      > </a
+      ><a name="3802" class="Symbol"
+      >&#8594;</a
+      ><a name="3803"
+      >
+         </a
+      ><a name="3813" href="FunUniverse.BinTree.html#3610" class="Datatype"
+      >Rot</a
+      ><a name="3816"
+      > </a
+      ><a name="3817" href="FunUniverse.BinTree.html#3749" class="Bound"
+      >right&#8320;</a
+      ><a name="3823"
+      > </a
+      ><a name="3824" href="FunUniverse.BinTree.html#3756" class="Bound"
+      >right&#8321;</a
+      ><a name="3830"
+      > </a
+      ><a name="3831" class="Symbol"
+      >&#8594;</a
+      ><a name="3832"
+      >
+         </a
+      ><a name="3842" href="FunUniverse.BinTree.html#3610" class="Datatype"
+      >Rot</a
+      ><a name="3845"
+      > </a
+      ><a name="3846" class="Symbol"
+      >(</a
+      ><a name="3847" href="FunUniverse.BinTree.html#632" class="InductiveConstructor"
+      >fork</a
+      ><a name="3851"
+      > </a
+      ><a name="3852" href="FunUniverse.BinTree.html#3737" class="Bound"
+      >left&#8320;</a
+      ><a name="3857"
+      > </a
+      ><a name="3858" href="FunUniverse.BinTree.html#3749" class="Bound"
+      >right&#8320;</a
+      ><a name="3864" class="Symbol"
+      >)</a
+      ><a name="3865"
+      > </a
+      ><a name="3866" class="Symbol"
+      >(</a
+      ><a name="3867" href="FunUniverse.BinTree.html#632" class="InductiveConstructor"
+      >fork</a
+      ><a name="3871"
+      > </a
+      ><a name="3872" href="FunUniverse.BinTree.html#3743" class="Bound"
+      >left&#8321;</a
+      ><a name="3877"
+      > </a
+      ><a name="3878" href="FunUniverse.BinTree.html#3756" class="Bound"
+      >right&#8321;</a
+      ><a name="3884" class="Symbol"
+      >)</a
+      ><a name="3885"
+      >
+  </a
+      ><a name="3888" href="FunUniverse.BinTree.html#3888" class="InductiveConstructor"
+      >krof</a
+      ><a name="3892"
+      > </a
+      ><a name="3893" class="Symbol"
+      >:</a
+      ><a name="3894"
+      > </a
+      ><a name="3895" class="Symbol"
+      >&#8704;</a
+      ><a name="3896"
+      > </a
+      ><a name="3897" class="Symbol"
+      >{</a
+      ><a name="3898" href="FunUniverse.BinTree.html#3898" class="Bound"
+      >n</a
+      ><a name="3899" class="Symbol"
+      >}</a
+      ><a name="3900"
+      > </a
+      ><a name="3901" class="Symbol"
+      >{</a
+      ><a name="3902" href="FunUniverse.BinTree.html#3902" class="Bound"
+      >left&#8320;</a
+      ><a name="3907"
+      > </a
+      ><a name="3908" href="FunUniverse.BinTree.html#3908" class="Bound"
+      >left&#8321;</a
+      ><a name="3913"
+      > </a
+      ><a name="3914" href="FunUniverse.BinTree.html#3914" class="Bound"
+      >right&#8320;</a
+      ><a name="3920"
+      > </a
+      ><a name="3921" href="FunUniverse.BinTree.html#3921" class="Bound"
+      >right&#8321;</a
+      ><a name="3927"
+      > </a
+      ><a name="3928" class="Symbol"
+      >:</a
+      ><a name="3929"
+      > </a
+      ><a name="3930" href="FunUniverse.BinTree.html#565" class="Datatype"
+      >Tree</a
+      ><a name="3934"
+      > </a
+      ><a name="3935" href="FunUniverse.BinTree.html#3619" class="Bound"
+      >A</a
+      ><a name="3936"
+      > </a
+      ><a name="3937" href="FunUniverse.BinTree.html#3898" class="Bound"
+      >n</a
+      ><a name="3938" class="Symbol"
+      >}</a
+      ><a name="3939"
+      > </a
+      ><a name="3940" class="Symbol"
+      >&#8594;</a
+      ><a name="3941"
+      >
+         </a
+      ><a name="3951" href="FunUniverse.BinTree.html#3610" class="Datatype"
+      >Rot</a
+      ><a name="3954"
+      > </a
+      ><a name="3955" href="FunUniverse.BinTree.html#3902" class="Bound"
+      >left&#8320;</a
+      ><a name="3960"
+      > </a
+      ><a name="3961" href="FunUniverse.BinTree.html#3921" class="Bound"
+      >right&#8321;</a
+      ><a name="3967"
+      > </a
+      ><a name="3968" class="Symbol"
+      >&#8594;</a
+      ><a name="3969"
+      >
+         </a
+      ><a name="3979" href="FunUniverse.BinTree.html#3610" class="Datatype"
+      >Rot</a
+      ><a name="3982"
+      > </a
+      ><a name="3983" href="FunUniverse.BinTree.html#3914" class="Bound"
+      >right&#8320;</a
+      ><a name="3989"
+      > </a
+      ><a name="3990" href="FunUniverse.BinTree.html#3908" class="Bound"
+      >left&#8321;</a
+      ><a name="3995"
+      > </a
+      ><a name="3996" class="Symbol"
+      >&#8594;</a
+      ><a name="3997"
+      >
+         </a
+      ><a name="4007" href="FunUniverse.BinTree.html#3610" class="Datatype"
+      >Rot</a
+      ><a name="4010"
+      > </a
+      ><a name="4011" class="Symbol"
+      >(</a
+      ><a name="4012" href="FunUniverse.BinTree.html#632" class="InductiveConstructor"
+      >fork</a
+      ><a name="4016"
+      > </a
+      ><a name="4017" href="FunUniverse.BinTree.html#3902" class="Bound"
+      >left&#8320;</a
+      ><a name="4022"
+      > </a
+      ><a name="4023" href="FunUniverse.BinTree.html#3914" class="Bound"
+      >right&#8320;</a
+      ><a name="4029" class="Symbol"
+      >)</a
+      ><a name="4030"
+      > </a
+      ><a name="4031" class="Symbol"
+      >(</a
+      ><a name="4032" href="FunUniverse.BinTree.html#632" class="InductiveConstructor"
+      >fork</a
+      ><a name="4036"
+      > </a
+      ><a name="4037" href="FunUniverse.BinTree.html#3908" class="Bound"
+      >left&#8321;</a
+      ><a name="4042"
+      > </a
+      ><a name="4043" href="FunUniverse.BinTree.html#3921" class="Bound"
+      >right&#8321;</a
+      ><a name="4049" class="Symbol"
+      >)</a
+      ><a name="4050"
+      >
+
+</a
+      ><a name="4052" href="FunUniverse.BinTree.html#4052" class="Function"
+      >Rot-refl</a
+      ><a name="4060"
+      > </a
+      ><a name="4061" class="Symbol"
+      >:</a
+      ><a name="4062"
+      > </a
+      ><a name="4063" class="Symbol"
+      >&#8704;</a
+      ><a name="4064"
+      > </a
+      ><a name="4065" class="Symbol"
+      >{</a
+      ><a name="4066" href="FunUniverse.BinTree.html#4066" class="Bound"
+      >n</a
+      ><a name="4067"
+      > </a
+      ><a name="4068" href="FunUniverse.BinTree.html#4068" class="Bound"
+      >a</a
+      ><a name="4069" class="Symbol"
+      >}</a
+      ><a name="4070"
+      > </a
+      ><a name="4071" class="Symbol"
+      >{</a
+      ><a name="4072" href="FunUniverse.BinTree.html#4072" class="Bound"
+      >A</a
+      ><a name="4073"
+      > </a
+      ><a name="4074" class="Symbol"
+      >:</a
+      ><a name="4075"
+      > </a
+      ><a name="4076" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="4077"
+      > </a
+      ><a name="4078" href="FunUniverse.BinTree.html#4068" class="Bound"
+      >a</a
+      ><a name="4079" class="Symbol"
+      >}</a
+      ><a name="4080"
+      > </a
+      ><a name="4081" class="Symbol"
+      >&#8594;</a
+      ><a name="4082"
+      > </a
+      ><a name="4083" href="Relation.Binary.Core.html#1891" class="Function"
+      >Reflexive</a
+      ><a name="4092"
+      > </a
+      ><a name="4093" class="Symbol"
+      >(</a
+      ><a name="4094" href="FunUniverse.BinTree.html#3610" class="Datatype"
+      >Rot</a
+      ><a name="4097"
+      > </a
+      ><a name="4098" class="Symbol"
+      >{</a
+      ><a name="4099"
+      >A </a
+      ><a name="4101" class="Symbol"
+      >=</a
+      ><a name="4102"
+      > </a
+      ><a name="4103" href="FunUniverse.BinTree.html#4072" class="Bound"
+      >A</a
+      ><a name="4104" class="Symbol"
+      >}</a
+      ><a name="4105"
+      > </a
+      ><a name="4106" class="Symbol"
+      >{</a
+      ><a name="4107" href="FunUniverse.BinTree.html#4066" class="Bound"
+      >n</a
+      ><a name="4108" class="Symbol"
+      >})</a
+      ><a name="4110"
+      >
+</a
+      ><a name="4111" href="FunUniverse.BinTree.html#4052" class="Function"
+      >Rot-refl</a
+      ><a name="4119"
+      > </a
+      ><a name="4120" class="Symbol"
+      >{</a
+      ><a name="4121"
+      >x </a
+      ><a name="4123" class="Symbol"
+      >=</a
+      ><a name="4124"
+      > </a
+      ><a name="4125" href="FunUniverse.BinTree.html#602" class="InductiveConstructor"
+      >leaf</a
+      ><a name="4129"
+      > </a
+      ><a name="4130" href="FunUniverse.BinTree.html#4130" class="Bound"
+      >x</a
+      ><a name="4131" class="Symbol"
+      >}</a
+      ><a name="4132"
+      > </a
+      ><a name="4133" class="Symbol"
+      >=</a
+      ><a name="4134"
+      > </a
+      ><a name="4135" href="FunUniverse.BinTree.html#3674" class="InductiveConstructor"
+      >leaf</a
+      ><a name="4139"
+      > </a
+      ><a name="4140" href="FunUniverse.BinTree.html#4130" class="Bound"
+      >x</a
+      ><a name="4141"
+      >
+</a
+      ><a name="4142" href="FunUniverse.BinTree.html#4052" class="Function"
+      >Rot-refl</a
+      ><a name="4150"
+      > </a
+      ><a name="4151" class="Symbol"
+      >{</a
+      ><a name="4152"
+      >x </a
+      ><a name="4154" class="Symbol"
+      >=</a
+      ><a name="4155"
+      > </a
+      ><a name="4156" href="FunUniverse.BinTree.html#632" class="InductiveConstructor"
+      >fork</a
+      ><a name="4160"
+      > </a
+      ><a name="4161" href="FunUniverse.BinTree.html#4161" class="Bound"
+      >left</a
+      ><a name="4165"
+      > </a
+      ><a name="4166" href="FunUniverse.BinTree.html#4166" class="Bound"
+      >right</a
+      ><a name="4171" class="Symbol"
+      >}</a
+      ><a name="4172"
+      > </a
+      ><a name="4173" class="Symbol"
+      >=</a
+      ><a name="4174"
+      > </a
+      ><a name="4175" href="FunUniverse.BinTree.html#3723" class="InductiveConstructor"
+      >fork</a
+      ><a name="4179"
+      > </a
+      ><a name="4180" href="FunUniverse.BinTree.html#4052" class="Function"
+      >Rot-refl</a
+      ><a name="4188"
+      > </a
+      ><a name="4189" href="FunUniverse.BinTree.html#4052" class="Function"
+      >Rot-refl</a
+      ><a name="4197"
+      >
+
+</a
+      ><a name="4199" href="FunUniverse.BinTree.html#4199" class="Function"
+      >Rot-sym</a
+      ><a name="4206"
+      > </a
+      ><a name="4207" class="Symbol"
+      >:</a
+      ><a name="4208"
+      > </a
+      ><a name="4209" class="Symbol"
+      >&#8704;</a
+      ><a name="4210"
+      > </a
+      ><a name="4211" class="Symbol"
+      >{</a
+      ><a name="4212" href="FunUniverse.BinTree.html#4212" class="Bound"
+      >n</a
+      ><a name="4213"
+      > </a
+      ><a name="4214" href="FunUniverse.BinTree.html#4214" class="Bound"
+      >a</a
+      ><a name="4215" class="Symbol"
+      >}</a
+      ><a name="4216"
+      > </a
+      ><a name="4217" class="Symbol"
+      >{</a
+      ><a name="4218" href="FunUniverse.BinTree.html#4218" class="Bound"
+      >A</a
+      ><a name="4219"
+      > </a
+      ><a name="4220" class="Symbol"
+      >:</a
+      ><a name="4221"
+      > </a
+      ><a name="4222" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="4223"
+      > </a
+      ><a name="4224" href="FunUniverse.BinTree.html#4214" class="Bound"
+      >a</a
+      ><a name="4225" class="Symbol"
+      >}</a
+      ><a name="4226"
+      > </a
+      ><a name="4227" class="Symbol"
+      >&#8594;</a
+      ><a name="4228"
+      > </a
+      ><a name="4229" href="Relation.Binary.Core.html#2314" class="Function"
+      >Symmetric</a
+      ><a name="4238"
+      > </a
+      ><a name="4239" class="Symbol"
+      >(</a
+      ><a name="4240" href="FunUniverse.BinTree.html#3610" class="Datatype"
+      >Rot</a
+      ><a name="4243"
+      > </a
+      ><a name="4244" class="Symbol"
+      >{</a
+      ><a name="4245"
+      >A </a
+      ><a name="4247" class="Symbol"
+      >=</a
+      ><a name="4248"
+      > </a
+      ><a name="4249" href="FunUniverse.BinTree.html#4218" class="Bound"
+      >A</a
+      ><a name="4250" class="Symbol"
+      >}</a
+      ><a name="4251"
+      > </a
+      ><a name="4252" class="Symbol"
+      >{</a
+      ><a name="4253" href="FunUniverse.BinTree.html#4212" class="Bound"
+      >n</a
+      ><a name="4254" class="Symbol"
+      >})</a
+      ><a name="4256"
+      >
+</a
+      ><a name="4257" href="FunUniverse.BinTree.html#4199" class="Function"
+      >Rot-sym</a
+      ><a name="4264"
+      > </a
+      ><a name="4265" class="Symbol"
+      >(</a
+      ><a name="4266" href="FunUniverse.BinTree.html#3674" class="InductiveConstructor"
+      >leaf</a
+      ><a name="4270"
+      > </a
+      ><a name="4271" href="FunUniverse.BinTree.html#4271" class="Bound"
+      >x</a
+      ><a name="4272" class="Symbol"
+      >)</a
+      ><a name="4273"
+      > </a
+      ><a name="4274" class="Symbol"
+      >=</a
+      ><a name="4275"
+      > </a
+      ><a name="4276" href="FunUniverse.BinTree.html#3674" class="InductiveConstructor"
+      >leaf</a
+      ><a name="4280"
+      > </a
+      ><a name="4281" href="FunUniverse.BinTree.html#4271" class="Bound"
+      >x</a
+      ><a name="4282"
+      >
+</a
+      ><a name="4283" href="FunUniverse.BinTree.html#4199" class="Function"
+      >Rot-sym</a
+      ><a name="4290"
+      > </a
+      ><a name="4291" class="Symbol"
+      >(</a
+      ><a name="4292" href="FunUniverse.BinTree.html#3723" class="InductiveConstructor"
+      >fork</a
+      ><a name="4296"
+      > </a
+      ><a name="4297" href="FunUniverse.BinTree.html#4297" class="Bound"
+      >p&#8320;</a
+      ><a name="4299"
+      > </a
+      ><a name="4300" href="FunUniverse.BinTree.html#4300" class="Bound"
+      >p&#8321;</a
+      ><a name="4302" class="Symbol"
+      >)</a
+      ><a name="4303"
+      > </a
+      ><a name="4304" class="Symbol"
+      >=</a
+      ><a name="4305"
+      > </a
+      ><a name="4306" href="FunUniverse.BinTree.html#3723" class="InductiveConstructor"
+      >fork</a
+      ><a name="4310"
+      > </a
+      ><a name="4311" class="Symbol"
+      >(</a
+      ><a name="4312" href="FunUniverse.BinTree.html#4199" class="Function"
+      >Rot-sym</a
+      ><a name="4319"
+      > </a
+      ><a name="4320" href="FunUniverse.BinTree.html#4297" class="Bound"
+      >p&#8320;</a
+      ><a name="4322" class="Symbol"
+      >)</a
+      ><a name="4323"
+      > </a
+      ><a name="4324" class="Symbol"
+      >(</a
+      ><a name="4325" href="FunUniverse.BinTree.html#4199" class="Function"
+      >Rot-sym</a
+      ><a name="4332"
+      > </a
+      ><a name="4333" href="FunUniverse.BinTree.html#4300" class="Bound"
+      >p&#8321;</a
+      ><a name="4335" class="Symbol"
+      >)</a
+      ><a name="4336"
+      >
+</a
+      ><a name="4337" href="FunUniverse.BinTree.html#4199" class="Function"
+      >Rot-sym</a
+      ><a name="4344"
+      > </a
+      ><a name="4345" class="Symbol"
+      >(</a
+      ><a name="4346" href="FunUniverse.BinTree.html#3888" class="InductiveConstructor"
+      >krof</a
+      ><a name="4350"
+      > </a
+      ><a name="4351" href="FunUniverse.BinTree.html#4351" class="Bound"
+      >p&#8320;</a
+      ><a name="4353"
+      > </a
+      ><a name="4354" href="FunUniverse.BinTree.html#4354" class="Bound"
+      >p&#8321;</a
+      ><a name="4356" class="Symbol"
+      >)</a
+      ><a name="4357"
+      > </a
+      ><a name="4358" class="Symbol"
+      >=</a
+      ><a name="4359"
+      > </a
+      ><a name="4360" href="FunUniverse.BinTree.html#3888" class="InductiveConstructor"
+      >krof</a
+      ><a name="4364"
+      > </a
+      ><a name="4365" class="Symbol"
+      >(</a
+      ><a name="4366" href="FunUniverse.BinTree.html#4199" class="Function"
+      >Rot-sym</a
+      ><a name="4373"
+      > </a
+      ><a name="4374" href="FunUniverse.BinTree.html#4354" class="Bound"
+      >p&#8321;</a
+      ><a name="4376" class="Symbol"
+      >)</a
+      ><a name="4377"
+      > </a
+      ><a name="4378" class="Symbol"
+      >(</a
+      ><a name="4379" href="FunUniverse.BinTree.html#4199" class="Function"
+      >Rot-sym</a
+      ><a name="4386"
+      > </a
+      ><a name="4387" href="FunUniverse.BinTree.html#4351" class="Bound"
+      >p&#8320;</a
+      ><a name="4389" class="Symbol"
+      >)</a
+      ><a name="4390"
+      >
+
+</a
+      ><a name="4392" class="Comment"
+      >{- with-K
+Rot-trans : &#8704; {n a} {A : &#9733; a} &#8594; Transitive (Rot {A = A} {n})
+Rot-trans (leaf x) q = q
+Rot-trans (fork p&#8320; p&#8321;) (fork q&#8320; q&#8321;) = fork (Rot-trans p&#8320; q&#8320;) (Rot-trans p&#8321; q&#8321;)
+Rot-trans (fork p&#8320; p&#8321;) (krof q&#8320; q&#8321;) = krof (Rot-trans p&#8320; q&#8320;) (Rot-trans p&#8321; q&#8321;)
+Rot-trans (krof p&#8320; p&#8321;) (fork q&#8320; q&#8321;) = krof (Rot-trans p&#8320; q&#8321;) (Rot-trans p&#8321; q&#8320;)
+Rot-trans (krof p&#8320; p&#8321;) (krof q&#8320; q&#8321;) = fork (Rot-trans p&#8320; q&#8321;) (Rot-trans p&#8321; q&#8320;)
+-- -}</a
+      ><a name="4809"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

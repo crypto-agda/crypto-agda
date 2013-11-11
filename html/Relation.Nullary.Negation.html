@@ -1,0 +1,4758 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Relation.Nullary.Negation</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="73"
+      >
+</a
+      ><a name="74" class="Comment"
+      >-- The Agda standard library</a
+      ><a name="102"
+      >
+</a
+      ><a name="103" class="Comment"
+      >--</a
+      ><a name="105"
+      >
+</a
+      ><a name="106" class="Comment"
+      >-- Properties related to negation</a
+      ><a name="139"
+      >
+</a
+      ><a name="140" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="212"
+      >
+
+</a
+      ><a name="214" class="Keyword"
+      >module</a
+      ><a name="220"
+      > </a
+      ><a name="221" href="Relation.Nullary.Negation.html#1" class="Module"
+      >Relation.Nullary.Negation</a
+      ><a name="246"
+      > </a
+      ><a name="247" class="Keyword"
+      >where</a
+      ><a name="252"
+      >
+
+</a
+      ><a name="254" class="Keyword"
+      >open</a
+      ><a name="258"
+      > </a
+      ><a name="259" class="Keyword"
+      >import</a
+      ><a name="265"
+      > </a
+      ><a name="266" href="Relation.Nullary.html#1" class="Module"
+      >Relation.Nullary</a
+      ><a name="282"
+      >
+</a
+      ><a name="283" class="Keyword"
+      >open</a
+      ><a name="287"
+      > </a
+      ><a name="288" class="Keyword"
+      >import</a
+      ><a name="294"
+      > </a
+      ><a name="295" href="Relation.Unary.html#1" class="Module"
+      >Relation.Unary</a
+      ><a name="309"
+      >
+</a
+      ><a name="310" class="Keyword"
+      >open</a
+      ><a name="314"
+      > </a
+      ><a name="315" class="Keyword"
+      >import</a
+      ><a name="321"
+      > </a
+      ><a name="322" href="Data.Bool.html#1" class="Module"
+      >Data.Bool</a
+      ><a name="331"
+      >
+</a
+      ><a name="332" class="Keyword"
+      >open</a
+      ><a name="336"
+      > </a
+      ><a name="337" class="Keyword"
+      >import</a
+      ><a name="343"
+      > </a
+      ><a name="344" href="Data.Empty.html#1" class="Module"
+      >Data.Empty</a
+      ><a name="354"
+      >
+</a
+      ><a name="355" class="Keyword"
+      >open</a
+      ><a name="359"
+      > </a
+      ><a name="360" class="Keyword"
+      >import</a
+      ><a name="366"
+      > </a
+      ><a name="367" href="Function.html#1" class="Module"
+      >Function</a
+      ><a name="375"
+      >
+</a
+      ><a name="376" class="Keyword"
+      >open</a
+      ><a name="380"
+      > </a
+      ><a name="381" class="Keyword"
+      >import</a
+      ><a name="387"
+      > </a
+      ><a name="388" href="Data.Product.html#1" class="Module"
+      >Data.Product</a
+      ><a name="400"
+      > </a
+      ><a name="401" class="Symbol"
+      >as</a
+      ><a name="403"
+      > </a
+      ><a name="404" class="Module"
+      >Prod</a
+      ><a name="408"
+      >
+</a
+      ><a name="409" class="Keyword"
+      >open</a
+      ><a name="413"
+      > </a
+      ><a name="414" class="Keyword"
+      >import</a
+      ><a name="420"
+      > </a
+      ><a name="421" href="Data.Fin.html#1" class="Module"
+      >Data.Fin</a
+      ><a name="429"
+      > </a
+      ><a name="430" class="Keyword"
+      >using</a
+      ><a name="435"
+      > </a
+      ><a name="436" class="Symbol"
+      >(</a
+      ><a name="437"
+      >Fin</a
+      ><a name="440" class="Symbol"
+      >)</a
+      ><a name="441"
+      >
+</a
+      ><a name="442" class="Keyword"
+      >open</a
+      ><a name="446"
+      > </a
+      ><a name="447" class="Keyword"
+      >import</a
+      ><a name="453"
+      > </a
+      ><a name="454" href="Data.Fin.Dec.html#1" class="Module"
+      >Data.Fin.Dec</a
+      ><a name="466"
+      >
+</a
+      ><a name="467" class="Keyword"
+      >open</a
+      ><a name="471"
+      > </a
+      ><a name="472" class="Keyword"
+      >import</a
+      ><a name="478"
+      > </a
+      ><a name="479" href="Data.Sum.html#1" class="Module"
+      >Data.Sum</a
+      ><a name="487"
+      > </a
+      ><a name="488" class="Symbol"
+      >as</a
+      ><a name="490"
+      > </a
+      ><a name="491" class="Module"
+      >Sum</a
+      ><a name="494"
+      >
+</a
+      ><a name="495" class="Keyword"
+      >open</a
+      ><a name="499"
+      > </a
+      ><a name="500" class="Keyword"
+      >import</a
+      ><a name="506"
+      > </a
+      ><a name="507" href="Category.Monad.html#1" class="Module"
+      >Category.Monad</a
+      ><a name="521"
+      >
+</a
+      ><a name="522" class="Keyword"
+      >open</a
+      ><a name="526"
+      > </a
+      ><a name="527" class="Keyword"
+      >import</a
+      ><a name="533"
+      > </a
+      ><a name="534" href="Level.html#1" class="Module"
+      >Level</a
+      ><a name="539"
+      >
+
+</a
+      ><a name="541" href="Relation.Nullary.Negation.html#541" class="Function"
+      >contradiction</a
+      ><a name="554"
+      > </a
+      ><a name="555" class="Symbol"
+      >:</a
+      ><a name="556"
+      > </a
+      ><a name="557" class="Symbol"
+      >&#8704;</a
+      ><a name="558"
+      > </a
+      ><a name="559" class="Symbol"
+      >{</a
+      ><a name="560" href="Relation.Nullary.Negation.html#560" class="Bound"
+      >p</a
+      ><a name="561"
+      > </a
+      ><a name="562" href="Relation.Nullary.Negation.html#562" class="Bound"
+      >w</a
+      ><a name="563" class="Symbol"
+      >}</a
+      ><a name="564"
+      > </a
+      ><a name="565" class="Symbol"
+      >{</a
+      ><a name="566" href="Relation.Nullary.Negation.html#566" class="Bound"
+      >P</a
+      ><a name="567"
+      > </a
+      ><a name="568" class="Symbol"
+      >:</a
+      ><a name="569"
+      > </a
+      ><a name="570" class="PrimitiveType"
+      >Set</a
+      ><a name="573"
+      > </a
+      ><a name="574" href="Relation.Nullary.Negation.html#560" class="Bound"
+      >p</a
+      ><a name="575" class="Symbol"
+      >}</a
+      ><a name="576"
+      > </a
+      ><a name="577" class="Symbol"
+      >{</a
+      ><a name="578" href="Relation.Nullary.Negation.html#578" class="Bound"
+      >Whatever</a
+      ><a name="586"
+      > </a
+      ><a name="587" class="Symbol"
+      >:</a
+      ><a name="588"
+      > </a
+      ><a name="589" class="PrimitiveType"
+      >Set</a
+      ><a name="592"
+      > </a
+      ><a name="593" href="Relation.Nullary.Negation.html#562" class="Bound"
+      >w</a
+      ><a name="594" class="Symbol"
+      >}</a
+      ><a name="595"
+      > </a
+      ><a name="596" class="Symbol"
+      >&#8594;</a
+      ><a name="597"
+      >
+                </a
+      ><a name="614" href="Relation.Nullary.Negation.html#566" class="Bound"
+      >P</a
+      ><a name="615"
+      > </a
+      ><a name="616" class="Symbol"
+      >&#8594;</a
+      ><a name="617"
+      > </a
+      ><a name="618" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="619"
+      > </a
+      ><a name="620" href="Relation.Nullary.Negation.html#566" class="Bound"
+      >P</a
+      ><a name="621"
+      > </a
+      ><a name="622" class="Symbol"
+      >&#8594;</a
+      ><a name="623"
+      > </a
+      ><a name="624" href="Relation.Nullary.Negation.html#578" class="Bound"
+      >Whatever</a
+      ><a name="632"
+      >
+</a
+      ><a name="633" href="Relation.Nullary.Negation.html#541" class="Function"
+      >contradiction</a
+      ><a name="646"
+      > </a
+      ><a name="647" href="Relation.Nullary.Negation.html#647" class="Bound"
+      >p</a
+      ><a name="648"
+      > </a
+      ><a name="649" href="Relation.Nullary.Negation.html#649" class="Bound"
+      >&#172;p</a
+      ><a name="651"
+      > </a
+      ><a name="652" class="Symbol"
+      >=</a
+      ><a name="653"
+      > </a
+      ><a name="654" href="Data.Empty.html#326" class="Function"
+      >&#8869;-elim</a
+      ><a name="660"
+      > </a
+      ><a name="661" class="Symbol"
+      >(</a
+      ><a name="662" href="Relation.Nullary.Negation.html#649" class="Bound"
+      >&#172;p</a
+      ><a name="664"
+      > </a
+      ><a name="665" href="Relation.Nullary.Negation.html#647" class="Bound"
+      >p</a
+      ><a name="666" class="Symbol"
+      >)</a
+      ><a name="667"
+      >
+
+</a
+      ><a name="669" href="Relation.Nullary.Negation.html#669" class="Function"
+      >contraposition</a
+      ><a name="683"
+      > </a
+      ><a name="684" class="Symbol"
+      >:</a
+      ><a name="685"
+      > </a
+      ><a name="686" class="Symbol"
+      >&#8704;</a
+      ><a name="687"
+      > </a
+      ><a name="688" class="Symbol"
+      >{</a
+      ><a name="689" href="Relation.Nullary.Negation.html#689" class="Bound"
+      >p</a
+      ><a name="690"
+      > </a
+      ><a name="691" href="Relation.Nullary.Negation.html#691" class="Bound"
+      >q</a
+      ><a name="692" class="Symbol"
+      >}</a
+      ><a name="693"
+      > </a
+      ><a name="694" class="Symbol"
+      >{</a
+      ><a name="695" href="Relation.Nullary.Negation.html#695" class="Bound"
+      >P</a
+      ><a name="696"
+      > </a
+      ><a name="697" class="Symbol"
+      >:</a
+      ><a name="698"
+      > </a
+      ><a name="699" class="PrimitiveType"
+      >Set</a
+      ><a name="702"
+      > </a
+      ><a name="703" href="Relation.Nullary.Negation.html#689" class="Bound"
+      >p</a
+      ><a name="704" class="Symbol"
+      >}</a
+      ><a name="705"
+      > </a
+      ><a name="706" class="Symbol"
+      >{</a
+      ><a name="707" href="Relation.Nullary.Negation.html#707" class="Bound"
+      >Q</a
+      ><a name="708"
+      > </a
+      ><a name="709" class="Symbol"
+      >:</a
+      ><a name="710"
+      > </a
+      ><a name="711" class="PrimitiveType"
+      >Set</a
+      ><a name="714"
+      > </a
+      ><a name="715" href="Relation.Nullary.Negation.html#691" class="Bound"
+      >q</a
+      ><a name="716" class="Symbol"
+      >}</a
+      ><a name="717"
+      > </a
+      ><a name="718" class="Symbol"
+      >&#8594;</a
+      ><a name="719"
+      >
+                 </a
+      ><a name="737" class="Symbol"
+      >(</a
+      ><a name="738" href="Relation.Nullary.Negation.html#695" class="Bound"
+      >P</a
+      ><a name="739"
+      > </a
+      ><a name="740" class="Symbol"
+      >&#8594;</a
+      ><a name="741"
+      > </a
+      ><a name="742" href="Relation.Nullary.Negation.html#707" class="Bound"
+      >Q</a
+      ><a name="743" class="Symbol"
+      >)</a
+      ><a name="744"
+      > </a
+      ><a name="745" class="Symbol"
+      >&#8594;</a
+      ><a name="746"
+      > </a
+      ><a name="747" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="748"
+      > </a
+      ><a name="749" href="Relation.Nullary.Negation.html#707" class="Bound"
+      >Q</a
+      ><a name="750"
+      > </a
+      ><a name="751" class="Symbol"
+      >&#8594;</a
+      ><a name="752"
+      > </a
+      ><a name="753" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="754"
+      > </a
+      ><a name="755" href="Relation.Nullary.Negation.html#695" class="Bound"
+      >P</a
+      ><a name="756"
+      >
+</a
+      ><a name="757" href="Relation.Nullary.Negation.html#669" class="Function"
+      >contraposition</a
+      ><a name="771"
+      > </a
+      ><a name="772" href="Relation.Nullary.Negation.html#772" class="Bound"
+      >f</a
+      ><a name="773"
+      > </a
+      ><a name="774" href="Relation.Nullary.Negation.html#774" class="Bound"
+      >&#172;q</a
+      ><a name="776"
+      > </a
+      ><a name="777" href="Relation.Nullary.Negation.html#777" class="Bound"
+      >p</a
+      ><a name="778"
+      > </a
+      ><a name="779" class="Symbol"
+      >=</a
+      ><a name="780"
+      > </a
+      ><a name="781" href="Relation.Nullary.Negation.html#541" class="Function"
+      >contradiction</a
+      ><a name="794"
+      > </a
+      ><a name="795" class="Symbol"
+      >(</a
+      ><a name="796" href="Relation.Nullary.Negation.html#772" class="Bound"
+      >f</a
+      ><a name="797"
+      > </a
+      ><a name="798" href="Relation.Nullary.Negation.html#777" class="Bound"
+      >p</a
+      ><a name="799" class="Symbol"
+      >)</a
+      ><a name="800"
+      > </a
+      ><a name="801" href="Relation.Nullary.Negation.html#774" class="Bound"
+      >&#172;q</a
+      ><a name="803"
+      >
+
+</a
+      ><a name="805" class="Comment"
+      >-- Note also the following use of flip:</a
+      ><a name="844"
+      >
+
+</a
+      ><a name="846" class="Keyword"
+      >private</a
+      ><a name="853"
+      >
+  </a
+      ><a name="856" href="Relation.Nullary.Negation.html#856" class="Function"
+      >note</a
+      ><a name="860"
+      > </a
+      ><a name="861" class="Symbol"
+      >:</a
+      ><a name="862"
+      > </a
+      ><a name="863" class="Symbol"
+      >&#8704;</a
+      ><a name="864"
+      > </a
+      ><a name="865" class="Symbol"
+      >{</a
+      ><a name="866" href="Relation.Nullary.Negation.html#866" class="Bound"
+      >p</a
+      ><a name="867"
+      > </a
+      ><a name="868" href="Relation.Nullary.Negation.html#868" class="Bound"
+      >q</a
+      ><a name="869" class="Symbol"
+      >}</a
+      ><a name="870"
+      > </a
+      ><a name="871" class="Symbol"
+      >{</a
+      ><a name="872" href="Relation.Nullary.Negation.html#872" class="Bound"
+      >P</a
+      ><a name="873"
+      > </a
+      ><a name="874" class="Symbol"
+      >:</a
+      ><a name="875"
+      > </a
+      ><a name="876" class="PrimitiveType"
+      >Set</a
+      ><a name="879"
+      > </a
+      ><a name="880" href="Relation.Nullary.Negation.html#866" class="Bound"
+      >p</a
+      ><a name="881" class="Symbol"
+      >}</a
+      ><a name="882"
+      > </a
+      ><a name="883" class="Symbol"
+      >{</a
+      ><a name="884" href="Relation.Nullary.Negation.html#884" class="Bound"
+      >Q</a
+      ><a name="885"
+      > </a
+      ><a name="886" class="Symbol"
+      >:</a
+      ><a name="887"
+      > </a
+      ><a name="888" class="PrimitiveType"
+      >Set</a
+      ><a name="891"
+      > </a
+      ><a name="892" href="Relation.Nullary.Negation.html#868" class="Bound"
+      >q</a
+      ><a name="893" class="Symbol"
+      >}</a
+      ><a name="894"
+      > </a
+      ><a name="895" class="Symbol"
+      >&#8594;</a
+      ><a name="896"
+      >
+         </a
+      ><a name="906" class="Symbol"
+      >(</a
+      ><a name="907" href="Relation.Nullary.Negation.html#872" class="Bound"
+      >P</a
+      ><a name="908"
+      > </a
+      ><a name="909" class="Symbol"
+      >&#8594;</a
+      ><a name="910"
+      > </a
+      ><a name="911" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="912"
+      > </a
+      ><a name="913" href="Relation.Nullary.Negation.html#884" class="Bound"
+      >Q</a
+      ><a name="914" class="Symbol"
+      >)</a
+      ><a name="915"
+      > </a
+      ><a name="916" class="Symbol"
+      >&#8594;</a
+      ><a name="917"
+      > </a
+      ><a name="918" href="Relation.Nullary.Negation.html#884" class="Bound"
+      >Q</a
+      ><a name="919"
+      > </a
+      ><a name="920" class="Symbol"
+      >&#8594;</a
+      ><a name="921"
+      > </a
+      ><a name="922" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="923"
+      > </a
+      ><a name="924" href="Relation.Nullary.Negation.html#872" class="Bound"
+      >P</a
+      ><a name="925"
+      >
+  </a
+      ><a name="928" href="Relation.Nullary.Negation.html#856" class="Function"
+      >note</a
+      ><a name="932"
+      > </a
+      ><a name="933" class="Symbol"
+      >=</a
+      ><a name="934"
+      > </a
+      ><a name="935" href="Function.html#1474" class="Function"
+      >flip</a
+      ><a name="939"
+      >
+
+</a
+      ><a name="941" class="Comment"
+      >-- If we can decide P, then we can decide its negation.</a
+      ><a name="996"
+      >
+
+</a
+      ><a name="998" href="Relation.Nullary.Negation.html#998" class="Function"
+      >&#172;?</a
+      ><a name="1000"
+      > </a
+      ><a name="1001" class="Symbol"
+      >:</a
+      ><a name="1002"
+      > </a
+      ><a name="1003" class="Symbol"
+      >&#8704;</a
+      ><a name="1004"
+      > </a
+      ><a name="1005" class="Symbol"
+      >{</a
+      ><a name="1006" href="Relation.Nullary.Negation.html#1006" class="Bound"
+      >p</a
+      ><a name="1007" class="Symbol"
+      >}</a
+      ><a name="1008"
+      > </a
+      ><a name="1009" class="Symbol"
+      >{</a
+      ><a name="1010" href="Relation.Nullary.Negation.html#1010" class="Bound"
+      >P</a
+      ><a name="1011"
+      > </a
+      ><a name="1012" class="Symbol"
+      >:</a
+      ><a name="1013"
+      > </a
+      ><a name="1014" class="PrimitiveType"
+      >Set</a
+      ><a name="1017"
+      > </a
+      ><a name="1018" href="Relation.Nullary.Negation.html#1006" class="Bound"
+      >p</a
+      ><a name="1019" class="Symbol"
+      >}</a
+      ><a name="1020"
+      > </a
+      ><a name="1021" class="Symbol"
+      >&#8594;</a
+      ><a name="1022"
+      > </a
+      ><a name="1023" href="Relation.Nullary.Core.html#468" class="Datatype"
+      >Dec</a
+      ><a name="1026"
+      > </a
+      ><a name="1027" href="Relation.Nullary.Negation.html#1010" class="Bound"
+      >P</a
+      ><a name="1028"
+      > </a
+      ><a name="1029" class="Symbol"
+      >&#8594;</a
+      ><a name="1030"
+      > </a
+      ><a name="1031" href="Relation.Nullary.Core.html#468" class="Datatype"
+      >Dec</a
+      ><a name="1034"
+      > </a
+      ><a name="1035" class="Symbol"
+      >(</a
+      ><a name="1036" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="1037"
+      > </a
+      ><a name="1038" href="Relation.Nullary.Negation.html#1010" class="Bound"
+      >P</a
+      ><a name="1039" class="Symbol"
+      >)</a
+      ><a name="1040"
+      >
+</a
+      ><a name="1041" href="Relation.Nullary.Negation.html#998" class="Function"
+      >&#172;?</a
+      ><a name="1043"
+      > </a
+      ><a name="1044" class="Symbol"
+      >(</a
+      ><a name="1045" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="1048"
+      > </a
+      ><a name="1049" href="Relation.Nullary.Negation.html#1049" class="Bound"
+      >p</a
+      ><a name="1050" class="Symbol"
+      >)</a
+      ><a name="1051"
+      > </a
+      ><a name="1052" class="Symbol"
+      >=</a
+      ><a name="1053"
+      > </a
+      ><a name="1054" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="1056"
+      > </a
+      ><a name="1057" class="Symbol"
+      >(&#955;</a
+      ><a name="1059"
+      > </a
+      ><a name="1060" href="Relation.Nullary.Negation.html#1060" class="Bound"
+      >&#172;p</a
+      ><a name="1062"
+      > </a
+      ><a name="1063" class="Symbol"
+      >&#8594;</a
+      ><a name="1064"
+      > </a
+      ><a name="1065" href="Relation.Nullary.Negation.html#1060" class="Bound"
+      >&#172;p</a
+      ><a name="1067"
+      > </a
+      ><a name="1068" href="Relation.Nullary.Negation.html#1049" class="Bound"
+      >p</a
+      ><a name="1069" class="Symbol"
+      >)</a
+      ><a name="1070"
+      >
+</a
+      ><a name="1071" href="Relation.Nullary.Negation.html#998" class="Function"
+      >&#172;?</a
+      ><a name="1073"
+      > </a
+      ><a name="1074" class="Symbol"
+      >(</a
+      ><a name="1075" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="1077"
+      > </a
+      ><a name="1078" href="Relation.Nullary.Negation.html#1078" class="Bound"
+      >&#172;p</a
+      ><a name="1080" class="Symbol"
+      >)</a
+      ><a name="1081"
+      > </a
+      ><a name="1082" class="Symbol"
+      >=</a
+      ><a name="1083"
+      > </a
+      ><a name="1084" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="1087"
+      > </a
+      ><a name="1088" href="Relation.Nullary.Negation.html#1078" class="Bound"
+      >&#172;p</a
+      ><a name="1090"
+      >
+
+</a
+      ><a name="1092" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="1164"
+      >
+</a
+      ><a name="1165" class="Comment"
+      >-- Quantifier juggling</a
+      ><a name="1187"
+      >
+
+</a
+      ><a name="1189" href="Relation.Nullary.Negation.html#1189" class="Function"
+      >&#8707;&#10230;&#172;&#8704;&#172;</a
+      ><a name="1194"
+      > </a
+      ><a name="1195" class="Symbol"
+      >:</a
+      ><a name="1196"
+      > </a
+      ><a name="1197" class="Symbol"
+      >&#8704;</a
+      ><a name="1198"
+      > </a
+      ><a name="1199" class="Symbol"
+      >{</a
+      ><a name="1200" href="Relation.Nullary.Negation.html#1200" class="Bound"
+      >a</a
+      ><a name="1201"
+      > </a
+      ><a name="1202" href="Relation.Nullary.Negation.html#1202" class="Bound"
+      >p</a
+      ><a name="1203" class="Symbol"
+      >}</a
+      ><a name="1204"
+      > </a
+      ><a name="1205" class="Symbol"
+      >{</a
+      ><a name="1206" href="Relation.Nullary.Negation.html#1206" class="Bound"
+      >A</a
+      ><a name="1207"
+      > </a
+      ><a name="1208" class="Symbol"
+      >:</a
+      ><a name="1209"
+      > </a
+      ><a name="1210" class="PrimitiveType"
+      >Set</a
+      ><a name="1213"
+      > </a
+      ><a name="1214" href="Relation.Nullary.Negation.html#1200" class="Bound"
+      >a</a
+      ><a name="1215" class="Symbol"
+      >}</a
+      ><a name="1216"
+      > </a
+      ><a name="1217" class="Symbol"
+      >{</a
+      ><a name="1218" href="Relation.Nullary.Negation.html#1218" class="Bound"
+      >P</a
+      ><a name="1219"
+      > </a
+      ><a name="1220" class="Symbol"
+      >:</a
+      ><a name="1221"
+      > </a
+      ><a name="1222" href="Relation.Nullary.Negation.html#1206" class="Bound"
+      >A</a
+      ><a name="1223"
+      > </a
+      ><a name="1224" class="Symbol"
+      >&#8594;</a
+      ><a name="1225"
+      > </a
+      ><a name="1226" class="PrimitiveType"
+      >Set</a
+      ><a name="1229"
+      > </a
+      ><a name="1230" href="Relation.Nullary.Negation.html#1202" class="Bound"
+      >p</a
+      ><a name="1231" class="Symbol"
+      >}</a
+      ><a name="1232"
+      > </a
+      ><a name="1233" class="Symbol"
+      >&#8594;</a
+      ><a name="1234"
+      >
+        </a
+      ><a name="1243" href="Data.Product.html#805" class="Function"
+      >&#8707;</a
+      ><a name="1244"
+      > </a
+      ><a name="1245" href="Relation.Nullary.Negation.html#1218" class="Bound"
+      >P</a
+      ><a name="1246"
+      > </a
+      ><a name="1247" class="Symbol"
+      >&#8594;</a
+      ><a name="1248"
+      > </a
+      ><a name="1249" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="1250"
+      > </a
+      ><a name="1251" class="Symbol"
+      >(&#8704;</a
+      ><a name="1253"
+      > </a
+      ><a name="1254" href="Relation.Nullary.Negation.html#1254" class="Bound"
+      >x</a
+      ><a name="1255"
+      > </a
+      ><a name="1256" class="Symbol"
+      >&#8594;</a
+      ><a name="1257"
+      > </a
+      ><a name="1258" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="1259"
+      > </a
+      ><a name="1260" href="Relation.Nullary.Negation.html#1218" class="Bound"
+      >P</a
+      ><a name="1261"
+      > </a
+      ><a name="1262" href="Relation.Nullary.Negation.html#1254" class="Bound"
+      >x</a
+      ><a name="1263" class="Symbol"
+      >)</a
+      ><a name="1264"
+      >
+</a
+      ><a name="1265" href="Relation.Nullary.Negation.html#1189" class="Function"
+      >&#8707;&#10230;&#172;&#8704;&#172;</a
+      ><a name="1270"
+      > </a
+      ><a name="1271" class="Symbol"
+      >=</a
+      ><a name="1272"
+      > </a
+      ><a name="1273" href="Function.html#1474" class="Function"
+      >flip</a
+      ><a name="1277"
+      > </a
+      ><a name="1278" href="Data.Product.html#2824" class="Function"
+      >uncurry</a
+      ><a name="1285"
+      >
+
+</a
+      ><a name="1287" href="Relation.Nullary.Negation.html#1287" class="Function"
+      >&#8704;&#10230;&#172;&#8707;&#172;</a
+      ><a name="1292"
+      > </a
+      ><a name="1293" class="Symbol"
+      >:</a
+      ><a name="1294"
+      > </a
+      ><a name="1295" class="Symbol"
+      >&#8704;</a
+      ><a name="1296"
+      > </a
+      ><a name="1297" class="Symbol"
+      >{</a
+      ><a name="1298" href="Relation.Nullary.Negation.html#1298" class="Bound"
+      >a</a
+      ><a name="1299"
+      > </a
+      ><a name="1300" href="Relation.Nullary.Negation.html#1300" class="Bound"
+      >p</a
+      ><a name="1301" class="Symbol"
+      >}</a
+      ><a name="1302"
+      > </a
+      ><a name="1303" class="Symbol"
+      >{</a
+      ><a name="1304" href="Relation.Nullary.Negation.html#1304" class="Bound"
+      >A</a
+      ><a name="1305"
+      > </a
+      ><a name="1306" class="Symbol"
+      >:</a
+      ><a name="1307"
+      > </a
+      ><a name="1308" class="PrimitiveType"
+      >Set</a
+      ><a name="1311"
+      > </a
+      ><a name="1312" href="Relation.Nullary.Negation.html#1298" class="Bound"
+      >a</a
+      ><a name="1313" class="Symbol"
+      >}</a
+      ><a name="1314"
+      > </a
+      ><a name="1315" class="Symbol"
+      >{</a
+      ><a name="1316" href="Relation.Nullary.Negation.html#1316" class="Bound"
+      >P</a
+      ><a name="1317"
+      > </a
+      ><a name="1318" class="Symbol"
+      >:</a
+      ><a name="1319"
+      > </a
+      ><a name="1320" href="Relation.Nullary.Negation.html#1304" class="Bound"
+      >A</a
+      ><a name="1321"
+      > </a
+      ><a name="1322" class="Symbol"
+      >&#8594;</a
+      ><a name="1323"
+      > </a
+      ><a name="1324" class="PrimitiveType"
+      >Set</a
+      ><a name="1327"
+      > </a
+      ><a name="1328" href="Relation.Nullary.Negation.html#1300" class="Bound"
+      >p</a
+      ><a name="1329" class="Symbol"
+      >}</a
+      ><a name="1330"
+      > </a
+      ><a name="1331" class="Symbol"
+      >&#8594;</a
+      ><a name="1332"
+      >
+        </a
+      ><a name="1341" class="Symbol"
+      >(&#8704;</a
+      ><a name="1343"
+      > </a
+      ><a name="1344" href="Relation.Nullary.Negation.html#1344" class="Bound"
+      >x</a
+      ><a name="1345"
+      > </a
+      ><a name="1346" class="Symbol"
+      >&#8594;</a
+      ><a name="1347"
+      > </a
+      ><a name="1348" href="Relation.Nullary.Negation.html#1316" class="Bound"
+      >P</a
+      ><a name="1349"
+      > </a
+      ><a name="1350" href="Relation.Nullary.Negation.html#1344" class="Bound"
+      >x</a
+      ><a name="1351" class="Symbol"
+      >)</a
+      ><a name="1352"
+      > </a
+      ><a name="1353" class="Symbol"
+      >&#8594;</a
+      ><a name="1354"
+      > </a
+      ><a name="1355" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="1356"
+      > </a
+      ><a name="1357" href="Data.Product.html#805" class="Function"
+      >&#8707;</a
+      ><a name="1358"
+      > </a
+      ><a name="1359" class="Symbol"
+      >&#955;</a
+      ><a name="1360"
+      > </a
+      ><a name="1361" href="Relation.Nullary.Negation.html#1361" class="Bound"
+      >x</a
+      ><a name="1362"
+      > </a
+      ><a name="1363" class="Symbol"
+      >&#8594;</a
+      ><a name="1364"
+      > </a
+      ><a name="1365" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="1366"
+      > </a
+      ><a name="1367" href="Relation.Nullary.Negation.html#1316" class="Bound"
+      >P</a
+      ><a name="1368"
+      > </a
+      ><a name="1369" href="Relation.Nullary.Negation.html#1361" class="Bound"
+      >x</a
+      ><a name="1370"
+      >
+</a
+      ><a name="1371" href="Relation.Nullary.Negation.html#1287" class="Function"
+      >&#8704;&#10230;&#172;&#8707;&#172;</a
+      ><a name="1376"
+      > </a
+      ><a name="1377" href="Relation.Nullary.Negation.html#1377" class="Bound"
+      >&#8704;xPx</a
+      ><a name="1381"
+      > </a
+      ><a name="1382" class="Symbol"
+      >(</a
+      ><a name="1383" href="Relation.Nullary.Negation.html#1383" class="Bound"
+      >x</a
+      ><a name="1384"
+      > </a
+      ><a name="1385" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1386"
+      > </a
+      ><a name="1387" href="Relation.Nullary.Negation.html#1387" class="Bound"
+      >&#172;Px</a
+      ><a name="1390" class="Symbol"
+      >)</a
+      ><a name="1391"
+      > </a
+      ><a name="1392" class="Symbol"
+      >=</a
+      ><a name="1393"
+      > </a
+      ><a name="1394" href="Relation.Nullary.Negation.html#1387" class="Bound"
+      >&#172;Px</a
+      ><a name="1397"
+      > </a
+      ><a name="1398" class="Symbol"
+      >(</a
+      ><a name="1399" href="Relation.Nullary.Negation.html#1377" class="Bound"
+      >&#8704;xPx</a
+      ><a name="1403"
+      > </a
+      ><a name="1404" href="Relation.Nullary.Negation.html#1383" class="Bound"
+      >x</a
+      ><a name="1405" class="Symbol"
+      >)</a
+      ><a name="1406"
+      >
+
+</a
+      ><a name="1408" href="Relation.Nullary.Negation.html#1408" class="Function"
+      >&#172;&#8707;&#10230;&#8704;&#172;</a
+      ><a name="1413"
+      > </a
+      ><a name="1414" class="Symbol"
+      >:</a
+      ><a name="1415"
+      > </a
+      ><a name="1416" class="Symbol"
+      >&#8704;</a
+      ><a name="1417"
+      > </a
+      ><a name="1418" class="Symbol"
+      >{</a
+      ><a name="1419" href="Relation.Nullary.Negation.html#1419" class="Bound"
+      >a</a
+      ><a name="1420"
+      > </a
+      ><a name="1421" href="Relation.Nullary.Negation.html#1421" class="Bound"
+      >p</a
+      ><a name="1422" class="Symbol"
+      >}</a
+      ><a name="1423"
+      > </a
+      ><a name="1424" class="Symbol"
+      >{</a
+      ><a name="1425" href="Relation.Nullary.Negation.html#1425" class="Bound"
+      >A</a
+      ><a name="1426"
+      > </a
+      ><a name="1427" class="Symbol"
+      >:</a
+      ><a name="1428"
+      > </a
+      ><a name="1429" class="PrimitiveType"
+      >Set</a
+      ><a name="1432"
+      > </a
+      ><a name="1433" href="Relation.Nullary.Negation.html#1419" class="Bound"
+      >a</a
+      ><a name="1434" class="Symbol"
+      >}</a
+      ><a name="1435"
+      > </a
+      ><a name="1436" class="Symbol"
+      >{</a
+      ><a name="1437" href="Relation.Nullary.Negation.html#1437" class="Bound"
+      >P</a
+      ><a name="1438"
+      > </a
+      ><a name="1439" class="Symbol"
+      >:</a
+      ><a name="1440"
+      > </a
+      ><a name="1441" href="Relation.Nullary.Negation.html#1425" class="Bound"
+      >A</a
+      ><a name="1442"
+      > </a
+      ><a name="1443" class="Symbol"
+      >&#8594;</a
+      ><a name="1444"
+      > </a
+      ><a name="1445" class="PrimitiveType"
+      >Set</a
+      ><a name="1448"
+      > </a
+      ><a name="1449" href="Relation.Nullary.Negation.html#1421" class="Bound"
+      >p</a
+      ><a name="1450" class="Symbol"
+      >}</a
+      ><a name="1451"
+      > </a
+      ><a name="1452" class="Symbol"
+      >&#8594;</a
+      ><a name="1453"
+      >
+        </a
+      ><a name="1462" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="1463"
+      > </a
+      ><a name="1464" href="Data.Product.html#805" class="Function"
+      >&#8707;</a
+      ><a name="1465"
+      > </a
+      ><a name="1466" class="Symbol"
+      >(&#955;</a
+      ><a name="1468"
+      > </a
+      ><a name="1469" href="Relation.Nullary.Negation.html#1469" class="Bound"
+      >x</a
+      ><a name="1470"
+      > </a
+      ><a name="1471" class="Symbol"
+      >&#8594;</a
+      ><a name="1472"
+      > </a
+      ><a name="1473" href="Relation.Nullary.Negation.html#1437" class="Bound"
+      >P</a
+      ><a name="1474"
+      > </a
+      ><a name="1475" href="Relation.Nullary.Negation.html#1469" class="Bound"
+      >x</a
+      ><a name="1476" class="Symbol"
+      >)</a
+      ><a name="1477"
+      > </a
+      ><a name="1478" class="Symbol"
+      >&#8594;</a
+      ><a name="1479"
+      > </a
+      ><a name="1480" class="Symbol"
+      >&#8704;</a
+      ><a name="1481"
+      > </a
+      ><a name="1482" href="Relation.Nullary.Negation.html#1482" class="Bound"
+      >x</a
+      ><a name="1483"
+      > </a
+      ><a name="1484" class="Symbol"
+      >&#8594;</a
+      ><a name="1485"
+      > </a
+      ><a name="1486" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="1487"
+      > </a
+      ><a name="1488" href="Relation.Nullary.Negation.html#1437" class="Bound"
+      >P</a
+      ><a name="1489"
+      > </a
+      ><a name="1490" href="Relation.Nullary.Negation.html#1482" class="Bound"
+      >x</a
+      ><a name="1491"
+      >
+</a
+      ><a name="1492" href="Relation.Nullary.Negation.html#1408" class="Function"
+      >&#172;&#8707;&#10230;&#8704;&#172;</a
+      ><a name="1497"
+      > </a
+      ><a name="1498" class="Symbol"
+      >=</a
+      ><a name="1499"
+      > </a
+      ><a name="1500" href="Data.Product.html#2659" class="Function"
+      >curry</a
+      ><a name="1505"
+      >
+
+</a
+      ><a name="1507" href="Relation.Nullary.Negation.html#1507" class="Function"
+      >&#8704;&#172;&#10230;&#172;&#8707;</a
+      ><a name="1512"
+      > </a
+      ><a name="1513" class="Symbol"
+      >:</a
+      ><a name="1514"
+      > </a
+      ><a name="1515" class="Symbol"
+      >&#8704;</a
+      ><a name="1516"
+      > </a
+      ><a name="1517" class="Symbol"
+      >{</a
+      ><a name="1518" href="Relation.Nullary.Negation.html#1518" class="Bound"
+      >a</a
+      ><a name="1519"
+      > </a
+      ><a name="1520" href="Relation.Nullary.Negation.html#1520" class="Bound"
+      >p</a
+      ><a name="1521" class="Symbol"
+      >}</a
+      ><a name="1522"
+      > </a
+      ><a name="1523" class="Symbol"
+      >{</a
+      ><a name="1524" href="Relation.Nullary.Negation.html#1524" class="Bound"
+      >A</a
+      ><a name="1525"
+      > </a
+      ><a name="1526" class="Symbol"
+      >:</a
+      ><a name="1527"
+      > </a
+      ><a name="1528" class="PrimitiveType"
+      >Set</a
+      ><a name="1531"
+      > </a
+      ><a name="1532" href="Relation.Nullary.Negation.html#1518" class="Bound"
+      >a</a
+      ><a name="1533" class="Symbol"
+      >}</a
+      ><a name="1534"
+      > </a
+      ><a name="1535" class="Symbol"
+      >{</a
+      ><a name="1536" href="Relation.Nullary.Negation.html#1536" class="Bound"
+      >P</a
+      ><a name="1537"
+      > </a
+      ><a name="1538" class="Symbol"
+      >:</a
+      ><a name="1539"
+      > </a
+      ><a name="1540" href="Relation.Nullary.Negation.html#1524" class="Bound"
+      >A</a
+      ><a name="1541"
+      > </a
+      ><a name="1542" class="Symbol"
+      >&#8594;</a
+      ><a name="1543"
+      > </a
+      ><a name="1544" class="PrimitiveType"
+      >Set</a
+      ><a name="1547"
+      > </a
+      ><a name="1548" href="Relation.Nullary.Negation.html#1520" class="Bound"
+      >p</a
+      ><a name="1549" class="Symbol"
+      >}</a
+      ><a name="1550"
+      > </a
+      ><a name="1551" class="Symbol"
+      >&#8594;</a
+      ><a name="1552"
+      >
+        </a
+      ><a name="1561" class="Symbol"
+      >(&#8704;</a
+      ><a name="1563"
+      > </a
+      ><a name="1564" href="Relation.Nullary.Negation.html#1564" class="Bound"
+      >x</a
+      ><a name="1565"
+      > </a
+      ><a name="1566" class="Symbol"
+      >&#8594;</a
+      ><a name="1567"
+      > </a
+      ><a name="1568" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="1569"
+      > </a
+      ><a name="1570" href="Relation.Nullary.Negation.html#1536" class="Bound"
+      >P</a
+      ><a name="1571"
+      > </a
+      ><a name="1572" href="Relation.Nullary.Negation.html#1564" class="Bound"
+      >x</a
+      ><a name="1573" class="Symbol"
+      >)</a
+      ><a name="1574"
+      > </a
+      ><a name="1575" class="Symbol"
+      >&#8594;</a
+      ><a name="1576"
+      > </a
+      ><a name="1577" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="1578"
+      > </a
+      ><a name="1579" href="Data.Product.html#805" class="Function"
+      >&#8707;</a
+      ><a name="1580"
+      > </a
+      ><a name="1581" class="Symbol"
+      >(&#955;</a
+      ><a name="1583"
+      > </a
+      ><a name="1584" href="Relation.Nullary.Negation.html#1584" class="Bound"
+      >x</a
+      ><a name="1585"
+      > </a
+      ><a name="1586" class="Symbol"
+      >&#8594;</a
+      ><a name="1587"
+      > </a
+      ><a name="1588" href="Relation.Nullary.Negation.html#1536" class="Bound"
+      >P</a
+      ><a name="1589"
+      > </a
+      ><a name="1590" href="Relation.Nullary.Negation.html#1584" class="Bound"
+      >x</a
+      ><a name="1591" class="Symbol"
+      >)</a
+      ><a name="1592"
+      >
+</a
+      ><a name="1593" href="Relation.Nullary.Negation.html#1507" class="Function"
+      >&#8704;&#172;&#10230;&#172;&#8707;</a
+      ><a name="1598"
+      > </a
+      ><a name="1599" class="Symbol"
+      >=</a
+      ><a name="1600"
+      > </a
+      ><a name="1601" href="Data.Product.html#2824" class="Function"
+      >uncurry</a
+      ><a name="1608"
+      >
+
+</a
+      ><a name="1610" href="Relation.Nullary.Negation.html#1610" class="Function"
+      >&#8707;&#172;&#10230;&#172;&#8704;</a
+      ><a name="1615"
+      > </a
+      ><a name="1616" class="Symbol"
+      >:</a
+      ><a name="1617"
+      > </a
+      ><a name="1618" class="Symbol"
+      >&#8704;</a
+      ><a name="1619"
+      > </a
+      ><a name="1620" class="Symbol"
+      >{</a
+      ><a name="1621" href="Relation.Nullary.Negation.html#1621" class="Bound"
+      >a</a
+      ><a name="1622"
+      > </a
+      ><a name="1623" href="Relation.Nullary.Negation.html#1623" class="Bound"
+      >p</a
+      ><a name="1624" class="Symbol"
+      >}</a
+      ><a name="1625"
+      > </a
+      ><a name="1626" class="Symbol"
+      >{</a
+      ><a name="1627" href="Relation.Nullary.Negation.html#1627" class="Bound"
+      >A</a
+      ><a name="1628"
+      > </a
+      ><a name="1629" class="Symbol"
+      >:</a
+      ><a name="1630"
+      > </a
+      ><a name="1631" class="PrimitiveType"
+      >Set</a
+      ><a name="1634"
+      > </a
+      ><a name="1635" href="Relation.Nullary.Negation.html#1621" class="Bound"
+      >a</a
+      ><a name="1636" class="Symbol"
+      >}</a
+      ><a name="1637"
+      > </a
+      ><a name="1638" class="Symbol"
+      >{</a
+      ><a name="1639" href="Relation.Nullary.Negation.html#1639" class="Bound"
+      >P</a
+      ><a name="1640"
+      > </a
+      ><a name="1641" class="Symbol"
+      >:</a
+      ><a name="1642"
+      > </a
+      ><a name="1643" href="Relation.Nullary.Negation.html#1627" class="Bound"
+      >A</a
+      ><a name="1644"
+      > </a
+      ><a name="1645" class="Symbol"
+      >&#8594;</a
+      ><a name="1646"
+      > </a
+      ><a name="1647" class="PrimitiveType"
+      >Set</a
+      ><a name="1650"
+      > </a
+      ><a name="1651" href="Relation.Nullary.Negation.html#1623" class="Bound"
+      >p</a
+      ><a name="1652" class="Symbol"
+      >}</a
+      ><a name="1653"
+      > </a
+      ><a name="1654" class="Symbol"
+      >&#8594;</a
+      ><a name="1655"
+      >
+        </a
+      ><a name="1664" href="Data.Product.html#805" class="Function"
+      >&#8707;</a
+      ><a name="1665"
+      > </a
+      ><a name="1666" class="Symbol"
+      >(&#955;</a
+      ><a name="1668"
+      > </a
+      ><a name="1669" href="Relation.Nullary.Negation.html#1669" class="Bound"
+      >x</a
+      ><a name="1670"
+      > </a
+      ><a name="1671" class="Symbol"
+      >&#8594;</a
+      ><a name="1672"
+      > </a
+      ><a name="1673" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="1674"
+      > </a
+      ><a name="1675" href="Relation.Nullary.Negation.html#1639" class="Bound"
+      >P</a
+      ><a name="1676"
+      > </a
+      ><a name="1677" href="Relation.Nullary.Negation.html#1669" class="Bound"
+      >x</a
+      ><a name="1678" class="Symbol"
+      >)</a
+      ><a name="1679"
+      > </a
+      ><a name="1680" class="Symbol"
+      >&#8594;</a
+      ><a name="1681"
+      > </a
+      ><a name="1682" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="1683"
+      > </a
+      ><a name="1684" class="Symbol"
+      >(&#8704;</a
+      ><a name="1686"
+      > </a
+      ><a name="1687" href="Relation.Nullary.Negation.html#1687" class="Bound"
+      >x</a
+      ><a name="1688"
+      > </a
+      ><a name="1689" class="Symbol"
+      >&#8594;</a
+      ><a name="1690"
+      > </a
+      ><a name="1691" href="Relation.Nullary.Negation.html#1639" class="Bound"
+      >P</a
+      ><a name="1692"
+      > </a
+      ><a name="1693" href="Relation.Nullary.Negation.html#1687" class="Bound"
+      >x</a
+      ><a name="1694" class="Symbol"
+      >)</a
+      ><a name="1695"
+      >
+</a
+      ><a name="1696" href="Relation.Nullary.Negation.html#1610" class="Function"
+      >&#8707;&#172;&#10230;&#172;&#8704;</a
+      ><a name="1701"
+      > </a
+      ><a name="1702" class="Symbol"
+      >=</a
+      ><a name="1703"
+      > </a
+      ><a name="1704" href="Function.html#1474" class="Function"
+      >flip</a
+      ><a name="1708"
+      > </a
+      ><a name="1709" href="Relation.Nullary.Negation.html#1287" class="Function"
+      >&#8704;&#10230;&#172;&#8707;&#172;</a
+      ><a name="1714"
+      >
+
+</a
+      ><a name="1716" class="Comment"
+      >-- When P is a decidable predicate over a finite set the following</a
+      ><a name="1782"
+      >
+</a
+      ><a name="1783" class="Comment"
+      >-- lemma can be proved.</a
+      ><a name="1806"
+      >
+
+</a
+      ><a name="1808" href="Relation.Nullary.Negation.html#1808" class="Function"
+      >&#172;&#8704;&#10230;&#8707;&#172;</a
+      ><a name="1813"
+      > </a
+      ><a name="1814" class="Symbol"
+      >:</a
+      ><a name="1815"
+      > </a
+      ><a name="1816" class="Symbol"
+      >&#8704;</a
+      ><a name="1817"
+      > </a
+      ><a name="1818" href="Relation.Nullary.Negation.html#1818" class="Bound"
+      >n</a
+      ><a name="1819"
+      > </a
+      ><a name="1820" class="Symbol"
+      >{</a
+      ><a name="1821" href="Relation.Nullary.Negation.html#1821" class="Bound"
+      >p</a
+      ><a name="1822" class="Symbol"
+      >}</a
+      ><a name="1823"
+      > </a
+      ><a name="1824" class="Symbol"
+      >(</a
+      ><a name="1825" href="Relation.Nullary.Negation.html#1825" class="Bound"
+      >P</a
+      ><a name="1826"
+      > </a
+      ><a name="1827" class="Symbol"
+      >:</a
+      ><a name="1828"
+      > </a
+      ><a name="1829" href="Data.Fin.html#775" class="Datatype"
+      >Fin</a
+      ><a name="1832"
+      > </a
+      ><a name="1833" href="Relation.Nullary.Negation.html#1818" class="Bound"
+      >n</a
+      ><a name="1834"
+      > </a
+      ><a name="1835" class="Symbol"
+      >&#8594;</a
+      ><a name="1836"
+      > </a
+      ><a name="1837" class="PrimitiveType"
+      >Set</a
+      ><a name="1840"
+      > </a
+      ><a name="1841" href="Relation.Nullary.Negation.html#1821" class="Bound"
+      >p</a
+      ><a name="1842" class="Symbol"
+      >)</a
+      ><a name="1843"
+      > </a
+      ><a name="1844" class="Symbol"
+      >&#8594;</a
+      ><a name="1845"
+      > </a
+      ><a name="1846" href="Relation.Unary.html#2968" class="Function"
+      >Decidable</a
+      ><a name="1855"
+      > </a
+      ><a name="1856" href="Relation.Nullary.Negation.html#1825" class="Bound"
+      >P</a
+      ><a name="1857"
+      > </a
+      ><a name="1858" class="Symbol"
+      >&#8594;</a
+      ><a name="1859"
+      >
+        </a
+      ><a name="1868" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="1869"
+      > </a
+      ><a name="1870" class="Symbol"
+      >(&#8704;</a
+      ><a name="1872"
+      > </a
+      ><a name="1873" href="Relation.Nullary.Negation.html#1873" class="Bound"
+      >i</a
+      ><a name="1874"
+      > </a
+      ><a name="1875" class="Symbol"
+      >&#8594;</a
+      ><a name="1876"
+      > </a
+      ><a name="1877" href="Relation.Nullary.Negation.html#1825" class="Bound"
+      >P</a
+      ><a name="1878"
+      > </a
+      ><a name="1879" href="Relation.Nullary.Negation.html#1873" class="Bound"
+      >i</a
+      ><a name="1880" class="Symbol"
+      >)</a
+      ><a name="1881"
+      > </a
+      ><a name="1882" class="Symbol"
+      >&#8594;</a
+      ><a name="1883"
+      > </a
+      ><a name="1884" href="Data.Product.html#805" class="Function"
+      >&#8707;</a
+      ><a name="1885"
+      > </a
+      ><a name="1886" class="Symbol"
+      >&#955;</a
+      ><a name="1887"
+      > </a
+      ><a name="1888" href="Relation.Nullary.Negation.html#1888" class="Bound"
+      >i</a
+      ><a name="1889"
+      > </a
+      ><a name="1890" class="Symbol"
+      >&#8594;</a
+      ><a name="1891"
+      > </a
+      ><a name="1892" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="1893"
+      > </a
+      ><a name="1894" href="Relation.Nullary.Negation.html#1825" class="Bound"
+      >P</a
+      ><a name="1895"
+      > </a
+      ><a name="1896" href="Relation.Nullary.Negation.html#1888" class="Bound"
+      >i</a
+      ><a name="1897"
+      >
+</a
+      ><a name="1898" href="Relation.Nullary.Negation.html#1808" class="Function"
+      >&#172;&#8704;&#10230;&#8707;&#172;</a
+      ><a name="1903"
+      > </a
+      ><a name="1904" href="Relation.Nullary.Negation.html#1904" class="Bound"
+      >n</a
+      ><a name="1905"
+      > </a
+      ><a name="1906" href="Relation.Nullary.Negation.html#1906" class="Bound"
+      >P</a
+      ><a name="1907"
+      > </a
+      ><a name="1908" href="Relation.Nullary.Negation.html#1908" class="Bound"
+      >dec</a
+      ><a name="1911"
+      > </a
+      ><a name="1912" href="Relation.Nullary.Negation.html#1912" class="Bound"
+      >&#172;P</a
+      ><a name="1914"
+      > </a
+      ><a name="1915" class="Symbol"
+      >=</a
+      ><a name="1916"
+      > </a
+      ><a name="1917" href="Data.Product.html#1854" class="Function"
+      >Prod.map</a
+      ><a name="1925"
+      > </a
+      ><a name="1926" href="Function.html#1006" class="Function"
+      >id</a
+      ><a name="1928"
+      > </a
+      ><a name="1929" href="Data.Product.html#525" class="Field"
+      >proj&#8321;</a
+      ><a name="1934"
+      > </a
+      ><a name="1935" href="Function.html#1829" class="Function Operator"
+      >$</a
+      ><a name="1936"
+      > </a
+      ><a name="1937" href="Data.Fin.Dec.html#4591" class="Function"
+      >&#172;&#8704;&#10230;&#8707;&#172;-smallest</a
+      ><a name="1951"
+      > </a
+      ><a name="1952" href="Relation.Nullary.Negation.html#1904" class="Bound"
+      >n</a
+      ><a name="1953"
+      > </a
+      ><a name="1954" href="Relation.Nullary.Negation.html#1906" class="Bound"
+      >P</a
+      ><a name="1955"
+      > </a
+      ><a name="1956" href="Relation.Nullary.Negation.html#1908" class="Bound"
+      >dec</a
+      ><a name="1959"
+      > </a
+      ><a name="1960" href="Relation.Nullary.Negation.html#1912" class="Bound"
+      >&#172;P</a
+      ><a name="1962"
+      >
+
+</a
+      ><a name="1964" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="2036"
+      >
+</a
+      ><a name="2037" class="Comment"
+      >-- Double-negation</a
+      ><a name="2055"
+      >
+
+</a
+      ><a name="2057" href="Relation.Nullary.Negation.html#2057" class="Function"
+      >&#172;&#172;-map</a
+      ><a name="2063"
+      > </a
+      ><a name="2064" class="Symbol"
+      >:</a
+      ><a name="2065"
+      > </a
+      ><a name="2066" class="Symbol"
+      >&#8704;</a
+      ><a name="2067"
+      > </a
+      ><a name="2068" class="Symbol"
+      >{</a
+      ><a name="2069" href="Relation.Nullary.Negation.html#2069" class="Bound"
+      >p</a
+      ><a name="2070"
+      > </a
+      ><a name="2071" href="Relation.Nullary.Negation.html#2071" class="Bound"
+      >q</a
+      ><a name="2072" class="Symbol"
+      >}</a
+      ><a name="2073"
+      > </a
+      ><a name="2074" class="Symbol"
+      >{</a
+      ><a name="2075" href="Relation.Nullary.Negation.html#2075" class="Bound"
+      >P</a
+      ><a name="2076"
+      > </a
+      ><a name="2077" class="Symbol"
+      >:</a
+      ><a name="2078"
+      > </a
+      ><a name="2079" class="PrimitiveType"
+      >Set</a
+      ><a name="2082"
+      > </a
+      ><a name="2083" href="Relation.Nullary.Negation.html#2069" class="Bound"
+      >p</a
+      ><a name="2084" class="Symbol"
+      >}</a
+      ><a name="2085"
+      > </a
+      ><a name="2086" class="Symbol"
+      >{</a
+      ><a name="2087" href="Relation.Nullary.Negation.html#2087" class="Bound"
+      >Q</a
+      ><a name="2088"
+      > </a
+      ><a name="2089" class="Symbol"
+      >:</a
+      ><a name="2090"
+      > </a
+      ><a name="2091" class="PrimitiveType"
+      >Set</a
+      ><a name="2094"
+      > </a
+      ><a name="2095" href="Relation.Nullary.Negation.html#2071" class="Bound"
+      >q</a
+      ><a name="2096" class="Symbol"
+      >}</a
+      ><a name="2097"
+      > </a
+      ><a name="2098" class="Symbol"
+      >&#8594;</a
+      ><a name="2099"
+      >
+         </a
+      ><a name="2109" class="Symbol"
+      >(</a
+      ><a name="2110" href="Relation.Nullary.Negation.html#2075" class="Bound"
+      >P</a
+      ><a name="2111"
+      > </a
+      ><a name="2112" class="Symbol"
+      >&#8594;</a
+      ><a name="2113"
+      > </a
+      ><a name="2114" href="Relation.Nullary.Negation.html#2087" class="Bound"
+      >Q</a
+      ><a name="2115" class="Symbol"
+      >)</a
+      ><a name="2116"
+      > </a
+      ><a name="2117" class="Symbol"
+      >&#8594;</a
+      ><a name="2118"
+      > </a
+      ><a name="2119" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="2120"
+      > </a
+      ><a name="2121" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="2122"
+      > </a
+      ><a name="2123" href="Relation.Nullary.Negation.html#2075" class="Bound"
+      >P</a
+      ><a name="2124"
+      > </a
+      ><a name="2125" class="Symbol"
+      >&#8594;</a
+      ><a name="2126"
+      > </a
+      ><a name="2127" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="2128"
+      > </a
+      ><a name="2129" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="2130"
+      > </a
+      ><a name="2131" href="Relation.Nullary.Negation.html#2087" class="Bound"
+      >Q</a
+      ><a name="2132"
+      >
+</a
+      ><a name="2133" href="Relation.Nullary.Negation.html#2057" class="Function"
+      >&#172;&#172;-map</a
+      ><a name="2139"
+      > </a
+      ><a name="2140" href="Relation.Nullary.Negation.html#2140" class="Bound"
+      >f</a
+      ><a name="2141"
+      > </a
+      ><a name="2142" class="Symbol"
+      >=</a
+      ><a name="2143"
+      > </a
+      ><a name="2144" href="Relation.Nullary.Negation.html#669" class="Function"
+      >contraposition</a
+      ><a name="2158"
+      > </a
+      ><a name="2159" class="Symbol"
+      >(</a
+      ><a name="2160" href="Relation.Nullary.Negation.html#669" class="Function"
+      >contraposition</a
+      ><a name="2174"
+      > </a
+      ><a name="2175" href="Relation.Nullary.Negation.html#2140" class="Bound"
+      >f</a
+      ><a name="2176" class="Symbol"
+      >)</a
+      ><a name="2177"
+      >
+
+</a
+      ><a name="2179" class="Comment"
+      >-- Stability under double-negation.</a
+      ><a name="2214"
+      >
+
+</a
+      ><a name="2216" href="Relation.Nullary.Negation.html#2216" class="Function"
+      >Stable</a
+      ><a name="2222"
+      > </a
+      ><a name="2223" class="Symbol"
+      >:</a
+      ><a name="2224"
+      > </a
+      ><a name="2225" class="Symbol"
+      >&#8704;</a
+      ><a name="2226"
+      > </a
+      ><a name="2227" class="Symbol"
+      >{</a
+      ><a name="2228" href="Relation.Nullary.Negation.html#2228" class="Bound"
+      >&#8467;</a
+      ><a name="2229" class="Symbol"
+      >}</a
+      ><a name="2230"
+      > </a
+      ><a name="2231" class="Symbol"
+      >&#8594;</a
+      ><a name="2232"
+      > </a
+      ><a name="2233" class="PrimitiveType"
+      >Set</a
+      ><a name="2236"
+      > </a
+      ><a name="2237" href="Relation.Nullary.Negation.html#2228" class="Bound"
+      >&#8467;</a
+      ><a name="2238"
+      > </a
+      ><a name="2239" class="Symbol"
+      >&#8594;</a
+      ><a name="2240"
+      > </a
+      ><a name="2241" class="PrimitiveType"
+      >Set</a
+      ><a name="2244"
+      > </a
+      ><a name="2245" href="Relation.Nullary.Negation.html#2228" class="Bound"
+      >&#8467;</a
+      ><a name="2246"
+      >
+</a
+      ><a name="2247" href="Relation.Nullary.Negation.html#2216" class="Function"
+      >Stable</a
+      ><a name="2253"
+      > </a
+      ><a name="2254" href="Relation.Nullary.Negation.html#2254" class="Bound"
+      >P</a
+      ><a name="2255"
+      > </a
+      ><a name="2256" class="Symbol"
+      >=</a
+      ><a name="2257"
+      > </a
+      ><a name="2258" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="2259"
+      > </a
+      ><a name="2260" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="2261"
+      > </a
+      ><a name="2262" href="Relation.Nullary.Negation.html#2254" class="Bound"
+      >P</a
+      ><a name="2263"
+      > </a
+      ><a name="2264" class="Symbol"
+      >&#8594;</a
+      ><a name="2265"
+      > </a
+      ><a name="2266" href="Relation.Nullary.Negation.html#2254" class="Bound"
+      >P</a
+      ><a name="2267"
+      >
+
+</a
+      ><a name="2269" class="Comment"
+      >-- Everything is stable in the double-negation monad.</a
+      ><a name="2322"
+      >
+
+</a
+      ><a name="2324" href="Relation.Nullary.Negation.html#2324" class="Function"
+      >stable</a
+      ><a name="2330"
+      > </a
+      ><a name="2331" class="Symbol"
+      >:</a
+      ><a name="2332"
+      > </a
+      ><a name="2333" class="Symbol"
+      >&#8704;</a
+      ><a name="2334"
+      > </a
+      ><a name="2335" class="Symbol"
+      >{</a
+      ><a name="2336" href="Relation.Nullary.Negation.html#2336" class="Bound"
+      >p</a
+      ><a name="2337" class="Symbol"
+      >}</a
+      ><a name="2338"
+      > </a
+      ><a name="2339" class="Symbol"
+      >{</a
+      ><a name="2340" href="Relation.Nullary.Negation.html#2340" class="Bound"
+      >P</a
+      ><a name="2341"
+      > </a
+      ><a name="2342" class="Symbol"
+      >:</a
+      ><a name="2343"
+      > </a
+      ><a name="2344" class="PrimitiveType"
+      >Set</a
+      ><a name="2347"
+      > </a
+      ><a name="2348" href="Relation.Nullary.Negation.html#2336" class="Bound"
+      >p</a
+      ><a name="2349" class="Symbol"
+      >}</a
+      ><a name="2350"
+      > </a
+      ><a name="2351" class="Symbol"
+      >&#8594;</a
+      ><a name="2352"
+      > </a
+      ><a name="2353" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="2354"
+      > </a
+      ><a name="2355" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="2356"
+      > </a
+      ><a name="2357" href="Relation.Nullary.Negation.html#2216" class="Function"
+      >Stable</a
+      ><a name="2363"
+      > </a
+      ><a name="2364" href="Relation.Nullary.Negation.html#2340" class="Bound"
+      >P</a
+      ><a name="2365"
+      >
+</a
+      ><a name="2366" href="Relation.Nullary.Negation.html#2324" class="Function"
+      >stable</a
+      ><a name="2372"
+      > </a
+      ><a name="2373" href="Relation.Nullary.Negation.html#2373" class="Bound"
+      >&#172;[&#172;&#172;p&#8594;p]</a
+      ><a name="2381"
+      > </a
+      ><a name="2382" class="Symbol"
+      >=</a
+      ><a name="2383"
+      > </a
+      ><a name="2384" href="Relation.Nullary.Negation.html#2373" class="Bound"
+      >&#172;[&#172;&#172;p&#8594;p]</a
+      ><a name="2392"
+      > </a
+      ><a name="2393" class="Symbol"
+      >(&#955;</a
+      ><a name="2395"
+      > </a
+      ><a name="2396" href="Relation.Nullary.Negation.html#2396" class="Bound"
+      >&#172;&#172;p</a
+      ><a name="2399"
+      > </a
+      ><a name="2400" class="Symbol"
+      >&#8594;</a
+      ><a name="2401"
+      > </a
+      ><a name="2402" href="Data.Empty.html#326" class="Function"
+      >&#8869;-elim</a
+      ><a name="2408"
+      > </a
+      ><a name="2409" class="Symbol"
+      >(</a
+      ><a name="2410" href="Relation.Nullary.Negation.html#2396" class="Bound"
+      >&#172;&#172;p</a
+      ><a name="2413"
+      > </a
+      ><a name="2414" class="Symbol"
+      >(</a
+      ><a name="2415" href="Relation.Nullary.Negation.html#2373" class="Bound"
+      >&#172;[&#172;&#172;p&#8594;p]</a
+      ><a name="2423"
+      > </a
+      ><a name="2424" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="2425"
+      > </a
+      ><a name="2426" href="Function.html#1047" class="Function"
+      >const</a
+      ><a name="2431" class="Symbol"
+      >)))</a
+      ><a name="2434"
+      >
+
+</a
+      ><a name="2436" class="Comment"
+      >-- Negated predicates are stable.</a
+      ><a name="2469"
+      >
+
+</a
+      ><a name="2471" href="Relation.Nullary.Negation.html#2471" class="Function"
+      >negated-stable</a
+      ><a name="2485"
+      > </a
+      ><a name="2486" class="Symbol"
+      >:</a
+      ><a name="2487"
+      > </a
+      ><a name="2488" class="Symbol"
+      >&#8704;</a
+      ><a name="2489"
+      > </a
+      ><a name="2490" class="Symbol"
+      >{</a
+      ><a name="2491" href="Relation.Nullary.Negation.html#2491" class="Bound"
+      >p</a
+      ><a name="2492" class="Symbol"
+      >}</a
+      ><a name="2493"
+      > </a
+      ><a name="2494" class="Symbol"
+      >{</a
+      ><a name="2495" href="Relation.Nullary.Negation.html#2495" class="Bound"
+      >P</a
+      ><a name="2496"
+      > </a
+      ><a name="2497" class="Symbol"
+      >:</a
+      ><a name="2498"
+      > </a
+      ><a name="2499" class="PrimitiveType"
+      >Set</a
+      ><a name="2502"
+      > </a
+      ><a name="2503" href="Relation.Nullary.Negation.html#2491" class="Bound"
+      >p</a
+      ><a name="2504" class="Symbol"
+      >}</a
+      ><a name="2505"
+      > </a
+      ><a name="2506" class="Symbol"
+      >&#8594;</a
+      ><a name="2507"
+      > </a
+      ><a name="2508" href="Relation.Nullary.Negation.html#2216" class="Function"
+      >Stable</a
+      ><a name="2514"
+      > </a
+      ><a name="2515" class="Symbol"
+      >(</a
+      ><a name="2516" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="2517"
+      > </a
+      ><a name="2518" href="Relation.Nullary.Negation.html#2495" class="Bound"
+      >P</a
+      ><a name="2519" class="Symbol"
+      >)</a
+      ><a name="2520"
+      >
+</a
+      ><a name="2521" href="Relation.Nullary.Negation.html#2471" class="Function"
+      >negated-stable</a
+      ><a name="2535"
+      > </a
+      ><a name="2536" href="Relation.Nullary.Negation.html#2536" class="Bound"
+      >&#172;&#172;&#172;P</a
+      ><a name="2540"
+      > </a
+      ><a name="2541" href="Relation.Nullary.Negation.html#2541" class="Bound"
+      >P</a
+      ><a name="2542"
+      > </a
+      ><a name="2543" class="Symbol"
+      >=</a
+      ><a name="2544"
+      > </a
+      ><a name="2545" href="Relation.Nullary.Negation.html#2536" class="Bound"
+      >&#172;&#172;&#172;P</a
+      ><a name="2549"
+      > </a
+      ><a name="2550" class="Symbol"
+      >(&#955;</a
+      ><a name="2552"
+      > </a
+      ><a name="2553" href="Relation.Nullary.Negation.html#2553" class="Bound"
+      >&#172;P</a
+      ><a name="2555"
+      > </a
+      ><a name="2556" class="Symbol"
+      >&#8594;</a
+      ><a name="2557"
+      > </a
+      ><a name="2558" href="Relation.Nullary.Negation.html#2553" class="Bound"
+      >&#172;P</a
+      ><a name="2560"
+      > </a
+      ><a name="2561" href="Relation.Nullary.Negation.html#2541" class="Bound"
+      >P</a
+      ><a name="2562" class="Symbol"
+      >)</a
+      ><a name="2563"
+      >
+
+</a
+      ><a name="2565" class="Comment"
+      >-- Decidable predicates are stable.</a
+      ><a name="2600"
+      >
+
+</a
+      ><a name="2602" href="Relation.Nullary.Negation.html#2602" class="Function"
+      >decidable-stable</a
+      ><a name="2618"
+      > </a
+      ><a name="2619" class="Symbol"
+      >:</a
+      ><a name="2620"
+      > </a
+      ><a name="2621" class="Symbol"
+      >&#8704;</a
+      ><a name="2622"
+      > </a
+      ><a name="2623" class="Symbol"
+      >{</a
+      ><a name="2624" href="Relation.Nullary.Negation.html#2624" class="Bound"
+      >p</a
+      ><a name="2625" class="Symbol"
+      >}</a
+      ><a name="2626"
+      > </a
+      ><a name="2627" class="Symbol"
+      >{</a
+      ><a name="2628" href="Relation.Nullary.Negation.html#2628" class="Bound"
+      >P</a
+      ><a name="2629"
+      > </a
+      ><a name="2630" class="Symbol"
+      >:</a
+      ><a name="2631"
+      > </a
+      ><a name="2632" class="PrimitiveType"
+      >Set</a
+      ><a name="2635"
+      > </a
+      ><a name="2636" href="Relation.Nullary.Negation.html#2624" class="Bound"
+      >p</a
+      ><a name="2637" class="Symbol"
+      >}</a
+      ><a name="2638"
+      > </a
+      ><a name="2639" class="Symbol"
+      >&#8594;</a
+      ><a name="2640"
+      > </a
+      ><a name="2641" href="Relation.Nullary.Core.html#468" class="Datatype"
+      >Dec</a
+      ><a name="2644"
+      > </a
+      ><a name="2645" href="Relation.Nullary.Negation.html#2628" class="Bound"
+      >P</a
+      ><a name="2646"
+      > </a
+      ><a name="2647" class="Symbol"
+      >&#8594;</a
+      ><a name="2648"
+      > </a
+      ><a name="2649" href="Relation.Nullary.Negation.html#2216" class="Function"
+      >Stable</a
+      ><a name="2655"
+      > </a
+      ><a name="2656" href="Relation.Nullary.Negation.html#2628" class="Bound"
+      >P</a
+      ><a name="2657"
+      >
+</a
+      ><a name="2658" href="Relation.Nullary.Negation.html#2602" class="Function"
+      >decidable-stable</a
+      ><a name="2674"
+      > </a
+      ><a name="2675" class="Symbol"
+      >(</a
+      ><a name="2676" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="2679"
+      > </a
+      ><a name="2680" href="Relation.Nullary.Negation.html#2680" class="Bound"
+      >p</a
+      ><a name="2681" class="Symbol"
+      >)</a
+      ><a name="2682"
+      > </a
+      ><a name="2683" href="Relation.Nullary.Negation.html#2683" class="Bound"
+      >&#172;&#172;p</a
+      ><a name="2686"
+      > </a
+      ><a name="2687" class="Symbol"
+      >=</a
+      ><a name="2688"
+      > </a
+      ><a name="2689" href="Relation.Nullary.Negation.html#2680" class="Bound"
+      >p</a
+      ><a name="2690"
+      >
+</a
+      ><a name="2691" href="Relation.Nullary.Negation.html#2602" class="Function"
+      >decidable-stable</a
+      ><a name="2707"
+      > </a
+      ><a name="2708" class="Symbol"
+      >(</a
+      ><a name="2709" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="2711"
+      > </a
+      ><a name="2712" href="Relation.Nullary.Negation.html#2712" class="Bound"
+      >&#172;p</a
+      ><a name="2714" class="Symbol"
+      >)</a
+      ><a name="2715"
+      > </a
+      ><a name="2716" href="Relation.Nullary.Negation.html#2716" class="Bound"
+      >&#172;&#172;p</a
+      ><a name="2719"
+      > </a
+      ><a name="2720" class="Symbol"
+      >=</a
+      ><a name="2721"
+      > </a
+      ><a name="2722" href="Data.Empty.html#326" class="Function"
+      >&#8869;-elim</a
+      ><a name="2728"
+      > </a
+      ><a name="2729" class="Symbol"
+      >(</a
+      ><a name="2730" href="Relation.Nullary.Negation.html#2716" class="Bound"
+      >&#172;&#172;p</a
+      ><a name="2733"
+      > </a
+      ><a name="2734" href="Relation.Nullary.Negation.html#2712" class="Bound"
+      >&#172;p</a
+      ><a name="2736" class="Symbol"
+      >)</a
+      ><a name="2737"
+      >
+
+</a
+      ><a name="2739" href="Relation.Nullary.Negation.html#2739" class="Function"
+      >&#172;-drop-Dec</a
+      ><a name="2749"
+      > </a
+      ><a name="2750" class="Symbol"
+      >:</a
+      ><a name="2751"
+      > </a
+      ><a name="2752" class="Symbol"
+      >&#8704;</a
+      ><a name="2753"
+      > </a
+      ><a name="2754" class="Symbol"
+      >{</a
+      ><a name="2755" href="Relation.Nullary.Negation.html#2755" class="Bound"
+      >p</a
+      ><a name="2756" class="Symbol"
+      >}</a
+      ><a name="2757"
+      > </a
+      ><a name="2758" class="Symbol"
+      >{</a
+      ><a name="2759" href="Relation.Nullary.Negation.html#2759" class="Bound"
+      >P</a
+      ><a name="2760"
+      > </a
+      ><a name="2761" class="Symbol"
+      >:</a
+      ><a name="2762"
+      > </a
+      ><a name="2763" class="PrimitiveType"
+      >Set</a
+      ><a name="2766"
+      > </a
+      ><a name="2767" href="Relation.Nullary.Negation.html#2755" class="Bound"
+      >p</a
+      ><a name="2768" class="Symbol"
+      >}</a
+      ><a name="2769"
+      > </a
+      ><a name="2770" class="Symbol"
+      >&#8594;</a
+      ><a name="2771"
+      > </a
+      ><a name="2772" href="Relation.Nullary.Core.html#468" class="Datatype"
+      >Dec</a
+      ><a name="2775"
+      > </a
+      ><a name="2776" class="Symbol"
+      >(</a
+      ><a name="2777" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="2778"
+      > </a
+      ><a name="2779" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="2780"
+      > </a
+      ><a name="2781" href="Relation.Nullary.Negation.html#2759" class="Bound"
+      >P</a
+      ><a name="2782" class="Symbol"
+      >)</a
+      ><a name="2783"
+      > </a
+      ><a name="2784" class="Symbol"
+      >&#8594;</a
+      ><a name="2785"
+      > </a
+      ><a name="2786" href="Relation.Nullary.Core.html#468" class="Datatype"
+      >Dec</a
+      ><a name="2789"
+      > </a
+      ><a name="2790" class="Symbol"
+      >(</a
+      ><a name="2791" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="2792"
+      > </a
+      ><a name="2793" href="Relation.Nullary.Negation.html#2759" class="Bound"
+      >P</a
+      ><a name="2794" class="Symbol"
+      >)</a
+      ><a name="2795"
+      >
+</a
+      ><a name="2796" href="Relation.Nullary.Negation.html#2739" class="Function"
+      >&#172;-drop-Dec</a
+      ><a name="2806"
+      > </a
+      ><a name="2807" class="Symbol"
+      >(</a
+      ><a name="2808" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="2811"
+      > </a
+      ><a name="2812" href="Relation.Nullary.Negation.html#2812" class="Bound"
+      >&#172;&#172;p</a
+      ><a name="2815" class="Symbol"
+      >)</a
+      ><a name="2816"
+      > </a
+      ><a name="2817" class="Symbol"
+      >=</a
+      ><a name="2818"
+      > </a
+      ><a name="2819" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="2821"
+      > </a
+      ><a name="2822" href="Relation.Nullary.Negation.html#2812" class="Bound"
+      >&#172;&#172;p</a
+      ><a name="2825"
+      >
+</a
+      ><a name="2826" href="Relation.Nullary.Negation.html#2739" class="Function"
+      >&#172;-drop-Dec</a
+      ><a name="2836"
+      > </a
+      ><a name="2837" class="Symbol"
+      >(</a
+      ><a name="2838" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="2840"
+      > </a
+      ><a name="2841" href="Relation.Nullary.Negation.html#2841" class="Bound"
+      >&#172;&#172;&#172;p</a
+      ><a name="2845" class="Symbol"
+      >)</a
+      ><a name="2846"
+      > </a
+      ><a name="2847" class="Symbol"
+      >=</a
+      ><a name="2848"
+      > </a
+      ><a name="2849" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="2852"
+      > </a
+      ><a name="2853" class="Symbol"
+      >(</a
+      ><a name="2854" href="Relation.Nullary.Negation.html#2471" class="Function"
+      >negated-stable</a
+      ><a name="2868"
+      > </a
+      ><a name="2869" href="Relation.Nullary.Negation.html#2841" class="Bound"
+      >&#172;&#172;&#172;p</a
+      ><a name="2873" class="Symbol"
+      >)</a
+      ><a name="2874"
+      >
+
+</a
+      ><a name="2876" class="Comment"
+      >-- Double-negation is a monad (if we assume that all elements of &#172; &#172; P</a
+      ><a name="2946"
+      >
+</a
+      ><a name="2947" class="Comment"
+      >-- are equal).</a
+      ><a name="2961"
+      >
+
+</a
+      ><a name="2963" href="Relation.Nullary.Negation.html#2963" class="Function"
+      >&#172;&#172;-Monad</a
+      ><a name="2971"
+      > </a
+      ><a name="2972" class="Symbol"
+      >:</a
+      ><a name="2973"
+      > </a
+      ><a name="2974" class="Symbol"
+      >&#8704;</a
+      ><a name="2975"
+      > </a
+      ><a name="2976" class="Symbol"
+      >{</a
+      ><a name="2977" href="Relation.Nullary.Negation.html#2977" class="Bound"
+      >p</a
+      ><a name="2978" class="Symbol"
+      >}</a
+      ><a name="2979"
+      > </a
+      ><a name="2980" class="Symbol"
+      >&#8594;</a
+      ><a name="2981"
+      > </a
+      ><a name="2982" href="Category.Monad.html#360" class="Function"
+      >RawMonad</a
+      ><a name="2990"
+      > </a
+      ><a name="2991" class="Symbol"
+      >(&#955;</a
+      ><a name="2993"
+      > </a
+      ><a name="2994" class="Symbol"
+      >(</a
+      ><a name="2995" href="Relation.Nullary.Negation.html#2995" class="Bound"
+      >P</a
+      ><a name="2996"
+      > </a
+      ><a name="2997" class="Symbol"
+      >:</a
+      ><a name="2998"
+      > </a
+      ><a name="2999" class="PrimitiveType"
+      >Set</a
+      ><a name="3002"
+      > </a
+      ><a name="3003" href="Relation.Nullary.Negation.html#2977" class="Bound"
+      >p</a
+      ><a name="3004" class="Symbol"
+      >)</a
+      ><a name="3005"
+      > </a
+      ><a name="3006" class="Symbol"
+      >&#8594;</a
+      ><a name="3007"
+      > </a
+      ><a name="3008" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="3009"
+      > </a
+      ><a name="3010" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="3011"
+      > </a
+      ><a name="3012" href="Relation.Nullary.Negation.html#2995" class="Bound"
+      >P</a
+      ><a name="3013" class="Symbol"
+      >)</a
+      ><a name="3014"
+      >
+</a
+      ><a name="3015" href="Relation.Nullary.Negation.html#2963" class="Function"
+      >&#172;&#172;-Monad</a
+      ><a name="3023"
+      > </a
+      ><a name="3024" class="Symbol"
+      >=</a
+      ><a name="3025"
+      > </a
+      ><a name="3026" class="Keyword"
+      >record</a
+      ><a name="3032"
+      >
+  </a
+      ><a name="3035" class="Symbol"
+      >{</a
+      ><a name="3036"
+      > </a
+      ><a name="3037" class="Field"
+      >return</a
+      ><a name="3043"
+      > </a
+      ><a name="3044" class="Symbol"
+      >=</a
+      ><a name="3045"
+      > </a
+      ><a name="3046" href="Relation.Nullary.Negation.html#541" class="Function"
+      >contradiction</a
+      ><a name="3059"
+      >
+  </a
+      ><a name="3062" class="Symbol"
+      >;</a
+      ><a name="3063"
+      > </a
+      ><a name="3064" class="Field Operator"
+      >_&gt;&gt;=_</a
+      ><a name="3069"
+      >  </a
+      ><a name="3071" class="Symbol"
+      >=</a
+      ><a name="3072"
+      > </a
+      ><a name="3073" class="Symbol"
+      >&#955;</a
+      ><a name="3074"
+      > </a
+      ><a name="3075" href="Relation.Nullary.Negation.html#3075" class="Bound"
+      >x</a
+      ><a name="3076"
+      > </a
+      ><a name="3077" href="Relation.Nullary.Negation.html#3077" class="Bound"
+      >f</a
+      ><a name="3078"
+      > </a
+      ><a name="3079" class="Symbol"
+      >&#8594;</a
+      ><a name="3080"
+      > </a
+      ><a name="3081" href="Relation.Nullary.Negation.html#2471" class="Function"
+      >negated-stable</a
+      ><a name="3095"
+      > </a
+      ><a name="3096" class="Symbol"
+      >(</a
+      ><a name="3097" href="Relation.Nullary.Negation.html#2057" class="Function"
+      >&#172;&#172;-map</a
+      ><a name="3103"
+      > </a
+      ><a name="3104" href="Relation.Nullary.Negation.html#3077" class="Bound"
+      >f</a
+      ><a name="3105"
+      > </a
+      ><a name="3106" href="Relation.Nullary.Negation.html#3075" class="Bound"
+      >x</a
+      ><a name="3107" class="Symbol"
+      >)</a
+      ><a name="3108"
+      >
+  </a
+      ><a name="3111" class="Symbol"
+      >}</a
+      ><a name="3112"
+      >
+
+</a
+      ><a name="3114" href="Relation.Nullary.Negation.html#3114" class="Function"
+      >&#172;&#172;-push</a
+      ><a name="3121"
+      > </a
+      ><a name="3122" class="Symbol"
+      >:</a
+      ><a name="3123"
+      > </a
+      ><a name="3124" class="Symbol"
+      >&#8704;</a
+      ><a name="3125"
+      > </a
+      ><a name="3126" class="Symbol"
+      >{</a
+      ><a name="3127" href="Relation.Nullary.Negation.html#3127" class="Bound"
+      >p</a
+      ><a name="3128"
+      > </a
+      ><a name="3129" href="Relation.Nullary.Negation.html#3129" class="Bound"
+      >q</a
+      ><a name="3130" class="Symbol"
+      >}</a
+      ><a name="3131"
+      > </a
+      ><a name="3132" class="Symbol"
+      >{</a
+      ><a name="3133" href="Relation.Nullary.Negation.html#3133" class="Bound"
+      >P</a
+      ><a name="3134"
+      > </a
+      ><a name="3135" class="Symbol"
+      >:</a
+      ><a name="3136"
+      > </a
+      ><a name="3137" class="PrimitiveType"
+      >Set</a
+      ><a name="3140"
+      > </a
+      ><a name="3141" href="Relation.Nullary.Negation.html#3127" class="Bound"
+      >p</a
+      ><a name="3142" class="Symbol"
+      >}</a
+      ><a name="3143"
+      > </a
+      ><a name="3144" class="Symbol"
+      >{</a
+      ><a name="3145" href="Relation.Nullary.Negation.html#3145" class="Bound"
+      >Q</a
+      ><a name="3146"
+      > </a
+      ><a name="3147" class="Symbol"
+      >:</a
+      ><a name="3148"
+      > </a
+      ><a name="3149" href="Relation.Nullary.Negation.html#3133" class="Bound"
+      >P</a
+      ><a name="3150"
+      > </a
+      ><a name="3151" class="Symbol"
+      >&#8594;</a
+      ><a name="3152"
+      > </a
+      ><a name="3153" class="PrimitiveType"
+      >Set</a
+      ><a name="3156"
+      > </a
+      ><a name="3157" href="Relation.Nullary.Negation.html#3129" class="Bound"
+      >q</a
+      ><a name="3158" class="Symbol"
+      >}</a
+      ><a name="3159"
+      > </a
+      ><a name="3160" class="Symbol"
+      >&#8594;</a
+      ><a name="3161"
+      >
+          </a
+      ><a name="3172" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="3173"
+      > </a
+      ><a name="3174" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="3175"
+      > </a
+      ><a name="3176" class="Symbol"
+      >((</a
+      ><a name="3178" href="Relation.Nullary.Negation.html#3178" class="Bound"
+      >x</a
+      ><a name="3179"
+      > </a
+      ><a name="3180" class="Symbol"
+      >:</a
+      ><a name="3181"
+      > </a
+      ><a name="3182" href="Relation.Nullary.Negation.html#3133" class="Bound"
+      >P</a
+      ><a name="3183" class="Symbol"
+      >)</a
+      ><a name="3184"
+      > </a
+      ><a name="3185" class="Symbol"
+      >&#8594;</a
+      ><a name="3186"
+      > </a
+      ><a name="3187" href="Relation.Nullary.Negation.html#3145" class="Bound"
+      >Q</a
+      ><a name="3188"
+      > </a
+      ><a name="3189" href="Relation.Nullary.Negation.html#3178" class="Bound"
+      >x</a
+      ><a name="3190" class="Symbol"
+      >)</a
+      ><a name="3191"
+      > </a
+      ><a name="3192" class="Symbol"
+      >&#8594;</a
+      ><a name="3193"
+      > </a
+      ><a name="3194" class="Symbol"
+      >(</a
+      ><a name="3195" href="Relation.Nullary.Negation.html#3195" class="Bound"
+      >x</a
+      ><a name="3196"
+      > </a
+      ><a name="3197" class="Symbol"
+      >:</a
+      ><a name="3198"
+      > </a
+      ><a name="3199" href="Relation.Nullary.Negation.html#3133" class="Bound"
+      >P</a
+      ><a name="3200" class="Symbol"
+      >)</a
+      ><a name="3201"
+      > </a
+      ><a name="3202" class="Symbol"
+      >&#8594;</a
+      ><a name="3203"
+      > </a
+      ><a name="3204" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="3205"
+      > </a
+      ><a name="3206" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="3207"
+      > </a
+      ><a name="3208" href="Relation.Nullary.Negation.html#3145" class="Bound"
+      >Q</a
+      ><a name="3209"
+      > </a
+      ><a name="3210" href="Relation.Nullary.Negation.html#3195" class="Bound"
+      >x</a
+      ><a name="3211"
+      >
+</a
+      ><a name="3212" href="Relation.Nullary.Negation.html#3114" class="Function"
+      >&#172;&#172;-push</a
+      ><a name="3219"
+      > </a
+      ><a name="3220" href="Relation.Nullary.Negation.html#3220" class="Bound"
+      >&#172;&#172;P&#10230;Q</a
+      ><a name="3225"
+      > </a
+      ><a name="3226" href="Relation.Nullary.Negation.html#3226" class="Bound"
+      >P</a
+      ><a name="3227"
+      > </a
+      ><a name="3228" href="Relation.Nullary.Negation.html#3228" class="Bound"
+      >&#172;Q</a
+      ><a name="3230"
+      > </a
+      ><a name="3231" class="Symbol"
+      >=</a
+      ><a name="3232"
+      > </a
+      ><a name="3233" href="Relation.Nullary.Negation.html#3220" class="Bound"
+      >&#172;&#172;P&#10230;Q</a
+      ><a name="3238"
+      > </a
+      ><a name="3239" class="Symbol"
+      >(&#955;</a
+      ><a name="3241"
+      > </a
+      ><a name="3242" href="Relation.Nullary.Negation.html#3242" class="Bound"
+      >P&#10230;Q</a
+      ><a name="3245"
+      > </a
+      ><a name="3246" class="Symbol"
+      >&#8594;</a
+      ><a name="3247"
+      > </a
+      ><a name="3248" href="Relation.Nullary.Negation.html#3228" class="Bound"
+      >&#172;Q</a
+      ><a name="3250"
+      > </a
+      ><a name="3251" class="Symbol"
+      >(</a
+      ><a name="3252" href="Relation.Nullary.Negation.html#3242" class="Bound"
+      >P&#10230;Q</a
+      ><a name="3255"
+      > </a
+      ><a name="3256" href="Relation.Nullary.Negation.html#3226" class="Bound"
+      >P</a
+      ><a name="3257" class="Symbol"
+      >))</a
+      ><a name="3259"
+      >
+
+</a
+      ><a name="3261" class="Comment"
+      >-- A double-negation-translated variant of excluded middle (or: every</a
+      ><a name="3330"
+      >
+</a
+      ><a name="3331" class="Comment"
+      >-- nullary relation is decidable in the double-negation monad).</a
+      ><a name="3394"
+      >
+
+</a
+      ><a name="3396" href="Relation.Nullary.Negation.html#3396" class="Function"
+      >excluded-middle</a
+      ><a name="3411"
+      > </a
+      ><a name="3412" class="Symbol"
+      >:</a
+      ><a name="3413"
+      > </a
+      ><a name="3414" class="Symbol"
+      >&#8704;</a
+      ><a name="3415"
+      > </a
+      ><a name="3416" class="Symbol"
+      >{</a
+      ><a name="3417" href="Relation.Nullary.Negation.html#3417" class="Bound"
+      >p</a
+      ><a name="3418" class="Symbol"
+      >}</a
+      ><a name="3419"
+      > </a
+      ><a name="3420" class="Symbol"
+      >{</a
+      ><a name="3421" href="Relation.Nullary.Negation.html#3421" class="Bound"
+      >P</a
+      ><a name="3422"
+      > </a
+      ><a name="3423" class="Symbol"
+      >:</a
+      ><a name="3424"
+      > </a
+      ><a name="3425" class="PrimitiveType"
+      >Set</a
+      ><a name="3428"
+      > </a
+      ><a name="3429" href="Relation.Nullary.Negation.html#3417" class="Bound"
+      >p</a
+      ><a name="3430" class="Symbol"
+      >}</a
+      ><a name="3431"
+      > </a
+      ><a name="3432" class="Symbol"
+      >&#8594;</a
+      ><a name="3433"
+      > </a
+      ><a name="3434" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="3435"
+      > </a
+      ><a name="3436" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="3437"
+      > </a
+      ><a name="3438" href="Relation.Nullary.Core.html#468" class="Datatype"
+      >Dec</a
+      ><a name="3441"
+      > </a
+      ><a name="3442" href="Relation.Nullary.Negation.html#3421" class="Bound"
+      >P</a
+      ><a name="3443"
+      >
+</a
+      ><a name="3444" href="Relation.Nullary.Negation.html#3396" class="Function"
+      >excluded-middle</a
+      ><a name="3459"
+      > </a
+      ><a name="3460" href="Relation.Nullary.Negation.html#3460" class="Bound"
+      >&#172;h</a
+      ><a name="3462"
+      > </a
+      ><a name="3463" class="Symbol"
+      >=</a
+      ><a name="3464"
+      > </a
+      ><a name="3465" href="Relation.Nullary.Negation.html#3460" class="Bound"
+      >&#172;h</a
+      ><a name="3467"
+      > </a
+      ><a name="3468" class="Symbol"
+      >(</a
+      ><a name="3469" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="3471"
+      > </a
+      ><a name="3472" class="Symbol"
+      >(&#955;</a
+      ><a name="3474"
+      > </a
+      ><a name="3475" href="Relation.Nullary.Negation.html#3475" class="Bound"
+      >p</a
+      ><a name="3476"
+      > </a
+      ><a name="3477" class="Symbol"
+      >&#8594;</a
+      ><a name="3478"
+      > </a
+      ><a name="3479" href="Relation.Nullary.Negation.html#3460" class="Bound"
+      >&#172;h</a
+      ><a name="3481"
+      > </a
+      ><a name="3482" class="Symbol"
+      >(</a
+      ><a name="3483" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="3486"
+      > </a
+      ><a name="3487" href="Relation.Nullary.Negation.html#3475" class="Bound"
+      >p</a
+      ><a name="3488" class="Symbol"
+      >)))</a
+      ><a name="3491"
+      >
+
+</a
+      ><a name="3493" class="Comment"
+      >-- If Whatever is instantiated with &#172;&#160;&#172;&#160;something, then this function</a
+      ><a name="3562"
+      >
+</a
+      ><a name="3563" class="Comment"
+      >-- is call with current continuation in the double-negation monad, or,</a
+      ><a name="3633"
+      >
+</a
+      ><a name="3634" class="Comment"
+      >-- if you will, a double-negation translation of Peirce's law.</a
+      ><a name="3696"
+      >
+</a
+      ><a name="3697" class="Comment"
+      >--</a
+      ><a name="3699"
+      >
+</a
+      ><a name="3700" class="Comment"
+      >-- In order to prove &#172;&#160;&#172;&#160;P one can assume &#172;&#160;P and prove &#8869;. However,</a
+      ><a name="3767"
+      >
+</a
+      ><a name="3768" class="Comment"
+      >-- sometimes it is nice to avoid leaving the double-negation monad; in</a
+      ><a name="3838"
+      >
+</a
+      ><a name="3839" class="Comment"
+      >-- that case this function can be used (with Whatever instantiated to</a
+      ><a name="3908"
+      >
+</a
+      ><a name="3909" class="Comment"
+      >-- &#8869;).</a
+      ><a name="3915"
+      >
+
+</a
+      ><a name="3917" href="Relation.Nullary.Negation.html#3917" class="Function"
+      >call/cc</a
+      ><a name="3924"
+      > </a
+      ><a name="3925" class="Symbol"
+      >:</a
+      ><a name="3926"
+      > </a
+      ><a name="3927" class="Symbol"
+      >&#8704;</a
+      ><a name="3928"
+      > </a
+      ><a name="3929" class="Symbol"
+      >{</a
+      ><a name="3930" href="Relation.Nullary.Negation.html#3930" class="Bound"
+      >w</a
+      ><a name="3931"
+      > </a
+      ><a name="3932" href="Relation.Nullary.Negation.html#3932" class="Bound"
+      >p</a
+      ><a name="3933" class="Symbol"
+      >}</a
+      ><a name="3934"
+      > </a
+      ><a name="3935" class="Symbol"
+      >{</a
+      ><a name="3936" href="Relation.Nullary.Negation.html#3936" class="Bound"
+      >Whatever</a
+      ><a name="3944"
+      > </a
+      ><a name="3945" class="Symbol"
+      >:</a
+      ><a name="3946"
+      > </a
+      ><a name="3947" class="PrimitiveType"
+      >Set</a
+      ><a name="3950"
+      > </a
+      ><a name="3951" href="Relation.Nullary.Negation.html#3930" class="Bound"
+      >w</a
+      ><a name="3952" class="Symbol"
+      >}</a
+      ><a name="3953"
+      > </a
+      ><a name="3954" class="Symbol"
+      >{</a
+      ><a name="3955" href="Relation.Nullary.Negation.html#3955" class="Bound"
+      >P</a
+      ><a name="3956"
+      > </a
+      ><a name="3957" class="Symbol"
+      >:</a
+      ><a name="3958"
+      > </a
+      ><a name="3959" class="PrimitiveType"
+      >Set</a
+      ><a name="3962"
+      > </a
+      ><a name="3963" href="Relation.Nullary.Negation.html#3932" class="Bound"
+      >p</a
+      ><a name="3964" class="Symbol"
+      >}</a
+      ><a name="3965"
+      > </a
+      ><a name="3966" class="Symbol"
+      >&#8594;</a
+      ><a name="3967"
+      >
+          </a
+      ><a name="3978" class="Symbol"
+      >((</a
+      ><a name="3980" href="Relation.Nullary.Negation.html#3955" class="Bound"
+      >P</a
+      ><a name="3981"
+      > </a
+      ><a name="3982" class="Symbol"
+      >&#8594;</a
+      ><a name="3983"
+      > </a
+      ><a name="3984" href="Relation.Nullary.Negation.html#3936" class="Bound"
+      >Whatever</a
+      ><a name="3992" class="Symbol"
+      >)</a
+      ><a name="3993"
+      > </a
+      ><a name="3994" class="Symbol"
+      >&#8594;</a
+      ><a name="3995"
+      > </a
+      ><a name="3996" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="3997"
+      > </a
+      ><a name="3998" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="3999"
+      > </a
+      ><a name="4000" href="Relation.Nullary.Negation.html#3955" class="Bound"
+      >P</a
+      ><a name="4001" class="Symbol"
+      >)</a
+      ><a name="4002"
+      > </a
+      ><a name="4003" class="Symbol"
+      >&#8594;</a
+      ><a name="4004"
+      > </a
+      ><a name="4005" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="4006"
+      > </a
+      ><a name="4007" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="4008"
+      > </a
+      ><a name="4009" href="Relation.Nullary.Negation.html#3955" class="Bound"
+      >P</a
+      ><a name="4010"
+      >
+</a
+      ><a name="4011" href="Relation.Nullary.Negation.html#3917" class="Function"
+      >call/cc</a
+      ><a name="4018"
+      > </a
+      ><a name="4019" href="Relation.Nullary.Negation.html#4019" class="Bound"
+      >hyp</a
+      ><a name="4022"
+      > </a
+      ><a name="4023" href="Relation.Nullary.Negation.html#4023" class="Bound"
+      >&#172;p</a
+      ><a name="4025"
+      > </a
+      ><a name="4026" class="Symbol"
+      >=</a
+      ><a name="4027"
+      > </a
+      ><a name="4028" href="Relation.Nullary.Negation.html#4019" class="Bound"
+      >hyp</a
+      ><a name="4031"
+      > </a
+      ><a name="4032" class="Symbol"
+      >(&#955;</a
+      ><a name="4034"
+      > </a
+      ><a name="4035" href="Relation.Nullary.Negation.html#4035" class="Bound"
+      >p</a
+      ><a name="4036"
+      > </a
+      ><a name="4037" class="Symbol"
+      >&#8594;</a
+      ><a name="4038"
+      > </a
+      ><a name="4039" href="Data.Empty.html#326" class="Function"
+      >&#8869;-elim</a
+      ><a name="4045"
+      > </a
+      ><a name="4046" class="Symbol"
+      >(</a
+      ><a name="4047" href="Relation.Nullary.Negation.html#4023" class="Bound"
+      >&#172;p</a
+      ><a name="4049"
+      > </a
+      ><a name="4050" href="Relation.Nullary.Negation.html#4035" class="Bound"
+      >p</a
+      ><a name="4051" class="Symbol"
+      >))</a
+      ><a name="4053"
+      > </a
+      ><a name="4054" href="Relation.Nullary.Negation.html#4023" class="Bound"
+      >&#172;p</a
+      ><a name="4056"
+      >
+
+</a
+      ><a name="4058" class="Comment"
+      >-- The &quot;independence of premise&quot; rule, in the double-negation monad.</a
+      ><a name="4126"
+      >
+</a
+      ><a name="4127" class="Comment"
+      >-- It is assumed that the index set (Q) is inhabited.</a
+      ><a name="4180"
+      >
+
+</a
+      ><a name="4182" href="Relation.Nullary.Negation.html#4182" class="Function"
+      >independence-of-premise</a
+      ><a name="4205"
+      >
+  </a
+      ><a name="4208" class="Symbol"
+      >:</a
+      ><a name="4209"
+      > </a
+      ><a name="4210" class="Symbol"
+      >&#8704;</a
+      ><a name="4211"
+      > </a
+      ><a name="4212" class="Symbol"
+      >{</a
+      ><a name="4213" href="Relation.Nullary.Negation.html#4213" class="Bound"
+      >p</a
+      ><a name="4214"
+      > </a
+      ><a name="4215" href="Relation.Nullary.Negation.html#4215" class="Bound"
+      >q</a
+      ><a name="4216"
+      > </a
+      ><a name="4217" href="Relation.Nullary.Negation.html#4217" class="Bound"
+      >r</a
+      ><a name="4218" class="Symbol"
+      >}</a
+      ><a name="4219"
+      > </a
+      ><a name="4220" class="Symbol"
+      >{</a
+      ><a name="4221" href="Relation.Nullary.Negation.html#4221" class="Bound"
+      >P</a
+      ><a name="4222"
+      > </a
+      ><a name="4223" class="Symbol"
+      >:</a
+      ><a name="4224"
+      > </a
+      ><a name="4225" class="PrimitiveType"
+      >Set</a
+      ><a name="4228"
+      > </a
+      ><a name="4229" href="Relation.Nullary.Negation.html#4213" class="Bound"
+      >p</a
+      ><a name="4230" class="Symbol"
+      >}</a
+      ><a name="4231"
+      > </a
+      ><a name="4232" class="Symbol"
+      >{</a
+      ><a name="4233" href="Relation.Nullary.Negation.html#4233" class="Bound"
+      >Q</a
+      ><a name="4234"
+      > </a
+      ><a name="4235" class="Symbol"
+      >:</a
+      ><a name="4236"
+      > </a
+      ><a name="4237" class="PrimitiveType"
+      >Set</a
+      ><a name="4240"
+      > </a
+      ><a name="4241" href="Relation.Nullary.Negation.html#4215" class="Bound"
+      >q</a
+      ><a name="4242" class="Symbol"
+      >}</a
+      ><a name="4243"
+      > </a
+      ><a name="4244" class="Symbol"
+      >{</a
+      ><a name="4245" href="Relation.Nullary.Negation.html#4245" class="Bound"
+      >R</a
+      ><a name="4246"
+      > </a
+      ><a name="4247" class="Symbol"
+      >:</a
+      ><a name="4248"
+      > </a
+      ><a name="4249" href="Relation.Nullary.Negation.html#4233" class="Bound"
+      >Q</a
+      ><a name="4250"
+      > </a
+      ><a name="4251" class="Symbol"
+      >&#8594;</a
+      ><a name="4252"
+      > </a
+      ><a name="4253" class="PrimitiveType"
+      >Set</a
+      ><a name="4256"
+      > </a
+      ><a name="4257" href="Relation.Nullary.Negation.html#4217" class="Bound"
+      >r</a
+      ><a name="4258" class="Symbol"
+      >}</a
+      ><a name="4259"
+      > </a
+      ><a name="4260" class="Symbol"
+      >&#8594;</a
+      ><a name="4261"
+      >
+    </a
+      ><a name="4266" href="Relation.Nullary.Negation.html#4233" class="Bound"
+      >Q</a
+      ><a name="4267"
+      > </a
+      ><a name="4268" class="Symbol"
+      >&#8594;</a
+      ><a name="4269"
+      > </a
+      ><a name="4270" class="Symbol"
+      >(</a
+      ><a name="4271" href="Relation.Nullary.Negation.html#4221" class="Bound"
+      >P</a
+      ><a name="4272"
+      > </a
+      ><a name="4273" class="Symbol"
+      >&#8594;</a
+      ><a name="4274"
+      > </a
+      ><a name="4275" href="Data.Product.html#439" class="Record"
+      >&#931;</a
+      ><a name="4276"
+      > </a
+      ><a name="4277" href="Relation.Nullary.Negation.html#4233" class="Bound"
+      >Q</a
+      ><a name="4278"
+      > </a
+      ><a name="4279" href="Relation.Nullary.Negation.html#4245" class="Bound"
+      >R</a
+      ><a name="4280" class="Symbol"
+      >)</a
+      ><a name="4281"
+      > </a
+      ><a name="4282" class="Symbol"
+      >&#8594;</a
+      ><a name="4283"
+      > </a
+      ><a name="4284" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="4285"
+      > </a
+      ><a name="4286" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="4287"
+      > </a
+      ><a name="4288" class="Symbol"
+      >(</a
+      ><a name="4289" href="Data.Product.html#688" class="Function"
+      >&#931;[</a
+      ><a name="4291"
+      > </a
+      ><a name="4292" href="Relation.Nullary.Negation.html#4292" class="Bound"
+      >x</a
+      ><a name="4293"
+      > </a
+      ><a name="4294" href="Data.Product.html#688" class="Function"
+      >&#8712;</a
+      ><a name="4295"
+      > </a
+      ><a name="4296" href="Relation.Nullary.Negation.html#4233" class="Bound"
+      >Q</a
+      ><a name="4297"
+      > </a
+      ><a name="4298" href="Data.Product.html#688" class="Function"
+      >]</a
+      ><a name="4299"
+      > </a
+      ><a name="4300" class="Symbol"
+      >(</a
+      ><a name="4301" href="Relation.Nullary.Negation.html#4221" class="Bound"
+      >P</a
+      ><a name="4302"
+      > </a
+      ><a name="4303" class="Symbol"
+      >&#8594;</a
+      ><a name="4304"
+      > </a
+      ><a name="4305" href="Relation.Nullary.Negation.html#4245" class="Bound"
+      >R</a
+      ><a name="4306"
+      > </a
+      ><a name="4307" href="Relation.Nullary.Negation.html#4292" class="Bound"
+      >x</a
+      ><a name="4308" class="Symbol"
+      >))</a
+      ><a name="4310"
+      >
+</a
+      ><a name="4311" href="Relation.Nullary.Negation.html#4182" class="Function"
+      >independence-of-premise</a
+      ><a name="4334"
+      > </a
+      ><a name="4335" class="Symbol"
+      >{</a
+      ><a name="4336"
+      >P </a
+      ><a name="4338" class="Symbol"
+      >=</a
+      ><a name="4339"
+      > </a
+      ><a name="4340" href="Relation.Nullary.Negation.html#4340" class="Bound"
+      >P</a
+      ><a name="4341" class="Symbol"
+      >}</a
+      ><a name="4342"
+      > </a
+      ><a name="4343" href="Relation.Nullary.Negation.html#4343" class="Bound"
+      >q</a
+      ><a name="4344"
+      > </a
+      ><a name="4345" href="Relation.Nullary.Negation.html#4345" class="Bound"
+      >f</a
+      ><a name="4346"
+      > </a
+      ><a name="4347" class="Symbol"
+      >=</a
+      ><a name="4348"
+      > </a
+      ><a name="4349" href="Relation.Nullary.Negation.html#2057" class="Function"
+      >&#172;&#172;-map</a
+      ><a name="4355"
+      > </a
+      ><a name="4356" href="Relation.Nullary.Negation.html#4389" class="Function"
+      >helper</a
+      ><a name="4362"
+      > </a
+      ><a name="4363" href="Relation.Nullary.Negation.html#3396" class="Function"
+      >excluded-middle</a
+      ><a name="4378"
+      >
+  </a
+      ><a name="4381" class="Keyword"
+      >where</a
+      ><a name="4386"
+      >
+  </a
+      ><a name="4389" href="Relation.Nullary.Negation.html#4389" class="Function"
+      >helper</a
+      ><a name="4395"
+      > </a
+      ><a name="4396" class="Symbol"
+      >:</a
+      ><a name="4397"
+      > </a
+      ><a name="4398" href="Relation.Nullary.Core.html#468" class="Datatype"
+      >Dec</a
+      ><a name="4401"
+      > </a
+      ><a name="4402" href="Relation.Nullary.Negation.html#4340" class="Bound"
+      >P</a
+      ><a name="4403"
+      > </a
+      ><a name="4404" class="Symbol"
+      >&#8594;</a
+      ><a name="4405"
+      > </a
+      ><a name="4406" class="Symbol"
+      >_</a
+      ><a name="4407"
+      >
+  </a
+      ><a name="4410" href="Relation.Nullary.Negation.html#4389" class="Function"
+      >helper</a
+      ><a name="4416"
+      > </a
+      ><a name="4417" class="Symbol"
+      >(</a
+      ><a name="4418" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="4421"
+      > </a
+      ><a name="4422" href="Relation.Nullary.Negation.html#4422" class="Bound"
+      >p</a
+      ><a name="4423" class="Symbol"
+      >)</a
+      ><a name="4424"
+      > </a
+      ><a name="4425" class="Symbol"
+      >=</a
+      ><a name="4426"
+      > </a
+      ><a name="4427" href="Data.Product.html#1854" class="Function"
+      >Prod.map</a
+      ><a name="4435"
+      > </a
+      ><a name="4436" href="Function.html#1006" class="Function"
+      >id</a
+      ><a name="4438"
+      > </a
+      ><a name="4439" href="Function.html#1047" class="Function"
+      >const</a
+      ><a name="4444"
+      > </a
+      ><a name="4445" class="Symbol"
+      >(</a
+      ><a name="4446" href="Relation.Nullary.Negation.html#4345" class="Bound"
+      >f</a
+      ><a name="4447"
+      > </a
+      ><a name="4448" href="Relation.Nullary.Negation.html#4422" class="Bound"
+      >p</a
+      ><a name="4449" class="Symbol"
+      >)</a
+      ><a name="4450"
+      >
+  </a
+      ><a name="4453" href="Relation.Nullary.Negation.html#4389" class="Function"
+      >helper</a
+      ><a name="4459"
+      > </a
+      ><a name="4460" class="Symbol"
+      >(</a
+      ><a name="4461" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="4463"
+      > </a
+      ><a name="4464" href="Relation.Nullary.Negation.html#4464" class="Bound"
+      >&#172;p</a
+      ><a name="4466" class="Symbol"
+      >)</a
+      ><a name="4467"
+      > </a
+      ><a name="4468" class="Symbol"
+      >=</a
+      ><a name="4469"
+      > </a
+      ><a name="4470" class="Symbol"
+      >(</a
+      ><a name="4471" href="Relation.Nullary.Negation.html#4343" class="Bound"
+      >q</a
+      ><a name="4472"
+      > </a
+      ><a name="4473" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="4474"
+      > </a
+      ><a name="4475" href="Data.Empty.html#326" class="Function"
+      >&#8869;-elim</a
+      ><a name="4481"
+      > </a
+      ><a name="4482" href="Function.html#898" class="Function Operator"
+      >&#8728;&#8242;</a
+      ><a name="4484"
+      > </a
+      ><a name="4485" href="Relation.Nullary.Negation.html#4464" class="Bound"
+      >&#172;p</a
+      ><a name="4487" class="Symbol"
+      >)</a
+      ><a name="4488"
+      >
+
+</a
+      ><a name="4490" class="Comment"
+      >-- The independence of premise rule for binary sums.</a
+      ><a name="4542"
+      >
+
+</a
+      ><a name="4544" href="Relation.Nullary.Negation.html#4544" class="Function"
+      >independence-of-premise-&#8846;</a
+      ><a name="4569"
+      >
+  </a
+      ><a name="4572" class="Symbol"
+      >:</a
+      ><a name="4573"
+      > </a
+      ><a name="4574" class="Symbol"
+      >&#8704;</a
+      ><a name="4575"
+      > </a
+      ><a name="4576" class="Symbol"
+      >{</a
+      ><a name="4577" href="Relation.Nullary.Negation.html#4577" class="Bound"
+      >p</a
+      ><a name="4578"
+      > </a
+      ><a name="4579" href="Relation.Nullary.Negation.html#4579" class="Bound"
+      >q</a
+      ><a name="4580"
+      > </a
+      ><a name="4581" href="Relation.Nullary.Negation.html#4581" class="Bound"
+      >r</a
+      ><a name="4582" class="Symbol"
+      >}</a
+      ><a name="4583"
+      > </a
+      ><a name="4584" class="Symbol"
+      >{</a
+      ><a name="4585" href="Relation.Nullary.Negation.html#4585" class="Bound"
+      >P</a
+      ><a name="4586"
+      > </a
+      ><a name="4587" class="Symbol"
+      >:</a
+      ><a name="4588"
+      > </a
+      ><a name="4589" class="PrimitiveType"
+      >Set</a
+      ><a name="4592"
+      > </a
+      ><a name="4593" href="Relation.Nullary.Negation.html#4577" class="Bound"
+      >p</a
+      ><a name="4594" class="Symbol"
+      >}</a
+      ><a name="4595"
+      > </a
+      ><a name="4596" class="Symbol"
+      >{</a
+      ><a name="4597" href="Relation.Nullary.Negation.html#4597" class="Bound"
+      >Q</a
+      ><a name="4598"
+      > </a
+      ><a name="4599" class="Symbol"
+      >:</a
+      ><a name="4600"
+      > </a
+      ><a name="4601" class="PrimitiveType"
+      >Set</a
+      ><a name="4604"
+      > </a
+      ><a name="4605" href="Relation.Nullary.Negation.html#4579" class="Bound"
+      >q</a
+      ><a name="4606" class="Symbol"
+      >}</a
+      ><a name="4607"
+      > </a
+      ><a name="4608" class="Symbol"
+      >{</a
+      ><a name="4609" href="Relation.Nullary.Negation.html#4609" class="Bound"
+      >R</a
+      ><a name="4610"
+      > </a
+      ><a name="4611" class="Symbol"
+      >:</a
+      ><a name="4612"
+      > </a
+      ><a name="4613" class="PrimitiveType"
+      >Set</a
+      ><a name="4616"
+      > </a
+      ><a name="4617" href="Relation.Nullary.Negation.html#4581" class="Bound"
+      >r</a
+      ><a name="4618" class="Symbol"
+      >}</a
+      ><a name="4619"
+      > </a
+      ><a name="4620" class="Symbol"
+      >&#8594;</a
+      ><a name="4621"
+      >
+    </a
+      ><a name="4626" class="Symbol"
+      >(</a
+      ><a name="4627" href="Relation.Nullary.Negation.html#4585" class="Bound"
+      >P</a
+      ><a name="4628"
+      > </a
+      ><a name="4629" class="Symbol"
+      >&#8594;</a
+      ><a name="4630"
+      > </a
+      ><a name="4631" href="Relation.Nullary.Negation.html#4597" class="Bound"
+      >Q</a
+      ><a name="4632"
+      > </a
+      ><a name="4633" href="Data.Sum.html#404" class="Datatype Operator"
+      >&#8846;</a
+      ><a name="4634"
+      > </a
+      ><a name="4635" href="Relation.Nullary.Negation.html#4609" class="Bound"
+      >R</a
+      ><a name="4636" class="Symbol"
+      >)</a
+      ><a name="4637"
+      > </a
+      ><a name="4638" class="Symbol"
+      >&#8594;</a
+      ><a name="4639"
+      > </a
+      ><a name="4640" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="4641"
+      > </a
+      ><a name="4642" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="4643"
+      > </a
+      ><a name="4644" class="Symbol"
+      >((</a
+      ><a name="4646" href="Relation.Nullary.Negation.html#4585" class="Bound"
+      >P</a
+      ><a name="4647"
+      > </a
+      ><a name="4648" class="Symbol"
+      >&#8594;</a
+      ><a name="4649"
+      > </a
+      ><a name="4650" href="Relation.Nullary.Negation.html#4597" class="Bound"
+      >Q</a
+      ><a name="4651" class="Symbol"
+      >)</a
+      ><a name="4652"
+      > </a
+      ><a name="4653" href="Data.Sum.html#404" class="Datatype Operator"
+      >&#8846;</a
+      ><a name="4654"
+      > </a
+      ><a name="4655" class="Symbol"
+      >(</a
+      ><a name="4656" href="Relation.Nullary.Negation.html#4585" class="Bound"
+      >P</a
+      ><a name="4657"
+      > </a
+      ><a name="4658" class="Symbol"
+      >&#8594;</a
+      ><a name="4659"
+      > </a
+      ><a name="4660" href="Relation.Nullary.Negation.html#4609" class="Bound"
+      >R</a
+      ><a name="4661" class="Symbol"
+      >))</a
+      ><a name="4663"
+      >
+</a
+      ><a name="4664" href="Relation.Nullary.Negation.html#4544" class="Function"
+      >independence-of-premise-&#8846;</a
+      ><a name="4689"
+      > </a
+      ><a name="4690" class="Symbol"
+      >{</a
+      ><a name="4691"
+      >P </a
+      ><a name="4693" class="Symbol"
+      >=</a
+      ><a name="4694"
+      > </a
+      ><a name="4695" href="Relation.Nullary.Negation.html#4695" class="Bound"
+      >P</a
+      ><a name="4696" class="Symbol"
+      >}</a
+      ><a name="4697"
+      > </a
+      ><a name="4698" href="Relation.Nullary.Negation.html#4698" class="Bound"
+      >f</a
+      ><a name="4699"
+      > </a
+      ><a name="4700" class="Symbol"
+      >=</a
+      ><a name="4701"
+      > </a
+      ><a name="4702" href="Relation.Nullary.Negation.html#2057" class="Function"
+      >&#172;&#172;-map</a
+      ><a name="4708"
+      > </a
+      ><a name="4709" href="Relation.Nullary.Negation.html#4742" class="Function"
+      >helper</a
+      ><a name="4715"
+      > </a
+      ><a name="4716" href="Relation.Nullary.Negation.html#3396" class="Function"
+      >excluded-middle</a
+      ><a name="4731"
+      >
+  </a
+      ><a name="4734" class="Keyword"
+      >where</a
+      ><a name="4739"
+      >
+  </a
+      ><a name="4742" href="Relation.Nullary.Negation.html#4742" class="Function"
+      >helper</a
+      ><a name="4748"
+      > </a
+      ><a name="4749" class="Symbol"
+      >:</a
+      ><a name="4750"
+      > </a
+      ><a name="4751" href="Relation.Nullary.Core.html#468" class="Datatype"
+      >Dec</a
+      ><a name="4754"
+      > </a
+      ><a name="4755" href="Relation.Nullary.Negation.html#4695" class="Bound"
+      >P</a
+      ><a name="4756"
+      > </a
+      ><a name="4757" class="Symbol"
+      >&#8594;</a
+      ><a name="4758"
+      > </a
+      ><a name="4759" class="Symbol"
+      >_</a
+      ><a name="4760"
+      >
+  </a
+      ><a name="4763" href="Relation.Nullary.Negation.html#4742" class="Function"
+      >helper</a
+      ><a name="4769"
+      > </a
+      ><a name="4770" class="Symbol"
+      >(</a
+      ><a name="4771" href="Relation.Nullary.Core.html#504" class="InductiveConstructor"
+      >yes</a
+      ><a name="4774"
+      > </a
+      ><a name="4775" href="Relation.Nullary.Negation.html#4775" class="Bound"
+      >p</a
+      ><a name="4776" class="Symbol"
+      >)</a
+      ><a name="4777"
+      > </a
+      ><a name="4778" class="Symbol"
+      >=</a
+      ><a name="4779"
+      > </a
+      ><a name="4780" href="Data.Sum.html#993" class="Function"
+      >Sum.map</a
+      ><a name="4787"
+      > </a
+      ><a name="4788" href="Function.html#1047" class="Function"
+      >const</a
+      ><a name="4793"
+      > </a
+      ><a name="4794" href="Function.html#1047" class="Function"
+      >const</a
+      ><a name="4799"
+      > </a
+      ><a name="4800" class="Symbol"
+      >(</a
+      ><a name="4801" href="Relation.Nullary.Negation.html#4698" class="Bound"
+      >f</a
+      ><a name="4802"
+      > </a
+      ><a name="4803" href="Relation.Nullary.Negation.html#4775" class="Bound"
+      >p</a
+      ><a name="4804" class="Symbol"
+      >)</a
+      ><a name="4805"
+      >
+  </a
+      ><a name="4808" href="Relation.Nullary.Negation.html#4742" class="Function"
+      >helper</a
+      ><a name="4814"
+      > </a
+      ><a name="4815" class="Symbol"
+      >(</a
+      ><a name="4816" href="Relation.Nullary.Core.html#531" class="InductiveConstructor"
+      >no</a
+      ><a name="4818"
+      > </a
+      ><a name="4819" href="Relation.Nullary.Negation.html#4819" class="Bound"
+      >&#172;p</a
+      ><a name="4821" class="Symbol"
+      >)</a
+      ><a name="4822"
+      > </a
+      ><a name="4823" class="Symbol"
+      >=</a
+      ><a name="4824"
+      > </a
+      ><a name="4825" href="Data.Sum.html#460" class="InductiveConstructor"
+      >inj&#8321;</a
+      ><a name="4829"
+      > </a
+      ><a name="4830" class="Symbol"
+      >(</a
+      ><a name="4831" href="Data.Empty.html#326" class="Function"
+      >&#8869;-elim</a
+      ><a name="4837"
+      > </a
+      ><a name="4838" href="Function.html#898" class="Function Operator"
+      >&#8728;&#8242;</a
+      ><a name="4840"
+      > </a
+      ><a name="4841" href="Relation.Nullary.Negation.html#4819" class="Bound"
+      >&#172;p</a
+      ><a name="4843" class="Symbol"
+      >)</a
+      ><a name="4844"
+      >
+
+</a
+      ><a name="4846" class="Keyword"
+      >private</a
+      ><a name="4853"
+      >
+
+  </a
+      ><a name="4857" class="Comment"
+      >-- Note that independence-of-premise-&#8846; is a consequence of</a
+      ><a name="4915"
+      >
+  </a
+      ><a name="4918" class="Comment"
+      >-- independence-of-premise (for simplicity it is assumed that Q and</a
+      ><a name="4985"
+      >
+  </a
+      ><a name="4988" class="Comment"
+      >-- R have the same type here):</a
+      ><a name="5018"
+      >
+
+  </a
+      ><a name="5022" href="Relation.Nullary.Negation.html#5022" class="Function"
+      >corollary</a
+      ><a name="5031"
+      > </a
+      ><a name="5032" class="Symbol"
+      >:</a
+      ><a name="5033"
+      > </a
+      ><a name="5034" class="Symbol"
+      >&#8704;</a
+      ><a name="5035"
+      > </a
+      ><a name="5036" class="Symbol"
+      >{</a
+      ><a name="5037" href="Relation.Nullary.Negation.html#5037" class="Bound"
+      >p</a
+      ><a name="5038"
+      > </a
+      ><a name="5039" href="Relation.Nullary.Negation.html#5039" class="Bound"
+      >&#8467;</a
+      ><a name="5040" class="Symbol"
+      >}</a
+      ><a name="5041"
+      > </a
+      ><a name="5042" class="Symbol"
+      >{</a
+      ><a name="5043" href="Relation.Nullary.Negation.html#5043" class="Bound"
+      >P</a
+      ><a name="5044"
+      > </a
+      ><a name="5045" class="Symbol"
+      >:</a
+      ><a name="5046"
+      > </a
+      ><a name="5047" class="PrimitiveType"
+      >Set</a
+      ><a name="5050"
+      > </a
+      ><a name="5051" href="Relation.Nullary.Negation.html#5037" class="Bound"
+      >p</a
+      ><a name="5052" class="Symbol"
+      >}</a
+      ><a name="5053"
+      > </a
+      ><a name="5054" class="Symbol"
+      >{</a
+      ><a name="5055" href="Relation.Nullary.Negation.html#5055" class="Bound"
+      >Q</a
+      ><a name="5056"
+      > </a
+      ><a name="5057" href="Relation.Nullary.Negation.html#5057" class="Bound"
+      >R</a
+      ><a name="5058"
+      > </a
+      ><a name="5059" class="Symbol"
+      >:</a
+      ><a name="5060"
+      > </a
+      ><a name="5061" class="PrimitiveType"
+      >Set</a
+      ><a name="5064"
+      > </a
+      ><a name="5065" href="Relation.Nullary.Negation.html#5039" class="Bound"
+      >&#8467;</a
+      ><a name="5066" class="Symbol"
+      >}</a
+      ><a name="5067"
+      > </a
+      ><a name="5068" class="Symbol"
+      >&#8594;</a
+      ><a name="5069"
+      >
+              </a
+      ><a name="5084" class="Symbol"
+      >(</a
+      ><a name="5085" href="Relation.Nullary.Negation.html#5043" class="Bound"
+      >P</a
+      ><a name="5086"
+      > </a
+      ><a name="5087" class="Symbol"
+      >&#8594;</a
+      ><a name="5088"
+      > </a
+      ><a name="5089" href="Relation.Nullary.Negation.html#5055" class="Bound"
+      >Q</a
+      ><a name="5090"
+      > </a
+      ><a name="5091" href="Data.Sum.html#404" class="Datatype Operator"
+      >&#8846;</a
+      ><a name="5092"
+      > </a
+      ><a name="5093" href="Relation.Nullary.Negation.html#5057" class="Bound"
+      >R</a
+      ><a name="5094" class="Symbol"
+      >)</a
+      ><a name="5095"
+      > </a
+      ><a name="5096" class="Symbol"
+      >&#8594;</a
+      ><a name="5097"
+      > </a
+      ><a name="5098" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="5099"
+      > </a
+      ><a name="5100" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="5101"
+      > </a
+      ><a name="5102" class="Symbol"
+      >((</a
+      ><a name="5104" href="Relation.Nullary.Negation.html#5043" class="Bound"
+      >P</a
+      ><a name="5105"
+      > </a
+      ><a name="5106" class="Symbol"
+      >&#8594;</a
+      ><a name="5107"
+      > </a
+      ><a name="5108" href="Relation.Nullary.Negation.html#5055" class="Bound"
+      >Q</a
+      ><a name="5109" class="Symbol"
+      >)</a
+      ><a name="5110"
+      > </a
+      ><a name="5111" href="Data.Sum.html#404" class="Datatype Operator"
+      >&#8846;</a
+      ><a name="5112"
+      > </a
+      ><a name="5113" class="Symbol"
+      >(</a
+      ><a name="5114" href="Relation.Nullary.Negation.html#5043" class="Bound"
+      >P</a
+      ><a name="5115"
+      > </a
+      ><a name="5116" class="Symbol"
+      >&#8594;</a
+      ><a name="5117"
+      > </a
+      ><a name="5118" href="Relation.Nullary.Negation.html#5057" class="Bound"
+      >R</a
+      ><a name="5119" class="Symbol"
+      >))</a
+      ><a name="5121"
+      >
+  </a
+      ><a name="5124" href="Relation.Nullary.Negation.html#5022" class="Function"
+      >corollary</a
+      ><a name="5133"
+      > </a
+      ><a name="5134" class="Symbol"
+      >{</a
+      ><a name="5135"
+      >P </a
+      ><a name="5137" class="Symbol"
+      >=</a
+      ><a name="5138"
+      > </a
+      ><a name="5139" href="Relation.Nullary.Negation.html#5139" class="Bound"
+      >P</a
+      ><a name="5140" class="Symbol"
+      >}</a
+      ><a name="5141"
+      > </a
+      ><a name="5142" class="Symbol"
+      >{</a
+      ><a name="5143" href="Relation.Nullary.Negation.html#5143" class="Bound"
+      >Q</a
+      ><a name="5144" class="Symbol"
+      >}</a
+      ><a name="5145"
+      > </a
+      ><a name="5146" class="Symbol"
+      >{</a
+      ><a name="5147" href="Relation.Nullary.Negation.html#5147" class="Bound"
+      >R</a
+      ><a name="5148" class="Symbol"
+      >}</a
+      ><a name="5149"
+      > </a
+      ><a name="5150" href="Relation.Nullary.Negation.html#5150" class="Bound"
+      >f</a
+      ><a name="5151"
+      > </a
+      ><a name="5152" class="Symbol"
+      >=</a
+      ><a name="5153"
+      >
+    </a
+      ><a name="5158" href="Relation.Nullary.Negation.html#2057" class="Function"
+      >&#172;&#172;-map</a
+      ><a name="5164"
+      > </a
+      ><a name="5165" href="Relation.Nullary.Negation.html#5270" class="Function"
+      >helper</a
+      ><a name="5171"
+      > </a
+      ><a name="5172" class="Symbol"
+      >(</a
+      ><a name="5173" href="Relation.Nullary.Negation.html#4182" class="Function"
+      >independence-of-premise</a
+      ><a name="5196"
+      >
+                     </a
+      ><a name="5218" href="Data.Bool.html#622" class="InductiveConstructor"
+      >true</a
+      ><a name="5222"
+      > </a
+      ><a name="5223" class="Symbol"
+      >(</a
+      ><a name="5224" href="Data.Sum.html#678" class="Function Operator"
+      >[</a
+      ><a name="5225"
+      > </a
+      ><a name="5226" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >_,_</a
+      ><a name="5229"
+      > </a
+      ><a name="5230" href="Data.Bool.html#622" class="InductiveConstructor"
+      >true</a
+      ><a name="5234"
+      > </a
+      ><a name="5235" href="Data.Sum.html#678" class="Function Operator"
+      >,</a
+      ><a name="5236"
+      > </a
+      ><a name="5237" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >_,_</a
+      ><a name="5240"
+      > </a
+      ><a name="5241" href="Data.Bool.html#637" class="InductiveConstructor"
+      >false</a
+      ><a name="5246"
+      > </a
+      ><a name="5247" href="Data.Sum.html#678" class="Function Operator"
+      >]</a
+      ><a name="5248"
+      > </a
+      ><a name="5249" href="Function.html#898" class="Function Operator"
+      >&#8728;&#8242;</a
+      ><a name="5251"
+      > </a
+      ><a name="5252" href="Relation.Nullary.Negation.html#5150" class="Bound"
+      >f</a
+      ><a name="5253" class="Symbol"
+      >))</a
+      ><a name="5255"
+      >
+    </a
+      ><a name="5260" class="Keyword"
+      >where</a
+      ><a name="5265"
+      >
+    </a
+      ><a name="5270" href="Relation.Nullary.Negation.html#5270" class="Function"
+      >helper</a
+      ><a name="5276"
+      > </a
+      ><a name="5277" class="Symbol"
+      >:</a
+      ><a name="5278"
+      > </a
+      ><a name="5279" href="Data.Product.html#805" class="Function"
+      >&#8707;</a
+      ><a name="5280"
+      > </a
+      ><a name="5281" class="Symbol"
+      >(&#955;</a
+      ><a name="5283"
+      > </a
+      ><a name="5284" href="Relation.Nullary.Negation.html#5284" class="Bound"
+      >b</a
+      ><a name="5285"
+      > </a
+      ><a name="5286" class="Symbol"
+      >&#8594;</a
+      ><a name="5287"
+      > </a
+      ><a name="5288" href="Relation.Nullary.Negation.html#5139" class="Bound"
+      >P</a
+      ><a name="5289"
+      > </a
+      ><a name="5290" class="Symbol"
+      >&#8594;</a
+      ><a name="5291"
+      > </a
+      ><a name="5292" href="Data.Bool.html#1047" class="Function Operator"
+      >if</a
+      ><a name="5294"
+      > </a
+      ><a name="5295" href="Relation.Nullary.Negation.html#5284" class="Bound"
+      >b</a
+      ><a name="5296"
+      > </a
+      ><a name="5297" href="Data.Bool.html#1047" class="Function Operator"
+      >then</a
+      ><a name="5301"
+      > </a
+      ><a name="5302" href="Relation.Nullary.Negation.html#5143" class="Bound"
+      >Q</a
+      ><a name="5303"
+      > </a
+      ><a name="5304" href="Data.Bool.html#1047" class="Function Operator"
+      >else</a
+      ><a name="5308"
+      > </a
+      ><a name="5309" href="Relation.Nullary.Negation.html#5147" class="Bound"
+      >R</a
+      ><a name="5310" class="Symbol"
+      >)</a
+      ><a name="5311"
+      > </a
+      ><a name="5312" class="Symbol"
+      >&#8594;</a
+      ><a name="5313"
+      > </a
+      ><a name="5314" class="Symbol"
+      >(</a
+      ><a name="5315" href="Relation.Nullary.Negation.html#5139" class="Bound"
+      >P</a
+      ><a name="5316"
+      > </a
+      ><a name="5317" class="Symbol"
+      >&#8594;</a
+      ><a name="5318"
+      > </a
+      ><a name="5319" href="Relation.Nullary.Negation.html#5143" class="Bound"
+      >Q</a
+      ><a name="5320" class="Symbol"
+      >)</a
+      ><a name="5321"
+      > </a
+      ><a name="5322" href="Data.Sum.html#404" class="Datatype Operator"
+      >&#8846;</a
+      ><a name="5323"
+      > </a
+      ><a name="5324" class="Symbol"
+      >(</a
+      ><a name="5325" href="Relation.Nullary.Negation.html#5139" class="Bound"
+      >P</a
+      ><a name="5326"
+      > </a
+      ><a name="5327" class="Symbol"
+      >&#8594;</a
+      ><a name="5328"
+      > </a
+      ><a name="5329" href="Relation.Nullary.Negation.html#5147" class="Bound"
+      >R</a
+      ><a name="5330" class="Symbol"
+      >)</a
+      ><a name="5331"
+      >
+    </a
+      ><a name="5336" href="Relation.Nullary.Negation.html#5270" class="Function"
+      >helper</a
+      ><a name="5342"
+      > </a
+      ><a name="5343" class="Symbol"
+      >(</a
+      ><a name="5344" href="Data.Bool.html#622" class="InductiveConstructor"
+      >true</a
+      ><a name="5348"
+      >  </a
+      ><a name="5350" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="5351"
+      > </a
+      ><a name="5352" href="Relation.Nullary.Negation.html#5352" class="Bound"
+      >f</a
+      ><a name="5353" class="Symbol"
+      >)</a
+      ><a name="5354"
+      > </a
+      ><a name="5355" class="Symbol"
+      >=</a
+      ><a name="5356"
+      > </a
+      ><a name="5357" href="Data.Sum.html#460" class="InductiveConstructor"
+      >inj&#8321;</a
+      ><a name="5361"
+      > </a
+      ><a name="5362" href="Relation.Nullary.Negation.html#5352" class="Bound"
+      >f</a
+      ><a name="5363"
+      >
+    </a
+      ><a name="5368" href="Relation.Nullary.Negation.html#5270" class="Function"
+      >helper</a
+      ><a name="5374"
+      > </a
+      ><a name="5375" class="Symbol"
+      >(</a
+      ><a name="5376" href="Data.Bool.html#637" class="InductiveConstructor"
+      >false</a
+      ><a name="5381"
+      > </a
+      ><a name="5382" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="5383"
+      > </a
+      ><a name="5384" href="Relation.Nullary.Negation.html#5384" class="Bound"
+      >f</a
+      ><a name="5385" class="Symbol"
+      >)</a
+      ><a name="5386"
+      > </a
+      ><a name="5387" class="Symbol"
+      >=</a
+      ><a name="5388"
+      > </a
+      ><a name="5389" href="Data.Sum.html#485" class="InductiveConstructor"
+      >inj&#8322;</a
+      ><a name="5393"
+      > </a
+      ><a name="5394" href="Relation.Nullary.Negation.html#5384" class="Bound"
+      >f</a
+      ><a name="5395"
+      >
+
+</a
+      ><a name="5397" class="Comment"
+      >-- The classical statements of excluded middle and double-negation</a
+      ><a name="5463"
+      >
+</a
+      ><a name="5464" class="Comment"
+      >-- elimination.</a
+      ><a name="5479"
+      >
+
+</a
+      ><a name="5481" href="Relation.Nullary.Negation.html#5481" class="Function"
+      >Excluded-Middle</a
+      ><a name="5496"
+      > </a
+      ><a name="5497" class="Symbol"
+      >:</a
+      ><a name="5498"
+      > </a
+      ><a name="5499" class="Symbol"
+      >(</a
+      ><a name="5500" href="Relation.Nullary.Negation.html#5500" class="Bound"
+      >&#8467;</a
+      ><a name="5501"
+      > </a
+      ><a name="5502" class="Symbol"
+      >:</a
+      ><a name="5503"
+      > </a
+      ><a name="5504" href="Agda.Prim.html#254" class="Postulate"
+      >Level</a
+      ><a name="5509" class="Symbol"
+      >)</a
+      ><a name="5510"
+      > </a
+      ><a name="5511" class="Symbol"
+      >&#8594;</a
+      ><a name="5512"
+      > </a
+      ><a name="5513" class="PrimitiveType"
+      >Set</a
+      ><a name="5516"
+      > </a
+      ><a name="5517" class="Symbol"
+      >(</a
+      ><a name="5518" href="Agda.Prim.html#284" class="Primitive"
+      >suc</a
+      ><a name="5521"
+      > </a
+      ><a name="5522" href="Relation.Nullary.Negation.html#5500" class="Bound"
+      >&#8467;</a
+      ><a name="5523" class="Symbol"
+      >)</a
+      ><a name="5524"
+      >
+</a
+      ><a name="5525" href="Relation.Nullary.Negation.html#5481" class="Function"
+      >Excluded-Middle</a
+      ><a name="5540"
+      > </a
+      ><a name="5541" href="Relation.Nullary.Negation.html#5541" class="Bound"
+      >p</a
+      ><a name="5542"
+      > </a
+      ><a name="5543" class="Symbol"
+      >=</a
+      ><a name="5544"
+      > </a
+      ><a name="5545" class="Symbol"
+      >{</a
+      ><a name="5546" href="Relation.Nullary.Negation.html#5546" class="Bound"
+      >P</a
+      ><a name="5547"
+      > </a
+      ><a name="5548" class="Symbol"
+      >:</a
+      ><a name="5549"
+      > </a
+      ><a name="5550" class="PrimitiveType"
+      >Set</a
+      ><a name="5553"
+      > </a
+      ><a name="5554" href="Relation.Nullary.Negation.html#5541" class="Bound"
+      >p</a
+      ><a name="5555" class="Symbol"
+      >}</a
+      ><a name="5556"
+      > </a
+      ><a name="5557" class="Symbol"
+      >&#8594;</a
+      ><a name="5558"
+      > </a
+      ><a name="5559" href="Relation.Nullary.Core.html#468" class="Datatype"
+      >Dec</a
+      ><a name="5562"
+      > </a
+      ><a name="5563" href="Relation.Nullary.Negation.html#5546" class="Bound"
+      >P</a
+      ><a name="5564"
+      >
+
+</a
+      ><a name="5566" href="Relation.Nullary.Negation.html#5566" class="Function"
+      >Double-Negation-Elimination</a
+      ><a name="5593"
+      > </a
+      ><a name="5594" class="Symbol"
+      >:</a
+      ><a name="5595"
+      > </a
+      ><a name="5596" class="Symbol"
+      >(</a
+      ><a name="5597" href="Relation.Nullary.Negation.html#5597" class="Bound"
+      >&#8467;</a
+      ><a name="5598"
+      > </a
+      ><a name="5599" class="Symbol"
+      >:</a
+      ><a name="5600"
+      > </a
+      ><a name="5601" href="Agda.Prim.html#254" class="Postulate"
+      >Level</a
+      ><a name="5606" class="Symbol"
+      >)</a
+      ><a name="5607"
+      > </a
+      ><a name="5608" class="Symbol"
+      >&#8594;</a
+      ><a name="5609"
+      > </a
+      ><a name="5610" class="PrimitiveType"
+      >Set</a
+      ><a name="5613"
+      > </a
+      ><a name="5614" class="Symbol"
+      >(</a
+      ><a name="5615" href="Agda.Prim.html#284" class="Primitive"
+      >suc</a
+      ><a name="5618"
+      > </a
+      ><a name="5619" href="Relation.Nullary.Negation.html#5597" class="Bound"
+      >&#8467;</a
+      ><a name="5620" class="Symbol"
+      >)</a
+      ><a name="5621"
+      >
+</a
+      ><a name="5622" href="Relation.Nullary.Negation.html#5566" class="Function"
+      >Double-Negation-Elimination</a
+      ><a name="5649"
+      > </a
+      ><a name="5650" href="Relation.Nullary.Negation.html#5650" class="Bound"
+      >p</a
+      ><a name="5651"
+      > </a
+      ><a name="5652" class="Symbol"
+      >=</a
+      ><a name="5653"
+      > </a
+      ><a name="5654" class="Symbol"
+      >{</a
+      ><a name="5655" href="Relation.Nullary.Negation.html#5655" class="Bound"
+      >P</a
+      ><a name="5656"
+      > </a
+      ><a name="5657" class="Symbol"
+      >:</a
+      ><a name="5658"
+      > </a
+      ><a name="5659" class="PrimitiveType"
+      >Set</a
+      ><a name="5662"
+      > </a
+      ><a name="5663" href="Relation.Nullary.Negation.html#5650" class="Bound"
+      >p</a
+      ><a name="5664" class="Symbol"
+      >}</a
+      ><a name="5665"
+      > </a
+      ><a name="5666" class="Symbol"
+      >&#8594;</a
+      ><a name="5667"
+      > </a
+      ><a name="5668" href="Relation.Nullary.Negation.html#2216" class="Function"
+      >Stable</a
+      ><a name="5674"
+      > </a
+      ><a name="5675" href="Relation.Nullary.Negation.html#5655" class="Bound"
+      >P</a
+      ><a name="5676"
+      >
+
+</a
+      ><a name="5678" class="Keyword"
+      >private</a
+      ><a name="5685"
+      >
+
+  </a
+      ><a name="5689" class="Comment"
+      >-- The two statements above are equivalent. The proofs are so</a
+      ><a name="5750"
+      >
+  </a
+      ><a name="5753" class="Comment"
+      >-- simple, given the definitions above, that they are not exported.</a
+      ><a name="5820"
+      >
+
+  </a
+      ><a name="5824" href="Relation.Nullary.Negation.html#5824" class="Function"
+      >em&#8658;dne</a
+      ><a name="5830"
+      > </a
+      ><a name="5831" class="Symbol"
+      >:</a
+      ><a name="5832"
+      > </a
+      ><a name="5833" class="Symbol"
+      >&#8704;</a
+      ><a name="5834"
+      > </a
+      ><a name="5835" class="Symbol"
+      >{</a
+      ><a name="5836" href="Relation.Nullary.Negation.html#5836" class="Bound"
+      >&#8467;</a
+      ><a name="5837" class="Symbol"
+      >}</a
+      ><a name="5838"
+      > </a
+      ><a name="5839" class="Symbol"
+      >&#8594;</a
+      ><a name="5840"
+      > </a
+      ><a name="5841" href="Relation.Nullary.Negation.html#5481" class="Function"
+      >Excluded-Middle</a
+      ><a name="5856"
+      > </a
+      ><a name="5857" href="Relation.Nullary.Negation.html#5836" class="Bound"
+      >&#8467;</a
+      ><a name="5858"
+      > </a
+      ><a name="5859" class="Symbol"
+      >&#8594;</a
+      ><a name="5860"
+      > </a
+      ><a name="5861" href="Relation.Nullary.Negation.html#5566" class="Function"
+      >Double-Negation-Elimination</a
+      ><a name="5888"
+      > </a
+      ><a name="5889" href="Relation.Nullary.Negation.html#5836" class="Bound"
+      >&#8467;</a
+      ><a name="5890"
+      >
+  </a
+      ><a name="5893" href="Relation.Nullary.Negation.html#5824" class="Function"
+      >em&#8658;dne</a
+      ><a name="5899"
+      > </a
+      ><a name="5900" href="Relation.Nullary.Negation.html#5900" class="Bound"
+      >em</a
+      ><a name="5902"
+      > </a
+      ><a name="5903" class="Symbol"
+      >=</a
+      ><a name="5904"
+      > </a
+      ><a name="5905" href="Relation.Nullary.Negation.html#2602" class="Function"
+      >decidable-stable</a
+      ><a name="5921"
+      > </a
+      ><a name="5922" href="Relation.Nullary.Negation.html#5900" class="Bound"
+      >em</a
+      ><a name="5924"
+      >
+
+  </a
+      ><a name="5928" href="Relation.Nullary.Negation.html#5928" class="Function"
+      >dne&#8658;em</a
+      ><a name="5934"
+      > </a
+      ><a name="5935" class="Symbol"
+      >:</a
+      ><a name="5936"
+      > </a
+      ><a name="5937" class="Symbol"
+      >&#8704;</a
+      ><a name="5938"
+      > </a
+      ><a name="5939" class="Symbol"
+      >{</a
+      ><a name="5940" href="Relation.Nullary.Negation.html#5940" class="Bound"
+      >&#8467;</a
+      ><a name="5941" class="Symbol"
+      >}</a
+      ><a name="5942"
+      > </a
+      ><a name="5943" class="Symbol"
+      >&#8594;</a
+      ><a name="5944"
+      > </a
+      ><a name="5945" href="Relation.Nullary.Negation.html#5566" class="Function"
+      >Double-Negation-Elimination</a
+      ><a name="5972"
+      > </a
+      ><a name="5973" href="Relation.Nullary.Negation.html#5940" class="Bound"
+      >&#8467;</a
+      ><a name="5974"
+      > </a
+      ><a name="5975" class="Symbol"
+      >&#8594;</a
+      ><a name="5976"
+      > </a
+      ><a name="5977" href="Relation.Nullary.Negation.html#5481" class="Function"
+      >Excluded-Middle</a
+      ><a name="5992"
+      > </a
+      ><a name="5993" href="Relation.Nullary.Negation.html#5940" class="Bound"
+      >&#8467;</a
+      ><a name="5994"
+      >
+  </a
+      ><a name="5997" href="Relation.Nullary.Negation.html#5928" class="Function"
+      >dne&#8658;em</a
+      ><a name="6003"
+      > </a
+      ><a name="6004" href="Relation.Nullary.Negation.html#6004" class="Bound"
+      >dne</a
+      ><a name="6007"
+      > </a
+      ><a name="6008" class="Symbol"
+      >=</a
+      ><a name="6009"
+      > </a
+      ><a name="6010" href="Relation.Nullary.Negation.html#6004" class="Bound"
+      >dne</a
+      ><a name="6013"
+      > </a
+      ><a name="6014" href="Relation.Nullary.Negation.html#3396" class="Function"
+      >excluded-middle</a
+      ><a name="6029"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

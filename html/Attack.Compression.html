@@ -1,0 +1,2011 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Attack.Compression</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Symbol"
+      >{-#</a
+      ><a name="4"
+      > </a
+      ><a name="5" class="Keyword"
+      >OPTIONS</a
+      ><a name="12"
+      > --copatterns </a
+      ><a name="26" class="Symbol"
+      >#-}</a
+      ><a name="29"
+      >
+</a
+      ><a name="30" class="Comment"
+      >-- Compression can be used an an Oracle to defeat encryption.</a
+      ><a name="91"
+      >
+</a
+      ><a name="92" class="Comment"
+      >-- Here we show how compressing before encrypting lead to a</a
+      ><a name="151"
+      >
+</a
+      ><a name="152" class="Comment"
+      >-- NOT semantically secure construction (IND-CPA).</a
+      ><a name="202"
+      >
+</a
+      ><a name="203" class="Keyword"
+      >module</a
+      ><a name="209"
+      > </a
+      ><a name="210" href="Attack.Compression.html#1" class="Module"
+      >Attack.Compression</a
+      ><a name="228"
+      > </a
+      ><a name="229" class="Keyword"
+      >where</a
+      ><a name="234"
+      >
+
+</a
+      ><a name="236" class="Keyword"
+      >open</a
+      ><a name="240"
+      > </a
+      ><a name="241" class="Keyword"
+      >import</a
+      ><a name="247"
+      > </a
+      ><a name="248" href="Type.html#1" class="Module"
+      >Type</a
+      ><a name="252"
+      > </a
+      ><a name="253" class="Keyword"
+      >using</a
+      ><a name="258"
+      > </a
+      ><a name="259" class="Symbol"
+      >(</a
+      ><a name="260"
+      >&#9733;</a
+      ><a name="261" class="Symbol"
+      >)</a
+      ><a name="262"
+      >
+</a
+      ><a name="263" class="Keyword"
+      >open</a
+      ><a name="267"
+      > </a
+      ><a name="268" class="Keyword"
+      >import</a
+      ><a name="274"
+      > </a
+      ><a name="275" href="Function.html#1" class="Module"
+      >Function</a
+      ><a name="283"
+      >
+</a
+      ><a name="284" class="Keyword"
+      >open</a
+      ><a name="288"
+      > </a
+      ><a name="289" class="Keyword"
+      >import</a
+      ><a name="295"
+      > </a
+      ><a name="296" href="Data.Nat.NP.html#1" class="Module"
+      >Data.Nat.NP</a
+      ><a name="307"
+      >
+</a
+      ><a name="308" class="Keyword"
+      >open</a
+      ><a name="312"
+      > </a
+      ><a name="313" class="Keyword"
+      >import</a
+      ><a name="319"
+      > </a
+      ><a name="320" href="Data.Two.html#1" class="Module"
+      >Data.Two</a
+      ><a name="328"
+      > </a
+      ><a name="329" class="Keyword"
+      >renaming</a
+      ><a name="337"
+      > </a
+      ><a name="338" class="Symbol"
+      >(</a
+      ><a name="339"
+      >_==_ </a
+      ><a name="344" class="Symbol"
+      >to</a
+      ><a name="346"
+      > _==&#7495;_</a
+      ><a name="352" class="Symbol"
+      >)</a
+      ><a name="353"
+      >
+</a
+      ><a name="354" class="Keyword"
+      >open</a
+      ><a name="358"
+      > </a
+      ><a name="359" class="Keyword"
+      >import</a
+      ><a name="365"
+      > </a
+      ><a name="366" href="Data.Product.html#1" class="Module"
+      >Data.Product</a
+      ><a name="378"
+      >
+</a
+      ><a name="379" class="Keyword"
+      >open</a
+      ><a name="383"
+      > </a
+      ><a name="384" class="Keyword"
+      >import</a
+      ><a name="390"
+      > </a
+      ><a name="391" href="Data.Zero.html#1" class="Module"
+      >Data.Zero</a
+      ><a name="400"
+      >
+</a
+      ><a name="401" class="Keyword"
+      >open</a
+      ><a name="405"
+      > </a
+      ><a name="406" class="Keyword"
+      >import</a
+      ><a name="412"
+      > </a
+      ><a name="413" href="Relation.Binary.PropositionalEquality.NP.html#1" class="Module"
+      >Relation.Binary.PropositionalEquality.NP</a
+      ><a name="453"
+      >
+
+</a
+      ><a name="455" class="Keyword"
+      >import</a
+      ><a name="461"
+      > </a
+      ><a name="462" href="Game.IND-CPA.html#1" class="Module"
+      >Game.IND-CPA</a
+      ><a name="474"
+      >
+
+</a
+      ><a name="476" class="Keyword"
+      >record</a
+      ><a name="482"
+      > </a
+      ><a name="483" href="Attack.Compression.html#483" class="Record"
+      >Sized</a
+      ><a name="488"
+      > </a
+      ><a name="489" class="Symbol"
+      >(</a
+      ><a name="490" href="Attack.Compression.html#490" class="Bound"
+      >A</a
+      ><a name="491"
+      > </a
+      ><a name="492" class="Symbol"
+      >:</a
+      ><a name="493"
+      > </a
+      ><a name="494" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="495" class="Symbol"
+      >)</a
+      ><a name="496"
+      > </a
+      ><a name="497" class="Symbol"
+      >:</a
+      ><a name="498"
+      > </a
+      ><a name="499" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="500"
+      > </a
+      ><a name="501" class="Keyword"
+      >where</a
+      ><a name="506"
+      >
+  </a
+      ><a name="509" class="Keyword"
+      >field</a
+      ><a name="514"
+      >
+    </a
+      ><a name="519" href="Attack.Compression.html#519" class="Field"
+      >size</a
+      ><a name="523"
+      >  </a
+      ><a name="525" class="Symbol"
+      >:</a
+      ><a name="526"
+      > </a
+      ><a name="527" href="Attack.Compression.html#490" class="Bound"
+      >A</a
+      ><a name="528"
+      > </a
+      ><a name="529" class="Symbol"
+      >&#8594;</a
+      ><a name="530"
+      > </a
+      ><a name="531" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="532"
+      >
+
+</a
+      ><a name="534" class="Keyword"
+      >open</a
+      ><a name="538"
+      > </a
+      ><a name="539" href="Attack.Compression.html#483" class="Module"
+      >Sized</a
+      ><a name="544"
+      > </a
+      ><a name="545" class="Symbol"
+      >{{...}}</a
+      ><a name="552"
+      >
+
+</a
+      ><a name="554" class="Keyword"
+      >module</a
+      ><a name="560"
+      > </a
+      ><a name="561" href="Attack.Compression.html#561" class="Module"
+      >_</a
+      ><a name="562"
+      > </a
+      ><a name="563" class="Symbol"
+      >{</a
+      ><a name="564" href="Attack.Compression.html#564" class="Bound"
+      >A</a
+      ><a name="565"
+      > </a
+      ><a name="566" href="Attack.Compression.html#566" class="Bound"
+      >B</a
+      ><a name="567" class="Symbol"
+      >}</a
+      ><a name="568"
+      > </a
+      ><a name="569" class="Symbol"
+      >{{</a
+      ><a name="571" href="Attack.Compression.html#571" class="Bound"
+      >_</a
+      ><a name="572"
+      > </a
+      ><a name="573" class="Symbol"
+      >:</a
+      ><a name="574"
+      > </a
+      ><a name="575" href="Attack.Compression.html#483" class="Record"
+      >Sized</a
+      ><a name="580"
+      > </a
+      ><a name="581" href="Attack.Compression.html#564" class="Bound"
+      >A</a
+      ><a name="582" class="Symbol"
+      >}}</a
+      ><a name="584"
+      > </a
+      ><a name="585" class="Symbol"
+      >{{</a
+      ><a name="587" href="Attack.Compression.html#587" class="Bound"
+      >_</a
+      ><a name="588"
+      > </a
+      ><a name="589" class="Symbol"
+      >:</a
+      ><a name="590"
+      > </a
+      ><a name="591" href="Attack.Compression.html#483" class="Record"
+      >Sized</a
+      ><a name="596"
+      > </a
+      ><a name="597" href="Attack.Compression.html#566" class="Bound"
+      >B</a
+      ><a name="598" class="Symbol"
+      >}}</a
+      ><a name="600"
+      > </a
+      ><a name="601" class="Keyword"
+      >where</a
+      ><a name="606"
+      >
+    </a
+      ><a name="611" class="Comment"
+      >-- Same size</a
+      ><a name="623"
+      >
+    </a
+      ><a name="628" href="Attack.Compression.html#628" class="Function Operator"
+      >_==&#738;_</a
+      ><a name="633"
+      > </a
+      ><a name="634" class="Symbol"
+      >:</a
+      ><a name="635"
+      > </a
+      ><a name="636" href="Attack.Compression.html#564" class="Bound"
+      >A</a
+      ><a name="637"
+      > </a
+      ><a name="638" class="Symbol"
+      >&#8594;</a
+      ><a name="639"
+      > </a
+      ><a name="640" href="Attack.Compression.html#566" class="Bound"
+      >B</a
+      ><a name="641"
+      > </a
+      ><a name="642" class="Symbol"
+      >&#8594;</a
+      ><a name="643"
+      > </a
+      ><a name="644" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="645"
+      >
+    </a
+      ><a name="650" href="Attack.Compression.html#650" class="Bound"
+      >x</a
+      ><a name="651"
+      > </a
+      ><a name="652" href="Attack.Compression.html#628" class="Function Operator"
+      >==&#738;</a
+      ><a name="655"
+      > </a
+      ><a name="656" href="Attack.Compression.html#656" class="Bound"
+      >y</a
+      ><a name="657"
+      > </a
+      ><a name="658" class="Symbol"
+      >=</a
+      ><a name="659"
+      > </a
+      ><a name="660" href="Attack.Compression.html#519" class="Function"
+      >size</a
+      ><a name="664"
+      > </a
+      ><a name="665" href="Attack.Compression.html#650" class="Bound"
+      >x</a
+      ><a name="666"
+      > </a
+      ><a name="667" href="Data.Nat.NP.html#3397" class="Function Operator"
+      >==</a
+      ><a name="669"
+      > </a
+      ><a name="670" href="Attack.Compression.html#519" class="Function"
+      >size</a
+      ><a name="674"
+      > </a
+      ><a name="675" href="Attack.Compression.html#656" class="Bound"
+      >y</a
+      ><a name="676"
+      >
+
+    </a
+      ><a name="682" class="Comment"
+      >-- Same size</a
+      ><a name="694"
+      >
+    </a
+      ><a name="699" href="Attack.Compression.html#699" class="Function Operator"
+      >_&#8801;&#738;_</a
+      ><a name="703"
+      > </a
+      ><a name="704" class="Symbol"
+      >:</a
+      ><a name="705"
+      > </a
+      ><a name="706" href="Attack.Compression.html#564" class="Bound"
+      >A</a
+      ><a name="707"
+      > </a
+      ><a name="708" class="Symbol"
+      >&#8594;</a
+      ><a name="709"
+      > </a
+      ><a name="710" href="Attack.Compression.html#566" class="Bound"
+      >B</a
+      ><a name="711"
+      > </a
+      ><a name="712" class="Symbol"
+      >&#8594;</a
+      ><a name="713"
+      > </a
+      ><a name="714" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="715"
+      >
+    </a
+      ><a name="720" href="Attack.Compression.html#720" class="Bound"
+      >x</a
+      ><a name="721"
+      > </a
+      ><a name="722" href="Attack.Compression.html#699" class="Function Operator"
+      >&#8801;&#738;</a
+      ><a name="724"
+      > </a
+      ><a name="725" href="Attack.Compression.html#725" class="Bound"
+      >y</a
+      ><a name="726"
+      > </a
+      ><a name="727" class="Symbol"
+      >=</a
+      ><a name="728"
+      > </a
+      ><a name="729" href="Attack.Compression.html#519" class="Function"
+      >size</a
+      ><a name="733"
+      > </a
+      ><a name="734" href="Attack.Compression.html#720" class="Bound"
+      >x</a
+      ><a name="735"
+      > </a
+      ><a name="736" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="737"
+      > </a
+      ><a name="738" href="Attack.Compression.html#519" class="Function"
+      >size</a
+      ><a name="742"
+      > </a
+      ><a name="743" href="Attack.Compression.html#725" class="Bound"
+      >y</a
+      ><a name="744"
+      >
+
+    </a
+      ><a name="750" href="Attack.Compression.html#750" class="Function"
+      >&#8801;&#738;&#8594;==&#738;</a
+      ><a name="756"
+      > </a
+      ><a name="757" class="Symbol"
+      >:</a
+      ><a name="758"
+      > </a
+      ><a name="759" class="Symbol"
+      >&#8704;</a
+      ><a name="760"
+      > </a
+      ><a name="761" class="Symbol"
+      >{</a
+      ><a name="762" href="Attack.Compression.html#762" class="Bound"
+      >x</a
+      ><a name="763"
+      > </a
+      ><a name="764" href="Attack.Compression.html#764" class="Bound"
+      >y</a
+      ><a name="765" class="Symbol"
+      >}</a
+      ><a name="766"
+      > </a
+      ><a name="767" class="Symbol"
+      >&#8594;</a
+      ><a name="768"
+      > </a
+      ><a name="769" href="Attack.Compression.html#762" class="Bound"
+      >x</a
+      ><a name="770"
+      > </a
+      ><a name="771" href="Attack.Compression.html#699" class="Function Operator"
+      >&#8801;&#738;</a
+      ><a name="773"
+      > </a
+      ><a name="774" href="Attack.Compression.html#764" class="Bound"
+      >y</a
+      ><a name="775"
+      > </a
+      ><a name="776" class="Symbol"
+      >&#8594;</a
+      ><a name="777"
+      > </a
+      ><a name="778" class="Symbol"
+      >(</a
+      ><a name="779" href="Attack.Compression.html#762" class="Bound"
+      >x</a
+      ><a name="780"
+      > </a
+      ><a name="781" href="Attack.Compression.html#628" class="Function Operator"
+      >==&#738;</a
+      ><a name="784"
+      > </a
+      ><a name="785" href="Attack.Compression.html#764" class="Bound"
+      >y</a
+      ><a name="786" class="Symbol"
+      >)</a
+      ><a name="787"
+      > </a
+      ><a name="788" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="789"
+      > </a
+      ><a name="790" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="792"
+      >
+    </a
+      ><a name="797" href="Attack.Compression.html#750" class="Function"
+      >&#8801;&#738;&#8594;==&#738;</a
+      ><a name="803"
+      > </a
+      ><a name="804" class="Symbol"
+      >{</a
+      ><a name="805" href="Attack.Compression.html#805" class="Bound"
+      >x</a
+      ><a name="806" class="Symbol"
+      >}</a
+      ><a name="807"
+      > </a
+      ><a name="808" class="Symbol"
+      >{</a
+      ><a name="809" href="Attack.Compression.html#809" class="Bound"
+      >y</a
+      ><a name="810" class="Symbol"
+      >}</a
+      ><a name="811"
+      > </a
+      ><a name="812" href="Attack.Compression.html#812" class="Bound"
+      >x&#8801;&#738;y</a
+      ><a name="816"
+      > </a
+      ><a name="817" class="Keyword"
+      >rewrite</a
+      ><a name="824"
+      > </a
+      ><a name="825" href="Attack.Compression.html#812" class="Bound"
+      >x&#8801;&#738;y</a
+      ><a name="829"
+      > </a
+      ><a name="830" class="Symbol"
+      >=</a
+      ><a name="831"
+      > </a
+      ><a name="832" href="Data.Two.html#2713" class="Function"
+      >&#10003;&#8594;&#8801;</a
+      ><a name="835"
+      > </a
+      ><a name="836" class="Symbol"
+      >(</a
+      ><a name="837" href="Data.Nat.NP.html#10072" class="Function"
+      >==.refl</a
+      ><a name="844"
+      > </a
+      ><a name="845" class="Symbol"
+      >{</a
+      ><a name="846" href="Attack.Compression.html#519" class="Function"
+      >size</a
+      ><a name="850"
+      > </a
+      ><a name="851" href="Attack.Compression.html#809" class="Bound"
+      >y</a
+      ><a name="852" class="Symbol"
+      >})</a
+      ><a name="854"
+      >
+
+    </a
+      ><a name="860" href="Attack.Compression.html#860" class="Function"
+      >==&#738;&#8594;&#8801;&#738;</a
+      ><a name="866"
+      > </a
+      ><a name="867" class="Symbol"
+      >:</a
+      ><a name="868"
+      > </a
+      ><a name="869" class="Symbol"
+      >&#8704;</a
+      ><a name="870"
+      > </a
+      ><a name="871" class="Symbol"
+      >{</a
+      ><a name="872" href="Attack.Compression.html#872" class="Bound"
+      >x</a
+      ><a name="873"
+      > </a
+      ><a name="874" href="Attack.Compression.html#874" class="Bound"
+      >y</a
+      ><a name="875" class="Symbol"
+      >}</a
+      ><a name="876"
+      > </a
+      ><a name="877" class="Symbol"
+      >&#8594;</a
+      ><a name="878"
+      > </a
+      ><a name="879" class="Symbol"
+      >(</a
+      ><a name="880" href="Attack.Compression.html#872" class="Bound"
+      >x</a
+      ><a name="881"
+      > </a
+      ><a name="882" href="Attack.Compression.html#628" class="Function Operator"
+      >==&#738;</a
+      ><a name="885"
+      > </a
+      ><a name="886" href="Attack.Compression.html#874" class="Bound"
+      >y</a
+      ><a name="887" class="Symbol"
+      >)</a
+      ><a name="888"
+      > </a
+      ><a name="889" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="890"
+      > </a
+      ><a name="891" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="893"
+      > </a
+      ><a name="894" class="Symbol"
+      >&#8594;</a
+      ><a name="895"
+      > </a
+      ><a name="896" href="Attack.Compression.html#872" class="Bound"
+      >x</a
+      ><a name="897"
+      > </a
+      ><a name="898" href="Attack.Compression.html#699" class="Function Operator"
+      >&#8801;&#738;</a
+      ><a name="900"
+      > </a
+      ><a name="901" href="Attack.Compression.html#874" class="Bound"
+      >y</a
+      ><a name="902"
+      >
+    </a
+      ><a name="907" href="Attack.Compression.html#860" class="Function"
+      >==&#738;&#8594;&#8801;&#738;</a
+      ><a name="913"
+      > </a
+      ><a name="914" href="Attack.Compression.html#914" class="Bound"
+      >p</a
+      ><a name="915"
+      > </a
+      ><a name="916" class="Symbol"
+      >=</a
+      ><a name="917"
+      > </a
+      ><a name="918" href="Data.Nat.NP.html#9998" class="Function"
+      >==.sound</a
+      ><a name="926"
+      > </a
+      ><a name="927" class="Symbol"
+      >_</a
+      ><a name="928"
+      > </a
+      ><a name="929" class="Symbol"
+      >_</a
+      ><a name="930"
+      > </a
+      ><a name="931" class="Symbol"
+      >(</a
+      ><a name="932" href="Data.Two.html#2619" class="Function"
+      >&#8801;&#8594;&#10003;</a
+      ><a name="935"
+      > </a
+      ><a name="936" href="Attack.Compression.html#914" class="Bound"
+      >p</a
+      ><a name="937" class="Symbol"
+      >)</a
+      ><a name="938"
+      >
+
+</a
+      ><a name="940" class="Keyword"
+      >module</a
+      ><a name="946"
+      > </a
+      ><a name="947" href="Attack.Compression.html#947" class="Module"
+      >_</a
+      ><a name="948"
+      > </a
+      ><a name="949" class="Symbol"
+      >{</a
+      ><a name="950" href="Attack.Compression.html#950" class="Bound"
+      >PubKey</a
+      ><a name="956"
+      > </a
+      ><a name="957" href="Attack.Compression.html#957" class="Bound"
+      >Message</a
+      ><a name="964"
+      > </a
+      ><a name="965" href="Attack.Compression.html#965" class="Bound"
+      >CipherText</a
+      ><a name="975"
+      > </a
+      ><a name="976" href="Attack.Compression.html#976" class="Bound"
+      >R&#8337;</a
+      ><a name="978"
+      > </a
+      ><a name="979" class="Symbol"
+      >:</a
+      ><a name="980"
+      > </a
+      ><a name="981" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="982" class="Symbol"
+      >}</a
+      ><a name="983"
+      >
+         </a
+      ><a name="993" class="Symbol"
+      >(</a
+      ><a name="994" href="Attack.Compression.html#994" class="Bound"
+      >Enc</a
+      ><a name="997"
+      >  </a
+      ><a name="999" class="Symbol"
+      >:</a
+      ><a name="1000"
+      > </a
+      ><a name="1001" href="Attack.Compression.html#950" class="Bound"
+      >PubKey</a
+      ><a name="1007"
+      > </a
+      ><a name="1008" class="Symbol"
+      >&#8594;</a
+      ><a name="1009"
+      > </a
+      ><a name="1010" href="Attack.Compression.html#957" class="Bound"
+      >Message</a
+      ><a name="1017"
+      > </a
+      ><a name="1018" class="Symbol"
+      >&#8594;</a
+      ><a name="1019"
+      > </a
+      ><a name="1020" href="Attack.Compression.html#976" class="Bound"
+      >R&#8337;</a
+      ><a name="1022"
+      > </a
+      ><a name="1023" class="Symbol"
+      >&#8594;</a
+      ><a name="1024"
+      > </a
+      ><a name="1025" href="Attack.Compression.html#965" class="Bound"
+      >CipherText</a
+      ><a name="1035" class="Symbol"
+      >)</a
+      ><a name="1036"
+      >
+         </a
+      ><a name="1046" class="Symbol"
+      >{{</a
+      ><a name="1048" href="Attack.Compression.html#1048" class="Bound"
+      >_</a
+      ><a name="1049"
+      > </a
+      ><a name="1050" class="Symbol"
+      >:</a
+      ><a name="1051"
+      > </a
+      ><a name="1052" href="Attack.Compression.html#483" class="Record"
+      >Sized</a
+      ><a name="1057"
+      > </a
+      ><a name="1058" href="Attack.Compression.html#957" class="Bound"
+      >Message</a
+      ><a name="1065" class="Symbol"
+      >}}</a
+      ><a name="1067"
+      >
+         </a
+      ><a name="1077" class="Symbol"
+      >{{</a
+      ><a name="1079" href="Attack.Compression.html#1079" class="Bound"
+      >_</a
+      ><a name="1080"
+      > </a
+      ><a name="1081" class="Symbol"
+      >:</a
+      ><a name="1082"
+      > </a
+      ><a name="1083" href="Attack.Compression.html#483" class="Record"
+      >Sized</a
+      ><a name="1088"
+      > </a
+      ><a name="1089" href="Attack.Compression.html#965" class="Bound"
+      >CipherText</a
+      ><a name="1099" class="Symbol"
+      >}}</a
+      ><a name="1101"
+      >
+  </a
+      ><a name="1104" class="Keyword"
+      >where</a
+      ><a name="1109"
+      >
+    </a
+      ><a name="1114" class="Comment"
+      >-- Encryption size is independant of the randomness</a
+      ><a name="1165"
+      >
+    </a
+      ><a name="1170" href="Attack.Compression.html#1170" class="Function"
+      >EncSizeRndInd</a
+      ><a name="1183"
+      > </a
+      ><a name="1184" class="Symbol"
+      >=</a
+      ><a name="1185"
+      >
+      </a
+      ><a name="1192" class="Symbol"
+      >&#8704;</a
+      ><a name="1193"
+      > </a
+      ><a name="1194" class="Symbol"
+      >{</a
+      ><a name="1195" href="Attack.Compression.html#1195" class="Bound"
+      >pk</a
+      ><a name="1197"
+      > </a
+      ><a name="1198" href="Attack.Compression.html#1198" class="Bound"
+      >m</a
+      ><a name="1199"
+      > </a
+      ><a name="1200" href="Attack.Compression.html#1200" class="Bound"
+      >r&#8320;</a
+      ><a name="1202"
+      > </a
+      ><a name="1203" href="Attack.Compression.html#1203" class="Bound"
+      >r&#8321;</a
+      ><a name="1205" class="Symbol"
+      >}</a
+      ><a name="1206"
+      > </a
+      ><a name="1207" class="Symbol"
+      >&#8594;</a
+      ><a name="1208"
+      > </a
+      ><a name="1209" href="Attack.Compression.html#994" class="Bound"
+      >Enc</a
+      ><a name="1212"
+      > </a
+      ><a name="1213" href="Attack.Compression.html#1195" class="Bound"
+      >pk</a
+      ><a name="1215"
+      > </a
+      ><a name="1216" href="Attack.Compression.html#1198" class="Bound"
+      >m</a
+      ><a name="1217"
+      > </a
+      ><a name="1218" href="Attack.Compression.html#1200" class="Bound"
+      >r&#8320;</a
+      ><a name="1220"
+      > </a
+      ><a name="1221" href="Attack.Compression.html#699" class="Function Operator"
+      >&#8801;&#738;</a
+      ><a name="1223"
+      > </a
+      ><a name="1224" href="Attack.Compression.html#994" class="Bound"
+      >Enc</a
+      ><a name="1227"
+      > </a
+      ><a name="1228" href="Attack.Compression.html#1195" class="Bound"
+      >pk</a
+      ><a name="1230"
+      > </a
+      ><a name="1231" href="Attack.Compression.html#1198" class="Bound"
+      >m</a
+      ><a name="1232"
+      > </a
+      ><a name="1233" href="Attack.Compression.html#1203" class="Bound"
+      >r&#8321;</a
+      ><a name="1235"
+      >
+
+    </a
+      ><a name="1241" class="Comment"
+      >-- Encrypted ciphertexts of the same size, will lead to messages of the same size</a
+      ><a name="1322"
+      >
+    </a
+      ><a name="1327" href="Attack.Compression.html#1327" class="Function"
+      >EncLeakSize</a
+      ><a name="1338"
+      > </a
+      ><a name="1339" class="Symbol"
+      >=</a
+      ><a name="1340"
+      >
+      </a
+      ><a name="1347" class="Symbol"
+      >&#8704;</a
+      ><a name="1348"
+      > </a
+      ><a name="1349" class="Symbol"
+      >{</a
+      ><a name="1350" href="Attack.Compression.html#1350" class="Bound"
+      >pk</a
+      ><a name="1352"
+      > </a
+      ><a name="1353" href="Attack.Compression.html#1353" class="Bound"
+      >m&#8320;</a
+      ><a name="1355"
+      > </a
+      ><a name="1356" href="Attack.Compression.html#1356" class="Bound"
+      >m&#8321;</a
+      ><a name="1358"
+      > </a
+      ><a name="1359" href="Attack.Compression.html#1359" class="Bound"
+      >r&#8320;</a
+      ><a name="1361"
+      > </a
+      ><a name="1362" href="Attack.Compression.html#1362" class="Bound"
+      >r&#8321;</a
+      ><a name="1364" class="Symbol"
+      >}</a
+      ><a name="1365"
+      > </a
+      ><a name="1366" class="Symbol"
+      >&#8594;</a
+      ><a name="1367"
+      > </a
+      ><a name="1368" href="Attack.Compression.html#994" class="Bound"
+      >Enc</a
+      ><a name="1371"
+      > </a
+      ><a name="1372" href="Attack.Compression.html#1350" class="Bound"
+      >pk</a
+      ><a name="1374"
+      > </a
+      ><a name="1375" href="Attack.Compression.html#1353" class="Bound"
+      >m&#8320;</a
+      ><a name="1377"
+      > </a
+      ><a name="1378" href="Attack.Compression.html#1359" class="Bound"
+      >r&#8320;</a
+      ><a name="1380"
+      > </a
+      ><a name="1381" href="Attack.Compression.html#699" class="Function Operator"
+      >&#8801;&#738;</a
+      ><a name="1383"
+      > </a
+      ><a name="1384" href="Attack.Compression.html#994" class="Bound"
+      >Enc</a
+      ><a name="1387"
+      > </a
+      ><a name="1388" href="Attack.Compression.html#1350" class="Bound"
+      >pk</a
+      ><a name="1390"
+      > </a
+      ><a name="1391" href="Attack.Compression.html#1356" class="Bound"
+      >m&#8321;</a
+      ><a name="1393"
+      > </a
+      ><a name="1394" href="Attack.Compression.html#1362" class="Bound"
+      >r&#8321;</a
+      ><a name="1396"
+      > </a
+      ><a name="1397" class="Symbol"
+      >&#8594;</a
+      ><a name="1398"
+      > </a
+      ><a name="1399" href="Attack.Compression.html#1353" class="Bound"
+      >m&#8320;</a
+      ><a name="1401"
+      > </a
+      ><a name="1402" href="Attack.Compression.html#699" class="Function Operator"
+      >&#8801;&#738;</a
+      ><a name="1404"
+      > </a
+      ><a name="1405" href="Attack.Compression.html#1356" class="Bound"
+      >m&#8321;</a
+      ><a name="1407"
+      >
+
+</a
+      ><a name="1409" class="Keyword"
+      >module</a
+      ><a name="1415"
+      > </a
+      ><a name="1416" href="Attack.Compression.html#1416" class="Module"
+      >M</a
+      ><a name="1417"
+      >
+  </a
+      ><a name="1420" class="Symbol"
+      >{</a
+      ><a name="1421" href="Attack.Compression.html#1421" class="Bound"
+      >Message</a
+      ><a name="1428"
+      > </a
+      ><a name="1429" href="Attack.Compression.html#1429" class="Bound"
+      >CompressedMessage</a
+      ><a name="1446"
+      > </a
+      ><a name="1447" class="Symbol"
+      >:</a
+      ><a name="1448"
+      > </a
+      ><a name="1449" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="1450" class="Symbol"
+      >}</a
+      ><a name="1451"
+      >
+  </a
+      ><a name="1454" class="Symbol"
+      >{{</a
+      ><a name="1456" href="Attack.Compression.html#1456" class="Bound"
+      >_</a
+      ><a name="1457"
+      > </a
+      ><a name="1458" class="Symbol"
+      >:</a
+      ><a name="1459"
+      > </a
+      ><a name="1460" href="Attack.Compression.html#483" class="Record"
+      >Sized</a
+      ><a name="1465"
+      > </a
+      ><a name="1466" href="Attack.Compression.html#1429" class="Bound"
+      >CompressedMessage</a
+      ><a name="1483" class="Symbol"
+      >}}</a
+      ><a name="1485"
+      >
+
+  </a
+      ><a name="1489" class="Symbol"
+      >(</a
+      ><a name="1490" href="Attack.Compression.html#1490" class="Bound"
+      >compress</a
+      ><a name="1498"
+      > </a
+      ><a name="1499" class="Symbol"
+      >:</a
+      ><a name="1500"
+      > </a
+      ><a name="1501" href="Attack.Compression.html#1421" class="Bound"
+      >Message</a
+      ><a name="1508"
+      > </a
+      ><a name="1509" class="Symbol"
+      >&#8594;</a
+      ><a name="1510"
+      > </a
+      ><a name="1511" href="Attack.Compression.html#1429" class="Bound"
+      >CompressedMessage</a
+      ><a name="1528" class="Symbol"
+      >)</a
+      ><a name="1529"
+      >
+
+  </a
+      ><a name="1533" class="Comment"
+      >-- 2 messages which have different size after compression</a
+      ><a name="1590"
+      >
+  </a
+      ><a name="1593" class="Symbol"
+      >(</a
+      ><a name="1594" href="Attack.Compression.html#1594" class="Bound"
+      >m&#8320;</a
+      ><a name="1596"
+      > </a
+      ><a name="1597" href="Attack.Compression.html#1597" class="Bound"
+      >m&#8321;</a
+      ><a name="1599"
+      > </a
+      ><a name="1600" class="Symbol"
+      >:</a
+      ><a name="1601"
+      > </a
+      ><a name="1602" href="Attack.Compression.html#1421" class="Bound"
+      >Message</a
+      ><a name="1609" class="Symbol"
+      >)</a
+      ><a name="1610"
+      >
+  </a
+      ><a name="1613" class="Symbol"
+      >(</a
+      ><a name="1614" href="Attack.Compression.html#1614" class="Bound"
+      >different-compression</a
+      ><a name="1635"
+      >
+     </a
+      ><a name="1641" class="Symbol"
+      >:</a
+      ><a name="1642"
+      > </a
+      ><a name="1643" href="Attack.Compression.html#519" class="Function"
+      >size</a
+      ><a name="1647"
+      > </a
+      ><a name="1648" class="Symbol"
+      >(</a
+      ><a name="1649" href="Attack.Compression.html#1490" class="Bound"
+      >compress</a
+      ><a name="1657"
+      > </a
+      ><a name="1658" href="Attack.Compression.html#1594" class="Bound"
+      >m&#8320;</a
+      ><a name="1660" class="Symbol"
+      >)</a
+      ><a name="1661"
+      > </a
+      ><a name="1662" href="Relation.Binary.Core.html#4754" class="Function Operator"
+      >&#8802;</a
+      ><a name="1663"
+      > </a
+      ><a name="1664" href="Attack.Compression.html#519" class="Function"
+      >size</a
+      ><a name="1668"
+      > </a
+      ><a name="1669" class="Symbol"
+      >(</a
+      ><a name="1670" href="Attack.Compression.html#1490" class="Bound"
+      >compress</a
+      ><a name="1678"
+      > </a
+      ><a name="1679" href="Attack.Compression.html#1597" class="Bound"
+      >m&#8321;</a
+      ><a name="1681" class="Symbol"
+      >))</a
+      ><a name="1683"
+      >
+
+  </a
+      ><a name="1687" class="Symbol"
+      >(</a
+      ><a name="1688" href="Attack.Compression.html#1688" class="Bound"
+      >PubKey</a
+      ><a name="1694"
+      >     </a
+      ><a name="1699" class="Symbol"
+      >:</a
+      ><a name="1700"
+      > </a
+      ><a name="1701" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="1702" class="Symbol"
+      >)</a
+      ><a name="1703"
+      >
+  </a
+      ><a name="1706" class="Symbol"
+      >(</a
+      ><a name="1707" href="Attack.Compression.html#1707" class="Bound"
+      >SecKey</a
+      ><a name="1713"
+      >     </a
+      ><a name="1718" class="Symbol"
+      >:</a
+      ><a name="1719"
+      > </a
+      ><a name="1720" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="1721" class="Symbol"
+      >)</a
+      ><a name="1722"
+      >
+  </a
+      ><a name="1725" class="Symbol"
+      >(</a
+      ><a name="1726" href="Attack.Compression.html#1726" class="Bound"
+      >CipherText</a
+      ><a name="1736"
+      > </a
+      ><a name="1737" class="Symbol"
+      >:</a
+      ><a name="1738"
+      > </a
+      ><a name="1739" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="1740" class="Symbol"
+      >)</a
+      ><a name="1741"
+      >
+  </a
+      ><a name="1744" class="Symbol"
+      >{{</a
+      ><a name="1746" href="Attack.Compression.html#1746" class="Bound"
+      >_</a
+      ><a name="1747"
+      > </a
+      ><a name="1748" class="Symbol"
+      >:</a
+      ><a name="1749"
+      > </a
+      ><a name="1750" href="Attack.Compression.html#483" class="Record"
+      >Sized</a
+      ><a name="1755"
+      > </a
+      ><a name="1756" href="Attack.Compression.html#1726" class="Bound"
+      >CipherText</a
+      ><a name="1766" class="Symbol"
+      >}}</a
+      ><a name="1768"
+      >
+  </a
+      ><a name="1771" class="Symbol"
+      >(</a
+      ><a name="1772" href="Attack.Compression.html#1772" class="Bound"
+      >R&#8337;</a
+      ><a name="1774"
+      > </a
+      ><a name="1775" href="Attack.Compression.html#1775" class="Bound"
+      >R&#8342;</a
+      ><a name="1777"
+      > </a
+      ><a name="1778" href="Attack.Compression.html#1778" class="Bound"
+      >R&#8339;</a
+      ><a name="1780"
+      > </a
+      ><a name="1781" class="Symbol"
+      >:</a
+      ><a name="1782"
+      > </a
+      ><a name="1783" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="1784" class="Symbol"
+      >)</a
+      ><a name="1785"
+      >
+  </a
+      ><a name="1788" class="Symbol"
+      >(</a
+      ><a name="1789" href="Attack.Compression.html#1789" class="Bound"
+      >KeyGen</a
+      ><a name="1795"
+      > </a
+      ><a name="1796" class="Symbol"
+      >:</a
+      ><a name="1797"
+      > </a
+      ><a name="1798" href="Attack.Compression.html#1775" class="Bound"
+      >R&#8342;</a
+      ><a name="1800"
+      > </a
+      ><a name="1801" class="Symbol"
+      >&#8594;</a
+      ><a name="1802"
+      > </a
+      ><a name="1803" href="Attack.Compression.html#1688" class="Bound"
+      >PubKey</a
+      ><a name="1809"
+      > </a
+      ><a name="1810" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="1811"
+      > </a
+      ><a name="1812" href="Attack.Compression.html#1707" class="Bound"
+      >SecKey</a
+      ><a name="1818" class="Symbol"
+      >)</a
+      ><a name="1819"
+      >
+  </a
+      ><a name="1822" class="Symbol"
+      >(</a
+      ><a name="1823" href="Attack.Compression.html#1823" class="Bound"
+      >Enc&#8320;</a
+      ><a name="1827"
+      > </a
+      ><a name="1828" class="Symbol"
+      >:</a
+      ><a name="1829"
+      > </a
+      ><a name="1830" href="Attack.Compression.html#1688" class="Bound"
+      >PubKey</a
+      ><a name="1836"
+      > </a
+      ><a name="1837" class="Symbol"
+      >&#8594;</a
+      ><a name="1838"
+      > </a
+      ><a name="1839" href="Attack.Compression.html#1429" class="Bound"
+      >CompressedMessage</a
+      ><a name="1856"
+      > </a
+      ><a name="1857" class="Symbol"
+      >&#8594;</a
+      ><a name="1858"
+      > </a
+      ><a name="1859" href="Attack.Compression.html#1772" class="Bound"
+      >R&#8337;</a
+      ><a name="1861"
+      > </a
+      ><a name="1862" class="Symbol"
+      >&#8594;</a
+      ><a name="1863"
+      > </a
+      ><a name="1864" href="Attack.Compression.html#1726" class="Bound"
+      >CipherText</a
+      ><a name="1874" class="Symbol"
+      >)</a
+      ><a name="1875"
+      >
+  </a
+      ><a name="1878" class="Symbol"
+      >(</a
+      ><a name="1879" href="Attack.Compression.html#1879" class="Bound"
+      >Enc&#8320;SizeRndInd</a
+      ><a name="1893"
+      > </a
+      ><a name="1894" class="Symbol"
+      >:</a
+      ><a name="1895"
+      > </a
+      ><a name="1896" href="Attack.Compression.html#1170" class="Function"
+      >EncSizeRndInd</a
+      ><a name="1909"
+      > </a
+      ><a name="1910" href="Attack.Compression.html#1823" class="Bound"
+      >Enc&#8320;</a
+      ><a name="1914" class="Symbol"
+      >)</a
+      ><a name="1915"
+      >
+  </a
+      ><a name="1918" class="Symbol"
+      >(</a
+      ><a name="1919" href="Attack.Compression.html#1919" class="Bound"
+      >Enc&#8320;LeakSize</a
+      ><a name="1931"
+      > </a
+      ><a name="1932" class="Symbol"
+      >:</a
+      ><a name="1933"
+      > </a
+      ><a name="1934" href="Attack.Compression.html#1327" class="Function"
+      >EncLeakSize</a
+      ><a name="1945"
+      > </a
+      ><a name="1946" href="Attack.Compression.html#1823" class="Bound"
+      >Enc&#8320;</a
+      ><a name="1950" class="Symbol"
+      >)</a
+      ><a name="1951"
+      >
+  </a
+      ><a name="1954" class="Keyword"
+      >where</a
+      ><a name="1959"
+      >
+
+  </a
+      ><a name="1963" class="Comment"
+      >-- Our adversary runs one encryption</a
+      ><a name="1999"
+      >
+  </a
+      ><a name="2002" href="Attack.Compression.html#2002" class="Function"
+      >R&#8336;</a
+      ><a name="2004"
+      > </a
+      ><a name="2005" class="Symbol"
+      >=</a
+      ><a name="2006"
+      > </a
+      ><a name="2007" href="Attack.Compression.html#1772" class="Bound"
+      >R&#8337;</a
+      ><a name="2009"
+      >
+
+  </a
+      ><a name="2013" href="Attack.Compression.html#2013" class="Function"
+      >Enc&#8321;</a
+      ><a name="2017"
+      > </a
+      ><a name="2018" class="Symbol"
+      >:</a
+      ><a name="2019"
+      > </a
+      ><a name="2020" href="Attack.Compression.html#1688" class="Bound"
+      >PubKey</a
+      ><a name="2026"
+      > </a
+      ><a name="2027" class="Symbol"
+      >&#8594;</a
+      ><a name="2028"
+      > </a
+      ><a name="2029" href="Attack.Compression.html#1421" class="Bound"
+      >Message</a
+      ><a name="2036"
+      > </a
+      ><a name="2037" class="Symbol"
+      >&#8594;</a
+      ><a name="2038"
+      > </a
+      ><a name="2039" href="Attack.Compression.html#1772" class="Bound"
+      >R&#8337;</a
+      ><a name="2041"
+      > </a
+      ><a name="2042" class="Symbol"
+      >&#8594;</a
+      ><a name="2043"
+      > </a
+      ><a name="2044" href="Attack.Compression.html#1726" class="Bound"
+      >CipherText</a
+      ><a name="2054"
+      >
+  </a
+      ><a name="2057" href="Attack.Compression.html#2013" class="Function"
+      >Enc&#8321;</a
+      ><a name="2061"
+      > </a
+      ><a name="2062" href="Attack.Compression.html#2062" class="Bound"
+      >pk</a
+      ><a name="2064"
+      > </a
+      ><a name="2065" href="Attack.Compression.html#2065" class="Bound"
+      >m</a
+      ><a name="2066"
+      > </a
+      ><a name="2067" href="Attack.Compression.html#2067" class="Bound"
+      >r&#8337;</a
+      ><a name="2069"
+      > </a
+      ><a name="2070" class="Symbol"
+      >=</a
+      ><a name="2071"
+      > </a
+      ><a name="2072" href="Attack.Compression.html#1823" class="Bound"
+      >Enc&#8320;</a
+      ><a name="2076"
+      > </a
+      ><a name="2077" href="Attack.Compression.html#2062" class="Bound"
+      >pk</a
+      ><a name="2079"
+      > </a
+      ><a name="2080" class="Symbol"
+      >(</a
+      ><a name="2081" href="Attack.Compression.html#1490" class="Bound"
+      >compress</a
+      ><a name="2089"
+      > </a
+      ><a name="2090" href="Attack.Compression.html#2065" class="Bound"
+      >m</a
+      ><a name="2091" class="Symbol"
+      >)</a
+      ><a name="2092"
+      > </a
+      ><a name="2093" href="Attack.Compression.html#2067" class="Bound"
+      >r&#8337;</a
+      ><a name="2095"
+      >
+
+  </a
+      ><a name="2099" class="Keyword"
+      >module</a
+      ><a name="2105"
+      > </a
+      ><a name="2106" href="Attack.Compression.html#2106" class="Module"
+      >IND-CPA</a
+      ><a name="2113"
+      > </a
+      ><a name="2114" class="Symbol"
+      >=</a
+      ><a name="2115"
+      > </a
+      ><a name="2116" href="Game.IND-CPA.html#1" class="Module"
+      >Game.IND-CPA</a
+      ><a name="2128"
+      > </a
+      ><a name="2129" href="Attack.Compression.html#1688" class="Bound"
+      >PubKey</a
+      ><a name="2135"
+      > </a
+      ><a name="2136" href="Attack.Compression.html#1707" class="Bound"
+      >SecKey</a
+      ><a name="2142"
+      > </a
+      ><a name="2143" href="Attack.Compression.html#1421" class="Bound"
+      >Message</a
+      ><a name="2150"
+      > </a
+      ><a name="2151" href="Attack.Compression.html#1726" class="Bound"
+      >CipherText</a
+      ><a name="2161"
+      >
+                                </a
+      ><a name="2194" href="Attack.Compression.html#1772" class="Bound"
+      >R&#8337;</a
+      ><a name="2196"
+      > </a
+      ><a name="2197" href="Attack.Compression.html#1775" class="Bound"
+      >R&#8342;</a
+      ><a name="2199"
+      > </a
+      ><a name="2200" href="Attack.Compression.html#2002" class="Function"
+      >R&#8336;</a
+      ><a name="2202"
+      > </a
+      ><a name="2203" href="Attack.Compression.html#1778" class="Bound"
+      >R&#8339;</a
+      ><a name="2205"
+      > </a
+      ><a name="2206" href="Attack.Compression.html#1789" class="Bound"
+      >KeyGen</a
+      ><a name="2212"
+      > </a
+      ><a name="2213" href="Attack.Compression.html#2013" class="Function"
+      >Enc&#8321;</a
+      ><a name="2217"
+      >
+  </a
+      ><a name="2220" class="Keyword"
+      >open</a
+      ><a name="2224"
+      > </a
+      ><a name="2225" href="Attack.Compression.html#2106" class="Module"
+      >IND-CPA.</a
+      ><a name="2233" href="Game.IND-CPA.html#420" class="Module"
+      >Adversary</a
+      ><a name="2242"
+      >
+
+  </a
+      ><a name="2246" href="Attack.Compression.html#2246" class="Function"
+      >A</a
+      ><a name="2247"
+      > </a
+      ><a name="2248" class="Symbol"
+      >:</a
+      ><a name="2249"
+      > </a
+      ><a name="2250" href="Game.IND-CPA.html#420" class="Record"
+      >IND-CPA.Adversary</a
+      ><a name="2267"
+      >
+  </a
+      ><a name="2270" href="Game.IND-CPA.html#760" class="Field"
+      >m</a
+      ><a name="2271"
+      >  </a
+      ><a name="2273" href="Attack.Compression.html#2246" class="Function"
+      >A</a
+      ><a name="2274"
+      > </a
+      ><a name="2275" class="Symbol"
+      >=</a
+      ><a name="2276"
+      > </a
+      ><a name="2277" class="Symbol"
+      >&#955;</a
+      ><a name="2278"
+      > </a
+      ><a name="2279" href="Attack.Compression.html#2279" class="Bound"
+      >_</a
+      ><a name="2280"
+      > </a
+      ><a name="2281" href="Attack.Compression.html#2281" class="Bound"
+      >_</a
+      ><a name="2282"
+      > </a
+      ><a name="2283" class="Symbol"
+      >&#8594;</a
+      ><a name="2284"
+      > </a
+      ><a name="2285" href="Data.Two.html#1603" class="Function Operator"
+      >[0:</a
+      ><a name="2288"
+      > </a
+      ><a name="2289" href="Attack.Compression.html#1594" class="Bound"
+      >m&#8320;</a
+      ><a name="2291"
+      > </a
+      ><a name="2292" href="Data.Two.html#1603" class="Function Operator"
+      >1:</a
+      ><a name="2294"
+      > </a
+      ><a name="2295" href="Attack.Compression.html#1597" class="Bound"
+      >m&#8321;</a
+      ><a name="2297"
+      > </a
+      ><a name="2298" href="Data.Two.html#1603" class="Function Operator"
+      >]</a
+      ><a name="2299"
+      >
+  </a
+      ><a name="2302" href="Game.IND-CPA.html#1047" class="Field"
+      >b&#8242;</a
+      ><a name="2304"
+      > </a
+      ><a name="2305" href="Attack.Compression.html#2246" class="Function"
+      >A</a
+      ><a name="2306"
+      > </a
+      ><a name="2307" class="Symbol"
+      >=</a
+      ><a name="2308"
+      > </a
+      ><a name="2309" class="Symbol"
+      >&#955;</a
+      ><a name="2310"
+      > </a
+      ><a name="2311" href="Attack.Compression.html#2311" class="Bound"
+      >r&#8337;</a
+      ><a name="2313"
+      > </a
+      ><a name="2314" href="Attack.Compression.html#2314" class="Bound"
+      >pk</a
+      ><a name="2316"
+      > </a
+      ><a name="2317" href="Attack.Compression.html#2317" class="Bound"
+      >c</a
+      ><a name="2318"
+      > </a
+      ><a name="2319" class="Symbol"
+      >&#8594;</a
+      ><a name="2320"
+      > </a
+      ><a name="2321" href="Attack.Compression.html#2317" class="Bound"
+      >c</a
+      ><a name="2322"
+      > </a
+      ><a name="2323" href="Attack.Compression.html#628" class="Function Operator"
+      >==&#738;</a
+      ><a name="2326"
+      > </a
+      ><a name="2327" href="Attack.Compression.html#2013" class="Function"
+      >Enc&#8321;</a
+      ><a name="2331"
+      > </a
+      ><a name="2332" href="Attack.Compression.html#2314" class="Bound"
+      >pk</a
+      ><a name="2334"
+      > </a
+      ><a name="2335" href="Attack.Compression.html#1597" class="Bound"
+      >m&#8321;</a
+      ><a name="2337"
+      > </a
+      ><a name="2338" href="Attack.Compression.html#2311" class="Bound"
+      >r&#8337;</a
+      ><a name="2340"
+      >
+
+  </a
+      ><a name="2344" class="Comment"
+      >-- The adversary A is always winning.</a
+      ><a name="2381"
+      >
+  </a
+      ><a name="2384" href="Attack.Compression.html#2384" class="Function"
+      >A-always-wins</a
+      ><a name="2397"
+      > </a
+      ><a name="2398" class="Symbol"
+      >:</a
+      ><a name="2399"
+      > </a
+      ><a name="2400" class="Symbol"
+      >&#8704;</a
+      ><a name="2401"
+      > </a
+      ><a name="2402" href="Attack.Compression.html#2402" class="Bound"
+      >b</a
+      ><a name="2403"
+      > </a
+      ><a name="2404" href="Attack.Compression.html#2404" class="Bound"
+      >r</a
+      ><a name="2405"
+      > </a
+      ><a name="2406" class="Symbol"
+      >&#8594;</a
+      ><a name="2407"
+      > </a
+      ><a name="2408" href="Game.IND-CPA.html#1610" class="Function"
+      >IND-CPA.EXP</a
+      ><a name="2419"
+      > </a
+      ><a name="2420" href="Attack.Compression.html#2402" class="Bound"
+      >b</a
+      ><a name="2421"
+      > </a
+      ><a name="2422" href="Attack.Compression.html#2246" class="Function"
+      >A</a
+      ><a name="2423"
+      > </a
+      ><a name="2424" href="Attack.Compression.html#2404" class="Bound"
+      >r</a
+      ><a name="2425"
+      > </a
+      ><a name="2426" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="2427"
+      > </a
+      ><a name="2428" href="Attack.Compression.html#2402" class="Bound"
+      >b</a
+      ><a name="2429"
+      >
+  </a
+      ><a name="2432" href="Attack.Compression.html#2384" class="Function"
+      >A-always-wins</a
+      ><a name="2445"
+      > </a
+      ><a name="2446" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="2448"
+      > </a
+      ><a name="2449" class="Symbol"
+      >_</a
+      ><a name="2450"
+      > </a
+      ><a name="2451" class="Symbol"
+      >=</a
+      ><a name="2452"
+      > </a
+      ><a name="2453" href="Data.Two.html#3757" class="Function"
+      >&#8802;1&#8594;&#8801;0</a
+      ><a name="2458"
+      > </a
+      ><a name="2459" class="Symbol"
+      >(</a
+      ><a name="2460" href="Attack.Compression.html#1614" class="Bound"
+      >different-compression</a
+      ><a name="2481"
+      > </a
+      ><a name="2482" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="2483"
+      > </a
+      ><a name="2484" href="Attack.Compression.html#1919" class="Bound"
+      >Enc&#8320;LeakSize</a
+      ><a name="2496"
+      > </a
+      ><a name="2497" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="2498"
+      > </a
+      ><a name="2499" href="Attack.Compression.html#860" class="Function"
+      >==&#738;&#8594;&#8801;&#738;</a
+      ><a name="2505" class="Symbol"
+      >)</a
+      ><a name="2506"
+      >
+  </a
+      ><a name="2509" href="Attack.Compression.html#2384" class="Function"
+      >A-always-wins</a
+      ><a name="2522"
+      > </a
+      ><a name="2523" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="2525"
+      > </a
+      ><a name="2526" class="Symbol"
+      >_</a
+      ><a name="2527"
+      > </a
+      ><a name="2528" class="Symbol"
+      >=</a
+      ><a name="2529"
+      > </a
+      ><a name="2530" href="Attack.Compression.html#750" class="Function"
+      >&#8801;&#738;&#8594;==&#738;</a
+      ><a name="2536"
+      > </a
+      ><a name="2537" href="Attack.Compression.html#1879" class="Bound"
+      >Enc&#8320;SizeRndInd</a
+      ><a name="2551"
+      >
+
+  </a
+      ><a name="2555" href="Attack.Compression.html#2555" class="Function"
+      >lem</a
+      ><a name="2558"
+      > </a
+      ><a name="2559" class="Symbol"
+      >:</a
+      ><a name="2560"
+      > </a
+      ><a name="2561" class="Symbol"
+      >&#8704;</a
+      ><a name="2562"
+      > </a
+      ><a name="2563" href="Attack.Compression.html#2563" class="Bound"
+      >x</a
+      ><a name="2564"
+      > </a
+      ><a name="2565" href="Attack.Compression.html#2565" class="Bound"
+      >y</a
+      ><a name="2566"
+      > </a
+      ><a name="2567" class="Symbol"
+      >&#8594;</a
+      ><a name="2568"
+      > </a
+      ><a name="2569" class="Symbol"
+      >(</a
+      ><a name="2570" href="Attack.Compression.html#2563" class="Bound"
+      >x</a
+      ><a name="2571"
+      > </a
+      ><a name="2572" href="Data.Two.html#2568" class="Function Operator"
+      >==&#7495;</a
+      ><a name="2575"
+      > </a
+      ><a name="2576" href="Attack.Compression.html#2565" class="Bound"
+      >y</a
+      ><a name="2577" class="Symbol"
+      >)</a
+      ><a name="2578"
+      > </a
+      ><a name="2579" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="2580"
+      > </a
+      ><a name="2581" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="2583"
+      > </a
+      ><a name="2584" class="Symbol"
+      >&#8594;</a
+      ><a name="2585"
+      > </a
+      ><a name="2586" href="Data.Bool.html#873" class="Function"
+      >not</a
+      ><a name="2589"
+      > </a
+      ><a name="2590" class="Symbol"
+      >(</a
+      ><a name="2591" href="Attack.Compression.html#2563" class="Bound"
+      >x</a
+      ><a name="2592"
+      > </a
+      ><a name="2593" href="Data.Two.html#2568" class="Function Operator"
+      >==&#7495;</a
+      ><a name="2596"
+      > </a
+      ><a name="2597" href="Attack.Compression.html#2565" class="Bound"
+      >y</a
+      ><a name="2598" class="Symbol"
+      >)</a
+      ><a name="2599"
+      > </a
+      ><a name="2600" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="2601"
+      > </a
+      ><a name="2602" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="2604"
+      >
+  </a
+      ><a name="2607" href="Attack.Compression.html#2555" class="Function"
+      >lem</a
+      ><a name="2610"
+      > </a
+      ><a name="2611" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="2613"
+      > </a
+      ><a name="2614" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="2616"
+      > </a
+      ><a name="2617" class="Symbol"
+      >=</a
+      ><a name="2618"
+      > </a
+      ><a name="2619" class="Symbol"
+      >&#955;</a
+      ><a name="2620"
+      > </a
+      ><a name="2621" class="Symbol"
+      >()</a
+      ><a name="2623"
+      >
+  </a
+      ><a name="2626" href="Attack.Compression.html#2555" class="Function"
+      >lem</a
+      ><a name="2629"
+      > </a
+      ><a name="2630" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="2632"
+      > </a
+      ><a name="2633" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="2635"
+      > </a
+      ><a name="2636" class="Symbol"
+      >=</a
+      ><a name="2637"
+      > </a
+      ><a name="2638" class="Symbol"
+      >&#955;</a
+      ><a name="2639"
+      > </a
+      ><a name="2640" href="Attack.Compression.html#2640" class="Bound"
+      >_</a
+      ><a name="2641"
+      > </a
+      ><a name="2642" class="Symbol"
+      >&#8594;</a
+      ><a name="2643"
+      > </a
+      ><a name="2644" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="2648"
+      >
+  </a
+      ><a name="2651" href="Attack.Compression.html#2555" class="Function"
+      >lem</a
+      ><a name="2654"
+      > </a
+      ><a name="2655" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="2657"
+      > </a
+      ><a name="2658" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="2660"
+      > </a
+      ><a name="2661" class="Symbol"
+      >=</a
+      ><a name="2662"
+      > </a
+      ><a name="2663" class="Symbol"
+      >&#955;</a
+      ><a name="2664"
+      > </a
+      ><a name="2665" href="Attack.Compression.html#2665" class="Bound"
+      >_</a
+      ><a name="2666"
+      > </a
+      ><a name="2667" class="Symbol"
+      >&#8594;</a
+      ><a name="2668"
+      > </a
+      ><a name="2669" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="2673"
+      >
+  </a
+      ><a name="2676" href="Attack.Compression.html#2555" class="Function"
+      >lem</a
+      ><a name="2679"
+      > </a
+      ><a name="2680" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="2682"
+      > </a
+      ><a name="2683" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="2685"
+      > </a
+      ><a name="2686" class="Symbol"
+      >=</a
+      ><a name="2687"
+      > </a
+      ><a name="2688" class="Symbol"
+      >&#955;</a
+      ><a name="2689"
+      > </a
+      ><a name="2690" class="Symbol"
+      >()</a
+      ><a name="2692"
+      >
+
+  </a
+      ><a name="2696" class="Comment"
+      >{-
+  A-always-wins' : &#8704; r &#8594; IND-CPA.game A r &#8801; 1&#8322;
+  A-always-wins' (0&#8322; , r) = {!lem (not (IND-CPA.EXP 0&#8322; {!A!} r)) (IND-CPA.EXP 1&#8322; A r) (A-always-wins 0&#8322; r)!}
+  A-always-wins' (1&#8322; , r) = A-always-wins 1&#8322; r
+  -}</a
+      ><a name="2906"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

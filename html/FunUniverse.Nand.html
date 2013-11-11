@@ -1,0 +1,821 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >FunUniverse.Nand</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Comment"
+      >-- http://en.wikipedia.org/wiki/NAND_logic</a
+      ><a name="43"
+      >
+</a
+      ><a name="44" class="Keyword"
+      >open</a
+      ><a name="48"
+      > </a
+      ><a name="49" class="Keyword"
+      >import</a
+      ><a name="55"
+      > </a
+      ><a name="56" href="Type.html#1" class="Module"
+      >Type</a
+      ><a name="60"
+      >
+</a
+      ><a name="61" class="Keyword"
+      >open</a
+      ><a name="65"
+      > </a
+      ><a name="66" class="Keyword"
+      >import</a
+      ><a name="72"
+      > </a
+      ><a name="73" href="FunUniverse.Core.html#1" class="Module"
+      >FunUniverse.Core</a
+      ><a name="89"
+      >
+</a
+      ><a name="90" class="Keyword"
+      >open</a
+      ><a name="94"
+      > </a
+      ><a name="95" class="Keyword"
+      >import</a
+      ><a name="101"
+      > </a
+      ><a name="102" href="Level.NP.html#1" class="Module"
+      >Level.NP</a
+      ><a name="110"
+      >
+</a
+      ><a name="111" class="Comment"
+      >--open import FunUniverse.Rewiring</a
+      ><a name="145"
+      >
+
+</a
+      ><a name="147" class="Keyword"
+      >module</a
+      ><a name="153"
+      > </a
+      ><a name="154" href="FunUniverse.Nand.html#1" class="Module"
+      >FunUniverse.Nand</a
+      ><a name="170"
+      > </a
+      ><a name="171" class="Symbol"
+      >{</a
+      ><a name="172" href="FunUniverse.Nand.html#172" class="Bound"
+      >t</a
+      ><a name="173" class="Symbol"
+      >}</a
+      ><a name="174"
+      > </a
+      ><a name="175" class="Symbol"
+      >{</a
+      ><a name="176" href="FunUniverse.Nand.html#176" class="Bound"
+      >T</a
+      ><a name="177"
+      > </a
+      ><a name="178" class="Symbol"
+      >:</a
+      ><a name="179"
+      > </a
+      ><a name="180" href="Type.html#140" class="Function Operator"
+      >&#9733;_</a
+      ><a name="182"
+      > </a
+      ><a name="183" href="FunUniverse.Nand.html#172" class="Bound"
+      >t</a
+      ><a name="184" class="Symbol"
+      >}</a
+      ><a name="185"
+      > </a
+      ><a name="186" class="Symbol"
+      >{</a
+      ><a name="187" href="FunUniverse.Nand.html#187" class="Bound"
+      >funU</a
+      ><a name="191"
+      > </a
+      ><a name="192" class="Symbol"
+      >:</a
+      ><a name="193"
+      > </a
+      ><a name="194" href="FunUniverse.Types.html#203" class="Record"
+      >FunUniverse</a
+      ><a name="205"
+      > </a
+      ><a name="206" href="FunUniverse.Nand.html#176" class="Bound"
+      >T</a
+      ><a name="207" class="Symbol"
+      >}</a
+      ><a name="208"
+      > </a
+      ><a name="209" class="Symbol"
+      >(</a
+      ><a name="210" href="FunUniverse.Nand.html#210" class="Bound"
+      >rewiring</a
+      ><a name="218"
+      > </a
+      ><a name="219" class="Symbol"
+      >:</a
+      ><a name="220"
+      > </a
+      ><a name="221" href="FunUniverse.Core.html#2100" class="Record"
+      >Rewiring</a
+      ><a name="229"
+      > </a
+      ><a name="230" href="FunUniverse.Nand.html#187" class="Bound"
+      >funU</a
+      ><a name="234" class="Symbol"
+      >)</a
+      ><a name="235"
+      > </a
+      ><a name="236" class="Keyword"
+      >where</a
+      ><a name="241"
+      >
+
+</a
+      ><a name="243" class="Keyword"
+      >open</a
+      ><a name="247"
+      > </a
+      ><a name="248" href="FunUniverse.Types.html#203" class="Module"
+      >FunUniverse</a
+      ><a name="259"
+      > </a
+      ><a name="260" href="FunUniverse.Nand.html#187" class="Bound"
+      >funU</a
+      ><a name="264"
+      >
+</a
+      ><a name="265" class="Keyword"
+      >open</a
+      ><a name="269"
+      > </a
+      ><a name="270" href="FunUniverse.Core.html#2100" class="Module"
+      >Rewiring</a
+      ><a name="278"
+      > </a
+      ><a name="279" href="FunUniverse.Nand.html#210" class="Bound"
+      >rewiring</a
+      ><a name="287"
+      >
+
+</a
+      ><a name="289" class="Keyword"
+      >module</a
+      ><a name="295"
+      > </a
+      ><a name="296" href="FunUniverse.Nand.html#296" class="Module"
+      >FromNand</a
+      ><a name="304"
+      > </a
+      ><a name="305" class="Symbol"
+      >(</a
+      ><a name="306" href="FunUniverse.Nand.html#306" class="Bound"
+      >nand</a
+      ><a name="310"
+      > </a
+      ><a name="311" class="Symbol"
+      >:</a
+      ><a name="312"
+      > </a
+      ><a name="313" href="FunUniverse.Data.html#612" class="Function"
+      >`&#120794;</a
+      ><a name="315"
+      > </a
+      ><a name="316" href="FunUniverse.Data.html#625" class="Function Operator"
+      >`&#215;</a
+      ><a name="318"
+      > </a
+      ><a name="319" href="FunUniverse.Data.html#612" class="Function"
+      >`&#120794;</a
+      ><a name="321"
+      > </a
+      ><a name="322" href="FunUniverse.Types.html#301" class="Function Operator"
+      >`&#8594;</a
+      ><a name="324"
+      > </a
+      ><a name="325" href="FunUniverse.Data.html#612" class="Function"
+      >`&#120794;</a
+      ><a name="327" class="Symbol"
+      >)</a
+      ><a name="328"
+      > </a
+      ><a name="329" class="Keyword"
+      >where</a
+      ><a name="334"
+      >
+  </a
+      ><a name="337" href="FunUniverse.Nand.html#337" class="Function"
+      >not</a
+      ><a name="340"
+      > </a
+      ><a name="341" class="Symbol"
+      >:</a
+      ><a name="342"
+      > </a
+      ><a name="343" href="FunUniverse.Data.html#612" class="Function"
+      >`&#120794;</a
+      ><a name="345"
+      > </a
+      ><a name="346" href="FunUniverse.Types.html#301" class="Function Operator"
+      >`&#8594;</a
+      ><a name="348"
+      > </a
+      ><a name="349" href="FunUniverse.Data.html#612" class="Function"
+      >`&#120794;</a
+      ><a name="351"
+      >
+  </a
+      ><a name="354" href="FunUniverse.Nand.html#337" class="Function"
+      >not</a
+      ><a name="357"
+      >  </a
+      ><a name="359" class="Symbol"
+      >=</a
+      ><a name="360"
+      > </a
+      ><a name="361" href="FunUniverse.Core.html#2366" class="Function"
+      >dup</a
+      ><a name="364"
+      > </a
+      ><a name="365" href="FunUniverse.Category.html#375" class="Function Operator"
+      >&#8271;</a
+      ><a name="366"
+      > </a
+      ><a name="367" href="FunUniverse.Nand.html#306" class="Bound"
+      >nand</a
+      ><a name="371"
+      > 
+
+  </a
+      ><a name="376" href="FunUniverse.Nand.html#376" class="Function"
+      >and</a
+      ><a name="379"
+      > </a
+      ><a name="380" href="FunUniverse.Nand.html#380" class="Function"
+      >or</a
+      ><a name="382"
+      > </a
+      ><a name="383" href="FunUniverse.Nand.html#383" class="Function"
+      >nor</a
+      ><a name="386"
+      > </a
+      ><a name="387" href="FunUniverse.Nand.html#387" class="Function"
+      >xor</a
+      ><a name="390"
+      > </a
+      ><a name="391" href="FunUniverse.Nand.html#391" class="Function"
+      >xnor</a
+      ><a name="395"
+      > </a
+      ><a name="396" class="Symbol"
+      >:</a
+      ><a name="397"
+      > </a
+      ><a name="398" href="FunUniverse.Data.html#612" class="Function"
+      >`&#120794;</a
+      ><a name="400"
+      > </a
+      ><a name="401" href="FunUniverse.Data.html#625" class="Function Operator"
+      >`&#215;</a
+      ><a name="403"
+      > </a
+      ><a name="404" href="FunUniverse.Data.html#612" class="Function"
+      >`&#120794;</a
+      ><a name="406"
+      > </a
+      ><a name="407" href="FunUniverse.Types.html#301" class="Function Operator"
+      >`&#8594;</a
+      ><a name="409"
+      > </a
+      ><a name="410" href="FunUniverse.Data.html#612" class="Function"
+      >`&#120794;</a
+      ><a name="412"
+      >
+
+  </a
+      ><a name="416" href="FunUniverse.Nand.html#376" class="Function"
+      >and</a
+      ><a name="419"
+      >  </a
+      ><a name="421" class="Symbol"
+      >=</a
+      ><a name="422"
+      > </a
+      ><a name="423" href="FunUniverse.Nand.html#306" class="Bound"
+      >nand</a
+      ><a name="427"
+      > </a
+      ><a name="428" href="FunUniverse.Category.html#375" class="Function Operator"
+      >&#8271;</a
+      ><a name="429"
+      > </a
+      ><a name="430" href="FunUniverse.Nand.html#337" class="Function"
+      >not</a
+      ><a name="433"
+      >
+  </a
+      ><a name="436" href="FunUniverse.Nand.html#380" class="Function"
+      >or</a
+      ><a name="438"
+      >   </a
+      ><a name="441" class="Symbol"
+      >=</a
+      ><a name="442"
+      > </a
+      ><a name="443" href="FunUniverse.Rewiring.Linear.html#929" class="Function Operator"
+      >&lt;</a
+      ><a name="444"
+      > </a
+      ><a name="445" href="FunUniverse.Nand.html#337" class="Function"
+      >not</a
+      ><a name="448"
+      > </a
+      ><a name="449" href="FunUniverse.Rewiring.Linear.html#929" class="Function Operator"
+      >&#215;</a
+      ><a name="450"
+      > </a
+      ><a name="451" href="FunUniverse.Nand.html#337" class="Function"
+      >not</a
+      ><a name="454"
+      > </a
+      ><a name="455" href="FunUniverse.Rewiring.Linear.html#929" class="Function Operator"
+      >&gt;</a
+      ><a name="456"
+      > </a
+      ><a name="457" href="FunUniverse.Category.html#375" class="Function Operator"
+      >&#8271;</a
+      ><a name="458"
+      > </a
+      ><a name="459" href="FunUniverse.Nand.html#306" class="Bound"
+      >nand</a
+      ><a name="463"
+      >
+  </a
+      ><a name="466" href="FunUniverse.Nand.html#383" class="Function"
+      >nor</a
+      ><a name="469"
+      >  </a
+      ><a name="471" class="Symbol"
+      >=</a
+      ><a name="472"
+      > </a
+      ><a name="473" href="FunUniverse.Nand.html#380" class="Function"
+      >or</a
+      ><a name="475"
+      > </a
+      ><a name="476" href="FunUniverse.Category.html#375" class="Function Operator"
+      >&#8271;</a
+      ><a name="477"
+      > </a
+      ><a name="478" href="FunUniverse.Nand.html#337" class="Function"
+      >not</a
+      ><a name="481"
+      >
+  </a
+      ><a name="484" href="FunUniverse.Nand.html#387" class="Function"
+      >xor</a
+      ><a name="487"
+      >  </a
+      ><a name="489" class="Symbol"
+      >=</a
+      ><a name="490"
+      > </a
+      ><a name="491" href="FunUniverse.Rewiring.Linear.html#929" class="Function Operator"
+      >&lt;</a
+      ><a name="492"
+      > </a
+      ><a name="493" href="FunUniverse.Core.html#2366" class="Function"
+      >dup</a
+      ><a name="496"
+      > </a
+      ><a name="497" href="FunUniverse.Rewiring.Linear.html#929" class="Function Operator"
+      >&#215;</a
+      ><a name="498"
+      > </a
+      ><a name="499" href="FunUniverse.Core.html#2366" class="Function"
+      >dup</a
+      ><a name="502"
+      > </a
+      ><a name="503" href="FunUniverse.Rewiring.Linear.html#929" class="Function Operator"
+      >&gt;</a
+      ><a name="504"
+      > </a
+      ><a name="505" href="FunUniverse.Category.html#375" class="Function Operator"
+      >&#8271;</a
+      ><a name="506"
+      > </a
+      ><a name="507" href="FunUniverse.Rewiring.Linear.html#2766" class="Function"
+      >inner2</a
+      ><a name="513"
+      > </a
+      ><a name="514" class="Symbol"
+      >(</a
+      ><a name="515" href="FunUniverse.Nand.html#306" class="Bound"
+      >nand</a
+      ><a name="519"
+      > </a
+      ><a name="520" href="FunUniverse.Category.html#375" class="Function Operator"
+      >&#8271;</a
+      ><a name="521"
+      > </a
+      ><a name="522" href="FunUniverse.Core.html#2366" class="Function"
+      >dup</a
+      ><a name="525" class="Symbol"
+      >)</a
+      ><a name="526"
+      > </a
+      ><a name="527" href="FunUniverse.Category.html#375" class="Function Operator"
+      >&#8271;</a
+      ><a name="528"
+      > </a
+      ><a name="529" href="FunUniverse.Rewiring.Linear.html#929" class="Function Operator"
+      >&lt;</a
+      ><a name="530"
+      > </a
+      ><a name="531" href="FunUniverse.Nand.html#306" class="Bound"
+      >nand</a
+      ><a name="535"
+      > </a
+      ><a name="536" href="FunUniverse.Rewiring.Linear.html#929" class="Function Operator"
+      >&#215;</a
+      ><a name="537"
+      > </a
+      ><a name="538" href="FunUniverse.Nand.html#306" class="Bound"
+      >nand</a
+      ><a name="542"
+      > </a
+      ><a name="543" href="FunUniverse.Rewiring.Linear.html#929" class="Function Operator"
+      >&gt;</a
+      ><a name="544"
+      > </a
+      ><a name="545" href="FunUniverse.Category.html#375" class="Function Operator"
+      >&#8271;</a
+      ><a name="546"
+      > </a
+      ><a name="547" href="FunUniverse.Nand.html#306" class="Bound"
+      >nand</a
+      ><a name="551"
+      >
+  </a
+      ><a name="554" href="FunUniverse.Nand.html#391" class="Function"
+      >xnor</a
+      ><a name="558"
+      > </a
+      ><a name="559" class="Symbol"
+      >=</a
+      ><a name="560"
+      > </a
+      ><a name="561" href="FunUniverse.Nand.html#387" class="Function"
+      >xor</a
+      ><a name="564"
+      > </a
+      ><a name="565" href="FunUniverse.Category.html#375" class="Function Operator"
+      >&#8271;</a
+      ><a name="566"
+      > </a
+      ><a name="567" href="FunUniverse.Nand.html#337" class="Function"
+      >not</a
+      ><a name="570"
+      >
+
+  </a
+      ><a name="574" class="Comment"
+      >-- xnor is _==_</a
+      ><a name="589"
+      >
+
+  </a
+      ><a name="593" class="Keyword"
+      >module</a
+      ><a name="599"
+      > </a
+      ><a name="600" href="FunUniverse.Nand.html#600" class="Module"
+      >_</a
+      ><a name="601"
+      > </a
+      ><a name="602" class="Symbol"
+      >{</a
+      ><a name="603" href="FunUniverse.Nand.html#603" class="Bound"
+      >A</a
+      ><a name="604"
+      > </a
+      ><a name="605" href="FunUniverse.Nand.html#605" class="Bound"
+      >B</a
+      ><a name="606"
+      > </a
+      ><a name="607" href="FunUniverse.Nand.html#607" class="Bound"
+      >C</a
+      ><a name="608"
+      > </a
+      ><a name="609" href="FunUniverse.Nand.html#609" class="Bound"
+      >D</a
+      ><a name="610"
+      > </a
+      ><a name="611" href="FunUniverse.Nand.html#611" class="Bound"
+      >E</a
+      ><a name="612" class="Symbol"
+      >}</a
+      ><a name="613"
+      >
+    </a
+      ><a name="618" class="Symbol"
+      >(</a
+      ><a name="619" href="FunUniverse.Nand.html#619" class="Bound"
+      >f</a
+      ><a name="620"
+      > </a
+      ><a name="621" class="Symbol"
+      >:</a
+      ><a name="622"
+      > </a
+      ><a name="623" href="FunUniverse.Nand.html#603" class="Bound"
+      >A</a
+      ><a name="624"
+      > </a
+      ><a name="625" href="FunUniverse.Data.html#625" class="Function Operator"
+      >`&#215;</a
+      ><a name="627"
+      > </a
+      ><a name="628" href="FunUniverse.Nand.html#605" class="Bound"
+      >B</a
+      ><a name="629"
+      > </a
+      ><a name="630" href="FunUniverse.Types.html#301" class="Function Operator"
+      >`&#8594;</a
+      ><a name="632"
+      > </a
+      ><a name="633" href="FunUniverse.Nand.html#609" class="Bound"
+      >D</a
+      ><a name="634" class="Symbol"
+      >)</a
+      ><a name="635"
+      >
+    </a
+      ><a name="640" class="Symbol"
+      >(</a
+      ><a name="641" href="FunUniverse.Nand.html#641" class="Bound"
+      >g</a
+      ><a name="642"
+      > </a
+      ><a name="643" class="Symbol"
+      >:</a
+      ><a name="644"
+      > </a
+      ><a name="645" href="FunUniverse.Nand.html#603" class="Bound"
+      >A</a
+      ><a name="646"
+      > </a
+      ><a name="647" href="FunUniverse.Data.html#625" class="Function Operator"
+      >`&#215;</a
+      ><a name="649"
+      > </a
+      ><a name="650" href="FunUniverse.Nand.html#607" class="Bound"
+      >C</a
+      ><a name="651"
+      > </a
+      ><a name="652" href="FunUniverse.Types.html#301" class="Function Operator"
+      >`&#8594;</a
+      ><a name="654"
+      > </a
+      ><a name="655" href="FunUniverse.Nand.html#611" class="Bound"
+      >E</a
+      ><a name="656" class="Symbol"
+      >)</a
+      ><a name="657"
+      > </a
+      ><a name="658" class="Keyword"
+      >where</a
+      ><a name="663"
+      >
+
+    </a
+      ><a name="669" href="FunUniverse.Nand.html#669" class="Function"
+      >dispatch</a
+      ><a name="677"
+      > </a
+      ><a name="678" class="Symbol"
+      >:</a
+      ><a name="679"
+      > </a
+      ><a name="680" href="FunUniverse.Nand.html#603" class="Bound"
+      >A</a
+      ><a name="681"
+      > </a
+      ><a name="682" href="FunUniverse.Data.html#625" class="Function Operator"
+      >`&#215;</a
+      ><a name="684"
+      > </a
+      ><a name="685" href="FunUniverse.Nand.html#605" class="Bound"
+      >B</a
+      ><a name="686"
+      > </a
+      ><a name="687" href="FunUniverse.Data.html#625" class="Function Operator"
+      >`&#215;</a
+      ><a name="689"
+      > </a
+      ><a name="690" href="FunUniverse.Nand.html#607" class="Bound"
+      >C</a
+      ><a name="691"
+      > </a
+      ><a name="692" href="FunUniverse.Types.html#301" class="Function Operator"
+      >`&#8594;</a
+      ><a name="694"
+      > </a
+      ><a name="695" href="FunUniverse.Nand.html#609" class="Bound"
+      >D</a
+      ><a name="696"
+      > </a
+      ><a name="697" href="FunUniverse.Data.html#625" class="Function Operator"
+      >`&#215;</a
+      ><a name="699"
+      > </a
+      ><a name="700" href="FunUniverse.Nand.html#611" class="Bound"
+      >E</a
+      ><a name="701"
+      >
+    </a
+      ><a name="706" href="FunUniverse.Nand.html#669" class="Function"
+      >dispatch</a
+      ><a name="714"
+      > </a
+      ><a name="715" class="Symbol"
+      >=</a
+      ><a name="716"
+      > </a
+      ><a name="717" href="FunUniverse.Rewiring.Linear.html#645" class="Function"
+      >first</a
+      ><a name="722"
+      > </a
+      ><a name="723" href="FunUniverse.Core.html#2366" class="Function"
+      >dup</a
+      ><a name="726"
+      > </a
+      ><a name="727" href="FunUniverse.Category.html#375" class="Function Operator"
+      >&#8271;</a
+      ><a name="728"
+      > </a
+      ><a name="729" href="FunUniverse.Rewiring.Linear.html#2766" class="Function"
+      >inner2</a
+      ><a name="735"
+      > </a
+      ><a name="736" href="FunUniverse.Rewiring.Linear.html#704" class="Function"
+      >swap</a
+      ><a name="740"
+      > </a
+      ><a name="741" href="FunUniverse.Category.html#375" class="Function Operator"
+      >&#8271;</a
+      ><a name="742"
+      > </a
+      ><a name="743" href="FunUniverse.Rewiring.Linear.html#929" class="Function Operator"
+      >&lt;</a
+      ><a name="744"
+      > </a
+      ><a name="745" href="FunUniverse.Nand.html#619" class="Bound"
+      >f</a
+      ><a name="746"
+      > </a
+      ><a name="747" href="FunUniverse.Rewiring.Linear.html#929" class="Function Operator"
+      >&#215;</a
+      ><a name="748"
+      > </a
+      ><a name="749" href="FunUniverse.Nand.html#641" class="Bound"
+      >g</a
+      ><a name="750"
+      > </a
+      ><a name="751" href="FunUniverse.Rewiring.Linear.html#929" class="Function Operator"
+      >&gt;</a
+      ><a name="752"
+      > 
+
+  </a
+      ><a name="757" class="Comment"
+      >-- 2-to-1 multiplexer</a
+      ><a name="778"
+      >
+  </a
+      ><a name="781" class="Comment"
+      >-- mux (s , (e&#8320; , e&#8321;)) = e&#8347;</a
+      ><a name="808"
+      >
+  </a
+      ><a name="811" class="Comment"
+      >-- or</a
+      ><a name="816"
+      >
+  </a
+      ><a name="819" class="Comment"
+      >-- mux (s , (e&#8320; , e&#8321;)) = (not s &#8743; e&#8320;) &#8744; (s &#8743; e&#8321;)</a
+      ><a name="867"
+      >
+  </a
+      ><a name="870" href="FunUniverse.Nand.html#870" class="Function"
+      >mux</a
+      ><a name="873"
+      > </a
+      ><a name="874" class="Symbol"
+      >:</a
+      ><a name="875"
+      > </a
+      ><a name="876" href="FunUniverse.Data.html#612" class="Function"
+      >`&#120794;</a
+      ><a name="878"
+      > </a
+      ><a name="879" href="FunUniverse.Data.html#625" class="Function Operator"
+      >`&#215;</a
+      ><a name="881"
+      > </a
+      ><a name="882" class="Symbol"
+      >(</a
+      ><a name="883" href="FunUniverse.Data.html#612" class="Function"
+      >`&#120794;</a
+      ><a name="885"
+      > </a
+      ><a name="886" href="FunUniverse.Data.html#625" class="Function Operator"
+      >`&#215;</a
+      ><a name="888"
+      > </a
+      ><a name="889" href="FunUniverse.Data.html#612" class="Function"
+      >`&#120794;</a
+      ><a name="891" class="Symbol"
+      >)</a
+      ><a name="892"
+      > </a
+      ><a name="893" href="FunUniverse.Types.html#301" class="Function Operator"
+      >`&#8594;</a
+      ><a name="895"
+      > </a
+      ><a name="896" href="FunUniverse.Data.html#612" class="Function"
+      >`&#120794;</a
+      ><a name="898"
+      >
+  </a
+      ><a name="901" href="FunUniverse.Nand.html#870" class="Function"
+      >mux</a
+      ><a name="904"
+      > </a
+      ><a name="905" class="Symbol"
+      >=</a
+      ><a name="906"
+      > </a
+      ><a name="907" href="FunUniverse.Nand.html#669" class="Function"
+      >dispatch</a
+      ><a name="915"
+      > </a
+      ><a name="916" class="Symbol"
+      >(</a
+      ><a name="917" href="FunUniverse.Rewiring.Linear.html#929" class="Function Operator"
+      >&lt;</a
+      ><a name="918"
+      > </a
+      ><a name="919" href="FunUniverse.Nand.html#337" class="Function"
+      >not</a
+      ><a name="922"
+      > </a
+      ><a name="923" href="FunUniverse.Rewiring.Linear.html#929" class="Function Operator"
+      >&#215;</a
+      ><a name="924"
+      > </a
+      ><a name="925" href="FunUniverse.Category.html#629" class="Function"
+      >id</a
+      ><a name="927"
+      > </a
+      ><a name="928" href="FunUniverse.Rewiring.Linear.html#929" class="Function Operator"
+      >&gt;</a
+      ><a name="929"
+      > </a
+      ><a name="930" href="FunUniverse.Category.html#375" class="Function Operator"
+      >&#8271;</a
+      ><a name="931"
+      > </a
+      ><a name="932" href="FunUniverse.Nand.html#376" class="Function"
+      >and</a
+      ><a name="935" class="Symbol"
+      >)</a
+      ><a name="936"
+      > </a
+      ><a name="937" href="FunUniverse.Nand.html#376" class="Function"
+      >and</a
+      ><a name="940"
+      > </a
+      ><a name="941" href="FunUniverse.Category.html#375" class="Function Operator"
+      >&#8271;</a
+      ><a name="942"
+      > </a
+      ><a name="943" href="FunUniverse.Nand.html#380" class="Function"
+      >or</a
+      ><a name="945"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

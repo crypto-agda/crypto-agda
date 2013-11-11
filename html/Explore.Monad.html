@@ -1,0 +1,1818 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Explore.Monad</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Symbol"
+      >{-#</a
+      ><a name="4"
+      > </a
+      ><a name="5" class="Keyword"
+      >OPTIONS</a
+      ><a name="12"
+      > --without-K </a
+      ><a name="25" class="Symbol"
+      >#-}</a
+      ><a name="28"
+      >
+</a
+      ><a name="29" class="Keyword"
+      >open</a
+      ><a name="33"
+      > </a
+      ><a name="34" class="Keyword"
+      >import</a
+      ><a name="40"
+      > </a
+      ><a name="41" href="Type.html#1" class="Module"
+      >Type</a
+      ><a name="45"
+      > </a
+      ><a name="46" class="Keyword"
+      >hiding</a
+      ><a name="52"
+      > </a
+      ><a name="53" class="Symbol"
+      >(</a
+      ><a name="54"
+      >&#9733;</a
+      ><a name="55" class="Symbol"
+      >)</a
+      ><a name="56"
+      >
+</a
+      ><a name="57" class="Keyword"
+      >open</a
+      ><a name="61"
+      > </a
+      ><a name="62" class="Keyword"
+      >import</a
+      ><a name="68"
+      > </a
+      ><a name="69" href="Function.html#1" class="Module"
+      >Function</a
+      ><a name="77"
+      >
+</a
+      ><a name="78" class="Keyword"
+      >open</a
+      ><a name="82"
+      > </a
+      ><a name="83" class="Keyword"
+      >import</a
+      ><a name="89"
+      > </a
+      ><a name="90" href="Relation.Binary.PropositionalEquality.html#1" class="Module"
+      >Relation.Binary.PropositionalEquality</a
+      ><a name="127"
+      >
+
+</a
+      ><a name="129" class="Keyword"
+      >open</a
+      ><a name="133"
+      > </a
+      ><a name="134" class="Keyword"
+      >import</a
+      ><a name="140"
+      > </a
+      ><a name="141" href="Explore.Core.html#1" class="Module"
+      >Explore.Core</a
+      ><a name="153"
+      >
+</a
+      ><a name="154" class="Keyword"
+      >open</a
+      ><a name="158"
+      > </a
+      ><a name="159" class="Keyword"
+      >import</a
+      ><a name="165"
+      > </a
+      ><a name="166" href="Explore.Properties.html#1" class="Module"
+      >Explore.Properties</a
+      ><a name="184"
+      >
+
+</a
+      ><a name="186" class="Comment"
+      >-- Explore &#8467; is not an endo functor because of universe levels</a
+      ><a name="248"
+      >
+</a
+      ><a name="249" class="Keyword"
+      >module</a
+      ><a name="255"
+      > </a
+      ><a name="256" href="Explore.Monad.html#1" class="Module"
+      >Explore.Monad</a
+      ><a name="269"
+      > </a
+      ><a name="270" href="Explore.Monad.html#270" class="Bound"
+      >&#8467;</a
+      ><a name="271"
+      > </a
+      ><a name="272" class="Keyword"
+      >where</a
+      ><a name="277"
+      >
+
+</a
+      ><a name="279" href="Explore.Monad.html#279" class="Function"
+      >M</a
+      ><a name="280"
+      > </a
+      ><a name="281" class="Symbol"
+      >=</a
+      ><a name="282"
+      > </a
+      ><a name="283" href="Explore.Core.html#447" class="Function"
+      >Explore</a
+      ><a name="290"
+      > </a
+      ><a name="291" href="Explore.Monad.html#270" class="Bound"
+      >&#8467;</a
+      ><a name="292"
+      >
+
+</a
+      ><a name="294" class="Keyword"
+      >module</a
+      ><a name="300"
+      > </a
+      ><a name="301" href="Explore.Monad.html#301" class="Module"
+      >_</a
+      ><a name="302"
+      > </a
+      ><a name="303" class="Symbol"
+      >{</a
+      ><a name="304" href="Explore.Monad.html#304" class="Bound"
+      >A</a
+      ><a name="305"
+      > </a
+      ><a name="306" class="Symbol"
+      >:</a
+      ><a name="307"
+      > </a
+      ><a name="308" class="PrimitiveType"
+      >Set</a
+      ><a name="311" class="Symbol"
+      >}</a
+      ><a name="312"
+      > </a
+      ><a name="313" class="Keyword"
+      >where</a
+      ><a name="318"
+      >
+    </a
+      ><a name="323" href="Explore.Monad.html#323" class="Function"
+      >return</a
+      ><a name="329"
+      > </a
+      ><a name="330" class="Symbol"
+      >:</a
+      ><a name="331"
+      > </a
+      ><a name="332" href="Explore.Monad.html#304" class="Bound"
+      >A</a
+      ><a name="333"
+      > </a
+      ><a name="334" class="Symbol"
+      >&#8594;</a
+      ><a name="335"
+      > </a
+      ><a name="336" href="Explore.Monad.html#279" class="Function"
+      >M</a
+      ><a name="337"
+      > </a
+      ><a name="338" href="Explore.Monad.html#304" class="Bound"
+      >A</a
+      ><a name="339"
+      >
+    </a
+      ><a name="344" href="Explore.Monad.html#323" class="Function"
+      >return</a
+      ><a name="350"
+      > </a
+      ><a name="351" class="Symbol"
+      >=</a
+      ><a name="352"
+      > </a
+      ><a name="353" href="Explore.Core.html#1812" class="Function"
+      >point-explore</a
+      ><a name="366"
+      >
+
+    </a
+      ><a name="372" href="Explore.Monad.html#372" class="Function"
+      >mzero</a
+      ><a name="377"
+      > </a
+      ><a name="378" class="Symbol"
+      >:</a
+      ><a name="379"
+      > </a
+      ><a name="380" href="Explore.Monad.html#279" class="Function"
+      >M</a
+      ><a name="381"
+      > </a
+      ><a name="382" href="Explore.Monad.html#304" class="Bound"
+      >A</a
+      ><a name="383"
+      >
+    </a
+      ><a name="388" href="Explore.Monad.html#372" class="Function"
+      >mzero</a
+      ><a name="393"
+      > </a
+      ><a name="394" class="Symbol"
+      >=</a
+      ><a name="395"
+      > </a
+      ><a name="396" href="Explore.Core.html#1751" class="Function"
+      >empty-explore</a
+      ><a name="409"
+      >
+
+    </a
+      ><a name="415" href="Explore.Monad.html#415" class="Function"
+      >mplus</a
+      ><a name="420"
+      > </a
+      ><a name="421" class="Symbol"
+      >:</a
+      ><a name="422"
+      > </a
+      ><a name="423" href="Explore.Monad.html#279" class="Function"
+      >M</a
+      ><a name="424"
+      > </a
+      ><a name="425" href="Explore.Monad.html#304" class="Bound"
+      >A</a
+      ><a name="426"
+      > </a
+      ><a name="427" class="Symbol"
+      >&#8594;</a
+      ><a name="428"
+      > </a
+      ><a name="429" href="Explore.Monad.html#279" class="Function"
+      >M</a
+      ><a name="430"
+      > </a
+      ><a name="431" href="Explore.Monad.html#304" class="Bound"
+      >A</a
+      ><a name="432"
+      > </a
+      ><a name="433" class="Symbol"
+      >&#8594;</a
+      ><a name="434"
+      > </a
+      ><a name="435" href="Explore.Monad.html#279" class="Function"
+      >M</a
+      ><a name="436"
+      > </a
+      ><a name="437" href="Explore.Monad.html#304" class="Bound"
+      >A</a
+      ><a name="438"
+      >
+    </a
+      ><a name="443" href="Explore.Monad.html#415" class="Function"
+      >mplus</a
+      ><a name="448"
+      > </a
+      ><a name="449" class="Symbol"
+      >=</a
+      ><a name="450"
+      > </a
+      ><a name="451" href="Explore.Core.html#1632" class="Function"
+      >merge-explore</a
+      ><a name="464"
+      >
+
+    </a
+      ><a name="470" class="Keyword"
+      >module</a
+      ><a name="476"
+      > </a
+      ><a name="477" href="Explore.Monad.html#477" class="Module"
+      >_</a
+      ><a name="478"
+      > </a
+      ><a name="479" class="Symbol"
+      >{</a
+      ><a name="480" href="Explore.Monad.html#480" class="Bound"
+      >p</a
+      ><a name="481" class="Symbol"
+      >}</a
+      ><a name="482"
+      > </a
+      ><a name="483" class="Keyword"
+      >where</a
+      ><a name="488"
+      >
+        </a
+      ><a name="497" href="Explore.Monad.html#497" class="Function"
+      >return-ind</a
+      ><a name="507"
+      > </a
+      ><a name="508" class="Symbol"
+      >:</a
+      ><a name="509"
+      > </a
+      ><a name="510" class="Symbol"
+      >&#8704;</a
+      ><a name="511"
+      > </a
+      ><a name="512" href="Explore.Monad.html#512" class="Bound"
+      >x</a
+      ><a name="513"
+      > </a
+      ><a name="514" class="Symbol"
+      >&#8594;</a
+      ><a name="515"
+      > </a
+      ><a name="516" href="Explore.Properties.html#1850" class="Function"
+      >ExploreInd</a
+      ><a name="526"
+      > </a
+      ><a name="527" href="Explore.Monad.html#480" class="Bound"
+      >p</a
+      ><a name="528"
+      > </a
+      ><a name="529" class="Symbol"
+      >(</a
+      ><a name="530" href="Explore.Monad.html#323" class="Function"
+      >return</a
+      ><a name="536"
+      > </a
+      ><a name="537" href="Explore.Monad.html#512" class="Bound"
+      >x</a
+      ><a name="538" class="Symbol"
+      >)</a
+      ><a name="539"
+      >
+        </a
+      ><a name="548" href="Explore.Monad.html#497" class="Function"
+      >return-ind</a
+      ><a name="558"
+      > </a
+      ><a name="559" class="Symbol"
+      >=</a
+      ><a name="560"
+      > </a
+      ><a name="561" href="Explore.Properties.html#2126" class="Function"
+      >point-explore-ind</a
+      ><a name="578"
+      >
+
+        </a
+      ><a name="588" href="Explore.Monad.html#588" class="Function"
+      >mzero-ind</a
+      ><a name="597"
+      > </a
+      ><a name="598" class="Symbol"
+      >:</a
+      ><a name="599"
+      > </a
+      ><a name="600" href="Explore.Properties.html#1850" class="Function"
+      >ExploreInd</a
+      ><a name="610"
+      > </a
+      ><a name="611" href="Explore.Monad.html#480" class="Bound"
+      >p</a
+      ><a name="612"
+      > </a
+      ><a name="613" href="Explore.Monad.html#372" class="Function"
+      >mzero</a
+      ><a name="618"
+      >
+        </a
+      ><a name="627" href="Explore.Monad.html#588" class="Function"
+      >mzero-ind</a
+      ><a name="636"
+      > </a
+      ><a name="637" class="Symbol"
+      >=</a
+      ><a name="638"
+      > </a
+      ><a name="639" href="Explore.Properties.html#2236" class="Function"
+      >empty-explore-ind</a
+      ><a name="656"
+      >
+
+        </a
+      ><a name="666" href="Explore.Monad.html#666" class="Function"
+      >mplus-ind</a
+      ><a name="675"
+      > </a
+      ><a name="676" class="Symbol"
+      >:</a
+      ><a name="677"
+      > </a
+      ><a name="678" class="Symbol"
+      >&#8704;</a
+      ><a name="679"
+      > </a
+      ><a name="680" class="Symbol"
+      >{</a
+      ><a name="681" href="Explore.Monad.html#681" class="Bound"
+      >e&#8320;</a
+      ><a name="683"
+      > </a
+      ><a name="684" href="Explore.Monad.html#684" class="Bound"
+      >e&#8321;</a
+      ><a name="686"
+      > </a
+      ><a name="687" class="Symbol"
+      >:</a
+      ><a name="688"
+      > </a
+      ><a name="689" href="Explore.Monad.html#279" class="Function"
+      >M</a
+      ><a name="690"
+      > </a
+      ><a name="691" href="Explore.Monad.html#304" class="Bound"
+      >A</a
+      ><a name="692" class="Symbol"
+      >}</a
+      ><a name="693"
+      >
+                    </a
+      ><a name="714" class="Symbol"
+      >&#8594;</a
+      ><a name="715"
+      > </a
+      ><a name="716" href="Explore.Properties.html#1850" class="Function"
+      >ExploreInd</a
+      ><a name="726"
+      > </a
+      ><a name="727" href="Explore.Monad.html#480" class="Bound"
+      >p</a
+      ><a name="728"
+      > </a
+      ><a name="729" href="Explore.Monad.html#681" class="Bound"
+      >e&#8320;</a
+      ><a name="731"
+      > </a
+      ><a name="732" class="Symbol"
+      >&#8594;</a
+      ><a name="733"
+      > </a
+      ><a name="734" href="Explore.Properties.html#1850" class="Function"
+      >ExploreInd</a
+      ><a name="744"
+      > </a
+      ><a name="745" href="Explore.Monad.html#480" class="Bound"
+      >p</a
+      ><a name="746"
+      > </a
+      ><a name="747" href="Explore.Monad.html#684" class="Bound"
+      >e&#8321;</a
+      ><a name="749"
+      >
+                    </a
+      ><a name="770" class="Symbol"
+      >&#8594;</a
+      ><a name="771"
+      > </a
+      ><a name="772" href="Explore.Properties.html#1850" class="Function"
+      >ExploreInd</a
+      ><a name="782"
+      > </a
+      ><a name="783" href="Explore.Monad.html#480" class="Bound"
+      >p</a
+      ><a name="784"
+      > </a
+      ><a name="785" class="Symbol"
+      >(</a
+      ><a name="786" href="Explore.Core.html#1632" class="Function"
+      >merge-explore</a
+      ><a name="799"
+      > </a
+      ><a name="800" href="Explore.Monad.html#681" class="Bound"
+      >e&#8320;</a
+      ><a name="802"
+      > </a
+      ><a name="803" href="Explore.Monad.html#684" class="Bound"
+      >e&#8321;</a
+      ><a name="805" class="Symbol"
+      >)</a
+      ><a name="806"
+      >
+        </a
+      ><a name="815" href="Explore.Monad.html#666" class="Function"
+      >mplus-ind</a
+      ><a name="824"
+      > </a
+      ><a name="825" href="Explore.Monad.html#825" class="Bound"
+      >Pe&#8320;</a
+      ><a name="828"
+      > </a
+      ><a name="829" href="Explore.Monad.html#829" class="Bound"
+      >Pe&#8321;</a
+      ><a name="832"
+      > </a
+      ><a name="833" href="Explore.Monad.html#833" class="Bound"
+      >P</a
+      ><a name="834"
+      > </a
+      ><a name="835" href="Explore.Monad.html#835" class="Bound"
+      >P&#949;</a
+      ><a name="837"
+      > </a
+      ><a name="838" href="Explore.Monad.html#838" class="Bound Operator"
+      >_P&#8729;_</a
+      ><a name="842"
+      > </a
+      ><a name="843" href="Explore.Monad.html#843" class="Bound"
+      >Pf</a
+      ><a name="845"
+      > </a
+      ><a name="846" class="Symbol"
+      >=</a
+      ><a name="847"
+      > </a
+      ><a name="848" class="Symbol"
+      >(</a
+      ><a name="849" href="Explore.Monad.html#825" class="Bound"
+      >Pe&#8320;</a
+      ><a name="852"
+      > </a
+      ><a name="853" href="Explore.Monad.html#833" class="Bound"
+      >P</a
+      ><a name="854"
+      > </a
+      ><a name="855" href="Explore.Monad.html#835" class="Bound"
+      >P&#949;</a
+      ><a name="857"
+      > </a
+      ><a name="858" href="Explore.Monad.html#838" class="Bound Operator"
+      >_P&#8729;_</a
+      ><a name="862"
+      > </a
+      ><a name="863" href="Explore.Monad.html#843" class="Bound"
+      >Pf</a
+      ><a name="865" class="Symbol"
+      >)</a
+      ><a name="866"
+      > </a
+      ><a name="867" href="Explore.Monad.html#838" class="Bound Operator"
+      >P&#8729;</a
+      ><a name="869"
+      > </a
+      ><a name="870" class="Symbol"
+      >(</a
+      ><a name="871" href="Explore.Monad.html#829" class="Bound"
+      >Pe&#8321;</a
+      ><a name="874"
+      > </a
+      ><a name="875" href="Explore.Monad.html#833" class="Bound"
+      >P</a
+      ><a name="876"
+      > </a
+      ><a name="877" href="Explore.Monad.html#835" class="Bound"
+      >P&#949;</a
+      ><a name="879"
+      > </a
+      ><a name="880" href="Explore.Monad.html#838" class="Bound Operator"
+      >_P&#8729;_</a
+      ><a name="884"
+      > </a
+      ><a name="885" href="Explore.Monad.html#843" class="Bound"
+      >Pf</a
+      ><a name="887" class="Symbol"
+      >)</a
+      ><a name="888"
+      >
+
+</a
+      ><a name="890" class="Keyword"
+      >module</a
+      ><a name="896"
+      > </a
+      ><a name="897" href="Explore.Monad.html#897" class="Module"
+      >_</a
+      ><a name="898"
+      > </a
+      ><a name="899" class="Symbol"
+      >{</a
+      ><a name="900" href="Explore.Monad.html#900" class="Bound"
+      >A</a
+      ><a name="901"
+      > </a
+      ><a name="902" href="Explore.Monad.html#902" class="Bound"
+      >B</a
+      ><a name="903"
+      > </a
+      ><a name="904" class="Symbol"
+      >:</a
+      ><a name="905"
+      > </a
+      ><a name="906" class="PrimitiveType"
+      >Set</a
+      ><a name="909" class="Symbol"
+      >}</a
+      ><a name="910"
+      > </a
+      ><a name="911" class="Keyword"
+      >where</a
+      ><a name="916"
+      >
+
+    </a
+      ><a name="922" class="Keyword"
+      >infixl</a
+      ><a name="928"
+      > </a
+      ><a name="929" class="Number"
+      >1</a
+      ><a name="930"
+      > _&gt;&gt;=_ _&gt;&gt;=-ind_
+    </a
+      ><a name="951" href="Explore.Monad.html#951" class="Function Operator"
+      >_&gt;&gt;=_</a
+      ><a name="956"
+      > </a
+      ><a name="957" class="Symbol"
+      >:</a
+      ><a name="958"
+      > </a
+      ><a name="959" href="Explore.Monad.html#279" class="Function"
+      >M</a
+      ><a name="960"
+      > </a
+      ><a name="961" href="Explore.Monad.html#900" class="Bound"
+      >A</a
+      ><a name="962"
+      > </a
+      ><a name="963" class="Symbol"
+      >&#8594;</a
+      ><a name="964"
+      > </a
+      ><a name="965" class="Symbol"
+      >(</a
+      ><a name="966" href="Explore.Monad.html#900" class="Bound"
+      >A</a
+      ><a name="967"
+      > </a
+      ><a name="968" class="Symbol"
+      >&#8594;</a
+      ><a name="969"
+      > </a
+      ><a name="970" href="Explore.Monad.html#279" class="Function"
+      >M</a
+      ><a name="971"
+      > </a
+      ><a name="972" href="Explore.Monad.html#902" class="Bound"
+      >B</a
+      ><a name="973" class="Symbol"
+      >)</a
+      ><a name="974"
+      > </a
+      ><a name="975" class="Symbol"
+      >&#8594;</a
+      ><a name="976"
+      > </a
+      ><a name="977" href="Explore.Monad.html#279" class="Function"
+      >M</a
+      ><a name="978"
+      > </a
+      ><a name="979" href="Explore.Monad.html#902" class="Bound"
+      >B</a
+      ><a name="980"
+      >
+    </a
+      ><a name="985" class="Symbol"
+      >(</a
+      ><a name="986" href="Explore.Monad.html#986" class="Bound"
+      >exp&#7468;</a
+      ><a name="990"
+      > </a
+      ><a name="991" href="Explore.Monad.html#951" class="Function Operator"
+      >&gt;&gt;=</a
+      ><a name="994"
+      > </a
+      ><a name="995" href="Explore.Monad.html#995" class="Bound"
+      >exp&#7470;</a
+      ><a name="999" class="Symbol"
+      >)</a
+      ><a name="1000"
+      > </a
+      ><a name="1001" href="Explore.Monad.html#1001" class="Bound"
+      >&#949;</a
+      ><a name="1002"
+      > </a
+      ><a name="1003" href="Explore.Monad.html#1003" class="Bound Operator"
+      >_&#8729;_</a
+      ><a name="1006"
+      > </a
+      ><a name="1007" href="Explore.Monad.html#1007" class="Bound"
+      >f</a
+      ><a name="1008"
+      > </a
+      ><a name="1009" class="Symbol"
+      >=</a
+      ><a name="1010"
+      > </a
+      ><a name="1011" href="Explore.Monad.html#986" class="Bound"
+      >exp&#7468;</a
+      ><a name="1015"
+      > </a
+      ><a name="1016" href="Explore.Monad.html#1001" class="Bound"
+      >&#949;</a
+      ><a name="1017"
+      > </a
+      ><a name="1018" href="Explore.Monad.html#1003" class="Bound Operator"
+      >_&#8729;_</a
+      ><a name="1021"
+      > </a
+      ><a name="1022" class="Symbol"
+      >&#955;</a
+      ><a name="1023"
+      > </a
+      ><a name="1024" href="Explore.Monad.html#1024" class="Bound"
+      >x</a
+      ><a name="1025"
+      > </a
+      ><a name="1026" class="Symbol"
+      >&#8594;</a
+      ><a name="1027"
+      > </a
+      ><a name="1028" href="Explore.Monad.html#995" class="Bound"
+      >exp&#7470;</a
+      ><a name="1032"
+      > </a
+      ><a name="1033" href="Explore.Monad.html#1024" class="Bound"
+      >x</a
+      ><a name="1034"
+      > </a
+      ><a name="1035" href="Explore.Monad.html#1001" class="Bound"
+      >&#949;</a
+      ><a name="1036"
+      > </a
+      ><a name="1037" href="Explore.Monad.html#1003" class="Bound Operator"
+      >_&#8729;_</a
+      ><a name="1040"
+      > </a
+      ><a name="1041" href="Explore.Monad.html#1007" class="Bound"
+      >f</a
+      ><a name="1042"
+      >
+
+    </a
+      ><a name="1048" href="Explore.Monad.html#1048" class="Function Operator"
+      >_&gt;&gt;=-ind_</a
+      ><a name="1057"
+      > </a
+      ><a name="1058" class="Symbol"
+      >:</a
+      ><a name="1059"
+      > </a
+      ><a name="1060" class="Symbol"
+      >&#8704;</a
+      ><a name="1061"
+      > </a
+      ><a name="1062" class="Symbol"
+      >{</a
+      ><a name="1063" href="Explore.Monad.html#1063" class="Bound"
+      >p</a
+      ><a name="1064" class="Symbol"
+      >}</a
+      ><a name="1065"
+      >
+                  </a
+      ><a name="1084" class="Symbol"
+      >{</a
+      ><a name="1085" href="Explore.Monad.html#1085" class="Bound"
+      >exp&#7468;</a
+      ><a name="1089"
+      > </a
+      ><a name="1090" class="Symbol"
+      >:</a
+      ><a name="1091"
+      > </a
+      ><a name="1092" href="Explore.Monad.html#279" class="Function"
+      >M</a
+      ><a name="1093"
+      > </a
+      ><a name="1094" href="Explore.Monad.html#900" class="Bound"
+      >A</a
+      ><a name="1095" class="Symbol"
+      >}</a
+      ><a name="1096"
+      > </a
+      ><a name="1097" class="Symbol"
+      >&#8594;</a
+      ><a name="1098"
+      > </a
+      ><a name="1099" href="Explore.Properties.html#1850" class="Function"
+      >ExploreInd</a
+      ><a name="1109"
+      > </a
+      ><a name="1110" href="Explore.Monad.html#1063" class="Bound"
+      >p</a
+      ><a name="1111"
+      > </a
+      ><a name="1112" href="Explore.Monad.html#1085" class="Bound"
+      >exp&#7468;</a
+      ><a name="1116"
+      > </a
+      ><a name="1117" class="Symbol"
+      >&#8594;</a
+      ><a name="1118"
+      >
+                  </a
+      ><a name="1137" class="Symbol"
+      >{</a
+      ><a name="1138" href="Explore.Monad.html#1138" class="Bound"
+      >exp&#7470;</a
+      ><a name="1142"
+      > </a
+      ><a name="1143" class="Symbol"
+      >:</a
+      ><a name="1144"
+      > </a
+      ><a name="1145" href="Explore.Monad.html#900" class="Bound"
+      >A</a
+      ><a name="1146"
+      > </a
+      ><a name="1147" class="Symbol"
+      >&#8594;</a
+      ><a name="1148"
+      > </a
+      ><a name="1149" href="Explore.Monad.html#279" class="Function"
+      >M</a
+      ><a name="1150"
+      > </a
+      ><a name="1151" href="Explore.Monad.html#902" class="Bound"
+      >B</a
+      ><a name="1152" class="Symbol"
+      >}</a
+      ><a name="1153"
+      > </a
+      ><a name="1154" class="Symbol"
+      >&#8594;</a
+      ><a name="1155"
+      > </a
+      ><a name="1156" class="Symbol"
+      >(&#8704;</a
+      ><a name="1158"
+      > </a
+      ><a name="1159" href="Explore.Monad.html#1159" class="Bound"
+      >x</a
+      ><a name="1160"
+      > </a
+      ><a name="1161" class="Symbol"
+      >&#8594;</a
+      ><a name="1162"
+      > </a
+      ><a name="1163" href="Explore.Properties.html#1850" class="Function"
+      >ExploreInd</a
+      ><a name="1173"
+      > </a
+      ><a name="1174" href="Explore.Monad.html#1063" class="Bound"
+      >p</a
+      ><a name="1175"
+      > </a
+      ><a name="1176" class="Symbol"
+      >(</a
+      ><a name="1177" href="Explore.Monad.html#1138" class="Bound"
+      >exp&#7470;</a
+      ><a name="1181"
+      > </a
+      ><a name="1182" href="Explore.Monad.html#1159" class="Bound"
+      >x</a
+      ><a name="1183" class="Symbol"
+      >))</a
+      ><a name="1185"
+      >
+               </a
+      ><a name="1201" class="Symbol"
+      >&#8594;</a
+      ><a name="1202"
+      > </a
+      ><a name="1203" href="Explore.Properties.html#1850" class="Function"
+      >ExploreInd</a
+      ><a name="1213"
+      > </a
+      ><a name="1214" href="Explore.Monad.html#1063" class="Bound"
+      >p</a
+      ><a name="1215"
+      > </a
+      ><a name="1216" class="Symbol"
+      >(</a
+      ><a name="1217" href="Explore.Monad.html#1085" class="Bound"
+      >exp&#7468;</a
+      ><a name="1221"
+      > </a
+      ><a name="1222" href="Explore.Monad.html#951" class="Function Operator"
+      >&gt;&gt;=</a
+      ><a name="1225"
+      > </a
+      ><a name="1226" href="Explore.Monad.html#1138" class="Bound"
+      >exp&#7470;</a
+      ><a name="1230" class="Symbol"
+      >)</a
+      ><a name="1231"
+      >
+    </a
+      ><a name="1236" href="Explore.Monad.html#1048" class="Function Operator"
+      >_&gt;&gt;=-ind_</a
+      ><a name="1245"
+      > </a
+      ><a name="1246" class="Symbol"
+      >{</a
+      ><a name="1247" href="Explore.Monad.html#1247" class="Bound"
+      >exp&#7468;</a
+      ><a name="1251" class="Symbol"
+      >}</a
+      ><a name="1252"
+      > </a
+      ><a name="1253" href="Explore.Monad.html#1253" class="Bound"
+      >P&#7468;</a
+      ><a name="1255"
+      > </a
+      ><a name="1256" class="Symbol"
+      >{</a
+      ><a name="1257" href="Explore.Monad.html#1257" class="Bound"
+      >exp&#7470;</a
+      ><a name="1261" class="Symbol"
+      >}</a
+      ><a name="1262"
+      > </a
+      ><a name="1263" href="Explore.Monad.html#1263" class="Bound"
+      >P&#7470;</a
+      ><a name="1265"
+      > </a
+      ><a name="1266" href="Explore.Monad.html#1266" class="Bound"
+      >P</a
+      ><a name="1267"
+      > </a
+      ><a name="1268" href="Explore.Monad.html#1268" class="Bound"
+      >Pz</a
+      ><a name="1270"
+      > </a
+      ><a name="1271" href="Explore.Monad.html#1271" class="Bound Operator"
+      >_P&#8729;_</a
+      ><a name="1275"
+      > </a
+      ><a name="1276" href="Explore.Monad.html#1276" class="Bound"
+      >Pf</a
+      ><a name="1278"
+      >
+      </a
+      ><a name="1285" class="Symbol"
+      >=</a
+      ><a name="1286"
+      > </a
+      ><a name="1287" href="Explore.Monad.html#1253" class="Bound"
+      >P&#7468;</a
+      ><a name="1289"
+      > </a
+      ><a name="1290" class="Symbol"
+      >(&#955;</a
+      ><a name="1292"
+      > </a
+      ><a name="1293" href="Explore.Monad.html#1293" class="Bound"
+      >e</a
+      ><a name="1294"
+      > </a
+      ><a name="1295" class="Symbol"
+      >&#8594;</a
+      ><a name="1296"
+      > </a
+      ><a name="1297" href="Explore.Monad.html#1266" class="Bound"
+      >P</a
+      ><a name="1298"
+      > </a
+      ><a name="1299" class="Symbol"
+      >(</a
+      ><a name="1300" href="Explore.Monad.html#1293" class="Bound"
+      >e</a
+      ><a name="1301"
+      > </a
+      ><a name="1302" href="Explore.Monad.html#951" class="Function Operator"
+      >&gt;&gt;=</a
+      ><a name="1305"
+      > </a
+      ><a name="1306" href="Explore.Monad.html#1257" class="Bound"
+      >exp&#7470;</a
+      ><a name="1310" class="Symbol"
+      >))</a
+      ><a name="1312"
+      > </a
+      ><a name="1313" href="Explore.Monad.html#1268" class="Bound"
+      >Pz</a
+      ><a name="1315"
+      > </a
+      ><a name="1316" href="Explore.Monad.html#1271" class="Bound Operator"
+      >_P&#8729;_</a
+      ><a name="1320"
+      > </a
+      ><a name="1321" class="Symbol"
+      >&#955;</a
+      ><a name="1322"
+      > </a
+      ><a name="1323" href="Explore.Monad.html#1323" class="Bound"
+      >x</a
+      ><a name="1324"
+      > </a
+      ><a name="1325" class="Symbol"
+      >&#8594;</a
+      ><a name="1326"
+      > </a
+      ><a name="1327" href="Explore.Monad.html#1263" class="Bound"
+      >P&#7470;</a
+      ><a name="1329"
+      > </a
+      ><a name="1330" href="Explore.Monad.html#1323" class="Bound"
+      >x</a
+      ><a name="1331"
+      > </a
+      ><a name="1332" href="Explore.Monad.html#1266" class="Bound"
+      >P</a
+      ><a name="1333"
+      > </a
+      ><a name="1334" href="Explore.Monad.html#1268" class="Bound"
+      >Pz</a
+      ><a name="1336"
+      > </a
+      ><a name="1337" href="Explore.Monad.html#1271" class="Bound Operator"
+      >_P&#8729;_</a
+      ><a name="1341"
+      > </a
+      ><a name="1342" href="Explore.Monad.html#1276" class="Bound"
+      >Pf</a
+      ><a name="1344"
+      >
+
+    </a
+      ><a name="1350" href="Explore.Monad.html#1350" class="Function"
+      >map</a
+      ><a name="1353"
+      > </a
+      ><a name="1354" class="Symbol"
+      >:</a
+      ><a name="1355"
+      > </a
+      ><a name="1356" class="Symbol"
+      >(</a
+      ><a name="1357" href="Explore.Monad.html#900" class="Bound"
+      >A</a
+      ><a name="1358"
+      > </a
+      ><a name="1359" class="Symbol"
+      >&#8594;</a
+      ><a name="1360"
+      > </a
+      ><a name="1361" href="Explore.Monad.html#902" class="Bound"
+      >B</a
+      ><a name="1362" class="Symbol"
+      >)</a
+      ><a name="1363"
+      > </a
+      ><a name="1364" class="Symbol"
+      >&#8594;</a
+      ><a name="1365"
+      > </a
+      ><a name="1366" href="Explore.Monad.html#279" class="Function"
+      >M</a
+      ><a name="1367"
+      > </a
+      ><a name="1368" href="Explore.Monad.html#900" class="Bound"
+      >A</a
+      ><a name="1369"
+      > </a
+      ><a name="1370" class="Symbol"
+      >&#8594;</a
+      ><a name="1371"
+      > </a
+      ><a name="1372" href="Explore.Monad.html#279" class="Function"
+      >M</a
+      ><a name="1373"
+      > </a
+      ><a name="1374" href="Explore.Monad.html#902" class="Bound"
+      >B</a
+      ><a name="1375"
+      >
+    </a
+      ><a name="1380" href="Explore.Monad.html#1350" class="Function"
+      >map</a
+      ><a name="1383"
+      > </a
+      ><a name="1384" href="Explore.Monad.html#1384" class="Bound"
+      >f</a
+      ><a name="1385"
+      > </a
+      ><a name="1386" href="Explore.Monad.html#1386" class="Bound"
+      >e</a
+      ><a name="1387"
+      > </a
+      ><a name="1388" class="Symbol"
+      >=</a
+      ><a name="1389"
+      > </a
+      ><a name="1390" href="Explore.Monad.html#1386" class="Bound"
+      >e</a
+      ><a name="1391"
+      > </a
+      ><a name="1392" href="Explore.Monad.html#951" class="Function Operator"
+      >&gt;&gt;=</a
+      ><a name="1395"
+      > </a
+      ><a name="1396" href="Explore.Monad.html#323" class="Function"
+      >return</a
+      ><a name="1402"
+      > </a
+      ><a name="1403" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1404"
+      > </a
+      ><a name="1405" href="Explore.Monad.html#1384" class="Bound"
+      >f</a
+      ><a name="1406"
+      >
+
+    </a
+      ><a name="1412" href="Explore.Monad.html#1412" class="Function"
+      >map-ind</a
+      ><a name="1419"
+      > </a
+      ><a name="1420" class="Symbol"
+      >:</a
+      ><a name="1421"
+      > </a
+      ><a name="1422" class="Symbol"
+      >&#8704;</a
+      ><a name="1423"
+      > </a
+      ><a name="1424" class="Symbol"
+      >{</a
+      ><a name="1425" href="Explore.Monad.html#1425" class="Bound"
+      >p</a
+      ><a name="1426" class="Symbol"
+      >}</a
+      ><a name="1427"
+      > </a
+      ><a name="1428" class="Symbol"
+      >(</a
+      ><a name="1429" href="Explore.Monad.html#1429" class="Bound"
+      >f</a
+      ><a name="1430"
+      > </a
+      ><a name="1431" class="Symbol"
+      >:</a
+      ><a name="1432"
+      > </a
+      ><a name="1433" href="Explore.Monad.html#900" class="Bound"
+      >A</a
+      ><a name="1434"
+      > </a
+      ><a name="1435" class="Symbol"
+      >&#8594;</a
+      ><a name="1436"
+      > </a
+      ><a name="1437" href="Explore.Monad.html#902" class="Bound"
+      >B</a
+      ><a name="1438" class="Symbol"
+      >)</a
+      ><a name="1439"
+      > </a
+      ><a name="1440" class="Symbol"
+      >{</a
+      ><a name="1441" href="Explore.Monad.html#1441" class="Bound"
+      >exp&#7468;</a
+      ><a name="1445"
+      > </a
+      ><a name="1446" class="Symbol"
+      >:</a
+      ><a name="1447"
+      > </a
+      ><a name="1448" href="Explore.Monad.html#279" class="Function"
+      >M</a
+      ><a name="1449"
+      > </a
+      ><a name="1450" href="Explore.Monad.html#900" class="Bound"
+      >A</a
+      ><a name="1451" class="Symbol"
+      >}</a
+      ><a name="1452"
+      > </a
+      ><a name="1453" class="Symbol"
+      >&#8594;</a
+      ><a name="1454"
+      > </a
+      ><a name="1455" href="Explore.Properties.html#1850" class="Function"
+      >ExploreInd</a
+      ><a name="1465"
+      > </a
+      ><a name="1466" href="Explore.Monad.html#1425" class="Bound"
+      >p</a
+      ><a name="1467"
+      > </a
+      ><a name="1468" href="Explore.Monad.html#1441" class="Bound"
+      >exp&#7468;</a
+      ><a name="1472"
+      > </a
+      ><a name="1473" class="Symbol"
+      >&#8594;</a
+      ><a name="1474"
+      > </a
+      ><a name="1475" href="Explore.Properties.html#1850" class="Function"
+      >ExploreInd</a
+      ><a name="1485"
+      > </a
+      ><a name="1486" href="Explore.Monad.html#1425" class="Bound"
+      >p</a
+      ><a name="1487"
+      > </a
+      ><a name="1488" class="Symbol"
+      >(</a
+      ><a name="1489" href="Explore.Monad.html#1350" class="Function"
+      >map</a
+      ><a name="1492"
+      > </a
+      ><a name="1493" href="Explore.Monad.html#1429" class="Bound"
+      >f</a
+      ><a name="1494"
+      > </a
+      ><a name="1495" href="Explore.Monad.html#1441" class="Bound"
+      >exp&#7468;</a
+      ><a name="1499" class="Symbol"
+      >)</a
+      ><a name="1500"
+      >
+    </a
+      ><a name="1505" href="Explore.Monad.html#1412" class="Function"
+      >map-ind</a
+      ><a name="1512"
+      > </a
+      ><a name="1513" href="Explore.Monad.html#1513" class="Bound"
+      >f</a
+      ><a name="1514"
+      > </a
+      ><a name="1515" href="Explore.Monad.html#1515" class="Bound"
+      >P&#7468;</a
+      ><a name="1517"
+      > </a
+      ><a name="1518" class="Symbol"
+      >=</a
+      ><a name="1519"
+      > </a
+      ><a name="1520" href="Explore.Monad.html#1515" class="Bound"
+      >P&#7468;</a
+      ><a name="1522"
+      > </a
+      ><a name="1523" href="Explore.Monad.html#1048" class="Function Operator"
+      >&gt;&gt;=-ind</a
+      ><a name="1530"
+      > </a
+      ><a name="1531" href="Explore.Monad.html#497" class="Function"
+      >return-ind</a
+      ><a name="1541"
+      > </a
+      ><a name="1542" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1543"
+      > </a
+      ><a name="1544" href="Explore.Monad.html#1513" class="Bound"
+      >f</a
+      ><a name="1545"
+      >
+
+    </a
+      ><a name="1551" class="Keyword"
+      >private</a
+      ><a name="1558"
+      >
+        </a
+      ><a name="1567" class="Comment"
+      >{- This law is for free: map f e = e &gt;&gt;= return &#8728; f -}</a
+      ><a name="1621"
+      >
+        </a
+      ><a name="1630" href="Explore.Monad.html#1630" class="Function"
+      >map'</a
+      ><a name="1634"
+      > </a
+      ><a name="1635" class="Symbol"
+      >:</a
+      ><a name="1636"
+      > </a
+      ><a name="1637" class="Symbol"
+      >(</a
+      ><a name="1638" href="Explore.Monad.html#900" class="Bound"
+      >A</a
+      ><a name="1639"
+      > </a
+      ><a name="1640" class="Symbol"
+      >&#8594;</a
+      ><a name="1641"
+      > </a
+      ><a name="1642" href="Explore.Monad.html#902" class="Bound"
+      >B</a
+      ><a name="1643" class="Symbol"
+      >)</a
+      ><a name="1644"
+      > </a
+      ><a name="1645" class="Symbol"
+      >&#8594;</a
+      ><a name="1646"
+      > </a
+      ><a name="1647" href="Explore.Monad.html#279" class="Function"
+      >M</a
+      ><a name="1648"
+      > </a
+      ><a name="1649" href="Explore.Monad.html#900" class="Bound"
+      >A</a
+      ><a name="1650"
+      > </a
+      ><a name="1651" class="Symbol"
+      >&#8594;</a
+      ><a name="1652"
+      > </a
+      ><a name="1653" href="Explore.Monad.html#279" class="Function"
+      >M</a
+      ><a name="1654"
+      > </a
+      ><a name="1655" href="Explore.Monad.html#902" class="Bound"
+      >B</a
+      ><a name="1656"
+      >
+        </a
+      ><a name="1665" href="Explore.Monad.html#1630" class="Function"
+      >map'</a
+      ><a name="1669"
+      > </a
+      ><a name="1670" href="Explore.Monad.html#1670" class="Bound"
+      >f</a
+      ><a name="1671"
+      > </a
+      ><a name="1672" href="Explore.Monad.html#1672" class="Bound"
+      >exp</a
+      ><a name="1675"
+      > </a
+      ><a name="1676" href="Explore.Monad.html#1676" class="Bound"
+      >&#949;</a
+      ><a name="1677"
+      > </a
+      ><a name="1678" href="Explore.Monad.html#1678" class="Bound Operator"
+      >_&#8729;_</a
+      ><a name="1681"
+      > </a
+      ><a name="1682" href="Explore.Monad.html#1682" class="Bound"
+      >g</a
+      ><a name="1683"
+      > </a
+      ><a name="1684" class="Symbol"
+      >=</a
+      ><a name="1685"
+      > </a
+      ><a name="1686" href="Explore.Monad.html#1672" class="Bound"
+      >exp</a
+      ><a name="1689"
+      > </a
+      ><a name="1690" href="Explore.Monad.html#1676" class="Bound"
+      >&#949;</a
+      ><a name="1691"
+      > </a
+      ><a name="1692" href="Explore.Monad.html#1678" class="Bound Operator"
+      >_&#8729;_</a
+      ><a name="1695"
+      > </a
+      ><a name="1696" class="Symbol"
+      >(</a
+      ><a name="1697" href="Explore.Monad.html#1682" class="Bound"
+      >g</a
+      ><a name="1698"
+      > </a
+      ><a name="1699" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1700"
+      > </a
+      ><a name="1701" href="Explore.Monad.html#1670" class="Bound"
+      >f</a
+      ><a name="1702" class="Symbol"
+      >)</a
+      ><a name="1703"
+      >
+
+        </a
+      ><a name="1713" href="Explore.Monad.html#1713" class="Function"
+      >map'&#8801;map</a
+      ><a name="1721"
+      > </a
+      ><a name="1722" class="Symbol"
+      >:</a
+      ><a name="1723"
+      > </a
+      ><a name="1724" href="Explore.Monad.html#1630" class="Function"
+      >map'</a
+      ><a name="1728"
+      > </a
+      ><a name="1729" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="1730"
+      > </a
+      ><a name="1731" href="Explore.Monad.html#1350" class="Function"
+      >map</a
+      ><a name="1734"
+      >
+        </a
+      ><a name="1743" href="Explore.Monad.html#1713" class="Function"
+      >map'&#8801;map</a
+      ><a name="1751"
+      > </a
+      ><a name="1752" class="Symbol"
+      >=</a
+      ><a name="1753"
+      > </a
+      ><a name="1754" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="1758"
+      >
+
+</a
+      ><a name="1760" class="Comment"
+      >-- universe issues...</a
+      ><a name="1781"
+      >
+</a
+      ><a name="1782" class="Comment"
+      >-- join : M (M A) &#8594; M A</a
+      ><a name="1805"
+      >
+
+</a
+      ><a name="1807" class="Keyword"
+      >module</a
+      ><a name="1813"
+      > </a
+      ><a name="1814" href="Explore.Monad.html#1814" class="Module"
+      >_</a
+      ><a name="1815"
+      > </a
+      ><a name="1816" class="Symbol"
+      >{</a
+      ><a name="1817" href="Explore.Monad.html#1817" class="Bound"
+      >A</a
+      ><a name="1818"
+      > </a
+      ><a name="1819" href="Explore.Monad.html#1819" class="Bound"
+      >B</a
+      ><a name="1820"
+      > </a
+      ><a name="1821" href="Explore.Monad.html#1821" class="Bound"
+      >C</a
+      ><a name="1822"
+      > </a
+      ><a name="1823" class="Symbol"
+      >:</a
+      ><a name="1824"
+      > </a
+      ><a name="1825" class="PrimitiveType"
+      >Set</a
+      ><a name="1828" class="Symbol"
+      >}</a
+      ><a name="1829"
+      > </a
+      ><a name="1830" class="Symbol"
+      >(</a
+      ><a name="1831" href="Explore.Monad.html#1831" class="Bound"
+      >m</a
+      ><a name="1832"
+      > </a
+      ><a name="1833" class="Symbol"
+      >:</a
+      ><a name="1834"
+      > </a
+      ><a name="1835" href="Explore.Monad.html#279" class="Function"
+      >M</a
+      ><a name="1836"
+      > </a
+      ><a name="1837" href="Explore.Monad.html#1817" class="Bound"
+      >A</a
+      ><a name="1838" class="Symbol"
+      >)</a
+      ><a name="1839"
+      > </a
+      ><a name="1840" class="Symbol"
+      >(</a
+      ><a name="1841" href="Explore.Monad.html#1841" class="Bound"
+      >f</a
+      ><a name="1842"
+      > </a
+      ><a name="1843" class="Symbol"
+      >:</a
+      ><a name="1844"
+      > </a
+      ><a name="1845" href="Explore.Monad.html#1817" class="Bound"
+      >A</a
+      ><a name="1846"
+      > </a
+      ><a name="1847" class="Symbol"
+      >&#8594;</a
+      ><a name="1848"
+      > </a
+      ><a name="1849" href="Explore.Monad.html#279" class="Function"
+      >M</a
+      ><a name="1850"
+      > </a
+      ><a name="1851" href="Explore.Monad.html#1819" class="Bound"
+      >B</a
+      ><a name="1852" class="Symbol"
+      >)</a
+      ><a name="1853"
+      > </a
+      ><a name="1854" class="Symbol"
+      >(</a
+      ><a name="1855" href="Explore.Monad.html#1855" class="Bound"
+      >g</a
+      ><a name="1856"
+      > </a
+      ><a name="1857" class="Symbol"
+      >:</a
+      ><a name="1858"
+      > </a
+      ><a name="1859" href="Explore.Monad.html#1819" class="Bound"
+      >B</a
+      ><a name="1860"
+      > </a
+      ><a name="1861" class="Symbol"
+      >&#8594;</a
+      ><a name="1862"
+      > </a
+      ><a name="1863" href="Explore.Monad.html#279" class="Function"
+      >M</a
+      ><a name="1864"
+      > </a
+      ><a name="1865" href="Explore.Monad.html#1821" class="Bound"
+      >C</a
+      ><a name="1866" class="Symbol"
+      >)</a
+      ><a name="1867"
+      > </a
+      ><a name="1868" class="Keyword"
+      >where</a
+      ><a name="1873"
+      >
+    </a
+      ><a name="1878" class="Keyword"
+      >infix</a
+      ><a name="1883"
+      > </a
+      ><a name="1884" class="Number"
+      >0</a
+      ><a name="1885"
+      > _&#8801;e_
+    </a
+      ><a name="1895" href="Explore.Monad.html#1895" class="Function Operator"
+      >_&#8801;e_</a
+      ><a name="1899"
+      > </a
+      ><a name="1900" class="Symbol"
+      >=</a
+      ><a name="1901"
+      > </a
+      ><a name="1902" class="Symbol"
+      >&#955;</a
+      ><a name="1903"
+      > </a
+      ><a name="1904" class="Symbol"
+      >{</a
+      ><a name="1905" href="Explore.Monad.html#1905" class="Bound"
+      >A</a
+      ><a name="1906" class="Symbol"
+      >}</a
+      ><a name="1907"
+      > </a
+      ><a name="1908" class="Symbol"
+      >&#8594;</a
+      ><a name="1909"
+      > </a
+      ><a name="1910" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >_&#8801;_</a
+      ><a name="1913"
+      > </a
+      ><a name="1914" class="Symbol"
+      >{</a
+      ><a name="1915"
+      >A </a
+      ><a name="1917" class="Symbol"
+      >=</a
+      ><a name="1918"
+      > </a
+      ><a name="1919" href="Explore.Monad.html#279" class="Function"
+      >M</a
+      ><a name="1920"
+      > </a
+      ><a name="1921" href="Explore.Monad.html#1905" class="Bound"
+      >A</a
+      ><a name="1922" class="Symbol"
+      >}</a
+      ><a name="1923"
+      >
+
+    </a
+      ><a name="1929" href="Explore.Monad.html#1929" class="Function"
+      >left-identity</a
+      ><a name="1942"
+      > </a
+      ><a name="1943" class="Symbol"
+      >:</a
+      ><a name="1944"
+      > </a
+      ><a name="1945" href="Explore.Monad.html#1841" class="Bound"
+      >f</a
+      ><a name="1946"
+      > </a
+      ><a name="1947" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="1948"
+      > </a
+      ><a name="1949" class="Symbol"
+      >(&#955;</a
+      ><a name="1951"
+      > </a
+      ><a name="1952" href="Explore.Monad.html#1952" class="Bound"
+      >x</a
+      ><a name="1953"
+      > </a
+      ><a name="1954" class="Symbol"
+      >&#8594;</a
+      ><a name="1955"
+      > </a
+      ><a name="1956" href="Explore.Monad.html#323" class="Function"
+      >return</a
+      ><a name="1962"
+      > </a
+      ><a name="1963" href="Explore.Monad.html#1952" class="Bound"
+      >x</a
+      ><a name="1964"
+      > </a
+      ><a name="1965" href="Explore.Monad.html#951" class="Function Operator"
+      >&gt;&gt;=</a
+      ><a name="1968"
+      > </a
+      ><a name="1969" href="Explore.Monad.html#1841" class="Bound"
+      >f</a
+      ><a name="1970" class="Symbol"
+      >)</a
+      ><a name="1971"
+      >
+    </a
+      ><a name="1976" href="Explore.Monad.html#1929" class="Function"
+      >left-identity</a
+      ><a name="1989"
+      > </a
+      ><a name="1990" class="Symbol"
+      >=</a
+      ><a name="1991"
+      > </a
+      ><a name="1992" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="1996"
+      >
+
+    </a
+      ><a name="2002" href="Explore.Monad.html#2002" class="Function"
+      >right-identity</a
+      ><a name="2016"
+      > </a
+      ><a name="2017" class="Symbol"
+      >:</a
+      ><a name="2018"
+      > </a
+      ><a name="2019" href="Explore.Monad.html#1831" class="Bound"
+      >m</a
+      ><a name="2020"
+      > </a
+      ><a name="2021" href="Explore.Monad.html#1895" class="Function Operator"
+      >&#8801;e</a
+      ><a name="2023"
+      > </a
+      ><a name="2024" href="Explore.Monad.html#1831" class="Bound"
+      >m</a
+      ><a name="2025"
+      > </a
+      ><a name="2026" href="Explore.Monad.html#951" class="Function Operator"
+      >&gt;&gt;=</a
+      ><a name="2029"
+      > </a
+      ><a name="2030" href="Explore.Monad.html#323" class="Function"
+      >return</a
+      ><a name="2036"
+      >
+    </a
+      ><a name="2041" href="Explore.Monad.html#2002" class="Function"
+      >right-identity</a
+      ><a name="2055"
+      > </a
+      ><a name="2056" class="Symbol"
+      >=</a
+      ><a name="2057"
+      > </a
+      ><a name="2058" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="2062"
+      >
+
+    </a
+      ><a name="2068" href="Explore.Monad.html#2068" class="Function"
+      >associativity</a
+      ><a name="2081"
+      > </a
+      ><a name="2082" class="Symbol"
+      >:</a
+      ><a name="2083"
+      > </a
+      ><a name="2084" href="Explore.Monad.html#1831" class="Bound"
+      >m</a
+      ><a name="2085"
+      > </a
+      ><a name="2086" href="Explore.Monad.html#951" class="Function Operator"
+      >&gt;&gt;=</a
+      ><a name="2089"
+      > </a
+      ><a name="2090" class="Symbol"
+      >(&#955;</a
+      ><a name="2092"
+      > </a
+      ><a name="2093" href="Explore.Monad.html#2093" class="Bound"
+      >x</a
+      ><a name="2094"
+      > </a
+      ><a name="2095" class="Symbol"
+      >&#8594;</a
+      ><a name="2096"
+      > </a
+      ><a name="2097" href="Explore.Monad.html#1841" class="Bound"
+      >f</a
+      ><a name="2098"
+      > </a
+      ><a name="2099" href="Explore.Monad.html#2093" class="Bound"
+      >x</a
+      ><a name="2100"
+      > </a
+      ><a name="2101" href="Explore.Monad.html#951" class="Function Operator"
+      >&gt;&gt;=</a
+      ><a name="2104"
+      > </a
+      ><a name="2105" href="Explore.Monad.html#1855" class="Bound"
+      >g</a
+      ><a name="2106" class="Symbol"
+      >)</a
+      ><a name="2107"
+      > </a
+      ><a name="2108" href="Explore.Monad.html#1895" class="Function Operator"
+      >&#8801;e</a
+      ><a name="2110"
+      > </a
+      ><a name="2111" class="Symbol"
+      >(</a
+      ><a name="2112" href="Explore.Monad.html#1831" class="Bound"
+      >m</a
+      ><a name="2113"
+      > </a
+      ><a name="2114" href="Explore.Monad.html#951" class="Function Operator"
+      >&gt;&gt;=</a
+      ><a name="2117"
+      > </a
+      ><a name="2118" href="Explore.Monad.html#1841" class="Bound"
+      >f</a
+      ><a name="2119" class="Symbol"
+      >)</a
+      ><a name="2120"
+      > </a
+      ><a name="2121" href="Explore.Monad.html#951" class="Function Operator"
+      >&gt;&gt;=</a
+      ><a name="2124"
+      > </a
+      ><a name="2125" href="Explore.Monad.html#1855" class="Bound"
+      >g</a
+      ><a name="2126"
+      >
+    </a
+      ><a name="2131" href="Explore.Monad.html#2068" class="Function"
+      >associativity</a
+      ><a name="2144"
+      > </a
+      ><a name="2145" class="Symbol"
+      >=</a
+      ><a name="2146"
+      > </a
+      ><a name="2147" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="2151"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

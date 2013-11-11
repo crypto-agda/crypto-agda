@@ -1,0 +1,2305 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Data.Sum.NP</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Comment"
+      >-- NOTE with-K</a
+      ><a name="15"
+      >
+</a
+      ><a name="16" class="Keyword"
+      >module</a
+      ><a name="22"
+      > </a
+      ><a name="23" href="Data.Sum.NP.html#1" class="Module"
+      >Data.Sum.NP</a
+      ><a name="34"
+      > </a
+      ><a name="35" class="Keyword"
+      >where</a
+      ><a name="40"
+      >
+
+</a
+      ><a name="42" class="Keyword"
+      >open</a
+      ><a name="46"
+      > </a
+      ><a name="47" class="Keyword"
+      >import</a
+      ><a name="53"
+      > </a
+      ><a name="54" href="Type.html#1" class="Module"
+      >Type</a
+      ><a name="58"
+      > </a
+      ><a name="59" class="Keyword"
+      >hiding</a
+      ><a name="65"
+      > </a
+      ><a name="66" class="Symbol"
+      >(</a
+      ><a name="67"
+      >&#9733;</a
+      ><a name="68" class="Symbol"
+      >)</a
+      ><a name="69"
+      >
+</a
+      ><a name="70" class="Keyword"
+      >open</a
+      ><a name="74"
+      > </a
+      ><a name="75" class="Keyword"
+      >import</a
+      ><a name="81"
+      > </a
+      ><a name="82" href="Level.NP.html#1" class="Module"
+      >Level.NP</a
+      ><a name="90"
+      >
+</a
+      ><a name="91" class="Keyword"
+      >open</a
+      ><a name="95"
+      > </a
+      ><a name="96" class="Keyword"
+      >import</a
+      ><a name="102"
+      > </a
+      ><a name="103" href="Function.html#1" class="Module"
+      >Function</a
+      ><a name="111"
+      >
+</a
+      ><a name="112" class="Keyword"
+      >open</a
+      ><a name="116"
+      > </a
+      ><a name="117" class="Keyword"
+      >import</a
+      ><a name="123"
+      > </a
+      ><a name="124" href="Data.Nat.html#1" class="Module"
+      >Data.Nat</a
+      ><a name="132"
+      > </a
+      ><a name="133" class="Keyword"
+      >using</a
+      ><a name="138"
+      > </a
+      ><a name="139" class="Symbol"
+      >(</a
+      ><a name="140"
+      >&#8469;</a
+      ><a name="141" class="Symbol"
+      >;</a
+      ><a name="142"
+      > zero</a
+      ><a name="147" class="Symbol"
+      >;</a
+      ><a name="148"
+      > suc</a
+      ><a name="152" class="Symbol"
+      >)</a
+      ><a name="153"
+      >
+</a
+      ><a name="154" class="Keyword"
+      >open</a
+      ><a name="158"
+      > </a
+      ><a name="159" class="Keyword"
+      >import</a
+      ><a name="165"
+      > </a
+      ><a name="166" href="Data.Zero.html#1" class="Module"
+      >Data.Zero</a
+      ><a name="175"
+      >
+</a
+      ><a name="176" class="Keyword"
+      >open</a
+      ><a name="180"
+      > </a
+      ><a name="181" class="Keyword"
+      >import</a
+      ><a name="187"
+      > </a
+      ><a name="188" href="Data.One.html#1" class="Module"
+      >Data.One</a
+      ><a name="196"
+      >
+</a
+      ><a name="197" class="Keyword"
+      >open</a
+      ><a name="201"
+      > </a
+      ><a name="202" class="Keyword"
+      >import</a
+      ><a name="208"
+      > </a
+      ><a name="209" href="Data.Sum.html#1" class="Module"
+      >Data.Sum</a
+      ><a name="217"
+      > </a
+      ><a name="218" class="Keyword"
+      >public</a
+      ><a name="224"
+      >
+</a
+      ><a name="225" class="Keyword"
+      >open</a
+      ><a name="229"
+      > </a
+      ><a name="230" class="Keyword"
+      >import</a
+      ><a name="236"
+      > </a
+      ><a name="237" href="Relation.Binary.html#1" class="Module"
+      >Relation.Binary</a
+      ><a name="252"
+      >
+</a
+      ><a name="253" class="Keyword"
+      >open</a
+      ><a name="257"
+      > </a
+      ><a name="258" class="Keyword"
+      >import</a
+      ><a name="264"
+      > </a
+      ><a name="265" href="Relation.Binary.Logical.html#1" class="Module"
+      >Relation.Binary.Logical</a
+      ><a name="288"
+      >
+</a
+      ><a name="289" class="Keyword"
+      >import</a
+      ><a name="295"
+      > </a
+      ><a name="296" href="Relation.Binary.PropositionalEquality.html#1" class="Module"
+      >Relation.Binary.PropositionalEquality</a
+      ><a name="333"
+      > </a
+      ><a name="334" class="Symbol"
+      >as</a
+      ><a name="336"
+      > </a
+      ><a name="337" class="Module"
+      >&#8801;</a
+      ><a name="338"
+      >
+</a
+      ><a name="339" class="Keyword"
+      >open</a
+      ><a name="343"
+      > </a
+      ><a name="344" href="Relation.Binary.PropositionalEquality.html#1" class="Module"
+      >&#8801;</a
+      ><a name="345"
+      > </a
+      ><a name="346" class="Keyword"
+      >using</a
+      ><a name="351"
+      > </a
+      ><a name="352" class="Symbol"
+      >(</a
+      ><a name="353"
+      >_&#8801;_</a
+      ><a name="356" class="Symbol"
+      >;</a
+      ><a name="357"
+      >_&#8802;_</a
+      ><a name="360" class="Symbol"
+      >;</a
+      ><a name="361"
+      >_&#8791;_</a
+      ><a name="364" class="Symbol"
+      >)</a
+      ><a name="365"
+      >
+</a
+      ><a name="366" class="Keyword"
+      >open</a
+      ><a name="370"
+      > </a
+      ><a name="371" class="Keyword"
+      >import</a
+      ><a name="377"
+      > </a
+      ><a name="378" href="Data.Two.html#1" class="Module"
+      >Data.Two</a
+      ><a name="386"
+      >
+</a
+      ><a name="387" class="Keyword"
+      >open</a
+      ><a name="391"
+      > </a
+      ><a name="392" href="Relation.Binary.PropositionalEquality.html#1" class="Module"
+      >&#8801;</a
+      ><a name="393"
+      > </a
+      ><a name="394" class="Keyword"
+      >using</a
+      ><a name="399"
+      > </a
+      ><a name="400" class="Symbol"
+      >(</a
+      ><a name="401"
+      >&#8594;-to-&#10230;</a
+      ><a name="407" class="Symbol"
+      >)</a
+      ><a name="408"
+      >
+
+</a
+      ><a name="410" href="Data.Sum.NP.html#410" class="Function"
+      >inj&#8321;-inj</a
+      ><a name="418"
+      > </a
+      ><a name="419" class="Symbol"
+      >:</a
+      ><a name="420"
+      > </a
+      ><a name="421" class="Symbol"
+      >&#8704;</a
+      ><a name="422"
+      > </a
+      ><a name="423" class="Symbol"
+      >{</a
+      ><a name="424" href="Data.Sum.NP.html#424" class="Bound"
+      >a</a
+      ><a name="425"
+      > </a
+      ><a name="426" href="Data.Sum.NP.html#426" class="Bound"
+      >b</a
+      ><a name="427" class="Symbol"
+      >}</a
+      ><a name="428"
+      > </a
+      ><a name="429" class="Symbol"
+      >{</a
+      ><a name="430" href="Data.Sum.NP.html#430" class="Bound"
+      >A</a
+      ><a name="431"
+      > </a
+      ><a name="432" class="Symbol"
+      >:</a
+      ><a name="433"
+      > </a
+      ><a name="434" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="435"
+      > </a
+      ><a name="436" href="Data.Sum.NP.html#424" class="Bound"
+      >a</a
+      ><a name="437" class="Symbol"
+      >}</a
+      ><a name="438"
+      > </a
+      ><a name="439" class="Symbol"
+      >{</a
+      ><a name="440" href="Data.Sum.NP.html#440" class="Bound"
+      >B</a
+      ><a name="441"
+      > </a
+      ><a name="442" class="Symbol"
+      >:</a
+      ><a name="443"
+      > </a
+      ><a name="444" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="445"
+      > </a
+      ><a name="446" href="Data.Sum.NP.html#426" class="Bound"
+      >b</a
+      ><a name="447" class="Symbol"
+      >}</a
+      ><a name="448"
+      > </a
+      ><a name="449" class="Symbol"
+      >{</a
+      ><a name="450" href="Data.Sum.NP.html#450" class="Bound"
+      >x</a
+      ><a name="451"
+      > </a
+      ><a name="452" href="Data.Sum.NP.html#452" class="Bound"
+      >y</a
+      ><a name="453"
+      > </a
+      ><a name="454" class="Symbol"
+      >:</a
+      ><a name="455"
+      > </a
+      ><a name="456" href="Data.Sum.NP.html#430" class="Bound"
+      >A</a
+      ><a name="457" class="Symbol"
+      >}</a
+      ><a name="458"
+      > </a
+      ><a name="459" class="Symbol"
+      >&#8594;</a
+      ><a name="460"
+      > </a
+      ><a name="461" href="Data.Sum.html#460" class="InductiveConstructor"
+      >_&#8846;_.inj&#8321;</a
+      ><a name="469"
+      > </a
+      ><a name="470" class="Symbol"
+      >{</a
+      ><a name="471"
+      >B </a
+      ><a name="473" class="Symbol"
+      >=</a
+      ><a name="474"
+      > </a
+      ><a name="475" href="Data.Sum.NP.html#440" class="Bound"
+      >B</a
+      ><a name="476" class="Symbol"
+      >}</a
+      ><a name="477"
+      > </a
+      ><a name="478" href="Data.Sum.NP.html#450" class="Bound"
+      >x</a
+      ><a name="479"
+      > </a
+      ><a name="480" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="481"
+      > </a
+      ><a name="482" href="Data.Sum.html#460" class="InductiveConstructor"
+      >inj&#8321;</a
+      ><a name="486"
+      > </a
+      ><a name="487" href="Data.Sum.NP.html#452" class="Bound"
+      >y</a
+      ><a name="488"
+      > </a
+      ><a name="489" class="Symbol"
+      >&#8594;</a
+      ><a name="490"
+      > </a
+      ><a name="491" href="Data.Sum.NP.html#450" class="Bound"
+      >x</a
+      ><a name="492"
+      > </a
+      ><a name="493" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="494"
+      > </a
+      ><a name="495" href="Data.Sum.NP.html#452" class="Bound"
+      >y</a
+      ><a name="496"
+      >
+</a
+      ><a name="497" href="Data.Sum.NP.html#410" class="Function"
+      >inj&#8321;-inj</a
+      ><a name="505"
+      > </a
+      ><a name="506" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >&#8801;.refl</a
+      ><a name="512"
+      > </a
+      ><a name="513" class="Symbol"
+      >=</a
+      ><a name="514"
+      > </a
+      ><a name="515" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >&#8801;.refl</a
+      ><a name="521"
+      >
+
+</a
+      ><a name="523" href="Data.Sum.NP.html#523" class="Function"
+      >inj&#8322;-inj</a
+      ><a name="531"
+      > </a
+      ><a name="532" class="Symbol"
+      >:</a
+      ><a name="533"
+      > </a
+      ><a name="534" class="Symbol"
+      >&#8704;</a
+      ><a name="535"
+      > </a
+      ><a name="536" class="Symbol"
+      >{</a
+      ><a name="537" href="Data.Sum.NP.html#537" class="Bound"
+      >a</a
+      ><a name="538"
+      > </a
+      ><a name="539" href="Data.Sum.NP.html#539" class="Bound"
+      >b</a
+      ><a name="540" class="Symbol"
+      >}</a
+      ><a name="541"
+      > </a
+      ><a name="542" class="Symbol"
+      >{</a
+      ><a name="543" href="Data.Sum.NP.html#543" class="Bound"
+      >A</a
+      ><a name="544"
+      > </a
+      ><a name="545" class="Symbol"
+      >:</a
+      ><a name="546"
+      > </a
+      ><a name="547" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="548"
+      > </a
+      ><a name="549" href="Data.Sum.NP.html#537" class="Bound"
+      >a</a
+      ><a name="550" class="Symbol"
+      >}</a
+      ><a name="551"
+      > </a
+      ><a name="552" class="Symbol"
+      >{</a
+      ><a name="553" href="Data.Sum.NP.html#553" class="Bound"
+      >B</a
+      ><a name="554"
+      > </a
+      ><a name="555" class="Symbol"
+      >:</a
+      ><a name="556"
+      > </a
+      ><a name="557" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="558"
+      > </a
+      ><a name="559" href="Data.Sum.NP.html#539" class="Bound"
+      >b</a
+      ><a name="560" class="Symbol"
+      >}</a
+      ><a name="561"
+      > </a
+      ><a name="562" class="Symbol"
+      >{</a
+      ><a name="563" href="Data.Sum.NP.html#563" class="Bound"
+      >x</a
+      ><a name="564"
+      > </a
+      ><a name="565" href="Data.Sum.NP.html#565" class="Bound"
+      >y</a
+      ><a name="566"
+      > </a
+      ><a name="567" class="Symbol"
+      >:</a
+      ><a name="568"
+      > </a
+      ><a name="569" href="Data.Sum.NP.html#553" class="Bound"
+      >B</a
+      ><a name="570" class="Symbol"
+      >}</a
+      ><a name="571"
+      > </a
+      ><a name="572" class="Symbol"
+      >&#8594;</a
+      ><a name="573"
+      > </a
+      ><a name="574" href="Data.Sum.html#485" class="InductiveConstructor"
+      >_&#8846;_.inj&#8322;</a
+      ><a name="582"
+      > </a
+      ><a name="583" class="Symbol"
+      >{</a
+      ><a name="584"
+      >A </a
+      ><a name="586" class="Symbol"
+      >=</a
+      ><a name="587"
+      > </a
+      ><a name="588" href="Data.Sum.NP.html#543" class="Bound"
+      >A</a
+      ><a name="589" class="Symbol"
+      >}</a
+      ><a name="590"
+      > </a
+      ><a name="591" href="Data.Sum.NP.html#563" class="Bound"
+      >x</a
+      ><a name="592"
+      > </a
+      ><a name="593" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="594"
+      > </a
+      ><a name="595" href="Data.Sum.html#485" class="InductiveConstructor"
+      >inj&#8322;</a
+      ><a name="599"
+      > </a
+      ><a name="600" href="Data.Sum.NP.html#565" class="Bound"
+      >y</a
+      ><a name="601"
+      > </a
+      ><a name="602" class="Symbol"
+      >&#8594;</a
+      ><a name="603"
+      > </a
+      ><a name="604" href="Data.Sum.NP.html#563" class="Bound"
+      >x</a
+      ><a name="605"
+      > </a
+      ><a name="606" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="607"
+      > </a
+      ><a name="608" href="Data.Sum.NP.html#565" class="Bound"
+      >y</a
+      ><a name="609"
+      >
+</a
+      ><a name="610" href="Data.Sum.NP.html#523" class="Function"
+      >inj&#8322;-inj</a
+      ><a name="618"
+      > </a
+      ><a name="619" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >&#8801;.refl</a
+      ><a name="625"
+      > </a
+      ><a name="626" class="Symbol"
+      >=</a
+      ><a name="627"
+      > </a
+      ><a name="628" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >&#8801;.refl</a
+      ><a name="634"
+      >
+
+</a
+      ><a name="636" class="Keyword"
+      >module</a
+      ><a name="642"
+      > </a
+      ><a name="643" href="Data.Sum.NP.html#643" class="Module"
+      >_</a
+      ><a name="644"
+      > </a
+      ><a name="645" class="Symbol"
+      >{</a
+      ><a name="646" href="Data.Sum.NP.html#646" class="Bound"
+      >a&#8321;</a
+      ><a name="648"
+      > </a
+      ><a name="649" href="Data.Sum.NP.html#649" class="Bound"
+      >a&#8322;</a
+      ><a name="651"
+      > </a
+      ><a name="652" href="Data.Sum.NP.html#652" class="Bound"
+      >b&#8321;</a
+      ><a name="654"
+      > </a
+      ><a name="655" href="Data.Sum.NP.html#655" class="Bound"
+      >b&#8322;</a
+      ><a name="657" class="Symbol"
+      >}</a
+      ><a name="658"
+      >
+         </a
+      ><a name="668" class="Symbol"
+      >{</a
+      ><a name="669" href="Data.Sum.NP.html#669" class="Bound"
+      >A&#8321;</a
+      ><a name="671"
+      > </a
+      ><a name="672" class="Symbol"
+      >:</a
+      ><a name="673"
+      > </a
+      ><a name="674" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="675"
+      > </a
+      ><a name="676" href="Data.Sum.NP.html#646" class="Bound"
+      >a&#8321;</a
+      ><a name="678" class="Symbol"
+      >}</a
+      ><a name="679"
+      > </a
+      ><a name="680" class="Symbol"
+      >{</a
+      ><a name="681" href="Data.Sum.NP.html#681" class="Bound"
+      >A&#8322;</a
+      ><a name="683"
+      > </a
+      ><a name="684" class="Symbol"
+      >:</a
+      ><a name="685"
+      > </a
+      ><a name="686" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="687"
+      > </a
+      ><a name="688" href="Data.Sum.NP.html#649" class="Bound"
+      >a&#8322;</a
+      ><a name="690" class="Symbol"
+      >}</a
+      ><a name="691"
+      >
+         </a
+      ><a name="701" class="Symbol"
+      >{</a
+      ><a name="702" href="Data.Sum.NP.html#702" class="Bound"
+      >B&#8321;</a
+      ><a name="704"
+      > </a
+      ><a name="705" class="Symbol"
+      >:</a
+      ><a name="706"
+      > </a
+      ><a name="707" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="708"
+      > </a
+      ><a name="709" href="Data.Sum.NP.html#652" class="Bound"
+      >b&#8321;</a
+      ><a name="711" class="Symbol"
+      >}</a
+      ><a name="712"
+      > </a
+      ><a name="713" class="Symbol"
+      >{</a
+      ><a name="714" href="Data.Sum.NP.html#714" class="Bound"
+      >B&#8322;</a
+      ><a name="716"
+      > </a
+      ><a name="717" class="Symbol"
+      >:</a
+      ><a name="718"
+      > </a
+      ><a name="719" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="720"
+      > </a
+      ><a name="721" href="Data.Sum.NP.html#655" class="Bound"
+      >b&#8322;</a
+      ><a name="723" class="Symbol"
+      >}</a
+      ><a name="724"
+      >
+         </a
+      ><a name="734" class="Symbol"
+      >{</a
+      ><a name="735" href="Data.Sum.NP.html#735" class="Bound"
+      >c</a
+      ><a name="736" class="Symbol"
+      >}</a
+      ><a name="737"
+      > </a
+      ><a name="738" class="Symbol"
+      >{</a
+      ><a name="739" href="Data.Sum.NP.html#739" class="Bound"
+      >C</a
+      ><a name="740"
+      > </a
+      ><a name="741" class="Symbol"
+      >:</a
+      ><a name="742"
+      > </a
+      ><a name="743" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="744"
+      > </a
+      ><a name="745" href="Data.Sum.NP.html#735" class="Bound"
+      >c</a
+      ><a name="746" class="Symbol"
+      >}</a
+      ><a name="747"
+      > </a
+      ><a name="748" class="Symbol"
+      >(</a
+      ><a name="749" href="Data.Sum.NP.html#749" class="Bound"
+      >f</a
+      ><a name="750"
+      > </a
+      ><a name="751" class="Symbol"
+      >:</a
+      ><a name="752"
+      > </a
+      ><a name="753" href="Data.Sum.NP.html#669" class="Bound"
+      >A&#8321;</a
+      ><a name="755"
+      > </a
+      ><a name="756" href="Data.Sum.html#404" class="Datatype Operator"
+      >&#8846;</a
+      ><a name="757"
+      > </a
+      ><a name="758" href="Data.Sum.NP.html#702" class="Bound"
+      >B&#8321;</a
+      ><a name="760"
+      > </a
+      ><a name="761" class="Symbol"
+      >&#8594;</a
+      ><a name="762"
+      > </a
+      ><a name="763" href="Data.Sum.NP.html#681" class="Bound"
+      >A&#8322;</a
+      ><a name="765"
+      > </a
+      ><a name="766" href="Data.Sum.html#404" class="Datatype Operator"
+      >&#8846;</a
+      ><a name="767"
+      > </a
+      ><a name="768" href="Data.Sum.NP.html#714" class="Bound"
+      >B&#8322;</a
+      ><a name="770"
+      > </a
+      ><a name="771" class="Symbol"
+      >&#8594;</a
+      ><a name="772"
+      > </a
+      ><a name="773" href="Data.Sum.NP.html#739" class="Bound"
+      >C</a
+      ><a name="774" class="Symbol"
+      >)</a
+      ><a name="775"
+      > </a
+      ><a name="776" class="Keyword"
+      >where</a
+      ><a name="781"
+      >
+    </a
+      ><a name="786" href="Data.Sum.NP.html#786" class="Function"
+      >on-inj&#8321;</a
+      ><a name="793"
+      > </a
+      ><a name="794" class="Symbol"
+      >=</a
+      ><a name="795"
+      > </a
+      ><a name="796" class="Symbol"
+      >&#955;</a
+      ><a name="797"
+      > </a
+      ><a name="798" href="Data.Sum.NP.html#798" class="Bound"
+      >i</a
+      ><a name="799"
+      > </a
+      ><a name="800" href="Data.Sum.NP.html#800" class="Bound"
+      >j</a
+      ><a name="801"
+      > </a
+      ><a name="802" class="Symbol"
+      >&#8594;</a
+      ><a name="803"
+      > </a
+      ><a name="804" href="Data.Sum.NP.html#749" class="Bound"
+      >f</a
+      ><a name="805"
+      > </a
+      ><a name="806" class="Symbol"
+      >(</a
+      ><a name="807" href="Data.Sum.html#460" class="InductiveConstructor"
+      >inj&#8321;</a
+      ><a name="811"
+      > </a
+      ><a name="812" href="Data.Sum.NP.html#798" class="Bound"
+      >i</a
+      ><a name="813" class="Symbol"
+      >)</a
+      ><a name="814"
+      > </a
+      ><a name="815" class="Symbol"
+      >(</a
+      ><a name="816" href="Data.Sum.html#460" class="InductiveConstructor"
+      >inj&#8321;</a
+      ><a name="820"
+      > </a
+      ><a name="821" href="Data.Sum.NP.html#800" class="Bound"
+      >j</a
+      ><a name="822" class="Symbol"
+      >)</a
+      ><a name="823"
+      >
+    </a
+      ><a name="828" href="Data.Sum.NP.html#828" class="Function"
+      >on-inj&#8322;</a
+      ><a name="835"
+      > </a
+      ><a name="836" class="Symbol"
+      >=</a
+      ><a name="837"
+      > </a
+      ><a name="838" class="Symbol"
+      >&#955;</a
+      ><a name="839"
+      > </a
+      ><a name="840" href="Data.Sum.NP.html#840" class="Bound"
+      >i</a
+      ><a name="841"
+      > </a
+      ><a name="842" href="Data.Sum.NP.html#842" class="Bound"
+      >j</a
+      ><a name="843"
+      > </a
+      ><a name="844" class="Symbol"
+      >&#8594;</a
+      ><a name="845"
+      > </a
+      ><a name="846" href="Data.Sum.NP.html#749" class="Bound"
+      >f</a
+      ><a name="847"
+      > </a
+      ><a name="848" class="Symbol"
+      >(</a
+      ><a name="849" href="Data.Sum.html#485" class="InductiveConstructor"
+      >inj&#8322;</a
+      ><a name="853"
+      > </a
+      ><a name="854" href="Data.Sum.NP.html#840" class="Bound"
+      >i</a
+      ><a name="855" class="Symbol"
+      >)</a
+      ><a name="856"
+      > </a
+      ><a name="857" class="Symbol"
+      >(</a
+      ><a name="858" href="Data.Sum.html#485" class="InductiveConstructor"
+      >inj&#8322;</a
+      ><a name="862"
+      > </a
+      ><a name="863" href="Data.Sum.NP.html#842" class="Bound"
+      >j</a
+      ><a name="864" class="Symbol"
+      >)</a
+      ><a name="865"
+      >
+
+</a
+      ><a name="867" href="Data.Sum.NP.html#867" class="Function"
+      >[,]-assoc</a
+      ><a name="876"
+      > </a
+      ><a name="877" class="Symbol"
+      >:</a
+      ><a name="878"
+      > </a
+      ><a name="879" class="Symbol"
+      >&#8704;</a
+      ><a name="880"
+      > </a
+      ><a name="881" class="Symbol"
+      >{</a
+      ><a name="882" href="Data.Sum.NP.html#882" class="Bound"
+      >a&#8321;</a
+      ><a name="884"
+      > </a
+      ><a name="885" href="Data.Sum.NP.html#885" class="Bound"
+      >a&#8322;</a
+      ><a name="887"
+      > </a
+      ><a name="888" href="Data.Sum.NP.html#888" class="Bound"
+      >b&#8321;</a
+      ><a name="890"
+      > </a
+      ><a name="891" href="Data.Sum.NP.html#891" class="Bound"
+      >b&#8322;</a
+      ><a name="893"
+      > </a
+      ><a name="894" href="Data.Sum.NP.html#894" class="Bound"
+      >c</a
+      ><a name="895" class="Symbol"
+      >}</a
+      ><a name="896"
+      > </a
+      ><a name="897" class="Symbol"
+      >{</a
+      ><a name="898" href="Data.Sum.NP.html#898" class="Bound"
+      >A&#8321;</a
+      ><a name="900"
+      > </a
+      ><a name="901" class="Symbol"
+      >:</a
+      ><a name="902"
+      > </a
+      ><a name="903" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="904"
+      > </a
+      ><a name="905" href="Data.Sum.NP.html#882" class="Bound"
+      >a&#8321;</a
+      ><a name="907" class="Symbol"
+      >}</a
+      ><a name="908"
+      > </a
+      ><a name="909" class="Symbol"
+      >{</a
+      ><a name="910" href="Data.Sum.NP.html#910" class="Bound"
+      >A&#8322;</a
+      ><a name="912"
+      > </a
+      ><a name="913" class="Symbol"
+      >:</a
+      ><a name="914"
+      > </a
+      ><a name="915" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="916"
+      > </a
+      ><a name="917" href="Data.Sum.NP.html#885" class="Bound"
+      >a&#8322;</a
+      ><a name="919" class="Symbol"
+      >}</a
+      ><a name="920"
+      >
+              </a
+      ><a name="935" class="Symbol"
+      >{</a
+      ><a name="936" href="Data.Sum.NP.html#936" class="Bound"
+      >B&#8321;</a
+      ><a name="938"
+      > </a
+      ><a name="939" class="Symbol"
+      >:</a
+      ><a name="940"
+      > </a
+      ><a name="941" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="942"
+      > </a
+      ><a name="943" href="Data.Sum.NP.html#888" class="Bound"
+      >b&#8321;</a
+      ><a name="945" class="Symbol"
+      >}</a
+      ><a name="946"
+      > </a
+      ><a name="947" class="Symbol"
+      >{</a
+      ><a name="948" href="Data.Sum.NP.html#948" class="Bound"
+      >B&#8322;</a
+      ><a name="950"
+      > </a
+      ><a name="951" class="Symbol"
+      >:</a
+      ><a name="952"
+      > </a
+      ><a name="953" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="954"
+      > </a
+      ><a name="955" href="Data.Sum.NP.html#891" class="Bound"
+      >b&#8322;</a
+      ><a name="957" class="Symbol"
+      >}</a
+      ><a name="958"
+      > </a
+      ><a name="959" class="Symbol"
+      >{</a
+      ><a name="960" href="Data.Sum.NP.html#960" class="Bound"
+      >C</a
+      ><a name="961"
+      > </a
+      ><a name="962" class="Symbol"
+      >:</a
+      ><a name="963"
+      > </a
+      ><a name="964" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="965"
+      > </a
+      ><a name="966" href="Data.Sum.NP.html#894" class="Bound"
+      >c</a
+      ><a name="967" class="Symbol"
+      >}</a
+      ><a name="968"
+      >
+              </a
+      ><a name="983" class="Symbol"
+      >{</a
+      ><a name="984" href="Data.Sum.NP.html#984" class="Bound"
+      >f&#8321;</a
+      ><a name="986"
+      > </a
+      ><a name="987" class="Symbol"
+      >:</a
+      ><a name="988"
+      > </a
+      ><a name="989" href="Data.Sum.NP.html#936" class="Bound"
+      >B&#8321;</a
+      ><a name="991"
+      > </a
+      ><a name="992" class="Symbol"
+      >&#8594;</a
+      ><a name="993"
+      > </a
+      ><a name="994" href="Data.Sum.NP.html#960" class="Bound"
+      >C</a
+      ><a name="995" class="Symbol"
+      >}</a
+      ><a name="996"
+      > </a
+      ><a name="997" class="Symbol"
+      >{</a
+      ><a name="998" href="Data.Sum.NP.html#998" class="Bound"
+      >g&#8321;</a
+      ><a name="1000"
+      > </a
+      ><a name="1001" class="Symbol"
+      >:</a
+      ><a name="1002"
+      > </a
+      ><a name="1003" href="Data.Sum.NP.html#898" class="Bound"
+      >A&#8321;</a
+      ><a name="1005"
+      > </a
+      ><a name="1006" class="Symbol"
+      >&#8594;</a
+      ><a name="1007"
+      > </a
+      ><a name="1008" href="Data.Sum.NP.html#936" class="Bound"
+      >B&#8321;</a
+      ><a name="1010" class="Symbol"
+      >}</a
+      ><a name="1011"
+      > </a
+      ><a name="1012" class="Symbol"
+      >{</a
+      ><a name="1013" href="Data.Sum.NP.html#1013" class="Bound"
+      >f&#8322;</a
+      ><a name="1015"
+      > </a
+      ><a name="1016" class="Symbol"
+      >:</a
+      ><a name="1017"
+      > </a
+      ><a name="1018" href="Data.Sum.NP.html#948" class="Bound"
+      >B&#8322;</a
+      ><a name="1020"
+      > </a
+      ><a name="1021" class="Symbol"
+      >&#8594;</a
+      ><a name="1022"
+      > </a
+      ><a name="1023" href="Data.Sum.NP.html#960" class="Bound"
+      >C</a
+      ><a name="1024" class="Symbol"
+      >}</a
+      ><a name="1025"
+      > </a
+      ><a name="1026" class="Symbol"
+      >{</a
+      ><a name="1027" href="Data.Sum.NP.html#1027" class="Bound"
+      >g&#8322;</a
+      ><a name="1029"
+      > </a
+      ><a name="1030" class="Symbol"
+      >:</a
+      ><a name="1031"
+      > </a
+      ><a name="1032" href="Data.Sum.NP.html#910" class="Bound"
+      >A&#8322;</a
+      ><a name="1034"
+      > </a
+      ><a name="1035" class="Symbol"
+      >&#8594;</a
+      ><a name="1036"
+      > </a
+      ><a name="1037" href="Data.Sum.NP.html#948" class="Bound"
+      >B&#8322;</a
+      ><a name="1039" class="Symbol"
+      >}</a
+      ><a name="1040"
+      > </a
+      ><a name="1041" class="Symbol"
+      >&#8594;</a
+      ><a name="1042"
+      >
+              </a
+      ><a name="1057" href="Data.Sum.html#678" class="Function Operator"
+      >[</a
+      ><a name="1058"
+      > </a
+      ><a name="1059" href="Data.Sum.NP.html#984" class="Bound"
+      >f&#8321;</a
+      ><a name="1061"
+      > </a
+      ><a name="1062" href="Data.Sum.html#678" class="Function Operator"
+      >,</a
+      ><a name="1063"
+      > </a
+      ><a name="1064" href="Data.Sum.NP.html#1013" class="Bound"
+      >f&#8322;</a
+      ><a name="1066"
+      > </a
+      ><a name="1067" href="Data.Sum.html#678" class="Function Operator"
+      >]</a
+      ><a name="1068"
+      > </a
+      ><a name="1069" href="Function.html#898" class="Function Operator"
+      >&#8728;&#8242;</a
+      ><a name="1071"
+      > </a
+      ><a name="1072" href="Data.Sum.html#993" class="Function"
+      >map</a
+      ><a name="1075"
+      > </a
+      ><a name="1076" href="Data.Sum.NP.html#998" class="Bound"
+      >g&#8321;</a
+      ><a name="1078"
+      > </a
+      ><a name="1079" href="Data.Sum.NP.html#1027" class="Bound"
+      >g&#8322;</a
+      ><a name="1081"
+      > </a
+      ><a name="1082" href="Relation.Binary.PropositionalEquality.html#2312" class="Function Operator"
+      >&#8791;</a
+      ><a name="1083"
+      > </a
+      ><a name="1084" href="Data.Sum.html#678" class="Function Operator"
+      >[</a
+      ><a name="1085"
+      > </a
+      ><a name="1086" href="Data.Sum.NP.html#984" class="Bound"
+      >f&#8321;</a
+      ><a name="1088"
+      > </a
+      ><a name="1089" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1090"
+      > </a
+      ><a name="1091" href="Data.Sum.NP.html#998" class="Bound"
+      >g&#8321;</a
+      ><a name="1093"
+      > </a
+      ><a name="1094" href="Data.Sum.html#678" class="Function Operator"
+      >,</a
+      ><a name="1095"
+      > </a
+      ><a name="1096" href="Data.Sum.NP.html#1013" class="Bound"
+      >f&#8322;</a
+      ><a name="1098"
+      > </a
+      ><a name="1099" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1100"
+      > </a
+      ><a name="1101" href="Data.Sum.NP.html#1027" class="Bound"
+      >g&#8322;</a
+      ><a name="1103"
+      > </a
+      ><a name="1104" href="Data.Sum.html#678" class="Function Operator"
+      >]</a
+      ><a name="1105"
+      >
+</a
+      ><a name="1106" href="Data.Sum.NP.html#867" class="Function"
+      >[,]-assoc</a
+      ><a name="1115"
+      > </a
+      ><a name="1116" class="Symbol"
+      >(</a
+      ><a name="1117" href="Data.Sum.html#460" class="InductiveConstructor"
+      >inj&#8321;</a
+      ><a name="1121"
+      > </a
+      ><a name="1122" class="Symbol"
+      >_)</a
+      ><a name="1124"
+      > </a
+      ><a name="1125" class="Symbol"
+      >=</a
+      ><a name="1126"
+      > </a
+      ><a name="1127" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >&#8801;.refl</a
+      ><a name="1133"
+      >
+</a
+      ><a name="1134" href="Data.Sum.NP.html#867" class="Function"
+      >[,]-assoc</a
+      ><a name="1143"
+      > </a
+      ><a name="1144" class="Symbol"
+      >(</a
+      ><a name="1145" href="Data.Sum.html#485" class="InductiveConstructor"
+      >inj&#8322;</a
+      ><a name="1149"
+      > </a
+      ><a name="1150" class="Symbol"
+      >_)</a
+      ><a name="1152"
+      > </a
+      ><a name="1153" class="Symbol"
+      >=</a
+      ><a name="1154"
+      > </a
+      ><a name="1155" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >&#8801;.refl</a
+      ><a name="1161"
+      >
+
+</a
+      ><a name="1163" href="Data.Sum.NP.html#1163" class="Function"
+      >[,]-factor</a
+      ><a name="1173"
+      > </a
+      ><a name="1174" class="Symbol"
+      >:</a
+      ><a name="1175"
+      > </a
+      ><a name="1176" class="Symbol"
+      >&#8704;</a
+      ><a name="1177"
+      > </a
+      ><a name="1178" class="Symbol"
+      >{</a
+      ><a name="1179" href="Data.Sum.NP.html#1179" class="Bound"
+      >a&#8321;</a
+      ><a name="1181"
+      > </a
+      ><a name="1182" href="Data.Sum.NP.html#1182" class="Bound"
+      >a&#8322;</a
+      ><a name="1184"
+      > </a
+      ><a name="1185" href="Data.Sum.NP.html#1185" class="Bound"
+      >b</a
+      ><a name="1186"
+      > </a
+      ><a name="1187" href="Data.Sum.NP.html#1187" class="Bound"
+      >c</a
+      ><a name="1188" class="Symbol"
+      >}</a
+      ><a name="1189"
+      > </a
+      ><a name="1190" class="Symbol"
+      >{</a
+      ><a name="1191" href="Data.Sum.NP.html#1191" class="Bound"
+      >A&#8321;</a
+      ><a name="1193"
+      > </a
+      ><a name="1194" class="Symbol"
+      >:</a
+      ><a name="1195"
+      > </a
+      ><a name="1196" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="1197"
+      > </a
+      ><a name="1198" href="Data.Sum.NP.html#1179" class="Bound"
+      >a&#8321;</a
+      ><a name="1200" class="Symbol"
+      >}</a
+      ><a name="1201"
+      > </a
+      ><a name="1202" class="Symbol"
+      >{</a
+      ><a name="1203" href="Data.Sum.NP.html#1203" class="Bound"
+      >A&#8322;</a
+      ><a name="1205"
+      > </a
+      ><a name="1206" class="Symbol"
+      >:</a
+      ><a name="1207"
+      > </a
+      ><a name="1208" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="1209"
+      > </a
+      ><a name="1210" href="Data.Sum.NP.html#1182" class="Bound"
+      >a&#8322;</a
+      ><a name="1212" class="Symbol"
+      >}</a
+      ><a name="1213"
+      > </a
+      ><a name="1214" class="Symbol"
+      >{</a
+      ><a name="1215" href="Data.Sum.NP.html#1215" class="Bound"
+      >B</a
+      ><a name="1216"
+      > </a
+      ><a name="1217" class="Symbol"
+      >:</a
+      ><a name="1218"
+      > </a
+      ><a name="1219" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="1220"
+      > </a
+      ><a name="1221" href="Data.Sum.NP.html#1185" class="Bound"
+      >b</a
+      ><a name="1222" class="Symbol"
+      >}</a
+      ><a name="1223"
+      > </a
+      ><a name="1224" class="Symbol"
+      >{</a
+      ><a name="1225" href="Data.Sum.NP.html#1225" class="Bound"
+      >C</a
+      ><a name="1226"
+      > </a
+      ><a name="1227" class="Symbol"
+      >:</a
+      ><a name="1228"
+      > </a
+      ><a name="1229" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="1230"
+      > </a
+      ><a name="1231" href="Data.Sum.NP.html#1187" class="Bound"
+      >c</a
+      ><a name="1232" class="Symbol"
+      >}</a
+      ><a name="1233"
+      >
+              </a
+      ><a name="1248" class="Symbol"
+      >{</a
+      ><a name="1249" href="Data.Sum.NP.html#1249" class="Bound"
+      >f</a
+      ><a name="1250"
+      > </a
+      ><a name="1251" class="Symbol"
+      >:</a
+      ><a name="1252"
+      > </a
+      ><a name="1253" href="Data.Sum.NP.html#1215" class="Bound"
+      >B</a
+      ><a name="1254"
+      > </a
+      ><a name="1255" class="Symbol"
+      >&#8594;</a
+      ><a name="1256"
+      > </a
+      ><a name="1257" href="Data.Sum.NP.html#1225" class="Bound"
+      >C</a
+      ><a name="1258" class="Symbol"
+      >}</a
+      ><a name="1259"
+      > </a
+      ><a name="1260" class="Symbol"
+      >{</a
+      ><a name="1261" href="Data.Sum.NP.html#1261" class="Bound"
+      >g&#8321;</a
+      ><a name="1263"
+      > </a
+      ><a name="1264" class="Symbol"
+      >:</a
+      ><a name="1265"
+      > </a
+      ><a name="1266" href="Data.Sum.NP.html#1191" class="Bound"
+      >A&#8321;</a
+      ><a name="1268"
+      > </a
+      ><a name="1269" class="Symbol"
+      >&#8594;</a
+      ><a name="1270"
+      > </a
+      ><a name="1271" href="Data.Sum.NP.html#1215" class="Bound"
+      >B</a
+      ><a name="1272" class="Symbol"
+      >}</a
+      ><a name="1273"
+      > </a
+      ><a name="1274" class="Symbol"
+      >{</a
+      ><a name="1275" href="Data.Sum.NP.html#1275" class="Bound"
+      >g&#8322;</a
+      ><a name="1277"
+      > </a
+      ><a name="1278" class="Symbol"
+      >:</a
+      ><a name="1279"
+      > </a
+      ><a name="1280" href="Data.Sum.NP.html#1203" class="Bound"
+      >A&#8322;</a
+      ><a name="1282"
+      > </a
+      ><a name="1283" class="Symbol"
+      >&#8594;</a
+      ><a name="1284"
+      > </a
+      ><a name="1285" href="Data.Sum.NP.html#1215" class="Bound"
+      >B</a
+      ><a name="1286" class="Symbol"
+      >}</a
+      ><a name="1287"
+      > </a
+      ><a name="1288" class="Symbol"
+      >&#8594;</a
+      ><a name="1289"
+      >
+              </a
+      ><a name="1304" href="Data.Sum.html#678" class="Function Operator"
+      >[</a
+      ><a name="1305"
+      > </a
+      ><a name="1306" href="Data.Sum.NP.html#1249" class="Bound"
+      >f</a
+      ><a name="1307"
+      > </a
+      ><a name="1308" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1309"
+      > </a
+      ><a name="1310" href="Data.Sum.NP.html#1261" class="Bound"
+      >g&#8321;</a
+      ><a name="1312"
+      > </a
+      ><a name="1313" href="Data.Sum.html#678" class="Function Operator"
+      >,</a
+      ><a name="1314"
+      > </a
+      ><a name="1315" href="Data.Sum.NP.html#1249" class="Bound"
+      >f</a
+      ><a name="1316"
+      > </a
+      ><a name="1317" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1318"
+      > </a
+      ><a name="1319" href="Data.Sum.NP.html#1275" class="Bound"
+      >g&#8322;</a
+      ><a name="1321"
+      > </a
+      ><a name="1322" href="Data.Sum.html#678" class="Function Operator"
+      >]</a
+      ><a name="1323"
+      > </a
+      ><a name="1324" href="Relation.Binary.PropositionalEquality.html#2312" class="Function Operator"
+      >&#8791;</a
+      ><a name="1325"
+      > </a
+      ><a name="1326" href="Data.Sum.NP.html#1249" class="Bound"
+      >f</a
+      ><a name="1327"
+      > </a
+      ><a name="1328" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1329"
+      > </a
+      ><a name="1330" href="Data.Sum.html#678" class="Function Operator"
+      >[</a
+      ><a name="1331"
+      > </a
+      ><a name="1332" href="Data.Sum.NP.html#1261" class="Bound"
+      >g&#8321;</a
+      ><a name="1334"
+      > </a
+      ><a name="1335" href="Data.Sum.html#678" class="Function Operator"
+      >,</a
+      ><a name="1336"
+      > </a
+      ><a name="1337" href="Data.Sum.NP.html#1275" class="Bound"
+      >g&#8322;</a
+      ><a name="1339"
+      > </a
+      ><a name="1340" href="Data.Sum.html#678" class="Function Operator"
+      >]</a
+      ><a name="1341"
+      >
+</a
+      ><a name="1342" href="Data.Sum.NP.html#1163" class="Function"
+      >[,]-factor</a
+      ><a name="1352"
+      > </a
+      ><a name="1353" class="Symbol"
+      >(</a
+      ><a name="1354" href="Data.Sum.html#460" class="InductiveConstructor"
+      >inj&#8321;</a
+      ><a name="1358"
+      > </a
+      ><a name="1359" class="Symbol"
+      >_)</a
+      ><a name="1361"
+      > </a
+      ><a name="1362" class="Symbol"
+      >=</a
+      ><a name="1363"
+      > </a
+      ><a name="1364" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >&#8801;.refl</a
+      ><a name="1370"
+      >
+</a
+      ><a name="1371" href="Data.Sum.NP.html#1163" class="Function"
+      >[,]-factor</a
+      ><a name="1381"
+      > </a
+      ><a name="1382" class="Symbol"
+      >(</a
+      ><a name="1383" href="Data.Sum.html#485" class="InductiveConstructor"
+      >inj&#8322;</a
+      ><a name="1387"
+      > </a
+      ><a name="1388" class="Symbol"
+      >_)</a
+      ><a name="1390"
+      > </a
+      ><a name="1391" class="Symbol"
+      >=</a
+      ><a name="1392"
+      > </a
+      ><a name="1393" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >&#8801;.refl</a
+      ><a name="1399"
+      >
+
+</a
+      ><a name="1401" href="Data.Sum.NP.html#1401" class="Function"
+      >map-assoc</a
+      ><a name="1410"
+      > </a
+      ><a name="1411" class="Symbol"
+      >:</a
+      ><a name="1412"
+      > </a
+      ><a name="1413" class="Symbol"
+      >&#8704;</a
+      ><a name="1414"
+      > </a
+      ><a name="1415" class="Symbol"
+      >{</a
+      ><a name="1416" href="Data.Sum.NP.html#1416" class="Bound"
+      >a&#8321;</a
+      ><a name="1418"
+      > </a
+      ><a name="1419" href="Data.Sum.NP.html#1419" class="Bound"
+      >a&#8322;</a
+      ><a name="1421"
+      > </a
+      ><a name="1422" href="Data.Sum.NP.html#1422" class="Bound"
+      >b&#8321;</a
+      ><a name="1424"
+      > </a
+      ><a name="1425" href="Data.Sum.NP.html#1425" class="Bound"
+      >b&#8322;</a
+      ><a name="1427"
+      > </a
+      ><a name="1428" href="Data.Sum.NP.html#1428" class="Bound"
+      >c&#8321;</a
+      ><a name="1430"
+      > </a
+      ><a name="1431" href="Data.Sum.NP.html#1431" class="Bound"
+      >c&#8322;</a
+      ><a name="1433" class="Symbol"
+      >}</a
+      ><a name="1434"
+      > </a
+      ><a name="1435" class="Symbol"
+      >{</a
+      ><a name="1436" href="Data.Sum.NP.html#1436" class="Bound"
+      >A&#8321;</a
+      ><a name="1438"
+      > </a
+      ><a name="1439" class="Symbol"
+      >:</a
+      ><a name="1440"
+      > </a
+      ><a name="1441" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="1442"
+      > </a
+      ><a name="1443" href="Data.Sum.NP.html#1416" class="Bound"
+      >a&#8321;</a
+      ><a name="1445" class="Symbol"
+      >}</a
+      ><a name="1446"
+      > </a
+      ><a name="1447" class="Symbol"
+      >{</a
+      ><a name="1448" href="Data.Sum.NP.html#1448" class="Bound"
+      >A&#8322;</a
+      ><a name="1450"
+      > </a
+      ><a name="1451" class="Symbol"
+      >:</a
+      ><a name="1452"
+      > </a
+      ><a name="1453" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="1454"
+      > </a
+      ><a name="1455" href="Data.Sum.NP.html#1419" class="Bound"
+      >a&#8322;</a
+      ><a name="1457" class="Symbol"
+      >}</a
+      ><a name="1458"
+      >
+              </a
+      ><a name="1473" class="Symbol"
+      >{</a
+      ><a name="1474" href="Data.Sum.NP.html#1474" class="Bound"
+      >B&#8321;</a
+      ><a name="1476"
+      > </a
+      ><a name="1477" class="Symbol"
+      >:</a
+      ><a name="1478"
+      > </a
+      ><a name="1479" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="1480"
+      > </a
+      ><a name="1481" href="Data.Sum.NP.html#1422" class="Bound"
+      >b&#8321;</a
+      ><a name="1483" class="Symbol"
+      >}</a
+      ><a name="1484"
+      > </a
+      ><a name="1485" class="Symbol"
+      >{</a
+      ><a name="1486" href="Data.Sum.NP.html#1486" class="Bound"
+      >B&#8322;</a
+      ><a name="1488"
+      > </a
+      ><a name="1489" class="Symbol"
+      >:</a
+      ><a name="1490"
+      > </a
+      ><a name="1491" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="1492"
+      > </a
+      ><a name="1493" href="Data.Sum.NP.html#1425" class="Bound"
+      >b&#8322;</a
+      ><a name="1495" class="Symbol"
+      >}</a
+      ><a name="1496"
+      > </a
+      ><a name="1497" class="Symbol"
+      >{</a
+      ><a name="1498" href="Data.Sum.NP.html#1498" class="Bound"
+      >C&#8321;</a
+      ><a name="1500"
+      > </a
+      ><a name="1501" class="Symbol"
+      >:</a
+      ><a name="1502"
+      > </a
+      ><a name="1503" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="1504"
+      > </a
+      ><a name="1505" href="Data.Sum.NP.html#1428" class="Bound"
+      >c&#8321;</a
+      ><a name="1507" class="Symbol"
+      >}</a
+      ><a name="1508"
+      > </a
+      ><a name="1509" class="Symbol"
+      >{</a
+      ><a name="1510" href="Data.Sum.NP.html#1510" class="Bound"
+      >C&#8322;</a
+      ><a name="1512"
+      > </a
+      ><a name="1513" class="Symbol"
+      >:</a
+      ><a name="1514"
+      > </a
+      ><a name="1515" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="1516"
+      > </a
+      ><a name="1517" href="Data.Sum.NP.html#1431" class="Bound"
+      >c&#8322;</a
+      ><a name="1519" class="Symbol"
+      >}</a
+      ><a name="1520"
+      >
+              </a
+      ><a name="1535" class="Symbol"
+      >{</a
+      ><a name="1536" href="Data.Sum.NP.html#1536" class="Bound"
+      >f&#8321;</a
+      ><a name="1538"
+      > </a
+      ><a name="1539" class="Symbol"
+      >:</a
+      ><a name="1540"
+      > </a
+      ><a name="1541" href="Data.Sum.NP.html#1474" class="Bound"
+      >B&#8321;</a
+      ><a name="1543"
+      > </a
+      ><a name="1544" class="Symbol"
+      >&#8594;</a
+      ><a name="1545"
+      > </a
+      ><a name="1546" href="Data.Sum.NP.html#1498" class="Bound"
+      >C&#8321;</a
+      ><a name="1548" class="Symbol"
+      >}</a
+      ><a name="1549"
+      > </a
+      ><a name="1550" class="Symbol"
+      >{</a
+      ><a name="1551" href="Data.Sum.NP.html#1551" class="Bound"
+      >g&#8321;</a
+      ><a name="1553"
+      > </a
+      ><a name="1554" class="Symbol"
+      >:</a
+      ><a name="1555"
+      > </a
+      ><a name="1556" href="Data.Sum.NP.html#1436" class="Bound"
+      >A&#8321;</a
+      ><a name="1558"
+      > </a
+      ><a name="1559" class="Symbol"
+      >&#8594;</a
+      ><a name="1560"
+      > </a
+      ><a name="1561" href="Data.Sum.NP.html#1474" class="Bound"
+      >B&#8321;</a
+      ><a name="1563" class="Symbol"
+      >}</a
+      ><a name="1564"
+      > </a
+      ><a name="1565" class="Symbol"
+      >{</a
+      ><a name="1566" href="Data.Sum.NP.html#1566" class="Bound"
+      >f&#8322;</a
+      ><a name="1568"
+      > </a
+      ><a name="1569" class="Symbol"
+      >:</a
+      ><a name="1570"
+      > </a
+      ><a name="1571" href="Data.Sum.NP.html#1486" class="Bound"
+      >B&#8322;</a
+      ><a name="1573"
+      > </a
+      ><a name="1574" class="Symbol"
+      >&#8594;</a
+      ><a name="1575"
+      > </a
+      ><a name="1576" href="Data.Sum.NP.html#1510" class="Bound"
+      >C&#8322;</a
+      ><a name="1578" class="Symbol"
+      >}</a
+      ><a name="1579"
+      > </a
+      ><a name="1580" class="Symbol"
+      >{</a
+      ><a name="1581" href="Data.Sum.NP.html#1581" class="Bound"
+      >g&#8322;</a
+      ><a name="1583"
+      > </a
+      ><a name="1584" class="Symbol"
+      >:</a
+      ><a name="1585"
+      > </a
+      ><a name="1586" href="Data.Sum.NP.html#1448" class="Bound"
+      >A&#8322;</a
+      ><a name="1588"
+      > </a
+      ><a name="1589" class="Symbol"
+      >&#8594;</a
+      ><a name="1590"
+      > </a
+      ><a name="1591" href="Data.Sum.NP.html#1486" class="Bound"
+      >B&#8322;</a
+      ><a name="1593" class="Symbol"
+      >}</a
+      ><a name="1594"
+      > </a
+      ><a name="1595" class="Symbol"
+      >&#8594;</a
+      ><a name="1596"
+      >
+              </a
+      ><a name="1611" href="Data.Sum.html#993" class="Function"
+      >map</a
+      ><a name="1614"
+      > </a
+      ><a name="1615" href="Data.Sum.NP.html#1536" class="Bound"
+      >f&#8321;</a
+      ><a name="1617"
+      > </a
+      ><a name="1618" href="Data.Sum.NP.html#1566" class="Bound"
+      >f&#8322;</a
+      ><a name="1620"
+      > </a
+      ><a name="1621" href="Function.html#898" class="Function Operator"
+      >&#8728;&#8242;</a
+      ><a name="1623"
+      > </a
+      ><a name="1624" href="Data.Sum.html#993" class="Function"
+      >map</a
+      ><a name="1627"
+      > </a
+      ><a name="1628" href="Data.Sum.NP.html#1551" class="Bound"
+      >g&#8321;</a
+      ><a name="1630"
+      > </a
+      ><a name="1631" href="Data.Sum.NP.html#1581" class="Bound"
+      >g&#8322;</a
+      ><a name="1633"
+      > </a
+      ><a name="1634" href="Relation.Binary.PropositionalEquality.html#2312" class="Function Operator"
+      >&#8791;</a
+      ><a name="1635"
+      > </a
+      ><a name="1636" href="Data.Sum.html#993" class="Function"
+      >map</a
+      ><a name="1639"
+      > </a
+      ><a name="1640" class="Symbol"
+      >(</a
+      ><a name="1641" href="Data.Sum.NP.html#1536" class="Bound"
+      >f&#8321;</a
+      ><a name="1643"
+      > </a
+      ><a name="1644" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1645"
+      > </a
+      ><a name="1646" href="Data.Sum.NP.html#1551" class="Bound"
+      >g&#8321;</a
+      ><a name="1648" class="Symbol"
+      >)</a
+      ><a name="1649"
+      > </a
+      ><a name="1650" class="Symbol"
+      >(</a
+      ><a name="1651" href="Data.Sum.NP.html#1566" class="Bound"
+      >f&#8322;</a
+      ><a name="1653"
+      > </a
+      ><a name="1654" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1655"
+      > </a
+      ><a name="1656" href="Data.Sum.NP.html#1581" class="Bound"
+      >g&#8322;</a
+      ><a name="1658" class="Symbol"
+      >)</a
+      ><a name="1659"
+      >
+</a
+      ><a name="1660" href="Data.Sum.NP.html#1401" class="Function"
+      >map-assoc</a
+      ><a name="1669"
+      > </a
+      ><a name="1670" class="Symbol"
+      >=</a
+      ><a name="1671"
+      > </a
+      ><a name="1672" href="Data.Sum.NP.html#867" class="Function"
+      >[,]-assoc</a
+      ><a name="1681"
+      >
+
+</a
+      ><a name="1683" class="Keyword"
+      >open</a
+      ><a name="1687"
+      > </a
+      ><a name="1688" class="Keyword"
+      >import</a
+      ><a name="1694"
+      > </a
+      ><a name="1695" href="Data.Product.html#1" class="Module"
+      >Data.Product</a
+      ><a name="1707"
+      >
+</a
+      ><a name="1708" class="Keyword"
+      >open</a
+      ><a name="1712"
+      > </a
+      ><a name="1713" class="Keyword"
+      >import</a
+      ><a name="1719"
+      > </a
+      ><a name="1720" href="Function.Inverse.html#1" class="Module"
+      >Function.Inverse</a
+      ><a name="1736"
+      >
+</a
+      ><a name="1737" class="Keyword"
+      >open</a
+      ><a name="1741"
+      > </a
+      ><a name="1742" class="Keyword"
+      >import</a
+      ><a name="1748"
+      > </a
+      ><a name="1749" href="Function.LeftInverse.html#1" class="Module"
+      >Function.LeftInverse</a
+      ><a name="1769"
+      >
+
+</a
+      ><a name="1771" href="Data.Sum.NP.html#1771" class="Function"
+      >&#8846;-proj&#8321;</a
+      ><a name="1778"
+      > </a
+      ><a name="1779" class="Symbol"
+      >:</a
+      ><a name="1780"
+      > </a
+      ><a name="1781" class="Symbol"
+      >&#8704;</a
+      ><a name="1782"
+      > </a
+      ><a name="1783" class="Symbol"
+      >{</a
+      ><a name="1784" href="Data.Sum.NP.html#1784" class="Bound"
+      >a</a
+      ><a name="1785"
+      > </a
+      ><a name="1786" href="Data.Sum.NP.html#1786" class="Bound"
+      >b</a
+      ><a name="1787" class="Symbol"
+      >}</a
+      ><a name="1788"
+      > </a
+      ><a name="1789" class="Symbol"
+      >{</a
+      ><a name="1790" href="Data.Sum.NP.html#1790" class="Bound"
+      >A</a
+      ><a name="1791"
+      > </a
+      ><a name="1792" class="Symbol"
+      >:</a
+      ><a name="1793"
+      > </a
+      ><a name="1794" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="1795"
+      > </a
+      ><a name="1796" href="Data.Sum.NP.html#1784" class="Bound"
+      >a</a
+      ><a name="1797" class="Symbol"
+      >}</a
+      ><a name="1798"
+      > </a
+      ><a name="1799" class="Symbol"
+      >{</a
+      ><a name="1800" href="Data.Sum.NP.html#1800" class="Bound"
+      >B</a
+      ><a name="1801"
+      > </a
+      ><a name="1802" class="Symbol"
+      >:</a
+      ><a name="1803"
+      > </a
+      ><a name="1804" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="1805"
+      > </a
+      ><a name="1806" href="Data.Sum.NP.html#1786" class="Bound"
+      >b</a
+      ><a name="1807" class="Symbol"
+      >}</a
+      ><a name="1808"
+      > </a
+      ><a name="1809" class="Symbol"
+      >&#8594;</a
+      ><a name="1810"
+      > </a
+      ><a name="1811" href="Data.Sum.NP.html#1790" class="Bound"
+      >A</a
+      ><a name="1812"
+      > </a
+      ><a name="1813" href="Data.Sum.html#404" class="Datatype Operator"
+      >&#8846;</a
+      ><a name="1814"
+      > </a
+      ><a name="1815" href="Data.Sum.NP.html#1800" class="Bound"
+      >B</a
+      ><a name="1816"
+      > </a
+      ><a name="1817" class="Symbol"
+      >&#8594;</a
+      ><a name="1818"
+      > </a
+      ><a name="1819" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="1820"
+      >
+</a
+      ><a name="1821" href="Data.Sum.NP.html#1771" class="Function"
+      >&#8846;-proj&#8321;</a
+      ><a name="1828"
+      > </a
+      ><a name="1829" class="Symbol"
+      >(</a
+      ><a name="1830" href="Data.Sum.html#460" class="InductiveConstructor"
+      >inj&#8321;</a
+      ><a name="1834"
+      > </a
+      ><a name="1835" class="Symbol"
+      >_)</a
+      ><a name="1837"
+      > </a
+      ><a name="1838" class="Symbol"
+      >=</a
+      ><a name="1839"
+      > </a
+      ><a name="1840" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="1842"
+      >
+</a
+      ><a name="1843" href="Data.Sum.NP.html#1771" class="Function"
+      >&#8846;-proj&#8321;</a
+      ><a name="1850"
+      > </a
+      ><a name="1851" class="Symbol"
+      >(</a
+      ><a name="1852" href="Data.Sum.html#485" class="InductiveConstructor"
+      >inj&#8322;</a
+      ><a name="1856"
+      > </a
+      ><a name="1857" class="Symbol"
+      >_)</a
+      ><a name="1859"
+      > </a
+      ><a name="1860" class="Symbol"
+      >=</a
+      ><a name="1861"
+      > </a
+      ><a name="1862" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="1864"
+      >
+
+</a
+      ><a name="1866" href="Data.Sum.NP.html#1866" class="Function"
+      >&#8846;-proj&#8322;</a
+      ><a name="1873"
+      > </a
+      ><a name="1874" class="Symbol"
+      >:</a
+      ><a name="1875"
+      > </a
+      ><a name="1876" class="Symbol"
+      >&#8704;</a
+      ><a name="1877"
+      > </a
+      ><a name="1878" class="Symbol"
+      >{</a
+      ><a name="1879" href="Data.Sum.NP.html#1879" class="Bound"
+      >&#8467;</a
+      ><a name="1880" class="Symbol"
+      >}</a
+      ><a name="1881"
+      > </a
+      ><a name="1882" class="Symbol"
+      >{</a
+      ><a name="1883" href="Data.Sum.NP.html#1883" class="Bound"
+      >A</a
+      ><a name="1884"
+      > </a
+      ><a name="1885" href="Data.Sum.NP.html#1885" class="Bound"
+      >B</a
+      ><a name="1886"
+      > </a
+      ><a name="1887" class="Symbol"
+      >:</a
+      ><a name="1888"
+      > </a
+      ><a name="1889" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="1890"
+      > </a
+      ><a name="1891" href="Data.Sum.NP.html#1879" class="Bound"
+      >&#8467;</a
+      ><a name="1892" class="Symbol"
+      >}</a
+      ><a name="1893"
+      > </a
+      ><a name="1894" class="Symbol"
+      >(</a
+      ><a name="1895" href="Data.Sum.NP.html#1895" class="Bound"
+      >x</a
+      ><a name="1896"
+      > </a
+      ><a name="1897" class="Symbol"
+      >:</a
+      ><a name="1898"
+      > </a
+      ><a name="1899" href="Data.Sum.NP.html#1883" class="Bound"
+      >A</a
+      ><a name="1900"
+      > </a
+      ><a name="1901" href="Data.Sum.html#404" class="Datatype Operator"
+      >&#8846;</a
+      ><a name="1902"
+      > </a
+      ><a name="1903" href="Data.Sum.NP.html#1885" class="Bound"
+      >B</a
+      ><a name="1904" class="Symbol"
+      >)</a
+      ><a name="1905"
+      > </a
+      ><a name="1906" class="Symbol"
+      >&#8594;</a
+      ><a name="1907"
+      > </a
+      ><a name="1908" href="Data.Two.html#2156" class="Function Operator"
+      >case</a
+      ><a name="1912"
+      > </a
+      ><a name="1913" href="Data.Sum.NP.html#1771" class="Function"
+      >&#8846;-proj&#8321;</a
+      ><a name="1920"
+      > </a
+      ><a name="1921" href="Data.Sum.NP.html#1895" class="Bound"
+      >x</a
+      ><a name="1922"
+      > </a
+      ><a name="1923" href="Data.Two.html#2156" class="Function Operator"
+      >0:</a
+      ><a name="1925"
+      > </a
+      ><a name="1926" href="Data.Sum.NP.html#1883" class="Bound"
+      >A</a
+      ><a name="1927"
+      > </a
+      ><a name="1928" href="Data.Two.html#2156" class="Function Operator"
+      >1:</a
+      ><a name="1930"
+      > </a
+      ><a name="1931" href="Data.Sum.NP.html#1885" class="Bound"
+      >B</a
+      ><a name="1932"
+      >
+</a
+      ><a name="1933" href="Data.Sum.NP.html#1866" class="Function"
+      >&#8846;-proj&#8322;</a
+      ><a name="1940"
+      > </a
+      ><a name="1941" class="Symbol"
+      >(</a
+      ><a name="1942" href="Data.Sum.html#460" class="InductiveConstructor"
+      >inj&#8321;</a
+      ><a name="1946"
+      > </a
+      ><a name="1947" href="Data.Sum.NP.html#1947" class="Bound"
+      >x</a
+      ><a name="1948" class="Symbol"
+      >)</a
+      ><a name="1949"
+      > </a
+      ><a name="1950" class="Symbol"
+      >=</a
+      ><a name="1951"
+      > </a
+      ><a name="1952" href="Data.Sum.NP.html#1947" class="Bound"
+      >x</a
+      ><a name="1953"
+      >
+</a
+      ><a name="1954" href="Data.Sum.NP.html#1866" class="Function"
+      >&#8846;-proj&#8322;</a
+      ><a name="1961"
+      > </a
+      ><a name="1962" class="Symbol"
+      >(</a
+      ><a name="1963" href="Data.Sum.html#485" class="InductiveConstructor"
+      >inj&#8322;</a
+      ><a name="1967"
+      > </a
+      ><a name="1968" href="Data.Sum.NP.html#1968" class="Bound"
+      >x</a
+      ><a name="1969" class="Symbol"
+      >)</a
+      ><a name="1970"
+      > </a
+      ><a name="1971" class="Symbol"
+      >=</a
+      ><a name="1972"
+      > </a
+      ><a name="1973" href="Data.Sum.NP.html#1968" class="Bound"
+      >x</a
+      ><a name="1974"
+      >
+
+</a
+      ><a name="1976" class="Comment"
+      >-- Function.Related.TypeIsomorphisms.NP for the A &#8846; B, &#931; &#120794; [0: A 1: B ] iso.</a
+      ><a name="2052"
+      >
+
+</a
+      ><a name="2054" href="Data.Sum.NP.html#2054" class="Function"
+      >&#120793;&#8846;^</a
+      ><a name="2057"
+      > </a
+      ><a name="2058" class="Symbol"
+      >:</a
+      ><a name="2059"
+      > </a
+      ><a name="2060" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="2061"
+      > </a
+      ><a name="2062" class="Symbol"
+      >&#8594;</a
+      ><a name="2063"
+      > </a
+      ><a name="2064" href="Type.html#107" class="Function"
+      >&#9733;&#8320;</a
+      ><a name="2066"
+      >
+</a
+      ><a name="2067" href="Data.Sum.NP.html#2054" class="Function"
+      >&#120793;&#8846;^</a
+      ><a name="2070"
+      > </a
+      ><a name="2071" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="2075"
+      >    </a
+      ><a name="2079" class="Symbol"
+      >=</a
+      ><a name="2080"
+      > </a
+      ><a name="2081" href="Data.Empty.html#243" class="Datatype"
+      >&#120792;</a
+      ><a name="2082"
+      >
+</a
+      ><a name="2083" href="Data.Sum.NP.html#2054" class="Function"
+      >&#120793;&#8846;^</a
+      ><a name="2086"
+      > </a
+      ><a name="2087" class="Symbol"
+      >(</a
+      ><a name="2088" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="2091"
+      > </a
+      ><a name="2092" href="Data.Sum.NP.html#2092" class="Bound"
+      >n</a
+      ><a name="2093" class="Symbol"
+      >)</a
+      ><a name="2094"
+      > </a
+      ><a name="2095" class="Symbol"
+      >=</a
+      ><a name="2096"
+      > </a
+      ><a name="2097" href="Data.Unit.html#653" class="Record"
+      >&#120793;</a
+      ><a name="2098"
+      > </a
+      ><a name="2099" href="Data.Sum.html#404" class="Datatype Operator"
+      >&#8846;</a
+      ><a name="2100"
+      > </a
+      ><a name="2101" href="Data.Sum.NP.html#2054" class="Function"
+      >&#120793;&#8846;^</a
+      ><a name="2104"
+      > </a
+      ><a name="2105" href="Data.Sum.NP.html#2092" class="Bound"
+      >n</a
+      ><a name="2106"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

@@ -1,0 +1,976 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Game.Transformation.CPAd-CPA</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1"
+      >
+</a
+      ><a name="2" class="Symbol"
+      >{-#</a
+      ><a name="5"
+      > </a
+      ><a name="6" class="Keyword"
+      >OPTIONS</a
+      ><a name="13"
+      > --without-K --copatterns </a
+      ><a name="39" class="Symbol"
+      >#-}</a
+      ><a name="42"
+      >
+
+</a
+      ><a name="44" class="Keyword"
+      >open</a
+      ><a name="48"
+      > </a
+      ><a name="49" class="Keyword"
+      >import</a
+      ><a name="55"
+      > </a
+      ><a name="56" href="Type.html#1" class="Module"
+      >Type</a
+      ><a name="60"
+      >
+</a
+      ><a name="61" class="Keyword"
+      >open</a
+      ><a name="65"
+      > </a
+      ><a name="66" class="Keyword"
+      >import</a
+      ><a name="72"
+      > </a
+      ><a name="73" href="Data.Bit.html#1" class="Module"
+      >Data.Bit</a
+      ><a name="81"
+      >
+</a
+      ><a name="82" class="Keyword"
+      >open</a
+      ><a name="86"
+      > </a
+      ><a name="87" class="Keyword"
+      >import</a
+      ><a name="93"
+      > </a
+      ><a name="94" href="Data.Maybe.html#1" class="Module"
+      >Data.Maybe</a
+      ><a name="104"
+      >
+</a
+      ><a name="105" class="Keyword"
+      >open</a
+      ><a name="109"
+      > </a
+      ><a name="110" class="Keyword"
+      >import</a
+      ><a name="116"
+      > </a
+      ><a name="117" href="Data.Product.html#1" class="Module"
+      >Data.Product</a
+      ><a name="129"
+      >
+</a
+      ><a name="130" class="Keyword"
+      >open</a
+      ><a name="134"
+      > </a
+      ><a name="135" class="Keyword"
+      >import</a
+      ><a name="141"
+      > </a
+      ><a name="142" href="Data.One.html#1" class="Module"
+      >Data.One</a
+      ><a name="150"
+      >
+</a
+      ><a name="151" class="Keyword"
+      >open</a
+      ><a name="155"
+      > </a
+      ><a name="156" class="Keyword"
+      >import</a
+      ><a name="162"
+      > </a
+      ><a name="163" href="Control.Strategy.html#1" class="Module"
+      >Control.Strategy</a
+      ><a name="179"
+      > </a
+      ><a name="180" class="Keyword"
+      >renaming</a
+      ><a name="188"
+      > </a
+      ><a name="189" class="Symbol"
+      >(</a
+      ><a name="190"
+      >run </a
+      ><a name="194" class="Symbol"
+      >to</a
+      ><a name="196"
+      > runStrategy</a
+      ><a name="208" class="Symbol"
+      >;</a
+      ><a name="209"
+      > map </a
+      ><a name="214" class="Symbol"
+      >to</a
+      ><a name="216"
+      > mapStrategy</a
+      ><a name="228" class="Symbol"
+      >)</a
+      ><a name="229"
+      >
+
+</a
+      ><a name="231" class="Keyword"
+      >open</a
+      ><a name="235"
+      > </a
+      ><a name="236" class="Keyword"
+      >import</a
+      ><a name="242"
+      > </a
+      ><a name="243" href="Function.html#1" class="Module"
+      >Function</a
+      ><a name="251"
+      >
+
+</a
+      ><a name="253" class="Keyword"
+      >open</a
+      ><a name="257"
+      > </a
+      ><a name="258" class="Keyword"
+      >import</a
+      ><a name="264"
+      > </a
+      ><a name="265" href="Relation.Binary.PropositionalEquality.html#1" class="Module"
+      >Relation.Binary.PropositionalEquality</a
+      ><a name="302"
+      >
+
+</a
+      ><a name="304" class="Keyword"
+      >import</a
+      ><a name="310"
+      > </a
+      ><a name="311" href="Game.IND-CPA-dagger.html#1" class="Module"
+      >Game.IND-CPA-dagger</a
+      ><a name="330"
+      >
+</a
+      ><a name="331" class="Keyword"
+      >import</a
+      ><a name="337"
+      > </a
+      ><a name="338" href="Game.IND-CPA.html#1" class="Module"
+      >Game.IND-CPA</a
+      ><a name="350"
+      >
+
+</a
+      ><a name="352" class="Keyword"
+      >module</a
+      ><a name="358"
+      > </a
+      ><a name="359" href="Game.Transformation.CPAd-CPA.html#1" class="Module"
+      >Game.Transformation.CPAd-CPA</a
+      ><a name="387"
+      >
+  </a
+      ><a name="390" class="Symbol"
+      >(</a
+      ><a name="391" href="Game.Transformation.CPAd-CPA.html#391" class="Bound"
+      >PubKey</a
+      ><a name="397"
+      >    </a
+      ><a name="401" class="Symbol"
+      >:</a
+      ><a name="402"
+      > </a
+      ><a name="403" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="404" class="Symbol"
+      >)</a
+      ><a name="405"
+      >
+  </a
+      ><a name="408" class="Symbol"
+      >(</a
+      ><a name="409" href="Game.Transformation.CPAd-CPA.html#409" class="Bound"
+      >SecKey</a
+      ><a name="415"
+      >    </a
+      ><a name="419" class="Symbol"
+      >:</a
+      ><a name="420"
+      > </a
+      ><a name="421" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="422" class="Symbol"
+      >)</a
+      ><a name="423"
+      >
+  </a
+      ><a name="426" class="Symbol"
+      >(</a
+      ><a name="427" href="Game.Transformation.CPAd-CPA.html#427" class="Bound"
+      >Message</a
+      ><a name="434"
+      >   </a
+      ><a name="437" class="Symbol"
+      >:</a
+      ><a name="438"
+      > </a
+      ><a name="439" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="440" class="Symbol"
+      >)</a
+      ><a name="441"
+      >
+  </a
+      ><a name="444" class="Symbol"
+      >(</a
+      ><a name="445" href="Game.Transformation.CPAd-CPA.html#445" class="Bound"
+      >CipherText</a
+      ><a name="455"
+      > </a
+      ><a name="456" class="Symbol"
+      >:</a
+      ><a name="457"
+      > </a
+      ><a name="458" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="459" class="Symbol"
+      >)</a
+      ><a name="460"
+      >
+
+  </a
+      ><a name="464" class="Comment"
+      >-- randomness supply for, encryption, key-generation, adversary, adversary state</a
+      ><a name="544"
+      >
+  </a
+      ><a name="547" class="Symbol"
+      >(</a
+      ><a name="548" href="Game.Transformation.CPAd-CPA.html#548" class="Bound"
+      >R&#8337;</a
+      ><a name="550"
+      > </a
+      ><a name="551" href="Game.Transformation.CPAd-CPA.html#551" class="Bound"
+      >R&#8342;</a
+      ><a name="553"
+      > </a
+      ><a name="554" href="Game.Transformation.CPAd-CPA.html#554" class="Bound"
+      >R&#8336;</a
+      ><a name="556"
+      > </a
+      ><a name="557" class="Symbol"
+      >:</a
+      ><a name="558"
+      > </a
+      ><a name="559" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="560" class="Symbol"
+      >)</a
+      ><a name="561"
+      >
+  </a
+      ><a name="564" class="Symbol"
+      >(</a
+      ><a name="565" href="Game.Transformation.CPAd-CPA.html#565" class="Bound"
+      >KeyGen</a
+      ><a name="571"
+      > </a
+      ><a name="572" class="Symbol"
+      >:</a
+      ><a name="573"
+      > </a
+      ><a name="574" href="Game.Transformation.CPAd-CPA.html#551" class="Bound"
+      >R&#8342;</a
+      ><a name="576"
+      > </a
+      ><a name="577" class="Symbol"
+      >&#8594;</a
+      ><a name="578"
+      > </a
+      ><a name="579" href="Game.Transformation.CPAd-CPA.html#391" class="Bound"
+      >PubKey</a
+      ><a name="585"
+      > </a
+      ><a name="586" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="587"
+      > </a
+      ><a name="588" href="Game.Transformation.CPAd-CPA.html#409" class="Bound"
+      >SecKey</a
+      ><a name="594" class="Symbol"
+      >)</a
+      ><a name="595"
+      >
+  </a
+      ><a name="598" class="Symbol"
+      >(</a
+      ><a name="599" href="Game.Transformation.CPAd-CPA.html#599" class="Bound"
+      >Enc</a
+      ><a name="602"
+      >    </a
+      ><a name="606" class="Symbol"
+      >:</a
+      ><a name="607"
+      > </a
+      ><a name="608" href="Game.Transformation.CPAd-CPA.html#391" class="Bound"
+      >PubKey</a
+      ><a name="614"
+      > </a
+      ><a name="615" class="Symbol"
+      >&#8594;</a
+      ><a name="616"
+      > </a
+      ><a name="617" href="Game.Transformation.CPAd-CPA.html#427" class="Bound"
+      >Message</a
+      ><a name="624"
+      > </a
+      ><a name="625" class="Symbol"
+      >&#8594;</a
+      ><a name="626"
+      > </a
+      ><a name="627" href="Game.Transformation.CPAd-CPA.html#548" class="Bound"
+      >R&#8337;</a
+      ><a name="629"
+      > </a
+      ><a name="630" class="Symbol"
+      >&#8594;</a
+      ><a name="631"
+      > </a
+      ><a name="632" href="Game.Transformation.CPAd-CPA.html#445" class="Bound"
+      >CipherText</a
+      ><a name="642" class="Symbol"
+      >)</a
+      ><a name="643"
+      >
+  </a
+      ><a name="646" class="Symbol"
+      >(</a
+      ><a name="647" href="Game.Transformation.CPAd-CPA.html#647" class="Bound"
+      >Dec</a
+      ><a name="650"
+      >    </a
+      ><a name="654" class="Symbol"
+      >:</a
+      ><a name="655"
+      > </a
+      ><a name="656" href="Game.Transformation.CPAd-CPA.html#409" class="Bound"
+      >SecKey</a
+      ><a name="662"
+      > </a
+      ><a name="663" class="Symbol"
+      >&#8594;</a
+      ><a name="664"
+      > </a
+      ><a name="665" href="Game.Transformation.CPAd-CPA.html#445" class="Bound"
+      >CipherText</a
+      ><a name="675"
+      > </a
+      ><a name="676" class="Symbol"
+      >&#8594;</a
+      ><a name="677"
+      > </a
+      ><a name="678" href="Game.Transformation.CPAd-CPA.html#427" class="Bound"
+      >Message</a
+      ><a name="685" class="Symbol"
+      >)</a
+      ><a name="686"
+      >
+  
+</a
+      ><a name="690" class="Keyword"
+      >where</a
+      ><a name="695"
+      >
+
+</a
+      ><a name="697" class="Keyword"
+      >module</a
+      ><a name="703"
+      > </a
+      ><a name="704" href="Game.Transformation.CPAd-CPA.html#704" class="Module"
+      >CPA&#8224;</a
+      ><a name="708"
+      > </a
+      ><a name="709" class="Symbol"
+      >=</a
+      ><a name="710"
+      > </a
+      ><a name="711" href="Game.IND-CPA-dagger.html#1" class="Module"
+      >Game.IND-CPA-dagger</a
+      ><a name="730"
+      > </a
+      ><a name="731" href="Game.Transformation.CPAd-CPA.html#391" class="Bound"
+      >PubKey</a
+      ><a name="737"
+      > </a
+      ><a name="738" href="Game.Transformation.CPAd-CPA.html#409" class="Bound"
+      >SecKey</a
+      ><a name="744"
+      > </a
+      ><a name="745" href="Game.Transformation.CPAd-CPA.html#427" class="Bound"
+      >Message</a
+      ><a name="752"
+      > </a
+      ><a name="753" href="Game.Transformation.CPAd-CPA.html#445" class="Bound"
+      >CipherText</a
+      ><a name="763"
+      > </a
+      ><a name="764" href="Game.Transformation.CPAd-CPA.html#548" class="Bound"
+      >R&#8337;</a
+      ><a name="766"
+      > </a
+      ><a name="767" href="Game.Transformation.CPAd-CPA.html#551" class="Bound"
+      >R&#8342;</a
+      ><a name="769"
+      > </a
+      ><a name="770" href="Game.Transformation.CPAd-CPA.html#554" class="Bound"
+      >R&#8336;</a
+      ><a name="772"
+      > </a
+      ><a name="773" href="Data.Unit.html#653" class="Record"
+      >&#120793;</a
+      ><a name="774"
+      > </a
+      ><a name="775" href="Game.Transformation.CPAd-CPA.html#565" class="Bound"
+      >KeyGen</a
+      ><a name="781"
+      > </a
+      ><a name="782" href="Game.Transformation.CPAd-CPA.html#599" class="Bound"
+      >Enc</a
+      ><a name="785"
+      >
+</a
+      ><a name="786" class="Keyword"
+      >module</a
+      ><a name="792"
+      > </a
+      ><a name="793" href="Game.Transformation.CPAd-CPA.html#793" class="Module"
+      >CPA</a
+      ><a name="796"
+      >  </a
+      ><a name="798" class="Symbol"
+      >=</a
+      ><a name="799"
+      > </a
+      ><a name="800" href="Game.IND-CPA.html#1" class="Module"
+      >Game.IND-CPA</a
+      ><a name="812"
+      >        </a
+      ><a name="820" href="Game.Transformation.CPAd-CPA.html#391" class="Bound"
+      >PubKey</a
+      ><a name="826"
+      > </a
+      ><a name="827" href="Game.Transformation.CPAd-CPA.html#409" class="Bound"
+      >SecKey</a
+      ><a name="833"
+      > </a
+      ><a name="834" href="Game.Transformation.CPAd-CPA.html#427" class="Bound"
+      >Message</a
+      ><a name="841"
+      > </a
+      ><a name="842" href="Game.Transformation.CPAd-CPA.html#445" class="Bound"
+      >CipherText</a
+      ><a name="852"
+      > </a
+      ><a name="853" href="Game.Transformation.CPAd-CPA.html#548" class="Bound"
+      >R&#8337;</a
+      ><a name="855"
+      > </a
+      ><a name="856" href="Game.Transformation.CPAd-CPA.html#551" class="Bound"
+      >R&#8342;</a
+      ><a name="858"
+      > </a
+      ><a name="859" href="Game.Transformation.CPAd-CPA.html#554" class="Bound"
+      >R&#8336;</a
+      ><a name="861"
+      > </a
+      ><a name="862" href="Data.Unit.html#653" class="Record"
+      >&#120793;</a
+      ><a name="863"
+      > </a
+      ><a name="864" href="Game.Transformation.CPAd-CPA.html#565" class="Bound"
+      >KeyGen</a
+      ><a name="870"
+      > </a
+      ><a name="871" href="Game.Transformation.CPAd-CPA.html#599" class="Bound"
+      >Enc</a
+      ><a name="874"
+      >
+
+</a
+      ><a name="876" href="Game.Transformation.CPAd-CPA.html#876" class="Function"
+      >R-transform</a
+      ><a name="887"
+      > </a
+      ><a name="888" class="Symbol"
+      >:</a
+      ><a name="889"
+      > </a
+      ><a name="890" href="Game.IND-CPA-dagger.html#1284" class="Function"
+      >CPA&#8224;.R</a
+      ><a name="896"
+      > </a
+      ><a name="897" class="Symbol"
+      >&#8594;</a
+      ><a name="898"
+      > </a
+      ><a name="899" href="Game.IND-CPA.html#1111" class="Function"
+      >CPA.R</a
+      ><a name="904"
+      >
+</a
+      ><a name="905" href="Game.Transformation.CPAd-CPA.html#876" class="Function"
+      >R-transform</a
+      ><a name="916"
+      > </a
+      ><a name="917" class="Symbol"
+      >(</a
+      ><a name="918" href="Game.Transformation.CPAd-CPA.html#918" class="Bound"
+      >r&#8336;</a
+      ><a name="920"
+      > </a
+      ><a name="921" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="922"
+      > </a
+      ><a name="923" href="Game.Transformation.CPAd-CPA.html#923" class="Bound"
+      >r&#8342;</a
+      ><a name="925"
+      > </a
+      ><a name="926" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="927"
+      > </a
+      ><a name="928" href="Game.Transformation.CPAd-CPA.html#928" class="Bound"
+      >r&#8337;</a
+      ><a name="930"
+      > </a
+      ><a name="931" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="932"
+      > </a
+      ><a name="933" class="Symbol"
+      >_</a
+      ><a name="934"
+      > </a
+      ><a name="935" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="936"
+      > </a
+      ><a name="937" class="Symbol"
+      >_)</a
+      ><a name="939"
+      > </a
+      ><a name="940" class="Symbol"
+      >=</a
+      ><a name="941"
+      > </a
+      ><a name="942" href="Game.Transformation.CPAd-CPA.html#918" class="Bound"
+      >r&#8336;</a
+      ><a name="944"
+      > </a
+      ><a name="945" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="946"
+      > </a
+      ><a name="947" href="Game.Transformation.CPAd-CPA.html#923" class="Bound"
+      >r&#8342;</a
+      ><a name="949"
+      > </a
+      ><a name="950" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="951"
+      > </a
+      ><a name="952" href="Game.Transformation.CPAd-CPA.html#928" class="Bound"
+      >r&#8337;</a
+      ><a name="954"
+      > </a
+      ><a name="955" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="956"
+      > </a
+      ><a name="957" class="Symbol"
+      >_</a
+      ><a name="958"
+      >
+
+</a
+      ><a name="960" class="Keyword"
+      >module</a
+      ><a name="966"
+      > </a
+      ><a name="967" href="Game.Transformation.CPAd-CPA.html#967" class="Module"
+      >_</a
+      ><a name="968"
+      > </a
+      ><a name="969" class="Symbol"
+      >(</a
+      ><a name="970" href="Game.Transformation.CPAd-CPA.html#970" class="Bound"
+      >A</a
+      ><a name="971"
+      > </a
+      ><a name="972" class="Symbol"
+      >:</a
+      ><a name="973"
+      > </a
+      ><a name="974" href="Game.IND-CPA.html#420" class="Record"
+      >CPA.Adversary</a
+      ><a name="987" class="Symbol"
+      >)</a
+      ><a name="988"
+      > </a
+      ><a name="989" class="Keyword"
+      >where</a
+      ><a name="994"
+      >
+  </a
+      ><a name="997" class="Keyword"
+      >open</a
+      ><a name="1001"
+      > </a
+      ><a name="1002" href="Game.Transformation.CPAd-CPA.html#704" class="Module"
+      >CPA&#8224;.</a
+      ><a name="1007" href="Game.IND-CPA-dagger.html#429" class="Module"
+      >Adversary</a
+      ><a name="1016"
+      >
+  </a
+      ><a name="1019" class="Keyword"
+      >module</a
+      ><a name="1025"
+      > </a
+      ><a name="1026" href="Game.Transformation.CPAd-CPA.html#1026" class="Module"
+      >A</a
+      ><a name="1027"
+      > </a
+      ><a name="1028" class="Symbol"
+      >=</a
+      ><a name="1029"
+      > </a
+      ><a name="1030" href="Game.Transformation.CPAd-CPA.html#793" class="Module"
+      >CPA.</a
+      ><a name="1034" href="Game.IND-CPA.html#420" class="Module"
+      >Adversary</a
+      ><a name="1043"
+      > </a
+      ><a name="1044" href="Game.Transformation.CPAd-CPA.html#970" class="Bound"
+      >A</a
+      ><a name="1045"
+      >
+
+  </a
+      ><a name="1049" href="Game.Transformation.CPAd-CPA.html#1049" class="Function"
+      >A&#8224;</a
+      ><a name="1051"
+      > </a
+      ><a name="1052" class="Symbol"
+      >:</a
+      ><a name="1053"
+      > </a
+      ><a name="1054" href="Game.IND-CPA-dagger.html#429" class="Record"
+      >CPA&#8224;.Adversary</a
+      ><a name="1068"
+      >
+  </a
+      ><a name="1071" href="Game.IND-CPA-dagger.html#796" class="Field"
+      >m</a
+      ><a name="1072"
+      >  </a
+      ><a name="1074" href="Game.Transformation.CPAd-CPA.html#1049" class="Function"
+      >A&#8224;</a
+      ><a name="1076"
+      > </a
+      ><a name="1077" class="Symbol"
+      >=</a
+      ><a name="1078"
+      > </a
+      ><a name="1079" href="Game.IND-CPA.html#760" class="Function"
+      >A.m</a
+      ><a name="1082"
+      >
+  </a
+      ><a name="1085" href="Game.IND-CPA-dagger.html#1207" class="Field"
+      >b&#8242;</a
+      ><a name="1087"
+      > </a
+      ><a name="1088" href="Game.Transformation.CPAd-CPA.html#1049" class="Function"
+      >A&#8224;</a
+      ><a name="1090"
+      > </a
+      ><a name="1091" href="Game.Transformation.CPAd-CPA.html#1091" class="Bound"
+      >r&#8336;</a
+      ><a name="1093"
+      > </a
+      ><a name="1094" href="Game.Transformation.CPAd-CPA.html#1094" class="Bound"
+      >pk</a
+      ><a name="1096"
+      > </a
+      ><a name="1097" href="Game.Transformation.CPAd-CPA.html#1097" class="Bound"
+      >c&#8320;</a
+      ><a name="1099"
+      > </a
+      ><a name="1100" href="Game.Transformation.CPAd-CPA.html#1100" class="Bound"
+      >c&#8321;</a
+      ><a name="1102"
+      > </a
+      ><a name="1103" class="Symbol"
+      >=</a
+      ><a name="1104"
+      > </a
+      ><a name="1105" href="Game.IND-CPA.html#1047" class="Function"
+      >A.b&#8242;</a
+      ><a name="1109"
+      > </a
+      ><a name="1110" href="Game.Transformation.CPAd-CPA.html#1091" class="Bound"
+      >r&#8336;</a
+      ><a name="1112"
+      > </a
+      ><a name="1113" href="Game.Transformation.CPAd-CPA.html#1094" class="Bound"
+      >pk</a
+      ><a name="1115"
+      > </a
+      ><a name="1116" href="Game.Transformation.CPAd-CPA.html#1097" class="Bound"
+      >c&#8320;</a
+      ><a name="1118"
+      >
+
+  </a
+      ><a name="1122" href="Game.Transformation.CPAd-CPA.html#1122" class="Function"
+      >lemma</a
+      ><a name="1127"
+      > </a
+      ><a name="1128" class="Symbol"
+      >:</a
+      ><a name="1129"
+      > </a
+      ><a name="1130" class="Symbol"
+      >&#8704;</a
+      ><a name="1131"
+      > </a
+      ><a name="1132" href="Game.Transformation.CPAd-CPA.html#1132" class="Bound"
+      >b</a
+      ><a name="1133"
+      > </a
+      ><a name="1134" href="Game.Transformation.CPAd-CPA.html#1134" class="Bound"
+      >t</a
+      ><a name="1135"
+      > </a
+      ><a name="1136" href="Game.Transformation.CPAd-CPA.html#1136" class="Bound"
+      >r</a
+      ><a name="1137"
+      >
+          </a
+      ><a name="1148" class="Symbol"
+      >&#8594;</a
+      ><a name="1149"
+      > </a
+      ><a name="1150" href="Game.IND-CPA.html#1610" class="Function"
+      >CPA.EXP</a
+      ><a name="1157"
+      >  </a
+      ><a name="1159" href="Game.Transformation.CPAd-CPA.html#1132" class="Bound"
+      >b</a
+      ><a name="1160"
+      >   </a
+      ><a name="1163" href="Game.Transformation.CPAd-CPA.html#970" class="Bound"
+      >A</a
+      ><a name="1164"
+      >  </a
+      ><a name="1166" class="Symbol"
+      >(</a
+      ><a name="1167" href="Game.Transformation.CPAd-CPA.html#876" class="Function"
+      >R-transform</a
+      ><a name="1178"
+      > </a
+      ><a name="1179" href="Game.Transformation.CPAd-CPA.html#1136" class="Bound"
+      >r</a
+      ><a name="1180" class="Symbol"
+      >)</a
+      ><a name="1181"
+      >
+          </a
+      ><a name="1192" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="1193"
+      > </a
+      ><a name="1194" href="Game.IND-CPA-dagger.html#1787" class="Function"
+      >CPA&#8224;.EXP</a
+      ><a name="1202"
+      > </a
+      ><a name="1203" href="Game.Transformation.CPAd-CPA.html#1132" class="Bound"
+      >b</a
+      ><a name="1204"
+      > </a
+      ><a name="1205" href="Game.Transformation.CPAd-CPA.html#1134" class="Bound"
+      >t</a
+      ><a name="1206"
+      > </a
+      ><a name="1207" href="Game.Transformation.CPAd-CPA.html#1049" class="Function"
+      >A&#8224;</a
+      ><a name="1209"
+      > </a
+      ><a name="1210" href="Game.Transformation.CPAd-CPA.html#1136" class="Bound"
+      >r</a
+      ><a name="1211"
+      >
+  </a
+      ><a name="1214" href="Game.Transformation.CPAd-CPA.html#1122" class="Function"
+      >lemma</a
+      ><a name="1219"
+      > </a
+      ><a name="1220" class="Symbol"
+      >_</a
+      ><a name="1221"
+      > </a
+      ><a name="1222" class="Symbol"
+      >_</a
+      ><a name="1223"
+      > </a
+      ><a name="1224" class="Symbol"
+      >_</a
+      ><a name="1225"
+      > </a
+      ><a name="1226" class="Symbol"
+      >=</a
+      ><a name="1227"
+      > </a
+      ><a name="1228" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="1232"
+      >
+
+  </a
+      ><a name="1236" class="Comment"
+      >-- If we are able to do the transformation, then we get the same advantage</a
+      ><a name="1310"
+      >
+  </a
+      ><a name="1313" href="Game.Transformation.CPAd-CPA.html#1313" class="Function"
+      >correct</a
+      ><a name="1320"
+      > </a
+      ><a name="1321" class="Symbol"
+      >:</a
+      ><a name="1322"
+      > </a
+      ><a name="1323" class="Symbol"
+      >&#8704;</a
+      ><a name="1324"
+      > </a
+      ><a name="1325" href="Game.Transformation.CPAd-CPA.html#1325" class="Bound"
+      >b</a
+      ><a name="1326"
+      > </a
+      ><a name="1327" href="Game.Transformation.CPAd-CPA.html#1327" class="Bound"
+      >r</a
+      ><a name="1328"
+      >
+            </a
+      ><a name="1341" class="Symbol"
+      >&#8594;</a
+      ><a name="1342"
+      > </a
+      ><a name="1343" href="Game.IND-CPA.html#1610" class="Function"
+      >CPA.EXP</a
+      ><a name="1350"
+      >  </a
+      ><a name="1352" href="Game.Transformation.CPAd-CPA.html#1325" class="Bound"
+      >b</a
+      ><a name="1353"
+      > </a
+      ><a name="1354" href="Game.Transformation.CPAd-CPA.html#970" class="Bound"
+      >A</a
+      ><a name="1355"
+      >          </a
+      ><a name="1365" class="Symbol"
+      >(</a
+      ><a name="1366" href="Game.Transformation.CPAd-CPA.html#876" class="Function"
+      >R-transform</a
+      ><a name="1377"
+      > </a
+      ><a name="1378" href="Game.Transformation.CPAd-CPA.html#1327" class="Bound"
+      >r</a
+      ><a name="1379" class="Symbol"
+      >)</a
+      ><a name="1380"
+      >
+            </a
+      ><a name="1393" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="1394"
+      > </a
+      ><a name="1395" href="Game.IND-CPA-dagger.html#1787" class="Function"
+      >CPA&#8224;.EXP</a
+      ><a name="1403"
+      > </a
+      ><a name="1404" href="Game.Transformation.CPAd-CPA.html#1325" class="Bound"
+      >b</a
+      ><a name="1405"
+      > </a
+      ><a name="1406" class="Symbol"
+      >(</a
+      ><a name="1407" href="Data.Bool.html#873" class="Function"
+      >not</a
+      ><a name="1410"
+      > </a
+      ><a name="1411" href="Game.Transformation.CPAd-CPA.html#1325" class="Bound"
+      >b</a
+      ><a name="1412" class="Symbol"
+      >)</a
+      ><a name="1413"
+      > </a
+      ><a name="1414" href="Game.Transformation.CPAd-CPA.html#1049" class="Function"
+      >A&#8224;</a
+      ><a name="1416"
+      > </a
+      ><a name="1417" href="Game.Transformation.CPAd-CPA.html#1327" class="Bound"
+      >r</a
+      ><a name="1418"
+      >
+  </a
+      ><a name="1421" href="Game.Transformation.CPAd-CPA.html#1313" class="Function"
+      >correct</a
+      ><a name="1428"
+      > </a
+      ><a name="1429" class="Symbol"
+      >_</a
+      ><a name="1430"
+      > </a
+      ><a name="1431" class="Symbol"
+      >_</a
+      ><a name="1432"
+      > </a
+      ><a name="1433" class="Symbol"
+      >=</a
+      ><a name="1434"
+      > </a
+      ><a name="1435" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="1439"
+      >
+
+</a
+      ><a name="1441" class="Comment"
+      >-- -}</a
+      ><a name="1446"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

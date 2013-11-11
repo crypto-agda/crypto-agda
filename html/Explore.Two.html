@@ -1,0 +1,1236 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Explore.Two</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Keyword"
+      >open</a
+      ><a name="5"
+      > </a
+      ><a name="6" class="Keyword"
+      >import</a
+      ><a name="12"
+      > </a
+      ><a name="13" href="Type.html#1" class="Module"
+      >Type</a
+      ><a name="17"
+      >
+</a
+      ><a name="18" class="Keyword"
+      >open</a
+      ><a name="22"
+      > </a
+      ><a name="23" class="Keyword"
+      >import</a
+      ><a name="29"
+      > </a
+      ><a name="30" href="Level.NP.html#1" class="Module"
+      >Level.NP</a
+      ><a name="38"
+      >
+</a
+      ><a name="39" class="Keyword"
+      >open</a
+      ><a name="43"
+      > </a
+      ><a name="44" class="Keyword"
+      >import</a
+      ><a name="50"
+      > </a
+      ><a name="51" href="Data.Two.html#1" class="Module"
+      >Data.Two</a
+      ><a name="59"
+      >
+</a
+      ><a name="60" class="Keyword"
+      >open</a
+      ><a name="64"
+      > </a
+      ><a name="65" class="Keyword"
+      >import</a
+      ><a name="71"
+      > </a
+      ><a name="72" href="Function.html#1" class="Module"
+      >Function</a
+      ><a name="80"
+      >
+</a
+      ><a name="81" class="Keyword"
+      >open</a
+      ><a name="85"
+      > </a
+      ><a name="86" class="Keyword"
+      >import</a
+      ><a name="92"
+      > </a
+      ><a name="93" href="Data.Product.html#1" class="Module"
+      >Data.Product</a
+      ><a name="105"
+      >
+</a
+      ><a name="106" class="Keyword"
+      >open</a
+      ><a name="110"
+      > </a
+      ><a name="111" class="Keyword"
+      >import</a
+      ><a name="117"
+      > </a
+      ><a name="118" href="Data.Sum.html#1" class="Module"
+      >Data.Sum</a
+      ><a name="126"
+      >
+</a
+      ><a name="127" class="Keyword"
+      >open</a
+      ><a name="131"
+      > </a
+      ><a name="132" class="Keyword"
+      >import</a
+      ><a name="138"
+      > </a
+      ><a name="139" href="Data.Fin.html#1" class="Module"
+      >Data.Fin</a
+      ><a name="147"
+      >
+</a
+      ><a name="148" class="Keyword"
+      >open</a
+      ><a name="152"
+      > </a
+      ><a name="153" class="Keyword"
+      >import</a
+      ><a name="159"
+      > </a
+      ><a name="160" href="Relation.Binary.PropositionalEquality.html#1" class="Module"
+      >Relation.Binary.PropositionalEquality</a
+      ><a name="197"
+      > </a
+      ><a name="198" class="Keyword"
+      >using</a
+      ><a name="203"
+      > </a
+      ><a name="204" class="Symbol"
+      >(</a
+      ><a name="205"
+      >refl</a
+      ><a name="209" class="Symbol"
+      >)</a
+      ><a name="210"
+      >
+</a
+      ><a name="211" class="Keyword"
+      >import</a
+      ><a name="217"
+      > </a
+      ><a name="218" href="Function.Inverse.NP.html#1" class="Module"
+      >Function.Inverse.NP</a
+      ><a name="237"
+      > </a
+      ><a name="238" class="Symbol"
+      >as</a
+      ><a name="240"
+      > </a
+      ><a name="241" class="Module"
+      >FI</a
+      ><a name="243"
+      >
+</a
+      ><a name="244" class="Keyword"
+      >open</a
+      ><a name="248"
+      > </a
+      ><a name="249" href="Function.Inverse.NP.html#1" class="Module"
+      >FI</a
+      ><a name="251"
+      > </a
+      ><a name="252" class="Keyword"
+      >using</a
+      ><a name="257"
+      > </a
+      ><a name="258" class="Symbol"
+      >(</a
+      ><a name="259"
+      >_&#8596;_</a
+      ><a name="262" class="Symbol"
+      >;</a
+      ><a name="263"
+      > inverses</a
+      ><a name="272" class="Symbol"
+      >;</a
+      ><a name="273"
+      > </a
+      ><a name="274" class="Keyword"
+      >module</a
+      ><a name="280"
+      > Inverse</a
+      ><a name="288" class="Symbol"
+      >)</a
+      ><a name="289"
+      > </a
+      ><a name="290" class="Keyword"
+      >renaming</a
+      ><a name="298"
+      > </a
+      ><a name="299" class="Symbol"
+      >(</a
+      ><a name="300"
+      >_$&#8321;_ </a
+      ><a name="305" class="Symbol"
+      >to</a
+      ><a name="307"
+      > to</a
+      ><a name="310" class="Symbol"
+      >;</a
+      ><a name="311"
+      > _$&#8322;_ </a
+      ><a name="317" class="Symbol"
+      >to</a
+      ><a name="319"
+      > from</a
+      ><a name="324" class="Symbol"
+      >)</a
+      ><a name="325"
+      >
+</a
+      ><a name="326" class="Keyword"
+      >open</a
+      ><a name="330"
+      > </a
+      ><a name="331" class="Keyword"
+      >import</a
+      ><a name="337"
+      > </a
+      ><a name="338" href="Function.Related.TypeIsomorphisms.NP.html#1" class="Module"
+      >Function.Related.TypeIsomorphisms.NP</a
+      ><a name="374"
+      >
+</a
+      ><a name="375" class="Keyword"
+      >open</a
+      ><a name="379"
+      > </a
+      ><a name="380" class="Keyword"
+      >import</a
+      ><a name="386"
+      > </a
+      ><a name="387" href="Relation.Binary.Sum.html#1" class="Module"
+      >Relation.Binary.Sum</a
+      ><a name="406"
+      >
+
+</a
+      ><a name="408" class="Keyword"
+      >open</a
+      ><a name="412"
+      > </a
+      ><a name="413" class="Keyword"
+      >import</a
+      ><a name="419"
+      > </a
+      ><a name="420" href="Explore.Sum.html#1" class="Module"
+      >Explore.Sum</a
+      ><a name="431"
+      >
+</a
+      ><a name="432" class="Keyword"
+      >open</a
+      ><a name="436"
+      > </a
+      ><a name="437" class="Keyword"
+      >import</a
+      ><a name="443"
+      > </a
+      ><a name="444" href="Explore.Core.html#1" class="Module"
+      >Explore.Core</a
+      ><a name="456"
+      >
+</a
+      ><a name="457" class="Keyword"
+      >open</a
+      ><a name="461"
+      > </a
+      ><a name="462" class="Keyword"
+      >import</a
+      ><a name="468"
+      > </a
+      ><a name="469" href="Explore.Properties.html#1" class="Module"
+      >Explore.Properties</a
+      ><a name="487"
+      >
+</a
+      ><a name="488" class="Keyword"
+      >open</a
+      ><a name="492"
+      > </a
+      ><a name="493" class="Keyword"
+      >import</a
+      ><a name="499"
+      > </a
+      ><a name="500" href="Explore.One.html#1" class="Module"
+      >Explore.One</a
+      ><a name="511"
+      >
+</a
+      ><a name="512" class="Keyword"
+      >open</a
+      ><a name="516"
+      > </a
+      ><a name="517" class="Keyword"
+      >import</a
+      ><a name="523"
+      > </a
+      ><a name="524" href="Explore.Explorable.html#1" class="Module"
+      >Explore.Explorable</a
+      ><a name="542"
+      >
+
+</a
+      ><a name="544" class="Keyword"
+      >module</a
+      ><a name="550"
+      > </a
+      ><a name="551" href="Explore.Two.html#1" class="Module"
+      >Explore.Two</a
+      ><a name="562"
+      > </a
+      ><a name="563" class="Keyword"
+      >where</a
+      ><a name="568"
+      >
+
+</a
+      ><a name="570" class="Keyword"
+      >module</a
+      ><a name="576"
+      > </a
+      ><a name="577" href="Explore.Two.html#577" class="Module"
+      >_</a
+      ><a name="578"
+      > </a
+      ><a name="579" class="Symbol"
+      >{</a
+      ><a name="580" href="Explore.Two.html#580" class="Bound"
+      >&#8467;</a
+      ><a name="581" class="Symbol"
+      >}</a
+      ><a name="582"
+      > </a
+      ><a name="583" class="Keyword"
+      >where</a
+      ><a name="588"
+      >
+    </a
+      ><a name="593" href="Explore.Two.html#593" class="Function"
+      >&#120794;&#7497;</a
+      ><a name="595"
+      > </a
+      ><a name="596" class="Symbol"
+      >:</a
+      ><a name="597"
+      > </a
+      ><a name="598" href="Explore.Core.html#447" class="Function"
+      >Explore</a
+      ><a name="605"
+      > </a
+      ><a name="606" href="Explore.Two.html#580" class="Bound"
+      >&#8467;</a
+      ><a name="607"
+      > </a
+      ><a name="608" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="609"
+      >
+    </a
+      ><a name="614" href="Explore.Two.html#593" class="Function"
+      >&#120794;&#7497;</a
+      ><a name="616"
+      > </a
+      ><a name="617" class="Symbol"
+      >_</a
+      ><a name="618"
+      > </a
+      ><a name="619" href="Explore.Two.html#619" class="Bound Operator"
+      >_&#8729;_</a
+      ><a name="622"
+      > </a
+      ><a name="623" href="Explore.Two.html#623" class="Bound"
+      >f</a
+      ><a name="624"
+      > </a
+      ><a name="625" class="Symbol"
+      >=</a
+      ><a name="626"
+      > </a
+      ><a name="627" href="Explore.Two.html#623" class="Bound"
+      >f</a
+      ><a name="628"
+      > </a
+      ><a name="629" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="631"
+      > </a
+      ><a name="632" href="Explore.Two.html#619" class="Bound Operator"
+      >&#8729;</a
+      ><a name="633"
+      > </a
+      ><a name="634" href="Explore.Two.html#623" class="Bound"
+      >f</a
+      ><a name="635"
+      > </a
+      ><a name="636" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="638"
+      >
+
+    </a
+      ><a name="644" href="Explore.Two.html#644" class="Function"
+      >&#120794;&#8305;</a
+      ><a name="646"
+      > </a
+      ><a name="647" class="Symbol"
+      >:</a
+      ><a name="648"
+      > </a
+      ><a name="649" class="Symbol"
+      >&#8704;</a
+      ><a name="650"
+      > </a
+      ><a name="651" class="Symbol"
+      >{</a
+      ><a name="652" href="Explore.Two.html#652" class="Bound"
+      >p</a
+      ><a name="653" class="Symbol"
+      >}</a
+      ><a name="654"
+      > </a
+      ><a name="655" class="Symbol"
+      >&#8594;</a
+      ><a name="656"
+      > </a
+      ><a name="657" href="Explore.Properties.html#1850" class="Function"
+      >ExploreInd</a
+      ><a name="667"
+      > </a
+      ><a name="668" href="Explore.Two.html#652" class="Bound"
+      >p</a
+      ><a name="669"
+      > </a
+      ><a name="670" href="Explore.Two.html#593" class="Function"
+      >&#120794;&#7497;</a
+      ><a name="672"
+      >
+    </a
+      ><a name="677" href="Explore.Two.html#644" class="Function"
+      >&#120794;&#8305;</a
+      ><a name="679"
+      > </a
+      ><a name="680" class="Symbol"
+      >_</a
+      ><a name="681"
+      > </a
+      ><a name="682" class="Symbol"
+      >_</a
+      ><a name="683"
+      > </a
+      ><a name="684" href="Explore.Two.html#684" class="Bound Operator"
+      >_P&#8729;_</a
+      ><a name="688"
+      > </a
+      ><a name="689" href="Explore.Two.html#689" class="Bound"
+      >Pf</a
+      ><a name="691"
+      > </a
+      ><a name="692" class="Symbol"
+      >=</a
+      ><a name="693"
+      > </a
+      ><a name="694" href="Explore.Two.html#689" class="Bound"
+      >Pf</a
+      ><a name="696"
+      > </a
+      ><a name="697" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="699"
+      > </a
+      ><a name="700" href="Explore.Two.html#684" class="Bound Operator"
+      >P&#8729;</a
+      ><a name="702"
+      > </a
+      ><a name="703" href="Explore.Two.html#689" class="Bound"
+      >Pf</a
+      ><a name="705"
+      > </a
+      ><a name="706" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="708"
+      >
+
+</a
+      ><a name="710" class="Keyword"
+      >open</a
+      ><a name="714"
+      > </a
+      ><a name="715" href="Explore.Explorable.html#8850" class="Module"
+      >Explorable&#8320;</a
+      ><a name="726"
+      >  </a
+      ><a name="728" href="Explore.Two.html#644" class="Function"
+      >&#120794;&#8305;</a
+      ><a name="730"
+      > </a
+      ><a name="731" class="Keyword"
+      >public</a
+      ><a name="737"
+      > </a
+      ><a name="738" class="Keyword"
+      >using</a
+      ><a name="743"
+      > </a
+      ><a name="744" class="Symbol"
+      >()</a
+      ><a name="746"
+      > </a
+      ><a name="747" class="Keyword"
+      >renaming</a
+      ><a name="755"
+      > </a
+      ><a name="756" class="Symbol"
+      >(</a
+      ><a name="757"
+      >sum     </a
+      ><a name="765" class="Symbol"
+      >to</a
+      ><a name="767"
+      > &#120794;&#738;</a
+      ><a name="770" class="Symbol"
+      >)</a
+      ><a name="771"
+      >
+</a
+      ><a name="772" class="Keyword"
+      >open</a
+      ><a name="776"
+      > </a
+      ><a name="777" href="Explore.Explorable.html#14147" class="Module"
+      >Explorable&#8321;&#8320;</a
+      ><a name="789"
+      > </a
+      ><a name="790" href="Explore.Two.html#644" class="Function"
+      >&#120794;&#8305;</a
+      ><a name="792"
+      > </a
+      ><a name="793" class="Keyword"
+      >public</a
+      ><a name="799"
+      > </a
+      ><a name="800" class="Keyword"
+      >using</a
+      ><a name="805"
+      > </a
+      ><a name="806" class="Symbol"
+      >()</a
+      ><a name="808"
+      > </a
+      ><a name="809" class="Keyword"
+      >renaming</a
+      ><a name="817"
+      > </a
+      ><a name="818" class="Symbol"
+      >(</a
+      ><a name="819"
+      >reify   </a
+      ><a name="827" class="Symbol"
+      >to</a
+      ><a name="829"
+      > &#120794;&#691;</a
+      ><a name="832" class="Symbol"
+      >)</a
+      ><a name="833"
+      >
+</a
+      ><a name="834" class="Keyword"
+      >open</a
+      ><a name="838"
+      > </a
+      ><a name="839" href="Explore.Explorable.html#14334" class="Module"
+      >Explorable&#8321;&#8321;</a
+      ><a name="851"
+      > </a
+      ><a name="852" href="Explore.Two.html#644" class="Function"
+      >&#120794;&#8305;</a
+      ><a name="854"
+      > </a
+      ><a name="855" class="Keyword"
+      >public</a
+      ><a name="861"
+      > </a
+      ><a name="862" class="Keyword"
+      >using</a
+      ><a name="867"
+      > </a
+      ><a name="868" class="Symbol"
+      >()</a
+      ><a name="870"
+      > </a
+      ><a name="871" class="Keyword"
+      >renaming</a
+      ><a name="879"
+      > </a
+      ><a name="880" class="Symbol"
+      >(</a
+      ><a name="881"
+      >unfocus </a
+      ><a name="889" class="Symbol"
+      >to</a
+      ><a name="891"
+      > &#120794;&#7512;</a
+      ><a name="894" class="Symbol"
+      >)</a
+      ><a name="895"
+      >
+
+</a
+      ><a name="897" class="Keyword"
+      >module</a
+      ><a name="903"
+      > </a
+      ><a name="904" href="Explore.Two.html#904" class="Module"
+      >_</a
+      ><a name="905"
+      > </a
+      ><a name="906" class="Symbol"
+      >{</a
+      ><a name="907" href="Explore.Two.html#907" class="Bound"
+      >&#8467;</a
+      ><a name="908" class="Symbol"
+      >}</a
+      ><a name="909"
+      > </a
+      ><a name="910" class="Keyword"
+      >where</a
+      ><a name="915"
+      >
+    </a
+      ><a name="920" href="Explore.Two.html#920" class="Function"
+      >&#120794;&#737;</a
+      ><a name="922"
+      > </a
+      ><a name="923" class="Symbol"
+      >:</a
+      ><a name="924"
+      > </a
+      ><a name="925" href="Explore.Properties.html#9476" class="Function"
+      >Lookup</a
+      ><a name="931"
+      > </a
+      ><a name="932" class="Symbol"
+      >{</a
+      ><a name="933" href="Explore.Two.html#907" class="Bound"
+      >&#8467;</a
+      ><a name="934" class="Symbol"
+      >}</a
+      ><a name="935"
+      > </a
+      ><a name="936" href="Explore.Two.html#593" class="Function"
+      >&#120794;&#7497;</a
+      ><a name="938"
+      >
+    </a
+      ><a name="943" href="Explore.Two.html#920" class="Function"
+      >&#120794;&#737;</a
+      ><a name="945"
+      > </a
+      ><a name="946" class="Symbol"
+      >=</a
+      ><a name="947"
+      > </a
+      ><a name="948" href="Data.Two.html#1897" class="Function"
+      >proj</a
+      ><a name="952"
+      >
+
+    </a
+      ><a name="958" href="Explore.Two.html#958" class="Function"
+      >&#120794;&#7584;</a
+      ><a name="960"
+      > </a
+      ><a name="961" class="Symbol"
+      >:</a
+      ><a name="962"
+      > </a
+      ><a name="963" href="Explore.Properties.html#9767" class="Function"
+      >Focus</a
+      ><a name="968"
+      > </a
+      ><a name="969" class="Symbol"
+      >{</a
+      ><a name="970" href="Explore.Two.html#907" class="Bound"
+      >&#8467;</a
+      ><a name="971" class="Symbol"
+      >}</a
+      ><a name="972"
+      > </a
+      ><a name="973" href="Explore.Two.html#593" class="Function"
+      >&#120794;&#7497;</a
+      ><a name="975"
+      >
+    </a
+      ><a name="980" href="Explore.Two.html#958" class="Function"
+      >&#120794;&#7584;</a
+      ><a name="982"
+      > </a
+      ><a name="983" class="Symbol"
+      >(</a
+      ><a name="984" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="986"
+      > </a
+      ><a name="987" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="988"
+      > </a
+      ><a name="989" href="Explore.Two.html#989" class="Bound"
+      >x</a
+      ><a name="990" class="Symbol"
+      >)</a
+      ><a name="991"
+      > </a
+      ><a name="992" class="Symbol"
+      >=</a
+      ><a name="993"
+      > </a
+      ><a name="994" href="Data.Sum.html#460" class="InductiveConstructor"
+      >inj&#8321;</a
+      ><a name="998"
+      > </a
+      ><a name="999" href="Explore.Two.html#989" class="Bound"
+      >x</a
+      ><a name="1000"
+      >
+    </a
+      ><a name="1005" href="Explore.Two.html#958" class="Function"
+      >&#120794;&#7584;</a
+      ><a name="1007"
+      > </a
+      ><a name="1008" class="Symbol"
+      >(</a
+      ><a name="1009" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="1011"
+      > </a
+      ><a name="1012" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1013"
+      > </a
+      ><a name="1014" href="Explore.Two.html#1014" class="Bound"
+      >x</a
+      ><a name="1015" class="Symbol"
+      >)</a
+      ><a name="1016"
+      > </a
+      ><a name="1017" class="Symbol"
+      >=</a
+      ><a name="1018"
+      > </a
+      ><a name="1019" href="Data.Sum.html#485" class="InductiveConstructor"
+      >inj&#8322;</a
+      ><a name="1023"
+      > </a
+      ><a name="1024" href="Explore.Two.html#1014" class="Bound"
+      >x</a
+      ><a name="1025"
+      >
+
+</a
+      ><a name="1027" href="Explore.Two.html#1027" class="Function"
+      >focused&#120794;</a
+      ><a name="1035"
+      > </a
+      ><a name="1036" class="Symbol"
+      >:</a
+      ><a name="1037"
+      > </a
+      ><a name="1038" href="Explore.Properties.html#9838" class="Function"
+      >Focused</a
+      ><a name="1045"
+      > </a
+      ><a name="1046" class="Symbol"
+      >{</a
+      ><a name="1047" href="Agda.Prim.html#268" class="Primitive"
+      >&#8320;</a
+      ><a name="1048" class="Symbol"
+      >}</a
+      ><a name="1049"
+      > </a
+      ><a name="1050" href="Explore.Two.html#593" class="Function"
+      >&#120794;&#7497;</a
+      ><a name="1052"
+      >
+</a
+      ><a name="1053" href="Explore.Two.html#1027" class="Function"
+      >focused&#120794;</a
+      ><a name="1061"
+      > </a
+      ><a name="1062" class="Symbol"
+      >=</a
+      ><a name="1063"
+      > </a
+      ><a name="1064" href="Function.Inverse.NP.html#712" class="Function"
+      >inverses</a
+      ><a name="1072"
+      > </a
+      ><a name="1073" href="Explore.Two.html#958" class="Function"
+      >&#120794;&#7584;</a
+      ><a name="1075"
+      > </a
+      ><a name="1076" href="Explore.Explorable.html#14443" class="Function"
+      >&#120794;&#7512;</a
+      ><a name="1078"
+      > </a
+      ><a name="1079" class="Symbol"
+      >(</a
+      ><a name="1080" href="Explore.Two.html#1095" class="Function"
+      >&#8658;</a
+      ><a name="1081" class="Symbol"
+      >)</a
+      ><a name="1082"
+      > </a
+      ><a name="1083" class="Symbol"
+      >(</a
+      ><a name="1084" href="Explore.Two.html#1175" class="Function"
+      >&#8656;</a
+      ><a name="1085" class="Symbol"
+      >)</a
+      ><a name="1086"
+      >
+  </a
+      ><a name="1089" class="Keyword"
+      >where</a
+      ><a name="1094"
+      > </a
+      ><a name="1095" href="Explore.Two.html#1095" class="Function"
+      >&#8658;</a
+      ><a name="1096"
+      > </a
+      ><a name="1097" class="Symbol"
+      >:</a
+      ><a name="1098"
+      > </a
+      ><a name="1099" class="Symbol"
+      >(</a
+      ><a name="1100" href="Explore.Two.html#1100" class="Bound"
+      >x</a
+      ><a name="1101"
+      > </a
+      ><a name="1102" class="Symbol"
+      >:</a
+      ><a name="1103"
+      > </a
+      ><a name="1104" href="Data.Product.html#439" class="Record"
+      >&#931;</a
+      ><a name="1105"
+      > </a
+      ><a name="1106" class="Symbol"
+      >_</a
+      ><a name="1107"
+      > </a
+      ><a name="1108" class="Symbol"
+      >_)</a
+      ><a name="1110"
+      > </a
+      ><a name="1111" class="Symbol"
+      >&#8594;</a
+      ><a name="1112"
+      > </a
+      ><a name="1113" class="Symbol"
+      >_</a
+      ><a name="1114"
+      >
+        </a
+      ><a name="1123" href="Explore.Two.html#1095" class="Function"
+      >&#8658;</a
+      ><a name="1124"
+      > </a
+      ><a name="1125" class="Symbol"
+      >(</a
+      ><a name="1126" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="1128"
+      > </a
+      ><a name="1129" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1130"
+      > </a
+      ><a name="1131" href="Explore.Two.html#1131" class="Bound"
+      >x</a
+      ><a name="1132" class="Symbol"
+      >)</a
+      ><a name="1133"
+      > </a
+      ><a name="1134" class="Symbol"
+      >=</a
+      ><a name="1135"
+      > </a
+      ><a name="1136" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="1140"
+      >
+        </a
+      ><a name="1149" href="Explore.Two.html#1095" class="Function"
+      >&#8658;</a
+      ><a name="1150"
+      > </a
+      ><a name="1151" class="Symbol"
+      >(</a
+      ><a name="1152" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="1154"
+      > </a
+      ><a name="1155" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="1156"
+      > </a
+      ><a name="1157" href="Explore.Two.html#1157" class="Bound"
+      >x</a
+      ><a name="1158" class="Symbol"
+      >)</a
+      ><a name="1159"
+      > </a
+      ><a name="1160" class="Symbol"
+      >=</a
+      ><a name="1161"
+      > </a
+      ><a name="1162" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="1166"
+      >
+        </a
+      ><a name="1175" href="Explore.Two.html#1175" class="Function"
+      >&#8656;</a
+      ><a name="1176"
+      > </a
+      ><a name="1177" class="Symbol"
+      >:</a
+      ><a name="1178"
+      > </a
+      ><a name="1179" class="Symbol"
+      >(</a
+      ><a name="1180" href="Explore.Two.html#1180" class="Bound"
+      >x</a
+      ><a name="1181"
+      > </a
+      ><a name="1182" class="Symbol"
+      >:</a
+      ><a name="1183"
+      > </a
+      ><a name="1184" class="Symbol"
+      >_</a
+      ><a name="1185"
+      > </a
+      ><a name="1186" href="Data.Sum.html#404" class="Datatype Operator"
+      >&#8846;</a
+      ><a name="1187"
+      > </a
+      ><a name="1188" class="Symbol"
+      >_)</a
+      ><a name="1190"
+      > </a
+      ><a name="1191" class="Symbol"
+      >&#8594;</a
+      ><a name="1192"
+      > </a
+      ><a name="1193" class="Symbol"
+      >_</a
+      ><a name="1194"
+      >
+        </a
+      ><a name="1203" href="Explore.Two.html#1175" class="Function"
+      >&#8656;</a
+      ><a name="1204"
+      > </a
+      ><a name="1205" class="Symbol"
+      >(</a
+      ><a name="1206" href="Data.Sum.html#460" class="InductiveConstructor"
+      >inj&#8321;</a
+      ><a name="1210"
+      > </a
+      ><a name="1211" href="Explore.Two.html#1211" class="Bound"
+      >x</a
+      ><a name="1212" class="Symbol"
+      >)</a
+      ><a name="1213"
+      > </a
+      ><a name="1214" class="Symbol"
+      >=</a
+      ><a name="1215"
+      > </a
+      ><a name="1216" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="1220"
+      >
+        </a
+      ><a name="1229" href="Explore.Two.html#1175" class="Function"
+      >&#8656;</a
+      ><a name="1230"
+      > </a
+      ><a name="1231" class="Symbol"
+      >(</a
+      ><a name="1232" href="Data.Sum.html#485" class="InductiveConstructor"
+      >inj&#8322;</a
+      ><a name="1236"
+      > </a
+      ><a name="1237" href="Explore.Two.html#1237" class="Bound"
+      >x</a
+      ><a name="1238" class="Symbol"
+      >)</a
+      ><a name="1239"
+      > </a
+      ><a name="1240" class="Symbol"
+      >=</a
+      ><a name="1241"
+      > </a
+      ><a name="1242" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="1246"
+      >
+
+</a
+      ><a name="1248" href="Explore.Two.html#1248" class="Function"
+      >&#120794;&#738;-ok</a
+      ><a name="1253"
+      > </a
+      ><a name="1254" class="Symbol"
+      >:</a
+      ><a name="1255"
+      > </a
+      ><a name="1256" href="Explore.Properties.html#3626" class="Function"
+      >AdequateSum</a
+      ><a name="1267"
+      > </a
+      ><a name="1268" href="Explore.Explorable.html#2828" class="Function"
+      >&#120794;&#738;</a
+      ><a name="1270"
+      >
+</a
+      ><a name="1271" href="Explore.Two.html#1248" class="Function"
+      >&#120794;&#738;-ok</a
+      ><a name="1276"
+      > </a
+      ><a name="1277" href="Explore.Two.html#1277" class="Bound"
+      >f</a
+      ><a name="1278"
+      > </a
+      ><a name="1279" class="Symbol"
+      >=</a
+      ><a name="1280"
+      > </a
+      ><a name="1281" href="Function.Inverse.html#4672" class="Function"
+      >FI.sym</a
+      ><a name="1287"
+      > </a
+      ><a name="1288" class="Symbol"
+      >(</a
+      ><a name="1289" href="Function.Related.TypeIsomorphisms.NP.html#28388" class="Function"
+      >Fin-&#8846;-+</a
+      ><a name="1296"
+      > </a
+      ><a name="1297" class="Symbol"
+      >(</a
+      ><a name="1298" href="Explore.Two.html#1277" class="Bound"
+      >f</a
+      ><a name="1299"
+      > </a
+      ><a name="1300" href="Data.Bool.html#637" class="InductiveConstructor"
+      >0&#8322;</a
+      ><a name="1302" class="Symbol"
+      >)</a
+      ><a name="1303"
+      > </a
+      ><a name="1304" class="Symbol"
+      >(</a
+      ><a name="1305" href="Explore.Two.html#1277" class="Bound"
+      >f</a
+      ><a name="1306"
+      > </a
+      ><a name="1307" href="Data.Bool.html#622" class="InductiveConstructor"
+      >1&#8322;</a
+      ><a name="1309" class="Symbol"
+      >)</a
+      ><a name="1310"
+      > </a
+      ><a name="1311" href="Function.Inverse.html#4151" class="Function Operator"
+      >FI.&#8728;</a
+      ><a name="1315"
+      > </a
+      ><a name="1316" href="Function.Related.TypeIsomorphisms.NP.html#27382" class="Function"
+      >&#931;&#120794;&#8596;&#8846;</a
+      ><a name="1320"
+      > </a
+      ><a name="1321" class="Symbol"
+      >(</a
+      ><a name="1322" href="Data.Fin.html#775" class="Datatype"
+      >Fin</a
+      ><a name="1325"
+      > </a
+      ><a name="1326" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1327"
+      > </a
+      ><a name="1328" href="Explore.Two.html#1277" class="Bound"
+      >f</a
+      ><a name="1329" class="Symbol"
+      >))</a
+      ><a name="1331"
+      >
+
+</a
+      ><a name="1333" href="Explore.Two.html#1333" class="Function"
+      >explore&#120794;</a
+      ><a name="1341"
+      >     </a
+      ><a name="1346" class="Symbol"
+      >=</a
+      ><a name="1347"
+      > </a
+      ><a name="1348" href="Explore.Two.html#593" class="Function"
+      >&#120794;&#7497;</a
+      ><a name="1350"
+      >
+</a
+      ><a name="1351" href="Explore.Two.html#1351" class="Function"
+      >explore&#120794;-ind</a
+      ><a name="1363"
+      > </a
+      ><a name="1364" class="Symbol"
+      >=</a
+      ><a name="1365"
+      > </a
+      ><a name="1366" href="Explore.Two.html#644" class="Function"
+      >&#120794;&#8305;</a
+      ><a name="1368"
+      >
+</a
+      ><a name="1369" href="Explore.Two.html#1369" class="Function"
+      >lookup&#120794;</a
+      ><a name="1376"
+      >      </a
+      ><a name="1382" class="Symbol"
+      >=</a
+      ><a name="1383"
+      > </a
+      ><a name="1384" href="Explore.Two.html#920" class="Function"
+      >&#120794;&#737;</a
+      ><a name="1386"
+      >
+</a
+      ><a name="1387" href="Explore.Two.html#1387" class="Function"
+      >reify&#120794;</a
+      ><a name="1393"
+      >       </a
+      ><a name="1400" class="Symbol"
+      >=</a
+      ><a name="1401"
+      > </a
+      ><a name="1402" href="Explore.Explorable.html#14256" class="Function"
+      >&#120794;&#691;</a
+      ><a name="1404"
+      >
+</a
+      ><a name="1405" href="Explore.Two.html#1405" class="Function"
+      >focus&#120794;</a
+      ><a name="1411"
+      >       </a
+      ><a name="1418" class="Symbol"
+      >=</a
+      ><a name="1419"
+      > </a
+      ><a name="1420" href="Explore.Two.html#958" class="Function"
+      >&#120794;&#7584;</a
+      ><a name="1422"
+      >
+</a
+      ><a name="1423" href="Explore.Two.html#1423" class="Function"
+      >unfocus&#120794;</a
+      ><a name="1431"
+      >     </a
+      ><a name="1436" class="Symbol"
+      >=</a
+      ><a name="1437"
+      > </a
+      ><a name="1438" href="Explore.Explorable.html#14443" class="Function"
+      >&#120794;&#7512;</a
+      ><a name="1440"
+      >
+</a
+      ><a name="1441" href="Explore.Two.html#1441" class="Function"
+      >sum&#120794;</a
+      ><a name="1445"
+      >         </a
+      ><a name="1454" class="Symbol"
+      >=</a
+      ><a name="1455"
+      > </a
+      ><a name="1456" href="Explore.Explorable.html#2828" class="Function"
+      >&#120794;&#738;</a
+      ><a name="1458"
+      >
+
+</a
+      ><a name="1460" class="Comment"
+      >-- DEPRECATED</a
+      ><a name="1473"
+      >
+</a
+      ><a name="1474" href="Explore.Two.html#1474" class="Function"
+      >&#956;&#120794;</a
+      ><a name="1476"
+      > </a
+      ><a name="1477" class="Symbol"
+      >:</a
+      ><a name="1478"
+      > </a
+      ><a name="1479" href="Explore.Explorable.html#14562" class="Record"
+      >Explorable</a
+      ><a name="1489"
+      > </a
+      ><a name="1490" href="Data.Bool.html#603" class="Datatype"
+      >&#120794;</a
+      ><a name="1491"
+      >
+</a
+      ><a name="1492" href="Explore.Two.html#1474" class="Function"
+      >&#956;&#120794;</a
+      ><a name="1494"
+      > </a
+      ><a name="1495" class="Symbol"
+      >=</a
+      ><a name="1496"
+      > </a
+      ><a name="1497" href="Explore.Explorable.html#14600" class="InductiveConstructor"
+      >mk</a
+      ><a name="1499"
+      > </a
+      ><a name="1500" class="Symbol"
+      >_</a
+      ><a name="1501"
+      > </a
+      ><a name="1502" href="Explore.Two.html#644" class="Function"
+      >&#120794;&#8305;</a
+      ><a name="1504"
+      > </a
+      ><a name="1505" href="Explore.Two.html#1248" class="Function"
+      >&#120794;&#738;-ok</a
+      ><a name="1510"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

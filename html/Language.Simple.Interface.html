@@ -1,0 +1,4082 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Language.Simple.Interface</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Keyword"
+      >open</a
+      ><a name="5"
+      > </a
+      ><a name="6" class="Keyword"
+      >import</a
+      ><a name="12"
+      > </a
+      ><a name="13" href="Level.NP.html#1" class="Module"
+      >Level.NP</a
+      ><a name="21"
+      >
+</a
+      ><a name="22" class="Keyword"
+      >open</a
+      ><a name="26"
+      > </a
+      ><a name="27" class="Keyword"
+      >import</a
+      ><a name="33"
+      > </a
+      ><a name="34" href="Type.html#1" class="Module"
+      >Type</a
+      ><a name="38"
+      >
+</a
+      ><a name="39" class="Keyword"
+      >open</a
+      ><a name="43"
+      > </a
+      ><a name="44" class="Keyword"
+      >import</a
+      ><a name="50"
+      > </a
+      ><a name="51" href="Function.html#1" class="Module"
+      >Function</a
+      ><a name="59"
+      >
+</a
+      ><a name="60" class="Keyword"
+      >open</a
+      ><a name="64"
+      > </a
+      ><a name="65" class="Keyword"
+      >import</a
+      ><a name="71"
+      > </a
+      ><a name="72" href="Data.Product.html#1" class="Module"
+      >Data.Product</a
+      ><a name="84"
+      > </a
+      ><a name="85" class="Keyword"
+      >using</a
+      ><a name="90"
+      > </a
+      ><a name="91" class="Symbol"
+      >(</a
+      ><a name="92"
+      >proj&#8322;</a
+      ><a name="97" class="Symbol"
+      >)</a
+      ><a name="98"
+      >
+</a
+      ><a name="99" class="Keyword"
+      >open</a
+      ><a name="103"
+      > </a
+      ><a name="104" class="Keyword"
+      >import</a
+      ><a name="110"
+      > </a
+      ><a name="111" href="Data.Two.html#1" class="Module"
+      >Data.Two</a
+      ><a name="119"
+      > </a
+      ><a name="120" class="Symbol"
+      >as</a
+      ><a name="122"
+      > </a
+      ><a name="123" class="Module"
+      >Two</a
+      ><a name="126"
+      >
+</a
+      ><a name="127" class="Keyword"
+      >open</a
+      ><a name="131"
+      > </a
+      ><a name="132" class="Keyword"
+      >import</a
+      ><a name="138"
+      > </a
+      ><a name="139" href="Data.Nat.NP.html#1" class="Module"
+      >Data.Nat.NP</a
+      ><a name="150"
+      > </a
+      ><a name="151" class="Keyword"
+      >using</a
+      ><a name="156"
+      > </a
+      ><a name="157" class="Symbol"
+      >(</a
+      ><a name="158"
+      >&#8469;</a
+      ><a name="159" class="Symbol"
+      >;</a
+      ><a name="160"
+      > _+_</a
+      ><a name="164" class="Symbol"
+      >;</a
+      ><a name="165"
+      > _*_</a
+      ><a name="169" class="Symbol"
+      >;</a
+      ><a name="170"
+      > </a
+      ><a name="171" class="Keyword"
+      >module</a
+      ><a name="177"
+      > &#8469;&#176;</a
+      ><a name="180" class="Symbol"
+      >)</a
+      ><a name="181"
+      >
+</a
+      ><a name="182" class="Keyword"
+      >open</a
+      ><a name="186"
+      > </a
+      ><a name="187" class="Keyword"
+      >import</a
+      ><a name="193"
+      > </a
+      ><a name="194" href="Data.Fin.NP.html#1" class="Module"
+      >Data.Fin.NP</a
+      ><a name="205"
+      > </a
+      ><a name="206" class="Symbol"
+      >as</a
+      ><a name="208"
+      > </a
+      ><a name="209" class="Module"
+      >Fin</a
+      ><a name="212"
+      > </a
+      ><a name="213" class="Keyword"
+      >using</a
+      ><a name="218"
+      > </a
+      ><a name="219" class="Symbol"
+      >(</a
+      ><a name="220"
+      >Fin</a
+      ><a name="223" class="Symbol"
+      >;</a
+      ><a name="224"
+      > inject+</a
+      ><a name="232" class="Symbol"
+      >;</a
+      ><a name="233"
+      > raise</a
+      ><a name="239" class="Symbol"
+      >)</a
+      ><a name="240"
+      >
+</a
+      ><a name="241" class="Keyword"
+      >open</a
+      ><a name="245"
+      > </a
+      ><a name="246" class="Keyword"
+      >import</a
+      ><a name="252"
+      > </a
+      ><a name="253" href="Data.Vec.NP.html#1" class="Module"
+      >Data.Vec.NP</a
+      ><a name="264"
+      > </a
+      ><a name="265" class="Keyword"
+      >using</a
+      ><a name="270"
+      > </a
+      ><a name="271" class="Symbol"
+      >(</a
+      ><a name="272"
+      >Vec</a
+      ><a name="275" class="Symbol"
+      >;</a
+      ><a name="276"
+      > []</a
+      ><a name="279" class="Symbol"
+      >;</a
+      ><a name="280"
+      > _&#8759;_</a
+      ><a name="284" class="Symbol"
+      >;</a
+      ><a name="285"
+      > lookup</a
+      ><a name="292" class="Symbol"
+      >;</a
+      ><a name="293"
+      > tabulate</a
+      ><a name="302" class="Symbol"
+      >;</a
+      ><a name="303"
+      > tabulate-ext</a
+      ><a name="316" class="Symbol"
+      >;</a
+      ><a name="317"
+      > reverse</a
+      ><a name="325" class="Symbol"
+      >;</a
+      ><a name="326"
+      > transpose</a
+      ><a name="336" class="Symbol"
+      >;</a
+      ><a name="337"
+      > rewire</a
+      ><a name="344" class="Symbol"
+      >)</a
+      ><a name="345"
+      > </a
+      ><a name="346" class="Keyword"
+      >renaming</a
+      ><a name="354"
+      > </a
+      ><a name="355" class="Symbol"
+      >(</a
+      ><a name="356"
+      >map </a
+      ><a name="360" class="Symbol"
+      >to</a
+      ><a name="362"
+      > vmap</a
+      ><a name="367" class="Symbol"
+      >)</a
+      ><a name="368"
+      >
+</a
+      ><a name="369" class="Keyword"
+      >open</a
+      ><a name="373"
+      > </a
+      ><a name="374" class="Keyword"
+      >import</a
+      ><a name="380"
+      > </a
+      ><a name="381" href="Data.Vec.Properties.html#1" class="Module"
+      >Data.Vec.Properties</a
+      ><a name="400"
+      > </a
+      ><a name="401" class="Keyword"
+      >using</a
+      ><a name="406"
+      > </a
+      ><a name="407" class="Symbol"
+      >(</a
+      ><a name="408"
+      >lookup&#8728;tabulate</a
+      ><a name="423" class="Symbol"
+      >;</a
+      ><a name="424"
+      > tabulate&#8728;lookup</a
+      ><a name="440" class="Symbol"
+      >)</a
+      ><a name="441"
+      >
+</a
+      ><a name="442" class="Keyword"
+      >open</a
+      ><a name="446"
+      > </a
+      ><a name="447" class="Keyword"
+      >import</a
+      ><a name="453"
+      > </a
+      ><a name="454" href="Category.Monad.NP.html#1" class="Module"
+      >Category.Monad.NP</a
+      ><a name="471"
+      >
+</a
+      ><a name="472" class="Keyword"
+      >open</a
+      ><a name="476"
+      > </a
+      ><a name="477" class="Keyword"
+      >import</a
+      ><a name="483"
+      > </a
+      ><a name="484" href="Relation.Binary.PropositionalEquality.NP.html#1" class="Module"
+      >Relation.Binary.PropositionalEquality.NP</a
+      ><a name="524"
+      >
+
+</a
+      ><a name="526" class="Keyword"
+      >module</a
+      ><a name="532"
+      > </a
+      ><a name="533" href="Language.Simple.Interface.html#1" class="Module"
+      >Language.Simple.Interface</a
+      ><a name="558"
+      > </a
+      ><a name="559" class="Keyword"
+      >where</a
+      ><a name="564"
+      >
+
+</a
+      ><a name="566" class="Keyword"
+      >module</a
+      ><a name="572"
+      > </a
+      ><a name="573" href="Language.Simple.Interface.html#573" class="Module"
+      >LangSupportFin</a
+      ><a name="587"
+      > </a
+      ><a name="588" class="Symbol"
+      >(</a
+      ><a name="589" href="Language.Simple.Interface.html#589" class="Bound"
+      >E</a
+      ><a name="590"
+      > </a
+      ><a name="591" class="Symbol"
+      >:</a
+      ><a name="592"
+      > </a
+      ><a name="593" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="594"
+      > </a
+      ><a name="595" class="Symbol"
+      >&#8594;</a
+      ><a name="596"
+      > </a
+      ><a name="597" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="598" class="Symbol"
+      >)</a
+      ><a name="599"
+      > </a
+      ><a name="600" class="Keyword"
+      >where</a
+      ><a name="605"
+      >
+  </a
+      ><a name="608" href="Language.Simple.Interface.html#608" class="Function Operator"
+      >_&#8594;&#7497;_</a
+      ><a name="612"
+      > </a
+      ><a name="613" class="Symbol"
+      >:</a
+      ><a name="614"
+      > </a
+      ><a name="615" class="Symbol"
+      >(</a
+      ><a name="616" href="Language.Simple.Interface.html#616" class="Bound"
+      >i</a
+      ><a name="617"
+      > </a
+      ><a name="618" href="Language.Simple.Interface.html#618" class="Bound"
+      >o</a
+      ><a name="619"
+      > </a
+      ><a name="620" class="Symbol"
+      >:</a
+      ><a name="621"
+      > </a
+      ><a name="622" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="623" class="Symbol"
+      >)</a
+      ><a name="624"
+      > </a
+      ><a name="625" class="Symbol"
+      >&#8594;</a
+      ><a name="626"
+      > </a
+      ><a name="627" href="Type.html#107" class="Function"
+      >&#9733;&#8320;</a
+      ><a name="629"
+      >
+  </a
+      ><a name="632" href="Language.Simple.Interface.html#632" class="Bound"
+      >i</a
+      ><a name="633"
+      > </a
+      ><a name="634" href="Language.Simple.Interface.html#608" class="Function Operator"
+      >&#8594;&#7497;</a
+      ><a name="636"
+      > </a
+      ><a name="637" href="Language.Simple.Interface.html#637" class="Bound"
+      >o</a
+      ><a name="638"
+      > </a
+      ><a name="639" class="Symbol"
+      >=</a
+      ><a name="640"
+      > </a
+      ><a name="641" href="Data.Fin.html#775" class="Datatype"
+      >Fin</a
+      ><a name="644"
+      > </a
+      ><a name="645" href="Language.Simple.Interface.html#637" class="Bound"
+      >o</a
+      ><a name="646"
+      > </a
+      ><a name="647" class="Symbol"
+      >&#8594;</a
+      ><a name="648"
+      > </a
+      ><a name="649" href="Language.Simple.Interface.html#589" class="Bound"
+      >E</a
+      ><a name="650"
+      > </a
+      ><a name="651" class="Symbol"
+      >(</a
+      ><a name="652" href="Data.Fin.html#775" class="Datatype"
+      >Fin</a
+      ><a name="655"
+      > </a
+      ><a name="656" href="Language.Simple.Interface.html#632" class="Bound"
+      >i</a
+      ><a name="657" class="Symbol"
+      >)</a
+      ><a name="658"
+      >
+
+  </a
+      ><a name="662" class="Comment"
+      >--efinFunU : FunUniverse &#8469;</a
+      ><a name="688"
+      >
+  </a
+      ><a name="691" class="Comment"
+      >--efinFunU = Bits-U , _&#8594;&#7497;_</a
+      ><a name="717"
+      >
+
+</a
+      ><a name="719" href="Language.Simple.Interface.html#719" class="Function Operator"
+      >_&#8594;&#7515;_</a
+      ><a name="723"
+      > </a
+      ><a name="724" class="Symbol"
+      >:</a
+      ><a name="725"
+      > </a
+      ><a name="726" class="Symbol"
+      >&#8704;</a
+      ><a name="727"
+      > </a
+      ><a name="728" class="Symbol"
+      >{</a
+      ><a name="729" href="Language.Simple.Interface.html#729" class="Bound"
+      >A</a
+      ><a name="730" class="Symbol"
+      >}</a
+      ><a name="731"
+      > </a
+      ><a name="732" class="Symbol"
+      >&#8594;</a
+      ><a name="733"
+      > </a
+      ><a name="734" class="Symbol"
+      >(</a
+      ><a name="735" href="Language.Simple.Interface.html#735" class="Bound"
+      >i</a
+      ><a name="736"
+      > </a
+      ><a name="737" href="Language.Simple.Interface.html#737" class="Bound"
+      >o</a
+      ><a name="738"
+      > </a
+      ><a name="739" class="Symbol"
+      >:</a
+      ><a name="740"
+      > </a
+      ><a name="741" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="742" class="Symbol"
+      >)</a
+      ><a name="743"
+      > </a
+      ><a name="744" class="Symbol"
+      >&#8594;</a
+      ><a name="745"
+      > </a
+      ><a name="746" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="747"
+      >
+</a
+      ><a name="748" href="Language.Simple.Interface.html#719" class="Function Operator"
+      >_&#8594;&#7515;_</a
+      ><a name="752"
+      > </a
+      ><a name="753" class="Symbol"
+      >{</a
+      ><a name="754" href="Language.Simple.Interface.html#754" class="Bound"
+      >A</a
+      ><a name="755" class="Symbol"
+      >}</a
+      ><a name="756"
+      > </a
+      ><a name="757" href="Language.Simple.Interface.html#757" class="Bound"
+      >i</a
+      ><a name="758"
+      > </a
+      ><a name="759" href="Language.Simple.Interface.html#759" class="Bound"
+      >o</a
+      ><a name="760"
+      > </a
+      ><a name="761" class="Symbol"
+      >=</a
+      ><a name="762"
+      > </a
+      ><a name="763" href="Data.Vec.html#604" class="Datatype"
+      >Vec</a
+      ><a name="766"
+      > </a
+      ><a name="767" href="Language.Simple.Interface.html#754" class="Bound"
+      >A</a
+      ><a name="768"
+      > </a
+      ><a name="769" href="Language.Simple.Interface.html#757" class="Bound"
+      >i</a
+      ><a name="770"
+      > </a
+      ><a name="771" class="Symbol"
+      >&#8594;</a
+      ><a name="772"
+      > </a
+      ><a name="773" href="Data.Vec.html#604" class="Datatype"
+      >Vec</a
+      ><a name="776"
+      > </a
+      ><a name="777" href="Language.Simple.Interface.html#754" class="Bound"
+      >A</a
+      ><a name="778"
+      > </a
+      ><a name="779" href="Language.Simple.Interface.html#759" class="Bound"
+      >o</a
+      ><a name="780"
+      >
+
+</a
+      ><a name="782" class="Keyword"
+      >module</a
+      ><a name="788"
+      > </a
+      ><a name="789" href="Language.Simple.Interface.html#789" class="Module"
+      >EvalSupport</a
+      ><a name="800"
+      > </a
+      ><a name="801" class="Symbol"
+      >{</a
+      ><a name="802" href="Language.Simple.Interface.html#802" class="Bound"
+      >R</a
+      ><a name="803"
+      > </a
+      ><a name="804" class="Symbol"
+      >:</a
+      ><a name="805"
+      > </a
+      ><a name="806" href="Type.html#107" class="Function"
+      >&#9733;&#8320;</a
+      ><a name="808" class="Symbol"
+      >}</a
+      ><a name="809"
+      > </a
+      ><a name="810" class="Symbol"
+      >{</a
+      ><a name="811" href="Language.Simple.Interface.html#811" class="Bound"
+      >E</a
+      ><a name="812"
+      > </a
+      ><a name="813" class="Symbol"
+      >:</a
+      ><a name="814"
+      > </a
+      ><a name="815" href="Type.html#107" class="Function"
+      >&#9733;&#8320;</a
+      ><a name="817"
+      > </a
+      ><a name="818" class="Symbol"
+      >&#8594;</a
+      ><a name="819"
+      > </a
+      ><a name="820" href="Type.html#107" class="Function"
+      >&#9733;&#8320;</a
+      ><a name="822" class="Symbol"
+      >}</a
+      ><a name="823"
+      >
+    </a
+      ><a name="828" class="Symbol"
+      >(</a
+      ><a name="829" href="Language.Simple.Interface.html#829" class="Bound"
+      >monad</a
+      ><a name="834"
+      > </a
+      ><a name="835" class="Symbol"
+      >:</a
+      ><a name="836"
+      > </a
+      ><a name="837" href="Category.Monad.NP.html#1793" class="Record"
+      >Monad</a
+      ><a name="842"
+      > </a
+      ><a name="843" href="Language.Simple.Interface.html#811" class="Bound"
+      >E</a
+      ><a name="844" class="Symbol"
+      >)</a
+      ><a name="845"
+      >
+    </a
+      ><a name="850" class="Symbol"
+      >(</a
+      ><a name="851" href="Language.Simple.Interface.html#851" class="Bound"
+      >eval</a
+      ><a name="855"
+      > </a
+      ><a name="856" class="Symbol"
+      >:</a
+      ><a name="857"
+      > </a
+      ><a name="858" class="Symbol"
+      >&#8704;</a
+      ><a name="859"
+      > </a
+      ><a name="860" class="Symbol"
+      >{</a
+      ><a name="861" href="Language.Simple.Interface.html#861" class="Bound"
+      >A</a
+      ><a name="862" class="Symbol"
+      >}</a
+      ><a name="863"
+      > </a
+      ><a name="864" class="Symbol"
+      >&#8594;</a
+      ><a name="865"
+      > </a
+      ><a name="866" class="Symbol"
+      >(</a
+      ><a name="867" href="Language.Simple.Interface.html#861" class="Bound"
+      >A</a
+      ><a name="868"
+      > </a
+      ><a name="869" class="Symbol"
+      >&#8594;</a
+      ><a name="870"
+      > </a
+      ><a name="871" href="Language.Simple.Interface.html#802" class="Bound"
+      >R</a
+      ><a name="872" class="Symbol"
+      >)</a
+      ><a name="873"
+      > </a
+      ><a name="874" class="Symbol"
+      >&#8594;</a
+      ><a name="875"
+      > </a
+      ><a name="876" href="Language.Simple.Interface.html#811" class="Bound"
+      >E</a
+      ><a name="877"
+      > </a
+      ><a name="878" href="Language.Simple.Interface.html#861" class="Bound"
+      >A</a
+      ><a name="879"
+      > </a
+      ><a name="880" class="Symbol"
+      >&#8594;</a
+      ><a name="881"
+      > </a
+      ><a name="882" href="Language.Simple.Interface.html#802" class="Bound"
+      >R</a
+      ><a name="883" class="Symbol"
+      >)</a
+      ><a name="884"
+      > </a
+      ><a name="885" class="Keyword"
+      >where</a
+      ><a name="890"
+      >
+  </a
+      ><a name="893" class="Keyword"
+      >open</a
+      ><a name="897"
+      > </a
+      ><a name="898" href="Category.Monad.NP.html#1793" class="Module"
+      >Monad</a
+      ><a name="903"
+      > </a
+      ><a name="904" href="Language.Simple.Interface.html#829" class="Bound"
+      >monad</a
+      ><a name="909"
+      >
+  </a
+      ><a name="912" class="Keyword"
+      >open</a
+      ><a name="916"
+      > </a
+      ><a name="917" href="Language.Simple.Interface.html#573" class="Module"
+      >LangSupportFin</a
+      ><a name="931"
+      > </a
+      ><a name="932" href="Language.Simple.Interface.html#811" class="Bound"
+      >E</a
+      ><a name="933"
+      > </a
+      ><a name="934" class="Keyword"
+      >public</a
+      ><a name="940"
+      >
+
+  </a
+      ><a name="944" href="Language.Simple.Interface.html#944" class="Function"
+      >eval&#7584;</a
+      ><a name="949"
+      > </a
+      ><a name="950" class="Symbol"
+      >:</a
+      ><a name="951"
+      > </a
+      ><a name="952" class="Symbol"
+      >&#8704;</a
+      ><a name="953"
+      > </a
+      ><a name="954" class="Symbol"
+      >{</a
+      ><a name="955" href="Language.Simple.Interface.html#955" class="Bound"
+      >i</a
+      ><a name="956" class="Symbol"
+      >}</a
+      ><a name="957"
+      > </a
+      ><a name="958" class="Symbol"
+      >&#8594;</a
+      ><a name="959"
+      > </a
+      ><a name="960" href="Language.Simple.Interface.html#811" class="Bound"
+      >E</a
+      ><a name="961"
+      > </a
+      ><a name="962" class="Symbol"
+      >(</a
+      ><a name="963" href="Data.Fin.html#775" class="Datatype"
+      >Fin</a
+      ><a name="966"
+      > </a
+      ><a name="967" href="Language.Simple.Interface.html#955" class="Bound"
+      >i</a
+      ><a name="968" class="Symbol"
+      >)</a
+      ><a name="969"
+      > </a
+      ><a name="970" class="Symbol"
+      >&#8594;</a
+      ><a name="971"
+      > </a
+      ><a name="972" href="Data.Vec.html#604" class="Datatype"
+      >Vec</a
+      ><a name="975"
+      > </a
+      ><a name="976" href="Language.Simple.Interface.html#802" class="Bound"
+      >R</a
+      ><a name="977"
+      > </a
+      ><a name="978" href="Language.Simple.Interface.html#955" class="Bound"
+      >i</a
+      ><a name="979"
+      > </a
+      ><a name="980" class="Symbol"
+      >&#8594;</a
+      ><a name="981"
+      > </a
+      ><a name="982" href="Language.Simple.Interface.html#802" class="Bound"
+      >R</a
+      ><a name="983"
+      >
+  </a
+      ><a name="986" href="Language.Simple.Interface.html#944" class="Function"
+      >eval&#7584;</a
+      ><a name="991"
+      > </a
+      ><a name="992" href="Language.Simple.Interface.html#992" class="Bound"
+      >e</a
+      ><a name="993"
+      > </a
+      ><a name="994" href="Language.Simple.Interface.html#994" class="Bound"
+      >vs</a
+      ><a name="996"
+      > </a
+      ><a name="997" class="Symbol"
+      >=</a
+      ><a name="998"
+      > </a
+      ><a name="999" href="Language.Simple.Interface.html#851" class="Bound"
+      >eval</a
+      ><a name="1003"
+      > </a
+      ><a name="1004" class="Symbol"
+      >(&#955;</a
+      ><a name="1006"
+      > </a
+      ><a name="1007" href="Language.Simple.Interface.html#1007" class="Bound"
+      >x</a
+      ><a name="1008"
+      > </a
+      ><a name="1009" class="Symbol"
+      >&#8594;</a
+      ><a name="1010"
+      > </a
+      ><a name="1011" href="Data.Vec.html#6126" class="Function"
+      >lookup</a
+      ><a name="1017"
+      > </a
+      ><a name="1018" href="Language.Simple.Interface.html#1007" class="Bound"
+      >x</a
+      ><a name="1019"
+      > </a
+      ><a name="1020" href="Language.Simple.Interface.html#994" class="Bound"
+      >vs</a
+      ><a name="1022" class="Symbol"
+      >)</a
+      ><a name="1023"
+      > </a
+      ><a name="1024" href="Language.Simple.Interface.html#992" class="Bound"
+      >e</a
+      ><a name="1025"
+      >
+
+  </a
+      ><a name="1029" href="Language.Simple.Interface.html#1029" class="Function"
+      >id&#7497;</a
+      ><a name="1032"
+      > </a
+      ><a name="1033" class="Symbol"
+      >:</a
+      ><a name="1034"
+      > </a
+      ><a name="1035" class="Symbol"
+      >&#8704;</a
+      ><a name="1036"
+      > </a
+      ><a name="1037" class="Symbol"
+      >{</a
+      ><a name="1038" href="Language.Simple.Interface.html#1038" class="Bound"
+      >i</a
+      ><a name="1039" class="Symbol"
+      >}</a
+      ><a name="1040"
+      > </a
+      ><a name="1041" class="Symbol"
+      >&#8594;</a
+      ><a name="1042"
+      > </a
+      ><a name="1043" href="Language.Simple.Interface.html#1038" class="Bound"
+      >i</a
+      ><a name="1044"
+      > </a
+      ><a name="1045" href="Language.Simple.Interface.html#608" class="Function Operator"
+      >&#8594;&#7497;</a
+      ><a name="1047"
+      > </a
+      ><a name="1048" href="Language.Simple.Interface.html#1038" class="Bound"
+      >i</a
+      ><a name="1049"
+      >
+  </a
+      ><a name="1052" href="Language.Simple.Interface.html#1029" class="Function"
+      >id&#7497;</a
+      ><a name="1055"
+      > </a
+      ><a name="1056" class="Symbol"
+      >=</a
+      ><a name="1057"
+      > </a
+      ><a name="1058" href="Category.Monad.Indexed.html#521" class="Function"
+      >return</a
+      ><a name="1064"
+      >
+
+  </a
+      ><a name="1068" href="Language.Simple.Interface.html#1068" class="Function Operator"
+      >_&#8728;&#7497;_</a
+      ><a name="1072"
+      > </a
+      ><a name="1073" class="Symbol"
+      >:</a
+      ><a name="1074"
+      > </a
+      ><a name="1075" class="Symbol"
+      >&#8704;</a
+      ><a name="1076"
+      > </a
+      ><a name="1077" class="Symbol"
+      >{</a
+      ><a name="1078" href="Language.Simple.Interface.html#1078" class="Bound"
+      >i</a
+      ><a name="1079"
+      > </a
+      ><a name="1080" href="Language.Simple.Interface.html#1080" class="Bound"
+      >j</a
+      ><a name="1081"
+      > </a
+      ><a name="1082" href="Language.Simple.Interface.html#1082" class="Bound"
+      >k</a
+      ><a name="1083" class="Symbol"
+      >}</a
+      ><a name="1084"
+      > </a
+      ><a name="1085" class="Symbol"
+      >&#8594;</a
+      ><a name="1086"
+      > </a
+      ><a name="1087" class="Symbol"
+      >(</a
+      ><a name="1088" href="Language.Simple.Interface.html#1080" class="Bound"
+      >j</a
+      ><a name="1089"
+      > </a
+      ><a name="1090" href="Language.Simple.Interface.html#608" class="Function Operator"
+      >&#8594;&#7497;</a
+      ><a name="1092"
+      > </a
+      ><a name="1093" href="Language.Simple.Interface.html#1082" class="Bound"
+      >k</a
+      ><a name="1094" class="Symbol"
+      >)</a
+      ><a name="1095"
+      > </a
+      ><a name="1096" class="Symbol"
+      >&#8594;</a
+      ><a name="1097"
+      > </a
+      ><a name="1098" class="Symbol"
+      >(</a
+      ><a name="1099" href="Language.Simple.Interface.html#1078" class="Bound"
+      >i</a
+      ><a name="1100"
+      > </a
+      ><a name="1101" href="Language.Simple.Interface.html#608" class="Function Operator"
+      >&#8594;&#7497;</a
+      ><a name="1103"
+      > </a
+      ><a name="1104" href="Language.Simple.Interface.html#1080" class="Bound"
+      >j</a
+      ><a name="1105" class="Symbol"
+      >)</a
+      ><a name="1106"
+      > </a
+      ><a name="1107" class="Symbol"
+      >&#8594;</a
+      ><a name="1108"
+      > </a
+      ><a name="1109" class="Symbol"
+      >(</a
+      ><a name="1110" href="Language.Simple.Interface.html#1078" class="Bound"
+      >i</a
+      ><a name="1111"
+      > </a
+      ><a name="1112" href="Language.Simple.Interface.html#608" class="Function Operator"
+      >&#8594;&#7497;</a
+      ><a name="1114"
+      > </a
+      ><a name="1115" href="Language.Simple.Interface.html#1082" class="Bound"
+      >k</a
+      ><a name="1116" class="Symbol"
+      >)</a
+      ><a name="1117"
+      >
+  </a
+      ><a name="1120" class="Symbol"
+      >(</a
+      ><a name="1121" href="Language.Simple.Interface.html#1121" class="Bound"
+      >f</a
+      ><a name="1122"
+      > </a
+      ><a name="1123" href="Language.Simple.Interface.html#1068" class="Function Operator"
+      >&#8728;&#7497;</a
+      ><a name="1125"
+      > </a
+      ><a name="1126" href="Language.Simple.Interface.html#1126" class="Bound"
+      >g</a
+      ><a name="1127" class="Symbol"
+      >)</a
+      ><a name="1128"
+      > </a
+      ><a name="1129" href="Language.Simple.Interface.html#1129" class="Bound"
+      >x</a
+      ><a name="1130"
+      > </a
+      ><a name="1131" class="Symbol"
+      >=</a
+      ><a name="1132"
+      > </a
+      ><a name="1133" href="Language.Simple.Interface.html#1121" class="Bound"
+      >f</a
+      ><a name="1134"
+      > </a
+      ><a name="1135" href="Language.Simple.Interface.html#1129" class="Bound"
+      >x</a
+      ><a name="1136"
+      > </a
+      ><a name="1137" href="Category.Monad.Indexed.html#556" class="Function Operator"
+      >&gt;&gt;=</a
+      ><a name="1140"
+      > </a
+      ><a name="1141" href="Language.Simple.Interface.html#1126" class="Bound"
+      >g</a
+      ><a name="1142"
+      >
+
+  </a
+      ><a name="1146" href="Language.Simple.Interface.html#1146" class="Function"
+      >eval&#7515;</a
+      ><a name="1151"
+      > </a
+      ><a name="1152" class="Symbol"
+      >:</a
+      ><a name="1153"
+      > </a
+      ><a name="1154" class="Symbol"
+      >&#8704;</a
+      ><a name="1155"
+      > </a
+      ><a name="1156" class="Symbol"
+      >{</a
+      ><a name="1157" href="Language.Simple.Interface.html#1157" class="Bound"
+      >i</a
+      ><a name="1158"
+      > </a
+      ><a name="1159" href="Language.Simple.Interface.html#1159" class="Bound"
+      >o</a
+      ><a name="1160" class="Symbol"
+      >}</a
+      ><a name="1161"
+      > </a
+      ><a name="1162" class="Symbol"
+      >&#8594;</a
+      ><a name="1163"
+      > </a
+      ><a name="1164" href="Language.Simple.Interface.html#1157" class="Bound"
+      >i</a
+      ><a name="1165"
+      > </a
+      ><a name="1166" href="Language.Simple.Interface.html#608" class="Function Operator"
+      >&#8594;&#7497;</a
+      ><a name="1168"
+      > </a
+      ><a name="1169" href="Language.Simple.Interface.html#1159" class="Bound"
+      >o</a
+      ><a name="1170"
+      > </a
+      ><a name="1171" class="Symbol"
+      >&#8594;</a
+      ><a name="1172"
+      > </a
+      ><a name="1173" href="Language.Simple.Interface.html#1157" class="Bound"
+      >i</a
+      ><a name="1174"
+      > </a
+      ><a name="1175" href="Language.Simple.Interface.html#719" class="Function Operator"
+      >&#8594;&#7515;</a
+      ><a name="1177"
+      > </a
+      ><a name="1178" href="Language.Simple.Interface.html#1159" class="Bound"
+      >o</a
+      ><a name="1179"
+      >
+  </a
+      ><a name="1182" href="Language.Simple.Interface.html#1146" class="Function"
+      >eval&#7515;</a
+      ><a name="1187"
+      > </a
+      ><a name="1188" href="Language.Simple.Interface.html#1188" class="Bound"
+      >f</a
+      ><a name="1189"
+      > </a
+      ><a name="1190" href="Language.Simple.Interface.html#1190" class="Bound"
+      >is</a
+      ><a name="1192"
+      > </a
+      ><a name="1193" class="Symbol"
+      >=</a
+      ><a name="1194"
+      > </a
+      ><a name="1195" href="Data.Vec.html#6275" class="Function"
+      >tabulate</a
+      ><a name="1203"
+      > </a
+      ><a name="1204" class="Symbol"
+      >(</a
+      ><a name="1205" href="Function.html#1474" class="Function"
+      >flip</a
+      ><a name="1209"
+      > </a
+      ><a name="1210" href="Language.Simple.Interface.html#944" class="Function"
+      >eval&#7584;</a
+      ><a name="1215"
+      > </a
+      ><a name="1216" href="Language.Simple.Interface.html#1190" class="Bound"
+      >is</a
+      ><a name="1218"
+      > </a
+      ><a name="1219" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1220"
+      > </a
+      ><a name="1221" href="Language.Simple.Interface.html#1188" class="Bound"
+      >f</a
+      ><a name="1222" class="Symbol"
+      >)</a
+      ><a name="1223"
+      >
+
+  </a
+      ><a name="1227" href="Language.Simple.Interface.html#1227" class="Function"
+      >eval&#738;</a
+      ><a name="1232"
+      > </a
+      ><a name="1233" class="Symbol"
+      >:</a
+      ><a name="1234"
+      > </a
+      ><a name="1235" href="Language.Simple.Interface.html#811" class="Bound"
+      >E</a
+      ><a name="1236"
+      > </a
+      ><a name="1237" href="Language.Simple.Interface.html#802" class="Bound"
+      >R</a
+      ><a name="1238"
+      > </a
+      ><a name="1239" class="Symbol"
+      >&#8594;</a
+      ><a name="1240"
+      > </a
+      ><a name="1241" href="Language.Simple.Interface.html#802" class="Bound"
+      >R</a
+      ><a name="1242"
+      >
+  </a
+      ><a name="1245" href="Language.Simple.Interface.html#1227" class="Function"
+      >eval&#738;</a
+      ><a name="1250"
+      > </a
+      ><a name="1251" class="Symbol"
+      >=</a
+      ><a name="1252"
+      > </a
+      ><a name="1253" href="Language.Simple.Interface.html#851" class="Bound"
+      >eval</a
+      ><a name="1257"
+      > </a
+      ><a name="1258" href="Function.html#1006" class="Function"
+      >id</a
+      ><a name="1260"
+      >
+
+</a
+      ><a name="1262" class="Keyword"
+      >module</a
+      ><a name="1268"
+      > </a
+      ><a name="1269" href="Language.Simple.Interface.html#1269" class="Module"
+      >FromEvalSimple</a
+      ><a name="1283"
+      > </a
+      ><a name="1284" class="Symbol"
+      >{</a
+      ><a name="1285" href="Language.Simple.Interface.html#1285" class="Bound"
+      >R</a
+      ><a name="1286"
+      > </a
+      ><a name="1287" class="Symbol"
+      >:</a
+      ><a name="1288"
+      > </a
+      ><a name="1289" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="1290" class="Symbol"
+      >}</a
+      ><a name="1291"
+      > </a
+      ><a name="1292" class="Symbol"
+      >{</a
+      ><a name="1293" href="Language.Simple.Interface.html#1293" class="Bound"
+      >E</a
+      ><a name="1294"
+      > </a
+      ><a name="1295" class="Symbol"
+      >:</a
+      ><a name="1296"
+      > </a
+      ><a name="1297" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="1298"
+      > </a
+      ><a name="1299" class="Symbol"
+      >&#8594;</a
+      ><a name="1300"
+      > </a
+      ><a name="1301" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="1302" class="Symbol"
+      >}</a
+      ><a name="1303"
+      >
+                      </a
+      ><a name="1326" class="Symbol"
+      >(</a
+      ><a name="1327" href="Language.Simple.Interface.html#1327" class="Bound"
+      >monad</a
+      ><a name="1332"
+      > </a
+      ><a name="1333" class="Symbol"
+      >:</a
+      ><a name="1334"
+      > </a
+      ><a name="1335" href="Category.Monad.NP.html#1793" class="Record"
+      >Monad</a
+      ><a name="1340"
+      > </a
+      ><a name="1341" href="Language.Simple.Interface.html#1293" class="Bound"
+      >E</a
+      ><a name="1342" class="Symbol"
+      >)</a
+      ><a name="1343"
+      >
+                      </a
+      ><a name="1366" class="Symbol"
+      >(</a
+      ><a name="1367" href="Language.Simple.Interface.html#1367" class="Bound"
+      >eval&#738;</a
+      ><a name="1372"
+      > </a
+      ><a name="1373" class="Symbol"
+      >:</a
+      ><a name="1374"
+      > </a
+      ><a name="1375" href="Language.Simple.Interface.html#1293" class="Bound"
+      >E</a
+      ><a name="1376"
+      > </a
+      ><a name="1377" href="Language.Simple.Interface.html#1285" class="Bound"
+      >R</a
+      ><a name="1378"
+      > </a
+      ><a name="1379" class="Symbol"
+      >&#8594;</a
+      ><a name="1380"
+      > </a
+      ><a name="1381" href="Language.Simple.Interface.html#1285" class="Bound"
+      >R</a
+      ><a name="1382" class="Symbol"
+      >)</a
+      ><a name="1383"
+      > </a
+      ><a name="1384" class="Keyword"
+      >where</a
+      ><a name="1389"
+      >
+  </a
+      ><a name="1392" class="Keyword"
+      >open</a
+      ><a name="1396"
+      > </a
+      ><a name="1397" href="Category.Monad.NP.html#1793" class="Module"
+      >Monad</a
+      ><a name="1402"
+      > </a
+      ><a name="1403" href="Language.Simple.Interface.html#1327" class="Bound"
+      >monad</a
+      ><a name="1408"
+      >
+  </a
+      ><a name="1411" href="Language.Simple.Interface.html#1411" class="Function"
+      >eval</a
+      ><a name="1415"
+      > </a
+      ><a name="1416" class="Symbol"
+      >:</a
+      ><a name="1417"
+      > </a
+      ><a name="1418" class="Symbol"
+      >&#8704;</a
+      ><a name="1419"
+      > </a
+      ><a name="1420" class="Symbol"
+      >{</a
+      ><a name="1421" href="Language.Simple.Interface.html#1421" class="Bound"
+      >V</a
+      ><a name="1422" class="Symbol"
+      >}</a
+      ><a name="1423"
+      > </a
+      ><a name="1424" class="Symbol"
+      >&#8594;</a
+      ><a name="1425"
+      > </a
+      ><a name="1426" class="Symbol"
+      >(</a
+      ><a name="1427" href="Language.Simple.Interface.html#1421" class="Bound"
+      >V</a
+      ><a name="1428"
+      > </a
+      ><a name="1429" class="Symbol"
+      >&#8594;</a
+      ><a name="1430"
+      > </a
+      ><a name="1431" href="Language.Simple.Interface.html#1285" class="Bound"
+      >R</a
+      ><a name="1432" class="Symbol"
+      >)</a
+      ><a name="1433"
+      > </a
+      ><a name="1434" class="Symbol"
+      >&#8594;</a
+      ><a name="1435"
+      > </a
+      ><a name="1436" href="Language.Simple.Interface.html#1293" class="Bound"
+      >E</a
+      ><a name="1437"
+      > </a
+      ><a name="1438" href="Language.Simple.Interface.html#1421" class="Bound"
+      >V</a
+      ><a name="1439"
+      > </a
+      ><a name="1440" class="Symbol"
+      >&#8594;</a
+      ><a name="1441"
+      > </a
+      ><a name="1442" href="Language.Simple.Interface.html#1285" class="Bound"
+      >R</a
+      ><a name="1443"
+      >
+  </a
+      ><a name="1446" href="Language.Simple.Interface.html#1411" class="Function"
+      >eval</a
+      ><a name="1450"
+      > </a
+      ><a name="1451" href="Language.Simple.Interface.html#1451" class="Bound"
+      >f</a
+      ><a name="1452"
+      > </a
+      ><a name="1453" href="Language.Simple.Interface.html#1453" class="Bound"
+      >x</a
+      ><a name="1454"
+      > </a
+      ><a name="1455" class="Symbol"
+      >=</a
+      ><a name="1456"
+      > </a
+      ><a name="1457" href="Language.Simple.Interface.html#1367" class="Bound"
+      >eval&#738;</a
+      ><a name="1462"
+      > </a
+      ><a name="1463" class="Symbol"
+      >(</a
+      ><a name="1464" href="Category.Monad.NP.html#839" class="Function"
+      >liftM</a
+      ><a name="1469"
+      > </a
+      ><a name="1470" href="Language.Simple.Interface.html#1451" class="Bound"
+      >f</a
+      ><a name="1471"
+      > </a
+      ><a name="1472" href="Language.Simple.Interface.html#1453" class="Bound"
+      >x</a
+      ><a name="1473" class="Symbol"
+      >)</a
+      ><a name="1474"
+      >
+
+</a
+      ><a name="1476" class="Keyword"
+      >record</a
+      ><a name="1482"
+      > </a
+      ><a name="1483" href="Language.Simple.Interface.html#1483" class="Record"
+      >Eval</a
+      ><a name="1487"
+      > </a
+      ><a name="1488" class="Symbol"
+      >(</a
+      ><a name="1489" href="Language.Simple.Interface.html#1489" class="Bound"
+      >R</a
+      ><a name="1490"
+      > </a
+      ><a name="1491" class="Symbol"
+      >:</a
+      ><a name="1492"
+      > </a
+      ><a name="1493" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="1494" class="Symbol"
+      >)</a
+      ><a name="1495"
+      > </a
+      ><a name="1496" class="Symbol"
+      >{</a
+      ><a name="1497" href="Language.Simple.Interface.html#1497" class="Bound"
+      >E</a
+      ><a name="1498"
+      > </a
+      ><a name="1499" class="Symbol"
+      >:</a
+      ><a name="1500"
+      > </a
+      ><a name="1501" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="1502"
+      > </a
+      ><a name="1503" class="Symbol"
+      >&#8594;</a
+      ><a name="1504"
+      > </a
+      ><a name="1505" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="1506" class="Symbol"
+      >}</a
+      ><a name="1507"
+      > </a
+      ><a name="1508" class="Symbol"
+      >(</a
+      ><a name="1509" href="Language.Simple.Interface.html#1509" class="Bound"
+      >monad</a
+      ><a name="1514"
+      > </a
+      ><a name="1515" class="Symbol"
+      >:</a
+      ><a name="1516"
+      > </a
+      ><a name="1517" href="Category.Monad.NP.html#1793" class="Record"
+      >Monad</a
+      ><a name="1522"
+      > </a
+      ><a name="1523" href="Language.Simple.Interface.html#1497" class="Bound"
+      >E</a
+      ><a name="1524" class="Symbol"
+      >)</a
+      ><a name="1525"
+      > </a
+      ><a name="1526" class="Symbol"
+      >:</a
+      ><a name="1527"
+      > </a
+      ><a name="1528" href="Type.html#88" class="Function"
+      >&#9733;&#8321;</a
+      ><a name="1530"
+      > </a
+      ><a name="1531" class="Keyword"
+      >where</a
+      ><a name="1536"
+      >
+  </a
+      ><a name="1539" class="Keyword"
+      >constructor</a
+      ><a name="1550"
+      > </a
+      ><a name="1551" href="Language.Simple.Interface.html#1551" class="InductiveConstructor"
+      >mk</a
+      ><a name="1553"
+      >
+  </a
+      ><a name="1556" class="Keyword"
+      >open</a
+      ><a name="1560"
+      > </a
+      ><a name="1561" href="Category.Monad.NP.html#1793" class="Module"
+      >Monad</a
+      ><a name="1566"
+      > </a
+      ><a name="1567" href="Language.Simple.Interface.html#1509" class="Bound"
+      >monad</a
+      ><a name="1572"
+      >
+  </a
+      ><a name="1575" class="Keyword"
+      >field</a
+      ><a name="1580"
+      >
+    </a
+      ><a name="1585" href="Language.Simple.Interface.html#1585" class="Field"
+      >eval</a
+      ><a name="1589"
+      > </a
+      ><a name="1590" class="Symbol"
+      >:</a
+      ><a name="1591"
+      > </a
+      ><a name="1592" class="Symbol"
+      >&#8704;</a
+      ><a name="1593"
+      > </a
+      ><a name="1594" class="Symbol"
+      >{</a
+      ><a name="1595" href="Language.Simple.Interface.html#1595" class="Bound"
+      >V</a
+      ><a name="1596" class="Symbol"
+      >}</a
+      ><a name="1597"
+      > </a
+      ><a name="1598" class="Symbol"
+      >&#8594;</a
+      ><a name="1599"
+      > </a
+      ><a name="1600" class="Symbol"
+      >(</a
+      ><a name="1601" href="Language.Simple.Interface.html#1595" class="Bound"
+      >V</a
+      ><a name="1602"
+      > </a
+      ><a name="1603" class="Symbol"
+      >&#8594;</a
+      ><a name="1604"
+      > </a
+      ><a name="1605" href="Language.Simple.Interface.html#1489" class="Bound"
+      >R</a
+      ><a name="1606" class="Symbol"
+      >)</a
+      ><a name="1607"
+      > </a
+      ><a name="1608" class="Symbol"
+      >&#8594;</a
+      ><a name="1609"
+      > </a
+      ><a name="1610" href="Language.Simple.Interface.html#1497" class="Bound"
+      >E</a
+      ><a name="1611"
+      > </a
+      ><a name="1612" href="Language.Simple.Interface.html#1595" class="Bound"
+      >V</a
+      ><a name="1613"
+      > </a
+      ><a name="1614" class="Symbol"
+      >&#8594;</a
+      ><a name="1615"
+      > </a
+      ><a name="1616" href="Language.Simple.Interface.html#1489" class="Bound"
+      >R</a
+      ><a name="1617"
+      >
+
+    </a
+      ><a name="1623" href="Language.Simple.Interface.html#1623" class="Field"
+      >eval-return</a
+      ><a name="1634"
+      > </a
+      ><a name="1635" class="Symbol"
+      >:</a
+      ><a name="1636"
+      > </a
+      ><a name="1637" class="Symbol"
+      >&#8704;</a
+      ><a name="1638"
+      > </a
+      ><a name="1639" class="Symbol"
+      >{</a
+      ><a name="1640" href="Language.Simple.Interface.html#1640" class="Bound"
+      >A</a
+      ><a name="1641" class="Symbol"
+      >}</a
+      ><a name="1642"
+      > </a
+      ><a name="1643" class="Symbol"
+      >(</a
+      ><a name="1644" href="Language.Simple.Interface.html#1644" class="Bound"
+      >f</a
+      ><a name="1645"
+      > </a
+      ><a name="1646" class="Symbol"
+      >:</a
+      ><a name="1647"
+      > </a
+      ><a name="1648" href="Language.Simple.Interface.html#1640" class="Bound"
+      >A</a
+      ><a name="1649"
+      > </a
+      ><a name="1650" class="Symbol"
+      >&#8594;</a
+      ><a name="1651"
+      > </a
+      ><a name="1652" href="Language.Simple.Interface.html#1489" class="Bound"
+      >R</a
+      ><a name="1653" class="Symbol"
+      >)</a
+      ><a name="1654"
+      > </a
+      ><a name="1655" class="Symbol"
+      >&#8594;</a
+      ><a name="1656"
+      > </a
+      ><a name="1657" href="Language.Simple.Interface.html#1585" class="Bound"
+      >eval</a
+      ><a name="1661"
+      > </a
+      ><a name="1662" href="Language.Simple.Interface.html#1644" class="Bound"
+      >f</a
+      ><a name="1663"
+      > </a
+      ><a name="1664" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1665"
+      > </a
+      ><a name="1666" href="Category.Monad.Indexed.html#521" class="Function"
+      >return</a
+      ><a name="1672"
+      > </a
+      ><a name="1673" href="Relation.Binary.PropositionalEquality.html#2312" class="Function Operator"
+      >&#8791;</a
+      ><a name="1674"
+      > </a
+      ><a name="1675" href="Language.Simple.Interface.html#1644" class="Bound"
+      >f</a
+      ><a name="1676"
+      >
+
+    </a
+      ><a name="1682" href="Language.Simple.Interface.html#1682" class="Field"
+      >eval-&gt;&gt;=</a
+      ><a name="1690"
+      > </a
+      ><a name="1691" class="Symbol"
+      >:</a
+      ><a name="1692"
+      > </a
+      ><a name="1693" class="Symbol"
+      >&#8704;</a
+      ><a name="1694"
+      > </a
+      ><a name="1695" class="Symbol"
+      >{</a
+      ><a name="1696" href="Language.Simple.Interface.html#1696" class="Bound"
+      >A</a
+      ><a name="1697"
+      > </a
+      ><a name="1698" href="Language.Simple.Interface.html#1698" class="Bound"
+      >B</a
+      ><a name="1699" class="Symbol"
+      >}</a
+      ><a name="1700"
+      > </a
+      ><a name="1701" class="Symbol"
+      >(</a
+      ><a name="1702" href="Language.Simple.Interface.html#1702" class="Bound"
+      >f</a
+      ><a name="1703"
+      > </a
+      ><a name="1704" class="Symbol"
+      >:</a
+      ><a name="1705"
+      > </a
+      ><a name="1706" href="Language.Simple.Interface.html#1698" class="Bound"
+      >B</a
+      ><a name="1707"
+      > </a
+      ><a name="1708" class="Symbol"
+      >&#8594;</a
+      ><a name="1709"
+      > </a
+      ><a name="1710" href="Language.Simple.Interface.html#1489" class="Bound"
+      >R</a
+      ><a name="1711" class="Symbol"
+      >)</a
+      ><a name="1712"
+      > </a
+      ><a name="1713" class="Symbol"
+      >(</a
+      ><a name="1714" href="Language.Simple.Interface.html#1714" class="Bound"
+      >g</a
+      ><a name="1715"
+      > </a
+      ><a name="1716" class="Symbol"
+      >:</a
+      ><a name="1717"
+      > </a
+      ><a name="1718" href="Language.Simple.Interface.html#1696" class="Bound"
+      >A</a
+      ><a name="1719"
+      > </a
+      ><a name="1720" class="Symbol"
+      >&#8594;</a
+      ><a name="1721"
+      > </a
+      ><a name="1722" href="Language.Simple.Interface.html#1497" class="Bound"
+      >E</a
+      ><a name="1723"
+      > </a
+      ><a name="1724" href="Language.Simple.Interface.html#1698" class="Bound"
+      >B</a
+      ><a name="1725" class="Symbol"
+      >)</a
+      ><a name="1726"
+      > </a
+      ><a name="1727" href="Language.Simple.Interface.html#1727" class="Bound"
+      >e</a
+      ><a name="1728"
+      >
+               </a
+      ><a name="1744" class="Symbol"
+      >&#8594;</a
+      ><a name="1745"
+      > </a
+      ><a name="1746" href="Language.Simple.Interface.html#1585" class="Bound"
+      >eval</a
+      ><a name="1750"
+      > </a
+      ><a name="1751" class="Symbol"
+      >(</a
+      ><a name="1752" href="Language.Simple.Interface.html#1585" class="Bound"
+      >eval</a
+      ><a name="1756"
+      > </a
+      ><a name="1757" href="Language.Simple.Interface.html#1702" class="Bound"
+      >f</a
+      ><a name="1758"
+      > </a
+      ><a name="1759" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1760"
+      > </a
+      ><a name="1761" href="Language.Simple.Interface.html#1714" class="Bound"
+      >g</a
+      ><a name="1762" class="Symbol"
+      >)</a
+      ><a name="1763"
+      > </a
+      ><a name="1764" href="Language.Simple.Interface.html#1727" class="Bound"
+      >e</a
+      ><a name="1765"
+      > </a
+      ><a name="1766" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="1767"
+      > </a
+      ><a name="1768" href="Language.Simple.Interface.html#1585" class="Bound"
+      >eval</a
+      ><a name="1772"
+      > </a
+      ><a name="1773" href="Language.Simple.Interface.html#1702" class="Bound"
+      >f</a
+      ><a name="1774"
+      > </a
+      ><a name="1775" class="Symbol"
+      >(</a
+      ><a name="1776" href="Language.Simple.Interface.html#1727" class="Bound"
+      >e</a
+      ><a name="1777"
+      > </a
+      ><a name="1778" href="Category.Monad.Indexed.html#556" class="Function Operator"
+      >&gt;&gt;=</a
+      ><a name="1781"
+      > </a
+      ><a name="1782" href="Language.Simple.Interface.html#1714" class="Bound"
+      >g</a
+      ><a name="1783" class="Symbol"
+      >)</a
+      ><a name="1784"
+      >
+
+    </a
+      ><a name="1790" href="Language.Simple.Interface.html#1790" class="Field"
+      >eval-ext</a
+      ><a name="1798"
+      > </a
+      ><a name="1799" class="Symbol"
+      >:</a
+      ><a name="1800"
+      > </a
+      ><a name="1801" class="Symbol"
+      >&#8704;</a
+      ><a name="1802"
+      > </a
+      ><a name="1803" class="Symbol"
+      >{</a
+      ><a name="1804" href="Language.Simple.Interface.html#1804" class="Bound"
+      >A</a
+      ><a name="1805" class="Symbol"
+      >}</a
+      ><a name="1806"
+      > </a
+      ><a name="1807" class="Symbol"
+      >{</a
+      ><a name="1808" href="Language.Simple.Interface.html#1808" class="Bound"
+      >f</a
+      ><a name="1809"
+      > </a
+      ><a name="1810" href="Language.Simple.Interface.html#1810" class="Bound"
+      >g</a
+      ><a name="1811"
+      > </a
+      ><a name="1812" class="Symbol"
+      >:</a
+      ><a name="1813"
+      > </a
+      ><a name="1814" href="Language.Simple.Interface.html#1804" class="Bound"
+      >A</a
+      ><a name="1815"
+      > </a
+      ><a name="1816" class="Symbol"
+      >&#8594;</a
+      ><a name="1817"
+      > </a
+      ><a name="1818" href="Language.Simple.Interface.html#1489" class="Bound"
+      >R</a
+      ><a name="1819" class="Symbol"
+      >}</a
+      ><a name="1820"
+      > </a
+      ><a name="1821" class="Symbol"
+      >&#8594;</a
+      ><a name="1822"
+      > </a
+      ><a name="1823" href="Language.Simple.Interface.html#1808" class="Bound"
+      >f</a
+      ><a name="1824"
+      > </a
+      ><a name="1825" href="Relation.Binary.PropositionalEquality.html#2312" class="Function Operator"
+      >&#8791;</a
+      ><a name="1826"
+      > </a
+      ><a name="1827" href="Language.Simple.Interface.html#1810" class="Bound"
+      >g</a
+      ><a name="1828"
+      > </a
+      ><a name="1829" class="Symbol"
+      >&#8594;</a
+      ><a name="1830"
+      > </a
+      ><a name="1831" href="Language.Simple.Interface.html#1585" class="Bound"
+      >eval</a
+      ><a name="1835"
+      > </a
+      ><a name="1836" href="Language.Simple.Interface.html#1808" class="Bound"
+      >f</a
+      ><a name="1837"
+      > </a
+      ><a name="1838" href="Relation.Binary.PropositionalEquality.html#2312" class="Function Operator"
+      >&#8791;</a
+      ><a name="1839"
+      > </a
+      ><a name="1840" href="Language.Simple.Interface.html#1585" class="Bound"
+      >eval</a
+      ><a name="1844"
+      > </a
+      ><a name="1845" href="Language.Simple.Interface.html#1810" class="Bound"
+      >g</a
+      ><a name="1846"
+      >
+
+  </a
+      ><a name="1850" href="Language.Simple.Interface.html#1850" class="Function"
+      >eval-map</a
+      ><a name="1858"
+      > </a
+      ><a name="1859" class="Symbol"
+      >:</a
+      ><a name="1860"
+      > </a
+      ><a name="1861" class="Symbol"
+      >&#8704;</a
+      ><a name="1862"
+      > </a
+      ><a name="1863" class="Symbol"
+      >{</a
+      ><a name="1864" href="Language.Simple.Interface.html#1864" class="Bound"
+      >A</a
+      ><a name="1865"
+      > </a
+      ><a name="1866" href="Language.Simple.Interface.html#1866" class="Bound"
+      >B</a
+      ><a name="1867" class="Symbol"
+      >}</a
+      ><a name="1868"
+      > </a
+      ><a name="1869" class="Symbol"
+      >(</a
+      ><a name="1870" href="Language.Simple.Interface.html#1870" class="Bound"
+      >f</a
+      ><a name="1871"
+      > </a
+      ><a name="1872" class="Symbol"
+      >:</a
+      ><a name="1873"
+      > </a
+      ><a name="1874" href="Language.Simple.Interface.html#1866" class="Bound"
+      >B</a
+      ><a name="1875"
+      > </a
+      ><a name="1876" class="Symbol"
+      >&#8594;</a
+      ><a name="1877"
+      > </a
+      ><a name="1878" href="Language.Simple.Interface.html#1489" class="Bound"
+      >R</a
+      ><a name="1879" class="Symbol"
+      >)</a
+      ><a name="1880"
+      > </a
+      ><a name="1881" class="Symbol"
+      >(</a
+      ><a name="1882" href="Language.Simple.Interface.html#1882" class="Bound"
+      >g</a
+      ><a name="1883"
+      > </a
+      ><a name="1884" class="Symbol"
+      >:</a
+      ><a name="1885"
+      > </a
+      ><a name="1886" href="Language.Simple.Interface.html#1864" class="Bound"
+      >A</a
+      ><a name="1887"
+      > </a
+      ><a name="1888" class="Symbol"
+      >&#8594;</a
+      ><a name="1889"
+      > </a
+      ><a name="1890" href="Language.Simple.Interface.html#1866" class="Bound"
+      >B</a
+      ><a name="1891" class="Symbol"
+      >)</a
+      ><a name="1892"
+      > </a
+      ><a name="1893" href="Language.Simple.Interface.html#1893" class="Bound"
+      >e</a
+      ><a name="1894"
+      >
+             </a
+      ><a name="1908" class="Symbol"
+      >&#8594;</a
+      ><a name="1909"
+      > </a
+      ><a name="1910" href="Language.Simple.Interface.html#1585" class="Field"
+      >eval</a
+      ><a name="1914"
+      > </a
+      ><a name="1915" class="Symbol"
+      >(</a
+      ><a name="1916" href="Language.Simple.Interface.html#1870" class="Bound"
+      >f</a
+      ><a name="1917"
+      > </a
+      ><a name="1918" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1919"
+      > </a
+      ><a name="1920" href="Language.Simple.Interface.html#1882" class="Bound"
+      >g</a
+      ><a name="1921" class="Symbol"
+      >)</a
+      ><a name="1922"
+      > </a
+      ><a name="1923" href="Language.Simple.Interface.html#1893" class="Bound"
+      >e</a
+      ><a name="1924"
+      > </a
+      ><a name="1925" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="1926"
+      > </a
+      ><a name="1927" href="Language.Simple.Interface.html#1585" class="Field"
+      >eval</a
+      ><a name="1931"
+      > </a
+      ><a name="1932" href="Language.Simple.Interface.html#1870" class="Bound"
+      >f</a
+      ><a name="1933"
+      > </a
+      ><a name="1934" class="Symbol"
+      >(</a
+      ><a name="1935" href="Language.Simple.Interface.html#1882" class="Bound"
+      >g</a
+      ><a name="1936"
+      > </a
+      ><a name="1937" href="Category.Functor.html#424" class="Function Operator"
+      >&lt;$&gt;</a
+      ><a name="1940"
+      > </a
+      ><a name="1941" href="Language.Simple.Interface.html#1893" class="Bound"
+      >e</a
+      ><a name="1942" class="Symbol"
+      >)</a
+      ><a name="1943"
+      >
+  </a
+      ><a name="1946" href="Language.Simple.Interface.html#1850" class="Function"
+      >eval-map</a
+      ><a name="1954"
+      > </a
+      ><a name="1955" class="Symbol"
+      >_</a
+      ><a name="1956"
+      > </a
+      ><a name="1957" class="Symbol"
+      >_</a
+      ><a name="1958"
+      > </a
+      ><a name="1959" class="Symbol"
+      >_</a
+      ><a name="1960"
+      > </a
+      ><a name="1961" class="Symbol"
+      >=</a
+      ><a name="1962"
+      > </a
+      ><a name="1963" href="Language.Simple.Interface.html#1790" class="Field"
+      >eval-ext</a
+      ><a name="1971"
+      > </a
+      ><a name="1972" class="Symbol"
+      >(&#955;</a
+      ><a name="1974"
+      > </a
+      ><a name="1975" href="Language.Simple.Interface.html#1975" class="Bound"
+      >_</a
+      ><a name="1976"
+      > </a
+      ><a name="1977" class="Symbol"
+      >&#8594;</a
+      ><a name="1978"
+      > </a
+      ><a name="1979" href="Relation.Binary.PropositionalEquality.NP.html#1077" class="Function Operator"
+      >!</a
+      ><a name="1980"
+      > </a
+      ><a name="1981" class="Symbol"
+      >(</a
+      ><a name="1982" href="Language.Simple.Interface.html#1623" class="Field"
+      >eval-return</a
+      ><a name="1993"
+      > </a
+      ><a name="1994" class="Symbol"
+      >_</a
+      ><a name="1995"
+      > </a
+      ><a name="1996" class="Symbol"
+      >_))</a
+      ><a name="1999"
+      > </a
+      ><a name="2000" class="Symbol"
+      >_</a
+      ><a name="2001"
+      >
+                 </a
+      ><a name="2019" href="Relation.Binary.PropositionalEquality.NP.html#986" class="Function Operator"
+      >&#8729;</a
+      ><a name="2020"
+      > </a
+      ><a name="2021" href="Language.Simple.Interface.html#1682" class="Field"
+      >eval-&gt;&gt;=</a
+      ><a name="2029"
+      > </a
+      ><a name="2030" class="Symbol"
+      >_</a
+      ><a name="2031"
+      > </a
+      ><a name="2032" class="Symbol"
+      >_</a
+      ><a name="2033"
+      > </a
+      ><a name="2034" class="Symbol"
+      >_</a
+      ><a name="2035"
+      >
+                 </a
+      ><a name="2053" href="Relation.Binary.PropositionalEquality.NP.html#986" class="Function Operator"
+      >&#8729;</a
+      ><a name="2054"
+      > </a
+      ><a name="2055" href="Relation.Binary.PropositionalEquality.NP.html#1330" class="Function"
+      >ap</a
+      ><a name="2057"
+      > </a
+      ><a name="2058" class="Symbol"
+      >(</a
+      ><a name="2059" href="Language.Simple.Interface.html#1585" class="Field"
+      >eval</a
+      ><a name="2063"
+      > </a
+      ><a name="2064" class="Symbol"
+      >_)</a
+      ><a name="2066"
+      > </a
+      ><a name="2067" class="Symbol"
+      >(</a
+      ><a name="2068" href="Relation.Binary.PropositionalEquality.NP.html#1077" class="Function Operator"
+      >!</a
+      ><a name="2069"
+      > </a
+      ><a name="2070" class="Symbol"
+      >(</a
+      ><a name="2071" href="Category.Monad.NP.html#911" class="Function"
+      >&lt;$&gt;-liftM</a
+      ><a name="2080"
+      > </a
+      ><a name="2081" class="Symbol"
+      >_</a
+      ><a name="2082"
+      > </a
+      ><a name="2083" class="Symbol"
+      >_))</a
+      ><a name="2086"
+      >
+
+  </a
+      ><a name="2090" class="Comment"
+      >-- In particular any eval can be expressed as the combination</a
+      ><a name="2151"
+      >
+  </a
+      ><a name="2154" class="Comment"
+      >-- of eval&#738; (a.k.a. eval id) and functoriality (&lt;$&gt;).</a
+      ><a name="2207"
+      >
+  </a
+      ><a name="2210" href="Language.Simple.Interface.html#2210" class="Function"
+      >eval-id</a
+      ><a name="2217"
+      > </a
+      ><a name="2218" class="Symbol"
+      >:</a
+      ><a name="2219"
+      > </a
+      ><a name="2220" class="Symbol"
+      >&#8704;</a
+      ><a name="2221"
+      > </a
+      ><a name="2222" class="Symbol"
+      >{</a
+      ><a name="2223" href="Language.Simple.Interface.html#2223" class="Bound"
+      >A</a
+      ><a name="2224" class="Symbol"
+      >}</a
+      ><a name="2225"
+      > </a
+      ><a name="2226" class="Symbol"
+      >(</a
+      ><a name="2227" href="Language.Simple.Interface.html#2227" class="Bound"
+      >f</a
+      ><a name="2228"
+      > </a
+      ><a name="2229" class="Symbol"
+      >:</a
+      ><a name="2230"
+      > </a
+      ><a name="2231" href="Language.Simple.Interface.html#2223" class="Bound"
+      >A</a
+      ><a name="2232"
+      > </a
+      ><a name="2233" class="Symbol"
+      >&#8594;</a
+      ><a name="2234"
+      > </a
+      ><a name="2235" href="Language.Simple.Interface.html#1489" class="Bound"
+      >R</a
+      ><a name="2236" class="Symbol"
+      >)</a
+      ><a name="2237"
+      > </a
+      ><a name="2238" class="Symbol"
+      >(</a
+      ><a name="2239" href="Language.Simple.Interface.html#2239" class="Bound"
+      >e</a
+      ><a name="2240"
+      > </a
+      ><a name="2241" class="Symbol"
+      >:</a
+      ><a name="2242"
+      > </a
+      ><a name="2243" href="Language.Simple.Interface.html#1497" class="Bound"
+      >E</a
+      ><a name="2244"
+      > </a
+      ><a name="2245" href="Language.Simple.Interface.html#2223" class="Bound"
+      >A</a
+      ><a name="2246" class="Symbol"
+      >)</a
+      ><a name="2247"
+      >
+            </a
+      ><a name="2260" class="Symbol"
+      >&#8594;</a
+      ><a name="2261"
+      > </a
+      ><a name="2262" href="Language.Simple.Interface.html#1585" class="Field"
+      >eval</a
+      ><a name="2266"
+      > </a
+      ><a name="2267" href="Language.Simple.Interface.html#2227" class="Bound"
+      >f</a
+      ><a name="2268"
+      > </a
+      ><a name="2269" href="Language.Simple.Interface.html#2239" class="Bound"
+      >e</a
+      ><a name="2270"
+      > </a
+      ><a name="2271" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="2272"
+      > </a
+      ><a name="2273" href="Language.Simple.Interface.html#1585" class="Field"
+      >eval</a
+      ><a name="2277"
+      > </a
+      ><a name="2278" href="Function.html#1006" class="Function"
+      >id</a
+      ><a name="2280"
+      > </a
+      ><a name="2281" class="Symbol"
+      >(</a
+      ><a name="2282" href="Language.Simple.Interface.html#2227" class="Bound"
+      >f</a
+      ><a name="2283"
+      > </a
+      ><a name="2284" href="Category.Functor.html#424" class="Function Operator"
+      >&lt;$&gt;</a
+      ><a name="2287"
+      > </a
+      ><a name="2288" href="Language.Simple.Interface.html#2239" class="Bound"
+      >e</a
+      ><a name="2289" class="Symbol"
+      >)</a
+      ><a name="2290"
+      >
+  </a
+      ><a name="2293" href="Language.Simple.Interface.html#2210" class="Function"
+      >eval-id</a
+      ><a name="2300"
+      > </a
+      ><a name="2301" class="Symbol"
+      >=</a
+      ><a name="2302"
+      > </a
+      ><a name="2303" href="Language.Simple.Interface.html#1850" class="Function"
+      >eval-map</a
+      ><a name="2311"
+      > </a
+      ><a name="2312" href="Function.html#1006" class="Function"
+      >id</a
+      ><a name="2314"
+      >
+
+  </a
+      ><a name="2318" class="Keyword"
+      >open</a
+      ><a name="2322"
+      > </a
+      ><a name="2323" href="Language.Simple.Interface.html#789" class="Module"
+      >EvalSupport</a
+      ><a name="2334"
+      > </a
+      ><a name="2335" href="Language.Simple.Interface.html#1509" class="Bound"
+      >monad</a
+      ><a name="2340"
+      > </a
+      ><a name="2341" href="Language.Simple.Interface.html#1585" class="Field"
+      >eval</a
+      ><a name="2345"
+      >
+
+  </a
+      ><a name="2349" href="Language.Simple.Interface.html#2349" class="Function"
+      >&#8728;&#7497;-assoc</a
+      ><a name="2357"
+      > </a
+      ><a name="2358" class="Symbol"
+      >:</a
+      ><a name="2359"
+      > </a
+      ><a name="2360" class="Symbol"
+      >&#8704;</a
+      ><a name="2361"
+      > </a
+      ><a name="2362" class="Symbol"
+      >{</a
+      ><a name="2363" href="Language.Simple.Interface.html#2363" class="Bound"
+      >i</a
+      ><a name="2364"
+      > </a
+      ><a name="2365" href="Language.Simple.Interface.html#2365" class="Bound"
+      >j</a
+      ><a name="2366"
+      > </a
+      ><a name="2367" href="Language.Simple.Interface.html#2367" class="Bound"
+      >k</a
+      ><a name="2368"
+      > </a
+      ><a name="2369" href="Language.Simple.Interface.html#2369" class="Bound"
+      >&#8467;</a
+      ><a name="2370" class="Symbol"
+      >}</a
+      ><a name="2371"
+      > </a
+      ><a name="2372" class="Symbol"
+      >(</a
+      ><a name="2373" href="Language.Simple.Interface.html#2373" class="Bound"
+      >f</a
+      ><a name="2374"
+      > </a
+      ><a name="2375" class="Symbol"
+      >:</a
+      ><a name="2376"
+      > </a
+      ><a name="2377" href="Language.Simple.Interface.html#2367" class="Bound"
+      >k</a
+      ><a name="2378"
+      > </a
+      ><a name="2379" href="Language.Simple.Interface.html#608" class="Function Operator"
+      >&#8594;&#7497;</a
+      ><a name="2381"
+      > </a
+      ><a name="2382" href="Language.Simple.Interface.html#2369" class="Bound"
+      >&#8467;</a
+      ><a name="2383" class="Symbol"
+      >)</a
+      ><a name="2384"
+      > </a
+      ><a name="2385" class="Symbol"
+      >(</a
+      ><a name="2386" href="Language.Simple.Interface.html#2386" class="Bound"
+      >g</a
+      ><a name="2387"
+      > </a
+      ><a name="2388" class="Symbol"
+      >:</a
+      ><a name="2389"
+      > </a
+      ><a name="2390" href="Language.Simple.Interface.html#2365" class="Bound"
+      >j</a
+      ><a name="2391"
+      > </a
+      ><a name="2392" href="Language.Simple.Interface.html#608" class="Function Operator"
+      >&#8594;&#7497;</a
+      ><a name="2394"
+      > </a
+      ><a name="2395" href="Language.Simple.Interface.html#2367" class="Bound"
+      >k</a
+      ><a name="2396" class="Symbol"
+      >)</a
+      ><a name="2397"
+      > </a
+      ><a name="2398" class="Symbol"
+      >(</a
+      ><a name="2399" href="Language.Simple.Interface.html#2399" class="Bound"
+      >h</a
+      ><a name="2400"
+      > </a
+      ><a name="2401" class="Symbol"
+      >:</a
+      ><a name="2402"
+      > </a
+      ><a name="2403" href="Language.Simple.Interface.html#2363" class="Bound"
+      >i</a
+      ><a name="2404"
+      > </a
+      ><a name="2405" href="Language.Simple.Interface.html#608" class="Function Operator"
+      >&#8594;&#7497;</a
+      ><a name="2407"
+      > </a
+      ><a name="2408" href="Language.Simple.Interface.html#2365" class="Bound"
+      >j</a
+      ><a name="2409" class="Symbol"
+      >)</a
+      ><a name="2410"
+      > </a
+      ><a name="2411" class="Symbol"
+      >&#8594;</a
+      ><a name="2412"
+      > </a
+      ><a name="2413" href="Language.Simple.Interface.html#2373" class="Bound"
+      >f</a
+      ><a name="2414"
+      > </a
+      ><a name="2415" href="Language.Simple.Interface.html#1068" class="Function Operator"
+      >&#8728;&#7497;</a
+      ><a name="2417"
+      > </a
+      ><a name="2418" class="Symbol"
+      >(</a
+      ><a name="2419" href="Language.Simple.Interface.html#2386" class="Bound"
+      >g</a
+      ><a name="2420"
+      > </a
+      ><a name="2421" href="Language.Simple.Interface.html#1068" class="Function Operator"
+      >&#8728;&#7497;</a
+      ><a name="2423"
+      > </a
+      ><a name="2424" href="Language.Simple.Interface.html#2399" class="Bound"
+      >h</a
+      ><a name="2425" class="Symbol"
+      >)</a
+      ><a name="2426"
+      > </a
+      ><a name="2427" href="Relation.Binary.PropositionalEquality.html#2312" class="Function Operator"
+      >&#8791;</a
+      ><a name="2428"
+      > </a
+      ><a name="2429" class="Symbol"
+      >(</a
+      ><a name="2430" href="Language.Simple.Interface.html#2373" class="Bound"
+      >f</a
+      ><a name="2431"
+      > </a
+      ><a name="2432" href="Language.Simple.Interface.html#1068" class="Function Operator"
+      >&#8728;&#7497;</a
+      ><a name="2434"
+      > </a
+      ><a name="2435" href="Language.Simple.Interface.html#2386" class="Bound"
+      >g</a
+      ><a name="2436" class="Symbol"
+      >)</a
+      ><a name="2437"
+      > </a
+      ><a name="2438" href="Language.Simple.Interface.html#1068" class="Function Operator"
+      >&#8728;&#7497;</a
+      ><a name="2440"
+      > </a
+      ><a name="2441" href="Language.Simple.Interface.html#2399" class="Bound"
+      >h</a
+      ><a name="2442"
+      >
+  </a
+      ><a name="2445" href="Language.Simple.Interface.html#2349" class="Function"
+      >&#8728;&#7497;-assoc</a
+      ><a name="2453"
+      > </a
+      ><a name="2454" href="Language.Simple.Interface.html#2454" class="Bound"
+      >f</a
+      ><a name="2455"
+      > </a
+      ><a name="2456" href="Language.Simple.Interface.html#2456" class="Bound"
+      >g</a
+      ><a name="2457"
+      > </a
+      ><a name="2458" href="Language.Simple.Interface.html#2458" class="Bound"
+      >h</a
+      ><a name="2459"
+      > </a
+      ><a name="2460" href="Language.Simple.Interface.html#2460" class="Bound"
+      >x</a
+      ><a name="2461"
+      > </a
+      ><a name="2462" class="Symbol"
+      >=</a
+      ><a name="2463"
+      > </a
+      ><a name="2464" href="Category.Monad.NP.html#520" class="Function"
+      >&gt;&gt;=-assoc</a
+      ><a name="2473"
+      > </a
+      ><a name="2474" class="Symbol"
+      >(</a
+      ><a name="2475" href="Language.Simple.Interface.html#2454" class="Bound"
+      >f</a
+      ><a name="2476"
+      > </a
+      ><a name="2477" href="Language.Simple.Interface.html#2460" class="Bound"
+      >x</a
+      ><a name="2478" class="Symbol"
+      >)</a
+      ><a name="2479"
+      > </a
+      ><a name="2480" href="Language.Simple.Interface.html#2456" class="Bound"
+      >g</a
+      ><a name="2481"
+      > </a
+      ><a name="2482" href="Language.Simple.Interface.html#2458" class="Bound"
+      >h</a
+      ><a name="2483"
+      >
+
+  </a
+      ><a name="2487" class="Comment"
+      >-- Derived properties of eval&#738; (a.k.a. eval id)</a
+      ><a name="2534"
+      >
+
+  </a
+      ><a name="2538" href="Language.Simple.Interface.html#2538" class="Function"
+      >eval&#738;-return</a
+      ><a name="2550"
+      > </a
+      ><a name="2551" class="Symbol"
+      >:</a
+      ><a name="2552"
+      > </a
+      ><a name="2553" href="Language.Simple.Interface.html#1227" class="Function"
+      >eval&#738;</a
+      ><a name="2558"
+      > </a
+      ><a name="2559" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="2560"
+      > </a
+      ><a name="2561" href="Category.Monad.Indexed.html#521" class="Function"
+      >return</a
+      ><a name="2567"
+      > </a
+      ><a name="2568" href="Relation.Binary.PropositionalEquality.html#2312" class="Function Operator"
+      >&#8791;</a
+      ><a name="2569"
+      > </a
+      ><a name="2570" href="Function.html#1006" class="Function"
+      >id</a
+      ><a name="2572"
+      >
+  </a
+      ><a name="2575" href="Language.Simple.Interface.html#2538" class="Function"
+      >eval&#738;-return</a
+      ><a name="2587"
+      > </a
+      ><a name="2588" class="Symbol"
+      >=</a
+      ><a name="2589"
+      > </a
+      ><a name="2590" href="Language.Simple.Interface.html#1623" class="Field"
+      >eval-return</a
+      ><a name="2601"
+      > </a
+      ><a name="2602" href="Function.html#1006" class="Function"
+      >id</a
+      ><a name="2604"
+      >
+
+  </a
+      ><a name="2608" href="Language.Simple.Interface.html#2608" class="Function"
+      >eval&#738;-&gt;&gt;=</a
+      ><a name="2617"
+      > </a
+      ><a name="2618" class="Symbol"
+      >:</a
+      ><a name="2619"
+      > </a
+      ><a name="2620" class="Symbol"
+      >&#8704;</a
+      ><a name="2621"
+      > </a
+      ><a name="2622" class="Symbol"
+      >{</a
+      ><a name="2623" href="Language.Simple.Interface.html#2623" class="Bound"
+      >A</a
+      ><a name="2624" class="Symbol"
+      >}</a
+      ><a name="2625"
+      > </a
+      ><a name="2626" class="Symbol"
+      >(</a
+      ><a name="2627" href="Language.Simple.Interface.html#2627" class="Bound"
+      >g</a
+      ><a name="2628"
+      > </a
+      ><a name="2629" class="Symbol"
+      >:</a
+      ><a name="2630"
+      > </a
+      ><a name="2631" href="Language.Simple.Interface.html#2623" class="Bound"
+      >A</a
+      ><a name="2632"
+      > </a
+      ><a name="2633" class="Symbol"
+      >&#8594;</a
+      ><a name="2634"
+      > </a
+      ><a name="2635" href="Language.Simple.Interface.html#1497" class="Bound"
+      >E</a
+      ><a name="2636"
+      > </a
+      ><a name="2637" href="Language.Simple.Interface.html#1489" class="Bound"
+      >R</a
+      ><a name="2638" class="Symbol"
+      >)</a
+      ><a name="2639"
+      > </a
+      ><a name="2640" href="Language.Simple.Interface.html#2640" class="Bound"
+      >e</a
+      ><a name="2641"
+      >
+              </a
+      ><a name="2656" class="Symbol"
+      >&#8594;</a
+      ><a name="2657"
+      > </a
+      ><a name="2658" href="Language.Simple.Interface.html#1227" class="Function"
+      >eval&#738;</a
+      ><a name="2663"
+      > </a
+      ><a name="2664" class="Symbol"
+      >((</a
+      ><a name="2666" href="Language.Simple.Interface.html#1227" class="Function"
+      >eval&#738;</a
+      ><a name="2671"
+      > </a
+      ><a name="2672" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="2673"
+      > </a
+      ><a name="2674" href="Language.Simple.Interface.html#2627" class="Bound"
+      >g</a
+      ><a name="2675" class="Symbol"
+      >)</a
+      ><a name="2676"
+      > </a
+      ><a name="2677" href="Category.Functor.html#424" class="Function Operator"
+      >&lt;$&gt;</a
+      ><a name="2680"
+      > </a
+      ><a name="2681" href="Language.Simple.Interface.html#2640" class="Bound"
+      >e</a
+      ><a name="2682" class="Symbol"
+      >)</a
+      ><a name="2683"
+      > </a
+      ><a name="2684" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="2685"
+      > </a
+      ><a name="2686" href="Language.Simple.Interface.html#1227" class="Function"
+      >eval&#738;</a
+      ><a name="2691"
+      > </a
+      ><a name="2692" class="Symbol"
+      >(</a
+      ><a name="2693" href="Language.Simple.Interface.html#2640" class="Bound"
+      >e</a
+      ><a name="2694"
+      > </a
+      ><a name="2695" href="Category.Monad.Indexed.html#556" class="Function Operator"
+      >&gt;&gt;=</a
+      ><a name="2698"
+      > </a
+      ><a name="2699" href="Language.Simple.Interface.html#2627" class="Bound"
+      >g</a
+      ><a name="2700" class="Symbol"
+      >)</a
+      ><a name="2701"
+      >
+  </a
+      ><a name="2704" href="Language.Simple.Interface.html#2608" class="Function"
+      >eval&#738;-&gt;&gt;=</a
+      ><a name="2713"
+      > </a
+      ><a name="2714" class="Symbol"
+      >_</a
+      ><a name="2715"
+      > </a
+      ><a name="2716" class="Symbol"
+      >_</a
+      ><a name="2717"
+      > </a
+      ><a name="2718" class="Symbol"
+      >=</a
+      ><a name="2719"
+      > </a
+      ><a name="2720" href="Relation.Binary.PropositionalEquality.NP.html#1077" class="Function Operator"
+      >!</a
+      ><a name="2721"
+      > </a
+      ><a name="2722" class="Symbol"
+      >(</a
+      ><a name="2723" href="Language.Simple.Interface.html#2210" class="Function"
+      >eval-id</a
+      ><a name="2730"
+      > </a
+      ><a name="2731" class="Symbol"
+      >_</a
+      ><a name="2732"
+      > </a
+      ><a name="2733" class="Symbol"
+      >_)</a
+      ><a name="2735"
+      > </a
+      ><a name="2736" href="Relation.Binary.PropositionalEquality.NP.html#986" class="Function Operator"
+      >&#8729;</a
+      ><a name="2737"
+      > </a
+      ><a name="2738" href="Language.Simple.Interface.html#1682" class="Field"
+      >eval-&gt;&gt;=</a
+      ><a name="2746"
+      > </a
+      ><a name="2747" href="Function.html#1006" class="Function"
+      >id</a
+      ><a name="2749"
+      > </a
+      ><a name="2750" class="Symbol"
+      >_</a
+      ><a name="2751"
+      > </a
+      ><a name="2752" class="Symbol"
+      >_</a
+      ><a name="2753"
+      >
+
+  </a
+      ><a name="2757" class="Comment"
+      >-- Model ()</a
+      ><a name="2768"
+      >
+
+  </a
+      ><a name="2772" href="Language.Simple.Interface.html#2772" class="Function"
+      >eval&#7515;-id</a
+      ><a name="2780"
+      > </a
+      ><a name="2781" class="Symbol"
+      >:</a
+      ><a name="2782"
+      > </a
+      ><a name="2783" class="Symbol"
+      >&#8704;</a
+      ><a name="2784"
+      > </a
+      ><a name="2785" class="Symbol"
+      >{</a
+      ><a name="2786" href="Language.Simple.Interface.html#2786" class="Bound"
+      >i</a
+      ><a name="2787" class="Symbol"
+      >}</a
+      ><a name="2788"
+      > </a
+      ><a name="2789" class="Symbol"
+      >&#8594;</a
+      ><a name="2790"
+      > </a
+      ><a name="2791" href="Language.Simple.Interface.html#1146" class="Function"
+      >eval&#7515;</a
+      ><a name="2796"
+      > </a
+      ><a name="2797" class="Symbol"
+      >{</a
+      ><a name="2798" href="Language.Simple.Interface.html#2786" class="Bound"
+      >i</a
+      ><a name="2799" class="Symbol"
+      >}</a
+      ><a name="2800"
+      > </a
+      ><a name="2801" href="Language.Simple.Interface.html#1029" class="Function"
+      >id&#7497;</a
+      ><a name="2804"
+      > </a
+      ><a name="2805" href="Relation.Binary.PropositionalEquality.html#2312" class="Function Operator"
+      >&#8791;</a
+      ><a name="2806"
+      > </a
+      ><a name="2807" href="Function.html#1006" class="Function"
+      >id</a
+      ><a name="2809"
+      >
+  </a
+      ><a name="2812" href="Language.Simple.Interface.html#2772" class="Function"
+      >eval&#7515;-id</a
+      ><a name="2820"
+      > </a
+      ><a name="2821" class="Symbol"
+      >_</a
+      ><a name="2822"
+      > </a
+      ><a name="2823" class="Symbol"
+      >=</a
+      ><a name="2824"
+      > </a
+      ><a name="2825" href="Data.Vec.NP.html#1804" class="Function"
+      >tabulate-ext</a
+      ><a name="2837"
+      > </a
+      ><a name="2838" class="Symbol"
+      >(</a
+      ><a name="2839" href="Language.Simple.Interface.html#1623" class="Field"
+      >eval-return</a
+      ><a name="2850"
+      > </a
+      ><a name="2851" class="Symbol"
+      >_)</a
+      ><a name="2853"
+      > </a
+      ><a name="2854" href="Relation.Binary.PropositionalEquality.NP.html#986" class="Function Operator"
+      >&#8729;</a
+      ><a name="2855"
+      > </a
+      ><a name="2856" href="Data.Vec.Properties.html#2842" class="Function"
+      >tabulate&#8728;lookup</a
+      ><a name="2871"
+      > </a
+      ><a name="2872" class="Symbol"
+      >_</a
+      ><a name="2873"
+      >
+
+  </a
+      ><a name="2877" href="Language.Simple.Interface.html#2877" class="Function"
+      >eval&#7515;-&#8728;</a
+      ><a name="2884"
+      > </a
+      ><a name="2885" class="Symbol"
+      >:</a
+      ><a name="2886"
+      > </a
+      ><a name="2887" class="Symbol"
+      >&#8704;</a
+      ><a name="2888"
+      > </a
+      ><a name="2889" class="Symbol"
+      >{</a
+      ><a name="2890" href="Language.Simple.Interface.html#2890" class="Bound"
+      >i</a
+      ><a name="2891"
+      > </a
+      ><a name="2892" href="Language.Simple.Interface.html#2892" class="Bound"
+      >j</a
+      ><a name="2893"
+      > </a
+      ><a name="2894" href="Language.Simple.Interface.html#2894" class="Bound"
+      >k</a
+      ><a name="2895" class="Symbol"
+      >}</a
+      ><a name="2896"
+      > </a
+      ><a name="2897" class="Symbol"
+      >(</a
+      ><a name="2898" href="Language.Simple.Interface.html#2898" class="Bound"
+      >f</a
+      ><a name="2899"
+      > </a
+      ><a name="2900" class="Symbol"
+      >:</a
+      ><a name="2901"
+      > </a
+      ><a name="2902" href="Language.Simple.Interface.html#2892" class="Bound"
+      >j</a
+      ><a name="2903"
+      > </a
+      ><a name="2904" href="Language.Simple.Interface.html#608" class="Function Operator"
+      >&#8594;&#7497;</a
+      ><a name="2906"
+      > </a
+      ><a name="2907" href="Language.Simple.Interface.html#2894" class="Bound"
+      >k</a
+      ><a name="2908" class="Symbol"
+      >)</a
+      ><a name="2909"
+      > </a
+      ><a name="2910" class="Symbol"
+      >(</a
+      ><a name="2911" href="Language.Simple.Interface.html#2911" class="Bound"
+      >g</a
+      ><a name="2912"
+      > </a
+      ><a name="2913" class="Symbol"
+      >:</a
+      ><a name="2914"
+      > </a
+      ><a name="2915" href="Language.Simple.Interface.html#2890" class="Bound"
+      >i</a
+      ><a name="2916"
+      > </a
+      ><a name="2917" href="Language.Simple.Interface.html#608" class="Function Operator"
+      >&#8594;&#7497;</a
+      ><a name="2919"
+      > </a
+      ><a name="2920" href="Language.Simple.Interface.html#2892" class="Bound"
+      >j</a
+      ><a name="2921" class="Symbol"
+      >)</a
+      ><a name="2922"
+      >
+            </a
+      ><a name="2935" class="Symbol"
+      >&#8594;</a
+      ><a name="2936"
+      > </a
+      ><a name="2937" href="Language.Simple.Interface.html#1146" class="Function"
+      >eval&#7515;</a
+      ><a name="2942"
+      > </a
+      ><a name="2943" href="Language.Simple.Interface.html#2898" class="Bound"
+      >f</a
+      ><a name="2944"
+      > </a
+      ><a name="2945" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="2946"
+      > </a
+      ><a name="2947" href="Language.Simple.Interface.html#1146" class="Function"
+      >eval&#7515;</a
+      ><a name="2952"
+      > </a
+      ><a name="2953" href="Language.Simple.Interface.html#2911" class="Bound"
+      >g</a
+      ><a name="2954"
+      > </a
+      ><a name="2955" href="Relation.Binary.PropositionalEquality.html#2312" class="Function Operator"
+      >&#8791;</a
+      ><a name="2956"
+      > </a
+      ><a name="2957" href="Language.Simple.Interface.html#1146" class="Function"
+      >eval&#7515;</a
+      ><a name="2962"
+      > </a
+      ><a name="2963" class="Symbol"
+      >(</a
+      ><a name="2964" href="Language.Simple.Interface.html#2898" class="Bound"
+      >f</a
+      ><a name="2965"
+      > </a
+      ><a name="2966" href="Language.Simple.Interface.html#1068" class="Function Operator"
+      >&#8728;&#7497;</a
+      ><a name="2968"
+      > </a
+      ><a name="2969" href="Language.Simple.Interface.html#2911" class="Bound"
+      >g</a
+      ><a name="2970" class="Symbol"
+      >)</a
+      ><a name="2971"
+      >
+  </a
+      ><a name="2974" href="Language.Simple.Interface.html#2877" class="Function"
+      >eval&#7515;-&#8728;</a
+      ><a name="2981"
+      > </a
+      ><a name="2982" class="Symbol"
+      >_</a
+      ><a name="2983"
+      > </a
+      ><a name="2984" class="Symbol"
+      >_</a
+      ><a name="2985"
+      > </a
+      ><a name="2986" class="Symbol"
+      >_</a
+      ><a name="2987"
+      > </a
+      ><a name="2988" class="Symbol"
+      >=</a
+      ><a name="2989"
+      > </a
+      ><a name="2990" href="Data.Vec.NP.html#1804" class="Function"
+      >tabulate-ext</a
+      ><a name="3002"
+      > </a
+      ><a name="3003" class="Symbol"
+      >(&#955;</a
+      ><a name="3005"
+      > </a
+      ><a name="3006" href="Language.Simple.Interface.html#3006" class="Bound"
+      >_</a
+      ><a name="3007"
+      > </a
+      ><a name="3008" class="Symbol"
+      >&#8594;</a
+      ><a name="3009"
+      >
+                    </a
+      ><a name="3030" href="Language.Simple.Interface.html#1790" class="Field"
+      >eval-ext</a
+      ><a name="3038"
+      > </a
+      ><a name="3039" class="Symbol"
+      >(</a
+      ><a name="3040" href="Data.Vec.Properties.html#2638" class="Function"
+      >lookup&#8728;tabulate</a
+      ><a name="3055"
+      > </a
+      ><a name="3056" class="Symbol"
+      >_)</a
+      ><a name="3058"
+      > </a
+      ><a name="3059" class="Symbol"
+      >_</a
+      ><a name="3060"
+      >
+                    </a
+      ><a name="3081" href="Relation.Binary.PropositionalEquality.NP.html#986" class="Function Operator"
+      >&#8729;</a
+      ><a name="3082"
+      > </a
+      ><a name="3083" href="Language.Simple.Interface.html#1682" class="Field"
+      >eval-&gt;&gt;=</a
+      ><a name="3091"
+      > </a
+      ><a name="3092" class="Symbol"
+      >_</a
+      ><a name="3093"
+      > </a
+      ><a name="3094" class="Symbol"
+      >_</a
+      ><a name="3095"
+      > </a
+      ><a name="3096" class="Symbol"
+      >_)</a
+      ><a name="3098"
+      >
+
+  </a
+      ><a name="3102" class="Keyword"
+      >open</a
+      ><a name="3106"
+      > </a
+      ><a name="3107" href="Language.Simple.Interface.html#789" class="Module"
+      >EvalSupport</a
+      ><a name="3118"
+      > </a
+      ><a name="3119" href="Language.Simple.Interface.html#1509" class="Bound"
+      >monad</a
+      ><a name="3124"
+      > </a
+      ><a name="3125" href="Language.Simple.Interface.html#1585" class="Field"
+      >eval</a
+      ><a name="3129"
+      > </a
+      ><a name="3130" class="Keyword"
+      >public</a
+      ><a name="3136"
+      >
+
+</a
+      ><a name="3138" href="Language.Simple.Interface.html#3138" class="Function"
+      >EvalOp</a
+      ><a name="3144"
+      > </a
+      ><a name="3145" class="Symbol"
+      >:</a
+      ><a name="3146"
+      > </a
+      ><a name="3147" class="Symbol"
+      >(</a
+      ><a name="3148" href="Language.Simple.Interface.html#3148" class="Bound"
+      >Op</a
+      ><a name="3150"
+      > </a
+      ><a name="3151" class="Symbol"
+      >:</a
+      ><a name="3152"
+      > </a
+      ><a name="3153" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="3154"
+      > </a
+      ><a name="3155" class="Symbol"
+      >&#8594;</a
+      ><a name="3156"
+      > </a
+      ><a name="3157" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="3158" class="Symbol"
+      >)</a
+      ><a name="3159"
+      > </a
+      ><a name="3160" class="Symbol"
+      >(</a
+      ><a name="3161" href="Language.Simple.Interface.html#3161" class="Bound"
+      >R</a
+      ><a name="3162"
+      > </a
+      ><a name="3163" class="Symbol"
+      >:</a
+      ><a name="3164"
+      > </a
+      ><a name="3165" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="3166" class="Symbol"
+      >)</a
+      ><a name="3167"
+      > </a
+      ><a name="3168" class="Symbol"
+      >&#8594;</a
+      ><a name="3169"
+      > </a
+      ><a name="3170" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="3171"
+      >
+</a
+      ><a name="3172" href="Language.Simple.Interface.html#3138" class="Function"
+      >EvalOp</a
+      ><a name="3178"
+      > </a
+      ><a name="3179" href="Language.Simple.Interface.html#3179" class="Bound"
+      >Op</a
+      ><a name="3181"
+      > </a
+      ><a name="3182" href="Language.Simple.Interface.html#3182" class="Bound"
+      >R</a
+      ><a name="3183"
+      > </a
+      ><a name="3184" class="Symbol"
+      >=</a
+      ><a name="3185"
+      > </a
+      ><a name="3186" class="Symbol"
+      >&#8704;</a
+      ><a name="3187"
+      > </a
+      ><a name="3188" class="Symbol"
+      >{</a
+      ><a name="3189" href="Language.Simple.Interface.html#3189" class="Bound"
+      >a</a
+      ><a name="3190" class="Symbol"
+      >}</a
+      ><a name="3191"
+      > </a
+      ><a name="3192" class="Symbol"
+      >(</a
+      ><a name="3193" href="Language.Simple.Interface.html#3193" class="Bound"
+      >o</a
+      ><a name="3194"
+      > </a
+      ><a name="3195" class="Symbol"
+      >:</a
+      ><a name="3196"
+      > </a
+      ><a name="3197" href="Language.Simple.Interface.html#3179" class="Bound"
+      >Op</a
+      ><a name="3199"
+      > </a
+      ><a name="3200" href="Language.Simple.Interface.html#3189" class="Bound"
+      >a</a
+      ><a name="3201" class="Symbol"
+      >)</a
+      ><a name="3202"
+      > </a
+      ><a name="3203" class="Symbol"
+      >(</a
+      ><a name="3204" href="Language.Simple.Interface.html#3204" class="Bound"
+      >es</a
+      ><a name="3206"
+      > </a
+      ><a name="3207" class="Symbol"
+      >:</a
+      ><a name="3208"
+      > </a
+      ><a name="3209" href="Data.Vec.html#604" class="Datatype"
+      >Vec</a
+      ><a name="3212"
+      > </a
+      ><a name="3213" href="Language.Simple.Interface.html#3182" class="Bound"
+      >R</a
+      ><a name="3214"
+      > </a
+      ><a name="3215" href="Language.Simple.Interface.html#3189" class="Bound"
+      >a</a
+      ><a name="3216" class="Symbol"
+      >)</a
+      ><a name="3217"
+      > </a
+      ><a name="3218" class="Symbol"
+      >&#8594;</a
+      ><a name="3219"
+      > </a
+      ><a name="3220" href="Language.Simple.Interface.html#3182" class="Bound"
+      >R</a
+      ><a name="3221"
+      >
+
+</a
+      ><a name="3223" class="Comment"
+      >-- 'n' is the length of vectors used as the values.</a
+      ><a name="3274"
+      >
+</a
+      ><a name="3275" class="Keyword"
+      >module</a
+      ><a name="3281"
+      > </a
+      ><a name="3282" href="Language.Simple.Interface.html#3282" class="Module"
+      >VecOps</a
+      ><a name="3288"
+      > </a
+      ><a name="3289" class="Symbol"
+      >(</a
+      ><a name="3290" href="Language.Simple.Interface.html#3290" class="Bound"
+      >Op</a
+      ><a name="3292"
+      > </a
+      ><a name="3293" class="Symbol"
+      >:</a
+      ><a name="3294"
+      > </a
+      ><a name="3295" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="3296"
+      > </a
+      ><a name="3297" class="Symbol"
+      >&#8594;</a
+      ><a name="3298"
+      > </a
+      ><a name="3299" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="3300" class="Symbol"
+      >)</a
+      ><a name="3301"
+      > </a
+      ><a name="3302" href="Language.Simple.Interface.html#3302" class="Bound"
+      >R</a
+      ><a name="3303"
+      > </a
+      ><a name="3304" class="Symbol"
+      >(</a
+      ><a name="3305" href="Language.Simple.Interface.html#3305" class="Bound"
+      >evalOp</a
+      ><a name="3311"
+      > </a
+      ><a name="3312" class="Symbol"
+      >:</a
+      ><a name="3313"
+      > </a
+      ><a name="3314" href="Language.Simple.Interface.html#3138" class="Function"
+      >EvalOp</a
+      ><a name="3320"
+      > </a
+      ><a name="3321" href="Language.Simple.Interface.html#3290" class="Bound"
+      >Op</a
+      ><a name="3323"
+      > </a
+      ><a name="3324" href="Language.Simple.Interface.html#3302" class="Bound"
+      >R</a
+      ><a name="3325" class="Symbol"
+      >)</a
+      ><a name="3326"
+      > </a
+      ><a name="3327" class="Symbol"
+      >(</a
+      ><a name="3328" href="Language.Simple.Interface.html#3328" class="Bound"
+      >n</a
+      ><a name="3329"
+      > </a
+      ><a name="3330" class="Symbol"
+      >:</a
+      ><a name="3331"
+      > </a
+      ><a name="3332" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="3333" class="Symbol"
+      >)</a
+      ><a name="3334"
+      > </a
+      ><a name="3335" class="Keyword"
+      >where</a
+      ><a name="3340"
+      >
+  </a
+      ><a name="3343" class="Keyword"
+      >data</a
+      ><a name="3347"
+      > </a
+      ><a name="3348" href="Language.Simple.Interface.html#3348" class="Datatype"
+      >VecOp</a
+      ><a name="3353"
+      > </a
+      ><a name="3354" class="Symbol"
+      >:</a
+      ><a name="3355"
+      > </a
+      ><a name="3356" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="3357"
+      > </a
+      ><a name="3358" class="Symbol"
+      >&#8594;</a
+      ><a name="3359"
+      > </a
+      ><a name="3360" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="3361"
+      > </a
+      ><a name="3362" class="Keyword"
+      >where</a
+      ><a name="3367"
+      >
+    </a
+      ><a name="3372" href="Language.Simple.Interface.html#3372" class="InductiveConstructor"
+      >`map</a
+      ><a name="3376"
+      > </a
+      ><a name="3377" class="Symbol"
+      >:</a
+      ><a name="3378"
+      > </a
+      ><a name="3379" class="Symbol"
+      >&#8704;</a
+      ><a name="3380"
+      > </a
+      ><a name="3381" class="Symbol"
+      >{</a
+      ><a name="3382" href="Language.Simple.Interface.html#3382" class="Bound"
+      >a</a
+      ><a name="3383" class="Symbol"
+      >}</a
+      ><a name="3384"
+      > </a
+      ><a name="3385" class="Symbol"
+      >&#8594;</a
+      ><a name="3386"
+      > </a
+      ><a name="3387" href="Language.Simple.Interface.html#3290" class="Bound"
+      >Op</a
+      ><a name="3389"
+      > </a
+      ><a name="3390" href="Language.Simple.Interface.html#3382" class="Bound"
+      >a</a
+      ><a name="3391"
+      > </a
+      ><a name="3392" class="Symbol"
+      >&#8594;</a
+      ><a name="3393"
+      > </a
+      ><a name="3394" href="Language.Simple.Interface.html#3348" class="Datatype"
+      >VecOp</a
+      ><a name="3399"
+      > </a
+      ><a name="3400" href="Language.Simple.Interface.html#3382" class="Bound"
+      >a</a
+      ><a name="3401"
+      >
+    </a
+      ><a name="3406" href="Language.Simple.Interface.html#3406" class="InductiveConstructor"
+      >`id</a
+      ><a name="3409"
+      > </a
+      ><a name="3410" href="Language.Simple.Interface.html#3410" class="InductiveConstructor"
+      >`reverse</a
+      ><a name="3418"
+      > </a
+      ><a name="3419" class="Symbol"
+      >:</a
+      ><a name="3420"
+      > </a
+      ><a name="3421" href="Language.Simple.Interface.html#3348" class="Datatype"
+      >VecOp</a
+      ><a name="3426"
+      > </a
+      ><a name="3427" class="Number"
+      >1</a
+      ><a name="3428"
+      >
+    </a
+      ><a name="3433" href="Language.Simple.Interface.html#3433" class="InductiveConstructor"
+      >`rewire</a
+      ><a name="3440"
+      > </a
+      ><a name="3441" class="Symbol"
+      >:</a
+      ><a name="3442"
+      > </a
+      ><a name="3443" class="Symbol"
+      >(</a
+      ><a name="3444" href="Data.Fin.html#775" class="Datatype"
+      >Fin</a
+      ><a name="3447"
+      > </a
+      ><a name="3448" href="Language.Simple.Interface.html#3328" class="Bound"
+      >n</a
+      ><a name="3449"
+      > </a
+      ><a name="3450" class="Symbol"
+      >&#8594;</a
+      ><a name="3451"
+      > </a
+      ><a name="3452" href="Data.Fin.html#775" class="Datatype"
+      >Fin</a
+      ><a name="3455"
+      > </a
+      ><a name="3456" href="Language.Simple.Interface.html#3328" class="Bound"
+      >n</a
+      ><a name="3457" class="Symbol"
+      >)</a
+      ><a name="3458"
+      > </a
+      ><a name="3459" class="Symbol"
+      >&#8594;</a
+      ><a name="3460"
+      > </a
+      ><a name="3461" href="Language.Simple.Interface.html#3348" class="Datatype"
+      >VecOp</a
+      ><a name="3466"
+      > </a
+      ><a name="3467" class="Number"
+      >1</a
+      ><a name="3468"
+      >
+  </a
+      ><a name="3471" href="Language.Simple.Interface.html#3471" class="Function"
+      >evalVecOp</a
+      ><a name="3480"
+      > </a
+      ><a name="3481" class="Symbol"
+      >:</a
+      ><a name="3482"
+      > </a
+      ><a name="3483" href="Language.Simple.Interface.html#3138" class="Function"
+      >EvalOp</a
+      ><a name="3489"
+      > </a
+      ><a name="3490" href="Language.Simple.Interface.html#3348" class="Datatype"
+      >VecOp</a
+      ><a name="3495"
+      > </a
+      ><a name="3496" class="Symbol"
+      >(</a
+      ><a name="3497" href="Data.Vec.html#604" class="Datatype"
+      >Vec</a
+      ><a name="3500"
+      > </a
+      ><a name="3501" href="Language.Simple.Interface.html#3302" class="Bound"
+      >R</a
+      ><a name="3502"
+      > </a
+      ><a name="3503" href="Language.Simple.Interface.html#3328" class="Bound"
+      >n</a
+      ><a name="3504" class="Symbol"
+      >)</a
+      ><a name="3505"
+      >
+  </a
+      ><a name="3508" href="Language.Simple.Interface.html#3471" class="Function"
+      >evalVecOp</a
+      ><a name="3517"
+      > </a
+      ><a name="3518" class="Symbol"
+      >(</a
+      ><a name="3519" href="Language.Simple.Interface.html#3372" class="InductiveConstructor"
+      >`map</a
+      ><a name="3523"
+      > </a
+      ><a name="3524" href="Language.Simple.Interface.html#3524" class="Bound"
+      >o</a
+      ><a name="3525" class="Symbol"
+      >)</a
+      ><a name="3526"
+      >     </a
+      ><a name="3531" href="Language.Simple.Interface.html#3531" class="Bound"
+      >xs</a
+      ><a name="3533"
+      >       </a
+      ><a name="3540" class="Symbol"
+      >=</a
+      ><a name="3541"
+      > </a
+      ><a name="3542" href="Data.Vec.NP.html#1171" class="Function"
+      >vmap</a
+      ><a name="3546"
+      > </a
+      ><a name="3547" class="Symbol"
+      >(</a
+      ><a name="3548" href="Language.Simple.Interface.html#3305" class="Bound"
+      >evalOp</a
+      ><a name="3554"
+      > </a
+      ><a name="3555" href="Language.Simple.Interface.html#3524" class="Bound"
+      >o</a
+      ><a name="3556" class="Symbol"
+      >)</a
+      ><a name="3557"
+      > </a
+      ><a name="3558" class="Symbol"
+      >(</a
+      ><a name="3559" href="Data.Vec.NP.html#5012" class="Function"
+      >transpose</a
+      ><a name="3568"
+      > </a
+      ><a name="3569" href="Language.Simple.Interface.html#3531" class="Bound"
+      >xs</a
+      ><a name="3571" class="Symbol"
+      >)</a
+      ><a name="3572"
+      >
+  </a
+      ><a name="3575" href="Language.Simple.Interface.html#3471" class="Function"
+      >evalVecOp</a
+      ><a name="3584"
+      > </a
+      ><a name="3585" class="Symbol"
+      >(</a
+      ><a name="3586" href="Language.Simple.Interface.html#3433" class="InductiveConstructor"
+      >`rewire</a
+      ><a name="3593"
+      > </a
+      ><a name="3594" href="Language.Simple.Interface.html#3594" class="Bound"
+      >&#960;</a
+      ><a name="3595" class="Symbol"
+      >)</a
+      ><a name="3596"
+      > </a
+      ><a name="3597" class="Symbol"
+      >(</a
+      ><a name="3598" href="Language.Simple.Interface.html#3598" class="Bound"
+      >xs</a
+      ><a name="3600"
+      > </a
+      ><a name="3601" href="Data.Vec.html#663" class="InductiveConstructor Operator"
+      >&#8759;</a
+      ><a name="3602"
+      > </a
+      ><a name="3603" href="Data.Vec.html#644" class="InductiveConstructor"
+      >[]</a
+      ><a name="3605" class="Symbol"
+      >)</a
+      ><a name="3606"
+      > </a
+      ><a name="3607" class="Symbol"
+      >=</a
+      ><a name="3608"
+      > </a
+      ><a name="3609" href="Data.Vec.NP.html#8950" class="Function"
+      >rewire</a
+      ><a name="3615"
+      > </a
+      ><a name="3616" href="Language.Simple.Interface.html#3594" class="Bound"
+      >&#960;</a
+      ><a name="3617"
+      > </a
+      ><a name="3618" href="Language.Simple.Interface.html#3598" class="Bound"
+      >xs</a
+      ><a name="3620"
+      >
+  </a
+      ><a name="3623" href="Language.Simple.Interface.html#3471" class="Function"
+      >evalVecOp</a
+      ><a name="3632"
+      > </a
+      ><a name="3633" href="Language.Simple.Interface.html#3406" class="InductiveConstructor"
+      >`id</a
+      ><a name="3636"
+      >         </a
+      ><a name="3645" class="Symbol"
+      >(</a
+      ><a name="3646" href="Language.Simple.Interface.html#3646" class="Bound"
+      >xs</a
+      ><a name="3648"
+      > </a
+      ><a name="3649" href="Data.Vec.html#663" class="InductiveConstructor Operator"
+      >&#8759;</a
+      ><a name="3650"
+      > </a
+      ><a name="3651" href="Data.Vec.html#644" class="InductiveConstructor"
+      >[]</a
+      ><a name="3653" class="Symbol"
+      >)</a
+      ><a name="3654"
+      > </a
+      ><a name="3655" class="Symbol"
+      >=</a
+      ><a name="3656"
+      > </a
+      ><a name="3657" href="Language.Simple.Interface.html#3646" class="Bound"
+      >xs</a
+      ><a name="3659"
+      >
+  </a
+      ><a name="3662" href="Language.Simple.Interface.html#3471" class="Function"
+      >evalVecOp</a
+      ><a name="3671"
+      > </a
+      ><a name="3672" href="Language.Simple.Interface.html#3410" class="InductiveConstructor"
+      >`reverse</a
+      ><a name="3680"
+      >    </a
+      ><a name="3684" class="Symbol"
+      >(</a
+      ><a name="3685" href="Language.Simple.Interface.html#3685" class="Bound"
+      >xs</a
+      ><a name="3687"
+      > </a
+      ><a name="3688" href="Data.Vec.html#663" class="InductiveConstructor Operator"
+      >&#8759;</a
+      ><a name="3689"
+      > </a
+      ><a name="3690" href="Data.Vec.html#644" class="InductiveConstructor"
+      >[]</a
+      ><a name="3692" class="Symbol"
+      >)</a
+      ><a name="3693"
+      > </a
+      ><a name="3694" class="Symbol"
+      >=</a
+      ><a name="3695"
+      > </a
+      ><a name="3696" href="Data.Vec.html#4559" class="Function"
+      >reverse</a
+      ><a name="3703"
+      > </a
+      ><a name="3704" href="Language.Simple.Interface.html#3685" class="Bound"
+      >xs</a
+      ><a name="3706"
+      >
+
+</a
+      ><a name="3708" class="Keyword"
+      >record</a
+      ><a name="3714"
+      > </a
+      ><a name="3715" href="Language.Simple.Interface.html#3715" class="Record"
+      >Lang</a
+      ><a name="3719"
+      > </a
+      ><a name="3720" class="Symbol"
+      >(</a
+      ><a name="3721" href="Language.Simple.Interface.html#3721" class="Bound"
+      >Op</a
+      ><a name="3723"
+      > </a
+      ><a name="3724" class="Symbol"
+      >:</a
+      ><a name="3725"
+      > </a
+      ><a name="3726" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="3727"
+      > </a
+      ><a name="3728" class="Symbol"
+      >&#8594;</a
+      ><a name="3729"
+      > </a
+      ><a name="3730" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="3731" class="Symbol"
+      >)</a
+      ><a name="3732"
+      > </a
+      ><a name="3733" href="Language.Simple.Interface.html#3733" class="Bound"
+      >R</a
+      ><a name="3734"
+      > </a
+      ><a name="3735" class="Symbol"
+      >(</a
+      ><a name="3736" href="Language.Simple.Interface.html#3736" class="Bound"
+      >E</a
+      ><a name="3737"
+      > </a
+      ><a name="3738" class="Symbol"
+      >:</a
+      ><a name="3739"
+      > </a
+      ><a name="3740" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="3741"
+      > </a
+      ><a name="3742" class="Symbol"
+      >&#8594;</a
+      ><a name="3743"
+      > </a
+      ><a name="3744" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="3745" class="Symbol"
+      >)</a
+      ><a name="3746"
+      > </a
+      ><a name="3747" class="Symbol"
+      >:</a
+      ><a name="3748"
+      > </a
+      ><a name="3749" href="Type.html#88" class="Function"
+      >&#9733;&#8321;</a
+      ><a name="3751"
+      > </a
+      ><a name="3752" class="Keyword"
+      >where</a
+      ><a name="3757"
+      >
+  </a
+      ><a name="3760" class="Keyword"
+      >field</a
+      ><a name="3765"
+      >
+    </a
+      ><a name="3770" href="Language.Simple.Interface.html#3770" class="Field"
+      >monad</a
+      ><a name="3775"
+      >    </a
+      ><a name="3779" class="Symbol"
+      >:</a
+      ><a name="3780"
+      > </a
+      ><a name="3781" href="Category.Monad.NP.html#1793" class="Record"
+      >Monad</a
+      ><a name="3786"
+      > </a
+      ><a name="3787" href="Language.Simple.Interface.html#3736" class="Bound"
+      >E</a
+      ><a name="3788"
+      >
+    </a
+      ><a name="3793" href="Language.Simple.Interface.html#3793" class="Field"
+      >op</a
+      ><a name="3795"
+      >       </a
+      ><a name="3802" class="Symbol"
+      >:</a
+      ><a name="3803"
+      > </a
+      ><a name="3804" class="Symbol"
+      >&#8704;</a
+      ><a name="3805"
+      > </a
+      ><a name="3806" class="Symbol"
+      >{</a
+      ><a name="3807" href="Language.Simple.Interface.html#3807" class="Bound"
+      >A</a
+      ><a name="3808" class="Symbol"
+      >}</a
+      ><a name="3809"
+      > </a
+      ><a name="3810" class="Symbol"
+      >&#8594;</a
+      ><a name="3811"
+      > </a
+      ><a name="3812" href="Language.Simple.Interface.html#3138" class="Function"
+      >EvalOp</a
+      ><a name="3818"
+      > </a
+      ><a name="3819" href="Language.Simple.Interface.html#3721" class="Bound"
+      >Op</a
+      ><a name="3821"
+      > </a
+      ><a name="3822" class="Symbol"
+      >(</a
+      ><a name="3823" href="Language.Simple.Interface.html#3736" class="Bound"
+      >E</a
+      ><a name="3824"
+      > </a
+      ><a name="3825" href="Language.Simple.Interface.html#3807" class="Bound"
+      >A</a
+      ><a name="3826" class="Symbol"
+      >)</a
+      ><a name="3827"
+      >
+    </a
+      ><a name="3832" href="Language.Simple.Interface.html#3832" class="Field"
+      >evalOp</a
+      ><a name="3838"
+      >   </a
+      ><a name="3841" class="Symbol"
+      >:</a
+      ><a name="3842"
+      > </a
+      ><a name="3843" href="Language.Simple.Interface.html#3138" class="Function"
+      >EvalOp</a
+      ><a name="3849"
+      > </a
+      ><a name="3850" href="Language.Simple.Interface.html#3721" class="Bound"
+      >Op</a
+      ><a name="3852"
+      > </a
+      ><a name="3853" href="Language.Simple.Interface.html#3733" class="Bound"
+      >R</a
+      ><a name="3854"
+      >
+    </a
+      ><a name="3859" href="Language.Simple.Interface.html#3859" class="Field"
+      >has-eval</a
+      ><a name="3867"
+      > </a
+      ><a name="3868" class="Symbol"
+      >:</a
+      ><a name="3869"
+      > </a
+      ><a name="3870" href="Language.Simple.Interface.html#1483" class="Record"
+      >Eval</a
+      ><a name="3874"
+      > </a
+      ><a name="3875" href="Language.Simple.Interface.html#3733" class="Bound"
+      >R</a
+      ><a name="3876"
+      > </a
+      ><a name="3877" href="Language.Simple.Interface.html#3770" class="Bound"
+      >monad</a
+      ><a name="3882"
+      >
+
+  </a
+      ><a name="3886" class="Keyword"
+      >open</a
+      ><a name="3890"
+      > </a
+      ><a name="3891" href="Category.Monad.NP.html#1793" class="Module"
+      >Monad</a
+      ><a name="3896"
+      > </a
+      ><a name="3897" href="Language.Simple.Interface.html#3770" class="Field"
+      >monad</a
+      ><a name="3902"
+      >
+  </a
+      ><a name="3905" class="Keyword"
+      >open</a
+      ><a name="3909"
+      > </a
+      ><a name="3910" href="Language.Simple.Interface.html#1483" class="Module"
+      >Eval</a
+      ><a name="3914"
+      > </a
+      ><a name="3915" href="Language.Simple.Interface.html#3859" class="Field"
+      >has-eval</a
+      ><a name="3923"
+      >
+
+  </a
+      ><a name="3927" class="Keyword"
+      >field</a
+      ><a name="3932"
+      >
+    </a
+      ><a name="3937" href="Language.Simple.Interface.html#3937" class="Field"
+      >eval-op</a
+      ><a name="3944"
+      > </a
+      ><a name="3945" class="Symbol"
+      >:</a
+      ><a name="3946"
+      > </a
+      ><a name="3947" class="Symbol"
+      >&#8704;</a
+      ><a name="3948"
+      > </a
+      ><a name="3949" class="Symbol"
+      >{</a
+      ><a name="3950" href="Language.Simple.Interface.html#3950" class="Bound"
+      >A</a
+      ><a name="3951" class="Symbol"
+      >}</a
+      ><a name="3952"
+      > </a
+      ><a name="3953" class="Symbol"
+      >(</a
+      ><a name="3954" href="Language.Simple.Interface.html#3954" class="Bound"
+      >f</a
+      ><a name="3955"
+      > </a
+      ><a name="3956" class="Symbol"
+      >:</a
+      ><a name="3957"
+      > </a
+      ><a name="3958" href="Language.Simple.Interface.html#3950" class="Bound"
+      >A</a
+      ><a name="3959"
+      > </a
+      ><a name="3960" class="Symbol"
+      >&#8594;</a
+      ><a name="3961"
+      > </a
+      ><a name="3962" href="Language.Simple.Interface.html#3733" class="Bound"
+      >R</a
+      ><a name="3963" class="Symbol"
+      >)</a
+      ><a name="3964"
+      >
+                </a
+      ><a name="3981" class="Symbol"
+      >{</a
+      ><a name="3982" href="Language.Simple.Interface.html#3982" class="Bound"
+      >n</a
+      ><a name="3983" class="Symbol"
+      >}</a
+      ><a name="3984"
+      > </a
+      ><a name="3985" class="Symbol"
+      >(</a
+      ><a name="3986" href="Language.Simple.Interface.html#3986" class="Bound"
+      >o</a
+      ><a name="3987"
+      > </a
+      ><a name="3988" class="Symbol"
+      >:</a
+      ><a name="3989"
+      > </a
+      ><a name="3990" href="Language.Simple.Interface.html#3721" class="Bound"
+      >Op</a
+      ><a name="3992"
+      > </a
+      ><a name="3993" href="Language.Simple.Interface.html#3982" class="Bound"
+      >n</a
+      ><a name="3994" class="Symbol"
+      >)</a
+      ><a name="3995"
+      > </a
+      ><a name="3996" href="Language.Simple.Interface.html#3996" class="Bound"
+      >es</a
+      ><a name="3998"
+      >
+              </a
+      ><a name="4013" class="Symbol"
+      >&#8594;</a
+      ><a name="4014"
+      > </a
+      ><a name="4015" href="Language.Simple.Interface.html#1585" class="Function"
+      >eval</a
+      ><a name="4019"
+      > </a
+      ><a name="4020" href="Language.Simple.Interface.html#3954" class="Bound"
+      >f</a
+      ><a name="4021"
+      > </a
+      ><a name="4022" class="Symbol"
+      >(</a
+      ><a name="4023" href="Language.Simple.Interface.html#3793" class="Bound"
+      >op</a
+      ><a name="4025"
+      > </a
+      ><a name="4026" href="Language.Simple.Interface.html#3986" class="Bound"
+      >o</a
+      ><a name="4027"
+      > </a
+      ><a name="4028" href="Language.Simple.Interface.html#3996" class="Bound"
+      >es</a
+      ><a name="4030" class="Symbol"
+      >)</a
+      ><a name="4031"
+      > </a
+      ><a name="4032" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="4033"
+      > </a
+      ><a name="4034" href="Language.Simple.Interface.html#3832" class="Bound"
+      >evalOp</a
+      ><a name="4040"
+      > </a
+      ><a name="4041" href="Language.Simple.Interface.html#3986" class="Bound"
+      >o</a
+      ><a name="4042"
+      > </a
+      ><a name="4043" class="Symbol"
+      >(</a
+      ><a name="4044" href="Data.Vec.NP.html#1171" class="Function"
+      >vmap</a
+      ><a name="4048"
+      > </a
+      ><a name="4049" class="Symbol"
+      >(</a
+      ><a name="4050" href="Language.Simple.Interface.html#1585" class="Function"
+      >eval</a
+      ><a name="4054"
+      > </a
+      ><a name="4055" href="Language.Simple.Interface.html#3954" class="Bound"
+      >f</a
+      ><a name="4056" class="Symbol"
+      >)</a
+      ><a name="4057"
+      > </a
+      ><a name="4058" href="Language.Simple.Interface.html#3996" class="Bound"
+      >es</a
+      ><a name="4060" class="Symbol"
+      >)</a
+      ><a name="4061"
+      >
+
+  </a
+      ><a name="4065" class="Comment"
+      >-- One can see the I type as describe the inputs we can read from.</a
+      ><a name="4131"
+      >
+  </a
+      ><a name="4134" class="Comment"
+      >-- Therefore 'return' can not only be seen as the variable case but</a
+      ><a name="4201"
+      >
+  </a
+      ><a name="4204" class="Comment"
+      >-- as 'read from input i'</a
+      ><a name="4229"
+      >
+  </a
+      ><a name="4232" href="Language.Simple.Interface.html#4232" class="Function"
+      >input</a
+      ><a name="4237"
+      > </a
+      ><a name="4238" class="Symbol"
+      >:</a
+      ><a name="4239"
+      > </a
+      ><a name="4240" class="Symbol"
+      >&#8704;</a
+      ><a name="4241"
+      > </a
+      ><a name="4242" class="Symbol"
+      >{</a
+      ><a name="4243" href="Language.Simple.Interface.html#4243" class="Bound"
+      >I</a
+      ><a name="4244" class="Symbol"
+      >}</a
+      ><a name="4245"
+      > </a
+      ><a name="4246" class="Symbol"
+      >&#8594;</a
+      ><a name="4247"
+      > </a
+      ><a name="4248" href="Language.Simple.Interface.html#4243" class="Bound"
+      >I</a
+      ><a name="4249"
+      > </a
+      ><a name="4250" class="Symbol"
+      >&#8594;</a
+      ><a name="4251"
+      > </a
+      ><a name="4252" href="Language.Simple.Interface.html#3736" class="Bound"
+      >E</a
+      ><a name="4253"
+      > </a
+      ><a name="4254" href="Language.Simple.Interface.html#4243" class="Bound"
+      >I</a
+      ><a name="4255"
+      >
+  </a
+      ><a name="4258" href="Language.Simple.Interface.html#4232" class="Function"
+      >input</a
+      ><a name="4263"
+      > </a
+      ><a name="4264" class="Symbol"
+      >=</a
+      ><a name="4265"
+      > </a
+      ><a name="4266" href="Category.Monad.Indexed.html#521" class="Function"
+      >return</a
+      ><a name="4272"
+      >
+
+  </a
+      ><a name="4276" class="Keyword"
+      >open</a
+      ><a name="4280"
+      > </a
+      ><a name="4281" href="Category.Monad.NP.html#1793" class="Module"
+      >Monad</a
+      ><a name="4286"
+      > </a
+      ><a name="4287" href="Language.Simple.Interface.html#3770" class="Field"
+      >monad</a
+      ><a name="4292"
+      >   </a
+      ><a name="4295" class="Keyword"
+      >public</a
+      ><a name="4301"
+      >
+  </a
+      ><a name="4304" class="Keyword"
+      >open</a
+      ><a name="4308"
+      > </a
+      ><a name="4309" href="Language.Simple.Interface.html#1483" class="Module"
+      >Eval</a
+      ><a name="4313"
+      > </a
+      ><a name="4314" href="Language.Simple.Interface.html#3859" class="Field"
+      >has-eval</a
+      ><a name="4322"
+      > </a
+      ><a name="4323" class="Keyword"
+      >public</a
+      ><a name="4329"
+      >
+</a
+      ><a name="4330" class="Comment"
+      >-- -}</a
+      ><a name="4335"
+      >
+</a
+      ><a name="4336" class="Comment"
+      >-- -}</a
+      ><a name="4341"
+      >
+</a
+      ><a name="4342" class="Comment"
+      >-- -}</a
+      ><a name="4347"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

@@ -1,0 +1,3854 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Control.Strategy</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Keyword"
+      >module</a
+      ><a name="7"
+      > </a
+      ><a name="8" href="Control.Strategy.html#1" class="Module"
+      >Control.Strategy</a
+      ><a name="24"
+      > </a
+      ><a name="25" class="Keyword"
+      >where</a
+      ><a name="30"
+      >
+
+</a
+      ><a name="32" class="Keyword"
+      >open</a
+      ><a name="36"
+      > </a
+      ><a name="37" class="Keyword"
+      >import</a
+      ><a name="43"
+      > </a
+      ><a name="44" href="Function.html#1" class="Module"
+      >Function</a
+      ><a name="52"
+      >
+</a
+      ><a name="53" class="Keyword"
+      >open</a
+      ><a name="57"
+      > </a
+      ><a name="58" class="Keyword"
+      >import</a
+      ><a name="64"
+      > </a
+      ><a name="65" href="Type.html#1" class="Module"
+      >Type</a
+      ><a name="69"
+      > </a
+      ><a name="70" class="Keyword"
+      >using</a
+      ><a name="75"
+      > </a
+      ><a name="76" class="Symbol"
+      >(</a
+      ><a name="77"
+      >&#9733;</a
+      ><a name="78" class="Symbol"
+      >)</a
+      ><a name="79"
+      >
+</a
+      ><a name="80" class="Keyword"
+      >open</a
+      ><a name="84"
+      > </a
+      ><a name="85" class="Keyword"
+      >import</a
+      ><a name="91"
+      > </a
+      ><a name="92" href="Category.Monad.html#1" class="Module"
+      >Category.Monad</a
+      ><a name="106"
+      >
+</a
+      ><a name="107" class="Keyword"
+      >open</a
+      ><a name="111"
+      > </a
+      ><a name="112" class="Keyword"
+      >import</a
+      ><a name="118"
+      > </a
+      ><a name="119" href="Data.Product.html#1" class="Module"
+      >Data.Product</a
+      ><a name="131"
+      > </a
+      ><a name="132" class="Keyword"
+      >hiding</a
+      ><a name="138"
+      > </a
+      ><a name="139" class="Symbol"
+      >(</a
+      ><a name="140"
+      >map</a
+      ><a name="143" class="Symbol"
+      >)</a
+      ><a name="144"
+      >
+</a
+      ><a name="145" class="Keyword"
+      >open</a
+      ><a name="149"
+      > </a
+      ><a name="150" class="Keyword"
+      >import</a
+      ><a name="156"
+      > </a
+      ><a name="157" href="Relation.Binary.PropositionalEquality.NP.html#1" class="Module"
+      >Relation.Binary.PropositionalEquality.NP</a
+      ><a name="197"
+      >
+
+</a
+      ><a name="199" class="Keyword"
+      >data</a
+      ><a name="203"
+      > </a
+      ><a name="204" href="Control.Strategy.html#204" class="Datatype"
+      >Strategy</a
+      ><a name="212"
+      > </a
+      ><a name="213" class="Symbol"
+      >(</a
+      ><a name="214" href="Control.Strategy.html#214" class="Bound"
+      >Q</a
+      ><a name="215"
+      > </a
+      ><a name="216" class="Symbol"
+      >:</a
+      ><a name="217"
+      > </a
+      ><a name="218" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="219" class="Symbol"
+      >)</a
+      ><a name="220"
+      > </a
+      ><a name="221" class="Symbol"
+      >(</a
+      ><a name="222" href="Control.Strategy.html#222" class="Bound"
+      >R</a
+      ><a name="223"
+      > </a
+      ><a name="224" class="Symbol"
+      >:</a
+      ><a name="225"
+      > </a
+      ><a name="226" href="Control.Strategy.html#214" class="Bound"
+      >Q</a
+      ><a name="227"
+      > </a
+      ><a name="228" class="Symbol"
+      >&#8594;</a
+      ><a name="229"
+      > </a
+      ><a name="230" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="231" class="Symbol"
+      >)</a
+      ><a name="232"
+      > </a
+      ><a name="233" class="Symbol"
+      >(</a
+      ><a name="234" href="Control.Strategy.html#234" class="Bound"
+      >A</a
+      ><a name="235"
+      > </a
+      ><a name="236" class="Symbol"
+      >:</a
+      ><a name="237"
+      > </a
+      ><a name="238" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="239" class="Symbol"
+      >)</a
+      ><a name="240"
+      > </a
+      ><a name="241" class="Symbol"
+      >:</a
+      ><a name="242"
+      > </a
+      ><a name="243" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="244"
+      > </a
+      ><a name="245" class="Keyword"
+      >where</a
+      ><a name="250"
+      >
+  </a
+      ><a name="253" href="Control.Strategy.html#253" class="InductiveConstructor"
+      >ask</a
+      ><a name="256"
+      >  </a
+      ><a name="258" class="Symbol"
+      >:</a
+      ><a name="259"
+      > </a
+      ><a name="260" class="Symbol"
+      >(</a
+      ><a name="261" href="Control.Strategy.html#261" class="Bound"
+      >q?</a
+      ><a name="263"
+      > </a
+      ><a name="264" class="Symbol"
+      >:</a
+      ><a name="265"
+      > </a
+      ><a name="266" href="Control.Strategy.html#214" class="Bound"
+      >Q</a
+      ><a name="267" class="Symbol"
+      >)</a
+      ><a name="268"
+      > </a
+      ><a name="269" class="Symbol"
+      >(</a
+      ><a name="270" href="Control.Strategy.html#270" class="Bound"
+      >cont</a
+      ><a name="274"
+      > </a
+      ><a name="275" class="Symbol"
+      >:</a
+      ><a name="276"
+      > </a
+      ><a name="277" href="Control.Strategy.html#222" class="Bound"
+      >R</a
+      ><a name="278"
+      > </a
+      ><a name="279" href="Control.Strategy.html#261" class="Bound"
+      >q?</a
+      ><a name="281"
+      > </a
+      ><a name="282" class="Symbol"
+      >&#8594;</a
+      ><a name="283"
+      > </a
+      ><a name="284" href="Control.Strategy.html#204" class="Datatype"
+      >Strategy</a
+      ><a name="292"
+      > </a
+      ><a name="293" href="Control.Strategy.html#214" class="Bound"
+      >Q</a
+      ><a name="294"
+      > </a
+      ><a name="295" href="Control.Strategy.html#222" class="Bound"
+      >R</a
+      ><a name="296"
+      > </a
+      ><a name="297" href="Control.Strategy.html#234" class="Bound"
+      >A</a
+      ><a name="298" class="Symbol"
+      >)</a
+      ><a name="299"
+      > </a
+      ><a name="300" class="Symbol"
+      >&#8594;</a
+      ><a name="301"
+      > </a
+      ><a name="302" href="Control.Strategy.html#204" class="Datatype"
+      >Strategy</a
+      ><a name="310"
+      > </a
+      ><a name="311" href="Control.Strategy.html#214" class="Bound"
+      >Q</a
+      ><a name="312"
+      > </a
+      ><a name="313" href="Control.Strategy.html#222" class="Bound"
+      >R</a
+      ><a name="314"
+      > </a
+      ><a name="315" href="Control.Strategy.html#234" class="Bound"
+      >A</a
+      ><a name="316"
+      >
+  </a
+      ><a name="319" href="Control.Strategy.html#319" class="InductiveConstructor"
+      >done</a
+      ><a name="323"
+      > </a
+      ><a name="324" class="Symbol"
+      >:</a
+      ><a name="325"
+      > </a
+      ><a name="326" href="Control.Strategy.html#234" class="Bound"
+      >A</a
+      ><a name="327"
+      > </a
+      ><a name="328" class="Symbol"
+      >&#8594;</a
+      ><a name="329"
+      > </a
+      ><a name="330" href="Control.Strategy.html#204" class="Datatype"
+      >Strategy</a
+      ><a name="338"
+      > </a
+      ><a name="339" href="Control.Strategy.html#214" class="Bound"
+      >Q</a
+      ><a name="340"
+      > </a
+      ><a name="341" href="Control.Strategy.html#222" class="Bound"
+      >R</a
+      ><a name="342"
+      > </a
+      ><a name="343" href="Control.Strategy.html#234" class="Bound"
+      >A</a
+      ><a name="344"
+      >
+
+</a
+      ><a name="346" class="Keyword"
+      >infix</a
+      ><a name="351"
+      > </a
+      ><a name="352" class="Number"
+      >2</a
+      ><a name="353"
+      > _&#8776;_
+</a
+      ><a name="358" class="Keyword"
+      >data</a
+      ><a name="362"
+      > </a
+      ><a name="363" href="Control.Strategy.html#363" class="Datatype Operator"
+      >_&#8776;_</a
+      ><a name="366"
+      > </a
+      ><a name="367" class="Symbol"
+      >{</a
+      ><a name="368" href="Control.Strategy.html#368" class="Bound"
+      >Q</a
+      ><a name="369"
+      > </a
+      ><a name="370" href="Control.Strategy.html#370" class="Bound"
+      >R</a
+      ><a name="371"
+      > </a
+      ><a name="372" href="Control.Strategy.html#372" class="Bound"
+      >A</a
+      ><a name="373" class="Symbol"
+      >}</a
+      ><a name="374"
+      > </a
+      ><a name="375" class="Symbol"
+      >:</a
+      ><a name="376"
+      > </a
+      ><a name="377" class="Symbol"
+      >(</a
+      ><a name="378" href="Control.Strategy.html#378" class="Bound"
+      >s&#8320;</a
+      ><a name="380"
+      > </a
+      ><a name="381" href="Control.Strategy.html#381" class="Bound"
+      >s&#8321;</a
+      ><a name="383"
+      > </a
+      ><a name="384" class="Symbol"
+      >:</a
+      ><a name="385"
+      > </a
+      ><a name="386" href="Control.Strategy.html#204" class="Datatype"
+      >Strategy</a
+      ><a name="394"
+      > </a
+      ><a name="395" href="Control.Strategy.html#368" class="Bound"
+      >Q</a
+      ><a name="396"
+      > </a
+      ><a name="397" href="Control.Strategy.html#370" class="Bound"
+      >R</a
+      ><a name="398"
+      > </a
+      ><a name="399" href="Control.Strategy.html#372" class="Bound"
+      >A</a
+      ><a name="400" class="Symbol"
+      >)</a
+      ><a name="401"
+      > </a
+      ><a name="402" class="Symbol"
+      >&#8594;</a
+      ><a name="403"
+      > </a
+      ><a name="404" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="405"
+      > </a
+      ><a name="406" class="Keyword"
+      >where</a
+      ><a name="411"
+      >
+  </a
+      ><a name="414" href="Control.Strategy.html#414" class="InductiveConstructor"
+      >ask-ask</a
+      ><a name="421"
+      > </a
+      ><a name="422" class="Symbol"
+      >:</a
+      ><a name="423"
+      > </a
+      ><a name="424" class="Symbol"
+      >&#8704;</a
+      ><a name="425"
+      > </a
+      ><a name="426" class="Symbol"
+      >(</a
+      ><a name="427" href="Control.Strategy.html#427" class="Bound"
+      >q?</a
+      ><a name="429"
+      > </a
+      ><a name="430" class="Symbol"
+      >:</a
+      ><a name="431"
+      > </a
+      ><a name="432" href="Control.Strategy.html#368" class="Bound"
+      >Q</a
+      ><a name="433" class="Symbol"
+      >)</a
+      ><a name="434"
+      > </a
+      ><a name="435" class="Symbol"
+      >{</a
+      ><a name="436" href="Control.Strategy.html#436" class="Bound"
+      >k&#8320;</a
+      ><a name="438"
+      > </a
+      ><a name="439" href="Control.Strategy.html#439" class="Bound"
+      >k&#8321;</a
+      ><a name="441" class="Symbol"
+      >}</a
+      ><a name="442"
+      > </a
+      ><a name="443" class="Symbol"
+      >(</a
+      ><a name="444" href="Control.Strategy.html#444" class="Bound"
+      >cont</a
+      ><a name="448"
+      > </a
+      ><a name="449" class="Symbol"
+      >:</a
+      ><a name="450"
+      > </a
+      ><a name="451" class="Symbol"
+      >&#8704;</a
+      ><a name="452"
+      > </a
+      ><a name="453" href="Control.Strategy.html#453" class="Bound"
+      >r</a
+      ><a name="454"
+      > </a
+      ><a name="455" class="Symbol"
+      >&#8594;</a
+      ><a name="456"
+      > </a
+      ><a name="457" href="Control.Strategy.html#436" class="Bound"
+      >k&#8320;</a
+      ><a name="459"
+      > </a
+      ><a name="460" href="Control.Strategy.html#453" class="Bound"
+      >r</a
+      ><a name="461"
+      > </a
+      ><a name="462" href="Control.Strategy.html#363" class="Datatype Operator"
+      >&#8776;</a
+      ><a name="463"
+      > </a
+      ><a name="464" href="Control.Strategy.html#439" class="Bound"
+      >k&#8321;</a
+      ><a name="466"
+      > </a
+      ><a name="467" href="Control.Strategy.html#453" class="Bound"
+      >r</a
+      ><a name="468" class="Symbol"
+      >)</a
+      ><a name="469"
+      > </a
+      ><a name="470" class="Symbol"
+      >&#8594;</a
+      ><a name="471"
+      > </a
+      ><a name="472" href="Control.Strategy.html#253" class="InductiveConstructor"
+      >ask</a
+      ><a name="475"
+      > </a
+      ><a name="476" href="Control.Strategy.html#427" class="Bound"
+      >q?</a
+      ><a name="478"
+      > </a
+      ><a name="479" href="Control.Strategy.html#436" class="Bound"
+      >k&#8320;</a
+      ><a name="481"
+      > </a
+      ><a name="482" href="Control.Strategy.html#363" class="Datatype Operator"
+      >&#8776;</a
+      ><a name="483"
+      > </a
+      ><a name="484" href="Control.Strategy.html#253" class="InductiveConstructor"
+      >ask</a
+      ><a name="487"
+      > </a
+      ><a name="488" href="Control.Strategy.html#427" class="Bound"
+      >q?</a
+      ><a name="490"
+      > </a
+      ><a name="491" href="Control.Strategy.html#439" class="Bound"
+      >k&#8321;</a
+      ><a name="493"
+      >
+  </a
+      ><a name="496" href="Control.Strategy.html#496" class="InductiveConstructor"
+      >done-done</a
+      ><a name="505"
+      > </a
+      ><a name="506" class="Symbol"
+      >:</a
+      ><a name="507"
+      > </a
+      ><a name="508" class="Symbol"
+      >&#8704;</a
+      ><a name="509"
+      > </a
+      ><a name="510" href="Control.Strategy.html#510" class="Bound"
+      >x</a
+      ><a name="511"
+      > </a
+      ><a name="512" class="Symbol"
+      >&#8594;</a
+      ><a name="513"
+      > </a
+      ><a name="514" href="Control.Strategy.html#319" class="InductiveConstructor"
+      >done</a
+      ><a name="518"
+      > </a
+      ><a name="519" href="Control.Strategy.html#510" class="Bound"
+      >x</a
+      ><a name="520"
+      > </a
+      ><a name="521" href="Control.Strategy.html#363" class="Datatype Operator"
+      >&#8776;</a
+      ><a name="522"
+      > </a
+      ><a name="523" href="Control.Strategy.html#319" class="InductiveConstructor"
+      >done</a
+      ><a name="527"
+      > </a
+      ><a name="528" href="Control.Strategy.html#510" class="Bound"
+      >x</a
+      ><a name="529"
+      >
+
+</a
+      ><a name="531" href="Control.Strategy.html#531" class="Function"
+      >&#8776;-refl</a
+      ><a name="537"
+      > </a
+      ><a name="538" class="Symbol"
+      >:</a
+      ><a name="539"
+      > </a
+      ><a name="540" class="Symbol"
+      >&#8704;</a
+      ><a name="541"
+      > </a
+      ><a name="542" class="Symbol"
+      >{</a
+      ><a name="543" href="Control.Strategy.html#543" class="Bound"
+      >Q</a
+      ><a name="544"
+      > </a
+      ><a name="545" href="Control.Strategy.html#545" class="Bound"
+      >R</a
+      ><a name="546"
+      > </a
+      ><a name="547" href="Control.Strategy.html#547" class="Bound"
+      >A</a
+      ><a name="548" class="Symbol"
+      >}</a
+      ><a name="549"
+      > </a
+      ><a name="550" class="Symbol"
+      >{</a
+      ><a name="551" href="Control.Strategy.html#551" class="Bound"
+      >s</a
+      ><a name="552"
+      > </a
+      ><a name="553" class="Symbol"
+      >:</a
+      ><a name="554"
+      > </a
+      ><a name="555" href="Control.Strategy.html#204" class="Datatype"
+      >Strategy</a
+      ><a name="563"
+      > </a
+      ><a name="564" href="Control.Strategy.html#543" class="Bound"
+      >Q</a
+      ><a name="565"
+      > </a
+      ><a name="566" href="Control.Strategy.html#545" class="Bound"
+      >R</a
+      ><a name="567"
+      > </a
+      ><a name="568" href="Control.Strategy.html#547" class="Bound"
+      >A</a
+      ><a name="569" class="Symbol"
+      >}</a
+      ><a name="570"
+      > </a
+      ><a name="571" class="Symbol"
+      >&#8594;</a
+      ><a name="572"
+      > </a
+      ><a name="573" href="Control.Strategy.html#551" class="Bound"
+      >s</a
+      ><a name="574"
+      > </a
+      ><a name="575" href="Control.Strategy.html#363" class="Datatype Operator"
+      >&#8776;</a
+      ><a name="576"
+      > </a
+      ><a name="577" href="Control.Strategy.html#551" class="Bound"
+      >s</a
+      ><a name="578"
+      >
+</a
+      ><a name="579" href="Control.Strategy.html#531" class="Function"
+      >&#8776;-refl</a
+      ><a name="585"
+      > </a
+      ><a name="586" class="Symbol"
+      >{</a
+      ><a name="587"
+      >s </a
+      ><a name="589" class="Symbol"
+      >=</a
+      ><a name="590"
+      > </a
+      ><a name="591" href="Control.Strategy.html#253" class="InductiveConstructor"
+      >ask</a
+      ><a name="594"
+      > </a
+      ><a name="595" href="Control.Strategy.html#595" class="Bound"
+      >q?</a
+      ><a name="597"
+      > </a
+      ><a name="598" href="Control.Strategy.html#598" class="Bound"
+      >cont</a
+      ><a name="602" class="Symbol"
+      >}</a
+      ><a name="603"
+      > </a
+      ><a name="604" class="Symbol"
+      >=</a
+      ><a name="605"
+      > </a
+      ><a name="606" href="Control.Strategy.html#414" class="InductiveConstructor"
+      >ask-ask</a
+      ><a name="613"
+      > </a
+      ><a name="614" href="Control.Strategy.html#595" class="Bound"
+      >q?</a
+      ><a name="616"
+      > </a
+      ><a name="617" class="Symbol"
+      >(&#955;</a
+      ><a name="619"
+      > </a
+      ><a name="620" href="Control.Strategy.html#620" class="Bound"
+      >r</a
+      ><a name="621"
+      > </a
+      ><a name="622" class="Symbol"
+      >&#8594;</a
+      ><a name="623"
+      > </a
+      ><a name="624" href="Control.Strategy.html#531" class="Function"
+      >&#8776;-refl</a
+      ><a name="630" class="Symbol"
+      >)</a
+      ><a name="631"
+      >
+</a
+      ><a name="632" href="Control.Strategy.html#531" class="Function"
+      >&#8776;-refl</a
+      ><a name="638"
+      > </a
+      ><a name="639" class="Symbol"
+      >{</a
+      ><a name="640"
+      >s </a
+      ><a name="642" class="Symbol"
+      >=</a
+      ><a name="643"
+      > </a
+      ><a name="644" href="Control.Strategy.html#319" class="InductiveConstructor"
+      >done</a
+      ><a name="648"
+      > </a
+      ><a name="649" href="Control.Strategy.html#649" class="Bound"
+      >x</a
+      ><a name="650" class="Symbol"
+      >}</a
+      ><a name="651"
+      >      </a
+      ><a name="657" class="Symbol"
+      >=</a
+      ><a name="658"
+      > </a
+      ><a name="659" href="Control.Strategy.html#496" class="InductiveConstructor"
+      >done-done</a
+      ><a name="668"
+      > </a
+      ><a name="669" href="Control.Strategy.html#649" class="Bound"
+      >x</a
+      ><a name="670"
+      >
+
+</a
+      ><a name="672" class="Keyword"
+      >module</a
+      ><a name="678"
+      > </a
+      ><a name="679" href="Control.Strategy.html#679" class="Module"
+      >_</a
+      ><a name="680"
+      > </a
+      ><a name="681" class="Symbol"
+      >{</a
+      ><a name="682" href="Control.Strategy.html#682" class="Bound"
+      >Q</a
+      ><a name="683"
+      > </a
+      ><a name="684" class="Symbol"
+      >:</a
+      ><a name="685"
+      > </a
+      ><a name="686" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="687" class="Symbol"
+      >}</a
+      ><a name="688"
+      > </a
+      ><a name="689" class="Symbol"
+      >{</a
+      ><a name="690" href="Control.Strategy.html#690" class="Bound"
+      >R</a
+      ><a name="691"
+      > </a
+      ><a name="692" class="Symbol"
+      >:</a
+      ><a name="693"
+      > </a
+      ><a name="694" href="Control.Strategy.html#682" class="Bound"
+      >Q</a
+      ><a name="695"
+      > </a
+      ><a name="696" class="Symbol"
+      >&#8594;</a
+      ><a name="697"
+      > </a
+      ><a name="698" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="699" class="Symbol"
+      >}</a
+      ><a name="700"
+      > </a
+      ><a name="701" class="Keyword"
+      >where</a
+      ><a name="706"
+      >
+  </a
+      ><a name="709" class="Keyword"
+      >private</a
+      ><a name="716"
+      >
+    </a
+      ><a name="721" href="Control.Strategy.html#721" class="Function"
+      >M</a
+      ><a name="722"
+      > </a
+      ><a name="723" class="Symbol"
+      >:</a
+      ><a name="724"
+      > </a
+      ><a name="725" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="726"
+      > </a
+      ><a name="727" class="Symbol"
+      >&#8594;</a
+      ><a name="728"
+      > </a
+      ><a name="729" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="730"
+      >
+    </a
+      ><a name="735" href="Control.Strategy.html#721" class="Function"
+      >M</a
+      ><a name="736"
+      > </a
+      ><a name="737" class="Symbol"
+      >=</a
+      ><a name="738"
+      > </a
+      ><a name="739" href="Control.Strategy.html#204" class="Datatype"
+      >Strategy</a
+      ><a name="747"
+      > </a
+      ><a name="748" href="Control.Strategy.html#682" class="Bound"
+      >Q</a
+      ><a name="749"
+      > </a
+      ><a name="750" href="Control.Strategy.html#690" class="Bound"
+      >R</a
+      ><a name="751"
+      >
+
+  </a
+      ><a name="755" href="Control.Strategy.html#755" class="Function Operator"
+      >_=&lt;&lt;_</a
+      ><a name="760"
+      > </a
+      ><a name="761" class="Symbol"
+      >:</a
+      ><a name="762"
+      > </a
+      ><a name="763" class="Symbol"
+      >&#8704;</a
+      ><a name="764"
+      > </a
+      ><a name="765" class="Symbol"
+      >{</a
+      ><a name="766" href="Control.Strategy.html#766" class="Bound"
+      >A</a
+      ><a name="767"
+      > </a
+      ><a name="768" href="Control.Strategy.html#768" class="Bound"
+      >B</a
+      ><a name="769" class="Symbol"
+      >}</a
+      ><a name="770"
+      > </a
+      ><a name="771" class="Symbol"
+      >&#8594;</a
+      ><a name="772"
+      > </a
+      ><a name="773" class="Symbol"
+      >(</a
+      ><a name="774" href="Control.Strategy.html#766" class="Bound"
+      >A</a
+      ><a name="775"
+      > </a
+      ><a name="776" class="Symbol"
+      >&#8594;</a
+      ><a name="777"
+      > </a
+      ><a name="778" href="Control.Strategy.html#721" class="Function"
+      >M</a
+      ><a name="779"
+      > </a
+      ><a name="780" href="Control.Strategy.html#768" class="Bound"
+      >B</a
+      ><a name="781" class="Symbol"
+      >)</a
+      ><a name="782"
+      > </a
+      ><a name="783" class="Symbol"
+      >&#8594;</a
+      ><a name="784"
+      > </a
+      ><a name="785" href="Control.Strategy.html#721" class="Function"
+      >M</a
+      ><a name="786"
+      > </a
+      ><a name="787" href="Control.Strategy.html#766" class="Bound"
+      >A</a
+      ><a name="788"
+      > </a
+      ><a name="789" class="Symbol"
+      >&#8594;</a
+      ><a name="790"
+      > </a
+      ><a name="791" href="Control.Strategy.html#721" class="Function"
+      >M</a
+      ><a name="792"
+      > </a
+      ><a name="793" href="Control.Strategy.html#768" class="Bound"
+      >B</a
+      ><a name="794"
+      >
+  </a
+      ><a name="797" href="Control.Strategy.html#797" class="Bound"
+      >f</a
+      ><a name="798"
+      > </a
+      ><a name="799" href="Control.Strategy.html#755" class="Function Operator"
+      >=&lt;&lt;</a
+      ><a name="802"
+      > </a
+      ><a name="803" href="Control.Strategy.html#253" class="InductiveConstructor"
+      >ask</a
+      ><a name="806"
+      > </a
+      ><a name="807" href="Control.Strategy.html#807" class="Bound"
+      >q?</a
+      ><a name="809"
+      > </a
+      ><a name="810" href="Control.Strategy.html#810" class="Bound"
+      >cont</a
+      ><a name="814"
+      > </a
+      ><a name="815" class="Symbol"
+      >=</a
+      ><a name="816"
+      > </a
+      ><a name="817" href="Control.Strategy.html#253" class="InductiveConstructor"
+      >ask</a
+      ><a name="820"
+      > </a
+      ><a name="821" href="Control.Strategy.html#807" class="Bound"
+      >q?</a
+      ><a name="823"
+      > </a
+      ><a name="824" class="Symbol"
+      >(&#955;</a
+      ><a name="826"
+      > </a
+      ><a name="827" href="Control.Strategy.html#827" class="Bound"
+      >r</a
+      ><a name="828"
+      > </a
+      ><a name="829" class="Symbol"
+      >&#8594;</a
+      ><a name="830"
+      > </a
+      ><a name="831" href="Control.Strategy.html#797" class="Bound"
+      >f</a
+      ><a name="832"
+      > </a
+      ><a name="833" href="Control.Strategy.html#755" class="Function Operator"
+      >=&lt;&lt;</a
+      ><a name="836"
+      > </a
+      ><a name="837" href="Control.Strategy.html#810" class="Bound"
+      >cont</a
+      ><a name="841"
+      > </a
+      ><a name="842" href="Control.Strategy.html#827" class="Bound"
+      >r</a
+      ><a name="843" class="Symbol"
+      >)</a
+      ><a name="844"
+      >
+  </a
+      ><a name="847" href="Control.Strategy.html#847" class="Bound"
+      >f</a
+      ><a name="848"
+      > </a
+      ><a name="849" href="Control.Strategy.html#755" class="Function Operator"
+      >=&lt;&lt;</a
+      ><a name="852"
+      > </a
+      ><a name="853" href="Control.Strategy.html#319" class="InductiveConstructor"
+      >done</a
+      ><a name="857"
+      > </a
+      ><a name="858" href="Control.Strategy.html#858" class="Bound"
+      >x</a
+      ><a name="859"
+      >      </a
+      ><a name="865" class="Symbol"
+      >=</a
+      ><a name="866"
+      > </a
+      ><a name="867" href="Control.Strategy.html#847" class="Bound"
+      >f</a
+      ><a name="868"
+      > </a
+      ><a name="869" href="Control.Strategy.html#858" class="Bound"
+      >x</a
+      ><a name="870"
+      >
+
+  </a
+      ><a name="874" href="Control.Strategy.html#874" class="Function"
+      >return</a
+      ><a name="880"
+      > </a
+      ><a name="881" class="Symbol"
+      >:</a
+      ><a name="882"
+      > </a
+      ><a name="883" class="Symbol"
+      >&#8704;</a
+      ><a name="884"
+      > </a
+      ><a name="885" class="Symbol"
+      >{</a
+      ><a name="886" href="Control.Strategy.html#886" class="Bound"
+      >A</a
+      ><a name="887" class="Symbol"
+      >}</a
+      ><a name="888"
+      > </a
+      ><a name="889" class="Symbol"
+      >&#8594;</a
+      ><a name="890"
+      > </a
+      ><a name="891" href="Control.Strategy.html#886" class="Bound"
+      >A</a
+      ><a name="892"
+      > </a
+      ><a name="893" class="Symbol"
+      >&#8594;</a
+      ><a name="894"
+      > </a
+      ><a name="895" href="Control.Strategy.html#721" class="Function"
+      >M</a
+      ><a name="896"
+      > </a
+      ><a name="897" href="Control.Strategy.html#886" class="Bound"
+      >A</a
+      ><a name="898"
+      >
+  </a
+      ><a name="901" href="Control.Strategy.html#874" class="Function"
+      >return</a
+      ><a name="907"
+      > </a
+      ><a name="908" class="Symbol"
+      >=</a
+      ><a name="909"
+      > </a
+      ><a name="910" href="Control.Strategy.html#319" class="InductiveConstructor"
+      >done</a
+      ><a name="914"
+      >
+
+  </a
+      ><a name="918" href="Control.Strategy.html#918" class="Function"
+      >map</a
+      ><a name="921"
+      > </a
+      ><a name="922" class="Symbol"
+      >:</a
+      ><a name="923"
+      > </a
+      ><a name="924" class="Symbol"
+      >&#8704;</a
+      ><a name="925"
+      > </a
+      ><a name="926" class="Symbol"
+      >{</a
+      ><a name="927" href="Control.Strategy.html#927" class="Bound"
+      >A</a
+      ><a name="928"
+      > </a
+      ><a name="929" href="Control.Strategy.html#929" class="Bound"
+      >B</a
+      ><a name="930" class="Symbol"
+      >}</a
+      ><a name="931"
+      > </a
+      ><a name="932" class="Symbol"
+      >&#8594;</a
+      ><a name="933"
+      > </a
+      ><a name="934" class="Symbol"
+      >(</a
+      ><a name="935" href="Control.Strategy.html#927" class="Bound"
+      >A</a
+      ><a name="936"
+      > </a
+      ><a name="937" class="Symbol"
+      >&#8594;</a
+      ><a name="938"
+      > </a
+      ><a name="939" href="Control.Strategy.html#929" class="Bound"
+      >B</a
+      ><a name="940" class="Symbol"
+      >)</a
+      ><a name="941"
+      > </a
+      ><a name="942" class="Symbol"
+      >&#8594;</a
+      ><a name="943"
+      > </a
+      ><a name="944" href="Control.Strategy.html#721" class="Function"
+      >M</a
+      ><a name="945"
+      > </a
+      ><a name="946" href="Control.Strategy.html#927" class="Bound"
+      >A</a
+      ><a name="947"
+      > </a
+      ><a name="948" class="Symbol"
+      >&#8594;</a
+      ><a name="949"
+      > </a
+      ><a name="950" href="Control.Strategy.html#721" class="Function"
+      >M</a
+      ><a name="951"
+      > </a
+      ><a name="952" href="Control.Strategy.html#929" class="Bound"
+      >B</a
+      ><a name="953"
+      >
+  </a
+      ><a name="956" href="Control.Strategy.html#918" class="Function"
+      >map</a
+      ><a name="959"
+      > </a
+      ><a name="960" href="Control.Strategy.html#960" class="Bound"
+      >f</a
+      ><a name="961"
+      > </a
+      ><a name="962" href="Control.Strategy.html#962" class="Bound"
+      >s</a
+      ><a name="963"
+      > </a
+      ><a name="964" class="Symbol"
+      >=</a
+      ><a name="965"
+      > </a
+      ><a name="966" class="Symbol"
+      >(</a
+      ><a name="967" href="Control.Strategy.html#319" class="InductiveConstructor"
+      >done</a
+      ><a name="971"
+      > </a
+      ><a name="972" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="973"
+      > </a
+      ><a name="974" href="Control.Strategy.html#960" class="Bound"
+      >f</a
+      ><a name="975" class="Symbol"
+      >)</a
+      ><a name="976"
+      > </a
+      ><a name="977" href="Control.Strategy.html#755" class="Function Operator"
+      >=&lt;&lt;</a
+      ><a name="980"
+      > </a
+      ><a name="981" href="Control.Strategy.html#962" class="Bound"
+      >s</a
+      ><a name="982"
+      >
+
+  </a
+      ><a name="986" href="Control.Strategy.html#986" class="Function"
+      >join</a
+      ><a name="990"
+      > </a
+      ><a name="991" class="Symbol"
+      >:</a
+      ><a name="992"
+      > </a
+      ><a name="993" class="Symbol"
+      >&#8704;</a
+      ><a name="994"
+      > </a
+      ><a name="995" class="Symbol"
+      >{</a
+      ><a name="996" href="Control.Strategy.html#996" class="Bound"
+      >A</a
+      ><a name="997" class="Symbol"
+      >}</a
+      ><a name="998"
+      > </a
+      ><a name="999" class="Symbol"
+      >&#8594;</a
+      ><a name="1000"
+      > </a
+      ><a name="1001" href="Control.Strategy.html#721" class="Function"
+      >M</a
+      ><a name="1002"
+      > </a
+      ><a name="1003" class="Symbol"
+      >(</a
+      ><a name="1004" href="Control.Strategy.html#721" class="Function"
+      >M</a
+      ><a name="1005"
+      > </a
+      ><a name="1006" href="Control.Strategy.html#996" class="Bound"
+      >A</a
+      ><a name="1007" class="Symbol"
+      >)</a
+      ><a name="1008"
+      > </a
+      ><a name="1009" class="Symbol"
+      >&#8594;</a
+      ><a name="1010"
+      > </a
+      ><a name="1011" href="Control.Strategy.html#721" class="Function"
+      >M</a
+      ><a name="1012"
+      > </a
+      ><a name="1013" href="Control.Strategy.html#996" class="Bound"
+      >A</a
+      ><a name="1014"
+      >
+  </a
+      ><a name="1017" href="Control.Strategy.html#986" class="Function"
+      >join</a
+      ><a name="1021"
+      > </a
+      ><a name="1022" href="Control.Strategy.html#1022" class="Bound"
+      >s</a
+      ><a name="1023"
+      > </a
+      ><a name="1024" class="Symbol"
+      >=</a
+      ><a name="1025"
+      > </a
+      ><a name="1026" href="Function.html#1006" class="Function"
+      >id</a
+      ><a name="1028"
+      > </a
+      ><a name="1029" href="Control.Strategy.html#755" class="Function Operator"
+      >=&lt;&lt;</a
+      ><a name="1032"
+      > </a
+      ><a name="1033" href="Control.Strategy.html#1022" class="Bound"
+      >s</a
+      ><a name="1034"
+      >
+
+  </a
+      ><a name="1038" href="Control.Strategy.html#1038" class="Function Operator"
+      >_&gt;&gt;=_</a
+      ><a name="1043"
+      > </a
+      ><a name="1044" class="Symbol"
+      >:</a
+      ><a name="1045"
+      > </a
+      ><a name="1046" class="Symbol"
+      >&#8704;</a
+      ><a name="1047"
+      > </a
+      ><a name="1048" class="Symbol"
+      >{</a
+      ><a name="1049" href="Control.Strategy.html#1049" class="Bound"
+      >A</a
+      ><a name="1050"
+      > </a
+      ><a name="1051" href="Control.Strategy.html#1051" class="Bound"
+      >B</a
+      ><a name="1052" class="Symbol"
+      >}</a
+      ><a name="1053"
+      > </a
+      ><a name="1054" class="Symbol"
+      >&#8594;</a
+      ><a name="1055"
+      > </a
+      ><a name="1056" href="Control.Strategy.html#721" class="Function"
+      >M</a
+      ><a name="1057"
+      > </a
+      ><a name="1058" href="Control.Strategy.html#1049" class="Bound"
+      >A</a
+      ><a name="1059"
+      > </a
+      ><a name="1060" class="Symbol"
+      >&#8594;</a
+      ><a name="1061"
+      > </a
+      ><a name="1062" class="Symbol"
+      >(</a
+      ><a name="1063" href="Control.Strategy.html#1049" class="Bound"
+      >A</a
+      ><a name="1064"
+      > </a
+      ><a name="1065" class="Symbol"
+      >&#8594;</a
+      ><a name="1066"
+      > </a
+      ><a name="1067" href="Control.Strategy.html#721" class="Function"
+      >M</a
+      ><a name="1068"
+      > </a
+      ><a name="1069" href="Control.Strategy.html#1051" class="Bound"
+      >B</a
+      ><a name="1070" class="Symbol"
+      >)</a
+      ><a name="1071"
+      > </a
+      ><a name="1072" class="Symbol"
+      >&#8594;</a
+      ><a name="1073"
+      > </a
+      ><a name="1074" href="Control.Strategy.html#721" class="Function"
+      >M</a
+      ><a name="1075"
+      > </a
+      ><a name="1076" href="Control.Strategy.html#1051" class="Bound"
+      >B</a
+      ><a name="1077"
+      >
+  </a
+      ><a name="1080" href="Control.Strategy.html#1038" class="Function Operator"
+      >_&gt;&gt;=_</a
+      ><a name="1085"
+      > </a
+      ><a name="1086" class="Symbol"
+      >=</a
+      ><a name="1087"
+      > </a
+      ><a name="1088" href="Function.html#1474" class="Function"
+      >flip</a
+      ><a name="1092"
+      > </a
+      ><a name="1093" href="Control.Strategy.html#755" class="Function Operator"
+      >_=&lt;&lt;_</a
+      ><a name="1098"
+      >
+
+  </a
+      ><a name="1102" href="Control.Strategy.html#1102" class="Function"
+      >rawMonad</a
+      ><a name="1110"
+      > </a
+      ><a name="1111" class="Symbol"
+      >:</a
+      ><a name="1112"
+      > </a
+      ><a name="1113" href="Category.Monad.html#360" class="Function"
+      >RawMonad</a
+      ><a name="1121"
+      > </a
+      ><a name="1122" href="Control.Strategy.html#721" class="Function"
+      >M</a
+      ><a name="1123"
+      >
+  </a
+      ><a name="1126" href="Control.Strategy.html#1102" class="Function"
+      >rawMonad</a
+      ><a name="1134"
+      > </a
+      ><a name="1135" class="Symbol"
+      >=</a
+      ><a name="1136"
+      > </a
+      ><a name="1137" class="Keyword"
+      >record</a
+      ><a name="1143"
+      > </a
+      ><a name="1144" class="Symbol"
+      >{</a
+      ><a name="1145"
+      > </a
+      ><a name="1146" class="Field"
+      >return</a
+      ><a name="1152"
+      > </a
+      ><a name="1153" class="Symbol"
+      >=</a
+      ><a name="1154"
+      > </a
+      ><a name="1155" href="Control.Strategy.html#874" class="Function"
+      >return</a
+      ><a name="1161" class="Symbol"
+      >;</a
+      ><a name="1162"
+      > </a
+      ><a name="1163" class="Field Operator"
+      >_&gt;&gt;=_</a
+      ><a name="1168"
+      > </a
+      ><a name="1169" class="Symbol"
+      >=</a
+      ><a name="1170"
+      > </a
+      ><a name="1171" href="Control.Strategy.html#1038" class="Function Operator"
+      >_&gt;&gt;=_</a
+      ><a name="1176"
+      > </a
+      ><a name="1177" class="Symbol"
+      >}</a
+      ><a name="1178"
+      >
+
+  </a
+      ><a name="1182" href="Control.Strategy.html#1182" class="Function"
+      >return-=&lt;&lt;</a
+      ><a name="1192"
+      > </a
+      ><a name="1193" class="Symbol"
+      >:</a
+      ><a name="1194"
+      > </a
+      ><a name="1195" class="Symbol"
+      >&#8704;</a
+      ><a name="1196"
+      > </a
+      ><a name="1197" class="Symbol"
+      >{</a
+      ><a name="1198" href="Control.Strategy.html#1198" class="Bound"
+      >A</a
+      ><a name="1199" class="Symbol"
+      >}</a
+      ><a name="1200"
+      > </a
+      ><a name="1201" class="Symbol"
+      >(</a
+      ><a name="1202" href="Control.Strategy.html#1202" class="Bound"
+      >m</a
+      ><a name="1203"
+      > </a
+      ><a name="1204" class="Symbol"
+      >:</a
+      ><a name="1205"
+      > </a
+      ><a name="1206" href="Control.Strategy.html#721" class="Function"
+      >M</a
+      ><a name="1207"
+      > </a
+      ><a name="1208" href="Control.Strategy.html#1198" class="Bound"
+      >A</a
+      ><a name="1209" class="Symbol"
+      >)</a
+      ><a name="1210"
+      > </a
+      ><a name="1211" class="Symbol"
+      >&#8594;</a
+      ><a name="1212"
+      > </a
+      ><a name="1213" href="Control.Strategy.html#874" class="Function"
+      >return</a
+      ><a name="1219"
+      > </a
+      ><a name="1220" href="Control.Strategy.html#755" class="Function Operator"
+      >=&lt;&lt;</a
+      ><a name="1223"
+      > </a
+      ><a name="1224" href="Control.Strategy.html#1202" class="Bound"
+      >m</a
+      ><a name="1225"
+      > </a
+      ><a name="1226" href="Control.Strategy.html#363" class="Datatype Operator"
+      >&#8776;</a
+      ><a name="1227"
+      > </a
+      ><a name="1228" href="Control.Strategy.html#1202" class="Bound"
+      >m</a
+      ><a name="1229"
+      >
+  </a
+      ><a name="1232" href="Control.Strategy.html#1182" class="Function"
+      >return-=&lt;&lt;</a
+      ><a name="1242"
+      > </a
+      ><a name="1243" class="Symbol"
+      >(</a
+      ><a name="1244" href="Control.Strategy.html#253" class="InductiveConstructor"
+      >ask</a
+      ><a name="1247"
+      > </a
+      ><a name="1248" href="Control.Strategy.html#1248" class="Bound"
+      >q?</a
+      ><a name="1250"
+      > </a
+      ><a name="1251" href="Control.Strategy.html#1251" class="Bound"
+      >cont</a
+      ><a name="1255" class="Symbol"
+      >)</a
+      ><a name="1256"
+      > </a
+      ><a name="1257" class="Symbol"
+      >=</a
+      ><a name="1258"
+      > </a
+      ><a name="1259" href="Control.Strategy.html#414" class="InductiveConstructor"
+      >ask-ask</a
+      ><a name="1266"
+      > </a
+      ><a name="1267" href="Control.Strategy.html#1248" class="Bound"
+      >q?</a
+      ><a name="1269"
+      > </a
+      ><a name="1270" class="Symbol"
+      >(&#955;</a
+      ><a name="1272"
+      > </a
+      ><a name="1273" href="Control.Strategy.html#1273" class="Bound"
+      >r</a
+      ><a name="1274"
+      > </a
+      ><a name="1275" class="Symbol"
+      >&#8594;</a
+      ><a name="1276"
+      > </a
+      ><a name="1277" href="Control.Strategy.html#1182" class="Function"
+      >return-=&lt;&lt;</a
+      ><a name="1287"
+      > </a
+      ><a name="1288" class="Symbol"
+      >(</a
+      ><a name="1289" href="Control.Strategy.html#1251" class="Bound"
+      >cont</a
+      ><a name="1293"
+      > </a
+      ><a name="1294" href="Control.Strategy.html#1273" class="Bound"
+      >r</a
+      ><a name="1295" class="Symbol"
+      >))</a
+      ><a name="1297"
+      >
+  </a
+      ><a name="1300" href="Control.Strategy.html#1182" class="Function"
+      >return-=&lt;&lt;</a
+      ><a name="1310"
+      > </a
+      ><a name="1311" class="Symbol"
+      >(</a
+      ><a name="1312" href="Control.Strategy.html#319" class="InductiveConstructor"
+      >done</a
+      ><a name="1316"
+      > </a
+      ><a name="1317" href="Control.Strategy.html#1317" class="Bound"
+      >x</a
+      ><a name="1318" class="Symbol"
+      >)</a
+      ><a name="1319"
+      >      </a
+      ><a name="1325" class="Symbol"
+      >=</a
+      ><a name="1326"
+      > </a
+      ><a name="1327" href="Control.Strategy.html#496" class="InductiveConstructor"
+      >done-done</a
+      ><a name="1336"
+      > </a
+      ><a name="1337" href="Control.Strategy.html#1317" class="Bound"
+      >x</a
+      ><a name="1338"
+      >
+
+  </a
+      ><a name="1342" href="Control.Strategy.html#1342" class="Function"
+      >return-&gt;&gt;=</a
+      ><a name="1352"
+      > </a
+      ><a name="1353" class="Symbol"
+      >:</a
+      ><a name="1354"
+      > </a
+      ><a name="1355" class="Symbol"
+      >&#8704;</a
+      ><a name="1356"
+      > </a
+      ><a name="1357" class="Symbol"
+      >{</a
+      ><a name="1358" href="Control.Strategy.html#1358" class="Bound"
+      >A</a
+      ><a name="1359"
+      > </a
+      ><a name="1360" href="Control.Strategy.html#1360" class="Bound"
+      >B</a
+      ><a name="1361" class="Symbol"
+      >}</a
+      ><a name="1362"
+      > </a
+      ><a name="1363" class="Symbol"
+      >(</a
+      ><a name="1364" href="Control.Strategy.html#1364" class="Bound"
+      >x</a
+      ><a name="1365"
+      > </a
+      ><a name="1366" class="Symbol"
+      >:</a
+      ><a name="1367"
+      > </a
+      ><a name="1368" href="Control.Strategy.html#1358" class="Bound"
+      >A</a
+      ><a name="1369" class="Symbol"
+      >)</a
+      ><a name="1370"
+      > </a
+      ><a name="1371" class="Symbol"
+      >(</a
+      ><a name="1372" href="Control.Strategy.html#1372" class="Bound"
+      >f</a
+      ><a name="1373"
+      > </a
+      ><a name="1374" class="Symbol"
+      >:</a
+      ><a name="1375"
+      > </a
+      ><a name="1376" href="Control.Strategy.html#1358" class="Bound"
+      >A</a
+      ><a name="1377"
+      > </a
+      ><a name="1378" class="Symbol"
+      >&#8594;</a
+      ><a name="1379"
+      > </a
+      ><a name="1380" href="Control.Strategy.html#721" class="Function"
+      >M</a
+      ><a name="1381"
+      > </a
+      ><a name="1382" href="Control.Strategy.html#1360" class="Bound"
+      >B</a
+      ><a name="1383" class="Symbol"
+      >)</a
+      ><a name="1384"
+      > </a
+      ><a name="1385" class="Symbol"
+      >&#8594;</a
+      ><a name="1386"
+      > </a
+      ><a name="1387" href="Control.Strategy.html#874" class="Function"
+      >return</a
+      ><a name="1393"
+      > </a
+      ><a name="1394" href="Control.Strategy.html#1364" class="Bound"
+      >x</a
+      ><a name="1395"
+      > </a
+      ><a name="1396" href="Control.Strategy.html#1038" class="Function Operator"
+      >&gt;&gt;=</a
+      ><a name="1399"
+      > </a
+      ><a name="1400" href="Control.Strategy.html#1372" class="Bound"
+      >f</a
+      ><a name="1401"
+      > </a
+      ><a name="1402" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="1403"
+      > </a
+      ><a name="1404" href="Control.Strategy.html#1372" class="Bound"
+      >f</a
+      ><a name="1405"
+      > </a
+      ><a name="1406" href="Control.Strategy.html#1364" class="Bound"
+      >x</a
+      ><a name="1407"
+      >
+  </a
+      ><a name="1410" href="Control.Strategy.html#1342" class="Function"
+      >return-&gt;&gt;=</a
+      ><a name="1420"
+      > </a
+      ><a name="1421" class="Symbol"
+      >_</a
+      ><a name="1422"
+      > </a
+      ><a name="1423" class="Symbol"
+      >_</a
+      ><a name="1424"
+      > </a
+      ><a name="1425" class="Symbol"
+      >=</a
+      ><a name="1426"
+      > </a
+      ><a name="1427" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="1431"
+      >
+
+  </a
+      ><a name="1435" href="Control.Strategy.html#1435" class="Function"
+      >&gt;&gt;=-assoc</a
+      ><a name="1444"
+      > </a
+      ><a name="1445" class="Symbol"
+      >:</a
+      ><a name="1446"
+      > </a
+      ><a name="1447" class="Symbol"
+      >&#8704;</a
+      ><a name="1448"
+      > </a
+      ><a name="1449" class="Symbol"
+      >{</a
+      ><a name="1450" href="Control.Strategy.html#1450" class="Bound"
+      >A</a
+      ><a name="1451"
+      > </a
+      ><a name="1452" href="Control.Strategy.html#1452" class="Bound"
+      >B</a
+      ><a name="1453"
+      > </a
+      ><a name="1454" href="Control.Strategy.html#1454" class="Bound"
+      >C</a
+      ><a name="1455" class="Symbol"
+      >}</a
+      ><a name="1456"
+      > </a
+      ><a name="1457" class="Symbol"
+      >(</a
+      ><a name="1458" href="Control.Strategy.html#1458" class="Bound"
+      >mx</a
+      ><a name="1460"
+      > </a
+      ><a name="1461" class="Symbol"
+      >:</a
+      ><a name="1462"
+      > </a
+      ><a name="1463" href="Control.Strategy.html#721" class="Function"
+      >M</a
+      ><a name="1464"
+      > </a
+      ><a name="1465" href="Control.Strategy.html#1450" class="Bound"
+      >A</a
+      ><a name="1466" class="Symbol"
+      >)</a
+      ><a name="1467"
+      > </a
+      ><a name="1468" class="Symbol"
+      >(</a
+      ><a name="1469" href="Control.Strategy.html#1469" class="Bound"
+      >my</a
+      ><a name="1471"
+      > </a
+      ><a name="1472" class="Symbol"
+      >:</a
+      ><a name="1473"
+      > </a
+      ><a name="1474" href="Control.Strategy.html#1450" class="Bound"
+      >A</a
+      ><a name="1475"
+      > </a
+      ><a name="1476" class="Symbol"
+      >&#8594;</a
+      ><a name="1477"
+      > </a
+      ><a name="1478" href="Control.Strategy.html#721" class="Function"
+      >M</a
+      ><a name="1479"
+      > </a
+      ><a name="1480" href="Control.Strategy.html#1452" class="Bound"
+      >B</a
+      ><a name="1481" class="Symbol"
+      >)</a
+      ><a name="1482"
+      > </a
+      ><a name="1483" class="Symbol"
+      >(</a
+      ><a name="1484" href="Control.Strategy.html#1484" class="Bound"
+      >f</a
+      ><a name="1485"
+      > </a
+      ><a name="1486" class="Symbol"
+      >:</a
+      ><a name="1487"
+      > </a
+      ><a name="1488" href="Control.Strategy.html#1452" class="Bound"
+      >B</a
+      ><a name="1489"
+      > </a
+      ><a name="1490" class="Symbol"
+      >&#8594;</a
+      ><a name="1491"
+      > </a
+      ><a name="1492" href="Control.Strategy.html#721" class="Function"
+      >M</a
+      ><a name="1493"
+      > </a
+      ><a name="1494" href="Control.Strategy.html#1454" class="Bound"
+      >C</a
+      ><a name="1495" class="Symbol"
+      >)</a
+      ><a name="1496"
+      > </a
+      ><a name="1497" class="Symbol"
+      >&#8594;</a
+      ><a name="1498"
+      > </a
+      ><a name="1499" class="Symbol"
+      >(</a
+      ><a name="1500" href="Control.Strategy.html#1458" class="Bound"
+      >mx</a
+      ><a name="1502"
+      > </a
+      ><a name="1503" href="Control.Strategy.html#1038" class="Function Operator"
+      >&gt;&gt;=</a
+      ><a name="1506"
+      > </a
+      ><a name="1507" class="Symbol"
+      >&#955;</a
+      ><a name="1508"
+      > </a
+      ><a name="1509" href="Control.Strategy.html#1509" class="Bound"
+      >x</a
+      ><a name="1510"
+      > </a
+      ><a name="1511" class="Symbol"
+      >&#8594;</a
+      ><a name="1512"
+      > </a
+      ><a name="1513" class="Symbol"
+      >(</a
+      ><a name="1514" href="Control.Strategy.html#1469" class="Bound"
+      >my</a
+      ><a name="1516"
+      > </a
+      ><a name="1517" href="Control.Strategy.html#1509" class="Bound"
+      >x</a
+      ><a name="1518"
+      > </a
+      ><a name="1519" href="Control.Strategy.html#1038" class="Function Operator"
+      >&gt;&gt;=</a
+      ><a name="1522"
+      > </a
+      ><a name="1523" href="Control.Strategy.html#1484" class="Bound"
+      >f</a
+      ><a name="1524" class="Symbol"
+      >))</a
+      ><a name="1526"
+      > </a
+      ><a name="1527" href="Control.Strategy.html#363" class="Datatype Operator"
+      >&#8776;</a
+      ><a name="1528"
+      > </a
+      ><a name="1529" class="Symbol"
+      >(</a
+      ><a name="1530" href="Control.Strategy.html#1458" class="Bound"
+      >mx</a
+      ><a name="1532"
+      > </a
+      ><a name="1533" href="Control.Strategy.html#1038" class="Function Operator"
+      >&gt;&gt;=</a
+      ><a name="1536"
+      > </a
+      ><a name="1537" href="Control.Strategy.html#1469" class="Bound"
+      >my</a
+      ><a name="1539" class="Symbol"
+      >)</a
+      ><a name="1540"
+      > </a
+      ><a name="1541" href="Control.Strategy.html#1038" class="Function Operator"
+      >&gt;&gt;=</a
+      ><a name="1544"
+      > </a
+      ><a name="1545" href="Control.Strategy.html#1484" class="Bound"
+      >f</a
+      ><a name="1546"
+      >
+  </a
+      ><a name="1549" href="Control.Strategy.html#1435" class="Function"
+      >&gt;&gt;=-assoc</a
+      ><a name="1558"
+      > </a
+      ><a name="1559" class="Symbol"
+      >(</a
+      ><a name="1560" href="Control.Strategy.html#253" class="InductiveConstructor"
+      >ask</a
+      ><a name="1563"
+      > </a
+      ><a name="1564" href="Control.Strategy.html#1564" class="Bound"
+      >q?</a
+      ><a name="1566"
+      > </a
+      ><a name="1567" href="Control.Strategy.html#1567" class="Bound"
+      >cont</a
+      ><a name="1571" class="Symbol"
+      >)</a
+      ><a name="1572"
+      > </a
+      ><a name="1573" href="Control.Strategy.html#1573" class="Bound"
+      >my</a
+      ><a name="1575"
+      > </a
+      ><a name="1576" href="Control.Strategy.html#1576" class="Bound"
+      >f</a
+      ><a name="1577"
+      > </a
+      ><a name="1578" class="Symbol"
+      >=</a
+      ><a name="1579"
+      > </a
+      ><a name="1580" href="Control.Strategy.html#414" class="InductiveConstructor"
+      >ask-ask</a
+      ><a name="1587"
+      > </a
+      ><a name="1588" href="Control.Strategy.html#1564" class="Bound"
+      >q?</a
+      ><a name="1590"
+      > </a
+      ><a name="1591" class="Symbol"
+      >(&#955;</a
+      ><a name="1593"
+      > </a
+      ><a name="1594" href="Control.Strategy.html#1594" class="Bound"
+      >r</a
+      ><a name="1595"
+      > </a
+      ><a name="1596" class="Symbol"
+      >&#8594;</a
+      ><a name="1597"
+      > </a
+      ><a name="1598" href="Control.Strategy.html#1435" class="Function"
+      >&gt;&gt;=-assoc</a
+      ><a name="1607"
+      > </a
+      ><a name="1608" class="Symbol"
+      >(</a
+      ><a name="1609" href="Control.Strategy.html#1567" class="Bound"
+      >cont</a
+      ><a name="1613"
+      > </a
+      ><a name="1614" href="Control.Strategy.html#1594" class="Bound"
+      >r</a
+      ><a name="1615" class="Symbol"
+      >)</a
+      ><a name="1616"
+      > </a
+      ><a name="1617" href="Control.Strategy.html#1573" class="Bound"
+      >my</a
+      ><a name="1619"
+      > </a
+      ><a name="1620" href="Control.Strategy.html#1576" class="Bound"
+      >f</a
+      ><a name="1621" class="Symbol"
+      >)</a
+      ><a name="1622"
+      >
+  </a
+      ><a name="1625" href="Control.Strategy.html#1435" class="Function"
+      >&gt;&gt;=-assoc</a
+      ><a name="1634"
+      > </a
+      ><a name="1635" class="Symbol"
+      >(</a
+      ><a name="1636" href="Control.Strategy.html#319" class="InductiveConstructor"
+      >done</a
+      ><a name="1640"
+      > </a
+      ><a name="1641" href="Control.Strategy.html#1641" class="Bound"
+      >x</a
+      ><a name="1642" class="Symbol"
+      >)</a
+      ><a name="1643"
+      >      </a
+      ><a name="1649" href="Control.Strategy.html#1649" class="Bound"
+      >my</a
+      ><a name="1651"
+      > </a
+      ><a name="1652" href="Control.Strategy.html#1652" class="Bound"
+      >f</a
+      ><a name="1653"
+      > </a
+      ><a name="1654" class="Symbol"
+      >=</a
+      ><a name="1655"
+      > </a
+      ><a name="1656" href="Control.Strategy.html#531" class="Function"
+      >&#8776;-refl</a
+      ><a name="1662"
+      >
+
+  </a
+      ><a name="1666" href="Control.Strategy.html#1666" class="Function"
+      >map-id</a
+      ><a name="1672"
+      > </a
+      ><a name="1673" class="Symbol"
+      >:</a
+      ><a name="1674"
+      > </a
+      ><a name="1675" class="Symbol"
+      >&#8704;</a
+      ><a name="1676"
+      > </a
+      ><a name="1677" class="Symbol"
+      >{</a
+      ><a name="1678" href="Control.Strategy.html#1678" class="Bound"
+      >A</a
+      ><a name="1679" class="Symbol"
+      >}</a
+      ><a name="1680"
+      > </a
+      ><a name="1681" class="Symbol"
+      >(</a
+      ><a name="1682" href="Control.Strategy.html#1682" class="Bound"
+      >s</a
+      ><a name="1683"
+      > </a
+      ><a name="1684" class="Symbol"
+      >:</a
+      ><a name="1685"
+      > </a
+      ><a name="1686" href="Control.Strategy.html#721" class="Function"
+      >M</a
+      ><a name="1687"
+      > </a
+      ><a name="1688" href="Control.Strategy.html#1678" class="Bound"
+      >A</a
+      ><a name="1689" class="Symbol"
+      >)</a
+      ><a name="1690"
+      > </a
+      ><a name="1691" class="Symbol"
+      >&#8594;</a
+      ><a name="1692"
+      > </a
+      ><a name="1693" href="Control.Strategy.html#918" class="Function"
+      >map</a
+      ><a name="1696"
+      > </a
+      ><a name="1697" href="Function.html#1006" class="Function"
+      >id</a
+      ><a name="1699"
+      > </a
+      ><a name="1700" href="Control.Strategy.html#1682" class="Bound"
+      >s</a
+      ><a name="1701"
+      > </a
+      ><a name="1702" href="Control.Strategy.html#363" class="Datatype Operator"
+      >&#8776;</a
+      ><a name="1703"
+      > </a
+      ><a name="1704" href="Control.Strategy.html#1682" class="Bound"
+      >s</a
+      ><a name="1705"
+      >
+  </a
+      ><a name="1708" href="Control.Strategy.html#1666" class="Function"
+      >map-id</a
+      ><a name="1714"
+      > </a
+      ><a name="1715" class="Symbol"
+      >=</a
+      ><a name="1716"
+      > </a
+      ><a name="1717" href="Control.Strategy.html#1182" class="Function"
+      >return-=&lt;&lt;</a
+      ><a name="1727"
+      >
+
+  </a
+      ><a name="1731" href="Control.Strategy.html#1731" class="Function"
+      >map-&#8728;</a
+      ><a name="1736"
+      > </a
+      ><a name="1737" class="Symbol"
+      >:</a
+      ><a name="1738"
+      > </a
+      ><a name="1739" class="Symbol"
+      >&#8704;</a
+      ><a name="1740"
+      > </a
+      ><a name="1741" class="Symbol"
+      >{</a
+      ><a name="1742" href="Control.Strategy.html#1742" class="Bound"
+      >A</a
+      ><a name="1743"
+      > </a
+      ><a name="1744" href="Control.Strategy.html#1744" class="Bound"
+      >B</a
+      ><a name="1745"
+      > </a
+      ><a name="1746" href="Control.Strategy.html#1746" class="Bound"
+      >C</a
+      ><a name="1747" class="Symbol"
+      >}</a
+      ><a name="1748"
+      > </a
+      ><a name="1749" class="Symbol"
+      >(</a
+      ><a name="1750" href="Control.Strategy.html#1750" class="Bound"
+      >f</a
+      ><a name="1751"
+      > </a
+      ><a name="1752" class="Symbol"
+      >:</a
+      ><a name="1753"
+      > </a
+      ><a name="1754" href="Control.Strategy.html#1742" class="Bound"
+      >A</a
+      ><a name="1755"
+      > </a
+      ><a name="1756" class="Symbol"
+      >&#8594;</a
+      ><a name="1757"
+      > </a
+      ><a name="1758" href="Control.Strategy.html#1744" class="Bound"
+      >B</a
+      ><a name="1759" class="Symbol"
+      >)</a
+      ><a name="1760"
+      > </a
+      ><a name="1761" class="Symbol"
+      >(</a
+      ><a name="1762" href="Control.Strategy.html#1762" class="Bound"
+      >g</a
+      ><a name="1763"
+      > </a
+      ><a name="1764" class="Symbol"
+      >:</a
+      ><a name="1765"
+      > </a
+      ><a name="1766" href="Control.Strategy.html#1744" class="Bound"
+      >B</a
+      ><a name="1767"
+      > </a
+      ><a name="1768" class="Symbol"
+      >&#8594;</a
+      ><a name="1769"
+      > </a
+      ><a name="1770" href="Control.Strategy.html#1746" class="Bound"
+      >C</a
+      ><a name="1771" class="Symbol"
+      >)</a
+      ><a name="1772"
+      > </a
+      ><a name="1773" href="Control.Strategy.html#1773" class="Bound"
+      >s</a
+      ><a name="1774"
+      > </a
+      ><a name="1775" class="Symbol"
+      >&#8594;</a
+      ><a name="1776"
+      > </a
+      ><a name="1777" href="Control.Strategy.html#918" class="Function"
+      >map</a
+      ><a name="1780"
+      > </a
+      ><a name="1781" class="Symbol"
+      >(</a
+      ><a name="1782" href="Control.Strategy.html#1762" class="Bound"
+      >g</a
+      ><a name="1783"
+      > </a
+      ><a name="1784" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1785"
+      > </a
+      ><a name="1786" href="Control.Strategy.html#1750" class="Bound"
+      >f</a
+      ><a name="1787" class="Symbol"
+      >)</a
+      ><a name="1788"
+      > </a
+      ><a name="1789" href="Control.Strategy.html#1773" class="Bound"
+      >s</a
+      ><a name="1790"
+      > </a
+      ><a name="1791" href="Control.Strategy.html#363" class="Datatype Operator"
+      >&#8776;</a
+      ><a name="1792"
+      > </a
+      ><a name="1793" class="Symbol"
+      >(</a
+      ><a name="1794" href="Control.Strategy.html#918" class="Function"
+      >map</a
+      ><a name="1797"
+      > </a
+      ><a name="1798" href="Control.Strategy.html#1762" class="Bound"
+      >g</a
+      ><a name="1799"
+      > </a
+      ><a name="1800" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1801"
+      > </a
+      ><a name="1802" href="Control.Strategy.html#918" class="Function"
+      >map</a
+      ><a name="1805"
+      > </a
+      ><a name="1806" href="Control.Strategy.html#1750" class="Bound"
+      >f</a
+      ><a name="1807" class="Symbol"
+      >)</a
+      ><a name="1808"
+      > </a
+      ><a name="1809" href="Control.Strategy.html#1773" class="Bound"
+      >s</a
+      ><a name="1810"
+      >
+  </a
+      ><a name="1813" href="Control.Strategy.html#1731" class="Function"
+      >map-&#8728;</a
+      ><a name="1818"
+      > </a
+      ><a name="1819" href="Control.Strategy.html#1819" class="Bound"
+      >f</a
+      ><a name="1820"
+      > </a
+      ><a name="1821" href="Control.Strategy.html#1821" class="Bound"
+      >g</a
+      ><a name="1822"
+      > </a
+      ><a name="1823" href="Control.Strategy.html#1823" class="Bound"
+      >s</a
+      ><a name="1824"
+      > </a
+      ><a name="1825" class="Symbol"
+      >=</a
+      ><a name="1826"
+      > </a
+      ><a name="1827" href="Control.Strategy.html#1435" class="Function"
+      >&gt;&gt;=-assoc</a
+      ><a name="1836"
+      > </a
+      ><a name="1837" href="Control.Strategy.html#1823" class="Bound"
+      >s</a
+      ><a name="1838"
+      > </a
+      ><a name="1839" class="Symbol"
+      >(</a
+      ><a name="1840" href="Control.Strategy.html#319" class="InductiveConstructor"
+      >done</a
+      ><a name="1844"
+      > </a
+      ><a name="1845" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1846"
+      > </a
+      ><a name="1847" href="Control.Strategy.html#1819" class="Bound"
+      >f</a
+      ><a name="1848" class="Symbol"
+      >)</a
+      ><a name="1849"
+      > </a
+      ><a name="1850" class="Symbol"
+      >(</a
+      ><a name="1851" href="Control.Strategy.html#319" class="InductiveConstructor"
+      >done</a
+      ><a name="1855"
+      > </a
+      ><a name="1856" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="1857"
+      > </a
+      ><a name="1858" href="Control.Strategy.html#1821" class="Bound"
+      >g</a
+      ><a name="1859" class="Symbol"
+      >)</a
+      ><a name="1860"
+      >
+
+  </a
+      ><a name="1864" class="Keyword"
+      >module</a
+      ><a name="1870"
+      > </a
+      ><a name="1871" href="Control.Strategy.html#1871" class="Module"
+      >EffectfulRun</a
+      ><a name="1883"
+      >
+           </a
+      ><a name="1895" class="Symbol"
+      >(</a
+      ><a name="1896" href="Control.Strategy.html#1896" class="Bound"
+      >E</a
+      ><a name="1897"
+      > </a
+      ><a name="1898" class="Symbol"
+      >:</a
+      ><a name="1899"
+      > </a
+      ><a name="1900" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="1901"
+      > </a
+      ><a name="1902" class="Symbol"
+      >&#8594;</a
+      ><a name="1903"
+      > </a
+      ><a name="1904" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="1905" class="Symbol"
+      >)</a
+      ><a name="1906"
+      >
+           </a
+      ><a name="1918" class="Symbol"
+      >(</a
+      ><a name="1919" href="Control.Strategy.html#1919" class="Bound Operator"
+      >_&gt;&gt;=E_</a
+      ><a name="1925"
+      >  </a
+      ><a name="1927" class="Symbol"
+      >:</a
+      ><a name="1928"
+      > </a
+      ><a name="1929" class="Symbol"
+      >&#8704;</a
+      ><a name="1930"
+      > </a
+      ><a name="1931" class="Symbol"
+      >{</a
+      ><a name="1932" href="Control.Strategy.html#1932" class="Bound"
+      >A</a
+      ><a name="1933"
+      > </a
+      ><a name="1934" href="Control.Strategy.html#1934" class="Bound"
+      >B</a
+      ><a name="1935" class="Symbol"
+      >}</a
+      ><a name="1936"
+      > </a
+      ><a name="1937" class="Symbol"
+      >&#8594;</a
+      ><a name="1938"
+      > </a
+      ><a name="1939" href="Control.Strategy.html#1896" class="Bound"
+      >E</a
+      ><a name="1940"
+      > </a
+      ><a name="1941" href="Control.Strategy.html#1932" class="Bound"
+      >A</a
+      ><a name="1942"
+      > </a
+      ><a name="1943" class="Symbol"
+      >&#8594;</a
+      ><a name="1944"
+      > </a
+      ><a name="1945" class="Symbol"
+      >(</a
+      ><a name="1946" href="Control.Strategy.html#1932" class="Bound"
+      >A</a
+      ><a name="1947"
+      > </a
+      ><a name="1948" class="Symbol"
+      >&#8594;</a
+      ><a name="1949"
+      > </a
+      ><a name="1950" href="Control.Strategy.html#1896" class="Bound"
+      >E</a
+      ><a name="1951"
+      > </a
+      ><a name="1952" href="Control.Strategy.html#1934" class="Bound"
+      >B</a
+      ><a name="1953" class="Symbol"
+      >)</a
+      ><a name="1954"
+      > </a
+      ><a name="1955" class="Symbol"
+      >&#8594;</a
+      ><a name="1956"
+      > </a
+      ><a name="1957" href="Control.Strategy.html#1896" class="Bound"
+      >E</a
+      ><a name="1958"
+      > </a
+      ><a name="1959" href="Control.Strategy.html#1934" class="Bound"
+      >B</a
+      ><a name="1960" class="Symbol"
+      >)</a
+      ><a name="1961"
+      >
+           </a
+      ><a name="1973" class="Symbol"
+      >(</a
+      ><a name="1974" href="Control.Strategy.html#1974" class="Bound"
+      >returnE</a
+      ><a name="1981"
+      > </a
+      ><a name="1982" class="Symbol"
+      >:</a
+      ><a name="1983"
+      > </a
+      ><a name="1984" class="Symbol"
+      >&#8704;</a
+      ><a name="1985"
+      > </a
+      ><a name="1986" class="Symbol"
+      >{</a
+      ><a name="1987" href="Control.Strategy.html#1987" class="Bound"
+      >A</a
+      ><a name="1988" class="Symbol"
+      >}</a
+      ><a name="1989"
+      > </a
+      ><a name="1990" class="Symbol"
+      >&#8594;</a
+      ><a name="1991"
+      > </a
+      ><a name="1992" href="Control.Strategy.html#1987" class="Bound"
+      >A</a
+      ><a name="1993"
+      > </a
+      ><a name="1994" class="Symbol"
+      >&#8594;</a
+      ><a name="1995"
+      > </a
+      ><a name="1996" href="Control.Strategy.html#1896" class="Bound"
+      >E</a
+      ><a name="1997"
+      > </a
+      ><a name="1998" href="Control.Strategy.html#1987" class="Bound"
+      >A</a
+      ><a name="1999" class="Symbol"
+      >)</a
+      ><a name="2000"
+      >
+           </a
+      ><a name="2012" class="Symbol"
+      >(</a
+      ><a name="2013" href="Control.Strategy.html#2013" class="Bound"
+      >Oracle</a
+      ><a name="2019"
+      >  </a
+      ><a name="2021" class="Symbol"
+      >:</a
+      ><a name="2022"
+      > </a
+      ><a name="2023" class="Symbol"
+      >(</a
+      ><a name="2024" href="Control.Strategy.html#2024" class="Bound"
+      >q</a
+      ><a name="2025"
+      > </a
+      ><a name="2026" class="Symbol"
+      >:</a
+      ><a name="2027"
+      > </a
+      ><a name="2028" href="Control.Strategy.html#682" class="Bound"
+      >Q</a
+      ><a name="2029" class="Symbol"
+      >)</a
+      ><a name="2030"
+      > </a
+      ><a name="2031" class="Symbol"
+      >&#8594;</a
+      ><a name="2032"
+      > </a
+      ><a name="2033" href="Control.Strategy.html#1896" class="Bound"
+      >E</a
+      ><a name="2034"
+      > </a
+      ><a name="2035" class="Symbol"
+      >(</a
+      ><a name="2036" href="Control.Strategy.html#690" class="Bound"
+      >R</a
+      ><a name="2037"
+      > </a
+      ><a name="2038" href="Control.Strategy.html#2024" class="Bound"
+      >q</a
+      ><a name="2039" class="Symbol"
+      >))</a
+      ><a name="2041"
+      > </a
+      ><a name="2042" class="Keyword"
+      >where</a
+      ><a name="2047"
+      >
+    </a
+      ><a name="2052" href="Control.Strategy.html#2052" class="Function"
+      >runE</a
+      ><a name="2056"
+      > </a
+      ><a name="2057" class="Symbol"
+      >:</a
+      ><a name="2058"
+      > </a
+      ><a name="2059" class="Symbol"
+      >&#8704;</a
+      ><a name="2060"
+      > </a
+      ><a name="2061" class="Symbol"
+      >{</a
+      ><a name="2062" href="Control.Strategy.html#2062" class="Bound"
+      >A</a
+      ><a name="2063" class="Symbol"
+      >}</a
+      ><a name="2064"
+      > </a
+      ><a name="2065" class="Symbol"
+      >&#8594;</a
+      ><a name="2066"
+      > </a
+      ><a name="2067" href="Control.Strategy.html#721" class="Function"
+      >M</a
+      ><a name="2068"
+      > </a
+      ><a name="2069" href="Control.Strategy.html#2062" class="Bound"
+      >A</a
+      ><a name="2070"
+      > </a
+      ><a name="2071" class="Symbol"
+      >&#8594;</a
+      ><a name="2072"
+      > </a
+      ><a name="2073" href="Control.Strategy.html#1896" class="Bound"
+      >E</a
+      ><a name="2074"
+      > </a
+      ><a name="2075" href="Control.Strategy.html#2062" class="Bound"
+      >A</a
+      ><a name="2076"
+      >
+    </a
+      ><a name="2081" href="Control.Strategy.html#2052" class="Function"
+      >runE</a
+      ><a name="2085"
+      > </a
+      ><a name="2086" class="Symbol"
+      >(</a
+      ><a name="2087" href="Control.Strategy.html#253" class="InductiveConstructor"
+      >ask</a
+      ><a name="2090"
+      > </a
+      ><a name="2091" href="Control.Strategy.html#2091" class="Bound"
+      >q?</a
+      ><a name="2093"
+      > </a
+      ><a name="2094" href="Control.Strategy.html#2094" class="Bound"
+      >cont</a
+      ><a name="2098" class="Symbol"
+      >)</a
+      ><a name="2099"
+      > </a
+      ><a name="2100" class="Symbol"
+      >=</a
+      ><a name="2101"
+      > </a
+      ><a name="2102" href="Control.Strategy.html#2013" class="Bound"
+      >Oracle</a
+      ><a name="2108"
+      > </a
+      ><a name="2109" href="Control.Strategy.html#2091" class="Bound"
+      >q?</a
+      ><a name="2111"
+      > </a
+      ><a name="2112" href="Control.Strategy.html#1919" class="Bound Operator"
+      >&gt;&gt;=E</a
+      ><a name="2116"
+      > </a
+      ><a name="2117" class="Symbol"
+      >(&#955;</a
+      ><a name="2119"
+      > </a
+      ><a name="2120" href="Control.Strategy.html#2120" class="Bound"
+      >r</a
+      ><a name="2121"
+      > </a
+      ><a name="2122" class="Symbol"
+      >&#8594;</a
+      ><a name="2123"
+      > </a
+      ><a name="2124" href="Control.Strategy.html#2052" class="Function"
+      >runE</a
+      ><a name="2128"
+      > </a
+      ><a name="2129" class="Symbol"
+      >(</a
+      ><a name="2130" href="Control.Strategy.html#2094" class="Bound"
+      >cont</a
+      ><a name="2134"
+      > </a
+      ><a name="2135" href="Control.Strategy.html#2120" class="Bound"
+      >r</a
+      ><a name="2136" class="Symbol"
+      >))</a
+      ><a name="2138"
+      >
+    </a
+      ><a name="2143" href="Control.Strategy.html#2052" class="Function"
+      >runE</a
+      ><a name="2147"
+      > </a
+      ><a name="2148" class="Symbol"
+      >(</a
+      ><a name="2149" href="Control.Strategy.html#319" class="InductiveConstructor"
+      >done</a
+      ><a name="2153"
+      > </a
+      ><a name="2154" href="Control.Strategy.html#2154" class="Bound"
+      >x</a
+      ><a name="2155" class="Symbol"
+      >)</a
+      ><a name="2156"
+      >      </a
+      ><a name="2162" class="Symbol"
+      >=</a
+      ><a name="2163"
+      > </a
+      ><a name="2164" href="Control.Strategy.html#1974" class="Bound"
+      >returnE</a
+      ><a name="2171"
+      > </a
+      ><a name="2172" href="Control.Strategy.html#2154" class="Bound"
+      >x</a
+      ><a name="2173"
+      >
+
+  </a
+      ><a name="2177" class="Keyword"
+      >module</a
+      ><a name="2183"
+      > </a
+      ><a name="2184" href="Control.Strategy.html#2184" class="Module"
+      >_</a
+      ><a name="2185"
+      > </a
+      ><a name="2186" class="Symbol"
+      >(</a
+      ><a name="2187" href="Control.Strategy.html#2187" class="Bound"
+      >Oracle</a
+      ><a name="2193"
+      > </a
+      ><a name="2194" class="Symbol"
+      >:</a
+      ><a name="2195"
+      > </a
+      ><a name="2196" class="Symbol"
+      >(</a
+      ><a name="2197" href="Control.Strategy.html#2197" class="Bound"
+      >q</a
+      ><a name="2198"
+      > </a
+      ><a name="2199" class="Symbol"
+      >:</a
+      ><a name="2200"
+      > </a
+      ><a name="2201" href="Control.Strategy.html#682" class="Bound"
+      >Q</a
+      ><a name="2202" class="Symbol"
+      >)</a
+      ><a name="2203"
+      > </a
+      ><a name="2204" class="Symbol"
+      >&#8594;</a
+      ><a name="2205"
+      > </a
+      ><a name="2206" href="Control.Strategy.html#690" class="Bound"
+      >R</a
+      ><a name="2207"
+      > </a
+      ><a name="2208" href="Control.Strategy.html#2197" class="Bound"
+      >q</a
+      ><a name="2209" class="Symbol"
+      >)</a
+      ><a name="2210"
+      > </a
+      ><a name="2211" class="Keyword"
+      >where</a
+      ><a name="2216"
+      >
+    </a
+      ><a name="2221" href="Control.Strategy.html#2221" class="Function"
+      >run</a
+      ><a name="2224"
+      > </a
+      ><a name="2225" class="Symbol"
+      >:</a
+      ><a name="2226"
+      > </a
+      ><a name="2227" class="Symbol"
+      >&#8704;</a
+      ><a name="2228"
+      > </a
+      ><a name="2229" class="Symbol"
+      >{</a
+      ><a name="2230" href="Control.Strategy.html#2230" class="Bound"
+      >A</a
+      ><a name="2231" class="Symbol"
+      >}</a
+      ><a name="2232"
+      > </a
+      ><a name="2233" class="Symbol"
+      >&#8594;</a
+      ><a name="2234"
+      > </a
+      ><a name="2235" href="Control.Strategy.html#721" class="Function"
+      >M</a
+      ><a name="2236"
+      > </a
+      ><a name="2237" href="Control.Strategy.html#2230" class="Bound"
+      >A</a
+      ><a name="2238"
+      > </a
+      ><a name="2239" class="Symbol"
+      >&#8594;</a
+      ><a name="2240"
+      > </a
+      ><a name="2241" href="Control.Strategy.html#2230" class="Bound"
+      >A</a
+      ><a name="2242"
+      >
+    </a
+      ><a name="2247" href="Control.Strategy.html#2221" class="Function"
+      >run</a
+      ><a name="2250"
+      > </a
+      ><a name="2251" class="Symbol"
+      >(</a
+      ><a name="2252" href="Control.Strategy.html#253" class="InductiveConstructor"
+      >ask</a
+      ><a name="2255"
+      > </a
+      ><a name="2256" href="Control.Strategy.html#2256" class="Bound"
+      >q?</a
+      ><a name="2258"
+      > </a
+      ><a name="2259" href="Control.Strategy.html#2259" class="Bound"
+      >cont</a
+      ><a name="2263" class="Symbol"
+      >)</a
+      ><a name="2264"
+      > </a
+      ><a name="2265" class="Symbol"
+      >=</a
+      ><a name="2266"
+      > </a
+      ><a name="2267" href="Control.Strategy.html#2221" class="Function"
+      >run</a
+      ><a name="2270"
+      > </a
+      ><a name="2271" class="Symbol"
+      >(</a
+      ><a name="2272" href="Control.Strategy.html#2259" class="Bound"
+      >cont</a
+      ><a name="2276"
+      > </a
+      ><a name="2277" class="Symbol"
+      >(</a
+      ><a name="2278" href="Control.Strategy.html#2187" class="Bound"
+      >Oracle</a
+      ><a name="2284"
+      > </a
+      ><a name="2285" href="Control.Strategy.html#2256" class="Bound"
+      >q?</a
+      ><a name="2287" class="Symbol"
+      >))</a
+      ><a name="2289"
+      >
+    </a
+      ><a name="2294" href="Control.Strategy.html#2221" class="Function"
+      >run</a
+      ><a name="2297"
+      > </a
+      ><a name="2298" class="Symbol"
+      >(</a
+      ><a name="2299" href="Control.Strategy.html#319" class="InductiveConstructor"
+      >done</a
+      ><a name="2303"
+      > </a
+      ><a name="2304" href="Control.Strategy.html#2304" class="Bound"
+      >x</a
+      ><a name="2305" class="Symbol"
+      >)</a
+      ><a name="2306"
+      >      </a
+      ><a name="2312" class="Symbol"
+      >=</a
+      ><a name="2313"
+      > </a
+      ><a name="2314" href="Control.Strategy.html#2304" class="Bound"
+      >x</a
+      ><a name="2315"
+      >
+
+    </a
+      ><a name="2321" class="Keyword"
+      >module</a
+      ><a name="2327"
+      > </a
+      ><a name="2328" href="Control.Strategy.html#2328" class="Module"
+      >_</a
+      ><a name="2329"
+      > </a
+      ><a name="2330" class="Symbol"
+      >{</a
+      ><a name="2331" href="Control.Strategy.html#2331" class="Bound"
+      >A</a
+      ><a name="2332"
+      > </a
+      ><a name="2333" href="Control.Strategy.html#2333" class="Bound"
+      >B</a
+      ><a name="2334"
+      > </a
+      ><a name="2335" class="Symbol"
+      >:</a
+      ><a name="2336"
+      > </a
+      ><a name="2337" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="2338" class="Symbol"
+      >}</a
+      ><a name="2339"
+      > </a
+      ><a name="2340" class="Symbol"
+      >(</a
+      ><a name="2341" href="Control.Strategy.html#2341" class="Bound"
+      >f</a
+      ><a name="2342"
+      > </a
+      ><a name="2343" class="Symbol"
+      >:</a
+      ><a name="2344"
+      > </a
+      ><a name="2345" href="Control.Strategy.html#2331" class="Bound"
+      >A</a
+      ><a name="2346"
+      > </a
+      ><a name="2347" class="Symbol"
+      >&#8594;</a
+      ><a name="2348"
+      > </a
+      ><a name="2349" href="Control.Strategy.html#721" class="Function"
+      >M</a
+      ><a name="2350"
+      > </a
+      ><a name="2351" href="Control.Strategy.html#2333" class="Bound"
+      >B</a
+      ><a name="2352" class="Symbol"
+      >)</a
+      ><a name="2353"
+      > </a
+      ><a name="2354" class="Keyword"
+      >where</a
+      ><a name="2359"
+      >
+        </a
+      ><a name="2368" href="Control.Strategy.html#2368" class="Function"
+      >run-&gt;&gt;=</a
+      ><a name="2375"
+      > </a
+      ><a name="2376" class="Symbol"
+      >:</a
+      ><a name="2377"
+      > </a
+      ><a name="2378" class="Symbol"
+      >(</a
+      ><a name="2379" href="Control.Strategy.html#2379" class="Bound"
+      >s</a
+      ><a name="2380"
+      > </a
+      ><a name="2381" class="Symbol"
+      >:</a
+      ><a name="2382"
+      > </a
+      ><a name="2383" href="Control.Strategy.html#721" class="Function"
+      >M</a
+      ><a name="2384"
+      > </a
+      ><a name="2385" href="Control.Strategy.html#2331" class="Bound"
+      >A</a
+      ><a name="2386" class="Symbol"
+      >)</a
+      ><a name="2387"
+      > </a
+      ><a name="2388" class="Symbol"
+      >&#8594;</a
+      ><a name="2389"
+      > </a
+      ><a name="2390" href="Control.Strategy.html#2221" class="Function"
+      >run</a
+      ><a name="2393"
+      > </a
+      ><a name="2394" class="Symbol"
+      >(</a
+      ><a name="2395" href="Control.Strategy.html#2379" class="Bound"
+      >s</a
+      ><a name="2396"
+      > </a
+      ><a name="2397" href="Control.Strategy.html#1038" class="Function Operator"
+      >&gt;&gt;=</a
+      ><a name="2400"
+      > </a
+      ><a name="2401" href="Control.Strategy.html#2341" class="Bound"
+      >f</a
+      ><a name="2402" class="Symbol"
+      >)</a
+      ><a name="2403"
+      > </a
+      ><a name="2404" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="2405"
+      > </a
+      ><a name="2406" href="Control.Strategy.html#2221" class="Function"
+      >run</a
+      ><a name="2409"
+      > </a
+      ><a name="2410" class="Symbol"
+      >(</a
+      ><a name="2411" href="Control.Strategy.html#2341" class="Bound"
+      >f</a
+      ><a name="2412"
+      > </a
+      ><a name="2413" class="Symbol"
+      >(</a
+      ><a name="2414" href="Control.Strategy.html#2221" class="Function"
+      >run</a
+      ><a name="2417"
+      > </a
+      ><a name="2418" href="Control.Strategy.html#2379" class="Bound"
+      >s</a
+      ><a name="2419" class="Symbol"
+      >))</a
+      ><a name="2421"
+      >
+        </a
+      ><a name="2430" href="Control.Strategy.html#2368" class="Function"
+      >run-&gt;&gt;=</a
+      ><a name="2437"
+      > </a
+      ><a name="2438" class="Symbol"
+      >(</a
+      ><a name="2439" href="Control.Strategy.html#253" class="InductiveConstructor"
+      >ask</a
+      ><a name="2442"
+      > </a
+      ><a name="2443" href="Control.Strategy.html#2443" class="Bound"
+      >q?</a
+      ><a name="2445"
+      > </a
+      ><a name="2446" href="Control.Strategy.html#2446" class="Bound"
+      >cont</a
+      ><a name="2450" class="Symbol"
+      >)</a
+      ><a name="2451"
+      > </a
+      ><a name="2452" class="Symbol"
+      >=</a
+      ><a name="2453"
+      > </a
+      ><a name="2454" href="Control.Strategy.html#2368" class="Function"
+      >run-&gt;&gt;=</a
+      ><a name="2461"
+      > </a
+      ><a name="2462" class="Symbol"
+      >(</a
+      ><a name="2463" href="Control.Strategy.html#2446" class="Bound"
+      >cont</a
+      ><a name="2467"
+      > </a
+      ><a name="2468" class="Symbol"
+      >(</a
+      ><a name="2469" href="Control.Strategy.html#2187" class="Bound"
+      >Oracle</a
+      ><a name="2475"
+      > </a
+      ><a name="2476" href="Control.Strategy.html#2443" class="Bound"
+      >q?</a
+      ><a name="2478" class="Symbol"
+      >))</a
+      ><a name="2480"
+      >
+        </a
+      ><a name="2489" href="Control.Strategy.html#2368" class="Function"
+      >run-&gt;&gt;=</a
+      ><a name="2496"
+      > </a
+      ><a name="2497" class="Symbol"
+      >(</a
+      ><a name="2498" href="Control.Strategy.html#319" class="InductiveConstructor"
+      >done</a
+      ><a name="2502"
+      > </a
+      ><a name="2503" href="Control.Strategy.html#2503" class="Bound"
+      >x</a
+      ><a name="2504" class="Symbol"
+      >)</a
+      ><a name="2505"
+      >      </a
+      ><a name="2511" class="Symbol"
+      >=</a
+      ><a name="2512"
+      > </a
+      ><a name="2513" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="2517"
+      >
+
+    </a
+      ><a name="2523" class="Keyword"
+      >module</a
+      ><a name="2529"
+      > </a
+      ><a name="2530" href="Control.Strategy.html#2530" class="Module"
+      >_</a
+      ><a name="2531"
+      > </a
+      ><a name="2532" class="Symbol"
+      >{</a
+      ><a name="2533" href="Control.Strategy.html#2533" class="Bound"
+      >A</a
+      ><a name="2534"
+      > </a
+      ><a name="2535" href="Control.Strategy.html#2535" class="Bound"
+      >B</a
+      ><a name="2536"
+      > </a
+      ><a name="2537" class="Symbol"
+      >:</a
+      ><a name="2538"
+      > </a
+      ><a name="2539" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="2540" class="Symbol"
+      >}</a
+      ><a name="2541"
+      > </a
+      ><a name="2542" class="Symbol"
+      >(</a
+      ><a name="2543" href="Control.Strategy.html#2543" class="Bound"
+      >f</a
+      ><a name="2544"
+      > </a
+      ><a name="2545" class="Symbol"
+      >:</a
+      ><a name="2546"
+      > </a
+      ><a name="2547" href="Control.Strategy.html#2533" class="Bound"
+      >A</a
+      ><a name="2548"
+      > </a
+      ><a name="2549" class="Symbol"
+      >&#8594;</a
+      ><a name="2550"
+      > </a
+      ><a name="2551" href="Control.Strategy.html#2535" class="Bound"
+      >B</a
+      ><a name="2552" class="Symbol"
+      >)</a
+      ><a name="2553"
+      > </a
+      ><a name="2554" class="Keyword"
+      >where</a
+      ><a name="2559"
+      >
+        </a
+      ><a name="2568" href="Control.Strategy.html#2568" class="Function"
+      >run-map</a
+      ><a name="2575"
+      > </a
+      ><a name="2576" class="Symbol"
+      >:</a
+      ><a name="2577"
+      > </a
+      ><a name="2578" class="Symbol"
+      >(</a
+      ><a name="2579" href="Control.Strategy.html#2579" class="Bound"
+      >s</a
+      ><a name="2580"
+      > </a
+      ><a name="2581" class="Symbol"
+      >:</a
+      ><a name="2582"
+      > </a
+      ><a name="2583" href="Control.Strategy.html#721" class="Function"
+      >M</a
+      ><a name="2584"
+      > </a
+      ><a name="2585" href="Control.Strategy.html#2533" class="Bound"
+      >A</a
+      ><a name="2586" class="Symbol"
+      >)</a
+      ><a name="2587"
+      > </a
+      ><a name="2588" class="Symbol"
+      >&#8594;</a
+      ><a name="2589"
+      > </a
+      ><a name="2590" href="Control.Strategy.html#2221" class="Function"
+      >run</a
+      ><a name="2593"
+      > </a
+      ><a name="2594" class="Symbol"
+      >(</a
+      ><a name="2595" href="Control.Strategy.html#918" class="Function"
+      >map</a
+      ><a name="2598"
+      > </a
+      ><a name="2599" href="Control.Strategy.html#2543" class="Bound"
+      >f</a
+      ><a name="2600"
+      > </a
+      ><a name="2601" href="Control.Strategy.html#2579" class="Bound"
+      >s</a
+      ><a name="2602" class="Symbol"
+      >)</a
+      ><a name="2603"
+      > </a
+      ><a name="2604" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="2605"
+      > </a
+      ><a name="2606" href="Control.Strategy.html#2543" class="Bound"
+      >f</a
+      ><a name="2607"
+      > </a
+      ><a name="2608" class="Symbol"
+      >(</a
+      ><a name="2609" href="Control.Strategy.html#2221" class="Function"
+      >run</a
+      ><a name="2612"
+      > </a
+      ><a name="2613" href="Control.Strategy.html#2579" class="Bound"
+      >s</a
+      ><a name="2614" class="Symbol"
+      >)</a
+      ><a name="2615"
+      >
+        </a
+      ><a name="2624" href="Control.Strategy.html#2568" class="Function"
+      >run-map</a
+      ><a name="2631"
+      > </a
+      ><a name="2632" class="Symbol"
+      >=</a
+      ><a name="2633"
+      > </a
+      ><a name="2634" href="Control.Strategy.html#2368" class="Function"
+      >run-&gt;&gt;=</a
+      ><a name="2641"
+      > </a
+      ><a name="2642" class="Symbol"
+      >(</a
+      ><a name="2643" href="Control.Strategy.html#874" class="Function"
+      >return</a
+      ><a name="2649"
+      > </a
+      ><a name="2650" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="2651"
+      > </a
+      ><a name="2652" href="Control.Strategy.html#2543" class="Bound"
+      >f</a
+      ><a name="2653" class="Symbol"
+      >)</a
+      ><a name="2654"
+      > 
+
+    </a
+      ><a name="2661" class="Keyword"
+      >module</a
+      ><a name="2667"
+      > </a
+      ><a name="2668" href="Control.Strategy.html#2668" class="Module"
+      >_</a
+      ><a name="2669"
+      > </a
+      ><a name="2670" class="Symbol"
+      >{</a
+      ><a name="2671" href="Control.Strategy.html#2671" class="Bound"
+      >A</a
+      ><a name="2672"
+      > </a
+      ><a name="2673" href="Control.Strategy.html#2673" class="Bound"
+      >B</a
+      ><a name="2674"
+      > </a
+      ><a name="2675" class="Symbol"
+      >:</a
+      ><a name="2676"
+      > </a
+      ><a name="2677" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="2678" class="Symbol"
+      >}</a
+      ><a name="2679"
+      > </a
+      ><a name="2680" class="Keyword"
+      >where</a
+      ><a name="2685"
+      >
+        </a
+      ><a name="2694" href="Control.Strategy.html#2694" class="Function"
+      >run-&#8776;</a
+      ><a name="2699"
+      > </a
+      ><a name="2700" class="Symbol"
+      >:</a
+      ><a name="2701"
+      > </a
+      ><a name="2702" class="Symbol"
+      >{</a
+      ><a name="2703" href="Control.Strategy.html#2703" class="Bound"
+      >s&#8320;</a
+      ><a name="2705"
+      > </a
+      ><a name="2706" href="Control.Strategy.html#2706" class="Bound"
+      >s&#8321;</a
+      ><a name="2708"
+      > </a
+      ><a name="2709" class="Symbol"
+      >:</a
+      ><a name="2710"
+      > </a
+      ><a name="2711" href="Control.Strategy.html#721" class="Function"
+      >M</a
+      ><a name="2712"
+      > </a
+      ><a name="2713" href="Control.Strategy.html#2671" class="Bound"
+      >A</a
+      ><a name="2714" class="Symbol"
+      >}</a
+      ><a name="2715"
+      > </a
+      ><a name="2716" class="Symbol"
+      >&#8594;</a
+      ><a name="2717"
+      > </a
+      ><a name="2718" href="Control.Strategy.html#2703" class="Bound"
+      >s&#8320;</a
+      ><a name="2720"
+      > </a
+      ><a name="2721" href="Control.Strategy.html#363" class="Datatype Operator"
+      >&#8776;</a
+      ><a name="2722"
+      > </a
+      ><a name="2723" href="Control.Strategy.html#2706" class="Bound"
+      >s&#8321;</a
+      ><a name="2725"
+      > </a
+      ><a name="2726" class="Symbol"
+      >&#8594;</a
+      ><a name="2727"
+      > </a
+      ><a name="2728" href="Control.Strategy.html#2221" class="Function"
+      >run</a
+      ><a name="2731"
+      > </a
+      ><a name="2732" href="Control.Strategy.html#2703" class="Bound"
+      >s&#8320;</a
+      ><a name="2734"
+      > </a
+      ><a name="2735" href="Relation.Binary.Core.html#4603" class="Datatype Operator"
+      >&#8801;</a
+      ><a name="2736"
+      > </a
+      ><a name="2737" href="Control.Strategy.html#2221" class="Function"
+      >run</a
+      ><a name="2740"
+      > </a
+      ><a name="2741" href="Control.Strategy.html#2706" class="Bound"
+      >s&#8321;</a
+      ><a name="2743"
+      >
+        </a
+      ><a name="2752" href="Control.Strategy.html#2694" class="Function"
+      >run-&#8776;</a
+      ><a name="2757"
+      > </a
+      ><a name="2758" class="Symbol"
+      >(</a
+      ><a name="2759" href="Control.Strategy.html#414" class="InductiveConstructor"
+      >ask-ask</a
+      ><a name="2766"
+      > </a
+      ><a name="2767" href="Control.Strategy.html#2767" class="Bound"
+      >q?</a
+      ><a name="2769"
+      > </a
+      ><a name="2770" href="Control.Strategy.html#2770" class="Bound"
+      >cont</a
+      ><a name="2774" class="Symbol"
+      >)</a
+      ><a name="2775"
+      > </a
+      ><a name="2776" class="Symbol"
+      >=</a
+      ><a name="2777"
+      > </a
+      ><a name="2778" href="Control.Strategy.html#2694" class="Function"
+      >run-&#8776;</a
+      ><a name="2783"
+      > </a
+      ><a name="2784" class="Symbol"
+      >(</a
+      ><a name="2785" href="Control.Strategy.html#2770" class="Bound"
+      >cont</a
+      ><a name="2789"
+      > </a
+      ><a name="2790" class="Symbol"
+      >(</a
+      ><a name="2791" href="Control.Strategy.html#2187" class="Bound"
+      >Oracle</a
+      ><a name="2797"
+      > </a
+      ><a name="2798" href="Control.Strategy.html#2767" class="Bound"
+      >q?</a
+      ><a name="2800" class="Symbol"
+      >))</a
+      ><a name="2802"
+      >
+        </a
+      ><a name="2811" href="Control.Strategy.html#2694" class="Function"
+      >run-&#8776;</a
+      ><a name="2816"
+      > </a
+      ><a name="2817" class="Symbol"
+      >(</a
+      ><a name="2818" href="Control.Strategy.html#496" class="InductiveConstructor"
+      >done-done</a
+      ><a name="2827"
+      > </a
+      ><a name="2828" href="Control.Strategy.html#2828" class="Bound"
+      >x</a
+      ><a name="2829" class="Symbol"
+      >)</a
+      ><a name="2830"
+      >     </a
+      ><a name="2835" class="Symbol"
+      >=</a
+      ><a name="2836"
+      > </a
+      ><a name="2837" href="Relation.Binary.Core.html#4659" class="InductiveConstructor"
+      >refl</a
+      ><a name="2841"
+      >
+
+  </a
+      ><a name="2845" class="Keyword"
+      >private</a
+      ><a name="2852"
+      >
+    </a
+      ><a name="2857" href="Control.Strategy.html#2857" class="Function"
+      >State</a
+      ><a name="2862"
+      > </a
+      ><a name="2863" class="Symbol"
+      >:</a
+      ><a name="2864"
+      > </a
+      ><a name="2865" class="Symbol"
+      >(</a
+      ><a name="2866" href="Control.Strategy.html#2866" class="Bound"
+      >S</a
+      ><a name="2867"
+      > </a
+      ><a name="2868" href="Control.Strategy.html#2868" class="Bound"
+      >A</a
+      ><a name="2869"
+      > </a
+      ><a name="2870" class="Symbol"
+      >:</a
+      ><a name="2871"
+      > </a
+      ><a name="2872" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="2873" class="Symbol"
+      >)</a
+      ><a name="2874"
+      > </a
+      ><a name="2875" class="Symbol"
+      >&#8594;</a
+      ><a name="2876"
+      > </a
+      ><a name="2877" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="2878"
+      >
+    </a
+      ><a name="2883" href="Control.Strategy.html#2857" class="Function"
+      >State</a
+      ><a name="2888"
+      > </a
+      ><a name="2889" href="Control.Strategy.html#2889" class="Bound"
+      >S</a
+      ><a name="2890"
+      > </a
+      ><a name="2891" href="Control.Strategy.html#2891" class="Bound"
+      >A</a
+      ><a name="2892"
+      > </a
+      ><a name="2893" class="Symbol"
+      >=</a
+      ><a name="2894"
+      > </a
+      ><a name="2895" href="Control.Strategy.html#2889" class="Bound"
+      >S</a
+      ><a name="2896"
+      > </a
+      ><a name="2897" class="Symbol"
+      >&#8594;</a
+      ><a name="2898"
+      > </a
+      ><a name="2899" href="Control.Strategy.html#2891" class="Bound"
+      >A</a
+      ><a name="2900"
+      > </a
+      ><a name="2901" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="2902"
+      > </a
+      ><a name="2903" href="Control.Strategy.html#2889" class="Bound"
+      >S</a
+      ><a name="2904"
+      >
+
+  </a
+      ><a name="2908" class="Comment"
+      >-- redundant since we have EffectfulRun, but...</a
+      ><a name="2955"
+      >
+  </a
+      ><a name="2958" class="Keyword"
+      >module</a
+      ><a name="2964"
+      > </a
+      ><a name="2965" href="Control.Strategy.html#2965" class="Module"
+      >StatefulRun</a
+      ><a name="2976"
+      > </a
+      ><a name="2977" class="Symbol"
+      >{</a
+      ><a name="2978" href="Control.Strategy.html#2978" class="Bound"
+      >S</a
+      ><a name="2979"
+      > </a
+      ><a name="2980" class="Symbol"
+      >:</a
+      ><a name="2981"
+      > </a
+      ><a name="2982" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="2983" class="Symbol"
+      >}</a
+      ><a name="2984"
+      > </a
+      ><a name="2985" class="Symbol"
+      >(</a
+      ><a name="2986" href="Control.Strategy.html#2986" class="Bound"
+      >Oracle</a
+      ><a name="2992"
+      > </a
+      ><a name="2993" class="Symbol"
+      >:</a
+      ><a name="2994"
+      > </a
+      ><a name="2995" class="Symbol"
+      >(</a
+      ><a name="2996" href="Control.Strategy.html#2996" class="Bound"
+      >q</a
+      ><a name="2997"
+      > </a
+      ><a name="2998" class="Symbol"
+      >:</a
+      ><a name="2999"
+      > </a
+      ><a name="3000" href="Control.Strategy.html#682" class="Bound"
+      >Q</a
+      ><a name="3001" class="Symbol"
+      >)</a
+      ><a name="3002"
+      > </a
+      ><a name="3003" class="Symbol"
+      >&#8594;</a
+      ><a name="3004"
+      > </a
+      ><a name="3005" href="Control.Strategy.html#2857" class="Function"
+      >State</a
+      ><a name="3010"
+      > </a
+      ><a name="3011" href="Control.Strategy.html#2978" class="Bound"
+      >S</a
+      ><a name="3012"
+      > </a
+      ><a name="3013" class="Symbol"
+      >(</a
+      ><a name="3014" href="Control.Strategy.html#690" class="Bound"
+      >R</a
+      ><a name="3015"
+      > </a
+      ><a name="3016" href="Control.Strategy.html#2996" class="Bound"
+      >q</a
+      ><a name="3017" class="Symbol"
+      >))</a
+      ><a name="3019"
+      > </a
+      ><a name="3020" class="Keyword"
+      >where</a
+      ><a name="3025"
+      >
+    </a
+      ><a name="3030" href="Control.Strategy.html#3030" class="Function"
+      >runS</a
+      ><a name="3034"
+      > </a
+      ><a name="3035" class="Symbol"
+      >:</a
+      ><a name="3036"
+      > </a
+      ><a name="3037" class="Symbol"
+      >&#8704;</a
+      ><a name="3038"
+      > </a
+      ><a name="3039" class="Symbol"
+      >{</a
+      ><a name="3040" href="Control.Strategy.html#3040" class="Bound"
+      >A</a
+      ><a name="3041" class="Symbol"
+      >}</a
+      ><a name="3042"
+      > </a
+      ><a name="3043" class="Symbol"
+      >&#8594;</a
+      ><a name="3044"
+      > </a
+      ><a name="3045" href="Control.Strategy.html#721" class="Function"
+      >M</a
+      ><a name="3046"
+      > </a
+      ><a name="3047" href="Control.Strategy.html#3040" class="Bound"
+      >A</a
+      ><a name="3048"
+      > </a
+      ><a name="3049" class="Symbol"
+      >&#8594;</a
+      ><a name="3050"
+      > </a
+      ><a name="3051" href="Control.Strategy.html#2857" class="Function"
+      >State</a
+      ><a name="3056"
+      > </a
+      ><a name="3057" href="Control.Strategy.html#2978" class="Bound"
+      >S</a
+      ><a name="3058"
+      > </a
+      ><a name="3059" href="Control.Strategy.html#3040" class="Bound"
+      >A</a
+      ><a name="3060"
+      >
+    </a
+      ><a name="3065" href="Control.Strategy.html#3030" class="Function"
+      >runS</a
+      ><a name="3069"
+      > </a
+      ><a name="3070" class="Symbol"
+      >(</a
+      ><a name="3071" href="Control.Strategy.html#253" class="InductiveConstructor"
+      >ask</a
+      ><a name="3074"
+      > </a
+      ><a name="3075" href="Control.Strategy.html#3075" class="Bound"
+      >q?</a
+      ><a name="3077"
+      > </a
+      ><a name="3078" href="Control.Strategy.html#3078" class="Bound"
+      >cont</a
+      ><a name="3082" class="Symbol"
+      >)</a
+      ><a name="3083"
+      > </a
+      ><a name="3084" href="Control.Strategy.html#3084" class="Bound"
+      >s</a
+      ><a name="3085"
+      > </a
+      ><a name="3086" class="Symbol"
+      >=</a
+      ><a name="3087"
+      > </a
+      ><a name="3088" href="Function.html#2755" class="Function Operator"
+      >case</a
+      ><a name="3092"
+      > </a
+      ><a name="3093" href="Control.Strategy.html#2986" class="Bound"
+      >Oracle</a
+      ><a name="3099"
+      > </a
+      ><a name="3100" href="Control.Strategy.html#3075" class="Bound"
+      >q?</a
+      ><a name="3102"
+      > </a
+      ><a name="3103" href="Control.Strategy.html#3084" class="Bound"
+      >s</a
+      ><a name="3104"
+      > </a
+      ><a name="3105" href="Function.html#2755" class="Function Operator"
+      >of</a
+      ><a name="3107"
+      > </a
+      ><a name="3108" class="Symbol"
+      >&#955;</a
+      ><a name="3109"
+      > </a
+      ><a name="3110" class="Symbol"
+      >{</a
+      ><a name="3111"
+      > </a
+      ><a name="3112" class="Symbol"
+      >(</a
+      ><a name="3113" href="Control.Strategy.html#3113" class="Bound"
+      >x</a
+      ><a name="3114"
+      > </a
+      ><a name="3115" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="3116"
+      > </a
+      ><a name="3117" href="Control.Strategy.html#3117" class="Bound"
+      >s'</a
+      ><a name="3119" class="Symbol"
+      >)</a
+      ><a name="3120"
+      > </a
+      ><a name="3121" class="Symbol"
+      >&#8594;</a
+      ><a name="3122"
+      > </a
+      ><a name="3123" href="Control.Strategy.html#3030" class="Function"
+      >runS</a
+      ><a name="3127"
+      > </a
+      ><a name="3128" class="Symbol"
+      >(</a
+      ><a name="3129" href="Control.Strategy.html#3078" class="Bound"
+      >cont</a
+      ><a name="3133"
+      > </a
+      ><a name="3134" href="Control.Strategy.html#3113" class="Bound"
+      >x</a
+      ><a name="3135" class="Symbol"
+      >)</a
+      ><a name="3136"
+      > </a
+      ><a name="3137" href="Control.Strategy.html#3117" class="Bound"
+      >s'</a
+      ><a name="3139"
+      > </a
+      ><a name="3140" class="Symbol"
+      >}</a
+      ><a name="3141"
+      >
+    </a
+      ><a name="3146" href="Control.Strategy.html#3030" class="Function"
+      >runS</a
+      ><a name="3150"
+      > </a
+      ><a name="3151" class="Symbol"
+      >(</a
+      ><a name="3152" href="Control.Strategy.html#319" class="InductiveConstructor"
+      >done</a
+      ><a name="3156"
+      > </a
+      ><a name="3157" href="Control.Strategy.html#3157" class="Bound"
+      >x</a
+      ><a name="3158" class="Symbol"
+      >)</a
+      ><a name="3159"
+      >      </a
+      ><a name="3165" href="Control.Strategy.html#3165" class="Bound"
+      >s</a
+      ><a name="3166"
+      > </a
+      ><a name="3167" class="Symbol"
+      >=</a
+      ><a name="3168"
+      > </a
+      ><a name="3169" href="Control.Strategy.html#3157" class="Bound"
+      >x</a
+      ><a name="3170"
+      > </a
+      ><a name="3171" href="Data.Product.html#509" class="InductiveConstructor Operator"
+      >,</a
+      ><a name="3172"
+      > </a
+      ><a name="3173" href="Control.Strategy.html#3165" class="Bound"
+      >s</a
+      ><a name="3174"
+      >
+
+    </a
+      ><a name="3180" href="Control.Strategy.html#3180" class="Function"
+      >evalS</a
+      ><a name="3185"
+      > </a
+      ><a name="3186" class="Symbol"
+      >:</a
+      ><a name="3187"
+      > </a
+      ><a name="3188" class="Symbol"
+      >&#8704;</a
+      ><a name="3189"
+      > </a
+      ><a name="3190" class="Symbol"
+      >{</a
+      ><a name="3191" href="Control.Strategy.html#3191" class="Bound"
+      >A</a
+      ><a name="3192" class="Symbol"
+      >}</a
+      ><a name="3193"
+      > </a
+      ><a name="3194" class="Symbol"
+      >&#8594;</a
+      ><a name="3195"
+      > </a
+      ><a name="3196" href="Control.Strategy.html#721" class="Function"
+      >M</a
+      ><a name="3197"
+      > </a
+      ><a name="3198" href="Control.Strategy.html#3191" class="Bound"
+      >A</a
+      ><a name="3199"
+      > </a
+      ><a name="3200" class="Symbol"
+      >&#8594;</a
+      ><a name="3201"
+      > </a
+      ><a name="3202" href="Control.Strategy.html#2978" class="Bound"
+      >S</a
+      ><a name="3203"
+      > </a
+      ><a name="3204" class="Symbol"
+      >&#8594;</a
+      ><a name="3205"
+      > </a
+      ><a name="3206" href="Control.Strategy.html#3191" class="Bound"
+      >A</a
+      ><a name="3207"
+      >
+    </a
+      ><a name="3212" href="Control.Strategy.html#3180" class="Function"
+      >evalS</a
+      ><a name="3217"
+      > </a
+      ><a name="3218" href="Control.Strategy.html#3218" class="Bound"
+      >x</a
+      ><a name="3219"
+      > </a
+      ><a name="3220" href="Control.Strategy.html#3220" class="Bound"
+      >s</a
+      ><a name="3221"
+      > </a
+      ><a name="3222" class="Symbol"
+      >=</a
+      ><a name="3223"
+      > </a
+      ><a name="3224" href="Data.Product.html#525" class="Field"
+      >proj&#8321;</a
+      ><a name="3229"
+      > </a
+      ><a name="3230" class="Symbol"
+      >(</a
+      ><a name="3231" href="Control.Strategy.html#3030" class="Function"
+      >runS</a
+      ><a name="3235"
+      > </a
+      ><a name="3236" href="Control.Strategy.html#3218" class="Bound"
+      >x</a
+      ><a name="3237"
+      > </a
+      ><a name="3238" href="Control.Strategy.html#3220" class="Bound"
+      >s</a
+      ><a name="3239" class="Symbol"
+      >)</a
+      ><a name="3240"
+      >
+
+    </a
+      ><a name="3246" href="Control.Strategy.html#3246" class="Function"
+      >execS</a
+      ><a name="3251"
+      > </a
+      ><a name="3252" class="Symbol"
+      >:</a
+      ><a name="3253"
+      > </a
+      ><a name="3254" class="Symbol"
+      >&#8704;</a
+      ><a name="3255"
+      > </a
+      ><a name="3256" class="Symbol"
+      >{</a
+      ><a name="3257" href="Control.Strategy.html#3257" class="Bound"
+      >A</a
+      ><a name="3258" class="Symbol"
+      >}</a
+      ><a name="3259"
+      > </a
+      ><a name="3260" class="Symbol"
+      >&#8594;</a
+      ><a name="3261"
+      > </a
+      ><a name="3262" href="Control.Strategy.html#721" class="Function"
+      >M</a
+      ><a name="3263"
+      > </a
+      ><a name="3264" href="Control.Strategy.html#3257" class="Bound"
+      >A</a
+      ><a name="3265"
+      > </a
+      ><a name="3266" class="Symbol"
+      >&#8594;</a
+      ><a name="3267"
+      > </a
+      ><a name="3268" href="Control.Strategy.html#2978" class="Bound"
+      >S</a
+      ><a name="3269"
+      > </a
+      ><a name="3270" class="Symbol"
+      >&#8594;</a
+      ><a name="3271"
+      > </a
+      ><a name="3272" href="Control.Strategy.html#2978" class="Bound"
+      >S</a
+      ><a name="3273"
+      >
+    </a
+      ><a name="3278" href="Control.Strategy.html#3246" class="Function"
+      >execS</a
+      ><a name="3283"
+      > </a
+      ><a name="3284" href="Control.Strategy.html#3284" class="Bound"
+      >x</a
+      ><a name="3285"
+      > </a
+      ><a name="3286" href="Control.Strategy.html#3286" class="Bound"
+      >s</a
+      ><a name="3287"
+      > </a
+      ><a name="3288" class="Symbol"
+      >=</a
+      ><a name="3289"
+      > </a
+      ><a name="3290" href="Data.Product.html#539" class="Field"
+      >proj&#8322;</a
+      ><a name="3295"
+      > </a
+      ><a name="3296" class="Symbol"
+      >(</a
+      ><a name="3297" href="Control.Strategy.html#3030" class="Function"
+      >runS</a
+      ><a name="3301"
+      > </a
+      ><a name="3302" href="Control.Strategy.html#3284" class="Bound"
+      >x</a
+      ><a name="3303"
+      > </a
+      ><a name="3304" href="Control.Strategy.html#3286" class="Bound"
+      >s</a
+      ><a name="3305" class="Symbol"
+      >)</a
+      ><a name="3306"
+      >
+</a
+      ><a name="3307" class="Comment"
+      >-- -}</a
+      ><a name="3312"
+      >
+</a
+      ><a name="3313" class="Comment"
+      >-- -}</a
+      ><a name="3318"
+      >
+</a
+      ><a name="3319" class="Comment"
+      >-- -}</a
+      ><a name="3324"
+      >
+</a
+      ><a name="3325" class="Comment"
+      >-- -}</a
+      ><a name="3330"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

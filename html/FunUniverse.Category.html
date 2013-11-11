@@ -1,0 +1,1004 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >FunUniverse.Category</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Symbol"
+      >{-#</a
+      ><a name="4"
+      > </a
+      ><a name="5" class="Keyword"
+      >OPTIONS</a
+      ><a name="12"
+      > --without-K </a
+      ><a name="25" class="Symbol"
+      >#-}</a
+      ><a name="28"
+      >
+</a
+      ><a name="29" class="Keyword"
+      >open</a
+      ><a name="33"
+      > </a
+      ><a name="34" class="Keyword"
+      >import</a
+      ><a name="40"
+      > </a
+      ><a name="41" href="Level.NP.html#1" class="Module"
+      >Level.NP</a
+      ><a name="49"
+      > </a
+      ><a name="50" class="Keyword"
+      >using</a
+      ><a name="55"
+      > </a
+      ><a name="56" class="Symbol"
+      >(</a
+      ><a name="57"
+      >_&#8852;_</a
+      ><a name="60" class="Symbol"
+      >)</a
+      ><a name="61"
+      >
+</a
+      ><a name="62" class="Keyword"
+      >open</a
+      ><a name="66"
+      > </a
+      ><a name="67" class="Keyword"
+      >import</a
+      ><a name="73"
+      > </a
+      ><a name="74" href="Type.html#1" class="Module"
+      >Type</a
+      ><a name="78"
+      > </a
+      ><a name="79" class="Keyword"
+      >hiding</a
+      ><a name="85"
+      > </a
+      ><a name="86" class="Symbol"
+      >(</a
+      ><a name="87"
+      >&#9733;</a
+      ><a name="88" class="Symbol"
+      >)</a
+      ><a name="89"
+      >
+</a
+      ><a name="90" class="Keyword"
+      >open</a
+      ><a name="94"
+      > </a
+      ><a name="95" class="Keyword"
+      >import</a
+      ><a name="101"
+      > </a
+      ><a name="102" href="Function.NP.html#1" class="Module"
+      >Function.NP</a
+      ><a name="113"
+      > </a
+      ><a name="114" class="Keyword"
+      >using</a
+      ><a name="119"
+      > </a
+      ><a name="120" class="Symbol"
+      >(</a
+      ><a name="121"
+      >Endo</a
+      ><a name="125" class="Symbol"
+      >)</a
+      ><a name="126"
+      >
+</a
+      ><a name="127" class="Keyword"
+      >open</a
+      ><a name="131"
+      > </a
+      ><a name="132" class="Keyword"
+      >import</a
+      ><a name="138"
+      > </a
+      ><a name="139" href="Data.Nat.html#1" class="Module"
+      >Data.Nat</a
+      ><a name="147"
+      > </a
+      ><a name="148" class="Keyword"
+      >using</a
+      ><a name="153"
+      > </a
+      ><a name="154" class="Symbol"
+      >(</a
+      ><a name="155"
+      >&#8469;</a
+      ><a name="156" class="Symbol"
+      >;</a
+      ><a name="157"
+      > zero</a
+      ><a name="162" class="Symbol"
+      >;</a
+      ><a name="163"
+      > suc</a
+      ><a name="167" class="Symbol"
+      >)</a
+      ><a name="168"
+      >
+
+</a
+      ><a name="170" class="Keyword"
+      >module</a
+      ><a name="176"
+      > </a
+      ><a name="177" href="FunUniverse.Category.html#1" class="Module"
+      >FunUniverse.Category</a
+      ><a name="197"
+      > </a
+      ><a name="198" class="Symbol"
+      >{</a
+      ><a name="199" href="FunUniverse.Category.html#199" class="Bound"
+      >t</a
+      ><a name="200"
+      > </a
+      ><a name="201" href="FunUniverse.Category.html#201" class="Bound"
+      >&#8467;</a
+      ><a name="202" class="Symbol"
+      >}</a
+      ><a name="203"
+      > </a
+      ><a name="204" class="Symbol"
+      >{</a
+      ><a name="205" href="FunUniverse.Category.html#205" class="Bound"
+      >T</a
+      ><a name="206"
+      > </a
+      ><a name="207" class="Symbol"
+      >:</a
+      ><a name="208"
+      > </a
+      ><a name="209" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="210"
+      > </a
+      ><a name="211" href="FunUniverse.Category.html#199" class="Bound"
+      >t</a
+      ><a name="212" class="Symbol"
+      >}</a
+      ><a name="213"
+      > </a
+      ><a name="214" class="Symbol"
+      >(</a
+      ><a name="215" href="FunUniverse.Category.html#215" class="Bound Operator"
+      >_`&#8594;_</a
+      ><a name="219"
+      > </a
+      ><a name="220" class="Symbol"
+      >:</a
+      ><a name="221"
+      > </a
+      ><a name="222" href="FunUniverse.Category.html#205" class="Bound"
+      >T</a
+      ><a name="223"
+      > </a
+      ><a name="224" class="Symbol"
+      >&#8594;</a
+      ><a name="225"
+      > </a
+      ><a name="226" href="FunUniverse.Category.html#205" class="Bound"
+      >T</a
+      ><a name="227"
+      > </a
+      ><a name="228" class="Symbol"
+      >&#8594;</a
+      ><a name="229"
+      > </a
+      ><a name="230" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="231"
+      > </a
+      ><a name="232" href="FunUniverse.Category.html#201" class="Bound"
+      >&#8467;</a
+      ><a name="233" class="Symbol"
+      >)</a
+      ><a name="234"
+      > </a
+      ><a name="235" class="Keyword"
+      >where</a
+      ><a name="240"
+      >
+
+</a
+      ><a name="242" class="Keyword"
+      >module</a
+      ><a name="248"
+      > </a
+      ><a name="249" href="FunUniverse.Category.html#249" class="Module"
+      >CompositionNotations</a
+      ><a name="269"
+      >
+  </a
+      ><a name="272" class="Symbol"
+      >(</a
+      ><a name="273" href="FunUniverse.Category.html#273" class="Bound Operator"
+      >_&#8728;_</a
+      ><a name="276"
+      > </a
+      ><a name="277" class="Symbol"
+      >:</a
+      ><a name="278"
+      > </a
+      ><a name="279" class="Symbol"
+      >&#8704;</a
+      ><a name="280"
+      > </a
+      ><a name="281" class="Symbol"
+      >{</a
+      ><a name="282" href="FunUniverse.Category.html#282" class="Bound"
+      >A</a
+      ><a name="283"
+      > </a
+      ><a name="284" href="FunUniverse.Category.html#284" class="Bound"
+      >B</a
+      ><a name="285"
+      > </a
+      ><a name="286" href="FunUniverse.Category.html#286" class="Bound"
+      >C</a
+      ><a name="287" class="Symbol"
+      >}</a
+      ><a name="288"
+      > </a
+      ><a name="289" class="Symbol"
+      >&#8594;</a
+      ><a name="290"
+      > </a
+      ><a name="291" class="Symbol"
+      >(</a
+      ><a name="292" href="FunUniverse.Category.html#284" class="Bound"
+      >B</a
+      ><a name="293"
+      > </a
+      ><a name="294" href="FunUniverse.Category.html#215" class="Bound Operator"
+      >`&#8594;</a
+      ><a name="296"
+      > </a
+      ><a name="297" href="FunUniverse.Category.html#286" class="Bound"
+      >C</a
+      ><a name="298" class="Symbol"
+      >)</a
+      ><a name="299"
+      > </a
+      ><a name="300" class="Symbol"
+      >&#8594;</a
+      ><a name="301"
+      > </a
+      ><a name="302" class="Symbol"
+      >(</a
+      ><a name="303" href="FunUniverse.Category.html#282" class="Bound"
+      >A</a
+      ><a name="304"
+      > </a
+      ><a name="305" href="FunUniverse.Category.html#215" class="Bound Operator"
+      >`&#8594;</a
+      ><a name="307"
+      > </a
+      ><a name="308" href="FunUniverse.Category.html#284" class="Bound"
+      >B</a
+      ><a name="309" class="Symbol"
+      >)</a
+      ><a name="310"
+      > </a
+      ><a name="311" class="Symbol"
+      >&#8594;</a
+      ><a name="312"
+      > </a
+      ><a name="313" class="Symbol"
+      >(</a
+      ><a name="314" href="FunUniverse.Category.html#282" class="Bound"
+      >A</a
+      ><a name="315"
+      > </a
+      ><a name="316" href="FunUniverse.Category.html#215" class="Bound Operator"
+      >`&#8594;</a
+      ><a name="318"
+      > </a
+      ><a name="319" href="FunUniverse.Category.html#286" class="Bound"
+      >C</a
+      ><a name="320" class="Symbol"
+      >))</a
+      ><a name="322"
+      >
+  </a
+      ><a name="325" class="Symbol"
+      >{</a
+      ><a name="326" href="FunUniverse.Category.html#326" class="Bound"
+      >A</a
+      ><a name="327"
+      > </a
+      ><a name="328" href="FunUniverse.Category.html#328" class="Bound"
+      >B</a
+      ><a name="329"
+      > </a
+      ><a name="330" href="FunUniverse.Category.html#330" class="Bound"
+      >C</a
+      ><a name="331" class="Symbol"
+      >}</a
+      ><a name="332"
+      > </a
+      ><a name="333" class="Keyword"
+      >where</a
+      ><a name="338"
+      >
+
+  </a
+      ><a name="342" class="Keyword"
+      >infixr</a
+      ><a name="348"
+      > </a
+      ><a name="349" class="Number"
+      >1</a
+      ><a name="350"
+      > _&#8271;_
+  </a
+      ><a name="357" class="Keyword"
+      >infixr</a
+      ><a name="363"
+      > </a
+      ><a name="364" class="Number"
+      >1</a
+      ><a name="365"
+      > _&gt;&gt;&gt;_
+
+  </a
+      ><a name="375" href="FunUniverse.Category.html#375" class="Function Operator"
+      >_&#8271;_</a
+      ><a name="378"
+      > </a
+      ><a name="379" class="Symbol"
+      >:</a
+      ><a name="380"
+      > </a
+      ><a name="381" class="Symbol"
+      >(</a
+      ><a name="382" href="FunUniverse.Category.html#326" class="Bound"
+      >A</a
+      ><a name="383"
+      > </a
+      ><a name="384" href="FunUniverse.Category.html#215" class="Bound Operator"
+      >`&#8594;</a
+      ><a name="386"
+      > </a
+      ><a name="387" href="FunUniverse.Category.html#328" class="Bound"
+      >B</a
+      ><a name="388" class="Symbol"
+      >)</a
+      ><a name="389"
+      > </a
+      ><a name="390" class="Symbol"
+      >&#8594;</a
+      ><a name="391"
+      > </a
+      ><a name="392" class="Symbol"
+      >(</a
+      ><a name="393" href="FunUniverse.Category.html#328" class="Bound"
+      >B</a
+      ><a name="394"
+      > </a
+      ><a name="395" href="FunUniverse.Category.html#215" class="Bound Operator"
+      >`&#8594;</a
+      ><a name="397"
+      > </a
+      ><a name="398" href="FunUniverse.Category.html#330" class="Bound"
+      >C</a
+      ><a name="399" class="Symbol"
+      >)</a
+      ><a name="400"
+      > </a
+      ><a name="401" class="Symbol"
+      >&#8594;</a
+      ><a name="402"
+      > </a
+      ><a name="403" class="Symbol"
+      >(</a
+      ><a name="404" href="FunUniverse.Category.html#326" class="Bound"
+      >A</a
+      ><a name="405"
+      > </a
+      ><a name="406" href="FunUniverse.Category.html#215" class="Bound Operator"
+      >`&#8594;</a
+      ><a name="408"
+      > </a
+      ><a name="409" href="FunUniverse.Category.html#330" class="Bound"
+      >C</a
+      ><a name="410" class="Symbol"
+      >)</a
+      ><a name="411"
+      >
+  </a
+      ><a name="414" href="FunUniverse.Category.html#414" class="Bound"
+      >f</a
+      ><a name="415"
+      > </a
+      ><a name="416" href="FunUniverse.Category.html#375" class="Function Operator"
+      >&#8271;</a
+      ><a name="417"
+      > </a
+      ><a name="418" href="FunUniverse.Category.html#418" class="Bound"
+      >g</a
+      ><a name="419"
+      > </a
+      ><a name="420" class="Symbol"
+      >=</a
+      ><a name="421"
+      > </a
+      ><a name="422" href="FunUniverse.Category.html#418" class="Bound"
+      >g</a
+      ><a name="423"
+      > </a
+      ><a name="424" href="FunUniverse.Category.html#273" class="Bound Operator"
+      >&#8728;</a
+      ><a name="425"
+      > </a
+      ><a name="426" href="FunUniverse.Category.html#414" class="Bound"
+      >f</a
+      ><a name="427"
+      >
+
+  </a
+      ><a name="431" href="FunUniverse.Category.html#431" class="Function Operator"
+      >_&lt;&lt;&lt;_</a
+      ><a name="436"
+      > </a
+      ><a name="437" class="Symbol"
+      >:</a
+      ><a name="438"
+      > </a
+      ><a name="439" class="Symbol"
+      >(</a
+      ><a name="440" href="FunUniverse.Category.html#328" class="Bound"
+      >B</a
+      ><a name="441"
+      > </a
+      ><a name="442" href="FunUniverse.Category.html#215" class="Bound Operator"
+      >`&#8594;</a
+      ><a name="444"
+      > </a
+      ><a name="445" href="FunUniverse.Category.html#330" class="Bound"
+      >C</a
+      ><a name="446" class="Symbol"
+      >)</a
+      ><a name="447"
+      > </a
+      ><a name="448" class="Symbol"
+      >&#8594;</a
+      ><a name="449"
+      > </a
+      ><a name="450" class="Symbol"
+      >(</a
+      ><a name="451" href="FunUniverse.Category.html#326" class="Bound"
+      >A</a
+      ><a name="452"
+      > </a
+      ><a name="453" href="FunUniverse.Category.html#215" class="Bound Operator"
+      >`&#8594;</a
+      ><a name="455"
+      > </a
+      ><a name="456" href="FunUniverse.Category.html#328" class="Bound"
+      >B</a
+      ><a name="457" class="Symbol"
+      >)</a
+      ><a name="458"
+      > </a
+      ><a name="459" class="Symbol"
+      >&#8594;</a
+      ><a name="460"
+      > </a
+      ><a name="461" class="Symbol"
+      >(</a
+      ><a name="462" href="FunUniverse.Category.html#326" class="Bound"
+      >A</a
+      ><a name="463"
+      > </a
+      ><a name="464" href="FunUniverse.Category.html#215" class="Bound Operator"
+      >`&#8594;</a
+      ><a name="466"
+      > </a
+      ><a name="467" href="FunUniverse.Category.html#330" class="Bound"
+      >C</a
+      ><a name="468" class="Symbol"
+      >)</a
+      ><a name="469"
+      >
+  </a
+      ><a name="472" href="FunUniverse.Category.html#472" class="Bound"
+      >g</a
+      ><a name="473"
+      > </a
+      ><a name="474" href="FunUniverse.Category.html#431" class="Function Operator"
+      >&lt;&lt;&lt;</a
+      ><a name="477"
+      > </a
+      ><a name="478" href="FunUniverse.Category.html#478" class="Bound"
+      >f</a
+      ><a name="479"
+      > </a
+      ><a name="480" class="Symbol"
+      >=</a
+      ><a name="481"
+      > </a
+      ><a name="482" href="FunUniverse.Category.html#472" class="Bound"
+      >g</a
+      ><a name="483"
+      > </a
+      ><a name="484" href="FunUniverse.Category.html#273" class="Bound Operator"
+      >&#8728;</a
+      ><a name="485"
+      > </a
+      ><a name="486" href="FunUniverse.Category.html#478" class="Bound"
+      >f</a
+      ><a name="487"
+      >
+
+  </a
+      ><a name="491" href="FunUniverse.Category.html#491" class="Function Operator"
+      >_&gt;&gt;&gt;_</a
+      ><a name="496"
+      > </a
+      ><a name="497" class="Symbol"
+      >:</a
+      ><a name="498"
+      > </a
+      ><a name="499" class="Symbol"
+      >(</a
+      ><a name="500" href="FunUniverse.Category.html#326" class="Bound"
+      >A</a
+      ><a name="501"
+      > </a
+      ><a name="502" href="FunUniverse.Category.html#215" class="Bound Operator"
+      >`&#8594;</a
+      ><a name="504"
+      > </a
+      ><a name="505" href="FunUniverse.Category.html#328" class="Bound"
+      >B</a
+      ><a name="506" class="Symbol"
+      >)</a
+      ><a name="507"
+      > </a
+      ><a name="508" class="Symbol"
+      >&#8594;</a
+      ><a name="509"
+      > </a
+      ><a name="510" class="Symbol"
+      >(</a
+      ><a name="511" href="FunUniverse.Category.html#328" class="Bound"
+      >B</a
+      ><a name="512"
+      > </a
+      ><a name="513" href="FunUniverse.Category.html#215" class="Bound Operator"
+      >`&#8594;</a
+      ><a name="515"
+      > </a
+      ><a name="516" href="FunUniverse.Category.html#330" class="Bound"
+      >C</a
+      ><a name="517" class="Symbol"
+      >)</a
+      ><a name="518"
+      > </a
+      ><a name="519" class="Symbol"
+      >&#8594;</a
+      ><a name="520"
+      > </a
+      ><a name="521" class="Symbol"
+      >(</a
+      ><a name="522" href="FunUniverse.Category.html#326" class="Bound"
+      >A</a
+      ><a name="523"
+      > </a
+      ><a name="524" href="FunUniverse.Category.html#215" class="Bound Operator"
+      >`&#8594;</a
+      ><a name="526"
+      > </a
+      ><a name="527" href="FunUniverse.Category.html#330" class="Bound"
+      >C</a
+      ><a name="528" class="Symbol"
+      >)</a
+      ><a name="529"
+      >
+  </a
+      ><a name="532" href="FunUniverse.Category.html#532" class="Bound"
+      >f</a
+      ><a name="533"
+      > </a
+      ><a name="534" href="FunUniverse.Category.html#491" class="Function Operator"
+      >&gt;&gt;&gt;</a
+      ><a name="537"
+      > </a
+      ><a name="538" href="FunUniverse.Category.html#538" class="Bound"
+      >g</a
+      ><a name="539"
+      > </a
+      ><a name="540" class="Symbol"
+      >=</a
+      ><a name="541"
+      > </a
+      ><a name="542" href="FunUniverse.Category.html#532" class="Bound"
+      >f</a
+      ><a name="543"
+      > </a
+      ><a name="544" href="FunUniverse.Category.html#375" class="Function Operator"
+      >&#8271;</a
+      ><a name="545"
+      > </a
+      ><a name="546" href="FunUniverse.Category.html#538" class="Bound"
+      >g</a
+      ><a name="547"
+      >
+
+</a
+      ><a name="549" class="Keyword"
+      >record</a
+      ><a name="555"
+      > </a
+      ><a name="556" href="FunUniverse.Category.html#556" class="Record"
+      >Category</a
+      ><a name="564"
+      > </a
+      ><a name="565" class="Symbol"
+      >:</a
+      ><a name="566"
+      > </a
+      ><a name="567" href="Type.html#140" class="Function Operator"
+      >&#9733;</a
+      ><a name="568"
+      > </a
+      ><a name="569" class="Symbol"
+      >(</a
+      ><a name="570" href="FunUniverse.Category.html#201" class="Bound"
+      >&#8467;</a
+      ><a name="571"
+      > </a
+      ><a name="572" href="Agda.Prim.html#314" class="Primitive Operator"
+      >&#8852;</a
+      ><a name="573"
+      > </a
+      ><a name="574" href="FunUniverse.Category.html#199" class="Bound"
+      >t</a
+      ><a name="575" class="Symbol"
+      >)</a
+      ><a name="576"
+      > </a
+      ><a name="577" class="Keyword"
+      >where</a
+      ><a name="582"
+      >
+  </a
+      ><a name="585" class="Keyword"
+      >constructor</a
+      ><a name="596"
+      > </a
+      ><a name="597" href="FunUniverse.Category.html#597" class="InductiveConstructor Operator"
+      >_,_</a
+      ><a name="600"
+      >
+
+  </a
+      ><a name="604" class="Keyword"
+      >infixr</a
+      ><a name="610"
+      > </a
+      ><a name="611" class="Number"
+      >9</a
+      ><a name="612"
+      > _&#8728;_
+  </a
+      ><a name="619" class="Keyword"
+      >field</a
+      ><a name="624"
+      >
+    </a
+      ><a name="629" href="FunUniverse.Category.html#629" class="Field"
+      >id</a
+      ><a name="631"
+      > </a
+      ><a name="632" class="Symbol"
+      >:</a
+      ><a name="633"
+      > </a
+      ><a name="634" class="Symbol"
+      >&#8704;</a
+      ><a name="635"
+      > </a
+      ><a name="636" class="Symbol"
+      >{</a
+      ><a name="637" href="FunUniverse.Category.html#637" class="Bound"
+      >A</a
+      ><a name="638" class="Symbol"
+      >}</a
+      ><a name="639"
+      > </a
+      ><a name="640" class="Symbol"
+      >&#8594;</a
+      ><a name="641"
+      > </a
+      ><a name="642" href="FunUniverse.Category.html#637" class="Bound"
+      >A</a
+      ><a name="643"
+      > </a
+      ><a name="644" href="FunUniverse.Category.html#215" class="Bound Operator"
+      >`&#8594;</a
+      ><a name="646"
+      > </a
+      ><a name="647" href="FunUniverse.Category.html#637" class="Bound"
+      >A</a
+      ><a name="648"
+      >
+    </a
+      ><a name="653" href="FunUniverse.Category.html#653" class="Field Operator"
+      >_&#8728;_</a
+      ><a name="656"
+      > </a
+      ><a name="657" class="Symbol"
+      >:</a
+      ><a name="658"
+      > </a
+      ><a name="659" class="Symbol"
+      >&#8704;</a
+      ><a name="660"
+      > </a
+      ><a name="661" class="Symbol"
+      >{</a
+      ><a name="662" href="FunUniverse.Category.html#662" class="Bound"
+      >A</a
+      ><a name="663"
+      > </a
+      ><a name="664" href="FunUniverse.Category.html#664" class="Bound"
+      >B</a
+      ><a name="665"
+      > </a
+      ><a name="666" href="FunUniverse.Category.html#666" class="Bound"
+      >C</a
+      ><a name="667" class="Symbol"
+      >}</a
+      ><a name="668"
+      > </a
+      ><a name="669" class="Symbol"
+      >&#8594;</a
+      ><a name="670"
+      > </a
+      ><a name="671" class="Symbol"
+      >(</a
+      ><a name="672" href="FunUniverse.Category.html#664" class="Bound"
+      >B</a
+      ><a name="673"
+      > </a
+      ><a name="674" href="FunUniverse.Category.html#215" class="Bound Operator"
+      >`&#8594;</a
+      ><a name="676"
+      > </a
+      ><a name="677" href="FunUniverse.Category.html#666" class="Bound"
+      >C</a
+      ><a name="678" class="Symbol"
+      >)</a
+      ><a name="679"
+      > </a
+      ><a name="680" class="Symbol"
+      >&#8594;</a
+      ><a name="681"
+      > </a
+      ><a name="682" class="Symbol"
+      >(</a
+      ><a name="683" href="FunUniverse.Category.html#662" class="Bound"
+      >A</a
+      ><a name="684"
+      > </a
+      ><a name="685" href="FunUniverse.Category.html#215" class="Bound Operator"
+      >`&#8594;</a
+      ><a name="687"
+      > </a
+      ><a name="688" href="FunUniverse.Category.html#664" class="Bound"
+      >B</a
+      ><a name="689" class="Symbol"
+      >)</a
+      ><a name="690"
+      > </a
+      ><a name="691" class="Symbol"
+      >&#8594;</a
+      ><a name="692"
+      > </a
+      ><a name="693" class="Symbol"
+      >(</a
+      ><a name="694" href="FunUniverse.Category.html#662" class="Bound"
+      >A</a
+      ><a name="695"
+      > </a
+      ><a name="696" href="FunUniverse.Category.html#215" class="Bound Operator"
+      >`&#8594;</a
+      ><a name="698"
+      > </a
+      ><a name="699" href="FunUniverse.Category.html#666" class="Bound"
+      >C</a
+      ><a name="700" class="Symbol"
+      >)</a
+      ><a name="701"
+      >
+
+  </a
+      ><a name="705" class="Keyword"
+      >private</a
+      ><a name="712"
+      >
+    </a
+      ><a name="717" href="FunUniverse.Category.html#717" class="Function"
+      >`Endo</a
+      ><a name="722"
+      > </a
+      ><a name="723" class="Symbol"
+      >:</a
+      ><a name="724"
+      > </a
+      ><a name="725" href="FunUniverse.Category.html#205" class="Bound"
+      >T</a
+      ><a name="726"
+      > </a
+      ><a name="727" class="Symbol"
+      >&#8594;</a
+      ><a name="728"
+      > </a
+      ><a name="729" class="PrimitiveType"
+      >Set</a
+      ><a name="732"
+      > </a
+      ><a name="733" href="FunUniverse.Category.html#201" class="Bound"
+      >&#8467;</a
+      ><a name="734"
+      >
+    </a
+      ><a name="739" href="FunUniverse.Category.html#717" class="Function"
+      >`Endo</a
+      ><a name="744"
+      > </a
+      ><a name="745" href="FunUniverse.Category.html#745" class="Bound"
+      >A</a
+      ><a name="746"
+      > </a
+      ><a name="747" class="Symbol"
+      >=</a
+      ><a name="748"
+      > </a
+      ><a name="749" href="FunUniverse.Category.html#745" class="Bound"
+      >A</a
+      ><a name="750"
+      > </a
+      ><a name="751" href="FunUniverse.Category.html#215" class="Bound Operator"
+      >`&#8594;</a
+      ><a name="753"
+      > </a
+      ><a name="754" href="FunUniverse.Category.html#745" class="Bound"
+      >A</a
+      ><a name="755"
+      >
+
+  </a
+      ><a name="759" href="FunUniverse.Category.html#759" class="Function"
+      >iterate</a
+      ><a name="766"
+      > </a
+      ><a name="767" class="Symbol"
+      >:</a
+      ><a name="768"
+      > </a
+      ><a name="769" class="Symbol"
+      >&#8704;</a
+      ><a name="770"
+      > </a
+      ><a name="771" class="Symbol"
+      >{</a
+      ><a name="772" href="FunUniverse.Category.html#772" class="Bound"
+      >A</a
+      ><a name="773" class="Symbol"
+      >}</a
+      ><a name="774"
+      > </a
+      ><a name="775" class="Symbol"
+      >&#8594;</a
+      ><a name="776"
+      > </a
+      ><a name="777" href="Data.Nat.html#698" class="Datatype"
+      >&#8469;</a
+      ><a name="778"
+      > </a
+      ><a name="779" class="Symbol"
+      >&#8594;</a
+      ><a name="780"
+      > </a
+      ><a name="781" href="Function.NP.html#1770" class="Function"
+      >Endo</a
+      ><a name="785"
+      > </a
+      ><a name="786" class="Symbol"
+      >(</a
+      ><a name="787" href="FunUniverse.Category.html#717" class="Function"
+      >`Endo</a
+      ><a name="792"
+      > </a
+      ><a name="793" href="FunUniverse.Category.html#772" class="Bound"
+      >A</a
+      ><a name="794" class="Symbol"
+      >)</a
+      ><a name="795"
+      >
+  </a
+      ><a name="798" href="FunUniverse.Category.html#759" class="Function"
+      >iterate</a
+      ><a name="805"
+      > </a
+      ><a name="806" href="Data.Nat.html#714" class="InductiveConstructor"
+      >zero</a
+      ><a name="810"
+      >    </a
+      ><a name="814" class="Symbol"
+      >_</a
+      ><a name="815"
+      > </a
+      ><a name="816" class="Symbol"
+      >=</a
+      ><a name="817"
+      > </a
+      ><a name="818" href="FunUniverse.Category.html#629" class="Field"
+      >id</a
+      ><a name="820"
+      >
+  </a
+      ><a name="823" href="FunUniverse.Category.html#759" class="Function"
+      >iterate</a
+      ><a name="830"
+      > </a
+      ><a name="831" class="Symbol"
+      >(</a
+      ><a name="832" href="Data.Nat.html#725" class="InductiveConstructor"
+      >suc</a
+      ><a name="835"
+      > </a
+      ><a name="836" href="FunUniverse.Category.html#836" class="Bound"
+      >n</a
+      ><a name="837" class="Symbol"
+      >)</a
+      ><a name="838"
+      > </a
+      ><a name="839" href="FunUniverse.Category.html#839" class="Bound"
+      >f</a
+      ><a name="840"
+      > </a
+      ><a name="841" class="Symbol"
+      >=</a
+      ><a name="842"
+      > </a
+      ><a name="843" href="FunUniverse.Category.html#759" class="Function"
+      >iterate</a
+      ><a name="850"
+      > </a
+      ><a name="851" href="FunUniverse.Category.html#836" class="Bound"
+      >n</a
+      ><a name="852"
+      > </a
+      ><a name="853" href="FunUniverse.Category.html#839" class="Bound"
+      >f</a
+      ><a name="854"
+      > </a
+      ><a name="855" href="FunUniverse.Category.html#653" class="Field Operator"
+      >&#8728;</a
+      ><a name="856"
+      > </a
+      ><a name="857" href="FunUniverse.Category.html#839" class="Bound"
+      >f</a
+      ><a name="858"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

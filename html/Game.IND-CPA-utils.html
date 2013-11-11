@@ -1,0 +1,481 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Game.IND-CPA-utils</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Symbol"
+      >{-#</a
+      ><a name="4"
+      > </a
+      ><a name="5" class="Keyword"
+      >OPTIONS</a
+      ><a name="12"
+      > --copatterns </a
+      ><a name="26" class="Symbol"
+      >#-}</a
+      ><a name="29"
+      >
+</a
+      ><a name="30" class="Keyword"
+      >open</a
+      ><a name="34"
+      > </a
+      ><a name="35" class="Keyword"
+      >import</a
+      ><a name="41"
+      > </a
+      ><a name="42" href="Type.html#1" class="Module"
+      >Type</a
+      ><a name="46"
+      >
+</a
+      ><a name="47" class="Keyword"
+      >open</a
+      ><a name="51"
+      > </a
+      ><a name="52" class="Keyword"
+      >import</a
+      ><a name="58"
+      > </a
+      ><a name="59" href="Control.Strategy.html#1" class="Module"
+      >Control.Strategy</a
+      ><a name="75"
+      >
+</a
+      ><a name="76" class="Keyword"
+      >open</a
+      ><a name="80"
+      > </a
+      ><a name="81" class="Keyword"
+      >import</a
+      ><a name="87"
+      > </a
+      ><a name="88" href="Data.Product.html#1" class="Module"
+      >Data.Product</a
+      ><a name="100"
+      >
+
+</a
+      ><a name="102" class="Keyword"
+      >module</a
+      ><a name="108"
+      > </a
+      ><a name="109" href="Game.IND-CPA-utils.html#1" class="Module"
+      >Game.IND-CPA-utils</a
+      ><a name="127"
+      > </a
+      ><a name="128" class="Symbol"
+      >(</a
+      ><a name="129" href="Game.IND-CPA-utils.html#129" class="Bound"
+      >Message</a
+      ><a name="136"
+      > </a
+      ><a name="137" href="Game.IND-CPA-utils.html#137" class="Bound"
+      >CipherText</a
+      ><a name="147"
+      > </a
+      ><a name="148" class="Symbol"
+      >:</a
+      ><a name="149"
+      > </a
+      ><a name="150" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="151" class="Symbol"
+      >)</a
+      ><a name="152"
+      > </a
+      ><a name="153" class="Keyword"
+      >where</a
+      ><a name="158"
+      >
+
+</a
+      ><a name="160" class="Comment"
+      >-- This describes a &quot;round&quot; of decryption queries</a
+      ><a name="209"
+      >
+</a
+      ><a name="210" href="Game.IND-CPA-utils.html#210" class="Function"
+      >DecRound</a
+      ><a name="218"
+      > </a
+      ><a name="219" class="Symbol"
+      >:</a
+      ><a name="220"
+      > </a
+      ><a name="221" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="222"
+      > </a
+      ><a name="223" class="Symbol"
+      >&#8594;</a
+      ><a name="224"
+      > </a
+      ><a name="225" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="226"
+      >
+</a
+      ><a name="227" href="Game.IND-CPA-utils.html#210" class="Function"
+      >DecRound</a
+      ><a name="235"
+      > </a
+      ><a name="236" class="Symbol"
+      >=</a
+      ><a name="237"
+      > </a
+      ><a name="238" href="Control.Strategy.html#204" class="Datatype"
+      >Strategy</a
+      ><a name="246"
+      > </a
+      ><a name="247" href="Game.IND-CPA-utils.html#137" class="Bound"
+      >CipherText</a
+      ><a name="257"
+      > </a
+      ><a name="258" class="Symbol"
+      >(&#955;</a
+      ><a name="260"
+      > </a
+      ><a name="261" href="Game.IND-CPA-utils.html#261" class="Bound"
+      >_</a
+      ><a name="262"
+      > </a
+      ><a name="263" class="Symbol"
+      >&#8594;</a
+      ><a name="264"
+      > </a
+      ><a name="265" href="Game.IND-CPA-utils.html#129" class="Bound"
+      >Message</a
+      ><a name="272" class="Symbol"
+      >)</a
+      ><a name="273"
+      >
+
+</a
+      ><a name="275" class="Keyword"
+      >record</a
+      ><a name="281"
+      > </a
+      ><a name="282" href="Game.IND-CPA-utils.html#282" class="Record"
+      >CPAAdversary</a
+      ><a name="294"
+      > </a
+      ><a name="295" class="Symbol"
+      >(</a
+      ><a name="296" href="Game.IND-CPA-utils.html#296" class="Bound"
+      >Next</a
+      ><a name="300"
+      > </a
+      ><a name="301" class="Symbol"
+      >:</a
+      ><a name="302"
+      > </a
+      ><a name="303" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="304" class="Symbol"
+      >)</a
+      ><a name="305"
+      > </a
+      ><a name="306" class="Symbol"
+      >:</a
+      ><a name="307"
+      > </a
+      ><a name="308" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="309"
+      > </a
+      ><a name="310" class="Keyword"
+      >where</a
+      ><a name="315"
+      >
+  </a
+      ><a name="318" class="Keyword"
+      >field</a
+      ><a name="323"
+      >
+    </a
+      ><a name="328" href="Game.IND-CPA-utils.html#328" class="Field"
+      >get-m</a
+      ><a name="333"
+      > </a
+      ><a name="334" class="Symbol"
+      >:</a
+      ><a name="335"
+      > </a
+      ><a name="336" href="Game.IND-CPA-utils.html#129" class="Bound"
+      >Message</a
+      ><a name="343"
+      > </a
+      ><a name="344" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="345"
+      > </a
+      ><a name="346" href="Game.IND-CPA-utils.html#129" class="Bound"
+      >Message</a
+      ><a name="353"
+      >
+    </a
+      ><a name="358" href="Game.IND-CPA-utils.html#358" class="Field"
+      >put-c</a
+      ><a name="363"
+      > </a
+      ><a name="364" class="Symbol"
+      >:</a
+      ><a name="365"
+      > </a
+      ><a name="366" href="Game.IND-CPA-utils.html#137" class="Bound"
+      >CipherText</a
+      ><a name="376"
+      > </a
+      ><a name="377" class="Symbol"
+      >&#8594;</a
+      ><a name="378"
+      > </a
+      ><a name="379" href="Game.IND-CPA-utils.html#296" class="Bound"
+      >Next</a
+      ><a name="383"
+      >
+</a
+      ><a name="384" class="Keyword"
+      >open</a
+      ><a name="388"
+      > </a
+      ><a name="389" href="Game.IND-CPA-utils.html#282" class="Module"
+      >CPAAdversary</a
+      ><a name="401"
+      > </a
+      ><a name="402" class="Keyword"
+      >public</a
+      ><a name="408"
+      >
+
+</a
+      ><a name="410" href="Game.IND-CPA-utils.html#410" class="Function"
+      >CPA&#8224;Adversary</a
+      ><a name="423"
+      > </a
+      ><a name="424" class="Symbol"
+      >:</a
+      ><a name="425"
+      > </a
+      ><a name="426" class="Symbol"
+      >(</a
+      ><a name="427" href="Game.IND-CPA-utils.html#427" class="Bound"
+      >Next</a
+      ><a name="431"
+      > </a
+      ><a name="432" class="Symbol"
+      >:</a
+      ><a name="433"
+      > </a
+      ><a name="434" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="435" class="Symbol"
+      >)</a
+      ><a name="436"
+      > </a
+      ><a name="437" class="Symbol"
+      >&#8594;</a
+      ><a name="438"
+      > </a
+      ><a name="439" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="440"
+      >
+</a
+      ><a name="441" href="Game.IND-CPA-utils.html#410" class="Function"
+      >CPA&#8224;Adversary</a
+      ><a name="454"
+      > </a
+      ><a name="455" href="Game.IND-CPA-utils.html#455" class="Bound"
+      >Next</a
+      ><a name="459"
+      > </a
+      ><a name="460" class="Symbol"
+      >=</a
+      ><a name="461"
+      > </a
+      ><a name="462" href="Game.IND-CPA-utils.html#282" class="Record"
+      >CPAAdversary</a
+      ><a name="474"
+      > </a
+      ><a name="475" class="Symbol"
+      >(</a
+      ><a name="476" href="Game.IND-CPA-utils.html#137" class="Bound"
+      >CipherText</a
+      ><a name="486"
+      > </a
+      ><a name="487" class="Symbol"
+      >&#8594;</a
+      ><a name="488"
+      > </a
+      ><a name="489" href="Game.IND-CPA-utils.html#455" class="Bound"
+      >Next</a
+      ><a name="493" class="Symbol"
+      >)</a
+      ><a name="494"
+      >
+
+</a
+      ><a name="496" class="Keyword"
+      >module</a
+      ><a name="502"
+      > </a
+      ><a name="503" href="Game.IND-CPA-utils.html#503" class="Module"
+      >TransformAdversaryResponse</a
+      ><a name="529"
+      > </a
+      ><a name="530" class="Symbol"
+      >{</a
+      ><a name="531" href="Game.IND-CPA-utils.html#531" class="Bound"
+      >X</a
+      ><a name="532"
+      > </a
+      ><a name="533" href="Game.IND-CPA-utils.html#533" class="Bound"
+      >Y</a
+      ><a name="534"
+      > </a
+      ><a name="535" class="Symbol"
+      >:</a
+      ><a name="536"
+      > </a
+      ><a name="537" href="Type.html#125" class="Function"
+      >&#9733;</a
+      ><a name="538" class="Symbol"
+      >}</a
+      ><a name="539"
+      > </a
+      ><a name="540" class="Symbol"
+      >(</a
+      ><a name="541" href="Game.IND-CPA-utils.html#541" class="Bound"
+      >f</a
+      ><a name="542"
+      > </a
+      ><a name="543" class="Symbol"
+      >:</a
+      ><a name="544"
+      > </a
+      ><a name="545" href="Game.IND-CPA-utils.html#531" class="Bound"
+      >X</a
+      ><a name="546"
+      > </a
+      ><a name="547" class="Symbol"
+      >&#8594;</a
+      ><a name="548"
+      > </a
+      ><a name="549" href="Game.IND-CPA-utils.html#533" class="Bound"
+      >Y</a
+      ><a name="550" class="Symbol"
+      >)</a
+      ><a name="551"
+      > </a
+      ><a name="552" class="Symbol"
+      >(</a
+      ><a name="553" href="Game.IND-CPA-utils.html#553" class="Bound"
+      >A</a
+      ><a name="554"
+      > </a
+      ><a name="555" class="Symbol"
+      >:</a
+      ><a name="556"
+      > </a
+      ><a name="557" href="Game.IND-CPA-utils.html#282" class="Record"
+      >CPAAdversary</a
+      ><a name="569"
+      > </a
+      ><a name="570" href="Game.IND-CPA-utils.html#531" class="Bound"
+      >X</a
+      ><a name="571" class="Symbol"
+      >)</a
+      ><a name="572"
+      > </a
+      ><a name="573" class="Keyword"
+      >where</a
+      ><a name="578"
+      >
+  </a
+      ><a name="581" href="Game.IND-CPA-utils.html#581" class="Function"
+      >A*</a
+      ><a name="583"
+      > </a
+      ><a name="584" class="Symbol"
+      >:</a
+      ><a name="585"
+      > </a
+      ><a name="586" href="Game.IND-CPA-utils.html#282" class="Record"
+      >CPAAdversary</a
+      ><a name="598"
+      > </a
+      ><a name="599" href="Game.IND-CPA-utils.html#533" class="Bound"
+      >Y</a
+      ><a name="600"
+      >
+  </a
+      ><a name="603" href="Game.IND-CPA-utils.html#328" class="Field"
+      >get-m</a
+      ><a name="608"
+      > </a
+      ><a name="609" href="Game.IND-CPA-utils.html#581" class="Function"
+      >A*</a
+      ><a name="611"
+      >   </a
+      ><a name="614" class="Symbol"
+      >=</a
+      ><a name="615"
+      > </a
+      ><a name="616" href="Game.IND-CPA-utils.html#328" class="Field"
+      >get-m</a
+      ><a name="621"
+      > </a
+      ><a name="622" href="Game.IND-CPA-utils.html#553" class="Bound"
+      >A</a
+      ><a name="623"
+      >
+  </a
+      ><a name="626" href="Game.IND-CPA-utils.html#358" class="Field"
+      >put-c</a
+      ><a name="631"
+      > </a
+      ><a name="632" href="Game.IND-CPA-utils.html#581" class="Function"
+      >A*</a
+      ><a name="634"
+      > </a
+      ><a name="635" href="Game.IND-CPA-utils.html#635" class="Bound"
+      >c</a
+      ><a name="636"
+      > </a
+      ><a name="637" class="Symbol"
+      >=</a
+      ><a name="638"
+      > </a
+      ><a name="639" href="Game.IND-CPA-utils.html#541" class="Bound"
+      >f</a
+      ><a name="640"
+      > </a
+      ><a name="641" class="Symbol"
+      >(</a
+      ><a name="642" href="Game.IND-CPA-utils.html#358" class="Field"
+      >put-c</a
+      ><a name="647"
+      > </a
+      ><a name="648" href="Game.IND-CPA-utils.html#553" class="Bound"
+      >A</a
+      ><a name="649"
+      > </a
+      ><a name="650" href="Game.IND-CPA-utils.html#635" class="Bound"
+      >c</a
+      ><a name="651" class="Symbol"
+      >)</a
+      ><a name="652"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>

@@ -1,0 +1,2754 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+><head
+  ><title
+    >Relation.Unary</title
+    ><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"
+     /><meta http-equiv="Content-Style-Type" content="text/css"
+     /><link href="Agda.css" rel="stylesheet" type="text/css"
+     /></head
+  ><body
+  ><pre
+    ><a name="1" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="73"
+      >
+</a
+      ><a name="74" class="Comment"
+      >-- The Agda standard library</a
+      ><a name="102"
+      >
+</a
+      ><a name="103" class="Comment"
+      >--</a
+      ><a name="105"
+      >
+</a
+      ><a name="106" class="Comment"
+      >-- Unary relations</a
+      ><a name="124"
+      >
+</a
+      ><a name="125" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="197"
+      >
+
+</a
+      ><a name="199" class="Keyword"
+      >module</a
+      ><a name="205"
+      > </a
+      ><a name="206" href="Relation.Unary.html#1" class="Module"
+      >Relation.Unary</a
+      ><a name="220"
+      > </a
+      ><a name="221" class="Keyword"
+      >where</a
+      ><a name="226"
+      >
+
+</a
+      ><a name="228" class="Keyword"
+      >open</a
+      ><a name="232"
+      > </a
+      ><a name="233" class="Keyword"
+      >import</a
+      ><a name="239"
+      > </a
+      ><a name="240" href="Data.Empty.html#1" class="Module"
+      >Data.Empty</a
+      ><a name="250"
+      >
+</a
+      ><a name="251" class="Keyword"
+      >open</a
+      ><a name="255"
+      > </a
+      ><a name="256" class="Keyword"
+      >import</a
+      ><a name="262"
+      > </a
+      ><a name="263" href="Function.html#1" class="Module"
+      >Function</a
+      ><a name="271"
+      >
+</a
+      ><a name="272" class="Keyword"
+      >open</a
+      ><a name="276"
+      > </a
+      ><a name="277" class="Keyword"
+      >import</a
+      ><a name="283"
+      > </a
+      ><a name="284" href="Data.Unit.html#1" class="Module"
+      >Data.Unit</a
+      ><a name="293"
+      >
+</a
+      ><a name="294" class="Keyword"
+      >open</a
+      ><a name="298"
+      > </a
+      ><a name="299" class="Keyword"
+      >import</a
+      ><a name="305"
+      > </a
+      ><a name="306" href="Data.Product.html#1" class="Module"
+      >Data.Product</a
+      ><a name="318"
+      >
+</a
+      ><a name="319" class="Keyword"
+      >open</a
+      ><a name="323"
+      > </a
+      ><a name="324" class="Keyword"
+      >import</a
+      ><a name="330"
+      > </a
+      ><a name="331" href="Data.Sum.html#1" class="Module"
+      >Data.Sum</a
+      ><a name="339"
+      >
+</a
+      ><a name="340" class="Keyword"
+      >open</a
+      ><a name="344"
+      > </a
+      ><a name="345" class="Keyword"
+      >import</a
+      ><a name="351"
+      > </a
+      ><a name="352" href="Level.html#1" class="Module"
+      >Level</a
+      ><a name="357"
+      >
+</a
+      ><a name="358" class="Keyword"
+      >open</a
+      ><a name="362"
+      > </a
+      ><a name="363" class="Keyword"
+      >import</a
+      ><a name="369"
+      > </a
+      ><a name="370" href="Relation.Nullary.html#1" class="Module"
+      >Relation.Nullary</a
+      ><a name="386"
+      >
+
+</a
+      ><a name="388" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="460"
+      >
+</a
+      ><a name="461" class="Comment"
+      >-- Unary relations</a
+      ><a name="479"
+      >
+
+</a
+      ><a name="481" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="485"
+      > </a
+      ><a name="486" class="Symbol"
+      >:</a
+      ><a name="487"
+      > </a
+      ><a name="488" class="Symbol"
+      >&#8704;</a
+      ><a name="489"
+      > </a
+      ><a name="490" class="Symbol"
+      >{</a
+      ><a name="491" href="Relation.Unary.html#491" class="Bound"
+      >a</a
+      ><a name="492" class="Symbol"
+      >}</a
+      ><a name="493"
+      > </a
+      ><a name="494" class="Symbol"
+      >&#8594;</a
+      ><a name="495"
+      > </a
+      ><a name="496" class="PrimitiveType"
+      >Set</a
+      ><a name="499"
+      > </a
+      ><a name="500" href="Relation.Unary.html#491" class="Bound"
+      >a</a
+      ><a name="501"
+      > </a
+      ><a name="502" class="Symbol"
+      >&#8594;</a
+      ><a name="503"
+      > </a
+      ><a name="504" class="Symbol"
+      >(</a
+      ><a name="505" href="Relation.Unary.html#505" class="Bound"
+      >&#8467;</a
+      ><a name="506"
+      > </a
+      ><a name="507" class="Symbol"
+      >:</a
+      ><a name="508"
+      > </a
+      ><a name="509" href="Agda.Prim.html#254" class="Postulate"
+      >Level</a
+      ><a name="514" class="Symbol"
+      >)</a
+      ><a name="515"
+      > </a
+      ><a name="516" class="Symbol"
+      >&#8594;</a
+      ><a name="517"
+      > </a
+      ><a name="518" class="PrimitiveType"
+      >Set</a
+      ><a name="521"
+      > </a
+      ><a name="522" class="Symbol"
+      >(</a
+      ><a name="523" href="Relation.Unary.html#491" class="Bound"
+      >a</a
+      ><a name="524"
+      > </a
+      ><a name="525" href="Agda.Prim.html#314" class="Primitive Operator"
+      >&#8852;</a
+      ><a name="526"
+      > </a
+      ><a name="527" href="Agda.Prim.html#284" class="Primitive"
+      >suc</a
+      ><a name="530"
+      > </a
+      ><a name="531" href="Relation.Unary.html#505" class="Bound"
+      >&#8467;</a
+      ><a name="532" class="Symbol"
+      >)</a
+      ><a name="533"
+      >
+</a
+      ><a name="534" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="538"
+      > </a
+      ><a name="539" href="Relation.Unary.html#539" class="Bound"
+      >A</a
+      ><a name="540"
+      > </a
+      ><a name="541" href="Relation.Unary.html#541" class="Bound"
+      >&#8467;</a
+      ><a name="542"
+      > </a
+      ><a name="543" class="Symbol"
+      >=</a
+      ><a name="544"
+      > </a
+      ><a name="545" href="Relation.Unary.html#539" class="Bound"
+      >A</a
+      ><a name="546"
+      > </a
+      ><a name="547" class="Symbol"
+      >&#8594;</a
+      ><a name="548"
+      > </a
+      ><a name="549" class="PrimitiveType"
+      >Set</a
+      ><a name="552"
+      > </a
+      ><a name="553" href="Relation.Unary.html#541" class="Bound"
+      >&#8467;</a
+      ><a name="554"
+      >
+
+</a
+      ><a name="556" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="628"
+      >
+</a
+      ><a name="629" class="Comment"
+      >-- Unary relations can be seen as sets</a
+      ><a name="667"
+      >
+
+</a
+      ><a name="669" class="Comment"
+      >-- I.e., they can be seen as subsets of the universe of discourse.</a
+      ><a name="735"
+      >
+
+</a
+      ><a name="737" class="Keyword"
+      >module</a
+      ><a name="743"
+      > </a
+      ><a name="744" href="Relation.Unary.html#744" class="Module"
+      >_</a
+      ><a name="745"
+      > </a
+      ><a name="746" class="Symbol"
+      >{</a
+      ><a name="747" href="Relation.Unary.html#747" class="Bound"
+      >a</a
+      ><a name="748" class="Symbol"
+      >}</a
+      ><a name="749"
+      > </a
+      ><a name="750" class="Symbol"
+      >{</a
+      ><a name="751" href="Relation.Unary.html#751" class="Bound"
+      >A</a
+      ><a name="752"
+      > </a
+      ><a name="753" class="Symbol"
+      >:</a
+      ><a name="754"
+      > </a
+      ><a name="755" class="PrimitiveType"
+      >Set</a
+      ><a name="758"
+      > </a
+      ><a name="759" href="Relation.Unary.html#747" class="Bound"
+      >a</a
+      ><a name="760" class="Symbol"
+      >}</a
+      ><a name="761"
+      > </a
+      ><a name="762" class="Comment"
+      >-- The universe of discourse.</a
+      ><a name="791"
+      >
+         </a
+      ><a name="801" class="Keyword"
+      >where</a
+      ><a name="806"
+      >
+
+  </a
+      ><a name="810" class="Comment"
+      >-- Set membership.</a
+      ><a name="828"
+      >
+
+  </a
+      ><a name="832" class="Keyword"
+      >infix</a
+      ><a name="837"
+      > </a
+      ><a name="838" class="Number"
+      >4</a
+      ><a name="839"
+      > _&#8712;_ _&#8713;_
+
+  </a
+      ><a name="851" href="Relation.Unary.html#851" class="Function Operator"
+      >_&#8712;_</a
+      ><a name="854"
+      > </a
+      ><a name="855" class="Symbol"
+      >:</a
+      ><a name="856"
+      > </a
+      ><a name="857" class="Symbol"
+      >&#8704;</a
+      ><a name="858"
+      > </a
+      ><a name="859" class="Symbol"
+      >{</a
+      ><a name="860" href="Relation.Unary.html#860" class="Bound"
+      >&#8467;</a
+      ><a name="861" class="Symbol"
+      >}</a
+      ><a name="862"
+      > </a
+      ><a name="863" class="Symbol"
+      >&#8594;</a
+      ><a name="864"
+      > </a
+      ><a name="865" href="Relation.Unary.html#751" class="Bound"
+      >A</a
+      ><a name="866"
+      > </a
+      ><a name="867" class="Symbol"
+      >&#8594;</a
+      ><a name="868"
+      > </a
+      ><a name="869" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="873"
+      > </a
+      ><a name="874" href="Relation.Unary.html#751" class="Bound"
+      >A</a
+      ><a name="875"
+      > </a
+      ><a name="876" href="Relation.Unary.html#860" class="Bound"
+      >&#8467;</a
+      ><a name="877"
+      > </a
+      ><a name="878" class="Symbol"
+      >&#8594;</a
+      ><a name="879"
+      > </a
+      ><a name="880" class="PrimitiveType"
+      >Set</a
+      ><a name="883"
+      > </a
+      ><a name="884" class="Symbol"
+      >_</a
+      ><a name="885"
+      >
+  </a
+      ><a name="888" href="Relation.Unary.html#888" class="Bound"
+      >x</a
+      ><a name="889"
+      > </a
+      ><a name="890" href="Relation.Unary.html#851" class="Function Operator"
+      >&#8712;</a
+      ><a name="891"
+      > </a
+      ><a name="892" href="Relation.Unary.html#892" class="Bound"
+      >P</a
+      ><a name="893"
+      > </a
+      ><a name="894" class="Symbol"
+      >=</a
+      ><a name="895"
+      > </a
+      ><a name="896" href="Relation.Unary.html#892" class="Bound"
+      >P</a
+      ><a name="897"
+      > </a
+      ><a name="898" href="Relation.Unary.html#888" class="Bound"
+      >x</a
+      ><a name="899"
+      >
+
+  </a
+      ><a name="903" href="Relation.Unary.html#903" class="Function Operator"
+      >_&#8713;_</a
+      ><a name="906"
+      > </a
+      ><a name="907" class="Symbol"
+      >:</a
+      ><a name="908"
+      > </a
+      ><a name="909" class="Symbol"
+      >&#8704;</a
+      ><a name="910"
+      > </a
+      ><a name="911" class="Symbol"
+      >{</a
+      ><a name="912" href="Relation.Unary.html#912" class="Bound"
+      >&#8467;</a
+      ><a name="913" class="Symbol"
+      >}</a
+      ><a name="914"
+      > </a
+      ><a name="915" class="Symbol"
+      >&#8594;</a
+      ><a name="916"
+      > </a
+      ><a name="917" href="Relation.Unary.html#751" class="Bound"
+      >A</a
+      ><a name="918"
+      > </a
+      ><a name="919" class="Symbol"
+      >&#8594;</a
+      ><a name="920"
+      > </a
+      ><a name="921" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="925"
+      > </a
+      ><a name="926" href="Relation.Unary.html#751" class="Bound"
+      >A</a
+      ><a name="927"
+      > </a
+      ><a name="928" href="Relation.Unary.html#912" class="Bound"
+      >&#8467;</a
+      ><a name="929"
+      > </a
+      ><a name="930" class="Symbol"
+      >&#8594;</a
+      ><a name="931"
+      > </a
+      ><a name="932" class="PrimitiveType"
+      >Set</a
+      ><a name="935"
+      > </a
+      ><a name="936" class="Symbol"
+      >_</a
+      ><a name="937"
+      >
+  </a
+      ><a name="940" href="Relation.Unary.html#940" class="Bound"
+      >x</a
+      ><a name="941"
+      > </a
+      ><a name="942" href="Relation.Unary.html#903" class="Function Operator"
+      >&#8713;</a
+      ><a name="943"
+      > </a
+      ><a name="944" href="Relation.Unary.html#944" class="Bound"
+      >P</a
+      ><a name="945"
+      > </a
+      ><a name="946" class="Symbol"
+      >=</a
+      ><a name="947"
+      > </a
+      ><a name="948" href="Relation.Nullary.Core.html#398" class="Function Operator"
+      >&#172;</a
+      ><a name="949"
+      > </a
+      ><a name="950" href="Relation.Unary.html#940" class="Bound"
+      >x</a
+      ><a name="951"
+      > </a
+      ><a name="952" href="Relation.Unary.html#851" class="Function Operator"
+      >&#8712;</a
+      ><a name="953"
+      > </a
+      ><a name="954" href="Relation.Unary.html#944" class="Bound"
+      >P</a
+      ><a name="955"
+      >
+
+  </a
+      ><a name="959" class="Comment"
+      >-- The empty set.</a
+      ><a name="976"
+      >
+
+  </a
+      ><a name="980" href="Relation.Unary.html#980" class="Function"
+      >&#8709;</a
+      ><a name="981"
+      > </a
+      ><a name="982" class="Symbol"
+      >:</a
+      ><a name="983"
+      > </a
+      ><a name="984" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="988"
+      > </a
+      ><a name="989" href="Relation.Unary.html#751" class="Bound"
+      >A</a
+      ><a name="990"
+      > </a
+      ><a name="991" href="Agda.Prim.html#268" class="Primitive"
+      >zero</a
+      ><a name="995"
+      >
+  </a
+      ><a name="998" href="Relation.Unary.html#980" class="Function"
+      >&#8709;</a
+      ><a name="999"
+      > </a
+      ><a name="1000" class="Symbol"
+      >=</a
+      ><a name="1001"
+      > </a
+      ><a name="1002" class="Symbol"
+      >&#955;</a
+      ><a name="1003"
+      > </a
+      ><a name="1004" href="Relation.Unary.html#1004" class="Bound"
+      >_</a
+      ><a name="1005"
+      > </a
+      ><a name="1006" class="Symbol"
+      >&#8594;</a
+      ><a name="1007"
+      > </a
+      ><a name="1008" href="Data.Empty.html#243" class="Datatype"
+      >&#8869;</a
+      ><a name="1009"
+      >
+
+  </a
+      ><a name="1013" class="Comment"
+      >-- The property of being empty.</a
+      ><a name="1044"
+      >
+
+  </a
+      ><a name="1048" href="Relation.Unary.html#1048" class="Function"
+      >Empty</a
+      ><a name="1053"
+      > </a
+      ><a name="1054" class="Symbol"
+      >:</a
+      ><a name="1055"
+      > </a
+      ><a name="1056" class="Symbol"
+      >&#8704;</a
+      ><a name="1057"
+      > </a
+      ><a name="1058" class="Symbol"
+      >{</a
+      ><a name="1059" href="Relation.Unary.html#1059" class="Bound"
+      >&#8467;</a
+      ><a name="1060" class="Symbol"
+      >}</a
+      ><a name="1061"
+      > </a
+      ><a name="1062" class="Symbol"
+      >&#8594;</a
+      ><a name="1063"
+      > </a
+      ><a name="1064" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="1068"
+      > </a
+      ><a name="1069" href="Relation.Unary.html#751" class="Bound"
+      >A</a
+      ><a name="1070"
+      > </a
+      ><a name="1071" href="Relation.Unary.html#1059" class="Bound"
+      >&#8467;</a
+      ><a name="1072"
+      > </a
+      ><a name="1073" class="Symbol"
+      >&#8594;</a
+      ><a name="1074"
+      > </a
+      ><a name="1075" class="PrimitiveType"
+      >Set</a
+      ><a name="1078"
+      > </a
+      ><a name="1079" class="Symbol"
+      >_</a
+      ><a name="1080"
+      >
+  </a
+      ><a name="1083" href="Relation.Unary.html#1048" class="Function"
+      >Empty</a
+      ><a name="1088"
+      > </a
+      ><a name="1089" href="Relation.Unary.html#1089" class="Bound"
+      >P</a
+      ><a name="1090"
+      > </a
+      ><a name="1091" class="Symbol"
+      >=</a
+      ><a name="1092"
+      > </a
+      ><a name="1093" class="Symbol"
+      >&#8704;</a
+      ><a name="1094"
+      > </a
+      ><a name="1095" href="Relation.Unary.html#1095" class="Bound"
+      >x</a
+      ><a name="1096"
+      > </a
+      ><a name="1097" class="Symbol"
+      >&#8594;</a
+      ><a name="1098"
+      > </a
+      ><a name="1099" href="Relation.Unary.html#1095" class="Bound"
+      >x</a
+      ><a name="1100"
+      > </a
+      ><a name="1101" href="Relation.Unary.html#903" class="Function Operator"
+      >&#8713;</a
+      ><a name="1102"
+      > </a
+      ><a name="1103" href="Relation.Unary.html#1089" class="Bound"
+      >P</a
+      ><a name="1104"
+      >
+
+  </a
+      ><a name="1108" href="Relation.Unary.html#1108" class="Function"
+      >&#8709;-Empty</a
+      ><a name="1115"
+      > </a
+      ><a name="1116" class="Symbol"
+      >:</a
+      ><a name="1117"
+      > </a
+      ><a name="1118" href="Relation.Unary.html#1048" class="Function"
+      >Empty</a
+      ><a name="1123"
+      > </a
+      ><a name="1124" href="Relation.Unary.html#980" class="Function"
+      >&#8709;</a
+      ><a name="1125"
+      >
+  </a
+      ><a name="1128" href="Relation.Unary.html#1108" class="Function"
+      >&#8709;-Empty</a
+      ><a name="1135"
+      > </a
+      ><a name="1136" href="Relation.Unary.html#1136" class="Bound"
+      >x</a
+      ><a name="1137"
+      > </a
+      ><a name="1138" class="Symbol"
+      >()</a
+      ><a name="1140"
+      >
+
+  </a
+      ><a name="1144" class="Comment"
+      >-- The universe, i.e. the subset containing all elements in A.</a
+      ><a name="1206"
+      >
+
+  </a
+      ><a name="1210" href="Relation.Unary.html#1210" class="Function"
+      >U</a
+      ><a name="1211"
+      > </a
+      ><a name="1212" class="Symbol"
+      >:</a
+      ><a name="1213"
+      > </a
+      ><a name="1214" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="1218"
+      > </a
+      ><a name="1219" href="Relation.Unary.html#751" class="Bound"
+      >A</a
+      ><a name="1220"
+      > </a
+      ><a name="1221" href="Agda.Prim.html#268" class="Primitive"
+      >zero</a
+      ><a name="1225"
+      >
+  </a
+      ><a name="1228" href="Relation.Unary.html#1210" class="Function"
+      >U</a
+      ><a name="1229"
+      > </a
+      ><a name="1230" class="Symbol"
+      >=</a
+      ><a name="1231"
+      > </a
+      ><a name="1232" class="Symbol"
+      >&#955;</a
+      ><a name="1233"
+      > </a
+      ><a name="1234" href="Relation.Unary.html#1234" class="Bound"
+      >_</a
+      ><a name="1235"
+      > </a
+      ><a name="1236" class="Symbol"
+      >&#8594;</a
+      ><a name="1237"
+      > </a
+      ><a name="1238" href="Data.Unit.html#653" class="Record"
+      >&#8868;</a
+      ><a name="1239"
+      >
+
+  </a
+      ><a name="1243" class="Comment"
+      >-- The property of being universal.</a
+      ><a name="1278"
+      >
+
+  </a
+      ><a name="1282" href="Relation.Unary.html#1282" class="Function"
+      >Universal</a
+      ><a name="1291"
+      > </a
+      ><a name="1292" class="Symbol"
+      >:</a
+      ><a name="1293"
+      > </a
+      ><a name="1294" class="Symbol"
+      >&#8704;</a
+      ><a name="1295"
+      > </a
+      ><a name="1296" class="Symbol"
+      >{</a
+      ><a name="1297" href="Relation.Unary.html#1297" class="Bound"
+      >&#8467;</a
+      ><a name="1298" class="Symbol"
+      >}</a
+      ><a name="1299"
+      > </a
+      ><a name="1300" class="Symbol"
+      >&#8594;</a
+      ><a name="1301"
+      > </a
+      ><a name="1302" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="1306"
+      > </a
+      ><a name="1307" href="Relation.Unary.html#751" class="Bound"
+      >A</a
+      ><a name="1308"
+      > </a
+      ><a name="1309" href="Relation.Unary.html#1297" class="Bound"
+      >&#8467;</a
+      ><a name="1310"
+      > </a
+      ><a name="1311" class="Symbol"
+      >&#8594;</a
+      ><a name="1312"
+      > </a
+      ><a name="1313" class="PrimitiveType"
+      >Set</a
+      ><a name="1316"
+      > </a
+      ><a name="1317" class="Symbol"
+      >_</a
+      ><a name="1318"
+      >
+  </a
+      ><a name="1321" href="Relation.Unary.html#1282" class="Function"
+      >Universal</a
+      ><a name="1330"
+      > </a
+      ><a name="1331" href="Relation.Unary.html#1331" class="Bound"
+      >P</a
+      ><a name="1332"
+      > </a
+      ><a name="1333" class="Symbol"
+      >=</a
+      ><a name="1334"
+      > </a
+      ><a name="1335" class="Symbol"
+      >&#8704;</a
+      ><a name="1336"
+      > </a
+      ><a name="1337" href="Relation.Unary.html#1337" class="Bound"
+      >x</a
+      ><a name="1338"
+      > </a
+      ><a name="1339" class="Symbol"
+      >&#8594;</a
+      ><a name="1340"
+      > </a
+      ><a name="1341" href="Relation.Unary.html#1337" class="Bound"
+      >x</a
+      ><a name="1342"
+      > </a
+      ><a name="1343" href="Relation.Unary.html#851" class="Function Operator"
+      >&#8712;</a
+      ><a name="1344"
+      > </a
+      ><a name="1345" href="Relation.Unary.html#1331" class="Bound"
+      >P</a
+      ><a name="1346"
+      >
+
+  </a
+      ><a name="1350" href="Relation.Unary.html#1350" class="Function"
+      >U-Universal</a
+      ><a name="1361"
+      > </a
+      ><a name="1362" class="Symbol"
+      >:</a
+      ><a name="1363"
+      > </a
+      ><a name="1364" href="Relation.Unary.html#1282" class="Function"
+      >Universal</a
+      ><a name="1373"
+      > </a
+      ><a name="1374" href="Relation.Unary.html#1210" class="Function"
+      >U</a
+      ><a name="1375"
+      >
+  </a
+      ><a name="1378" href="Relation.Unary.html#1350" class="Function"
+      >U-Universal</a
+      ><a name="1389"
+      > </a
+      ><a name="1390" class="Symbol"
+      >=</a
+      ><a name="1391"
+      > </a
+      ><a name="1392" class="Symbol"
+      >&#955;</a
+      ><a name="1393"
+      > </a
+      ><a name="1394" href="Relation.Unary.html#1394" class="Bound"
+      >_</a
+      ><a name="1395"
+      > </a
+      ><a name="1396" class="Symbol"
+      >&#8594;</a
+      ><a name="1397"
+      > </a
+      ><a name="1398" class="Symbol"
+      >_</a
+      ><a name="1399"
+      >
+
+  </a
+      ><a name="1403" class="Comment"
+      >-- Set complement.</a
+      ><a name="1421"
+      >
+
+  </a
+      ><a name="1425" href="Relation.Unary.html#1425" class="Function"
+      >&#8705;</a
+      ><a name="1426"
+      > </a
+      ><a name="1427" class="Symbol"
+      >:</a
+      ><a name="1428"
+      > </a
+      ><a name="1429" class="Symbol"
+      >&#8704;</a
+      ><a name="1430"
+      > </a
+      ><a name="1431" class="Symbol"
+      >{</a
+      ><a name="1432" href="Relation.Unary.html#1432" class="Bound"
+      >&#8467;</a
+      ><a name="1433" class="Symbol"
+      >}</a
+      ><a name="1434"
+      > </a
+      ><a name="1435" class="Symbol"
+      >&#8594;</a
+      ><a name="1436"
+      > </a
+      ><a name="1437" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="1441"
+      > </a
+      ><a name="1442" href="Relation.Unary.html#751" class="Bound"
+      >A</a
+      ><a name="1443"
+      > </a
+      ><a name="1444" href="Relation.Unary.html#1432" class="Bound"
+      >&#8467;</a
+      ><a name="1445"
+      > </a
+      ><a name="1446" class="Symbol"
+      >&#8594;</a
+      ><a name="1447"
+      > </a
+      ><a name="1448" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="1452"
+      > </a
+      ><a name="1453" href="Relation.Unary.html#751" class="Bound"
+      >A</a
+      ><a name="1454"
+      > </a
+      ><a name="1455" href="Relation.Unary.html#1432" class="Bound"
+      >&#8467;</a
+      ><a name="1456"
+      >
+  </a
+      ><a name="1459" href="Relation.Unary.html#1425" class="Function"
+      >&#8705;</a
+      ><a name="1460"
+      > </a
+      ><a name="1461" href="Relation.Unary.html#1461" class="Bound"
+      >P</a
+      ><a name="1462"
+      > </a
+      ><a name="1463" class="Symbol"
+      >=</a
+      ><a name="1464"
+      > </a
+      ><a name="1465" class="Symbol"
+      >&#955;</a
+      ><a name="1466"
+      > </a
+      ><a name="1467" href="Relation.Unary.html#1467" class="Bound"
+      >x</a
+      ><a name="1468"
+      > </a
+      ><a name="1469" class="Symbol"
+      >&#8594;</a
+      ><a name="1470"
+      > </a
+      ><a name="1471" href="Relation.Unary.html#1467" class="Bound"
+      >x</a
+      ><a name="1472"
+      > </a
+      ><a name="1473" href="Relation.Unary.html#903" class="Function Operator"
+      >&#8713;</a
+      ><a name="1474"
+      > </a
+      ><a name="1475" href="Relation.Unary.html#1461" class="Bound"
+      >P</a
+      ><a name="1476"
+      >
+
+  </a
+      ><a name="1480" href="Relation.Unary.html#1480" class="Function"
+      >&#8705;&#8709;-Universal</a
+      ><a name="1492"
+      > </a
+      ><a name="1493" class="Symbol"
+      >:</a
+      ><a name="1494"
+      > </a
+      ><a name="1495" href="Relation.Unary.html#1282" class="Function"
+      >Universal</a
+      ><a name="1504"
+      > </a
+      ><a name="1505" class="Symbol"
+      >(</a
+      ><a name="1506" href="Relation.Unary.html#1425" class="Function"
+      >&#8705;</a
+      ><a name="1507"
+      > </a
+      ><a name="1508" href="Relation.Unary.html#980" class="Function"
+      >&#8709;</a
+      ><a name="1509" class="Symbol"
+      >)</a
+      ><a name="1510"
+      >
+  </a
+      ><a name="1513" href="Relation.Unary.html#1480" class="Function"
+      >&#8705;&#8709;-Universal</a
+      ><a name="1525"
+      > </a
+      ><a name="1526" class="Symbol"
+      >=</a
+      ><a name="1527"
+      > </a
+      ><a name="1528" class="Symbol"
+      >&#955;</a
+      ><a name="1529"
+      > </a
+      ><a name="1530" href="Relation.Unary.html#1530" class="Bound"
+      >x</a
+      ><a name="1531"
+      > </a
+      ><a name="1532" href="Relation.Unary.html#1532" class="Bound"
+      >x&#8712;&#8709;</a
+      ><a name="1535"
+      > </a
+      ><a name="1536" class="Symbol"
+      >&#8594;</a
+      ><a name="1537"
+      > </a
+      ><a name="1538" href="Relation.Unary.html#1532" class="Bound"
+      >x&#8712;&#8709;</a
+      ><a name="1541"
+      >
+
+  </a
+      ><a name="1545" href="Relation.Unary.html#1545" class="Function"
+      >&#8705;U-Empty</a
+      ><a name="1553"
+      > </a
+      ><a name="1554" class="Symbol"
+      >:</a
+      ><a name="1555"
+      > </a
+      ><a name="1556" href="Relation.Unary.html#1048" class="Function"
+      >Empty</a
+      ><a name="1561"
+      > </a
+      ><a name="1562" class="Symbol"
+      >(</a
+      ><a name="1563" href="Relation.Unary.html#1425" class="Function"
+      >&#8705;</a
+      ><a name="1564"
+      > </a
+      ><a name="1565" href="Relation.Unary.html#1210" class="Function"
+      >U</a
+      ><a name="1566" class="Symbol"
+      >)</a
+      ><a name="1567"
+      >
+  </a
+      ><a name="1570" href="Relation.Unary.html#1545" class="Function"
+      >&#8705;U-Empty</a
+      ><a name="1578"
+      > </a
+      ><a name="1579" class="Symbol"
+      >=</a
+      ><a name="1580"
+      > </a
+      ><a name="1581" class="Symbol"
+      >&#955;</a
+      ><a name="1582"
+      > </a
+      ><a name="1583" href="Relation.Unary.html#1583" class="Bound"
+      >x</a
+      ><a name="1584"
+      > </a
+      ><a name="1585" href="Relation.Unary.html#1585" class="Bound"
+      >x&#8712;&#8705;U</a
+      ><a name="1589"
+      > </a
+      ><a name="1590" class="Symbol"
+      >&#8594;</a
+      ><a name="1591"
+      > </a
+      ><a name="1592" href="Relation.Unary.html#1585" class="Bound"
+      >x&#8712;&#8705;U</a
+      ><a name="1596"
+      > </a
+      ><a name="1597" class="Symbol"
+      >_</a
+      ><a name="1598"
+      >
+
+  </a
+      ><a name="1602" class="Comment"
+      >-- P&#160;&#8838;&#160;Q means that P is a subset of Q. _&#8838;&#8242;_ is a variant of _&#8838;_.</a
+      ><a name="1667"
+      >
+
+  </a
+      ><a name="1671" class="Keyword"
+      >infix</a
+      ><a name="1676"
+      > </a
+      ><a name="1677" class="Number"
+      >4</a
+      ><a name="1678"
+      > _&#8838;_ _&#8839;_ _&#8838;&#8242;_ _&#8839;&#8242;_
+
+  </a
+      ><a name="1700" href="Relation.Unary.html#1700" class="Function Operator"
+      >_&#8838;_</a
+      ><a name="1703"
+      > </a
+      ><a name="1704" class="Symbol"
+      >:</a
+      ><a name="1705"
+      > </a
+      ><a name="1706" class="Symbol"
+      >&#8704;</a
+      ><a name="1707"
+      > </a
+      ><a name="1708" class="Symbol"
+      >{</a
+      ><a name="1709" href="Relation.Unary.html#1709" class="Bound"
+      >&#8467;&#8321;</a
+      ><a name="1711"
+      > </a
+      ><a name="1712" href="Relation.Unary.html#1712" class="Bound"
+      >&#8467;&#8322;</a
+      ><a name="1714" class="Symbol"
+      >}</a
+      ><a name="1715"
+      > </a
+      ><a name="1716" class="Symbol"
+      >&#8594;</a
+      ><a name="1717"
+      > </a
+      ><a name="1718" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="1722"
+      > </a
+      ><a name="1723" href="Relation.Unary.html#751" class="Bound"
+      >A</a
+      ><a name="1724"
+      > </a
+      ><a name="1725" href="Relation.Unary.html#1709" class="Bound"
+      >&#8467;&#8321;</a
+      ><a name="1727"
+      > </a
+      ><a name="1728" class="Symbol"
+      >&#8594;</a
+      ><a name="1729"
+      > </a
+      ><a name="1730" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="1734"
+      > </a
+      ><a name="1735" href="Relation.Unary.html#751" class="Bound"
+      >A</a
+      ><a name="1736"
+      > </a
+      ><a name="1737" href="Relation.Unary.html#1712" class="Bound"
+      >&#8467;&#8322;</a
+      ><a name="1739"
+      > </a
+      ><a name="1740" class="Symbol"
+      >&#8594;</a
+      ><a name="1741"
+      > </a
+      ><a name="1742" class="PrimitiveType"
+      >Set</a
+      ><a name="1745"
+      > </a
+      ><a name="1746" class="Symbol"
+      >_</a
+      ><a name="1747"
+      >
+  </a
+      ><a name="1750" href="Relation.Unary.html#1750" class="Bound"
+      >P</a
+      ><a name="1751"
+      > </a
+      ><a name="1752" href="Relation.Unary.html#1700" class="Function Operator"
+      >&#8838;</a
+      ><a name="1753"
+      > </a
+      ><a name="1754" href="Relation.Unary.html#1754" class="Bound"
+      >Q</a
+      ><a name="1755"
+      > </a
+      ><a name="1756" class="Symbol"
+      >=</a
+      ><a name="1757"
+      > </a
+      ><a name="1758" class="Symbol"
+      >&#8704;</a
+      ><a name="1759"
+      > </a
+      ><a name="1760" class="Symbol"
+      >{</a
+      ><a name="1761" href="Relation.Unary.html#1761" class="Bound"
+      >x</a
+      ><a name="1762" class="Symbol"
+      >}</a
+      ><a name="1763"
+      > </a
+      ><a name="1764" class="Symbol"
+      >&#8594;</a
+      ><a name="1765"
+      > </a
+      ><a name="1766" href="Relation.Unary.html#1761" class="Bound"
+      >x</a
+      ><a name="1767"
+      > </a
+      ><a name="1768" href="Relation.Unary.html#851" class="Function Operator"
+      >&#8712;</a
+      ><a name="1769"
+      > </a
+      ><a name="1770" href="Relation.Unary.html#1750" class="Bound"
+      >P</a
+      ><a name="1771"
+      > </a
+      ><a name="1772" class="Symbol"
+      >&#8594;</a
+      ><a name="1773"
+      > </a
+      ><a name="1774" href="Relation.Unary.html#1761" class="Bound"
+      >x</a
+      ><a name="1775"
+      > </a
+      ><a name="1776" href="Relation.Unary.html#851" class="Function Operator"
+      >&#8712;</a
+      ><a name="1777"
+      > </a
+      ><a name="1778" href="Relation.Unary.html#1754" class="Bound"
+      >Q</a
+      ><a name="1779"
+      >
+
+  </a
+      ><a name="1783" href="Relation.Unary.html#1783" class="Function Operator"
+      >_&#8838;&#8242;_</a
+      ><a name="1787"
+      > </a
+      ><a name="1788" class="Symbol"
+      >:</a
+      ><a name="1789"
+      > </a
+      ><a name="1790" class="Symbol"
+      >&#8704;</a
+      ><a name="1791"
+      > </a
+      ><a name="1792" class="Symbol"
+      >{</a
+      ><a name="1793" href="Relation.Unary.html#1793" class="Bound"
+      >&#8467;&#8321;</a
+      ><a name="1795"
+      > </a
+      ><a name="1796" href="Relation.Unary.html#1796" class="Bound"
+      >&#8467;&#8322;</a
+      ><a name="1798" class="Symbol"
+      >}</a
+      ><a name="1799"
+      > </a
+      ><a name="1800" class="Symbol"
+      >&#8594;</a
+      ><a name="1801"
+      > </a
+      ><a name="1802" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="1806"
+      > </a
+      ><a name="1807" href="Relation.Unary.html#751" class="Bound"
+      >A</a
+      ><a name="1808"
+      > </a
+      ><a name="1809" href="Relation.Unary.html#1793" class="Bound"
+      >&#8467;&#8321;</a
+      ><a name="1811"
+      > </a
+      ><a name="1812" class="Symbol"
+      >&#8594;</a
+      ><a name="1813"
+      > </a
+      ><a name="1814" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="1818"
+      > </a
+      ><a name="1819" href="Relation.Unary.html#751" class="Bound"
+      >A</a
+      ><a name="1820"
+      > </a
+      ><a name="1821" href="Relation.Unary.html#1796" class="Bound"
+      >&#8467;&#8322;</a
+      ><a name="1823"
+      > </a
+      ><a name="1824" class="Symbol"
+      >&#8594;</a
+      ><a name="1825"
+      > </a
+      ><a name="1826" class="PrimitiveType"
+      >Set</a
+      ><a name="1829"
+      > </a
+      ><a name="1830" class="Symbol"
+      >_</a
+      ><a name="1831"
+      >
+  </a
+      ><a name="1834" href="Relation.Unary.html#1834" class="Bound"
+      >P</a
+      ><a name="1835"
+      > </a
+      ><a name="1836" href="Relation.Unary.html#1783" class="Function Operator"
+      >&#8838;&#8242;</a
+      ><a name="1838"
+      > </a
+      ><a name="1839" href="Relation.Unary.html#1839" class="Bound"
+      >Q</a
+      ><a name="1840"
+      > </a
+      ><a name="1841" class="Symbol"
+      >=</a
+      ><a name="1842"
+      > </a
+      ><a name="1843" class="Symbol"
+      >&#8704;</a
+      ><a name="1844"
+      > </a
+      ><a name="1845" href="Relation.Unary.html#1845" class="Bound"
+      >x</a
+      ><a name="1846"
+      > </a
+      ><a name="1847" class="Symbol"
+      >&#8594;</a
+      ><a name="1848"
+      > </a
+      ><a name="1849" href="Relation.Unary.html#1845" class="Bound"
+      >x</a
+      ><a name="1850"
+      > </a
+      ><a name="1851" href="Relation.Unary.html#851" class="Function Operator"
+      >&#8712;</a
+      ><a name="1852"
+      > </a
+      ><a name="1853" href="Relation.Unary.html#1834" class="Bound"
+      >P</a
+      ><a name="1854"
+      > </a
+      ><a name="1855" class="Symbol"
+      >&#8594;</a
+      ><a name="1856"
+      > </a
+      ><a name="1857" href="Relation.Unary.html#1845" class="Bound"
+      >x</a
+      ><a name="1858"
+      > </a
+      ><a name="1859" href="Relation.Unary.html#851" class="Function Operator"
+      >&#8712;</a
+      ><a name="1860"
+      > </a
+      ><a name="1861" href="Relation.Unary.html#1839" class="Bound"
+      >Q</a
+      ><a name="1862"
+      >
+
+  </a
+      ><a name="1866" href="Relation.Unary.html#1866" class="Function Operator"
+      >_&#8839;_</a
+      ><a name="1869"
+      > </a
+      ><a name="1870" class="Symbol"
+      >:</a
+      ><a name="1871"
+      > </a
+      ><a name="1872" class="Symbol"
+      >&#8704;</a
+      ><a name="1873"
+      > </a
+      ><a name="1874" class="Symbol"
+      >{</a
+      ><a name="1875" href="Relation.Unary.html#1875" class="Bound"
+      >&#8467;&#8321;</a
+      ><a name="1877"
+      > </a
+      ><a name="1878" href="Relation.Unary.html#1878" class="Bound"
+      >&#8467;&#8322;</a
+      ><a name="1880" class="Symbol"
+      >}</a
+      ><a name="1881"
+      > </a
+      ><a name="1882" class="Symbol"
+      >&#8594;</a
+      ><a name="1883"
+      > </a
+      ><a name="1884" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="1888"
+      > </a
+      ><a name="1889" href="Relation.Unary.html#751" class="Bound"
+      >A</a
+      ><a name="1890"
+      > </a
+      ><a name="1891" href="Relation.Unary.html#1875" class="Bound"
+      >&#8467;&#8321;</a
+      ><a name="1893"
+      > </a
+      ><a name="1894" class="Symbol"
+      >&#8594;</a
+      ><a name="1895"
+      > </a
+      ><a name="1896" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="1900"
+      > </a
+      ><a name="1901" href="Relation.Unary.html#751" class="Bound"
+      >A</a
+      ><a name="1902"
+      > </a
+      ><a name="1903" href="Relation.Unary.html#1878" class="Bound"
+      >&#8467;&#8322;</a
+      ><a name="1905"
+      > </a
+      ><a name="1906" class="Symbol"
+      >&#8594;</a
+      ><a name="1907"
+      > </a
+      ><a name="1908" class="PrimitiveType"
+      >Set</a
+      ><a name="1911"
+      > </a
+      ><a name="1912" class="Symbol"
+      >_</a
+      ><a name="1913"
+      >
+  </a
+      ><a name="1916" href="Relation.Unary.html#1916" class="Bound"
+      >Q</a
+      ><a name="1917"
+      > </a
+      ><a name="1918" href="Relation.Unary.html#1866" class="Function Operator"
+      >&#8839;</a
+      ><a name="1919"
+      > </a
+      ><a name="1920" href="Relation.Unary.html#1920" class="Bound"
+      >P</a
+      ><a name="1921"
+      > </a
+      ><a name="1922" class="Symbol"
+      >=</a
+      ><a name="1923"
+      > </a
+      ><a name="1924" href="Relation.Unary.html#1920" class="Bound"
+      >P</a
+      ><a name="1925"
+      > </a
+      ><a name="1926" href="Relation.Unary.html#1700" class="Function Operator"
+      >&#8838;</a
+      ><a name="1927"
+      > </a
+      ><a name="1928" href="Relation.Unary.html#1916" class="Bound"
+      >Q</a
+      ><a name="1929"
+      >
+
+  </a
+      ><a name="1933" href="Relation.Unary.html#1933" class="Function Operator"
+      >_&#8839;&#8242;_</a
+      ><a name="1937"
+      > </a
+      ><a name="1938" class="Symbol"
+      >:</a
+      ><a name="1939"
+      > </a
+      ><a name="1940" class="Symbol"
+      >&#8704;</a
+      ><a name="1941"
+      > </a
+      ><a name="1942" class="Symbol"
+      >{</a
+      ><a name="1943" href="Relation.Unary.html#1943" class="Bound"
+      >&#8467;&#8321;</a
+      ><a name="1945"
+      > </a
+      ><a name="1946" href="Relation.Unary.html#1946" class="Bound"
+      >&#8467;&#8322;</a
+      ><a name="1948" class="Symbol"
+      >}</a
+      ><a name="1949"
+      > </a
+      ><a name="1950" class="Symbol"
+      >&#8594;</a
+      ><a name="1951"
+      > </a
+      ><a name="1952" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="1956"
+      > </a
+      ><a name="1957" href="Relation.Unary.html#751" class="Bound"
+      >A</a
+      ><a name="1958"
+      > </a
+      ><a name="1959" href="Relation.Unary.html#1943" class="Bound"
+      >&#8467;&#8321;</a
+      ><a name="1961"
+      > </a
+      ><a name="1962" class="Symbol"
+      >&#8594;</a
+      ><a name="1963"
+      > </a
+      ><a name="1964" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="1968"
+      > </a
+      ><a name="1969" href="Relation.Unary.html#751" class="Bound"
+      >A</a
+      ><a name="1970"
+      > </a
+      ><a name="1971" href="Relation.Unary.html#1946" class="Bound"
+      >&#8467;&#8322;</a
+      ><a name="1973"
+      > </a
+      ><a name="1974" class="Symbol"
+      >&#8594;</a
+      ><a name="1975"
+      > </a
+      ><a name="1976" class="PrimitiveType"
+      >Set</a
+      ><a name="1979"
+      > </a
+      ><a name="1980" class="Symbol"
+      >_</a
+      ><a name="1981"
+      >
+  </a
+      ><a name="1984" href="Relation.Unary.html#1984" class="Bound"
+      >Q</a
+      ><a name="1985"
+      > </a
+      ><a name="1986" href="Relation.Unary.html#1933" class="Function Operator"
+      >&#8839;&#8242;</a
+      ><a name="1988"
+      > </a
+      ><a name="1989" href="Relation.Unary.html#1989" class="Bound"
+      >P</a
+      ><a name="1990"
+      > </a
+      ><a name="1991" class="Symbol"
+      >=</a
+      ><a name="1992"
+      > </a
+      ><a name="1993" href="Relation.Unary.html#1989" class="Bound"
+      >P</a
+      ><a name="1994"
+      > </a
+      ><a name="1995" href="Relation.Unary.html#1783" class="Function Operator"
+      >&#8838;&#8242;</a
+      ><a name="1997"
+      > </a
+      ><a name="1998" href="Relation.Unary.html#1984" class="Bound"
+      >Q</a
+      ><a name="1999"
+      >
+
+  </a
+      ><a name="2003" href="Relation.Unary.html#2003" class="Function"
+      >&#8709;-&#8838;</a
+      ><a name="2006"
+      > </a
+      ><a name="2007" class="Symbol"
+      >:</a
+      ><a name="2008"
+      > </a
+      ><a name="2009" class="Symbol"
+      >&#8704;</a
+      ><a name="2010"
+      > </a
+      ><a name="2011" class="Symbol"
+      >{</a
+      ><a name="2012" href="Relation.Unary.html#2012" class="Bound"
+      >&#8467;</a
+      ><a name="2013" class="Symbol"
+      >}</a
+      ><a name="2014"
+      > </a
+      ><a name="2015" class="Symbol"
+      >&#8594;</a
+      ><a name="2016"
+      > </a
+      ><a name="2017" class="Symbol"
+      >(</a
+      ><a name="2018" href="Relation.Unary.html#2018" class="Bound"
+      >P</a
+      ><a name="2019"
+      > </a
+      ><a name="2020" class="Symbol"
+      >:</a
+      ><a name="2021"
+      > </a
+      ><a name="2022" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="2026"
+      > </a
+      ><a name="2027" href="Relation.Unary.html#751" class="Bound"
+      >A</a
+      ><a name="2028"
+      > </a
+      ><a name="2029" href="Relation.Unary.html#2012" class="Bound"
+      >&#8467;</a
+      ><a name="2030" class="Symbol"
+      >)</a
+      ><a name="2031"
+      > </a
+      ><a name="2032" class="Symbol"
+      >&#8594;</a
+      ><a name="2033"
+      > </a
+      ><a name="2034" href="Relation.Unary.html#980" class="Function"
+      >&#8709;</a
+      ><a name="2035"
+      > </a
+      ><a name="2036" href="Relation.Unary.html#1700" class="Function Operator"
+      >&#8838;</a
+      ><a name="2037"
+      > </a
+      ><a name="2038" href="Relation.Unary.html#2018" class="Bound"
+      >P</a
+      ><a name="2039"
+      >
+  </a
+      ><a name="2042" href="Relation.Unary.html#2003" class="Function"
+      >&#8709;-&#8838;</a
+      ><a name="2045"
+      > </a
+      ><a name="2046" href="Relation.Unary.html#2046" class="Bound"
+      >P</a
+      ><a name="2047"
+      > </a
+      ><a name="2048" class="Symbol"
+      >()</a
+      ><a name="2050"
+      >
+
+  </a
+      ><a name="2054" href="Relation.Unary.html#2054" class="Function"
+      >&#8838;-U</a
+      ><a name="2057"
+      > </a
+      ><a name="2058" class="Symbol"
+      >:</a
+      ><a name="2059"
+      > </a
+      ><a name="2060" class="Symbol"
+      >&#8704;</a
+      ><a name="2061"
+      > </a
+      ><a name="2062" class="Symbol"
+      >{</a
+      ><a name="2063" href="Relation.Unary.html#2063" class="Bound"
+      >&#8467;</a
+      ><a name="2064" class="Symbol"
+      >}</a
+      ><a name="2065"
+      > </a
+      ><a name="2066" class="Symbol"
+      >&#8594;</a
+      ><a name="2067"
+      > </a
+      ><a name="2068" class="Symbol"
+      >(</a
+      ><a name="2069" href="Relation.Unary.html#2069" class="Bound"
+      >P</a
+      ><a name="2070"
+      > </a
+      ><a name="2071" class="Symbol"
+      >:</a
+      ><a name="2072"
+      > </a
+      ><a name="2073" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="2077"
+      > </a
+      ><a name="2078" href="Relation.Unary.html#751" class="Bound"
+      >A</a
+      ><a name="2079"
+      > </a
+      ><a name="2080" href="Relation.Unary.html#2063" class="Bound"
+      >&#8467;</a
+      ><a name="2081" class="Symbol"
+      >)</a
+      ><a name="2082"
+      > </a
+      ><a name="2083" class="Symbol"
+      >&#8594;</a
+      ><a name="2084"
+      > </a
+      ><a name="2085" href="Relation.Unary.html#2069" class="Bound"
+      >P</a
+      ><a name="2086"
+      > </a
+      ><a name="2087" href="Relation.Unary.html#1700" class="Function Operator"
+      >&#8838;</a
+      ><a name="2088"
+      > </a
+      ><a name="2089" href="Relation.Unary.html#1210" class="Function"
+      >U</a
+      ><a name="2090"
+      >
+  </a
+      ><a name="2093" href="Relation.Unary.html#2054" class="Function"
+      >&#8838;-U</a
+      ><a name="2096"
+      > </a
+      ><a name="2097" href="Relation.Unary.html#2097" class="Bound"
+      >P</a
+      ><a name="2098"
+      > </a
+      ><a name="2099" class="Symbol"
+      >_</a
+      ><a name="2100"
+      > </a
+      ><a name="2101" class="Symbol"
+      >=</a
+      ><a name="2102"
+      > </a
+      ><a name="2103" class="Symbol"
+      >_</a
+      ><a name="2104"
+      >
+
+  </a
+      ><a name="2108" class="Comment"
+      >-- Set union.</a
+      ><a name="2121"
+      >
+
+  </a
+      ><a name="2125" class="Keyword"
+      >infixl</a
+      ><a name="2131"
+      > </a
+      ><a name="2132" class="Number"
+      >6</a
+      ><a name="2133"
+      > _&#8746;_
+
+  </a
+      ><a name="2141" href="Relation.Unary.html#2141" class="Function Operator"
+      >_&#8746;_</a
+      ><a name="2144"
+      > </a
+      ><a name="2145" class="Symbol"
+      >:</a
+      ><a name="2146"
+      > </a
+      ><a name="2147" class="Symbol"
+      >&#8704;</a
+      ><a name="2148"
+      > </a
+      ><a name="2149" class="Symbol"
+      >{</a
+      ><a name="2150" href="Relation.Unary.html#2150" class="Bound"
+      >&#8467;&#8321;</a
+      ><a name="2152"
+      > </a
+      ><a name="2153" href="Relation.Unary.html#2153" class="Bound"
+      >&#8467;&#8322;</a
+      ><a name="2155" class="Symbol"
+      >}</a
+      ><a name="2156"
+      > </a
+      ><a name="2157" class="Symbol"
+      >&#8594;</a
+      ><a name="2158"
+      > </a
+      ><a name="2159" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="2163"
+      > </a
+      ><a name="2164" href="Relation.Unary.html#751" class="Bound"
+      >A</a
+      ><a name="2165"
+      > </a
+      ><a name="2166" href="Relation.Unary.html#2150" class="Bound"
+      >&#8467;&#8321;</a
+      ><a name="2168"
+      > </a
+      ><a name="2169" class="Symbol"
+      >&#8594;</a
+      ><a name="2170"
+      > </a
+      ><a name="2171" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="2175"
+      > </a
+      ><a name="2176" href="Relation.Unary.html#751" class="Bound"
+      >A</a
+      ><a name="2177"
+      > </a
+      ><a name="2178" href="Relation.Unary.html#2153" class="Bound"
+      >&#8467;&#8322;</a
+      ><a name="2180"
+      > </a
+      ><a name="2181" class="Symbol"
+      >&#8594;</a
+      ><a name="2182"
+      > </a
+      ><a name="2183" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="2187"
+      > </a
+      ><a name="2188" href="Relation.Unary.html#751" class="Bound"
+      >A</a
+      ><a name="2189"
+      > </a
+      ><a name="2190" class="Symbol"
+      >_</a
+      ><a name="2191"
+      >
+  </a
+      ><a name="2194" href="Relation.Unary.html#2194" class="Bound"
+      >P</a
+      ><a name="2195"
+      > </a
+      ><a name="2196" href="Relation.Unary.html#2141" class="Function Operator"
+      >&#8746;</a
+      ><a name="2197"
+      > </a
+      ><a name="2198" href="Relation.Unary.html#2198" class="Bound"
+      >Q</a
+      ><a name="2199"
+      > </a
+      ><a name="2200" class="Symbol"
+      >=</a
+      ><a name="2201"
+      > </a
+      ><a name="2202" class="Symbol"
+      >&#955;</a
+      ><a name="2203"
+      > </a
+      ><a name="2204" href="Relation.Unary.html#2204" class="Bound"
+      >x</a
+      ><a name="2205"
+      > </a
+      ><a name="2206" class="Symbol"
+      >&#8594;</a
+      ><a name="2207"
+      > </a
+      ><a name="2208" href="Relation.Unary.html#2204" class="Bound"
+      >x</a
+      ><a name="2209"
+      > </a
+      ><a name="2210" href="Relation.Unary.html#851" class="Function Operator"
+      >&#8712;</a
+      ><a name="2211"
+      > </a
+      ><a name="2212" href="Relation.Unary.html#2194" class="Bound"
+      >P</a
+      ><a name="2213"
+      > </a
+      ><a name="2214" href="Data.Sum.html#404" class="Datatype Operator"
+      >&#8846;</a
+      ><a name="2215"
+      > </a
+      ><a name="2216" href="Relation.Unary.html#2204" class="Bound"
+      >x</a
+      ><a name="2217"
+      > </a
+      ><a name="2218" href="Relation.Unary.html#851" class="Function Operator"
+      >&#8712;</a
+      ><a name="2219"
+      > </a
+      ><a name="2220" href="Relation.Unary.html#2198" class="Bound"
+      >Q</a
+      ><a name="2221"
+      >
+
+  </a
+      ><a name="2225" class="Comment"
+      >-- Set intersection.</a
+      ><a name="2245"
+      >
+
+  </a
+      ><a name="2249" class="Keyword"
+      >infixl</a
+      ><a name="2255"
+      > </a
+      ><a name="2256" class="Number"
+      >7</a
+      ><a name="2257"
+      > _&#8745;_
+
+  </a
+      ><a name="2265" href="Relation.Unary.html#2265" class="Function Operator"
+      >_&#8745;_</a
+      ><a name="2268"
+      > </a
+      ><a name="2269" class="Symbol"
+      >:</a
+      ><a name="2270"
+      > </a
+      ><a name="2271" class="Symbol"
+      >&#8704;</a
+      ><a name="2272"
+      > </a
+      ><a name="2273" class="Symbol"
+      >{</a
+      ><a name="2274" href="Relation.Unary.html#2274" class="Bound"
+      >&#8467;&#8321;</a
+      ><a name="2276"
+      > </a
+      ><a name="2277" href="Relation.Unary.html#2277" class="Bound"
+      >&#8467;&#8322;</a
+      ><a name="2279" class="Symbol"
+      >}</a
+      ><a name="2280"
+      > </a
+      ><a name="2281" class="Symbol"
+      >&#8594;</a
+      ><a name="2282"
+      > </a
+      ><a name="2283" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="2287"
+      > </a
+      ><a name="2288" href="Relation.Unary.html#751" class="Bound"
+      >A</a
+      ><a name="2289"
+      > </a
+      ><a name="2290" href="Relation.Unary.html#2274" class="Bound"
+      >&#8467;&#8321;</a
+      ><a name="2292"
+      > </a
+      ><a name="2293" class="Symbol"
+      >&#8594;</a
+      ><a name="2294"
+      > </a
+      ><a name="2295" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="2299"
+      > </a
+      ><a name="2300" href="Relation.Unary.html#751" class="Bound"
+      >A</a
+      ><a name="2301"
+      > </a
+      ><a name="2302" href="Relation.Unary.html#2277" class="Bound"
+      >&#8467;&#8322;</a
+      ><a name="2304"
+      > </a
+      ><a name="2305" class="Symbol"
+      >&#8594;</a
+      ><a name="2306"
+      > </a
+      ><a name="2307" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="2311"
+      > </a
+      ><a name="2312" href="Relation.Unary.html#751" class="Bound"
+      >A</a
+      ><a name="2313"
+      > </a
+      ><a name="2314" class="Symbol"
+      >_</a
+      ><a name="2315"
+      >
+  </a
+      ><a name="2318" href="Relation.Unary.html#2318" class="Bound"
+      >P</a
+      ><a name="2319"
+      > </a
+      ><a name="2320" href="Relation.Unary.html#2265" class="Function Operator"
+      >&#8745;</a
+      ><a name="2321"
+      > </a
+      ><a name="2322" href="Relation.Unary.html#2322" class="Bound"
+      >Q</a
+      ><a name="2323"
+      > </a
+      ><a name="2324" class="Symbol"
+      >=</a
+      ><a name="2325"
+      > </a
+      ><a name="2326" class="Symbol"
+      >&#955;</a
+      ><a name="2327"
+      > </a
+      ><a name="2328" href="Relation.Unary.html#2328" class="Bound"
+      >x</a
+      ><a name="2329"
+      > </a
+      ><a name="2330" class="Symbol"
+      >&#8594;</a
+      ><a name="2331"
+      > </a
+      ><a name="2332" href="Relation.Unary.html#2328" class="Bound"
+      >x</a
+      ><a name="2333"
+      > </a
+      ><a name="2334" href="Relation.Unary.html#851" class="Function Operator"
+      >&#8712;</a
+      ><a name="2335"
+      > </a
+      ><a name="2336" href="Relation.Unary.html#2318" class="Bound"
+      >P</a
+      ><a name="2337"
+      > </a
+      ><a name="2338" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="2339"
+      > </a
+      ><a name="2340" href="Relation.Unary.html#2328" class="Bound"
+      >x</a
+      ><a name="2341"
+      > </a
+      ><a name="2342" href="Relation.Unary.html#851" class="Function Operator"
+      >&#8712;</a
+      ><a name="2343"
+      > </a
+      ><a name="2344" href="Relation.Unary.html#2322" class="Bound"
+      >Q</a
+      ><a name="2345"
+      >
+
+</a
+      ><a name="2347" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="2419"
+      >
+</a
+      ><a name="2420" class="Comment"
+      >-- Unary relation combinators</a
+      ><a name="2449"
+      >
+
+</a
+      ><a name="2451" class="Keyword"
+      >infixr</a
+      ><a name="2457"
+      > </a
+      ><a name="2458" class="Number"
+      >2</a
+      ><a name="2459"
+      > _&#10216;&#215;&#10217;_
+</a
+      ><a name="2466" class="Keyword"
+      >infixr</a
+      ><a name="2472"
+      > </a
+      ><a name="2473" class="Number"
+      >1</a
+      ><a name="2474"
+      > _&#10216;&#8846;&#10217;_
+</a
+      ><a name="2481" class="Keyword"
+      >infixr</a
+      ><a name="2487"
+      > </a
+      ><a name="2488" class="Number"
+      >0</a
+      ><a name="2489"
+      > _&#10216;&#8594;&#10217;_
+
+</a
+      ><a name="2497" href="Relation.Unary.html#2497" class="Function Operator"
+      >_&#10216;&#215;&#10217;_</a
+      ><a name="2502"
+      > </a
+      ><a name="2503" class="Symbol"
+      >:</a
+      ><a name="2504"
+      > </a
+      ><a name="2505" class="Symbol"
+      >&#8704;</a
+      ><a name="2506"
+      > </a
+      ><a name="2507" class="Symbol"
+      >{</a
+      ><a name="2508" href="Relation.Unary.html#2508" class="Bound"
+      >a</a
+      ><a name="2509"
+      > </a
+      ><a name="2510" href="Relation.Unary.html#2510" class="Bound"
+      >b</a
+      ><a name="2511"
+      > </a
+      ><a name="2512" href="Relation.Unary.html#2512" class="Bound"
+      >&#8467;&#8321;</a
+      ><a name="2514"
+      > </a
+      ><a name="2515" href="Relation.Unary.html#2515" class="Bound"
+      >&#8467;&#8322;</a
+      ><a name="2517" class="Symbol"
+      >}</a
+      ><a name="2518"
+      > </a
+      ><a name="2519" class="Symbol"
+      >{</a
+      ><a name="2520" href="Relation.Unary.html#2520" class="Bound"
+      >A</a
+      ><a name="2521"
+      > </a
+      ><a name="2522" class="Symbol"
+      >:</a
+      ><a name="2523"
+      > </a
+      ><a name="2524" class="PrimitiveType"
+      >Set</a
+      ><a name="2527"
+      > </a
+      ><a name="2528" href="Relation.Unary.html#2508" class="Bound"
+      >a</a
+      ><a name="2529" class="Symbol"
+      >}</a
+      ><a name="2530"
+      > </a
+      ><a name="2531" class="Symbol"
+      >{</a
+      ><a name="2532" href="Relation.Unary.html#2532" class="Bound"
+      >B</a
+      ><a name="2533"
+      > </a
+      ><a name="2534" class="Symbol"
+      >:</a
+      ><a name="2535"
+      > </a
+      ><a name="2536" class="PrimitiveType"
+      >Set</a
+      ><a name="2539"
+      > </a
+      ><a name="2540" href="Relation.Unary.html#2510" class="Bound"
+      >b</a
+      ><a name="2541" class="Symbol"
+      >}</a
+      ><a name="2542"
+      > </a
+      ><a name="2543" class="Symbol"
+      >&#8594;</a
+      ><a name="2544"
+      >
+        </a
+      ><a name="2553" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="2557"
+      > </a
+      ><a name="2558" href="Relation.Unary.html#2520" class="Bound"
+      >A</a
+      ><a name="2559"
+      > </a
+      ><a name="2560" href="Relation.Unary.html#2512" class="Bound"
+      >&#8467;&#8321;</a
+      ><a name="2562"
+      > </a
+      ><a name="2563" class="Symbol"
+      >&#8594;</a
+      ><a name="2564"
+      > </a
+      ><a name="2565" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="2569"
+      > </a
+      ><a name="2570" href="Relation.Unary.html#2532" class="Bound"
+      >B</a
+      ><a name="2571"
+      > </a
+      ><a name="2572" href="Relation.Unary.html#2515" class="Bound"
+      >&#8467;&#8322;</a
+      ><a name="2574"
+      > </a
+      ><a name="2575" class="Symbol"
+      >&#8594;</a
+      ><a name="2576"
+      > </a
+      ><a name="2577" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="2581"
+      > </a
+      ><a name="2582" class="Symbol"
+      >(</a
+      ><a name="2583" href="Relation.Unary.html#2520" class="Bound"
+      >A</a
+      ><a name="2584"
+      > </a
+      ><a name="2585" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="2586"
+      > </a
+      ><a name="2587" href="Relation.Unary.html#2532" class="Bound"
+      >B</a
+      ><a name="2588" class="Symbol"
+      >)</a
+      ><a name="2589"
+      > </a
+      ><a name="2590" class="Symbol"
+      >_</a
+      ><a name="2591"
+      >
+</a
+      ><a name="2592" href="Relation.Unary.html#2592" class="Bound"
+      >P</a
+      ><a name="2593"
+      > </a
+      ><a name="2594" href="Relation.Unary.html#2497" class="Function Operator"
+      >&#10216;&#215;&#10217;</a
+      ><a name="2597"
+      > </a
+      ><a name="2598" href="Relation.Unary.html#2598" class="Bound"
+      >Q</a
+      ><a name="2599"
+      > </a
+      ><a name="2600" class="Symbol"
+      >=</a
+      ><a name="2601"
+      > </a
+      ><a name="2602" href="Data.Product.html#2824" class="Function"
+      >uncurry</a
+      ><a name="2609"
+      > </a
+      ><a name="2610" class="Symbol"
+      >(&#955;</a
+      ><a name="2612"
+      > </a
+      ><a name="2613" href="Relation.Unary.html#2613" class="Bound"
+      >p</a
+      ><a name="2614"
+      > </a
+      ><a name="2615" href="Relation.Unary.html#2615" class="Bound"
+      >q</a
+      ><a name="2616"
+      > </a
+      ><a name="2617" class="Symbol"
+      >&#8594;</a
+      ><a name="2618"
+      > </a
+      ><a name="2619" href="Relation.Unary.html#2592" class="Bound"
+      >P</a
+      ><a name="2620"
+      > </a
+      ><a name="2621" href="Relation.Unary.html#2613" class="Bound"
+      >p</a
+      ><a name="2622"
+      > </a
+      ><a name="2623" href="Data.Product.html#1055" class="Function Operator"
+      >&#215;</a
+      ><a name="2624"
+      > </a
+      ><a name="2625" href="Relation.Unary.html#2598" class="Bound"
+      >Q</a
+      ><a name="2626"
+      > </a
+      ><a name="2627" href="Relation.Unary.html#2615" class="Bound"
+      >q</a
+      ><a name="2628" class="Symbol"
+      >)</a
+      ><a name="2629"
+      >
+
+</a
+      ><a name="2631" href="Relation.Unary.html#2631" class="Function Operator"
+      >_&#10216;&#8846;&#10217;_</a
+      ><a name="2636"
+      > </a
+      ><a name="2637" class="Symbol"
+      >:</a
+      ><a name="2638"
+      > </a
+      ><a name="2639" class="Symbol"
+      >&#8704;</a
+      ><a name="2640"
+      > </a
+      ><a name="2641" class="Symbol"
+      >{</a
+      ><a name="2642" href="Relation.Unary.html#2642" class="Bound"
+      >a</a
+      ><a name="2643"
+      > </a
+      ><a name="2644" href="Relation.Unary.html#2644" class="Bound"
+      >b</a
+      ><a name="2645"
+      > </a
+      ><a name="2646" href="Relation.Unary.html#2646" class="Bound"
+      >&#8467;</a
+      ><a name="2647" class="Symbol"
+      >}</a
+      ><a name="2648"
+      > </a
+      ><a name="2649" class="Symbol"
+      >{</a
+      ><a name="2650" href="Relation.Unary.html#2650" class="Bound"
+      >A</a
+      ><a name="2651"
+      > </a
+      ><a name="2652" class="Symbol"
+      >:</a
+      ><a name="2653"
+      > </a
+      ><a name="2654" class="PrimitiveType"
+      >Set</a
+      ><a name="2657"
+      > </a
+      ><a name="2658" href="Relation.Unary.html#2642" class="Bound"
+      >a</a
+      ><a name="2659" class="Symbol"
+      >}</a
+      ><a name="2660"
+      > </a
+      ><a name="2661" class="Symbol"
+      >{</a
+      ><a name="2662" href="Relation.Unary.html#2662" class="Bound"
+      >B</a
+      ><a name="2663"
+      > </a
+      ><a name="2664" class="Symbol"
+      >:</a
+      ><a name="2665"
+      > </a
+      ><a name="2666" class="PrimitiveType"
+      >Set</a
+      ><a name="2669"
+      > </a
+      ><a name="2670" href="Relation.Unary.html#2644" class="Bound"
+      >b</a
+      ><a name="2671" class="Symbol"
+      >}</a
+      ><a name="2672"
+      > </a
+      ><a name="2673" class="Symbol"
+      >&#8594;</a
+      ><a name="2674"
+      >
+        </a
+      ><a name="2683" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="2687"
+      > </a
+      ><a name="2688" href="Relation.Unary.html#2650" class="Bound"
+      >A</a
+      ><a name="2689"
+      > </a
+      ><a name="2690" href="Relation.Unary.html#2646" class="Bound"
+      >&#8467;</a
+      ><a name="2691"
+      > </a
+      ><a name="2692" class="Symbol"
+      >&#8594;</a
+      ><a name="2693"
+      > </a
+      ><a name="2694" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="2698"
+      > </a
+      ><a name="2699" href="Relation.Unary.html#2662" class="Bound"
+      >B</a
+      ><a name="2700"
+      > </a
+      ><a name="2701" href="Relation.Unary.html#2646" class="Bound"
+      >&#8467;</a
+      ><a name="2702"
+      > </a
+      ><a name="2703" class="Symbol"
+      >&#8594;</a
+      ><a name="2704"
+      > </a
+      ><a name="2705" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="2709"
+      > </a
+      ><a name="2710" class="Symbol"
+      >(</a
+      ><a name="2711" href="Relation.Unary.html#2650" class="Bound"
+      >A</a
+      ><a name="2712"
+      > </a
+      ><a name="2713" href="Data.Sum.html#404" class="Datatype Operator"
+      >&#8846;</a
+      ><a name="2714"
+      > </a
+      ><a name="2715" href="Relation.Unary.html#2662" class="Bound"
+      >B</a
+      ><a name="2716" class="Symbol"
+      >)</a
+      ><a name="2717"
+      > </a
+      ><a name="2718" class="Symbol"
+      >_</a
+      ><a name="2719"
+      >
+</a
+      ><a name="2720" href="Relation.Unary.html#2720" class="Bound"
+      >P</a
+      ><a name="2721"
+      > </a
+      ><a name="2722" href="Relation.Unary.html#2631" class="Function Operator"
+      >&#10216;&#8846;&#10217;</a
+      ><a name="2725"
+      > </a
+      ><a name="2726" href="Relation.Unary.html#2726" class="Bound"
+      >Q</a
+      ><a name="2727"
+      > </a
+      ><a name="2728" class="Symbol"
+      >=</a
+      ><a name="2729"
+      > </a
+      ><a name="2730" href="Data.Sum.html#678" class="Function Operator"
+      >[</a
+      ><a name="2731"
+      > </a
+      ><a name="2732" href="Relation.Unary.html#2720" class="Bound"
+      >P</a
+      ><a name="2733"
+      > </a
+      ><a name="2734" href="Data.Sum.html#678" class="Function Operator"
+      >,</a
+      ><a name="2735"
+      > </a
+      ><a name="2736" href="Relation.Unary.html#2726" class="Bound"
+      >Q</a
+      ><a name="2737"
+      > </a
+      ><a name="2738" href="Data.Sum.html#678" class="Function Operator"
+      >]</a
+      ><a name="2739"
+      >
+
+</a
+      ><a name="2741" href="Relation.Unary.html#2741" class="Function Operator"
+      >_&#10216;&#8594;&#10217;_</a
+      ><a name="2746"
+      > </a
+      ><a name="2747" class="Symbol"
+      >:</a
+      ><a name="2748"
+      > </a
+      ><a name="2749" class="Symbol"
+      >&#8704;</a
+      ><a name="2750"
+      > </a
+      ><a name="2751" class="Symbol"
+      >{</a
+      ><a name="2752" href="Relation.Unary.html#2752" class="Bound"
+      >a</a
+      ><a name="2753"
+      > </a
+      ><a name="2754" href="Relation.Unary.html#2754" class="Bound"
+      >b</a
+      ><a name="2755"
+      > </a
+      ><a name="2756" href="Relation.Unary.html#2756" class="Bound"
+      >&#8467;&#8321;</a
+      ><a name="2758"
+      > </a
+      ><a name="2759" href="Relation.Unary.html#2759" class="Bound"
+      >&#8467;&#8322;</a
+      ><a name="2761" class="Symbol"
+      >}</a
+      ><a name="2762"
+      > </a
+      ><a name="2763" class="Symbol"
+      >{</a
+      ><a name="2764" href="Relation.Unary.html#2764" class="Bound"
+      >A</a
+      ><a name="2765"
+      > </a
+      ><a name="2766" class="Symbol"
+      >:</a
+      ><a name="2767"
+      > </a
+      ><a name="2768" class="PrimitiveType"
+      >Set</a
+      ><a name="2771"
+      > </a
+      ><a name="2772" href="Relation.Unary.html#2752" class="Bound"
+      >a</a
+      ><a name="2773" class="Symbol"
+      >}</a
+      ><a name="2774"
+      > </a
+      ><a name="2775" class="Symbol"
+      >{</a
+      ><a name="2776" href="Relation.Unary.html#2776" class="Bound"
+      >B</a
+      ><a name="2777"
+      > </a
+      ><a name="2778" class="Symbol"
+      >:</a
+      ><a name="2779"
+      > </a
+      ><a name="2780" class="PrimitiveType"
+      >Set</a
+      ><a name="2783"
+      > </a
+      ><a name="2784" href="Relation.Unary.html#2754" class="Bound"
+      >b</a
+      ><a name="2785" class="Symbol"
+      >}</a
+      ><a name="2786"
+      > </a
+      ><a name="2787" class="Symbol"
+      >&#8594;</a
+      ><a name="2788"
+      >
+        </a
+      ><a name="2797" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="2801"
+      > </a
+      ><a name="2802" href="Relation.Unary.html#2764" class="Bound"
+      >A</a
+      ><a name="2803"
+      > </a
+      ><a name="2804" href="Relation.Unary.html#2756" class="Bound"
+      >&#8467;&#8321;</a
+      ><a name="2806"
+      > </a
+      ><a name="2807" class="Symbol"
+      >&#8594;</a
+      ><a name="2808"
+      > </a
+      ><a name="2809" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="2813"
+      > </a
+      ><a name="2814" href="Relation.Unary.html#2776" class="Bound"
+      >B</a
+      ><a name="2815"
+      > </a
+      ><a name="2816" href="Relation.Unary.html#2759" class="Bound"
+      >&#8467;&#8322;</a
+      ><a name="2818"
+      > </a
+      ><a name="2819" class="Symbol"
+      >&#8594;</a
+      ><a name="2820"
+      > </a
+      ><a name="2821" href="Relation.Unary.html#481" class="Function"
+      >Pred</a
+      ><a name="2825"
+      > </a
+      ><a name="2826" class="Symbol"
+      >(</a
+      ><a name="2827" href="Relation.Unary.html#2764" class="Bound"
+      >A</a
+      ><a name="2828"
+      > </a
+      ><a name="2829" class="Symbol"
+      >&#8594;</a
+      ><a name="2830"
+      > </a
+      ><a name="2831" href="Relation.Unary.html#2776" class="Bound"
+      >B</a
+      ><a name="2832" class="Symbol"
+      >)</a
+      ><a name="2833"
+      > </a
+      ><a name="2834" class="Symbol"
+      >_</a
+      ><a name="2835"
+      >
+</a
+      ><a name="2836" class="Symbol"
+      >(</a
+      ><a name="2837" href="Relation.Unary.html#2837" class="Bound"
+      >P</a
+      ><a name="2838"
+      > </a
+      ><a name="2839" href="Relation.Unary.html#2741" class="Function Operator"
+      >&#10216;&#8594;&#10217;</a
+      ><a name="2842"
+      > </a
+      ><a name="2843" href="Relation.Unary.html#2843" class="Bound"
+      >Q</a
+      ><a name="2844" class="Symbol"
+      >)</a
+      ><a name="2845"
+      > </a
+      ><a name="2846" href="Relation.Unary.html#2846" class="Bound"
+      >f</a
+      ><a name="2847"
+      > </a
+      ><a name="2848" class="Symbol"
+      >=</a
+      ><a name="2849"
+      > </a
+      ><a name="2850" href="Relation.Unary.html#2837" class="Bound"
+      >P</a
+      ><a name="2851"
+      > </a
+      ><a name="2852" href="Relation.Unary.html#1700" class="Function Operator"
+      >&#8838;</a
+      ><a name="2853"
+      > </a
+      ><a name="2854" href="Relation.Unary.html#2843" class="Bound"
+      >Q</a
+      ><a name="2855"
+      > </a
+      ><a name="2856" href="Function.html#713" class="Function Operator"
+      >&#8728;</a
+      ><a name="2857"
+      > </a
+      ><a name="2858" href="Relation.Unary.html#2846" class="Bound"
+      >f</a
+      ><a name="2859"
+      >
+
+</a
+      ><a name="2861" class="Comment"
+      >------------------------------------------------------------------------</a
+      ><a name="2933"
+      >
+</a
+      ><a name="2934" class="Comment"
+      >-- Properties of unary relations</a
+      ><a name="2966"
+      >
+
+</a
+      ><a name="2968" href="Relation.Unary.html#2968" class="Function"
+      >Decidable</a
+      ><a name="2977"
+      > </a
+      ><a name="2978" class="Symbol"
+      >:</a
+      ><a name="2979"
+      > </a
+      ><a name="2980" class="Symbol"
+      >&#8704;</a
+      ><a name="2981"
+      > </a
+      ><a name="2982" class="Symbol"
+      >{</a
+      ><a name="2983" href="Relation.Unary.html#2983" class="Bound"
+      >a</a
+      ><a name="2984"
+      > </a
+      ><a name="2985" href="Relation.Unary.html#2985" class="Bound"
+      >p</a
+      ><a name="2986" class="Symbol"
+      >}</a
+      ><a name="2987"
+      > </a
+      ><a name="2988" class="Symbol"
+      >{</a
+      ><a name="2989" href="Relation.Unary.html#2989" class="Bound"
+      >A</a
+      ><a name="2990"
+      > </a
+      ><a name="2991" class="Symbol"
+      >:</a
+      ><a name="2992"
+      > </a
+      ><a name="2993" class="PrimitiveType"
+      >Set</a
+      ><a name="2996"
+      > </a
+      ><a name="2997" href="Relation.Unary.html#2983" class="Bound"
+      >a</a
+      ><a name="2998" class="Symbol"
+      >}</a
+      ><a name="2999"
+      > </a
+      ><a name="3000" class="Symbol"
+      >(</a
+      ><a name="3001" href="Relation.Unary.html#3001" class="Bound"
+      >P</a
+      ><a name="3002"
+      > </a
+      ><a name="3003" class="Symbol"
+      >:</a
+      ><a name="3004"
+      > </a
+      ><a name="3005" href="Relation.Unary.html#2989" class="Bound"
+      >A</a
+      ><a name="3006"
+      > </a
+      ><a name="3007" class="Symbol"
+      >&#8594;</a
+      ><a name="3008"
+      > </a
+      ><a name="3009" class="PrimitiveType"
+      >Set</a
+      ><a name="3012"
+      > </a
+      ><a name="3013" href="Relation.Unary.html#2985" class="Bound"
+      >p</a
+      ><a name="3014" class="Symbol"
+      >)</a
+      ><a name="3015"
+      > </a
+      ><a name="3016" class="Symbol"
+      >&#8594;</a
+      ><a name="3017"
+      > </a
+      ><a name="3018" class="PrimitiveType"
+      >Set</a
+      ><a name="3021"
+      > </a
+      ><a name="3022" class="Symbol"
+      >_</a
+      ><a name="3023"
+      >
+</a
+      ><a name="3024" href="Relation.Unary.html#2968" class="Function"
+      >Decidable</a
+      ><a name="3033"
+      > </a
+      ><a name="3034" href="Relation.Unary.html#3034" class="Bound"
+      >P</a
+      ><a name="3035"
+      > </a
+      ><a name="3036" class="Symbol"
+      >=</a
+      ><a name="3037"
+      > </a
+      ><a name="3038" class="Symbol"
+      >&#8704;</a
+      ><a name="3039"
+      > </a
+      ><a name="3040" href="Relation.Unary.html#3040" class="Bound"
+      >x</a
+      ><a name="3041"
+      > </a
+      ><a name="3042" class="Symbol"
+      >&#8594;</a
+      ><a name="3043"
+      > </a
+      ><a name="3044" href="Relation.Nullary.Core.html#468" class="Datatype"
+      >Dec</a
+      ><a name="3047"
+      > </a
+      ><a name="3048" class="Symbol"
+      >(</a
+      ><a name="3049" href="Relation.Unary.html#3034" class="Bound"
+      >P</a
+      ><a name="3050"
+      > </a
+      ><a name="3051" href="Relation.Unary.html#3040" class="Bound"
+      >x</a
+      ><a name="3052" class="Symbol"
+      >)</a
+      ><a name="3053"
+      >
+</a
+      ></pre
+    ></body
+  ></html
+>
