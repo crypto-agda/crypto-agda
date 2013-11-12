@@ -20,6 +20,8 @@ open import Game.Transformation.CCA2-CCA2d
 open import Game.Transformation.CCA2d-CCA2
 open import Game.Transformation.CPA-CPAd
 open import Game.Transformation.CPAd-CPA
+open import Game.Transformation.Naor-Yung
+--open import Game.Transformation.Naor-Yung-proof
 
 --TODO[or not] open import Attack.BruteForce.Keys
 --TODO open import Attack.BruteForce.Randomness
@@ -40,7 +42,7 @@ open import FunUniverse.README
 
 open import bijection-syntax.README
 
---open import alea.cpo
+open import alea.cpo
 
 open import circuits.circuit
 

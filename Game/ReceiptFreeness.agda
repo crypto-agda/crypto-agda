@@ -141,6 +141,12 @@ fillBallot c (co , _ , sn , enc-co) = co , marked (mark co c) , sn , enc-co
 BB : ★
 BB = List Receipt
 
+ClearReceipt : ★
+ClearReceipt = CO × MarkedReceipt?
+
+ClearBB : ★
+ClearBB = List ClearReceipt
+
 Tally : ★
 Tally = ℕ × ℕ
 
@@ -180,12 +186,19 @@ tallyMarkedReceipt? : CO → MarkedReceipt? → Tally
 tallyMarkedReceipt? co not-marked    = 0 , 0
 tallyMarkedReceipt? co (marked mark) = tallyMarkedReceipt co mark
 
-tallyCheckedReceipt : SecKey → Receipt → Tally
-tallyCheckedReceipt sk (marked? , _ , enc-co) = tallyMarkedReceipt? (Dec sk enc-co) marked?
+-- Not taking advantage of any homomorphic encryption
+tallyClearBB : ClearBB → Tally
+tallyClearBB = L.foldr (zip-× _+_ _+_) (0 , 0) ∘ L.map (uncurry tallyMarkedReceipt?)
+
+DecReceipt : SecKey → Receipt → CO × MarkedReceipt?
+DecReceipt sk (m? , sn , enc-co) = Dec sk enc-co , m?
+
+DecBB : SecKey → BB → ClearBB
+DecBB = L.map ∘ DecReceipt
 
 -- Not taking advantage of any homomorphic encryption
 tally : SecKey → BB → Tally
-tally sk bb = L.foldr (zip-× _+_ _+_) (0 , 0) (L.map (tallyCheckedReceipt sk) bb)
+tally sk bb = tallyClearBB (DecBB sk bb)
 
 data Accept? : ★ where
   accept reject : Accept?

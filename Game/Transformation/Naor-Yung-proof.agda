@@ -6,7 +6,7 @@ open import Data.One
 
 import Game.IND-CPA-alt
 import Game.IND-CCA
-import Game.CCA-Common
+--import Game.CCA-Common
 
 import Game.Transformation.Naor-Yung
 
