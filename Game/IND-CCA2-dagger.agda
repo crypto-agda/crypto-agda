@@ -51,15 +51,17 @@ R = Rₐ × Rₖ × Rₑ × Rₑ
 Experiment : ★
 Experiment = Adversary → R → Bit
 
-EXP : Bit → Experiment
-EXP b A (rₐ , rₖ , rₑ₀ , rₑ₁) with KeyGen rₖ
-... | pk , sk = b′ where
+module EXP (b : Bit) (A : Adversary) (rₐ : Rₐ) (pk : PubKey) (sk : SecKey) (rₑ₀ rₑ₁ : Rₑ) where
   decRound = runStrategy (Dec sk)
   cpaA     = decRound (A rₐ pk)
-  mb       = proj (get-m cpaA)
+  mb       = proj′ (get-m cpaA)
   c₀       = Enc pk (mb b)       rₑ₀
   c₁       = Enc pk (mb (not b)) rₑ₁
   b′       = decRound (put-c cpaA c₀ c₁)
+
+EXP : Bit → Experiment
+EXP b A (rₐ , rₖ , rₑ₀ , rₑ₁) with KeyGen rₖ
+... | pk , sk = EXP.b′ b A rₐ pk sk rₑ₀ rₑ₁
 
 module Advantage
   (μₑ : Explore₀ Rₑ)
