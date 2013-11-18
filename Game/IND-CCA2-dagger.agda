@@ -53,11 +53,15 @@ Experiment = Adversary → R → Bit
 
 module EXP (b : Bit) (A : Adversary) (rₐ : Rₐ) (pk : PubKey) (sk : SecKey) (rₑ₀ rₑ₁ : Rₑ) where
   decRound = runStrategy (Dec sk)
-  cpaA     = decRound (A rₐ pk)
+  A1       = A rₐ pk
+  cpaA     = decRound A1
   mb       = proj′ (get-m cpaA)
   c₀       = Enc pk (mb b)       rₑ₀
   c₁       = Enc pk (mb (not b)) rₑ₁
-  b′       = decRound (put-c cpaA c₀ c₁)
+  A2       = put-c cpaA c₀ c₁
+  b′       = decRound A2
+
+  ct       = proj′ (c₀ , c₁)
 
 EXP : Bit → Experiment
 EXP b A (rₐ , rₖ , rₑ₀ , rₑ₁) with KeyGen rₖ
