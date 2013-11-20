@@ -13,6 +13,7 @@ open import Data.Nat.NP renaming (_==_ to _==ℕ_)
 
 open import Relation.Binary.PropositionalEquality
 open import Control.Strategy
+open import Game.Challenge
 
 module Game.ReceiptFreeness
   (PubKey    : ★)
@@ -35,8 +36,13 @@ module Game.ReceiptFreeness
 
 where
 
-unchecked = 0₂
-checked = 1₂
+_∷²_ : ∀ {a} {A : ★_ a} → A ² → List A → List A
+p ∷² xs = p 0₂ ∷ p 1₂ ∷ xs
+
+{-
+_∷²_ : ∀ {a} {A : ★_ a} {n} → A ² → Vec A n → Vec A (2 + n)
+p ∷² xs = p 0₂ ∷ p 1₂ ∷ xs
+-}
 
 Candidate : ★
 Candidate = 𝟚 -- as in the paper: "for simplicity"
@@ -217,20 +223,17 @@ Resp RTally = Tally
 Phase : ★ → ★
 Phase = Strategy Q Resp
 
-_² : ★ → ★
-A ² = 𝟚 → A
-
 -- How to read types as protocols:
 -- A × B   sends A, then behave as B
 -- A → B   receives A, then behave as B
 
 RFChallenge : ★ → ★
-RFChallenge Next = (SerialNumber ²) × (Receipt ² → Next)
+RFChallenge = ChalAdversary (SerialNumber ²) (Receipt ²)
 
 Adversary : ★
-Adversary = Rₐ → PubKey → Phase -- Phase[I]
-                           (RFChallenge
-                             (Phase -- Phase[II]
+Adversary = Rₐ → PubKey → Phase -- Phase1
+                           (RFChallenge -- give two serial numbers, get back two receipts
+                             (Phase -- Phase2
                                𝟚)) -- Adversary guess of whether the vote is for alice
 
 -- TODO adversary validity
@@ -254,40 +257,16 @@ private
   State S A = S → A × S
 open StatefulRun
 
-module ToBeUsedLater
-   (b : 𝟚) (pk : PubKey)
-   (rgb : Candidate → Rgb) {-
-   (rco : Candidate → CO)
-   (rₑ : Candidate → Rₑ)
-   (sn : Candidate → SerialNumber)-} where
-
-   {-
-  rgb : Candidate → Rgb
-  rgb c = rco c , sn c , rₑ c
-  -}
-
-  ballots : Candidate → Ballot
-  ballots c = fillBallot c (genBallot pk (rgb c))
-
-  ballot-for-alice = ballots alice
-  ballot-for-bob   = ballots bob
-
-  randomly-swapped-ballots : Candidate → Ballot
-  randomly-swapped-ballots = ballots ∘ _xor_ b
-
-  randomly-swapped-receipts : Candidate → Receipt
-  randomly-swapped-receipts = receipt ∘ randomly-swapped-ballots
-
 PhaseNumber = 𝟚
-module EXP (b : 𝟚) (A : Adversary) (pk : PubKey) (sk : SecKey)
+module EXP (A : Adversary) (pk : PubKey) (sk : SecKey)
            (rₐ : Rₐ)
-           (v : PhaseNumber → Vec Rgb #q) (cs : Candidate → CipherText)
-           (ms : Candidate → MarkedReceipt?) where
+           (v : PhaseNumber → Vec Rgb #q) (cs : CipherText ²)
+           (ms : MarkedReceipt? ²) where
   BBsetup : BB
   BBsetup = []
 
-  Aphase[I] : Phase _
-  Aphase[I] = A rₐ pk
+  Aphase1 : Phase _
+  Aphase1 = A rₐ pk
 
   S = BB × Fin #q
 
@@ -299,57 +278,74 @@ module EXP (b : 𝟚) (A : Adversary) (pk : PubKey) (sk : SecKey)
   OracleS phase# q (bb , i) = O.resp q , O.newBB q , Fin.pred i
     where module O = Oracle sk pk (lookup i (v phase#)) bb
 
-  phase[I] = runS (OracleS 0₂) Aphase[I] (BBsetup , max#q)
+  phase1 = runS (OracleS 0₂) Aphase1 (BBsetup , max#q)
 
   AdversaryRFChallenge : RFChallenge _
-  AdversaryRFChallenge = proj₁ phase[I]
+  AdversaryRFChallenge = proj₁ phase1
 
   AdversarySN : SerialNumber ²
-  AdversarySN = proj₁ AdversaryRFChallenge
+  AdversarySN = get-chal AdversaryRFChallenge
 
-  BBphase[I] : BB
-  BBphase[I] = proj₁ (proj₂ phase[I])
+  BBphase1 : BB
+  BBphase1 = proj₁ (proj₂ phase1)
 
-  receipts : Candidate → Receipt
+  receipts : Receipt ²
   receipts c = ms c , AdversarySN c , cs c
 
   BBrfc : BB
-  BBrfc = receipts 0₂ ∷ receipts 1₂ ∷ BBphase[I]
+  BBrfc = receipts ∷² BBphase1
 
-  Aphase[II] : Phase _
-  Aphase[II] = proj₂ AdversaryRFChallenge receipts
+  Aphase2 : Phase _
+  Aphase2 = put-resp AdversaryRFChallenge receipts
 
-  phase[II] = runS (OracleS 1₂) Aphase[II] (BBrfc , max#q)
+  phase2 = runS (OracleS 1₂) Aphase2 (BBrfc , max#q)
 
   -- adversary guess
-  b′ = proj₁ phase[II]
+  b′ = proj₁ phase2
 
 module SimpleScheme where
     R : ★
     R = Rₖ × Rₐ × 𝟚 × (Rₑ)² × (Vec Rgb #q)²
 
+    ct-resp : (b : 𝟚) → PubKey → Rₑ ² → CipherText ²
+    ct-resp b pk rₑ = Enc pk ∘ flip _xor_ b ˢ rₑ
+
     game : Adversary → R → 𝟚
     game A (rₖ , rₐ , b , rₑ , rgbs) =
       case KeyGen rₖ of λ
       { (pk , sk) →
-        b == EXP.b′ b A pk sk rₐ rgbs (Enc pk ˢ rₑ) (const (marked 0₂))
+        b == EXP.b′ A pk sk rₐ rgbs (ct-resp b pk rₑ) (const (marked 0₂))
       }
 
 module LessSimpleScheme where
     R : ★
     R = Rₖ × Rₐ × 𝟚 × Rgb ² × (Vec Rgb #q)²
 
+    module Receipts (b : 𝟚) (pk : PubKey) (rgb : Rgb ²) where
+
+      ballots : Ballot ²
+      ballots c = fillBallot c (genBallot pk (rgb c))
+
+      ballot-for-alice = ballots alice
+      ballot-for-bob   = ballots bob
+
+      randomly-swapped-ballots : Ballot ²
+      randomly-swapped-ballots = ballots ∘ _xor_ b
+
+      randomly-swapped-receipts : Receipt ²
+      randomly-swapped-receipts = receipt ∘ randomly-swapped-ballots
+
     game : Adversary → R → 𝟚
     game A (rₖ , rₐ , b , rgb , rgbs) =
       case KeyGen rₖ of λ
       { (pk , sk) →
         let
-            open ToBeUsedLater b pk rgb
+            open Receipts b pk rgb
             r = randomly-swapped-receipts
             ms = markedReceipt? ∘ r
             cs = enc-co ∘ r
         in
-        b == EXP.b′ b A pk sk rₐ rgbs cs ms
+        b == EXP.b′ A pk sk rₐ rgbs cs ms
       }
 
     -- Winning condition

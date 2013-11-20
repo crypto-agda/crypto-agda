@@ -1,6 +1,7 @@
 
 open import Type
-open import Data.Bit
+open import Function
+open import Data.Two
 open import Data.Maybe
 open import Data.Product
 
@@ -12,6 +13,7 @@ open import Explore.Explorable
 open import Explore.Product
 open Operators
 open import Control.Strategy renaming (run to runStrategy)
+open import Game.Challenge
 import Game.IND-CPA-utils
 
 open import Relation.Binary.PropositionalEquality
@@ -31,14 +33,15 @@ module Game.IND-CCA2-dagger
 where
 
 open Game.IND-CPA-utils Message CipherText
-open CPAAdversary
 
 Adversary : ★
 Adversary = Rₐ → PubKey →
-                   DecRound              -- first round of decryption queries
-                     (CPAAdversary       -- choosen plaintext attack
-                       (CipherText →     -- in which a second ciphertext is provided
-                          DecRound Bit)) -- second round of decryption queries
+                   DecRound            -- first round of decryption queries
+                     (ChalAdversary    -- choosen plaintext attack (†)
+                        (Message ²)    --   the adversary picks two messages
+                        (CipherText ²) --   receives the encryption of both of them in a random order
+                        (DecRound      -- second round of decryption queries
+                           𝟚))         -- the adversary has to guess which message is encrypted as the first ciphertext
 
 {-
 Valid-Adv : Adv → Set
@@ -49,23 +52,31 @@ R : ★
 R = Rₐ × Rₖ × Rₑ × Rₑ
 
 Experiment : ★
-Experiment = Adversary → R → Bit
+Experiment = Adversary → R → 𝟚
 
-module EXP (b : Bit) (A : Adversary) (rₐ : Rₐ) (pk : PubKey) (sk : SecKey) (rₑ₀ rₑ₁ : Rₑ) where
+module EXP (b : 𝟚) (A : Adversary) (rₐ : Rₐ) (pk : PubKey) (sk : SecKey) (rₑ : Rₑ ²) where
   decRound = runStrategy (Dec sk)
   A1       = A rₐ pk
   cpaA     = decRound A1
-  mb       = proj′ (get-m cpaA)
-  c₀       = Enc pk (mb b)       rₑ₀
-  c₁       = Enc pk (mb (not b)) rₑ₁
-  A2       = put-c cpaA c₀ c₁
+  m        = get-chal cpaA
+  c        = Enc pk ∘ m ∘ flip _xor_ b ˢ rₑ
+  A2       = put-resp cpaA c
   b′       = decRound A2
 
-  ct       = proj′ (c₀ , c₁)
+  c₀ = c 0₂
+  c₁ = c 1₂
+  rₑ₀ = rₑ 0₂
+  rₑ₁ = rₑ 1₂
 
-EXP : Bit → Experiment
+  c₀-spec : c₀ ≡ Enc pk (m b) rₑ₀
+  c₀-spec = refl
+
+  c₁-spec : c₁ ≡ Enc pk (m (not b)) rₑ₁
+  c₁-spec = refl
+
+EXP : 𝟚 → Experiment
 EXP b A (rₐ , rₖ , rₑ₀ , rₑ₁) with KeyGen rₖ
-... | pk , sk = EXP.b′ b A rₐ pk sk rₑ₀ rₑ₁
+... | pk , sk = EXP.b′ b A rₐ pk sk [0: rₑ₀ 1: rₑ₁ ]
 
 module Advantage
   (μₑ : Explore₀ Rₑ)
@@ -77,7 +88,7 @@ module Advantage
   
   module μR = FromExplore₀ μR
   
-  run : Bit → Adversary → ℕ
+  run : 𝟚 → Adversary → ℕ
   run b adv = μR.count (EXP b adv)
     
   {-
