@@ -8,10 +8,13 @@ open import Data.One
 open import Data.Two
 open import Data.Vec
 open import Data.List as L
+import Data.List.Any as LA
+import Data.Vec.NP
 
 open import Data.Nat.NP renaming (_==_ to _==ℕ_)
 
-open import Relation.Binary.PropositionalEquality
+open import Relation.Nullary using (¬_)
+open import Relation.Binary.PropositionalEquality as ≡
 open import Control.Strategy
 open import Game.Challenge
 
@@ -236,8 +239,40 @@ Adversary = Rₐ → PubKey → Phase -- Phase1
                              (Phase -- Phase2
                                𝟚)) -- Adversary guess of whether the vote is for alice
 
+module Valid-Adversary (rₐ : Rₐ)(pk : PubKey) where
+
+  module _ (rec : Receipt ²) where
+    Phase2-Valid : Phase 𝟚 → ★
+    Phase2-Valid (ask REB cont) = ∀ r → Phase2-Valid (cont r)
+    Phase2-Valid (ask RBB cont) = ∀ r → Phase2-Valid (cont r)
+    Phase2-Valid (ask RTally cont) = ∀ r → Phase2-Valid (cont r)
+    Phase2-Valid (ask (RCO x) cont) = rec 0₂ ≢ x × rec 1₂ ≢ x × (∀ r → Phase2-Valid (cont r))
+    Phase2-Valid (ask (Vote x) cont) = ∀ r → Phase2-Valid (cont r)
+    Phase2-Valid (done x)      = 𝟙
+
+  RFChallenge-Valid : List SerialNumber → RFChallenge (Phase 𝟚) → ★
+  RFChallenge-Valid sn ch = sn₀ ∉ sn × sn₁ ∉ sn × (∀ r → Phase2-Valid r (put-resp ch r))
+    where sn₀ = get-chal ch 0₂
+          sn₁ = get-chal ch 1₂
+          open LA.Membership (≡.setoid _)
+
+  serials : ∀ q → Resp q → List SerialNumber
+  serials REB (_ , _ , sn , _) = L.[ sn ]
+  serials RBB r = []
+  serials RTally r = []
+  serials (RCO (_ , sn , _)) r = L.[ sn ] -- page 75
+  serials (Vote (_ , sn , _)) r = L.[ sn ] -- page 75
+
+  Phase1-Valid : List SerialNumber → Phase (RFChallenge (Phase 𝟚)) → ★
+  Phase1-Valid sn (ask q? cont) = ∀ r → Phase1-Valid (serials q? r L.++ sn) (cont r)
+  Phase1-Valid sn (done x) = RFChallenge-Valid sn x
+
+  Valid : Adversary → ★
+  Valid A = Phase1-Valid [] (A rₐ pk)
+
 -- TODO adversary validity
--- Valid-Adversary : Adversary → ★
+Valid-Adversary : Adversary → ★
+Valid-Adversary A = ∀ rₐ pk → Valid-Adversary.Valid rₐ pk A
 
 module Oracle (sk : SecKey) (pk : PubKey) (rgb : Rgb) (bb : BB) where
     resp : (q : Q) → Resp q
