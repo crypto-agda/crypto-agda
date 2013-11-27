@@ -6,15 +6,19 @@ open import Data.Two
 open import Data.Maybe
 open import Data.Product
 open import Data.Nat
-open import Data.Vec hiding (_>>=_)
-open import Data.List
+open import Data.Vec hiding (_>>=_ ; _∈_)
+open import Data.List as L
+import Data.List.Any as LA
 open import Data.Fin as Fin using (Fin)
-open import Relation.Binary.PropositionalEquality.NP
+open import Relation.Binary.PropositionalEquality.NP as ≡
 open import Control.Strategy renaming (map to mapS)
 open import Game.Challenge
 import Game.ReceiptFreeness
 import Game.IND-CCA2-dagger
 import Game.IND-CPA-utils
+
+private
+  open module DON'T-CARE-FOR-THIS-NAME {X : ★} = LA.Membership (≡.setoid X)
 
 module Game.Transformation.ReceiptFreeness-CCA2d
   (PubKey    : ★)
@@ -32,8 +36,10 @@ module Game.Transformation.ReceiptFreeness-CCA2d
             PubKey → Message → Rₑ → CipherText)
   (Dec    : let Message = 𝟚 in
             SecKey → CipherText → Message)
-  (Check    : CipherText → 𝟚)
-  (CheckEnc : ∀ pk m rₑ → Check (Enc pk m rₑ) ≡ 1₂)
+  (Check    : let open Game.ReceiptFreeness PubKey SecKey CipherText SerialNumber Rₑ Rₖ Rₐ #q max#q KeyGen Enc Dec
+               in BB → Receipt → 𝟚)
+  (CheckMem : ∀ bb r → ✓ (Check bb r) → proj₁ (proj₂ r) ∉ L.map (proj₁ ∘ proj₂) bb)
+  -- (CheckEnc : ∀ pk m rₑ → Check (Enc pk m rₑ) ≡ 1₂)
   where
 
 _²' : ★ → ★
@@ -153,7 +159,8 @@ module _ where --StrategyUtils where
 
 Message = 𝟚
 open Game.IND-CPA-utils Message CipherText
-module RF = Game.ReceiptFreeness PubKey SecKey CipherText SerialNumber Rₑ Rₖ Rₐ  #q max#q KeyGen Enc Dec Check CheckEnc
+module RF = Game.ReceiptFreeness PubKey SecKey CipherText SerialNumber Rₑ Rₖ Rₐ  #q max#q KeyGen Enc Dec -- Check CheckEnc
+module RFC = RF.WithCheck Check CheckMem
 open RF renaming (Phase to RFPhase; Q to RFQ; Resp to RFResp)
 
 Rₐ† : ★
@@ -184,22 +191,22 @@ module Simulator (m : 𝟚 {-which mark to put on the two receipts-})
     ballot : RF.PhaseNumber → Fin #q → Ballot
     ballot p# n = RF.genBallot pk (lookup n (rgb p#))
 
+
     MITM-phase : (p# : RF.PhaseNumber) → Fin #q → BB → Tally → ∀ {X} → MITM {CCAProto} {RFProto} {MITMState X} {X}
+    MITM-phase-vote : ∀ v (p# : RF.PhaseNumber) → Fin #q → BB → Tally → 𝟚 → ∀ {X}
+       → Client CCAProto (P'.R {CCAProto} {RFProto} {MITMState X}{X} (RF.Vote v) × MITM {CCAProto} {RFProto} {MITMState X} {X})
     hack-query (MITM-phase p# n bb ta) REB = done (ballot p# n , MITM-phase p# (Fin.pred n) bb ta)
     hack-query (MITM-phase p# n bb ta) RBB = done (bb , MITM-phase p# (Fin.pred n) bb ta)
     hack-query (MITM-phase p# n bb ta) RTally = done (ta , MITM-phase p# (Fin.pred n) bb ta)
     hack-query (MITM-phase p# n bb ta) (RCO (m? , sn , enc-co)) =
        -- if receipt in DB then ...
        ask enc-co λ co → done (co , MITM-phase p# (Fin.pred n) bb ta)
-    hack-query (MITM-phase p# n bb ta) (Vote (m? , sn , enc-co))
-       -- lots of cases
-       = ask enc-co λ co →
-           let (res , cbb' , bb') =
-                  case Check enc-co
-                    0: (RF.reject ,′ ta , bb)
-                    1: (RF.accept , tallyMarkedReceipt? co m? +,+ ta , (m? , sn , enc-co) ∷ bb) in
-           done (res , MITM-phase p# (Fin.pred n) bb' cbb')
+    hack-query (MITM-phase p# n bb ta) (Vote v) = MITM-phase-vote v p# n bb ta (Check bb v)
     hack-result (MITM-phase p# n bb ta) r = done (r , bb , ta)
+
+    MITM-phase-vote _ p# n bb ta 0₂ = done (RF.reject , MITM-phase p# (Fin.pred n) bb ta)
+    MITM-phase-vote (m? , sn , enc-co) p# n bb ta 1₂ = ask enc-co λ co →
+      done (RF.accept , MITM-phase p# (Fin.pred n) ((m? , sn , enc-co) ∷ bb) (tallyMarkedReceipt? co m? +,+ ta))
 
     MITM-RFChallenge : ∀ {X} → MITM {_} {_} {MITMState X} {X}
     MITM-RFChallenge = MITM-phase 0₂ max#q [] (0 , 0)
@@ -231,6 +238,46 @@ module Simulator (m : 𝟚 {-which mark to put on the two receipts-})
   A† (rₐ , rgb) pk = mapS A†2 A†1
      where open AdversaryParts rgb pk rₐ
 
+{-
+module Simulator-Valid (m : 𝟚)(RFA : RF.Adversary)(RFA-Valid : RF.Valid-Adversary RFA) where
+  valid : CCA2†.Valid-Adversary (Simulator.A† m RFA)
+  valid (rₐ , rgb) pk = Phase1 _ (RFA-Valid rₐ pk) where
+     open CCA2†.Valid-Adversary (rₐ , rgb) pk
+     module RFA = RF.Valid-Adversary rₐ pk
+     open Simulator m RFA
+     open AdversaryParts rgb pk rₐ
+
+     r-sn : Receipt → SerialNumber
+     r-sn (_ , sn , _) = sn
+
+     -- could refine r more
+     Phase2 : ∀ RF {bb i taA taB r} → r-sn (r 0₂) ∈ L.map r-sn bb → r-sn (r 1₂) ∈ L.map r-sn bb → RFA.Phase2-Valid r RF
+            → Phase2-Valid (proj₂ ∘ proj₂ ∘ r) (mapS proj₁ (mitm-to-client-trans (MITM-phase 1₂ i bb (taA , taB)) RF))
+     Phase2 (ask REB cont) r0 r1 RF-valid = Phase2 (cont _) r0 r1 (RF-valid _)
+     Phase2 (ask RBB cont) r0 r1 RF-valid = Phase2 (cont _) r0 r1 (RF-valid _)
+     Phase2 (ask RTally cont) r0 r1 RF-valid = Phase2 (cont _) r0 r1 (RF-valid _)
+     Phase2 (ask (RCO x) cont) r0 r1 ((r₀ , r₁) , RF-valid) = r₀ , r₁ , (λ r → Phase2 (cont _) r0 r1 (RF-valid _))
+     Phase2 (ask (Vote x) cont) {bb} r0 r1 RF-valid with Check bb x | CheckMem bb x
+     ... | 0₂ | _ = Phase2 (cont _) r0 r1 (RF-valid _)
+     ... | 1₂ | not-in-bb = (λ eq → not-in-bb _ {!subst (λ x → x ∈ L.map r-sn bb) eq!})
+                            , {!!}
+                            , (λ r → Phase2 (cont _) (LA.there r0) (LA.there r1) (RF-valid _))
+     Phase2 (done x) r0 r1 RF-valid = RF-valid
+
+     Phase1 : ∀ RF {sn i bb taA taB} → RFA.Phase1-Valid sn RF
+            → Phase1-Valid (mapS A†2 (mitm-to-client-trans (MITM-phase 0₂ i bb (taA , taB)) RF))
+     Phase1 (ask REB cont) RF-valid = Phase1 _ (RF-valid _)
+     Phase1 (ask RBB cont) RF-valid = Phase1 _ (RF-valid _)
+     Phase1 (ask RTally cont) RF-valid = Phase1 _ (RF-valid _)
+     Phase1 (ask (RCO x) cont) RF-valid r = Phase1 _ (RF-valid _)
+     Phase1 (ask (Vote x) cont) {bb = bb} RF-valid with Check bb x
+     Phase1 (ask (Vote x) cont) RF-valid | 1₂ = λ r → Phase1 _ (RF-valid _)
+     Phase1 (ask (Vote x) cont) RF-valid | 0₂ = Phase1 _ (RF-valid _)
+     Phase1 (done x) (sn₀∉sn , sn₁∉sn , RF-valid) cs = Phase2 (put-resp x (proj₂ (put-resp (hack-challenge x) cs) ))
+            (LA.here refl) (LA.there (LA.here refl)) (RF-valid _)
+
+-- -}
+-- {-
 open StatefulRun
 module SimulatorProof
   (m : 𝟚) (RFA : RF.Adversary) (pk : PubKey) (sk : SecKey)
@@ -249,7 +296,7 @@ module SimulatorProof
 
   rₑ = proj₂ ∘ proj₂ ∘ rgb
 
-  module RFEXP = RF.EXP RFA pk sk rₐ rgbs (SimpleScheme.ct-resp b pk rₑ) (const (marked m))
+  module RFEXP = RFC.EXP RFA pk sk rₐ rgbs (RFC.SimpleScheme.ct-resp b pk rₑ) (const (marked m))
   module EXP†  = CCA2†.EXP b A† (rₐ , rgbs) pk sk rₑ
 
   module _ {X} (p# : PhaseNumber) where
@@ -265,7 +312,7 @@ module SimulatorProof
     pf-phase n bb (ask RBB cont) = pf-phase (Fin.pred n) bb (cont bb)
     pf-phase n bb (ask RTally cont) = pf-phase (Fin.pred n) bb (cont (tally sk bb))
     pf-phase n bb (ask (RCO (m? , sn , enc-co)) cont) = pf-phase (Fin.pred n) bb (cont (Dec sk enc-co))
-    pf-phase n bb (ask (Vote r) cont) with Check (enc-co r)
+    pf-phase n bb (ask (Vote r) cont) with Check bb r -- (enc-co r)
     ... | 0₂ = pf-phase (Fin.pred n) bb (cont reject)
     ... | 1₂ = pf-phase (Fin.pred n) (r ∷ bb) (cont accept)
     pf-phase n bb (done x) = refl , refl , refl
