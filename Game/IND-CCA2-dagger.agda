@@ -17,6 +17,10 @@ open import Control.Strategy renaming (run to runStrategy)
 open import Game.Challenge
 import Game.IND-CPA-utils
 
+import Game.IND-CCA2-dagger.Adversary
+import Game.IND-CCA2-dagger.Valid
+import Game.IND-CCA2-dagger.Experiment
+
 open import Relation.Binary.PropositionalEquality
 
 module Game.IND-CCA2-dagger
@@ -33,67 +37,10 @@ module Game.IND-CCA2-dagger
 
   where
 
-open Game.IND-CPA-utils Message CipherText
+open Game.IND-CCA2-dagger.Adversary PubKey Message CipherText Rₐ public
 
-Adversary : ★
-Adversary = Rₐ → PubKey →
-                   DecRound            -- first round of decryption queries
-                     (ChalAdversary    -- choosen plaintext attack (†)
-                        (Message ²)    --   the adversary picks two messages
-                        (CipherText ²) --   receives the encryption of both of them in a random order
-                        (DecRound      -- second round of decryption queries
-                           𝟚))         -- the adversary has to guess which message is encrypted as the first ciphertext
-
-module Valid-Adversary (rₐ : Rₐ)(pk : PubKey) where
-
-  module _ (rec : CipherText ²) where
-    Phase2-Valid : DecRound 𝟚 → ★
-    Phase2-Valid (ask q? cont) = rec 0₂ ≢ q? × rec 1₂ ≢ q? × (∀ r → Phase2-Valid (cont r))
-    Phase2-Valid (done x) = 𝟙
-
-  Chal-Valid : ChalAdversary (Message ²) (CipherText ²) (DecRound 𝟚) → ★
-  Chal-Valid A = ∀ cs →  Phase2-Valid cs (put-resp A cs)
-
-  Phase1-Valid : DecRound (ChalAdversary (Message ²) (CipherText ²) (DecRound 𝟚)) → ★
-  Phase1-Valid (ask q? cont) = ∀ r → Phase1-Valid (cont r)
-  Phase1-Valid (done A) = Chal-Valid A
-
-  Valid : Adversary → ★
-  Valid A = Phase1-Valid (A rₐ pk)
-
-Valid-Adversary : Adversary → Set
-Valid-Adversary A = ∀ rₐ pk → Valid-Adversary.Valid rₐ pk A
---∀ {rₐ rₓ pk c c'} → Valid (λ x → x ≢ c × x ≢ c') (d rₐ rₓ pk c c')
-
-R : ★
-R = Rₐ × Rₖ × Rₑ × Rₑ
-
-Experiment : ★
-Experiment = Adversary → R → 𝟚
-
-module EXP (b : 𝟚) (A : Adversary) (rₐ : Rₐ) (pk : PubKey) (sk : SecKey) (rₑ : Rₑ ²) where
-  decRound = runStrategy (Dec sk)
-  A1       = A rₐ pk
-  cpaA     = decRound A1
-  m        = get-chal cpaA
-  c        = Enc pk ∘ m ∘ flip _xor_ b ˢ rₑ
-  A2       = put-resp cpaA c
-  b′       = decRound A2
-
-  c₀ = c 0₂
-  c₁ = c 1₂
-  rₑ₀ = rₑ 0₂
-  rₑ₁ = rₑ 1₂
-
-  c₀-spec : c₀ ≡ Enc pk (m b) rₑ₀
-  c₀-spec = refl
-
-  c₁-spec : c₁ ≡ Enc pk (m (not b)) rₑ₁
-  c₁-spec = refl
-
-EXP : 𝟚 → Experiment
-EXP b A (rₐ , rₖ , rₑ₀ , rₑ₁) with KeyGen rₖ
-... | pk , sk = EXP.b′ b A rₐ pk sk [0: rₑ₀ 1: rₑ₁ ]
+open Game.IND-CCA2-dagger.Valid PubKey Message CipherText Rₐ public
+open Game.IND-CCA2-dagger.Experiment PubKey SecKey Message CipherText Rₑ Rₖ Rₐ KeyGen Enc Dec public
 
 module Advantage
   (μₑ : Explore₀ Rₑ)
@@ -102,12 +49,12 @@ module Advantage
   where
   μR : Explore₀ R
   μR = μₐ ×ᵉ μₖ ×ᵉ μₑ ×ᵉ μₑ
-  
+
   module μR = FromExplore₀ μR
-  
+
   run : 𝟚 → Adversary → ℕ
   run b adv = μR.count (EXP b adv)
-    
+
   {-
   Advantage : Adv → ℚ
   Advantage adv = dist (run 0b adv) (run 1b adv) / μR.Card
