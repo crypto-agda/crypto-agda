@@ -19,6 +19,7 @@ open Operators
 open import Relation.Binary.PropositionalEquality.NP
 open import Control.Strategy renaming (run to runStrategy)
 
+open import Game.Challenge
 import Game.IND-CPA-utils
 import Game.IND-CCA
 
@@ -38,7 +39,6 @@ where
 
 module CCA = Game.IND-CCA  PubKey SecKey Message CipherText Rₑ Rₖ Rₐ KeyGen Enc Dec
 open Game.IND-CPA-utils Message CipherText public
-open CPAAdversary
 
 Adversary : ★
 Adversary = Rₐ → PubKey →
@@ -56,29 +56,29 @@ R : ★
 R = Rₐ × Rₖ × Rₑ
 
 EXP : Bit → Adversary → R → Bit
-EXP b m (rₐ , rₖ , rₑ) with KeyGen rₖ
+EXP b A (rₐ , rₖ , rₑ) with KeyGen rₖ
 ... | pk , sk = b′ where
   decRound = runStrategy (Dec sk)
   
-  round1 = decRound (m rₐ pk)
-  mb     = proj (get-m round1) b
-  c      = Enc pk mb rₑ
-  round2 = put-c round1 c
+  round1 = decRound (A rₐ pk)
+  m      = get-chal round1
+  c      = Enc pk (m b) rₑ
+  round2 = put-resp round1 c
   b′     = decRound round2
 
 game : Adversary → (Bit × R) → Bit
 game A (b , r) = b == EXP b A r
 
 module Cheating
-   (m : Bit → Message)
+   (m : Message ²)
    (m⁻¹ : Message → Bit)
    where
 
   cheatingA : Adversary
   cheatingA rₐ pk = done CPApart
     where CPApart : CPAAdversary _
-          get-m CPApart   = tabulate₂ m
-          put-c CPApart c = ask c (done ∘ m⁻¹)
+          get-chal CPApart   = m
+          put-resp CPApart c = ask c (done ∘ m⁻¹)
 
   module _
     (DecEnc : ∀ rₖ rₑ m → let (pk , sk) = KeyGen rₖ in
@@ -88,7 +88,7 @@ module Cheating
 
     cheatingA-always-wins : ∀ r → game cheatingA r ≡ 1b
     cheatingA-always-wins (b , rₐ , rₖ , rₑ) =
-      ap (_==_ b ∘ m⁻¹) (DecEnc rₖ rₑ (proj (tabulate₂ m) b) ∙ proj-tabulate₂ m b) ∙ ==-≡1₂.reflexive (!(m⁻¹-m b))
+      ap (_==_ b ∘ m⁻¹) (DecEnc rₖ rₑ (m b)) ∙ ==-≡1₂.reflexive (!(m⁻¹-m b))
   
 module Advantage
   (μₑ : Explore₀ Rₑ)

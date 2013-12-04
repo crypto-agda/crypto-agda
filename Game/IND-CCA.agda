@@ -5,6 +5,7 @@ open import Data.Bit
 open import Data.Maybe
 open import Data.Product
 open import Control.Strategy renaming (run to runStrategy)
+open import Game.Challenge
 import Game.IND-CPA-utils
   
 module Game.IND-CCA
@@ -33,9 +34,9 @@ Experiment : ★
 Experiment = Adversary → R → Bit
 
 EXP : Bit → Experiment
-EXP b adv (rₐ , rₖ , rₑ) with KeyGen rₖ
+EXP b A (rₐ , rₖ , rₑ) with KeyGen rₖ
 ... | pk , sk = b′ where
-  module AdvCPA = CPAAdversary (runStrategy (Dec sk) (adv rₐ pk))
-  mb = proj AdvCPA.get-m b
-  c  = Enc pk mb rₑ
-  b′ = AdvCPA.put-c c
+  A' = runStrategy (Dec sk) (A rₐ pk)
+  m  = get-chal A'
+  c  = Enc pk (m b) rₑ
+  b′ = put-resp A' c
