@@ -17,12 +17,11 @@ open import Data.Product
 open import Data.Two
 open import Game.Challenge
 open import Control.Strategy
-import Data.List.Any as LA
+open import Data.List.Any using (here; there)
+open Data.List.Any.Membership-≡ using (_∈_ ; _∉_)
 
 open import Relation.Nullary
 open import Relation.Binary.PropositionalEquality.NP
-
-open module MM {X : ★} = LA.Membership (setoid X)
 
 module Game.ReceiptFreeness.CheatingAdversaries
   (PubKey    : ★)
@@ -42,19 +41,17 @@ module Game.ReceiptFreeness.CheatingAdversaries
             SecKey → CipherText → Message)
   where
 
+open import Game.ReceiptFreeness PubKey SecKey CipherText SerialNumber Rₑ Rₖ Rₐ #q max#q KeyGen Enc Dec
 
-open import Game.ReceiptFreeness.Definitions PubKey SecKey CipherText SerialNumber Rₑ Rₖ Rₐ #q max#q KeyGen Enc Dec
 
 module _ 
   (Check : BB → Receipt → 𝟚)
   (CheckMem : ∀ bb r → ✓ (Check bb r) → proj₁ (proj₂ r) ∉ L.map (proj₁ ∘ proj₂) bb)
   where
 
-  open import Game.ReceiptFreeness.Experiment PubKey SecKey CipherText SerialNumber Rₑ Rₖ Rₐ #q max#q KeyGen Enc Dec Check CheckMem
-  open import Game.ReceiptFreeness.Valid PubKey SecKey CipherText SerialNumber Rₑ Rₖ Rₐ #q max#q KeyGen Enc Dec
+  open WithCheck Check
   
   module Cheating1 (sn : SerialNumber ²) where
-      open SimpleScheme 
       cheatingA : Adversary
       cheatingA rₐ pk = done chal where
         chal : ChalAdversary _ _ _
@@ -75,8 +72,7 @@ module _
         notValid va = proj₂ (proj₁ (proj₂ (proj₂ (va rₐ pk)) (λ _ → not-marked , sn , ci))) refl
       
           
-  module Cheating2 (sn : SerialNumber ²) where
-      open SimpleScheme
+  module TriesToCheatByReVotingButItsRejected (sn : SerialNumber ²) where
       cheatingA : Adversary
       cheatingA rₐ pk = done chal where
         chal : ChalAdversary _ (Receipt ²) (Strategy Q Resp 𝟚)
@@ -85,8 +81,7 @@ module _
           (λ { accept → ask RTally (λ { (x , y) → done (x ==ℕ 2) })
              ; reject → done 1₂ })
   
-      module _
-       (rₖ : _)(rₐ : _)(b : _)(rₑ : _)(rgbs : _)
+      module _ rₖ rₐ b rₑ rgbs
        (DecEnc : ∀ b m → let (pk , sk) = KeyGen rₖ in
                        Dec sk (Enc pk m (rₑ b)) ≡ m) where
   
@@ -96,38 +91,20 @@ module _
           pk = proj₁ (KeyGen rₖ)
           sk = proj₂ (KeyGen rₖ)
           
-          module E = EXP cheatingA pk sk rₐ rgbs (ct-resp b pk rₑ) (const (marked 0₂))
+          module E = EXP b cheatingA pk sk rₐ rgbs rₑ
           ballot = marked 0₂ ,′ sn 1₂ , Enc pk (not b) (rₑ 1₂)
           
-          cheatingA-wins : game cheatingA r ≡ b
-          cheatingA-wins with Check E.BBrfc ballot
+          cheatingA-busted : game cheatingA r ≡ b
+          cheatingA-busted with Check E.BBrfc ballot
                             | CheckMem E.BBrfc ballot
-          cheatingA-wins | 1₂ | pr with pr _ (LA.there (LA.here refl))
+          cheatingA-busted | 1₂ | pr with pr _ (there (here refl))
           ... | ()
-          cheatingA-wins | 0₂ | _ with b
+          cheatingA-busted | 0₂ | _ with b
           ... | 0₂ = refl
           ... | 1₂ = refl
-      module _  where
-        valid : Valid-Adversary cheatingA
-        valid rₐ pk = (λ ()) , (λ ()) , (λ { r₁ accept r → _ ; r₁ reject → _ })
 
-          {-
-             rewrite CheckEnc (proj₁ (KeyGen rₖ)) (co 1₂) (rₑ 1₂)
-                   | DecEnc rₖ (rₑ 0₂) (co 0₂)
-                   | DecEnc rₖ (rₑ 1₂) (co 1₂) with co 0₂ | co 1₂
-          ... | 0₂ | 0₂ = refl
-          ... | 0₂ | 1₂ = refl
-          ... | 1₂ | 0₂ = refl
-          ... | 1₂ | 1₂ = refl
-          cheatingA-wins (rₖ , _ , 1₂ , co , rₑ , _)
-             rewrite CheckEnc (proj₁ (KeyGen rₖ)) (co 0₂) (rₑ 0₂)
-                   | DecEnc rₖ (rₑ 0₂) (co 0₂)
-                   | DecEnc rₖ (rₑ 1₂) (co 1₂) with co 0₂ | co 1₂
-          ... | 0₂ | 0₂ = refl
-          ... | 0₂ | 1₂ = refl
-          ... | 1₂ | 0₂ = refl
-          ... | 1₂ | 1₂ = refl
-          -}
+      valid : Valid-Adversary cheatingA
+      valid rₐ pk = (λ ()) , (λ ()) , λ _ → λ { accept r → _ ; reject → _ }
 -- -}
 -- -}
 -- -}

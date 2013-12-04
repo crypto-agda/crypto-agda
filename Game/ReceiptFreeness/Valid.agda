@@ -9,29 +9,18 @@ open import Game.Challenge
 open import Control.Strategy
 open import Relation.Binary.PropositionalEquality
 
-import Data.List.Any as LA
-open module MM {X : ★} = LA.Membership (setoid X)
+import Data.List.Any
+open Data.List.Any.Membership-≡ using (_∉_)
 
 module Game.ReceiptFreeness.Valid
-  (PubKey    : ★)
-  (SecKey    : ★)
-  -- Message = 𝟚
-  (CipherText : ★)
-
-  (SerialNumber : ★)
-
-  -- randomness supply for, encryption, key-generation, adversary, adversary state
-  (Rₑ Rₖ Rₐ : ★)
-  (#q : ℕ) (max#q : Fin #q)
-  (KeyGen : Rₖ → PubKey × SecKey)
+  (PubKey SecKey CipherText SerialNumber Rₑ Rₐ : ★)
   (Enc    : let Message = 𝟚 in
             PubKey → Message → Rₑ → CipherText)
   (Dec    : let Message = 𝟚 in
             SecKey → CipherText → Message)
   where
 
-open import Game.ReceiptFreeness.Definitions PubKey SecKey CipherText SerialNumber Rₑ Rₖ Rₐ #q max#q KeyGen Enc Dec
-
+open import Game.ReceiptFreeness.Definitions PubKey SecKey CipherText SerialNumber Rₑ Rₐ Enc Dec
 
 module Valid-Adversary (rₐ : Rₐ)(pk : PubKey) where
 
@@ -68,6 +57,5 @@ module Valid-Adversary (rₐ : Rₐ)(pk : PubKey) where
   Valid : Adversary → ★
   Valid A = Phase1-Valid [] (A rₐ pk)
 
--- TODO adversary validity
 Valid-Adversary : Adversary → ★
 Valid-Adversary A = ∀ rₐ pk → Valid-Adversary.Valid rₐ pk A

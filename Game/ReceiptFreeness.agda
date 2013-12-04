@@ -1,16 +1,14 @@
-open import Function using (_∘_)
+open import Function using (_∘_; flip; _ˢ_)
 open import Type using (★)
 open import Data.Fin.NP using (Fin)
-import Data.List as L
+open import Data.List as L
 open import Data.Nat.NP using (ℕ)
-open import Data.Product using (_×_ ; proj₁ ; proj₂)
-open import Data.Two using (𝟚 ; ✓)
-import Data.List.Any as LA
+open import Data.Product using (_×_ ; proj₁ ; proj₂; _,_)
+open import Data.Two using (𝟚 ; ✓; _²; 0₂; 1₂; _xor_)
+import Data.List.Any
+open Data.List.Any.Membership-≡ using (_∈_ ; _∉_)
 
 import Relation.Binary.PropositionalEquality.NP as ≡
-
-private
-  open module DUMMY {X : ★} = LA.Membership (≡.setoid X) 
 
 -- module that re-exports the important definitions for the ReceiptFreeness game
 module Game.ReceiptFreeness
@@ -29,16 +27,34 @@ module Game.ReceiptFreeness
             PubKey → Message → Rₑ → CipherText)
   (Dec    : let Message = 𝟚 in
             SecKey → CipherText → Message)
- -- (Check : CipherText → 𝟚)
- -- (CheckEnc : ∀ pk m rₑ → Check (Enc pk m rₑ) ≡ 1₂)
 
   where
 
-open import Game.ReceiptFreeness.Definitions PubKey SecKey CipherText SerialNumber Rₑ Rₖ Rₐ #q max#q KeyGen Enc Dec public
-open import Game.ReceiptFreeness.Valid PubKey SecKey CipherText SerialNumber Rₑ Rₖ Rₐ #q max#q KeyGen Enc Dec public
+open import Game.ReceiptFreeness.Definitions PubKey SecKey CipherText SerialNumber Rₑ Rₐ Enc Dec public
+open import Game.ReceiptFreeness.Valid       PubKey SecKey CipherText SerialNumber Rₑ Rₐ Enc Dec public
 
-module WithCheck
-  (Check    : BB → Receipt → 𝟚)
-  (CheckMem : ∀ bb r → ✓ (Check bb r) → proj₁ (proj₂ r) ∉ L.map (proj₁ ∘ proj₂) bb) where
-  open import Game.ReceiptFreeness.Experiment PubKey SecKey CipherText SerialNumber Rₑ Rₖ Rₐ #q max#q KeyGen Enc Dec
-                                              Check CheckMem public
+EncReceipts : PubKey → Rₑ ² → SerialNumber ² → CO → Receipt ²
+EncReceipts pk rₑ sn b i = marked 0₂ , sn i , Enc pk (i xor b) (rₑ i)
+
+DecReceipt' : SecKey → Receipt → CO
+DecReceipt' sk r = proj₁ (DecReceipt sk r)
+
+import Game.ReceiptFreeness.Experiment
+
+{- Agda bug?
+module Experiment = Game.ReceiptFreeness.Experiment
+    PubKey SecKey (SerialNumber ²) (Rₑ ²) Rₖ Rₐ #q max#q KeyGen
+    Receipt EncReceipts DecReceipt' Rgb Ballot BB [] _∷_ genBallot Tally tally
+-}
+
+module Experiment Check where
+  open Game.ReceiptFreeness.Experiment
+    PubKey SecKey (SerialNumber ²) (Rₑ ²) Rₖ Rₐ #q max#q KeyGen
+    Receipt EncReceipts DecReceipt' Rgb Ballot BB [] _∷_ genBallot Tally tally
+    Check public
+
+-- -}
+-- -}
+-- -}
+-- -}
+-- -}
