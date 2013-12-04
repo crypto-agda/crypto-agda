@@ -1,6 +1,4 @@
 open import Type
-open import Data.Fin.NP using (Fin)
-open import Data.Nat.NP using (ℕ)
 open import Data.One using (𝟙)
 open import Data.List as L
 open import Data.Product
@@ -11,25 +9,25 @@ open import Relation.Binary.PropositionalEquality
 
 import Data.List.Any
 open Data.List.Any.Membership-≡ using (_∉_)
+import Game.ReceiptFreeness.Adversary
 
 module Game.ReceiptFreeness.Valid
-  (PubKey SecKey CipherText SerialNumber Rₑ Rₐ : ★)
-  (Enc    : let Message = 𝟚 in
-            PubKey → Message → Rₑ → CipherText)
-  (Dec    : let Message = 𝟚 in
-            SecKey → CipherText → Message)
+  (PubKey SerialNumber Rₐ Receipt Ballot Tally CO BB : ★)
+  (CipherText : ★)
+  (enc-co : Receipt → CipherText)
+  (r-sn   : Receipt → SerialNumber)
+  (b-sn   : Ballot → SerialNumber)
   where
 
-open import Game.ReceiptFreeness.Definitions PubKey SecKey CipherText SerialNumber Rₑ Rₐ Enc Dec
+open Game.ReceiptFreeness.Adversary PubKey (SerialNumber ²) Rₐ Receipt Ballot Tally CO BB
 
 module Valid-Adversary (rₐ : Rₐ)(pk : PubKey) where
 
   module _ (rec : Receipt ²) where
     RCO-ok : Receipt → ★
-    RCO-ok (m? , sn , c) = proj₂ (proj₂ (rec 0₂)) ≢ c
-                         × proj₂ (proj₂ (rec 1₂)) ≢ c
+    RCO-ok r = enc-co (rec 0₂) ≢ enc-co r
+             × enc-co (rec 1₂) ≢  enc-co r
 
-  
     Phase2-Valid : Phase 𝟚 → ★
     Phase2-Valid (ask REB cont) = ∀ r → Phase2-Valid (cont r)
     Phase2-Valid (ask RBB cont) = ∀ r → Phase2-Valid (cont r)
@@ -44,11 +42,11 @@ module Valid-Adversary (rₐ : Rₐ)(pk : PubKey) where
           sn₁ = get-chal ch 1₂
 
   serials : ∀ q → Resp q → List SerialNumber
-  serials REB (_ , _ , sn , _) = L.[ sn ]
+  serials REB X = L.[ b-sn X ]
   serials RBB r = []
   serials RTally r = []
-  serials (RCO (_ , sn , _)) r = L.[ sn ] -- page 75
-  serials (Vote (_ , sn , _)) r = L.[ sn ] -- page 75
+  serials (RCO v) r = L.[ r-sn v ] -- page 75
+  serials (Vote v) r = L.[ r-sn v ] -- page 75
 
   Phase1-Valid : List SerialNumber → Phase (RFChallenge (Phase 𝟚)) → ★
   Phase1-Valid sn (ask q? cont) = ∀ r → Phase1-Valid (serials q? r L.++ sn) (cont r)

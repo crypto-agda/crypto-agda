@@ -31,7 +31,7 @@ module Game.ReceiptFreeness
   where
 
 open import Game.ReceiptFreeness.Definitions PubKey SecKey CipherText SerialNumber Rₑ Rₐ Enc Dec public
-open import Game.ReceiptFreeness.Valid       PubKey SecKey CipherText SerialNumber Rₑ Rₐ Enc Dec public
+open import Game.ReceiptFreeness.ValidInst   PubKey SecKey CipherText SerialNumber Rₑ Rₐ Enc Dec public
 
 EncReceipts : PubKey → Rₑ ² → SerialNumber ² → CO → Receipt ²
 EncReceipts pk rₑ sn b i = marked 0₂ , sn i , Enc pk (i xor b) (rₑ i)

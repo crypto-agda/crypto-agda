@@ -86,8 +86,14 @@ enc-co = proj₂ ∘ proj₂
 m? : Receipt → MarkedReceipt?
 m? = proj₁
 
+r-sn : Receipt → SerialNumber
+r-sn = proj₁ ∘ proj₂
+
 Ballot : ★
 Ballot = CO × Receipt
+
+b-sn : Ballot → SerialNumber
+b-sn = r-sn ∘ proj₂
 
 -- co or also called LHS
 co : Ballot → CO
