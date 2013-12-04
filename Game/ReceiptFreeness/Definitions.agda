@@ -83,6 +83,9 @@ marked-on-second-cell? (marked x) = x == 1₂
 enc-co : Receipt → CipherText
 enc-co = proj₂ ∘ proj₂
 
+m? : Receipt → MarkedReceipt?
+m? = proj₁
+
 Ballot : ★
 Ballot = CO × Receipt
 
