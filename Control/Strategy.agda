@@ -81,7 +81,7 @@ module _ {Q : ★} {R : Q → ★} where
 
     module _ {A B : ★} (f : A → B) where
         run-map : (s : M A) → run (map f s) ≡ f (run s)
-        run-map = run->>= (return ∘ f) 
+        run-map = run->>= (return ∘ f)
 
     module _ {A B : ★} where
         run-≈ : {s₀ s₁ : M A} → s₀ ≈ s₁ → run s₀ ≡ run s₁

@@ -4,6 +4,8 @@ open import Function
 open import Data.Product
 open import Control.Strategy renaming (map to mapS)
 
+import Relation.Binary.PropositionalEquality.NP as ≡
+
 module Control.Strategy.Utils where
 
 record Proto : ★₁ where
@@ -55,25 +57,55 @@ module _ {A B Q Q' : ★} {R : Q → ★} {R'}
   [_,_]=<<'_ (ask q? cont) = f q? >>= λ r → [_,_]=<<'_ (cont r)
   [_,_]=<<'_ (done x)      = g x
 
+Server : Proto → ★₀ → ★₀
 record ServerResp (P : Proto) (q : Proto.Q P) (A : ★₀) : ★₀ where
   coinductive
   open Proto P
   field
       srv-resp : R q
-      srv-cont : ∀ q → ServerResp P q A
+      srv-cont : Server P A -- ∀ q → ServerResp P q A
 open ServerResp
 
-Server : Proto → ★₀ → ★₀
 Server P A = ∀ q → ServerResp P q A
 
 OracleServer : Proto → ★₀
 OracleServer P[ Q , R ] = (q : Q) → R q
 
-module _ {P : Proto} {A : ★} where
+module ServerBisim (P : Proto)(A : ★₀) where
+
+  ServerSim : Server P A → Server P A → ★₀
+
+  record RespSim {q}(s₀ s₁ : ServerResp P q A) : ★₀ where
+    coinductive
+    open Proto P
+    field
+      srv-resp-sim : srv-resp s₀ ≡.≡ srv-resp s₁
+      srv-cont-sim : ServerSim (srv-cont s₀) (srv-cont s₁)
+
+  ServerSim s₀ s₁ = ∀ q → RespSim (s₀ q) (s₁ q)
+
+module _ {P : Proto} {A Aₛ : ★} where
   open Proto P
   com : Server P A → Client P A → A
   com srv (ask q κc) = com (srv-cont r) (κc (srv-resp r)) where r = srv q
   com srv (done x)   = x
+
+  com-with-server : Server P A → Client P A → A × Server P A
+  com-with-server srv (ask q? cont) = com-with-server (srv-cont r) (cont (srv-resp r))
+    where r = srv q?
+  com-with-server srv (done x) = x , srv
+
+module BisimCom
+  (P : Proto)(A : ★₀)
+  where
+  open ServerBisim P A
+  open RespSim
+  open ≡
+
+  equalCom : ∀ {s₀ s₁ : Server P A}(c : Client P A) → ServerSim s₀ s₁
+           → com s₀ c ≡ com s₁ c
+  equalCom (ask q? cont) eq rewrite srv-resp-sim (eq q?) = equalCom (cont _) (srv-cont-sim (eq q?))
+  equalCom (done x) eq = refl
 
 module _ {P P' : Proto} {A A' : ★} where
   module P = Proto P
@@ -101,6 +133,12 @@ module _ {P P' : Proto} {A A' : ★} where
   mitm-to-client-trans : MITM → Client P' A' → Client P A
   mitm-to-client-trans mitm (ask q? cont) = hack-query mitm q? >>= λ { (r' , mitm') → mitm-to-client-trans mitm' (cont r') }
   mitm-to-client-trans mitm (done x)      = hack-result mitm x
+
+  mitm-to-server-trans : MITM → Server P A → Server P' A'
+  srv-resp (mitm-to-server-trans mitm serv q?) = let ((x , _) , _) = com-with-server serv (hack-query mitm q?)
+                                                  in x
+  srv-cont (mitm-to-server-trans mitm serv q?) = let ((_ , mitm') , serv') = com-with-server serv (hack-query mitm q?)
+                                                  in mitm-to-server-trans mitm' serv'
 
   hacked-com : Server P A → MITM → Client P' A' → A
   hacked-com srv mitm clt = com srv (mitm-to-client-trans mitm clt)
