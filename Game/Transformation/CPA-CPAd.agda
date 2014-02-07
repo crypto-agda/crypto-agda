@@ -27,7 +27,7 @@ module Game.Transformation.CPA-CPAd
   (Enc    : PubKey → Message → Rₑ → CipherText)
   (Dec    : SecKey → CipherText → Message)
   
-where
+  where
 
 Rₐ = Rₑ × Rₐ†
 

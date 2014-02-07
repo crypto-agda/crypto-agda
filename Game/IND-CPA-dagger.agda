@@ -1,4 +1,3 @@
-
 {-# OPTIONS --without-K #-}
 open import Type
 open import Data.Product
@@ -16,7 +15,7 @@ module Game.IND-CPA-dagger
   (KeyGen : Rₖ → PubKey × SecKey)
   (Enc    : PubKey → Message → Rₑ → CipherText)
 
-where
+  where
 
 -- IND-CPA† adversary in two parts
 record Adversary : ★ where

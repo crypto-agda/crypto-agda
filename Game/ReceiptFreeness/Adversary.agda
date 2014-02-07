@@ -1,17 +1,8 @@
-open import Function
 open import Type
-open import Data.Fin as Fin
-open import Data.Nat.NP using (ℕ)
 open import Data.Two
-open import Data.Product
-import Data.List as L
-open L using (List; _∷_ ; [])
-open import Data.Vec
 
 open import Game.Challenge
 open import Control.Strategy
-
-open import Relation.Binary.PropositionalEquality.NP as ≡
 
 module Game.ReceiptFreeness.Adversary
   (PubKey SerialNumber² Rₐ Receipt Ballot Tally CO BB : ★) where

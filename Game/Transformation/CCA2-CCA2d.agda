@@ -19,12 +19,20 @@ open import Explore.Explorable renaming (module Explorable₀ to Exp
 open import Explore.Product
 open Operators
 
+open import Game.Challenge
 import Game.IND-CCA2-dagger
 import Game.IND-CCA2
 import Game.IND-CCA
 import Game.IND-CPA-utils
 
 module Game.Transformation.CCA2-CCA2d
+
+BROKEN
+
+The simulator here is not valid (picking at random)
+
+BROKEN
+
   (PubKey    : ★)
   (SecKey    : ★)
   (Message   : ★)
@@ -36,7 +44,7 @@ module Game.Transformation.CCA2-CCA2d
   (Enc    : PubKey → Message → Rₑ → CipherText)
   (Dec    : SecKey → CipherText → Message)
   
-where
+  where
 
 Rₐ† = Bit × Rₑ × Rₐ
 
@@ -45,13 +53,12 @@ module CCA2d = Game.IND-CCA2-dagger PubKey SecKey Message CipherText
 module CCA2 = Game.IND-CCA2  PubKey SecKey Message CipherText
     Rₑ Rₖ Rₐ† KeyGen Enc Dec
 open Game.IND-CPA-utils Message CipherText
-open CPAAdversary
 
 CPA-transform : PubKey → Bit → Rₑ
               → CPAAdversary (CipherText → DecRound Bit)
               → CPAAdversary (DecRound Bit)
-get-m (CPA-transform pk t rₑ A)   = get-m A
-put-c (CPA-transform pk t rₑ A) c = put-c A c (Enc pk (proj (get-m A) t) rₑ)
+get-chal (CPA-transform pk t rₑ A)   = get-chal A
+put-resp (CPA-transform pk t rₑ A) c = put-resp A c (Enc pk (get-chal A t) rₑ)
 
 --ERROR: panic unbound variable A:
 --put-c (CPA-transform pk t rₑ A) c = {!A!}
@@ -88,10 +95,10 @@ correct : ∀ {rₑ rₑ' rₖ rₐ} b adv
         → CCA2d.EXP b adv               (rₐ , rₖ , rₑ , rₑ')
         ≡ CCA2.EXP  b (A-transform adv) ((not b , rₑ' , rₐ) , rₖ , rₑ)
 correct {rₑ}{rₑ' = ra}{rₖ = r}{rₐ} 1b adv with KeyGen r
-... | pk , sk = cong (λ x → runStrategy (Dec sk) (put-c x (Enc pk (proj₂ (get-m x)) rₑ)))
+... | pk , sk = cong (λ x → runStrategy (Dec sk) (put-resp x (Enc pk (proj₂ (get-chal x)) rₑ)))
                      (sym (run-map (Dec sk) (CPA-transform pk 0b ra) (adv rₐ pk)))
 correct {rₑ}{rₑ' = ra}{rₖ = r}{rₐ} 0b adv with KeyGen r
-... | pk , sk = cong (λ x → runStrategy (Dec sk) (put-c x (Enc pk (proj₁ (get-m x)) rₑ)))
+... | pk , sk = cong (λ x → runStrategy (Dec sk) (put-resp x (Enc pk (proj₁ (get-chal x)) rₑ)))
                      (sym (run-map (Dec sk) (CPA-transform pk 1b ra) (adv rₐ pk)))
 
 

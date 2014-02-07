@@ -106,9 +106,13 @@ module SimulatorProof
   pf-phase1 : Bisim' 0₂ max#q [] RFEXP.Aphase1 A†1
   pf-phase1 = pf-phase 0₂ max#q [] RFEXP.Aphase1
 
+  MITM1 : MITMState _
   MITM1 = run (Dec sk) A†1
+  MITM-S1 : _
   MITM-S1 = proj₂ MITM1
+  MITM-BB1 : BB
   MITM-BB1 = proj₁ MITM-S1
+  MITM-tally1 : Tally
   MITM-tally1 = proj₂ MITM-S1
 
   tally1 = tally sk RFEXP.BBphase1

@@ -18,7 +18,7 @@ module Game.Transformation.Naor-Yung
   (Dec    : SecKey → CipherText → Message)
   (Prove  : Message → PubKey → PubKey → Rₑ → Rₑ → CipherText → CipherText → Proof)
   (Verify : (Bit → CipherText) → Proof → Bit)
-where
+  where
 
 PubKey' = Bit → PubKey
 SecKey' = SecKey

@@ -1,7 +1,12 @@
 {-# OPTIONS --without-K #-}
 open import Type
+open import Function
 open import Data.Product
+open import Data.Zero
+open import Data.One
 open import Data.Two
+open import Game.GenChal as GenChal
+open import Control.Protocol.Core
 
 module Game.IND-CPA
   (PubKey     : ★)
@@ -14,8 +19,13 @@ module Game.IND-CPA
 
   (KeyGen : Rₖ → PubKey × SecKey)
   (Enc    : PubKey → Message → Rₑ → CipherText)
+  where
 
-where
+challenge : PubKey → 𝟚 → Message ² → Rₑ → CipherText
+challenge pk b m rₑ = Enc pk (m b) rₑ
+
+module CPA-Proto = GenChal PubKey (const 𝟘) (λ()) (Message ²)  CipherText end
+module CPA-ProtoImplem = CPA-Proto.Implementation SecKey 𝟚 {𝟙} _ (λ _ ()) challenge
 
 -- IND-CPA adversary in two parts
 record Adversary : ★ where
@@ -67,6 +77,11 @@ game : Adversary → (𝟚 × R) → 𝟚
 game A (b , r) = b == EXP b A r
 
 open import Relation.Binary.PropositionalEquality
+{-
+pf : ∀ b pk sk rₑ → CPA-ProtoImplem.main b pk sk rₑ ≡ (pk , ((λ m → Enc pk (m b) rₑ , (_ , (λ()))) , (λ())))
+pf b pk sk rₑ = cong₂ _,_ refl {!cong₂ _,_!}
+-}
+
 module _
   (Dist : ★)
   (|Pr[_≡1]-Pr[_≡1]| : (f g : R → 𝟚) → Dist)
@@ -79,3 +94,7 @@ module _
     Advantage-unordered : ∀ A b → Advantage A ≡ |Pr[ EXP b A ≡1]-Pr[ EXP (not b) A ≡1]|
     Advantage-unordered A 1₂ = dist-comm _ _
     Advantage-unordered A 0₂ = refl
+-- -}
+-- -}
+-- -}
+-- -}

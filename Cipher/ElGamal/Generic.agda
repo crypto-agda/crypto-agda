@@ -15,7 +15,7 @@ module Cipher.ElGamal.Generic
 
   -- Required for decryption
   (_/_     : Message → G → Message)
-where
+  where
 
 PubKey     = G
 SecKey     = ℤq

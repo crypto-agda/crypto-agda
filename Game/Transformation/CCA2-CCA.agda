@@ -7,6 +7,7 @@ open import Data.Maybe
 open import Data.Product
 open import Data.One
 open import Control.Strategy renaming (run to runStrategy; map to mapStrategy)
+open import Game.Challenge
 
 open import Relation.Binary.PropositionalEquality
 
@@ -26,13 +27,13 @@ module Game.Transformation.CCA2-CCA
   (Enc    : PubKey → Message → Rₑ → CipherText)
   (Dec    : SecKey → CipherText → Message)
   
-where
+  where
 
 open Game.IND-CPA-utils Message CipherText
 
 CPA-A-transform : CPAAdversary Bit → CPAAdversary (DecRound Bit)
-get-m (CPA-A-transform A) = get-m A
-put-c (CPA-A-transform A) = done ∘ put-c A
+get-chal (CPA-A-transform A) = get-chal A
+put-resp (CPA-A-transform A) = done ∘ put-resp A
 
 module CCA2 = Game.IND-CCA2 PubKey SecKey Message CipherText Rₑ Rₖ Rₐ KeyGen Enc Dec 
 module CCA  = Game.IND-CCA  PubKey SecKey Message CipherText Rₑ Rₖ Rₐ KeyGen Enc Dec
@@ -57,7 +58,7 @@ valid-transform adv = tt
 correct : ∀ b adv r → CCA.EXP  b adv               r
                     ≡ CCA2.EXP b (A-transform adv) r
 correct b adv (rₐ , rₖ , rₑ)
- =  cong (λ A → runStrategy (Dec sk) (put-c A (Enc pk (proj (get-m A) b) rₑ)))
+ =  cong (λ A → runStrategy (Dec sk) (put-resp A (Enc pk (get-chal A b) rₑ)))
          (sym (run-map (Dec sk) CPA-A-transform (adv rₐ pk)))
 
          where k  = KeyGen rₖ

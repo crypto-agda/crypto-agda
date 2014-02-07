@@ -27,7 +27,7 @@ module Game.Transformation.CPAd-CPA
   (Enc    : PubKey → Message → Rₑ → CipherText)
   (Dec    : SecKey → CipherText → Message)
   
-where
+  where
 
 module CPA† = Game.IND-CPA-dagger PubKey SecKey Message CipherText Rₑ Rₖ Rₐ 𝟙 KeyGen Enc
 module CPA  = Game.IND-CPA        PubKey SecKey Message CipherText Rₑ Rₖ Rₐ 𝟙 KeyGen Enc

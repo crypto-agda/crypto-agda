@@ -16,7 +16,7 @@ module Game.IND-CPA-alt
   (KeyGen : Rₖ → PubKey × SecKey)
   (Enc    : PubKey → Message → Rₑ → CipherText)
 
-where
+  where
 
 M² = Bit → Message
 

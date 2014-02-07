@@ -56,7 +56,7 @@ CO = 𝟚
 PhaseNumber = 𝟚
 
 open Game.ReceiptFreeness.Protocol PubKey SerialNumber² Receipt Ballot BB Tally CO
-open Manual
+open Explicit-definitions
 
 --
 module Oracle (sk : SecKey) (pk : PubKey) (rgb : Rgb) (bb : BB) where

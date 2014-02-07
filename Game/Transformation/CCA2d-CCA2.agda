@@ -27,11 +27,12 @@ module Game.Transformation.CCA2d-CCA2
   (Enc    : PubKey → Message → Rₑ → CipherText)
   (Dec    : SecKey → CipherText → Message)
   
-where
+  where
 
 module CCA2d = Game.IND-CCA2-dagger PubKey SecKey Message CipherText Rₑ Rₖ Rₐ KeyGen Enc Dec 
 module CCA2  = Game.IND-CCA2        PubKey SecKey Message CipherText Rₑ Rₖ Rₐ KeyGen Enc Dec
 open Game.IND-CPA-utils Message CipherText
+{-
 open TransformAdversaryResponse {DecRound Bit} {CipherText → DecRound Bit} (λ x _ → x)
 
 A-transform : (adv : CCA2.Adversary) → CCA2d.Adversary

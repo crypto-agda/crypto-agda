@@ -49,7 +49,7 @@ module _
   (CheckMem : ∀ bb r → ✓ (Check bb r) → proj₁ (proj₂ r) ∉ L.map (proj₁ ∘ proj₂) bb)
   where
 
-  open WithCheck Check
+  open Experiment Check
   
   module Cheating1 (sn : SerialNumber ²) where
       cheatingA : Adversary

@@ -20,7 +20,7 @@ module Game.IND-CCA
   (Enc    : PubKey → Message → Rₑ → CipherText)
   (Dec    : SecKey → CipherText → Message)
 
-where
+  where
 
 open Game.IND-CPA-utils Message CipherText
 

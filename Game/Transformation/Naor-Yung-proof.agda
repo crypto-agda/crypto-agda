@@ -26,11 +26,12 @@ module Game.Transformation.Naor-Yung-proof
   (Prove  : Message → PubKey → PubKey → Rₑ → Rₑ → CipherText → CipherText → Proof)
   (Verify : (Bit → CipherText) → Proof → Bit)
   (Sim    : (Bit → CipherText) → Proof)
-where
+  where
 
 module NY = Game.Transformation.Naor-Yung PubKey SecKey Message CipherText Proof Rₑ Rₖ KeyGen Enc Dec Prove Verify
 
 module CPA = Game.IND-CPA-alt PubKey SecKey Message CipherText Rₑ Rₖ (Bit × Rₖ × Rₑ × Rₐ) KeyGen Enc
+{-
 module CCA = Game.IND-CCA NY.PubKey' NY.SecKey' NY.Message' NY.CipherText' NY.Rₑ' NY.Rₖ' Rₐ NY.KeyGen' NY.Enc' NY.Dec'
 
 swap? : ∀ {X : ★} → Bit → (X × X) → Bit → X
@@ -66,3 +67,7 @@ R = CPA.R × CCA.R
 thm : ∀ adv cpaR ccaR b → CCA.⅁ b adv ccaR ≡ CPA.⅁ b (transformation adv) cpaR
 thm adv cpaR ccaR 1b = {!refl!}
 thm adv cpaR ccaR 0b = {!!}
+-- -}
+-- -}
+-- -}
+-- -}

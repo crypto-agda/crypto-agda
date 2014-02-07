@@ -35,7 +35,7 @@ module Game.IND-CCA2
   (Enc    : PubKey → Message → Rₑ → CipherText)
   (Dec    : SecKey → CipherText → Message)
 
-where
+  where
 
 module CCA = Game.IND-CCA  PubKey SecKey Message CipherText Rₑ Rₖ Rₐ KeyGen Enc Dec
 open Game.IND-CPA-utils Message CipherText public
