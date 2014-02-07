@@ -2,7 +2,7 @@
 .*.vim
 *~
 *.swp
-/\.redo/
+\.gup/
 \#*\#
 /html/
 /MAlonzo/

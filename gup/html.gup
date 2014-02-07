@@ -1,0 +1,2 @@
+#!/bin/bash -eu
+exec agda-pkg -cagda-pkg.conf --html crypto-agda.agda
