@@ -7,10 +7,11 @@ open import Data.Product
 open import Data.Two
 open import Relation.Binary.PropositionalEquality.NP
 open import Control.Strategy
+open import Game.Challenge
 
 import Game.IND-CCA2
 
-module Attack.Reencryption.OneBitMessage
+module Attack.Reencryption.OneBit
   (PubKey SecKey CipherText Rₑ Rₖ : ★)
 
   (KeyGen : Rₖ → PubKey × SecKey)
@@ -29,11 +30,11 @@ open IND-CCA2
 
 module _ (rₐ : Rₑ) (pk : PubKey) where
     CPA-adversary : CPAAdversary (DecRound 𝟚)
-    get-m CPA-adversary   = 0₂ , 1₂
-    put-c CPA-adversary c = ask (Reenc pk c rₐ) done
+    get-chal CPA-adversary   = id -- equivalent to (0₂ , 1₂)
+    put-resp CPA-adversary c = ask (Reenc pk c rₐ) done
 
 adversary : IND-CCA2.Adversary
 adversary rₐ pk = done (CPA-adversary rₐ pk)
 
 adversary-always-win : ∀ b r → IND-CCA2.EXP b adversary r ≡ b
-adversary-always-win b (rₐ , rₖ , rₑ) rewrite η-[0:1:] id b = Reenc-correct rₖ b rₑ rₐ
+adversary-always-win b (rₐ , rₖ , rₑ) = Reenc-correct rₖ b rₑ rₐ

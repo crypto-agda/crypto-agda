@@ -65,29 +65,29 @@ module M
   {{_ : Sized CipherText}}
   (Rₑ Rₖ Rₓ : ★)
   (KeyGen : Rₖ → PubKey × SecKey)
-  (Enc₀ : PubKey → CompressedMessage → Rₑ → CipherText)
-  (Enc₀SizeRndInd : EncSizeRndInd Enc₀)
-  (Enc₀LeakSize : EncLeakSize Enc₀)
+  (Enc : PubKey → CompressedMessage → Rₑ → CipherText)
+  (EncSizeRndInd : EncSizeRndInd Enc)
+  (EncLeakSize : EncLeakSize Enc)
   where
 
   -- Our adversary runs one encryption
   Rₐ = Rₑ
 
-  Enc₁ : PubKey → Message → Rₑ → CipherText
-  Enc₁ pk m rₑ = Enc₀ pk (compress m) rₑ
+  CEnc : PubKey → Message → Rₑ → CipherText
+  CEnc pk m rₑ = Enc pk (compress m) rₑ
 
   module IND-CPA = Game.IND-CPA PubKey SecKey Message CipherText
-                                Rₑ Rₖ Rₐ Rₓ KeyGen Enc₁
+                                Rₑ Rₖ Rₐ Rₓ KeyGen CEnc
   open IND-CPA.Adversary
 
   A : IND-CPA.Adversary
   m  A = λ _ _ → [0: m₀ 1: m₁ ]
-  b′ A = λ rₑ pk c → c ==ˢ Enc₁ pk m₁ rₑ
+  b′ A = λ rₑ pk c → c ==ˢ CEnc pk m₁ rₑ
 
   -- The adversary A is always winning.
   A-always-wins : ∀ b r → IND-CPA.EXP b A r ≡ b
-  A-always-wins 0₂ _ = ≢1→≡0 (different-compression ∘ Enc₀LeakSize ∘ ==ˢ→≡ˢ)
-  A-always-wins 1₂ _ = ≡ˢ→==ˢ Enc₀SizeRndInd
+  A-always-wins 0₂ _ = ≢1→≡0 (different-compression ∘ EncLeakSize ∘ ==ˢ→≡ˢ)
+  A-always-wins 1₂ _ = ≡ˢ→==ˢ EncSizeRndInd
 
   lem : ∀ x y → (x ==ᵇ y) ≡ 0₂ → not (x ==ᵇ y) ≡ 1₂
   lem 1₂ 1₂ = λ ()

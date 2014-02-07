@@ -8,6 +8,7 @@ open import Data.Product
 open import Data.Two
 open import Relation.Binary.PropositionalEquality.NP
 open import Control.Strategy
+open import Game.Challenge
 
 import Game.IND-CCA2
 
@@ -49,8 +50,8 @@ open IND-CCA2
 adversary : IND-CCA2.Adversary
 adversary rₐ pk = done CPApart
   where CPApart : CPAAdversary _
-        get-m CPApart   = m₀ , m₁
-        put-c CPApart c = ask (Reenc pk c rₐ) λ m′ → done (m′ == m₁)
+        get-chal CPApart   = m
+        put-resp CPApart c = ask (Reenc pk c rₐ) λ m′ → done (m′ == m₁)
 
 adversary-always-win : ∀ b r → IND-CCA2.EXP b adversary r ≡ b
 adversary-always-win b (rₐ , rₖ , rₑ) = ap (flip _==_ m₁) (Reenc-correct rₖ (m b) rₑ rₐ) ∙ m-diff b
