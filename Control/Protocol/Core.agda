@@ -33,6 +33,7 @@ module _ (Q : ★)(R : Q → ★)(A : ★) where
 
   record Server where
     coinductive
+    constructor _,_
     field
       srv-done : A
       srv-ask  : ∀ q → ServerResponse q

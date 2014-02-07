@@ -20,7 +20,7 @@ module FunSHA1
   (funOps : FunOps funU)
   where
 
-    open FunUniverse funU renaming (`⊤ to `𝟙; `Bit to `𝟚)
+    open FunUniverse funU
     open FunOps funOps renaming (_∘_ to _`∘_)
 
     Word : T
@@ -72,7 +72,7 @@ module FunSHA1
                   (λ a b d va vb → (d , (a , va) , (b , vb)) ↦ (d , a , b) , (va , vb))
 
     <⊞> adder : Word `× Word `→ Word
-    adder = <tt⁏ <0b> , id > ⁏ iter full-adder
+    adder = <tt⁏ <0₂> , id > ⁏ iter full-adder
     <⊞> = adder
 
     infixl 4 _`⊞_

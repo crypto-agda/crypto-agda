@@ -16,7 +16,7 @@ open import Game.ReceiptFreeness
 open import Game.Transformation.InternalExternal
 open import Game.Transformation.CCA-CPA
 open import Game.Transformation.CCA2-CCA
-open import Game.Transformation.CCA2-CCA2d
+--open import Game.Transformation.CCA2-CCA2d
 open import Game.Transformation.CCA2d-CCA2
 open import Game.Transformation.CPA-CPAd
 open import Game.Transformation.CPAd-CPA
@@ -28,7 +28,7 @@ open import Game.Transformation.Naor-Yung
 --TODO[could be trivially based on Attack.BruteForce.Randomness] open import Attack.Deterministic
 open import Attack.Compression
 open import Attack.Reencryption
-open import Attack.Reencryption.OneBitMessage
+open import Attack.Reencryption.OneBit
 
 open import Crypto.Schemes
 
@@ -42,7 +42,7 @@ open import FunUniverse.README
 
 open import bijection-syntax.README
 
-open import alea.cpo
+--open import alea.cpo
 
 open import circuits.circuit
 

@@ -19,11 +19,18 @@ module FiniteField.FinImplem (q-1 : ℕ) ([0]' [1]' : Fin (suc q-1)) where
   ℤq : ★
   ℤq = Fin q
 
-  μℤq : Explorable ℤq
-  μℤq = μFin (suc q-1)
-
-  sumℤq : Sum ℤq
-  sumℤq = sum μℤq
+  open Explore.Fin.Regular q
+      renaming ( Finᵉ to ℤqᵉ
+               ; Finⁱ to ℤqⁱ
+               ; Finˡ to ℤqˡ
+               ; Finᶠ to ℤqᶠ
+               ; Finˢ to ℤqˢ
+               ; Finᵖ to ℤqᵖ
+               ; Finʳ to ℤqʳ
+               ; Finᵘ to ℤqᵘ
+               ; Finˢ-ok to ℤqˢ-ok
+               ; Finˢ-stableUnder to ℤqˢ-stableUnder
+               ; μFin to μℤq)
 
   [0] : ℤq
   [0] = [0]'
@@ -32,8 +39,11 @@ module FiniteField.FinImplem (q-1 : ℕ) ([0]' [1]' : Fin (suc q-1)) where
   [1] = [1]'
 
   {-
+  [suc]-iso : Fin q ↔ Fin q
+  [suc]-iso = ?
+
   [suc]-stable : SumStableUnder (sum μℤq) [suc]
-  [suc]-stable = {!Finˢ-stableUnder q {[suc]} {![suc]-inj!}!}
+  [suc]-stable = ℤqˢ-stableUnder {![suc]-iso!}
   -}
 
   _ℕ⊞_ : ℕ → ℤq → ℤq
@@ -73,3 +83,7 @@ module FiniteField.FinImplem (q-1 : ℕ) ([0]' [1]' : Fin (suc q-1)) where
 
   _[^]_ : ℤq → ℤq → ℤq
   m [^] n = m [^]ℕ (Fin▹ℕ n)
+-- -}
+-- -}
+-- -}
+-- -}

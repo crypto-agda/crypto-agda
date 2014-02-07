@@ -51,7 +51,7 @@ CO = 𝟚
 Candidate = 𝟚
 
 open Game.ReceiptFreeness.Protocol PubKey SerialNumber² Receipt Ballot BB Tally CO
-open Manual
+open Explicit-definitions
 
 open Game.IND-CCA2-dagger.Protocol PubKey Message CipherText
 

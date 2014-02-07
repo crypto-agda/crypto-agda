@@ -14,7 +14,7 @@ open import Relation.Binary.PropositionalEquality.NP as ≡
 import Game.DDH
 import Game.IND-CPA
 import Cipher.ElGamal.Generic
-open import Explore.Type
+open import Explore.Core
 open import Explore.Explorable
 open import Explore.Sum -- renaming (μBit to μ𝟚)
 open import Explore.Product

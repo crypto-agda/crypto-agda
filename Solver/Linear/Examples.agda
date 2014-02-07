@@ -36,6 +36,7 @@ module #Vars {a} {A : Set a}
   lookupVar (t , t₁) bs a₁ = {!lookupVar t bs!}
   -}
 
+  {-
 module Syntaxˢ' {a} {A : Set a} {funU} linRewiring where
   open Syntax (λ x y → ⌊ String≤._<?_ x y ⌋) String._≟_ {a} {A} {funU} linRewiring public
   open import Solver.Linear.Parser

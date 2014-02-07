@@ -84,7 +84,7 @@ module ServerBisim (P : Proto)(A : ★₀) where
 
   ServerSim s₀ s₁ = ∀ q → RespSim (s₀ q) (s₁ q)
 
-module _ {P : Proto} {A Aₛ : ★} where
+module _ {P : Proto} {A : ★} where
   open Proto P
   com : Server P A → Client P A → A
   com srv (ask q κc) = com (srv-cont r) (κc (srv-resp r)) where r = srv q
@@ -134,6 +134,7 @@ module _ {P P' : Proto} {A A' : ★} where
   mitm-to-client-trans mitm (ask q? cont) = hack-query mitm q? >>= λ { (r' , mitm') → mitm-to-client-trans mitm' (cont r') }
   mitm-to-client-trans mitm (done x)      = hack-result mitm x
 
+  {-
   mitm-to-server-trans : MITM → Server P A → Server P' A'
   srv-resp (mitm-to-server-trans mitm serv q?) = let ((x , _) , _) = com-with-server serv (hack-query mitm q?)
                                                   in x
@@ -142,6 +143,7 @@ module _ {P P' : Proto} {A A' : ★} where
 
   hacked-com : Server P A → MITM → Client P' A' → A
   hacked-com srv mitm clt = com srv (mitm-to-client-trans mitm clt)
+  -}
 
 module _ (P : Proto) (A : ★) where
   open Proto P

@@ -81,7 +81,7 @@ DecReceipt sk c = Dec sk (enc-co c)
 
 
 open Game.ReceiptFreeness.Protocol PubKey (SerialNumber ²) Receipt Ballot BB Tally CO
-open Manual
+open Explicit-definitions
 open Game.IND-CCA2-dagger.Protocol PubKey Message CipherText
 
 -- open Game.ReceiptFreeness.Protocol PubKey SerialNumber² Receipt Ballot BB Tally
