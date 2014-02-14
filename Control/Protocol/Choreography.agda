@@ -16,16 +16,28 @@ module Control.Protocol.Choreography where
 
 data ☐ {a}(A : ★_ a) : ★_ a where
   [_] : ..(x : A) → ☐ A
+
+un☐ : ∀ {a b}{A : ★_ a}{B : ☐ A → ★_ b} → (..(x : A) → B [ x ]) → Π (☐ A) B
+un☐ f [ x ] = f x
+
 map☐ : ∀ {a b}{A : ★_ a}{B : ★_ b} → (..(x : A) → B) → ☐ A → ☐ B
 map☐ f [ x ] = [ f x ]
 
 data InOut : ★ where
-  -- Π' Σ' : InOut
   In Out : InOut
+
+dualInOut : InOut → InOut
+dualInOut In  = Out
+dualInOut Out = In
 
 data Proto : ★₁ where
   end : Proto
   com  : (q : InOut)(M : ★)(P : M → Proto) → Proto
+
+infix 0 _≡ᴾ_
+data _≡ᴾ_ : Proto → Proto → ★₁ where
+  end : end ≡ᴾ end
+  com : ∀ q M {P Q} → (∀ m → P m ≡ᴾ Q m) → com q M P ≡ᴾ com q M Q
 
 pattern Π' M P = com In  M P
 pattern Σ' M P = com Out M P
@@ -43,10 +55,13 @@ pattern Σ' M P = com Out M P
 ΣS' : (M : ★)(P : ..(_ : M) → Proto) → Proto
 ΣS' M P = Σ' (☐ M) (λ { [ m ] → P m })
 
+⟦_⟧ΠΣ : InOut → (M : ★) (P : M → ★) → ★
+⟦_⟧ΠΣ In  = Π
+⟦_⟧ΠΣ Out = Σ
+
 ⟦_⟧ : Proto → ★
-⟦ end         ⟧ = 𝟙
-⟦ Π' M P ⟧ = Π  M λ x → ⟦ P x ⟧
-⟦ Σ' M P ⟧ = Σ  M λ x → ⟦ P x ⟧
+⟦ end       ⟧ = 𝟙
+⟦ com q M P ⟧ = ⟦ q ⟧ΠΣ M λ x → ⟦ P x ⟧
 
 data Choreo (I : ★) : ★₁ where
   _-[_]→_⁏_ : (A : I) (M : ★) (B : I) (ℂ : ..(m : M) → Choreo I) → Choreo I
@@ -70,12 +85,28 @@ Trace : Proto → Proto
 Trace end          = end
 Trace (com _ A B) = Σ' A λ m → Trace (B m)
 
+dual : Proto → Proto
+dual end = end
+dual (com q A B) = com (dualInOut q) A (λ x → dual (B x))
+
 module _
   (funExt : ∀ {a}{b}{A : ★_ a}{B : A → ★_ b}{f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g)
   where
-    Trace-idempotent : ∀ P → Trace (Trace P) ≡ Trace P
-    Trace-idempotent end = refl
-    Trace-idempotent (com q M P) = cong (Σ' M) (funExt λ m → Trace-idempotent (P m))
+    ≡ᴾ-sound : ∀ {P Q} → P ≡ᴾ Q → P ≡ Q
+    ≡ᴾ-sound end           = refl
+    ≡ᴾ-sound (com q M P≡Q) = cong (com q M) (funExt λ m → ≡ᴾ-sound (P≡Q m))
+
+≡ᴾ-refl : ∀ P → P ≡ᴾ P
+≡ᴾ-refl end         = end
+≡ᴾ-refl (com q M P) = com q M (λ m → ≡ᴾ-refl (P m))
+
+Trace-idempotent : ∀ P → Trace (Trace P) ≡ᴾ Trace P
+Trace-idempotent end = end
+Trace-idempotent (com q M P) = Σ' M λ m → Trace-idempotent (P m)
+
+Trace-dual-oblivious : ∀ P → Trace (dual P) ≡ᴾ Trace P
+Trace-dual-oblivious end = end
+Trace-dual-oblivious (com q M P) = Σ' M λ m → Trace-dual-oblivious (P m)
 
 Tele : Proto → ★
 Tele P = ⟦ Trace P ⟧
@@ -87,38 +118,24 @@ com π A B >>≡ Q = com π A (λ x → B x >>≡ (λ xs → Q (x , xs)))
 _>>_ : Proto → Proto → Proto
 P >> Q = P >>≡ λ _ → Q
 
-++Tele : ∀ (P : Proto)(Q : Tele P → Proto) → (x : Tele P) → Tele (Q x) → Tele (P >>≡ Q)
-++Tele end Q x y = y
-++Tele (Π' M C) Q (m , x) y = m , ++Tele (C m) (λ x₁ → Q (m , x₁)) x y
-++Tele (Σ' M C) Q (m , x) y = m , ++Tele (C m) _ x y
+++Tele : ∀ (P : Proto){Q : Tele P → Proto} (xs : Tele P) → Tele (Q xs) → Tele (P >>≡ Q)
+++Tele end         _        ys = ys
+++Tele (com q M P) (x , xs) ys = x , ++Tele (P x) xs ys
 
-module _
-  (funExt : ∀ {a}{b}{A : ★_ a}{B : A → ★_ b}{f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g)
-  where
-  right-unit : ∀ (P : Proto) → (P >>≡ λ x → end) ≡ P
-  right-unit end = refl
-  right-unit (Π' M C) = let p = funExt (λ x → right-unit (C x)) in cong (Π' M) p
-  right-unit (Σ' M C) = cong (Σ' M) (funExt (λ x → right-unit (C x)))
+right-unit : ∀ (P : Proto) → (P >>≡ λ x → end) ≡ᴾ P
+right-unit end = end
+right-unit (com q M P) = com q M λ m → right-unit (P m)
 
-  assoc : ∀ (P : Proto)(Q : Tele P → Proto)(R : Tele (P >>≡ Q) → Proto)
-        → P >>≡ (λ x → Q x >>≡ (λ y → R (++Tele P Q x y))) ≡ ((P >>≡ Q) >>≡ R)
-  assoc end Q R = refl
-  assoc (Π' M C₁) Q R = cong (Π' M) (funExt (λ x → assoc (C₁ x) (λ xs → Q (x , xs)) (λ xs → R (x , xs))))
-  assoc (Σ' M C₁) Q R = cong (Σ' M) (funExt (λ x → assoc (C₁ x) (λ xs → Q (x , xs)) (λ xs → R (x , xs))))
+assoc : ∀ (P : Proto)(Q : Tele P → Proto)(R : Tele (P >>≡ Q) → Proto)
+        → P >>≡ (λ x → Q x >>≡ (λ y → R (++Tele P x y))) ≡ᴾ ((P >>≡ Q) >>≡ R)
+assoc end         Q R = ≡ᴾ-refl (Q _ >>≡ R)
+assoc (com q M P) Q R = com q M λ m → assoc (P m) (λ ms → Q (m , ms)) (λ ms → R (m , ms))
 
 _×'_ : Set → Proto → Proto
 A ×' B = Σ' A λ _ → B
 
 _→'_ : Set → Proto → Proto
 A →' B = Π' A λ _ → B
-
-dualInOut : InOut → InOut
-dualInOut In  = Out
-dualInOut Out = In
-
-dual : Proto → Proto
-dual end = end
-dual (com q A B) = com (dualInOut q) A (λ x → dual (B x))
 
 data DualInOut : InOut → InOut → ★ where
   DInOut : DualInOut In  Out
@@ -139,7 +156,7 @@ commit : ∀ M R (m : M)  → ⟦ Commit M R ⟧
 commit M R m = [ m ] , (λ x → (sing m) , _)
 
 decommit : ∀ M R (r : R) → ⟦ dual (Commit M R) ⟧
-decommit M R r = λ { [ m ] → r , (λ x → {!!}) }
+decommit M R r = λ { [ m ] → r , (λ x → 0₁) }
 
 data [_&_≡_]InOut : InOut → InOut → InOut → ★₁ where
   ΠXX : ∀ {X} → [ In & X  ≡ X ]InOut
@@ -149,21 +166,19 @@ data [_&_≡_]InOut : InOut → InOut → InOut → ★₁ where
 &InOut-comm ΠXX = XΠX
 &InOut-comm XΠX = ΠXX
 
-  {-
 data [_&_≡_] : Proto → Proto → Proto → ★₁ where
   end& : ∀ {P} → [ end & P ≡ P ]
   &end : ∀ {P} → [ P & end ≡ P ]
-  XXX  : ∀ {qP qQ qR M P Q R}(q : [ qP & qQ ≡ qR ]InOut)(P& : ∀   m → [ P m & Q m ≡ R m ]) → [ com qP    M  P & com qQ    M  Q ≡ com qR M R ]
-  -- SDD  : ∀ {qP qQ qR M P Q R}(q : [ qP & qQ ≡ qR ]InOut)(P& : ∀   m → [ P m & Q m ≡ R m ]) → [ com qP (☐ M) P & com qQ    M  Q ≡ com qR M R ]
-  DSD  : ∀ {qP qQ qR M P Q R}(q : [ qP & qQ ≡ qR ]InOut)(P& : ∀   m → [ P m & Q m ≡ R m ]) → [ com qP    M  P & com qQ (☐ M) Q ≡ com qR M R ]
+  D&D  : ∀ {qP qQ qR M P Q R}(q : [ qP & qQ ≡ qR ]InOut)(P& : ∀   m → [ P m     & Q m     ≡ R m ]) → [ com qP    M  P & com qQ    M  Q ≡ com qR M R ]
+  S&D  : ∀ {qP qQ qR M P Q R}(q : [ qP & qQ ≡ qR ]InOut)(P& : ∀   m → [ P [ m ] & Q m     ≡ R m ]) → [ com qP (☐ M) P & com qQ    M  Q ≡ com qR M R ]
+  D&S  : ∀ {qP qQ qR M P Q R}(q : [ qP & qQ ≡ qR ]InOut)(P& : ∀   m → [ P m     & Q [ m ] ≡ R m ]) → [ com qP    M  P & com qQ (☐ M) Q ≡ com qR M R ]
 
 &-comm : ∀ {P Q R} → [ P & Q ≡ R ] → [ Q & P ≡ R ]
 &-comm end& = &end
 &-comm &end = end&
-&-comm (XXX q P&) = XXX (&InOut-comm q) (λ m → &-comm (P& m))
-&-comm (SDD q P&) = DSD (&InOut-comm q) (λ m → &-comm (P& m))
-&-comm (DSD q P&) = SDD (&InOut-comm q) (λ m → &-comm (P& m))
--}
+&-comm (D&D q P&) = D&D (&InOut-comm q) (λ m → &-comm (P& m))
+&-comm (S&D q P&) = D&S (&InOut-comm q) (λ m → &-comm (P& m))
+&-comm (D&S q P&) = S&D (&InOut-comm q) (λ m → &-comm (P& m))
 
 DualInOut-sym : ∀ {P Q} → DualInOut P Q → DualInOut Q P
 DualInOut-sym DInOut = DOutIn
@@ -183,57 +198,43 @@ Dual-spec end = end
 Dual-spec (com In M P) = Π·Σ (λ x → Dual-spec (P x))
 Dual-spec (com Out M P) = Σ·Π (λ x → Dual-spec (P x))
 
-{-
 module _ (funExt : ∀ {a b}{A : ★_ a}{B : A → ★_ b}{f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g)where
-  dual-Tele : ∀ P → Tele P ≡ Tele (dual P)
-  dual-Tele end = refl
-  dual-Tele (Π' A B) = cong (Σ A) (funExt (λ x → dual-Tele (B x)))
-  dual-Tele (Σ' A B) = cong (Σ A) (funExt (λ x → dual-Tele (B x)))
-  dual-Tele (later i P) = ?
--}{-
-module _ where
-  El : (P : Proto) → (Tele P → ★) → ★
-  El end X = X _
-  El (Π' A B) X = Π A λ x → El (B x) (λ y → X (x , y))
-  El (Σ' A B) X = Σ A λ x → El (B x) (λ y → X (x , y))
-  El (later i P) = ?
+  dual-Tele : ∀ P → Tele (dual P) ≡ Tele P
+  dual-Tele P = cong ⟦_⟧ (≡ᴾ-sound funExt (Trace-dual-oblivious P))
+
+El : (P : Proto) → (Tele P → ★) → ★
+El end         X = X _
+El (com q M P) X = ⟦ q ⟧ΠΣ M λ x → El (P x) (λ y → X (x , y))
 
 module ElBind (funExt : ∀ {a b}{A : ★_ a}{B : A → ★_ b}{f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g)where
 
-  bind-spec : (P : Proto)(Q : Tele P → Proto)(X : Tele (P >>≡ Q) → ★) → El (P >>≡ Q) X ≡ El P (λ x → El (Q x) (λ y → X (++Tele P Q x y)))
-  bind-spec end Q X = refl
-  bind-spec (Π' A B) Q X = cong (Π A) (funExt (λ x → bind-spec (B x) (λ xs → Q (x , xs)) (λ y → X (x , y))))
-  bind-spec (Σ' A B) Q X = cong (Σ A) (funExt (λ x → bind-spec (B x) _ _))
-  bind-spec (later i p) Q X = ?
+  bind-spec : (P : Proto){Q : Tele P → Proto}{X : Tele (P >>≡ Q) → ★} → El (P >>≡ Q) X ≡ El P (λ x → El (Q x) (λ y → X (++Tele P x y)))
+  bind-spec end         = refl
+  bind-spec (com q M P) = cong (⟦ q ⟧ΠΣ M) (funExt λ m → bind-spec (P m))
 
 
 module _ {A B} where
-  com : (P : Proto) → El P (const A) → El (dual P) (const B) → A × B
-  com end a b = a , b
-  com (Π' A B) f (x , y) = com (B x) (f x) y
-  com (Σ' A B) (x , y) f = com (B x) y (f x)
-  com (later i P) x y = ?
+  run-com : (P : Proto) → El P (const A) → El (dual P) (const B) → A × B
+  run-com end      a       b       = a , b
+  run-com (Π' M P) p       (m , q) = run-com (P m) (p m) q
+  run-com (Σ' M P) (m , p) q       = run-com (P m) p (q m)
 
-module _ (funExt : ∀ {a b}{A : ★_ a}{B : A → ★_ b}{f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g)where
-  com-cont : (P : Proto){A : Tele P → ★}{B : Tele (dual P) → ★} → El P A → El (dual P) B → Σ (Tele P) A × Σ (Tele (dual P)) B
-  com-cont end p q = (_ , p)  , (_ , q)
-  com-cont (Π' A B) p (m , q) with com-cont (B m) (p m) q
-  ... | (X , a) , (Y , b) = ((m , X) , a) , (m , Y) , b
-  com-cont (Σ' A B) (m , p) q with com-cont (B m) p (q m)
-  ... | (X , a) , (Y , b) = ((m , X) , a) , (m , Y) , b
-  com-cont (later i P) p q = ?
--}
+com-cont : (P : Proto){A : Tele P → ★}{B : Tele (dual P) → ★} → El P A → El (dual P) B → Σ (Tele P) A × Σ (Tele (dual P)) B
+com-cont end p q = (_ , p)  , (_ , q)
+com-cont (Π' A B) p (m , q) with com-cont (B m) (p m) q
+... | (X , a) , (Y , b) = ((m , X) , a) , (m , Y) , b
+com-cont (Σ' A B) (m , p) q with com-cont (B m) p (q m)
+... | (X , a) , (Y , b) = ((m , X) , a) , (m , Y) , b
 
 data ProcessF (this : Proto → ★₁): Proto → ★₁ where
   recv : ∀ {M P} → ((m : M) → this (P m)) → ProcessF this (Π' M P)
   send : ∀ {M P} (m : M) → this (P m) → ProcessF this (Σ' M P)
 
-{-
-recvS : ∀ {this : Proto → ★₁}{M P} → (..(m : M) → this (P m)) → ProcessF this (Π' (☐ M) P)
-recvS = ?
-sendS : ∀ {M P} → ΠM S M (λ m → this (P m) → ProcessF this (Σ' S M P))
-sendS = ?
--}
+recvS : ∀ {this : Proto → ★₁}{M}{P : ☐ M → Proto} → (..(m : M) → this (P [ m ])) → ProcessF this (Π' (☐ M) P)
+recvS = recv ∘ un☐
+
+sendS : ∀ {this : Proto → ★₁}{M}{P : ☐ M → Proto} ..(m : M) → this (P [ m ]) → ProcessF this (Σ' (☐ M) P)
+sendS m = send [ m ]
 
 data Process (A : ★) : Proto → ★₁ where
   do  : ∀ {P} → ProcessF (Process A) P → Process A P
