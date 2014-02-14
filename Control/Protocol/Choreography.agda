@@ -317,6 +317,11 @@ sim-id end = end
 sim-id (Π' A B) = right (recv (λ x → left (send x (sim-id (B x)))))
 sim-id (Σ' A B) = left (recv (λ x → right (send x (sim-id (B x)))))
 
+idˢ : ∀ {P P'} → Dual P P' → Sim P P'
+idˢ end = end
+idˢ (Π·Σ x) = left (recv (λ m → right (send m (idˢ (x m)))))
+idˢ (Σ·Π x) = right (recv (λ m → left (send m (idˢ (x m)))))
+
 sim-comp : ∀ {P Q Q' R} → Dual Q Q' → Sim P Q → Sim Q' R → Sim P R
 sim-compRL : ∀ {P Q Q' R} → Dual Q Q' → SimR P Q → SimL Q' R → Sim P R
 sim-compL : ∀ {P Q Q' R} → Dual Q Q' → SimL P Q → Sim Q' R → SimL P R
@@ -363,7 +368,7 @@ sim-unit (right (recv P)) = do (recv (λ m → sim-unit (P m)))
 sim-unit (right (send m P)) = do (send m (sim-unit P))
 sim-unit end = end 0₁
 
-module _ where
+module 3-way-trace where
 
   mod₁ : ∀ {A A' B : ★} → (A → A') → A × B → A' × B
   mod₁ = λ f → Data.Product.map f id
@@ -384,6 +389,25 @@ module _ where
     PQ ≈ PQ' = ∀ {P' Q'}(P-P' : Dual P P')(Q-Q' : Dual Q Q') → (·P : Sim end P')(Q· : Sim Q' end)
        → trace P-P' Q-Q' ·P PQ Q· ≡ trace P-P' Q-Q' ·P PQ' Q·
 
+module _ where
+  mod₁ : ∀ {A A' B : ★} → (A → A') → A × B → A' × B
+  mod₁ = λ f → Data.Product.map f id
+
+  mod₂ : ∀ {A B B' : ★} → (B → B') → A × B → A × B'
+  mod₂ = λ f → Data.Product.map id f
+
+  trace : ∀ {B E} → Sim (Trace B) (Trace E) → Tele B × Tele E
+  trace {end} {end} end = _
+  trace {end} {com q M P} (right (send m x)) = mod₂ (_,_ m) (trace x)
+  trace {com q M P} {end} (left (send m x)) = mod₁ (_,_ m) (trace x)
+  trace {com q M P} {com q₁ M₁ P₁} (left (send m x)) = mod₁ (_,_ m) (trace {_} {com (q₁) _ _} x)
+  trace {com q M P} {com q₁ M₁ P₁} (right (send m x)) = mod₂ (_,_ m) (trace {com q _ _} x)
+
+  module _ {P Q} where
+    _≈_ : (PQ PQ' : Sim P Q) → ★₁
+    PQ ≈ PQ' = ∀ {B P' Q' E} → (P'-P : Dual P' P)(Q-Q' : Dual Q Q')(BP : Sim (Trace B) P')(QE : Sim Q' (Trace E))
+       → trace (sim-comp P'-P BP (sim-comp Q-Q' PQ QE)) ≡ trace (sim-comp P'-P BP (sim-comp Q-Q' PQ' QE))
+
 module _ {P Q : Proto} where
   infix 2 _∼_
   _∼_ : (PQ PQ' : Sim P Q) → ★₁
@@ -402,49 +426,59 @@ module _
 module _
   (funExt : ∀ {a}{b}{A : ★_ a}{B : A → ★_ b}{f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g)
   where
-  sim-comp-assoc-end : ∀ {P P' Q Q' R}(P-P' : Dual P P')(Q-Q' : Dual Q Q')
-    (øP : Sim end P)(PQ : Sim P' Q)(QR : Sim Q' R)
-    → sim-comp Q-Q' (sim-comp P-P' øP PQ) QR
-    ≡ sim-comp P-P' øP (sim-comp Q-Q' PQ QR)
-  sim-comp-assoc-end (Π·Σ x₁) Q-Q' (right (recv x)) (left (send x₂ x₃)) QR
-    = sim-comp-assoc-end (x₁ x₂) Q-Q' (x x₂) x₃ QR
-  sim-comp-assoc-end (Σ·Π x) Q-Q' (right (send x₁ x₂)) (left (recv x₃)) QR
-    = sim-comp-assoc-end (x x₁) Q-Q' x₂ (x₃ x₁) QR
-  sim-comp-assoc-end P-P' (Π·Σ x₁) (right øP) (right (recv x)) (left (send x₂ x₃))
-    = sim-comp-assoc-end P-P' (x₁ x₂) (right øP) (x x₂) x₃
-  sim-comp-assoc-end P-P' (Σ·Π x) (right øP) (right (send x₁ x₂)) (left (recv x₃))
-    = sim-comp-assoc-end P-P' (x x₁) (right øP) x₂ (x₃ x₁)
-  sim-comp-assoc-end P-P' Q-Q' (right øP) (right x) (right (recv x₁))
-    = cong (right ∘ recv) (funExt (λ m → sim-comp-assoc-end P-P' Q-Q' (right øP) (right x) (x₁ m)))
-  sim-comp-assoc-end P-P' Q-Q' (right øP) (right x) (right (send x₁ x₂))
-    = cong (right ∘ send x₁) (sim-comp-assoc-end P-P' Q-Q' (right øP) (right x) x₂)
-  sim-comp-assoc-end end Q-Q' end PQ QR = refl
-
-  ♦-assoc-end : ∀ {P Q R}(øP : Sim end P)(PQ : Sim (dual P) Q)(QR : Sim (dual Q) R)
-    → (øP ♦ PQ) ♦ QR ≡ øP ♦ (PQ ♦ QR)
-  ♦-assoc-end = sim-comp-assoc-end (Dual-spec _) (Dual-spec _)
 
   open ≡-Reasoning
   sim-comp-assoc : ∀ {W P P' Q Q' R}(P-P' : Dual P P')(Q-Q' : Dual Q Q')
     (WP : Sim W P)(PQ : Sim P' Q)(QR : Sim Q' R)
     → sim-comp Q-Q' (sim-comp P-P' WP PQ) QR
-    ∼ sim-comp P-P' WP (sim-comp Q-Q' PQ QR)
-  sim-comp-assoc P-P' Q-Q' WP PQ QR {W'} W'-W øW'
-    = sim-comp W'-W øW' (sim-comp Q-Q' (sim-comp P-P' WP PQ) QR)
-    ≡⟨ sym (sim-comp-assoc-end W'-W Q-Q' øW' (sim-comp P-P' WP PQ) QR) ⟩
-      sim-comp Q-Q' (sim-comp W'-W øW' (sim-comp P-P' WP PQ)) QR
-    ≡⟨ cong (λ X → sim-comp Q-Q' X QR) (sym (sim-comp-assoc-end W'-W P-P' øW' WP PQ)) ⟩
-      sim-comp Q-Q' (sim-comp P-P' (sim-comp W'-W øW' WP) PQ) QR
-    ≡⟨ sim-comp-assoc-end P-P' Q-Q' (sim-comp W'-W øW' WP) PQ QR ⟩
-      sim-comp P-P' (sim-comp W'-W øW' WP) (sim-comp Q-Q' PQ QR)
-    ≡⟨ sim-comp-assoc-end W'-W P-P' øW' WP (sim-comp Q-Q' PQ QR) ⟩
-      sim-comp W'-W øW' (sim-comp P-P' WP (sim-comp Q-Q' PQ QR))
-    ∎
+    ≡ sim-comp P-P' WP (sim-comp Q-Q' PQ QR)
+  sim-comp-assoc P-P' Q-Q' (left (recv x)) PQ QR = cong (left ∘ recv) (funExt (λ m → sim-comp-assoc P-P' Q-Q' (x m) PQ QR))
+  sim-comp-assoc P-P' Q-Q' (left (send m x)) PQ QR = cong (left ∘ send m) (sim-comp-assoc P-P' Q-Q' x PQ QR)
+  sim-comp-assoc (Π·Σ x₁) Q-Q' (right (recv x)) (left (send m x₂)) QR = sim-comp-assoc (x₁ m) Q-Q' (x m) x₂ QR
+  sim-comp-assoc (Σ·Π x₁) Q-Q' (right (send m x)) (left (recv x₂)) QR = sim-comp-assoc (x₁ m) Q-Q' x (x₂ m) QR
+  sim-comp-assoc P-P' (Π·Σ x₂) (right x) (right (recv x₁)) (left (send m x₃)) = sim-comp-assoc P-P' (x₂ m) (right x) (x₁ m) x₃
+  sim-comp-assoc P-P' (Σ·Π x₂) (right x) (right (send m x₁)) (left (recv x₃)) = sim-comp-assoc P-P' (x₂ m) (right x) x₁ (x₃ m)
+  sim-comp-assoc P-P' Q-Q' (right x) (right x₁) (right (recv x₂)) = cong (right ∘ recv) (funExt λ m → sim-comp-assoc P-P' Q-Q' (right x) (right x₁) (x₂ m))
+  sim-comp-assoc P-P' Q-Q' (right x) (right x₁) (right (send m x₂)) = cong (right ∘ send m) (sim-comp-assoc P-P' Q-Q' (right x) (right x₁) x₂)
+  sim-comp-assoc end Q-Q' end PQ QR = refl
 
   ♦-assoc : ∀ {W P Q R}(WP : Sim W P)(PQ : Sim (dual P) Q)(QR : Sim (dual Q) R)
-    → (WP ♦ PQ) ♦ QR ∼ WP ♦ (PQ ♦ QR)
+    → (WP ♦ PQ) ♦ QR ≡ WP ♦ (PQ ♦ QR)
   ♦-assoc = sim-comp-assoc (Dual-spec _) (Dual-spec _)
 
+  sim-id-comp : ∀ {P P' Q}(P-P' : Dual P P')(s : Sim P' Q) → sim-comp P-P' (idˢ (Dual-sym P-P')) s ≡ s
+  sim-id-comp end s = refl
+  sim-id-comp (Π·Σ x) s = {!!}
+  sim-id-comp (Σ·Π x) s = {!!}
+
+  module _ A where
+    Test : Proto
+    Test = com Out A (const end)
+
+    s : A → Sim Test Test
+    s m = right (send m (left (send m end)))
+
+    s' : Sim (dual Test) (dual Test)
+    s' = right (recv (λ m → left (recv (λ m₁ → end))))
+
+    prf : ∀ x → s x ♦ sim-id _ ≡ s x
+    prf x = {!!}
+
+    c-prf : ∀ x → sim-id _ ♦ s x ≡ s x
+    c-prf x = {!!}
+
+    c-prf' : sim-id _ ♦ s' ≡ s'
+    c-prf' = {!!}
+
+    prf' : s' ♦ sim-id _ ≡ s'
+    prf' = {!!}
+
+  sim-comp-id : ∀ {P Q}(s : Sim P Q) → s ♦ (sim-id Q) ≡ s
+  sim-comp-id (left (recv x)) = cong (left ∘ recv) (funExt λ m → sim-comp-id (x m))
+  sim-comp-id (left (send m x)) = cong (left ∘ send m) (sim-comp-id x)
+  sim-comp-id (right (recv x)) = cong (right ∘ recv) (funExt λ m → sim-comp-id (x m))
+  sim-comp-id (right (send m x)) = {!cong (right ∘ send m) (sim-comp-id x)!}
+  sim-comp-id end = refl
 
 ∼-ø : ∀ {P}{s s' : Sim end P} → s ∼ s' → s ≡ s'
 ∼-ø s∼s' = s∼s' end end
@@ -468,25 +502,11 @@ module _
     = cong (left ∘ recv) (funExt (λ x₂ → sim-comp-!-end Q-Q' (right x) (x₁ x₂)))
   sim-comp-!-end Q-Q' (right x) (right (send x₁ x₂))
     = cong (left ∘ send x₁) (sim-comp-!-end Q-Q' (right x) x₂)
-  sim-comp-!-end end end QR = {!!}
+  sim-comp-!-end end end (right (recv x)) = cong (left ∘ recv) (funExt λ m → sim-comp-!-end end end (x m))
+  sim-comp-!-end end end (right (send m x)) = cong (left ∘ send m) (sim-comp-!-end end end x)
+  sim-comp-!-end end end end = refl
 
   open ≡-Reasoning
-  module _ {P Q}{s s' : Sim P Q} where
-    !ˢ-cong : s ∼ s' → !ˢ s ∼ !ˢ s'
-    !ˢ-cong s∼s' Q'-Q øQ'
-      = sim-comp Q'-Q øQ' (!ˢ s)
-      ≡⟨ {!!} ⟩
-        sim-comp Q'-Q øQ' (!ˢ (sim-comp (Dual-spec Q) s (sim-id _)))
-      ≡⟨ {!!} ⟩
-        sim-comp Q'-Q øQ' (!ˢ s')
-      ∎
-
-  postulate
-    sim-comp-assoc-end' : ∀ {P Q Q' R R'}(Q-Q' : Dual Q Q')(R-R' : Dual R R')
-      (PQ : Sim P Q)(QR : Sim Q' R )(Rø : Sim R' end)
-      → sim-comp R-R' (sim-comp Q-Q' PQ QR) Rø
-      ≡ sim-comp Q-Q' PQ (sim-comp R-R' QR Rø)
-
 
   sim-comp-! : ∀ {P Q Q' R}(Q-Q' : Dual Q Q')(PQ : Sim P Q)(Q'R : Sim Q' R)
     → sim-comp (Dual-sym Q-Q') (!ˢ Q'R) (!ˢ PQ) ∼ !ˢ (sim-comp Q-Q' PQ Q'R)
@@ -494,7 +514,7 @@ module _
     = sim-comp R'-R øR' (sim-comp (Dual-sym Q-Q') (!ˢ Q'R) (!ˢ PQ))
     ≡⟨ sim-!! (sim-comp R'-R øR' (sim-comp (Dual-sym Q-Q') (!ˢ Q'R) (!ˢ PQ))) ⟩
       !ˢ( !ˢ ((sim-comp R'-R øR' (sim-comp (Dual-sym Q-Q') (!ˢ Q'R) (!ˢ PQ)))))
-    ≡⟨ cong (!ˢ ∘ !ˢ) (sym (sim-comp-assoc-end funExt R'-R (Dual-sym Q-Q') øR' (!ˢ Q'R) (!ˢ PQ))) ⟩
+    ≡⟨ cong (!ˢ ∘ !ˢ) (sym (sim-comp-assoc funExt R'-R (Dual-sym Q-Q') øR' (!ˢ Q'R) (!ˢ PQ))) ⟩
       !ˢ
         (!ˢ
          (sim-comp (Dual-sym Q-Q') (sim-comp R'-R øR' (!ˢ Q'R)) (!ˢ PQ)))
@@ -513,8 +533,7 @@ module _
          (λ X → !ˢ (sim-comp Q-Q' PQ (sim-comp (Dual-sym R'-R) X (!ˢ øR'))))
          (sym (sim-!! Q'R)) ⟩
       !ˢ (sim-comp Q-Q' PQ (sim-comp (Dual-sym R'-R) Q'R (!ˢ øR')))
-    -- ≡⟨ cong !ˢ (sym (sim-comp-assoc-end' Q-Q' (Dual-sym R'-R) PQ Q'R (!ˢ øR'))) ⟩
-    ≡⟨ ∼-ø {!!}⟩
+    ≡⟨ cong !ˢ (sym (sim-comp-assoc funExt Q-Q' (Dual-sym R'-R) PQ Q'R (!ˢ øR'))) ⟩
       !ˢ (sim-comp (Dual-sym R'-R) (sim-comp Q-Q' PQ Q'R) (!ˢ øR'))
     ≡⟨ cong (λ X → !ˢ (sim-comp (Dual-sym R'-R) X (!ˢ øR'))) (sim-!! (sim-comp Q-Q' PQ Q'R)) ⟩
       !ˢ (sim-comp (Dual-sym R'-R) (!ˢ (!ˢ (sim-comp Q-Q' PQ Q'R)))
