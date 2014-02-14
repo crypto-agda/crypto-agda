@@ -10,7 +10,6 @@ open import Data.One
 open import Relation.Binary.PropositionalEquality.NP
 
 module Control.Protocol.Choreography where
-open import Control.Strategy renaming (Strategy to Client) public
 
 Π· : ∀ {a b}(A : ★_ a) → (B : ..(_ : A) → ★_ b) → ★_ (a ⊔ b)
 Π· A B = ..(x : A) → B x
@@ -364,6 +363,31 @@ sim-unit (right (recvS P)) = do (recvS (λ m → sim-unit (P m)))
 sim-unit (right (sendD m P)) = do (sendD m (sim-unit P))
 sim-unit (right (sendS m P)) = do (sendS m (sim-unit P))
 sim-unit end = end 0₁
+
+module _ where
+
+  mod₁ : ∀ {A A' B : ★} → (A → A') → A × B → A' × B
+  mod₁ = λ f → Data.Product.map f id
+
+  mod₂ : ∀ {A B B' : ★} → (B → B') → A × B → A × B'
+  mod₂ = λ f → Data.Product.map id f
+
+  trace : ∀ {P P' Q Q'} → Dual P P' → Dual Q Q' →  Sim end P' → Sim P Q → Sim Q' end
+        → Tele P × Tele Q
+  trace (S DΠΣ x₁) Q-Q' (right (sendS x x₂)) (left (recvS x₃)) Q· = mod₁ (_,_ x) (trace (x₁ x) Q-Q' x₂ (x₃ x) Q·)
+  trace (S DΣΠ x₁) Q-Q' (right (recvS x)) (left (sendS x₂ x₃)) Q· = mod₁ (_,_ x₂) (trace (x₁ x₂) Q-Q' (x x₂) x₃ Q·)
+  trace (D DΠΣ x₁) Q-Q' (right (sendD x x₂)) (left (recvD x₃)) Q· = mod₁ (_,_ x) (trace (x₁ x) Q-Q' x₂ (x₃ x) Q·)
+  trace (D DΣΠ x₁) Q-Q' (right (recvD x)) (left (sendD x₂ x₃)) Q· = mod₁ (_,_ x₂) (trace (x₁ x₂) Q-Q' (x x₂) x₃ Q·)
+  trace P-P' (S DΠΣ x₁) ·P (right (recvS x)) (left (sendS x₂ x₃)) = mod₂ (_,_ x₂) (trace P-P' (x₁ x₂) ·P (x x₂) x₃)
+  trace P-P' (S DΣΠ x₁) ·P (right (sendS x x₂)) (left (recvS x₃)) = mod₂ (_,_ x) (trace P-P' (x₁ x) ·P x₂ (x₃ x))
+  trace P-P' (D DΠΣ x₁) ·P (right (recvD x)) (left (sendD x₂ x₃)) = mod₂ (_,_ x₂) (trace P-P' (x₁ x₂) ·P (x x₂) x₃)
+  trace P-P' (D DΣΠ x₁) ·P (right (sendD x x₂)) (left (recvD x₃)) = mod₂ (_,_ x) (trace P-P' (x₁ x) ·P x₂ (x₃ x))
+  trace P-P' Q-Q' ·P end Q· = _
+
+  module _ {P Q : Proto} where
+    _≈_ : (PQ PQ' : Sim P Q) → ★₁
+    PQ ≈ PQ' = ∀ {P' Q'}(P-P' : Dual P P')(Q-Q' : Dual Q Q') → (·P : Sim end P')(Q· : Sim Q' end)
+       → trace P-P' Q-Q' ·P PQ Q· ≡ trace P-P' Q-Q' ·P PQ' Q·
 
 module _ {P Q : Proto} where
   infix 2 _∼_
