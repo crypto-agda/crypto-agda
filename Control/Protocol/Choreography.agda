@@ -621,8 +621,11 @@ module _ where
     _oxᶜR_ : Com → Com → Proto
     P oxᶜR (mk qᴿ Mᴿ Pᴿ) = com' qᴿ Mᴿ (λ m → com P oxᴾ Pᴿ m)
 
+  Equiv : ∀ {A B : ★} → (A → B) → ★
+  Equiv {A} {B} f = ∀ y → Σ A (_≡_ y ∘ f)
+
   _≃_ : ★ → ★ → ★
-  A ≃ B = {!!}
+  A ≃ B = Σ (A → B) Equiv
 
   ⅋ᴾ-id : ∀ P → ⟦ dual P ⅋ᴾ P ⟧
   ⅋ᴾ-id = {!!}
@@ -643,7 +646,15 @@ module _ where
   oxᴾ-assoc P Q R = {!!}
 
   commaᴾ : ∀ P Q → ⟦ P ⟧ → ⟦ Q ⟧ → ⟦ P oxᴾ Q ⟧
-  commaᴾ P Q p q = {!!}
+  commaᴾ end     Q   p q = q
+  commaᴾ (com x) end p q = p
+  commaᴾ (Σᴾ M P) (com Q)  (m , p) q `L = m , commaᴾ (P m) (com Q) p q
+  commaᴾ (Πᴾ M P) (com Q)  p       q `L = λ m → commaᴾ (P m) (com Q) (p m) q
+  commaᴾ (com P)  (Σᴾ M Q) p (m , q) `R = m , commaᴾ (com P) (Q m) p q
+  commaᴾ (com P)  (Πᴾ M Q) p       q `R = λ m → commaᴾ (com P) (Q m) p (q m)
+
+  commaᴾ-equiv : ∀ P Q → Equiv (commaᴾ P Q)
+  commaᴾ-equiv P Q = {!!}
 
   switchL : ∀ P Q R → ⟦ (P ⅋ᴾ Q) oxᴾ R ⟧ → ⟦ P ⅋ᴾ (Q oxᴾ R) ⟧
   switchL P Q R pqr = {!!}
