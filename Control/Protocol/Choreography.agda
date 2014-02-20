@@ -627,9 +627,31 @@ module _ where
   _≃_ : ★ → ★ → ★
   A ≃ B = Σ (A → B) Equiv
 
+  ⅋ᴾ-rend : ∀ P → ⟦ P ⅋ᴾ end ⟧  → ⟦ P ⟧
+  ⅋ᴾ-rend end     = id
+  ⅋ᴾ-rend (com x) = id
+
+  ⅋ᴾ-sendR : ∀ {M P}{Q : M → Proto}(m : M) → ⟦ P ⅋ᴾ Q m ⟧ → ⟦ P ⅋ᴾ com' Out M Q ⟧
+  ⅋ᴾ-sendR {P = end} m p = m , p
+  ⅋ᴾ-sendR {P = com x} m p = `R , (m , p)
+
+  ⅋ᴾ-sendL : ∀ {M P}{Q : M → Proto}(m : M) → ⟦ Q m ⅋ᴾ P ⟧ → ⟦ com' Out M Q ⅋ᴾ P ⟧
+  ⅋ᴾ-sendL {P = end}{Q} m p = m , ⅋ᴾ-rend (Q m) p
+  ⅋ᴾ-sendL {P = com x} m p = `L , (m , p)
+
+  ⅋ᴾ-recvR : ∀ {M P}{Q : M → Proto} → ((m : M) → ⟦ P ⅋ᴾ Q m ⟧) → ⟦ P ⅋ᴾ com' In M Q ⟧
+  ⅋ᴾ-recvR {P = end}   f = f
+  ⅋ᴾ-recvR {P = com x} f = `R , f
+
+  ⅋ᴾ-recvL : ∀ {M P}{Q : M → Proto} → ((m : M) → ⟦ Q m ⅋ᴾ P ⟧) → ⟦ com' In M Q ⅋ᴾ P ⟧
+  ⅋ᴾ-recvL {P = end}{Q} f x = ⅋ᴾ-rend (Q x) (f x)
+  ⅋ᴾ-recvL {P = com x} f = `L , f
+
   ⅋ᴾ-id : ∀ P → ⟦ dual P ⅋ᴾ P ⟧
-  ⅋ᴾ-id = {!!}
-  
+  ⅋ᴾ-id end = _
+  ⅋ᴾ-id (com (mk In M P))  = `R , λ m → ⅋ᴾ-sendL {P = P m} m (⅋ᴾ-id (P m))
+  ⅋ᴾ-id (com (mk Out M P)) = `L , λ m → ⅋ᴾ-sendR {P = dual (P m)} m (⅋ᴾ-id (P m))
+
   ⅋ᴾ-comm : ∀ P Q → ⟦ P ⅋ᴾ Q ⟧ ≃ ⟦ Q ⅋ᴾ P ⟧
   ⅋ᴾ-comm P Q = {!!}
 
