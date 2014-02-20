@@ -543,23 +543,6 @@ _>>ᶜ_ : (P : Com) → (Proto → Proto) → Com
 P >>ᶜ S = record P { P = λ m → S (Com.P P m) }
 
 {-
-module V1 where
-  mutual
-    Simᴾ : Proto → Proto → Proto
-    Simᴾ end Q = Q
-    Simᴾ P end = P
-    Simᴾ (com Pᴸ) (com Pᴿ) = Σᴾ LR (Simᶜ Pᴸ Pᴿ)
-
-    Simᶜ : Com → Com → LR → Proto
-    Simᶜ Pᴸ Pᴿ `L = SimᶜL Pᴸ Pᴿ
-    Simᶜ Pᴸ Pᴿ `R = SimᶜR Pᴸ Pᴿ
-
-    SimᶜL : Com → Com → Proto
-    SimᶜL (mk qᴸ Mᴸ Pᴸ) Q = com' qᴸ Mᴸ (λ m → Simᴾ (Pᴸ m) (com Q))
-
-    SimᶜR : Com → Com → Proto
-    SimᶜR P (mk qᴿ Mᴿ Pᴿ) = com' qᴿ Mᴿ (λ m → Simᴾ (com P) (Pᴿ m))
-
 module V2 where
   mutual
     Simᴾ : Proto → Proto → Proto
@@ -605,26 +588,38 @@ module V2 where
   Simᴾ-apply (Σᴾ M P) (Σᴾ M' Q) (inr m , s) p       = m , Simᴾ-apply (Σᴾ M P) (Q m) s p
   -}
 
-module V3 where
+module _ where
   mutual
     _⅋ᴾ_ : Proto → Proto → Proto
-    P ⅋ᴾ Q = Σᴾ LR (Parᴾ P Q)
+    end    ⅋ᴾ Q      = Q
+    P      ⅋ᴾ end    = P
+    com Pᴸ ⅋ᴾ com Pᴿ = Σᴾ LR (Pᴸ ⅋ᶜ Pᴿ)
 
-    Parᴾ : Proto → Proto → LR → Proto
-    Parᴾ end          Q `L = Q
-    Parᴾ (com' q M P) Q `L = com' q M λ m → P m ⅋ᴾ Q
-    Parᴾ P end          `R = P
-    Parᴾ P (com' q M Q) `R = com' q M λ m → P ⅋ᴾ Q m
+    _⅋ᶜ_ : Com → Com → LR → Proto
+    (Pᴸ ⅋ᶜ Pᴿ) `L = Pᴸ ⅋ᶜL Pᴿ
+    (Pᴸ ⅋ᶜ Pᴿ) `R = Pᴸ ⅋ᶜR Pᴿ
+
+    _⅋ᶜL_ : Com → Com → Proto
+    (mk qᴸ Mᴸ Pᴸ) ⅋ᶜL Q = com' qᴸ Mᴸ (λ m → Pᴸ m ⅋ᴾ com Q)
+
+    _⅋ᶜR_ : Com → Com → Proto
+    P ⅋ᶜR (mk qᴿ Mᴿ Pᴿ) = com' qᴿ Mᴿ (λ m → com P ⅋ᴾ Pᴿ m)
 
   mutual
     _oxᴾ_ : Proto → Proto → Proto
-    P oxᴾ Q = Πᴾ LR (Tenᴾ P Q)
+    end    oxᴾ Q      = Q
+    P      oxᴾ end    = P
+    com Pᴸ oxᴾ com Pᴿ = Πᴾ LR (Pᴸ oxᶜ Pᴿ)
 
-    Tenᴾ : Proto → Proto → LR → Proto
-    Tenᴾ end          Q `L = Q
-    Tenᴾ (com' q M P) Q `L = com' q M λ m → P m oxᴾ Q
-    Tenᴾ P end          `R = P
-    Tenᴾ P (com' q M Q) `R = com' q M λ m → P oxᴾ Q m
+    _oxᶜ_ : Com → Com → LR → Proto
+    (Pᴸ oxᶜ Pᴿ) `L = Pᴸ oxᶜL Pᴿ
+    (Pᴸ oxᶜ Pᴿ) `R = Pᴸ oxᶜR Pᴿ
+
+    _oxᶜL_ : Com → Com → Proto
+    (mk qᴸ Mᴸ Pᴸ) oxᶜL Q = com' qᴸ Mᴸ (λ m → Pᴸ m oxᴾ com Q)
+
+    _oxᶜR_ : Com → Com → Proto
+    P oxᶜR (mk qᴿ Mᴿ Pᴿ) = com' qᴿ Mᴿ (λ m → com P oxᴾ Pᴿ m)
 
   _≃_ : ★ → ★ → ★
   A ≃ B = {!!}
