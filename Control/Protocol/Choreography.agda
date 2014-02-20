@@ -621,8 +621,12 @@ module _ where
     _oxᶜR_ : Com → Com → Proto
     P oxᶜR (mk qᴿ Mᴿ Pᴿ) = com' qᴿ Mᴿ (λ m → com P oxᴾ Pᴿ m)
 
-  Equiv : ∀ {A B : ★} → (A → B) → ★
-  Equiv {A} {B} f = ∀ y → Σ A (_≡_ y ∘ f)
+  record Equiv {A B : ★}(f : A → B) : ★ where
+    field
+      linv : B → A
+      is-linv : ∀ x → linv (f x) ≡ x
+      rinv : B → A
+      is-rinv : ∀ x → f (rinv x) ≡ x
 
   _≃_ : ★ → ★ → ★
   A ≃ B = Σ (A → B) Equiv
