@@ -17,6 +17,60 @@ open import Relation.Binary.PropositionalEquality.NP as ≡
 
 module Control.Protocol.Choreography where
 
+module Equivalences
+  (funExt : ∀ {a}{b}{A : ★_ a}{B : A → ★_ b}{f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g)
+  where
+
+  record Equiv {A B : ★}(f : A → B) : ★ where
+    field
+      linv : B → A
+      is-linv : ∀ x → linv (f x) ≡ x
+      rinv : B → A
+      is-rinv : ∀ x → f (rinv x) ≡ x
+
+  module _ {A B : ★}{f : A → B}(fᴱ : Equiv f) where
+    open Equiv fᴱ
+    inv : B → A
+    inv = linv ∘ f ∘ rinv
+
+    inv-equiv : Equiv inv
+    inv-equiv = record { linv = f
+                       ; is-linv = λ x → cong f (is-linv (rinv x)) ∙ is-rinv x
+                       ; rinv = f
+                       ; is-rinv = λ x → cong linv (is-rinv (f x)) ∙ is-linv x }
+
+  idᴱ : ∀ {A} → Equiv {A} id
+  idᴱ = record
+            { linv = id
+            ; is-linv = λ _ → refl
+            ; rinv = id
+            ; is-rinv = λ _ → refl
+            }
+
+  module _ {A B C}{g : B → C}{f : A → B} where
+    _∘ᴱ_ : Equiv g → Equiv f → Equiv (g ∘ f)
+    gᴱ ∘ᴱ fᴱ = record { linv = F.linv ∘ G.linv ; is-linv = λ x → cong F.linv (G.is-linv (f x)) ∙ F.is-linv x
+                      ; rinv = F.rinv ∘ G.rinv ; is-rinv = λ x → cong g (F.is-rinv _) ∙ G.is-rinv x }
+      where
+        module G = Equiv gᴱ
+        module F = Equiv fᴱ
+
+  _≃_ : ★ → ★ → ★
+  A ≃ B = Σ (A → B) Equiv
+
+  ≃-refl : Reflexive _≃_
+  ≃-refl = _ , idᴱ
+
+  ≃-sym : Symmetric _≃_
+  ≃-sym (_ , fᴱ) = _ , inv-equiv fᴱ
+
+  ≃-trans : Transitive _≃_
+  ≃-trans (_ , p) (_ , q) = _ , q ∘ᴱ p
+
+  module _ {a}{b}{A : ★_ a}{B : A → ★_ b} where
+    Σ-ext : ∀ {x y : Σ A B} → (p : fst x ≡ fst y) → subst B p (snd x) ≡ snd y → x ≡ y
+    Σ-ext refl = cong (_,_ _)
+
 Π· : ∀ {a b}(A : ★_ a) → (B : ..(_ : A) → ★_ b) → ★_ (a ⊔ b)
 Π· A B = ..(x : A) → B x
 
@@ -70,6 +124,26 @@ dualᴵᴼ In  = Out
 dualᴵᴼ Out = In
 
 mutual
+    record Com_ ℓ : ★_(ₛ ℓ) where
+      constructor mk
+      field
+        io : InOut
+        M  : ★_ ℓ
+        P  : M → Proto_ ℓ
+
+    data Proto_ ℓ : ★_(ₛ ℓ) where
+      end : Proto_ ℓ
+      com : Com_ ℓ → Proto_ ℓ
+
+Proto : ★₁
+Proto = Proto_ ₀
+Proto₀ = Proto
+Proto₁ = Proto_ ₁
+Com   : ★₁
+Com   = Com_ ₀
+
+{-
+mutual
     record Com : ★₁ where
       constructor mk
       field
@@ -80,7 +154,7 @@ mutual
     data Proto : ★₁ where
       end : Proto
       com : Com → Proto
-
+-}
 pattern com' q M P = com (mk q M P)
 
 pattern Πᶜ M P = mk In  M P
@@ -135,7 +209,7 @@ mutual
     source-of (com c) = com (source-ofᶜ c)
 
     source-ofᶜ : Com → Com
-    source-ofᶜ c = Σᶜ (Com.M c) λ m → source-of (Com.P c m)
+    source-ofᶜ (mk _ M P) = Σᶜ M λ m → source-of (P m)
 
     {-
 dual : Proto → Proto
@@ -150,7 +224,7 @@ mutual
     dual (com c) = com (dualᶜ c)
 
     dualᶜ : Com → Com
-    dualᶜ c = mk (dualᴵᴼ (Com.io c)) (Com.M c) λ m → dual (Com.P c m)
+    dualᶜ (mk io M P) = mk (dualᴵᴼ io) M λ m → dual (P m)
 
 data IsSource : Proto → ★₁ where
   end : IsSource end
@@ -164,11 +238,15 @@ data Proto☐ : Proto → ★₁ where
   end : Proto☐ end
   com : ∀ q M {P} (P☐ : ∀ m → Proto☐ (P m)) → Proto☐ (com' q (☐ M) P)
 
-⟦_⟧ᴵᴼ : InOut → (M : ★) (P : M → ★) → ★
+⟦_⟧ᴵᴼ : InOut → ∀{ℓ}(M : ★_ ℓ) (P : M → ★_ ℓ) → ★_ ℓ
 ⟦_⟧ᴵᴼ In  = Π
 ⟦_⟧ᴵᴼ Out = Σ
 
-⟦_⟧ : Proto → ★
+⟦_⟧′ : ∀ {ℓ} → Proto_ ℓ → ★_ ℓ
+⟦ end        ⟧′ = Lift 𝟙
+⟦ com' q M P ⟧′ = ⟦ q ⟧ᴵᴼ M λ m → ⟦ P m ⟧′
+
+⟦_⟧ : Proto₀ → ★
 ⟦ end        ⟧ = 𝟙
 ⟦ com' q M P ⟧ = ⟦ q ⟧ᴵᴼ M λ m → ⟦ P m ⟧
 
@@ -192,6 +270,12 @@ M →' P = Πᴾ M λ _ → P
 
 ≡ᴾ-reflexive : ∀ {P Q} → P ≡ Q → P ≡ᴾ Q
 ≡ᴾ-reflexive refl = ≡ᴾ-refl _
+
+≡ᴾ-trans : Transitive _≡ᴾ_
+≡ᴾ-trans end qr = qr
+≡ᴾ-trans (com refl M x) (com refl .M x₁) = com refl M (λ m → ≡ᴾ-trans (x m) (x₁ m))
+
+_∙ᴾ_ = ≡ᴾ-trans
 
 module _
   (funExt : ∀ {a}{b}{A : ★_ a}{B : A → ★_ b}{f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g)
@@ -231,6 +315,28 @@ source-of-dual-oblivious (com' _ M P) = com refl M λ m → source-of-dual-obliv
 sink-of : Proto → Proto
 sink-of = dual ∘ source-of
 
+module _
+  (funExt : ∀ {a}{b}{A : ★_ a}{B : A → ★_ b}{f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g)
+  where
+    open Equivalences funExt
+
+    module _ {A} {B : A → ★} where
+        foo : (∀ (x : A) → B x ≃ 𝟙) → Π A B ≃ 𝟙
+        foo f = {!!}
+          where
+            to : Π A B → 𝟙
+            to = _
+
+            from : 𝟙 → Π A B
+            from _ x = {!f x!}
+
+            toᴱ : Π A B ≃ 𝟙
+            toᴱ = _ , record { linv = {!!} ; is-linv = {!!} ; rinv = {!!} ; is-rinv = {!!} }
+
+    sink≃𝟙 : ∀ P → ⟦ sink-of P ⟧ ≃ 𝟙
+    sink≃𝟙 end = ≃-refl
+    sink≃𝟙 (com' _ _ P) = {!sink≃𝟙 (P ?)!}
+
 Log : Proto → ★
 Log P = ⟦ source-of P ⟧
 
@@ -245,16 +351,16 @@ replicateᴾ : ℕ → Proto → Proto
 replicateᴾ 0       P = end
 replicateᴾ (suc n) P = P >> replicateᴾ n P
 
-++Tele : ∀ (P : Proto){Q : Log P → Proto} (xs : Log P) → Log (Q xs) → Log (P >>= Q)
-++Tele end         _        ys = ys
-++Tele (com' q M P) (x , xs) ys = x , ++Tele (P x) xs ys
+++Log : ∀ (P : Proto){Q : Log P → Proto} (xs : Log P) → Log (Q xs) → Log (P >>= Q)
+++Log end         _        ys = ys
+++Log (com' q M P) (x , xs) ys = x , ++Log (P x) xs ys
 
 >>=-right-unit : ∀ P → (P >> end) ≡ᴾ P
 >>=-right-unit end         = end
 >>=-right-unit (com' q M P) = com refl M λ m → >>=-right-unit (P m)
 
 >>=-assoc : ∀ (P : Proto)(Q : Log P → Proto)(R : Log (P >>= Q) → Proto)
-            → P >>= (λ x → Q x >>= (λ y → R (++Tele P x y))) ≡ᴾ ((P >>= Q) >>= R)
+            → P >>= (λ x → Q x >>= (λ y → R (++Log P x y))) ≡ᴾ ((P >>= Q) >>= R)
 >>=-assoc end         Q R = ≡ᴾ-refl (Q _ >>= R)
 >>=-assoc (com' q M P) Q R = com refl M λ m → >>=-assoc (P m) (λ ms → Q (m , ms)) (λ ms → R (m , ms))
 
@@ -297,6 +403,23 @@ Abortᴾ _ = end
 
 add-abort : Proto → Proto
 add-abort = addΣᴾ Abortᴾ
+
+tele-com : ∀ P → ⟦ P ⟧ → ⟦ P ⊥⟧ → Log P
+tele-com end      _       _       = _
+tele-com (Πᴾ M P) p       (m , q) = m , tele-com (P m) (p m) q
+tele-com (Σᴾ M P) (m , p) q       = m , tele-com (P m) p (q m)
+
+module Mobility where
+  Comᴾ : Proto_ ₁
+  Comᴾ = Πᴾ Proto₀         λ P →
+         Πᴾ (Lift ⟦ P  ⟧)  λ p →
+         Πᴾ (Lift ⟦ P ⊥⟧)  λ p⊥ →
+         Σᴾ (Lift (Log P)) λ log →
+         end
+  com-proc : ⟦ Comᴾ ⟧′
+  com-proc P (lift p) (lift p⊥) = lift (tele-com P p p⊥) , _
+
+
 {-
 
 mutual
@@ -463,24 +586,15 @@ Dual-spec (Σᴾ M P) = Σ·Π λ m → Dual-spec (P m)
 -}
 
 {-
-module _ (funExt : ∀ {a b}{A : ★_ a}{B : A → ★_ b}{f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g)where
-  dual-Tele : ∀ P → Log (dual P) ≡ Log P
-  dual-Tele P = cong ⟦_⟧ (≡ᴾ-sound funExt (Trace-dual-oblivious P))
-
 El : (P : Proto) → (Log P → ★) → ★
 El end         X = X _
 El (com' q M P) X = ⟦ q ⟧ᴵᴼ M λ x → El (P x) (λ y → X (x , y))
 
 module ElBind (funExt : ∀ {a b}{A : ★_ a}{B : A → ★_ b}{f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g)where
 
-  El->>= : (P : Proto){Q : Log P → Proto}{X : Log (P >>= Q) → ★} → El (P >>= Q) X ≡ El P (λ x → El (Q x) (λ y → X (++Tele P x y)))
+  El->>= : (P : Proto){Q : Log P → Proto}{X : Log (P >>= Q) → ★} → El (P >>= Q) X ≡ El P (λ x → El (Q x) (λ y → X (++Log P x y)))
   El->>= end         = refl
   El->>= (com' q M P) = cong (⟦ q ⟧ᴵᴼ M) (funExt λ m → El->>= (P m))
-
-tele-com : ∀ P → ⟦ P ⟧ → ⟦ P ⊥⟧ → Log P
-tele-com end      _       _       = _
-tele-com (Πᴾ M P) p       (m , q) = m , tele-com (P m) (p m) q
-tele-com (Σᴾ M P) (m , p) q       = m , tele-com (P m) p (q m)
 -}
 
 >>=-com : (P : Proto){Q : Log P → Proto}{R : Log P → Proto}
@@ -507,20 +621,47 @@ module ClientServerV1 (Query : ★₀) (Resp : Query → ★₀) (P : Proto) whe
     Server (suc n) = Πᴾ Query λ q → Σᴾ (Resp q) λ r → Server n
 
 module ClientServerV2 (Query : ★₀) (Resp : Query → ★₀) where
-    Client : ℕ → Proto
-    Client zero    = end
-    Client (suc n) = Σᴾ Query λ q → Πᴾ (Resp q) λ r → Client n
+    ClientRound ServerRound : Proto
+    ClientRound = Σᴾ Query λ q → Πᴾ (Resp q) λ r → end
+    ServerRound = dual ClientRound
 
-    Server : ℕ → Proto
+    Client Server : ℕ → Proto
+    Client n = replicateᴾ n ClientRound
     Server = dual ∘ Client
 
-    Server' : ℕ → Proto
-    Server' zero    = end
-    Server' (suc n) = Πᴾ Query λ q → Σᴾ (Resp q) λ r → Server' n
+    DynamicServer StaticServer : Proto
+    DynamicServer = Πᴾ ℕ λ n →
+                    Server n
+    StaticServer  = Σᴾ ℕ λ n →
+                    Server n
 
-    Server≡Server' : ∀ n → Server n ≡ᴾ Server' n
-    Server≡Server' zero    = end
-    Server≡Server' (suc n) = com refl Query (λ m → com refl (Resp m) (λ m' → Server≡Server' n))
+    module PureServer (serve : Π Query Resp) where
+      server : ∀ n → ⟦ Server n ⟧
+      server zero      = _
+      server (suc n) q = serve q , server n
+
+module _ (funExt : ∀ {a b}{A : ★_ a}{B : A → ★_ b}{f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g)where
+  dual-Log : ∀ P → Log (dual P) ≡ Log P
+  dual-Log P = cong ⟦_⟧ (≡ᴾ-sound funExt (source-of-dual-oblivious P))
+
+dual->> : ∀ P Q → dual (P >> Q) ≡ᴾ dual P >> dual Q
+dual->> end Q = ≡ᴾ-refl _
+dual->> (Πᴾ M P) Q = com refl M (λ m → dual->> (P m) Q)
+dual->> (Σᴾ M P) Q = com refl M (λ m → dual->> (P m) Q)
+
+  {- ohoh!
+  dual->>= : ∀ P (Q : Log P → Proto) → dual (P >>= Q) ≡ᴾ dual P >>= (dual ∘ Q ∘ subst id (dual-Log P))
+  dual->>= end Q = ≡ᴾ-refl _
+  dual->>= (Πᴾ M P) Q = ProtoRel.com refl M (λ m → {!dual->>= (P m) (Q ∘ _,_ m)!})
+  dual->>= (Σᴾ M P) Q = ProtoRel.com refl M (λ m → {!!})
+  -}
+
+module _
+  (funExt : ∀ {a}{b}{A : ★_ a}{B : A → ★_ b}{f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g)
+  (P : Proto) where
+    dual-replicateᴾ : ∀ n → dual (replicateᴾ n P) ≡ᴾ replicateᴾ n (dual P)
+    dual-replicateᴾ zero    = end
+    dual-replicateᴾ (suc n) = dual->> P (replicateᴾ n P) ∙ᴾ ≡ᴾ-cong funExt (_>>_ (dual P)) (dual-replicateᴾ n)
 
 data ProcessF (this : Proto → ★₁): Com → ★₁ where
   recv : ∀ {M P} (s : (m : M) → this (P m)) → ProcessF this (Πᶜ M P)
@@ -651,41 +792,8 @@ _&ᴾ_ : (l r : Proto) → Proto
 l &ᴾ r = Πᴾ LR [L: l R: r ]
 
 _>>ᶜ_ : (P : Com) → (Proto → Proto) → Com
-P >>ᶜ S = record P { P = λ m → S (Com.P P m) }
-
-module Equivalences
-  (funExt : ∀ {a}{b}{A : ★_ a}{B : A → ★_ b}{f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g)
-  where
-
-  record Equiv {A B : ★}(f : A → B) : ★ where
-    field
-      linv : B → A
-      is-linv : ∀ x → linv (f x) ≡ x
-      rinv : B → A
-      is-rinv : ∀ x → f (rinv x) ≡ x
-
-  idᴱ : ∀ {A} → Equiv {A} id
-  idᴱ = record
-            { linv = id
-            ; is-linv = λ _ → refl
-            ; rinv = id
-            ; is-rinv = λ _ → refl
-            }
-
-  module _ {A B C}{g : B → C}{f : A → B} where
-    _∘ᴱ_ : Equiv g → Equiv f → Equiv (g ∘ f)
-    gᴱ ∘ᴱ fᴱ = record { linv = F.linv ∘ G.linv ; is-linv = λ x → cong F.linv (G.is-linv (f x)) ∙ F.is-linv x
-                      ; rinv = F.rinv ∘ G.rinv ; is-rinv = λ x → cong g (F.is-rinv _) ∙ G.is-rinv x }
-      where
-        module G = Equiv gᴱ
-        module F = Equiv fᴱ
-
-  _≃_ : ★ → ★ → ★
-  A ≃ B = Σ (A → B) Equiv
-
-  module _ {a}{b}{A : ★_ a}{B : A → ★_ b} where
-    Σ-ext : ∀ {x y : Σ A B} → (p : fst x ≡ fst y) → subst B p (snd x) ≡ snd y → x ≡ y
-    Σ-ext refl = cong (_,_ _)
+Pᶜ >>ᶜ S = record Pᶜ { P = λ m → S (P m) }
+  where open Com_ Pᶜ
 
 data ViewProc : ∀ P → ⟦ P ⟧ → ★₁ where
   send : ∀ M(P : M → Proto)(m : M)(p : ⟦ P m ⟧) → ViewProc (Σᴾ M P) (m , p)
