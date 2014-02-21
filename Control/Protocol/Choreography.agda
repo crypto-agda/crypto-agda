@@ -6,7 +6,7 @@ open import Type
 open import Level.NP
 open import Data.Product.NP renaming (map to ×-map; proj₁ to fst; proj₂ to snd)
 open import Data.Zero
-open import Data.Sum renaming (inj₁ to inl; inj₂ to inr; [_,_] to [inl:_,inr:_])
+open import Data.Sum renaming (inj₁ to inl; inj₂ to inr; [_,_] to [inl:_,inr:_]) hiding ([_,_]′)
 open import Data.One hiding (_≟_)
 open import Data.Two hiding (_≟_)
 open import Data.Nat hiding (_⊔_)
@@ -83,12 +83,31 @@ mutual
 
 pattern com' q M P = com (mk q M P)
 
+pattern Πᶜ M P = mk In  M P
+pattern Σᶜ M P = mk Out M P
+
+pattern Πᴾ M P = com (mk In  M P)
+pattern Σᴾ M P = com (mk Out M P)
+
 module ProtoRel (_≈ᴵᴼ_ : InOut → InOut → ★) where
     infix 0 _≈ᴾ_
     data _≈ᴾ_ : Proto → Proto → ★₁ where
       end : end ≈ᴾ end
       com : ∀ {q₀ q₁} (q : q₀ ≈ᴵᴼ q₁) M {P Q} → (∀ m → P m ≈ᴾ Q m) → com' q₀ M P ≈ᴾ com' q₁ M Q
-open ProtoRel _≡_ public renaming (_≈ᴾ_ to _≡ᴾ_)
+
+module ProtoRelImplicit {_≈ᴵᴼ_ : InOut → InOut → ★} = ProtoRel _≈ᴵᴼ_
+open ProtoRelImplicit hiding (_≈ᴾ_)
+open ProtoRel _≡_ public renaming (_≈ᴾ_ to _≡ᴾ_) using ()
+
+data View-≡ᴾ : (P Q : Proto) → P ≡ᴾ Q → ★₁ where
+  end : View-≡ᴾ end end end
+  ≡-Σ : ∀ {M P Q} (p≡q : ∀ m → P m ≡ᴾ Q m) → View-≡ᴾ (Σᴾ M P) (Σᴾ M Q) (com refl M p≡q)
+  ≡-Π : ∀ {M P Q} (p≡q : ∀ m → P m ≡ᴾ Q m) → View-≡ᴾ (Πᴾ M P) (Πᴾ M Q) (com refl M p≡q)
+
+view-≡ᴾ : ∀ {P Q} (p≡q : P ≡ᴾ Q) → View-≡ᴾ P Q p≡q
+view-≡ᴾ end = end
+view-≡ᴾ (com {In}  refl _ _) = ≡-Π _
+view-≡ᴾ (com {Out} refl _ _) = ≡-Σ _
 
 {-
 infix 0 _≡ᴾ_
@@ -96,12 +115,6 @@ data _≡ᴾ_ : Proto → Proto → ★₁ where
   end : end ≡ᴾ end
   com : ∀ q M {P Q} → (∀ m → P m ≡ᴾ Q m) → com' q M P ≡ᴾ com' q M Q
   -}
-
-pattern Πᶜ M P = mk In  M P
-pattern Σᶜ M P = mk Out M P
-
-pattern Πᴾ M P = com (mk In  M P)
-pattern Σᴾ M P = com (mk Out M P)
 {-
 Π' : (M : ★)(P : M → Proto) → Proto
 Π' M P = com In  M P
@@ -117,12 +130,19 @@ pattern Σᴾ M P = com (mk Out M P)
 Σ☐ᴾ M P = Σᴾ (☐ M) (λ { [ m ] → P m })
 
 mutual
-    Trace : Proto → Proto
-    Trace end     = end
-    Trace (com c) = com (Traceᶜ c)
+    source-of : Proto → Proto
+    source-of end     = end
+    source-of (com c) = com (source-ofᶜ c)
 
-    Traceᶜ : Com → Com
-    Traceᶜ c = Σᶜ (Com.M c) λ m → Trace (Com.P c m)
+    source-ofᶜ : Com → Com
+    source-ofᶜ c = Σᶜ (Com.M c) λ m → source-of (Com.P c m)
+
+    {-
+dual : Proto → Proto
+dual end      = end
+dual (Σᴾ M P) = Πᴾ M λ m → dual (P m)
+dual (Πᴾ M P) = Σᴾ M λ m → dual (P m)
+-}
 
 mutual
     dual : Proto → Proto
@@ -132,9 +152,9 @@ mutual
     dualᶜ : Com → Com
     dualᶜ c = mk (dualᴵᴼ (Com.io c)) (Com.M c) λ m → dual (Com.P c m)
 
-data IsTrace : Proto → ★₁ where
-  end : IsTrace end
-  com : ∀ M {P} (PT : ∀ m → IsTrace (P m)) → IsTrace (Σᴾ M P)
+data IsSource : Proto → ★₁ where
+  end : IsSource end
+  com : ∀ M {P} (PT : ∀ m → IsSource (P m)) → IsSource (Σᴾ M P)
 
 data IsSink : Proto → ★₁ where
   end : IsSink end
@@ -166,10 +186,118 @@ M ×' P = Σᴾ M λ _ → P
 _→'_ : ★ → Proto → Proto
 M →' P = Πᴾ M λ _ → P
 
+≡ᴾ-refl : ∀ P → P ≡ᴾ P
+≡ᴾ-refl end         = end
+≡ᴾ-refl (com' q M P) = com refl M λ m → ≡ᴾ-refl (P m)
+
+≡ᴾ-reflexive : ∀ {P Q} → P ≡ Q → P ≡ᴾ Q
+≡ᴾ-reflexive refl = ≡ᴾ-refl _
+
+module _
+  (funExt : ∀ {a}{b}{A : ★_ a}{B : A → ★_ b}{f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g)
+  where
+    ≡ᴾ-sound : ∀ {P Q} → P ≡ᴾ Q → P ≡ Q
+    ≡ᴾ-sound end              = refl
+    ≡ᴾ-sound (com refl M P≡Q) = cong (com' _ M) (funExt λ m → ≡ᴾ-sound (P≡Q m))
+
+    ≡ᴾ-cong : ∀ {P Q} (f : Proto → Proto) → P ≡ᴾ Q → f P ≡ᴾ f Q
+    ≡ᴾ-cong f P≡Q = ≡ᴾ-reflexive (cong f (≡ᴾ-sound P≡Q))
+
+dualᴵᴼ-involutive : ∀ io → dualᴵᴼ (dualᴵᴼ io) ≡ io
+dualᴵᴼ-involutive In = refl
+dualᴵᴼ-involutive Out = refl
+
+dual-involutive : ∀ P → dual (dual P) ≡ᴾ P
+dual-involutive end = end
+dual-involutive (com' q M P) = com (dualᴵᴼ-involutive q) M (λ m → dual-involutive (P m))
+
+dual-inj : ∀ P Q → dual P ≡ᴾ dual Q → P ≡ᴾ Q
+dual-inj end end end = end
+dual-inj end (com x) ()
+dual-inj (com x) end ()
+dual-inj (com (mk In M P₁)) (com (mk In .M P)) (ProtoRel.com q .M x) = ProtoRel.com refl M (λ m → dual-inj (P₁ m) (P m) (x m))
+dual-inj (com (mk In M P₁)) (com (mk Out .M P)) (ProtoRel.com () .M x)
+dual-inj (com (mk Out M P)) (com (mk In .M Q)) (ProtoRel.com () .M x)
+dual-inj (com (mk Out M P)) (com (mk Out .M Q)) (ProtoRel.com refl .M x) = ProtoRel.com refl M (λ m → dual-inj (P m) (Q m) (x m))
+
+source-of-idempotent : ∀ P → source-of (source-of P) ≡ᴾ source-of P
+source-of-idempotent end         = end
+source-of-idempotent (com' _ M P) = com refl M λ m → source-of-idempotent (P m)
+
+source-of-dual-oblivious : ∀ P → source-of (dual P) ≡ᴾ source-of P
+source-of-dual-oblivious end         = end
+source-of-dual-oblivious (com' _ M P) = com refl M λ m → source-of-dual-oblivious (P m)
+
+sink-of : Proto → Proto
+sink-of = dual ∘ source-of
+
+Log : Proto → ★
+Log P = ⟦ source-of P ⟧
+
+_>>=_ : (P : Proto) → (Log P → Proto) → Proto
+end       >>= Q = Q _
+com' q M P >>= Q = com' q M λ m → P m >>= λ ms → Q (m , ms)
+
+_>>_ : Proto → Proto → Proto
+P >> Q = P >>= λ _ → Q
+
+replicateᴾ : ℕ → Proto → Proto
+replicateᴾ 0       P = end
+replicateᴾ (suc n) P = P >> replicateᴾ n P
+
+++Tele : ∀ (P : Proto){Q : Log P → Proto} (xs : Log P) → Log (Q xs) → Log (P >>= Q)
+++Tele end         _        ys = ys
+++Tele (com' q M P) (x , xs) ys = x , ++Tele (P x) xs ys
+
+>>=-right-unit : ∀ P → (P >> end) ≡ᴾ P
+>>=-right-unit end         = end
+>>=-right-unit (com' q M P) = com refl M λ m → >>=-right-unit (P m)
+
+>>=-assoc : ∀ (P : Proto)(Q : Log P → Proto)(R : Log (P >>= Q) → Proto)
+            → P >>= (λ x → Q x >>= (λ y → R (++Tele P x y))) ≡ᴾ ((P >>= Q) >>= R)
+>>=-assoc end         Q R = ≡ᴾ-refl (Q _ >>= R)
+>>=-assoc (com' q M P) Q R = com refl M λ m → >>=-assoc (P m) (λ ms → Q (m , ms)) (λ ms → R (m , ms))
+
 data Accept? : ★ where
   accept reject : Accept?
 data Is-accept : Accept? → ★ where
   accept : Is-accept accept
+
+--    foo : (⟦ P ⟧ → ⟦ Q ⟧) → Sim (dual P) Q
+--       foo can stop interacting with P as soon as Q is done
+
+data End? : ★ where
+  end continue : End?
+
+End?ᴾ : Proto → Proto
+End?ᴾ P = Σᴾ End? λ { end → end ; continue → P }
+
+module _ {A : ★} (Aᴾ : A → Proto) where
+    addΣᴾ : Proto → Proto
+    addΣᴾ end      = end
+    addΣᴾ (Σᴾ M P) = Σᴾ (M ⊎ A) [inl: (λ m → addΣᴾ (P m)) ,inr: Aᴾ ]
+    addΣᴾ (Πᴾ M P) = Πᴾ M λ m → addΣᴾ (P m)
+
+    addΠᴾ : Proto → Proto
+    addΠᴾ end      = end
+    addΠᴾ (Πᴾ M P) = Πᴾ (M ⊎ A) [inl: (λ m → addΠᴾ (P m)) ,inr: Aᴾ ]
+    addΠᴾ (Σᴾ M P) = Σᴾ M λ m → addΠᴾ (P m)
+
+module _ {A : ★} (Aᴾ : A → Proto) where
+    dual-addΣᴾ : ∀ P → dual (addΣᴾ Aᴾ P) ≡ᴾ addΠᴾ (dual ∘ Aᴾ) (dual P)
+    dual-addΣᴾ end      = end
+    dual-addΣᴾ (Πᴾ M P) = com refl M (λ m → dual-addΣᴾ (P m))
+    dual-addΣᴾ (Σᴾ M P) = com refl (M ⊎ A) [inl: (λ m → dual-addΣᴾ (P m))
+                                           ,inr: (λ x → ≡ᴾ-refl (dual (Aᴾ x))) ]
+
+data Abort : ★ where abort : Abort
+
+Abortᴾ : Abort → Proto
+Abortᴾ _ = end
+
+add-abort : Proto → Proto
+add-abort = addΣᴾ Abortᴾ
+{-
 
 mutual
     data Dualᶜ : Com → Com → ★₁ where
@@ -207,13 +335,13 @@ module _ {I : ★} where
     ℂObserver : Choreo I → Proto
     ℂObserver ℂ = ℂ // λ _ → 0₂
 
-    ℂTrace : Choreo I → Proto
-    ℂTrace ℂ = ℂ // λ _ → 1₂
+    ℂLog : Choreo I → Proto
+    ℂLog ℂ = ℂ // λ _ → 1₂
 
-    ℂTrace-IsTrace : ∀ ℂ → IsTrace (ℂTrace ℂ)
-    ℂTrace-IsTrace (A -[ M ]→ B ⁏ ℂ) = com M λ m → ℂTrace-IsTrace (ℂ m)
-    ℂTrace-IsTrace (A -[ M ]→★⁏   ℂ) = com M λ m → ℂTrace-IsTrace (ℂ m)
-    ℂTrace-IsTrace end               = end
+    ℂLog-IsSource : ∀ ℂ → IsSource (ℂLog ℂ)
+    ℂLog-IsSource (A -[ M ]→ B ⁏ ℂ) = com M λ m → ℂLog-IsSource (ℂ m)
+    ℂLog-IsSource (A -[ M ]→★⁏   ℂ) = com M λ m → ℂLog-IsSource (ℂ m)
+    ℂLog-IsSource end               = end
 
     ℂObserver-IsSink : ∀ ℂ → IsSink (ℂObserver ℂ)
     ℂObserver-IsSink (A -[ M ]→ B ⁏ ℂ) = com (☐ M) λ { [ m ] → ℂObserver-IsSink (ℂ m) }
@@ -295,63 +423,6 @@ module Choreo3 where
            R-1-2-¬0 1₃ = R101
            R-1-2-¬0 2₃ = R011
 -}
-module _
-  (funExt : ∀ {a}{b}{A : ★_ a}{B : A → ★_ b}{f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g)
-  where
-    ≡ᴾ-sound : ∀ {P Q} → P ≡ᴾ Q → P ≡ Q
-    ≡ᴾ-sound end              = refl
-    ≡ᴾ-sound (com refl M P≡Q) = cong (com' _ M) (funExt λ m → ≡ᴾ-sound (P≡Q m))
-
-≡ᴾ-refl : ∀ P → P ≡ᴾ P
-≡ᴾ-refl end         = end
-≡ᴾ-refl (com' q M P) = com refl M λ m → ≡ᴾ-refl (P m)
-
-dualᴵᴼ-involutive : ∀ io → dualᴵᴼ (dualᴵᴼ io) ≡ io
-dualᴵᴼ-involutive In = refl
-dualᴵᴼ-involutive Out = refl
-
-dual-involutive : ∀ P → dual (dual P) ≡ᴾ P
-dual-involutive end = end
-dual-involutive (com' q M P) = com (dualᴵᴼ-involutive q) M (λ m → dual-involutive (P m))
-
-Trace-idempotent : ∀ P → Trace (Trace P) ≡ᴾ Trace P
-Trace-idempotent end         = end
-Trace-idempotent (com' _ M P) = com refl M λ m → Trace-idempotent (P m)
-
-Trace-dual-oblivious : ∀ P → Trace (dual P) ≡ᴾ Trace P
-Trace-dual-oblivious end         = end
-Trace-dual-oblivious (com' _ M P) = com refl M λ m → Trace-dual-oblivious (P m)
-
-Sink : Proto → Proto
-Sink = dual ∘ Trace
-
-Tele : Proto → ★
-Tele P = ⟦ Trace P ⟧
-
-_>>=_ : (P : Proto) → (Tele P → Proto) → Proto
-end       >>= Q = Q _
-com' q M P >>= Q = com' q M λ m → P m >>= λ ms → Q (m , ms)
-
-_>>_ : Proto → Proto → Proto
-P >> Q = P >>= λ _ → Q
-
-replicateᴾ : ℕ → Proto → Proto
-replicateᴾ 0       P = end
-replicateᴾ (suc n) P = P >> replicateᴾ n P
-
-{-
-++Tele : ∀ (P : Proto){Q : Tele P → Proto} (xs : Tele P) → Tele (Q xs) → Tele (P >>= Q)
-++Tele end         _        ys = ys
-++Tele (com' q M P) (x , xs) ys = x , ++Tele (P x) xs ys
-
->>=-right-unit : ∀ P → (P >> end) ≡ᴾ P
->>=-right-unit end         = end
->>=-right-unit (com' q M P) = com q M λ m → >>=-right-unit (P m)
-
->>=-assoc : ∀ (P : Proto)(Q : Tele P → Proto)(R : Tele (P >>= Q) → Proto)
-            → P >>= (λ x → Q x >>= (λ y → R (++Tele P x y))) ≡ᴾ ((P >>= Q) >>= R)
->>=-assoc end         Q R = ≡ᴾ-refl (Q _ >>= R)
->>=-assoc (com' q M P) Q R = com q M λ m → >>=-assoc (P m) (λ ms → Q (m , ms)) (λ ms → R (m , ms))
 
 mutual
     data [_&_≡_]ᶜ : Com → Com → Com → ★₁ where
@@ -384,38 +455,38 @@ Dual-sym (Σ·Π f) = Π·Σ (λ x → Dual-sym (f x))
 Dual-sym (Π☐·Σ f) = {!Σ·Π (λ x → Dual-sym (f x))!}
 Dual-sym (Σ·Π☐ f) = {!Π·Σ (λ x → Dual-sym (f x))!}
 -}
--}
 
 Dual-spec : ∀ P → Dual P (dual P)
 Dual-spec end = end
 Dual-spec (Πᴾ M P) = Π·Σ λ m → Dual-spec (P m)
 Dual-spec (Σᴾ M P) = Σ·Π λ m → Dual-spec (P m)
+-}
 
 {-
 module _ (funExt : ∀ {a b}{A : ★_ a}{B : A → ★_ b}{f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g)where
-  dual-Tele : ∀ P → Tele (dual P) ≡ Tele P
+  dual-Tele : ∀ P → Log (dual P) ≡ Log P
   dual-Tele P = cong ⟦_⟧ (≡ᴾ-sound funExt (Trace-dual-oblivious P))
 
-El : (P : Proto) → (Tele P → ★) → ★
+El : (P : Proto) → (Log P → ★) → ★
 El end         X = X _
 El (com' q M P) X = ⟦ q ⟧ᴵᴼ M λ x → El (P x) (λ y → X (x , y))
 
 module ElBind (funExt : ∀ {a b}{A : ★_ a}{B : A → ★_ b}{f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g)where
 
-  El->>= : (P : Proto){Q : Tele P → Proto}{X : Tele (P >>= Q) → ★} → El (P >>= Q) X ≡ El P (λ x → El (Q x) (λ y → X (++Tele P x y)))
+  El->>= : (P : Proto){Q : Log P → Proto}{X : Log (P >>= Q) → ★} → El (P >>= Q) X ≡ El P (λ x → El (Q x) (λ y → X (++Tele P x y)))
   El->>= end         = refl
   El->>= (com' q M P) = cong (⟦ q ⟧ᴵᴼ M) (funExt λ m → El->>= (P m))
 
-tele-com : ∀ P → ⟦ P ⟧ → ⟦ P ⊥⟧ → Tele P
+tele-com : ∀ P → ⟦ P ⟧ → ⟦ P ⊥⟧ → Log P
 tele-com end      _       _       = _
 tele-com (Πᴾ M P) p       (m , q) = m , tele-com (P m) (p m) q
 tele-com (Σᴾ M P) (m , p) q       = m , tele-com (P m) p (q m)
 -}
 
->>=-com : (P : Proto){Q : Tele P → Proto}{R : Tele P → Proto}
+>>=-com : (P : Proto){Q : Log P → Proto}{R : Log P → Proto}
           → ⟦ P >>= Q  ⟧
           → ⟦ P >>= R ⊥⟧
-          → Σ (Tele P) (λ t → ⟦ Q t ⟧ × ⟦ R t ⊥⟧)
+          → Σ (Log P) (λ t → ⟦ Q t ⟧ × ⟦ R t ⊥⟧)
 >>=-com end      p0       p1       = _ , p0 , p1
 >>=-com (Σᴾ M P) (m , p0) p1       = first (_,_ m) (>>=-com (P m) p0 (p1 m))
 >>=-com (Πᴾ M P) p0       (m , p1) = first (_,_ m) (>>=-com (P m) (p0 m) p1)
@@ -423,8 +494,33 @@ tele-com (Σᴾ M P) (m , p) q       = m , tele-com (P m) p (q m)
 >>-com : (P : Proto){Q R : Proto}
        → ⟦ P >> Q  ⟧
        → ⟦ P >> R ⊥⟧
-       → Tele P × ⟦ Q ⟧ × ⟦ R ⊥⟧
+       → Log P × ⟦ Q ⟧ × ⟦ R ⊥⟧
 >>-com P p q = >>=-com P p q
+
+module ClientServerV1 (Query : ★₀) (Resp : Query → ★₀) (P : Proto) where
+    Client : ℕ → Proto
+    Client zero    = P
+    Client (suc n) = Σᴾ Query λ q → Πᴾ (Resp q) λ r → Client n
+
+    Server : ℕ → Proto
+    Server zero    = P
+    Server (suc n) = Πᴾ Query λ q → Σᴾ (Resp q) λ r → Server n
+
+module ClientServerV2 (Query : ★₀) (Resp : Query → ★₀) where
+    Client : ℕ → Proto
+    Client zero    = end
+    Client (suc n) = Σᴾ Query λ q → Πᴾ (Resp q) λ r → Client n
+
+    Server : ℕ → Proto
+    Server = dual ∘ Client
+
+    Server' : ℕ → Proto
+    Server' zero    = end
+    Server' (suc n) = Πᴾ Query λ q → Σᴾ (Resp q) λ r → Server' n
+
+    Server≡Server' : ∀ n → Server n ≡ᴾ Server' n
+    Server≡Server' zero    = end
+    Server≡Server' (suc n) = com refl Query (λ m → com refl (Resp m) (λ m' → Server≡Server' n))
 
 data ProcessF (this : Proto → ★₁): Com → ★₁ where
   recv : ∀ {M P} (s : (m : M) → this (P m)) → ProcessF this (Πᶜ M P)
@@ -1210,7 +1306,7 @@ Simᴾ-assoc {com P} {com Q} {com R} (`R , `R , s) = {!!}
 {-
 module 3-way-trace where
   trace : ∀ {P P' Q Q'} → Dual P P' → Dual Q Q' →  Sim end P' → Sim P Q → Sim Q' end
-        → Tele P × Tele Q
+        → Log P × Log Q
   trace (Π·Σ x₁) Q-Q' (comR (send x x₂)) (comL (recv x₃)) Q· = first (_,_ x) (trace (x₁ x) Q-Q' x₂ (x₃ x) Q·)
   trace (Σ·Π x₁) Q-Q' (comR (recv x)) (comL (send x₂ x₃)) Q· = first (_,_ x₂) (trace (x₁ x₂) Q-Q' (x x₂) x₃ Q·)
   {-
@@ -1231,7 +1327,7 @@ module 3-way-trace where
        → trace P-P' Q-Q' ·P PQ Q· ≡ trace P-P' Q-Q' ·P PQ' Q·
 
 module _ where
-  trace : ∀ {B E} → Sim (Trace B) (Trace E) → Tele B × Tele E
+  trace : ∀ {B E} → Sim (Trace B) (Trace E) → Log B × Log E
   trace {end}   {end}   end = _
   trace {com _} {end}   (comL  (send m s)) = first  (_,_ m) (trace s)
   trace {end}   {com _} (comR (send m s)) = second (_,_ m) (trace s)
@@ -1428,35 +1524,6 @@ module Commitment {Secret Guess : ★} {R : ..(_ : Secret) → Guess → ★} wh
 
 open import Relation.Nullary
 open import Relation.Nullary.Decidable
-
---    foo : (⟦ P ⟧ → ⟦ Q ⟧) → Sim (dual P) Q
---       foo can stop interacting with P as soon as Q is done
-
-data End? : ★ where
-  end continue : End?
-
-End?ᴾ : Proto → Proto
-End?ᴾ P = Σᴾ End? λ { end → end ; continue → P }
-
-module _ {A : ★} (Aᴾ : A → Proto) where
-    addΣᴾ : Proto → Proto
-    addΣᴾ end      = end
-    addΣᴾ (Σᴾ M P) = Σᴾ (M ⊎ A) [ (λ m → addΣᴾ (P m)) , Aᴾ ]′
-    addΣᴾ (Πᴾ M P) = Πᴾ M λ m → addΣᴾ (P m)
-
-    addΠᴾ : Proto → Proto
-    addΠᴾ end      = end
-    addΠᴾ (Σᴾ M P) = Σᴾ (M ⊎ A) [ (λ m → addΠᴾ (P m)) , Aᴾ ]′
-    addΠᴾ (Πᴾ M P) = Πᴾ M λ m → addΠᴾ (P m)
-
-data Abort : ★ where abort : Abort
-
-Abortᴾ : Abort → Proto
-Abortᴾ _ = end
-
-add-abort : Proto → Proto
-add-abort = addΣᴾ Abortᴾ
-
 {-
 test-sim : Sim (𝟘 ×' end) end
 test-sim = end
