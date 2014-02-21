@@ -631,6 +631,10 @@ module _ where
   _≃_ : ★ → ★ → ★
   A ≃ B = Σ (A → B) Equiv
 
+  module _ {a}{b}{A : ★_ a}{B : A → ★_ b} where
+    Σ-ext : ∀ {x y : Σ A B} → (p : proj₁ x ≡ proj₁ y) → subst B p (proj₂ x) ≡ proj₂ y → x ≡ y
+    Σ-ext refl = cong (_,_ _)
+
   ⅋ᴾ-rend : ∀ P → ⟦ P ⅋ᴾ end ⟧  → ⟦ P ⟧
   ⅋ᴾ-rend end     = id
   ⅋ᴾ-rend (com x) = id
@@ -656,8 +660,34 @@ module _ where
   ⅋ᴾ-id (com (mk In M P))  = `R , λ m → ⅋ᴾ-sendL {P = P m} m (⅋ᴾ-id (P m))
   ⅋ᴾ-id (com (mk Out M P)) = `L , λ m → ⅋ᴾ-sendR {P = dual (P m)} m (⅋ᴾ-id (P m))
 
-  ⅋ᴾ-comm : ∀ P Q → ⟦ P ⅋ᴾ Q ⟧ ≃ ⟦ Q ⅋ᴾ P ⟧
-  ⅋ᴾ-comm P Q = {!!}
+  module _ (Π-ext : ∀ {a}{b}{A : ★_ a}{B : A → ★_ b}{f g : ∀ x → B x} → (∀ x → f x ≡ g x) → f ≡ g) where
+    ⅋ᴾ-comm : ∀ P Q → ⟦ P ⅋ᴾ Q ⟧ ≃ ⟦ Q ⅋ᴾ P ⟧
+    ⅋ᴾ-comm = λ P Q → to P Q , equiv P Q
+      where
+      to : ∀ P Q → ⟦ P ⅋ᴾ Q ⟧ → ⟦ Q ⅋ᴾ P ⟧
+      to end end pq = pq
+      to end (com x) pq = pq
+      to (com x) end pq = pq
+      to (com (mk In M P)) (com x₁) (`L , pq) = `R , (λ m → to (P m) (com x₁) (pq m))
+      to (com (mk Out M P)) (com x₁) (`L , m , pq) = `R , m , to (P m) (com x₁) pq
+      to (com x) (com (mk In M P)) (`R , pq) = `L , (λ m → to (com x) (P m) (pq m))
+      to (com x) (com (mk Out M P)) (`R , m , pq) = `L , m , to (com x) (P m) pq
+
+      toto : ∀ P Q (x : ⟦ P ⅋ᴾ Q ⟧) → to Q P (to P Q x) ≡ x
+      toto end end x = refl
+      toto end (com (mk io M P)) x₁ = refl
+      toto (com (mk io M P)) end x₁ = refl
+      toto (com (mk In M P)) (com (mk In M₁ P₁)) (`L , pq) = Σ-ext refl (Π-ext λ x → toto (P x) (com' In M₁ P₁) (pq x))
+      toto (com (mk In M P)) (com (mk Out M₁ P₁)) (`L , pq) = Σ-ext refl (Π-ext λ x → toto (P x) (com' Out M₁ P₁) (pq x))
+      toto (com (mk Out M P)) (com (mk In M₁ P₁)) (`L , m , pq) = Σ-ext refl (Σ-ext refl (toto (P m) (com' In M₁ P₁) pq))
+      toto (com (mk Out M P)) (com (mk Out M₁ P₁)) (`L , m , pq) = Σ-ext refl (Σ-ext refl (toto (P m) (com' Out M₁ P₁) pq))
+      toto (com (mk In M P)) (com (mk In M₁ P₁)) (`R , pq) = Σ-ext refl (Π-ext (λ x → toto (com' In M P) (P₁ x) (pq x)))
+      toto (com (mk In M P)) (com (mk Out M₁ P₁)) (`R , m , pq) = Σ-ext refl (Σ-ext refl (toto (com' In M P) (P₁ m) pq))
+      toto (com (mk Out M P)) (com (mk In M₁ P₁)) (`R , pq) = Σ-ext refl (Π-ext (λ x → toto (com' Out M P) (P₁ x) (pq x)))
+      toto (com (mk Out M P)) (com (mk Out M₁ P₁)) (`R , m , pq) = Σ-ext refl (Σ-ext refl (toto (com' Out M P) (P₁ m) pq))
+
+      equiv : ∀ P Q → Equiv (to P Q)
+      equiv P Q = record { linv = to Q P ; is-linv = toto P Q ; rinv = to Q P ; is-rinv = toto Q P }
 
   ⅋ᴾ-assoc : ∀ P Q R → ⟦ (P ⅋ᴾ Q) ⅋ᴾ R ⟧ ≃ ⟦ P ⅋ᴾ (Q ⅋ᴾ R) ⟧
   ⅋ᴾ-assoc P Q R = {!!}
