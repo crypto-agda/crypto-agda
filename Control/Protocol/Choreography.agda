@@ -547,58 +547,176 @@ _⊕ᴾ_ : (l r : Proto) → Proto
 l ⊕ᴾ r = Σᴾ LR [L: l R: r ]
 
 _&ᴾ_ : (l r : Proto) → Proto
-l &ᴾ r = Σᴾ LR [L: l R: r ]
+l &ᴾ r = Πᴾ LR [L: l R: r ]
 
 _>>ᶜ_ : (P : Com) → (Proto → Proto) → Com
 P >>ᶜ S = record P { P = λ m → S (Com.P P m) }
 
-{-
-module V2 where
-  mutual
-    Simᴾ : Proto → Proto → Proto
-    Simᴾ end      Q         = Q
-    Simᴾ (Πᴾ M P) Q         = Πᴾ M λ m → Simᴾ (P m) Q
-    Simᴾ P        end       = P
-    Simᴾ P        (Πᴾ M  Q) = Πᴾ M λ m → Simᴾ P (Q m)
-    Simᴾ (Σᴾ M P) (Σᴾ M' Q) = Σᴾ (M ⊎ M') [inl: (λ m → Simᴾ (P m) (Σᴾ M' Q)) ,inr: (λ m' → Simᴾ (Σᴾ M P) (Q m')) ]
+module Equivalences
+  (funExt : ∀ {a}{b}{A : ★_ a}{B : A → ★_ b}{f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g)
+  where
 
-  Simᴾ-assoc : ∀ P Q R → ⟦ Simᴾ P (Simᴾ Q R) ⟧ → ⟦ Simᴾ (Simᴾ P Q) R ⟧
-  Simᴾ-assoc end      Q        R         s                 = s
-  Simᴾ-assoc (Πᴾ _ P) Q        R         s m               = Simᴾ-assoc (P m) _ _ (s m)
-  Simᴾ-assoc (Σᴾ _ P) end      R         s                 = s
-  Simᴾ-assoc (Σᴾ _ P) (Πᴾ _ Q) R         s m               = Simᴾ-assoc (Σᴾ _ P) (Q m) _ (s m)
-  Simᴾ-assoc (Σᴾ _ P) (Σᴾ _ Q) end       s                 = s
-  Simᴾ-assoc (Σᴾ _ P) (Σᴾ _ Q) (Πᴾ M R)  s m               = Simᴾ-assoc (Σᴾ _ P) (Σᴾ _ Q) (R m) (s m)
-  Simᴾ-assoc (Σᴾ _ P) (Σᴾ _ Q) (Σᴾ Mr R) (inl m , s)       = inl (inl m) , Simᴾ-assoc (P m) (Σᴾ _ Q) (Σᴾ _ R) s
-  Simᴾ-assoc (Σᴾ _ P) (Σᴾ _ Q) (Σᴾ Mr R) (inr (inl m) , s) = inl (inr m) , Simᴾ-assoc (Σᴾ _ P) (Q m) (Σᴾ _ R) s
-  Simᴾ-assoc (Σᴾ _ P) (Σᴾ _ Q) (Σᴾ Mr R) (inr (inr m) , s) = inr m       , Simᴾ-assoc (Σᴾ _ P) (Σᴾ _ Q) (R m) s
+  record Equiv {A B : ★}(f : A → B) : ★ where
+    field
+      linv : B → A
+      is-linv : ∀ x → linv (f x) ≡ x
+      rinv : B → A
+      is-rinv : ∀ x → f (rinv x) ≡ x
 
-  Simᴾ-sendR : ∀ {M} P Q → ⟦ Simᴾ P (Πᴾ M Q) ⟧ → (m : M) → ⟦ Simᴾ P (Q m) ⟧
-  Simᴾ-sendR P Q s m = {!!}
+  idᴱ : ∀ {A} → Equiv {A} id
+  idᴱ = record
+            { linv = id
+            ; is-linv = λ _ → refl
+            ; rinv = id
+            ; is-rinv = λ _ → refl
+            }
 
-  Simᴾ-recvR : ∀ {M} P Q → ((m : M) → ⟦ Simᴾ P (Q m) ⟧) → ⟦ Simᴾ P (Πᴾ M Q) ⟧
-  Simᴾ-recvR P Q s = {!!}
+  module _ {A B C}{g : B → C}{f : A → B} where
+    _∘ᴱ_ : Equiv g → Equiv f → Equiv (g ∘ f)
+    gᴱ ∘ᴱ fᴱ = record { linv = F.linv ∘ G.linv ; is-linv = λ x → cong F.linv (G.is-linv (f x)) ∙ F.is-linv x
+                      ; rinv = F.rinv ∘ G.rinv ; is-rinv = λ x → cong g (F.is-rinv _) ∙ G.is-rinv x }
+      where
+        module G = Equiv gᴱ
+        module F = Equiv fᴱ
 
-  Simᴾ-! : ∀ P Q → ⟦ Simᴾ P Q ⟧ → ⟦ Simᴾ Q P ⟧
-  Simᴾ-! end Q p = {!!}
-  Simᴾ-! (Πᴾ M P) end p x = Simᴾ-! (P x) end (p x)
-  Simᴾ-! (Πᴾ M P) (Πᴾ M' Q) p = λ m' → Simᴾ-recvR (Q m') P λ m → Simᴾ-sendR {!!} {!!} (p m) m'
-  Simᴾ-! (Πᴾ M P) (Σᴾ M' Q) p = λ m → Simᴾ-! (P m) (com (mk Out M' Q)) (p m) 
-  Simᴾ-! (Σᴾ M P) end       p = p 
-  Simᴾ-! (Σᴾ M P) (Πᴾ M' Q) p = λ m' → Simᴾ-! (com (mk Out M P)) (Q m') (p m') 
-  Simᴾ-! (Σᴾ M P) (Σᴾ M' Q) (inl m , p) = inr m , (Simᴾ-! (P m) (com (mk Out M' Q)) p) 
-  Simᴾ-! (Σᴾ M P) (Σᴾ M' Q) (inr m , p) = inl m , (Simᴾ-! (com (mk Out M P)) (Q m) p) 
+  _≃_ : ★ → ★ → ★
+  A ≃ B = Σ (A → B) Equiv
 
-  Simᴾ-apply : ∀ P Q → ⟦ Simᴾ P Q ⟧ → ⟦ dual P ⟧ → ⟦ Q ⟧
-  Simᴾ-apply end      Q         s           p       = s
-  Simᴾ-apply (Πᴾ M P) Q         s           (m , p) = Simᴾ-apply (P m) Q (s m) p
-  Simᴾ-apply (Σᴾ M P) end       s           p       = _
-  Simᴾ-apply (Σᴾ M P) (Πᴾ M' Q) s           p m'    = Simᴾ-apply (Σᴾ M P) (Q m') (s m') p
-  Simᴾ-apply (Σᴾ M P) (Σᴾ M' Q) (inl m , s) p       = Simᴾ-apply (P m) (Σᴾ M' Q) s (p m)
-  Simᴾ-apply (Σᴾ M P) (Σᴾ M' Q) (inr m , s) p       = m , Simᴾ-apply (Σᴾ M P) (Q m) s p
-  -}
+  module _ {a}{b}{A : ★_ a}{B : A → ★_ b} where
+    Σ-ext : ∀ {x y : Σ A B} → (p : proj₁ x ≡ proj₁ y) → subst B p (proj₂ x) ≡ proj₂ y → x ≡ y
+    Σ-ext refl = cong (_,_ _)
+
+data ViewProc : ∀ P → ⟦ P ⟧ → ★₁ where
+  send : ∀ M(P : M → Proto)(m : M)(p : ⟦ P m ⟧) → ViewProc (Σᴾ M P) (m , p)
+  recv : ∀ M(P : M → Proto)(p : ((m : M) → ⟦ P m ⟧)) → ViewProc (Πᴾ M P) p
+  end  : ViewProc end _
+
+view-proc : ∀ P (p : ⟦ P ⟧) → ViewProc P p
+view-proc end      _       = end
+view-proc (Πᴾ M P) p       = recv _ _ p
+view-proc (Σᴾ M P) (m , p) = send _ _ m p
+
+data ViewCom : ∀ P → ⟦ com P ⟧ → ★₁ where
+  send : ∀{M}(P : M → Proto)(m : M)(p : ⟦ P m ⟧) → ViewCom (Σᶜ M P) (m , p)
+  recv : ∀{M}(P : M → Proto)(p : ((m : M) → ⟦ P m ⟧)) → ViewCom (Πᶜ M P) p
+
+view-com : ∀ P (p : ⟦ com P ⟧) → ViewCom P p
+view-com (Πᶜ M P) p       = recv _ p
+view-com (Σᶜ M P) (m , p) = send _ m p
 
 module _
+  (funExt : ∀ {a}{b}{A : ★_ a}{B : A → ★_ b}{f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g)
+  where
+
+  open Equivalences funExt
+
+  _⅋ᴾ_ : Proto → Proto → Proto
+  end    ⅋ᴾ Q       = Q
+  Πᴾ M P ⅋ᴾ Q       = Πᴾ M λ m → P m ⅋ᴾ Q
+  P      ⅋ᴾ end     = P
+  P      ⅋ᴾ Πᴾ M  Q = Πᴾ M λ m → P ⅋ᴾ Q m
+  Σᴾ M P ⅋ᴾ Σᴾ M' Q = Σᴾ (M ⊎ M') [inl: (λ m → P m ⅋ᴾ Σᴾ M' Q)
+                                  ,inr: (λ m' → Σᴾ M P ⅋ᴾ Q m') ]
+
+  data View-⅋ : ∀ P Q → ⟦ P ⅋ᴾ Q ⟧ → ★₁ where
+    sendL' : ∀ {M M'}(P : M → Proto)(Q : M' → Proto)(m  : M )(p : ⟦ P m ⅋ᴾ Σᴾ M' Q ⟧) → View-⅋ (Σᴾ M P) (Σᴾ M' Q) (inl m  , p)
+    sendR' : ∀ {M M'}(P : M → Proto)(Q : M' → Proto)(m' : M')(p : ⟦ Σᴾ M P ⅋ᴾ Q m' ⟧) → View-⅋ (Σᴾ M P) (Σᴾ M' Q) (inr m' , p)
+    recvL' : ∀ {M} (P : M → Proto) Q (p : ((m : M) → ⟦ P m ⅋ᴾ Q ⟧)) → View-⅋ (Πᴾ M P) Q p
+    recvR' : ∀ {M M'} (P : M → Proto) (Q : M' → Proto)(p : (m' : M') → ⟦ Σᴾ M P ⅋ᴾ Q m' ⟧) → View-⅋ (Σᴾ M P) (Πᴾ M' Q) p
+    endL   : ∀ Q (p : ⟦ Q ⟧) → View-⅋ end Q p
+    endR   : ∀ {M} (P : M → Proto) (p : ⟦ Σᴾ M P ⟧) → View-⅋ (Σᴾ M P) end p
+
+  view-⅋ : ∀ P Q (p : ⟦ P ⅋ᴾ Q ⟧) → View-⅋ P Q p
+  view-⅋ end Q p = endL Q p
+  view-⅋ (Πᴾ M P) Q p = recvL' P Q p
+  view-⅋ (Σᴾ M P) end p = endR P p
+  view-⅋ (Σᴾ M P) (Πᴾ M' Q) p = recvR' P Q p
+  view-⅋ (com (mk Out M P)) (com (mk Out M' Q)) (inl x , p) = sendL' P Q x p
+  view-⅋ (com (mk Out M P)) (com (mk Out M' Q)) (inr y , p) = sendR' P Q y p
+
+  ⅋ᴾ-assoc : ∀ P Q R → ⟦ P ⅋ᴾ (Q ⅋ᴾ R) ⟧ → ⟦ (P ⅋ᴾ Q) ⅋ᴾ R ⟧
+  ⅋ᴾ-assoc end      Q        R         s                 = s
+  ⅋ᴾ-assoc (Πᴾ _ P) Q        R         s m               = ⅋ᴾ-assoc (P m) _ _ (s m)
+  ⅋ᴾ-assoc (Σᴾ _ P) end      R         s                 = s
+  ⅋ᴾ-assoc (Σᴾ _ P) (Πᴾ _ Q) R         s m               = ⅋ᴾ-assoc (Σᴾ _ P) (Q m) _ (s m)
+  ⅋ᴾ-assoc (Σᴾ _ P) (Σᴾ _ Q) end       s                 = s
+  ⅋ᴾ-assoc (Σᴾ _ P) (Σᴾ _ Q) (Πᴾ M R)  s m               = ⅋ᴾ-assoc (Σᴾ _ P) (Σᴾ _ Q) (R m) (s m)
+  ⅋ᴾ-assoc (Σᴾ _ P) (Σᴾ _ Q) (Σᴾ Mr R) (inl m , s)       = inl (inl m) , ⅋ᴾ-assoc (P m) (Σᴾ _ Q) (Σᴾ _ R) s
+  ⅋ᴾ-assoc (Σᴾ _ P) (Σᴾ _ Q) (Σᴾ Mr R) (inr (inl m) , s) = inl (inr m) , ⅋ᴾ-assoc (Σᴾ _ P) (Q m) (Σᴾ _ R) s
+  ⅋ᴾ-assoc (Σᴾ _ P) (Σᴾ _ Q) (Σᴾ Mr R) (inr (inr m) , s) = inr m       , ⅋ᴾ-assoc (Σᴾ _ P) (Σᴾ _ Q) (R m) s
+
+  ⅋ᴾ-rend : ∀ P → ⟦ P ⅋ᴾ end ⟧  → ⟦ P ⟧
+  ⅋ᴾ-rend end      p = p
+  ⅋ᴾ-rend (Πᴾ _ P) p = λ m → ⅋ᴾ-rend (P m) (p m)
+  ⅋ᴾ-rend (Σᴾ _ _) p = p
+
+  ⅋ᴾ-rend' : ∀ P  → ⟦ P ⟧ → ⟦ P ⅋ᴾ end ⟧
+  ⅋ᴾ-rend' end      p = p
+  ⅋ᴾ-rend' (Πᴾ _ P) p = λ m → ⅋ᴾ-rend' (P m) (p m)
+  ⅋ᴾ-rend' (Σᴾ _ _) p = p
+
+  {-
+  ⅋ᴾ-rend-equiv : ∀ P → Equiv (⅋ᴾ-rend P)
+  ⅋ᴾ-rend-equiv end     = idᴱ
+  ⅋ᴾ-rend-equiv (com _) = idᴱ
+  -}
+
+  ⅋ᴾ-sendR : ∀ {M}P{Q : M → Proto}(m : M) → ⟦ P ⅋ᴾ Q m ⟧ → ⟦ P ⅋ᴾ com' Out M Q ⟧
+  ⅋ᴾ-sendR end     m p = m , p
+  ⅋ᴾ-sendR (Σᴾ M P) m p = inr m , p
+  ⅋ᴾ-sendR (Πᴾ M P) m p = λ x → ⅋ᴾ-sendR (P x) m (p x)
+
+  ⅋ᴾ-sendL : ∀ {M}{P : M → Proto} Q (m : M) → ⟦ P m ⅋ᴾ Q ⟧ → ⟦ Σᴾ M P ⅋ᴾ Q ⟧
+  ⅋ᴾ-sendL {P = P} end      m p = m , ⅋ᴾ-rend (P m) p
+  ⅋ᴾ-sendL         (Πᴾ M Q) m p = λ m' → ⅋ᴾ-sendL (Q m') m {!p!}
+  ⅋ᴾ-sendL         (Σᴾ M Q) m p = {!!} , p
+
+  {-
+  ⅋ᴾ-sendR : ∀ {M} P Q → ⟦ P ⅋ᴾ Πᴾ M Q ⟧ → (m : M) → ⟦ P ⅋ᴾ Q m ⟧
+  ⅋ᴾ-sendR P Q s m = {!!}
+  -}
+
+  ⅋ᴾ-recvR : ∀ {M} P Q → ((m : M) → ⟦ P ⅋ᴾ Q m ⟧) → ⟦ P ⅋ᴾ Πᴾ M Q ⟧
+  ⅋ᴾ-recvR end      Q s = s
+  ⅋ᴾ-recvR (Πᴾ M P) Q s = λ x → ⅋ᴾ-recvR (P x) Q (λ m → s m x)
+  ⅋ᴾ-recvR (Σᴾ M P) Q s = s
+
+  mutual
+    ⅋ᴾ-! : ∀ P Q → ⟦ P ⅋ᴾ Q ⟧ → ⟦ Q ⅋ᴾ P ⟧
+    ⅋ᴾ-! P Q p = {!!}
+
+    ⅋ᴾ-!-view : ∀ {P Q} {pq : ⟦ P ⅋ᴾ Q ⟧} → View-⅋ P Q pq → ⟦ Q ⅋ᴾ P ⟧
+    ⅋ᴾ-!-view (sendL' P Q m p) = ⅋ᴾ-sendR (Σᴾ _ Q) m (⅋ᴾ-! (P m) (com (mk Out _ Q)) p)
+    ⅋ᴾ-!-view (sendR' P Q m' p) = {!⅋ᴾ-sendL (Σᴾ _ P) m'!}
+    ⅋ᴾ-!-view (recvL' P Q pq) = {!!}
+    ⅋ᴾ-!-view (recvR' P Q pq) = {!!}
+    ⅋ᴾ-!-view (endL Q pq) = {!!}
+    ⅋ᴾ-!-view (endR P pq) = {!!}
+
+  {-
+  end Q p = ⅋ᴾ-rend' Q p
+  {-
+  ⅋ᴾ-! end Q p = ⅋ᴾ-rend' Q p
+  ⅋ᴾ-! (Πᴾ M P) end p x = ⅋ᴾ-! (P x) end (p x)
+  ⅋ᴾ-! (Πᴾ M P) (Πᴾ M' Q) p = λ m' → {!⅋ᴾ-! (Π !}
+  ⅋ᴾ-! (Πᴾ M P) (Σᴾ M' Q) p = λ m → ⅋ᴾ-! (P m) (com (mk Out M' Q)) (p m)
+  ⅋ᴾ-! (Σᴾ M P) end       p = p
+  ⅋ᴾ-! (Σᴾ M P) (Πᴾ M' Q) p = λ m' → ⅋ᴾ-! (com (mk Out M P)) (Q m') (p m')
+  ⅋ᴾ-! (Σᴾ M P) (Σᴾ M' Q) (inl m , p) = inr m , (⅋ᴾ-! (P m) (com (mk Out M' Q)) p)
+  ⅋ᴾ-! (Σᴾ M P) (Σᴾ M' Q) (inr m , p) = inl m , (⅋ᴾ-! (com (mk Out M P)) (Q m) p)
+
+  {-
+  ⅋ᴾ-apply : ∀ P Q → ⟦ ⅋ᴾ P Q ⟧ → ⟦ dual P ⟧ → ⟦ Q ⟧
+  ⅋ᴾ-apply end      Q         s           p       = s
+  ⅋ᴾ-apply (Πᴾ M P) Q         s           (m , p) = ⅋ᴾ-apply (P m) Q (s m) p
+  ⅋ᴾ-apply (Σᴾ M P) end       s           p       = _
+  ⅋ᴾ-apply (Σᴾ M P) (Πᴾ M' Q) s           p m'    = ⅋ᴾ-apply (Σᴾ M P) (Q m') (s m') p
+  ⅋ᴾ-apply (Σᴾ M P) (Σᴾ M' Q) (inl m , s) p       = ⅋ᴾ-apply (P m) (Σᴾ M' Q) s (p m)
+  ⅋ᴾ-apply (Σᴾ M P) (Σᴾ M' Q) (inr m , s) p       = m , ⅋ᴾ-apply (Σᴾ M P) (Q m) s p
+  -}
+
+  {-
+module V4
   (funExt : ∀ {a}{b}{A : ★_ a}{B : A → ★_ b}{f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g)
   where
   mutual
@@ -632,42 +750,6 @@ module _
 
     _oxᶜR_ : Com → Com → Proto
     P oxᶜR (mk qᴿ Mᴿ Pᴿ) = com' qᴿ Mᴿ (λ m → com P oxᴾ Pᴿ m)
-
-  data ViewProc : ∀ P → ⟦ P ⟧ → ★₁ where
-    send : ∀ M(P : M → Proto)(m : M)(p : ⟦ P m ⟧) → ViewProc (Σᴾ M P) (m , p)
-    recv : ∀ M(P : M → Proto)(p : ((m : M) → ⟦ P m ⟧)) → ViewProc (Πᴾ M P) p
-    end  : ViewProc end _
-
-  view-proc : ∀ P (p : ⟦ P ⟧) → ViewProc P p
-  view-proc end      _       = end
-  view-proc (Πᴾ M P) p       = recv _ _ p
-  view-proc (Σᴾ M P) (m , p) = send _ _ m p
-
-  data ViewCom : ∀ P → ⟦ com P ⟧ → ★₁ where
-    send : ∀{M}(P : M → Proto)(m : M)(p : ⟦ P m ⟧) → ViewCom (Σᶜ M P) (m , p)
-    recv : ∀{M}(P : M → Proto)(p : ((m : M) → ⟦ P m ⟧)) → ViewCom (Πᶜ M P) p
-
-  view-com : ∀ P (p : ⟦ com P ⟧) → ViewCom P p
-  view-com (Πᶜ M P) p       = recv _ p
-  view-com (Σᶜ M P) (m , p) = send _ m p
-
-  data View-⅋ : ∀ P Q → ⟦ P ⅋ᴾ Q ⟧ → ★₁ where
-    sendL' : ∀ {M} (P : M → Proto) Q (m : M)(p : ⟦ P m ⅋ᴾ com Q ⟧) → View-⅋ (Σᴾ M P) (com Q) (`L , m , p)
-    sendR' : ∀ {M} P (Q : M → Proto)(m : M)(p : ⟦ com P ⅋ᴾ Q m ⟧) → View-⅋ (com P) (Σᴾ M Q) (`R , m , p)
-    recvL' : ∀ {M} (P : M → Proto) Q (p : ((m : M) → ⟦ P m ⅋ᴾ com Q ⟧)) → View-⅋ (Πᴾ M P) (com Q) (`L , p)
-    recvR' : ∀ {M} P (Q : M → Proto)(p : ((m : M) → ⟦ com P ⅋ᴾ Q m ⟧)) → View-⅋ (com P) (Πᴾ M Q) (`R , p)
-    endL   : ∀ Q (p : ⟦ Q ⟧) → View-⅋ end Q p
-    endR   : ∀ P (p : ⟦ com P ⟧) → View-⅋ (com P) end p
-
-  view-⅋ : ∀ P Q (p : ⟦ P ⅋ᴾ Q ⟧) → View-⅋ P Q p
-  view-⅋ end      Q       p                = endL _ _
-  view-⅋ (com x)  end     p                = endR _ _
-  view-⅋ (Πᴾ M P) (com Q) (`L , p)         = recvL' _ _ _
-  view-⅋ (Σᴾ M P) (com Q) (`L , (m , p))   = sendL' _ _ _ _
-  view-⅋ (Πᴾ M P) (Πᴾ M' Q) (`R , p)       = recvR' _ _ _
-  view-⅋ (Πᴾ M P) (Σᴾ M' Q) (`R , (m , p)) = sendR' _ _ _ _
-  view-⅋ (Σᴾ M P) (Πᴾ M' Q) (`R , p)       = recvR' _ _ _
-  view-⅋ (Σᴾ M P) (Σᴾ M' Q) (`R , (m , p)) = sendR' _ _ _ _
 
   data Viewox : ∀ P Q → ⟦ P oxᴾ Q ⟧ → ★₁ where
     com  : ∀{P Q}(p : ⟦ Πᴾ LR (P oxᶜ Q) ⟧) → Viewox (com P) (com Q) p
@@ -724,36 +806,6 @@ module _
     view-∘-view (endL _ _)       _                 = endL _ _ _ _
     view-∘-view (endR _ _)       _                 = endM _ _ _ _
 
-  record Equiv {A B : ★}(f : A → B) : ★ where
-    field
-      linv : B → A
-      is-linv : ∀ x → linv (f x) ≡ x
-      rinv : B → A
-      is-rinv : ∀ x → f (rinv x) ≡ x
-
-  idᴱ : ∀ {A} → Equiv {A} id
-  idᴱ = record
-            { linv = id
-            ; is-linv = λ _ → refl
-            ; rinv = id
-            ; is-rinv = λ _ → refl
-            }
-
-  module _ {A B C}{g : B → C}{f : A → B} where
-    _∘ᴱ_ : Equiv g → Equiv f → Equiv (g ∘ f)
-    gᴱ ∘ᴱ fᴱ = record { linv = F.linv ∘ G.linv ; is-linv = λ x → cong F.linv (G.is-linv (f x)) ∙ F.is-linv x
-                      ; rinv = F.rinv ∘ G.rinv ; is-rinv = λ x → cong g (F.is-rinv _) ∙ G.is-rinv x }
-      where
-        module G = Equiv gᴱ
-        module F = Equiv fᴱ
-
-  _≃_ : ★ → ★ → ★
-  A ≃ B = Σ (A → B) Equiv
-
-  module _ {a}{b}{A : ★_ a}{B : A → ★_ b} where
-    Σ-ext : ∀ {x y : Σ A B} → (p : proj₁ x ≡ proj₁ y) → subst B p (proj₂ x) ≡ proj₂ y → x ≡ y
-    Σ-ext refl = cong (_,_ _)
-
   ⅋ᴾ-rend : ∀ P → ⟦ P ⅋ᴾ end ⟧  → ⟦ P ⟧
   ⅋ᴾ-rend end     = id
   ⅋ᴾ-rend (com _) = id
@@ -791,7 +843,7 @@ module _
   ⅋ᴾ-id (com (mk In M P))  = `R , λ m → ⅋ᴾ-sendL (P m) m (⅋ᴾ-id (P m))
   ⅋ᴾ-id (com (mk Out M P)) = `L , λ m → ⅋ᴾ-sendR (dual (P m)) m (⅋ᴾ-id (P m))
 
-  module _ (Π-ext : ∀ {a}{b}{A : ★_ a}{B : A → ★_ b}{f g : ∀ x → B x} → (∀ x → f x ≡ g x) → f ≡ g) where
+  module _ where
     ⅋ᴾ-comm : ∀ P Q → ⟦ P ⅋ᴾ Q ⟧ ≃ ⟦ Q ⅋ᴾ P ⟧
     ⅋ᴾ-comm = λ P Q → to P Q , equiv P Q
       where
@@ -808,13 +860,13 @@ module _
       toto end end x = refl
       toto end (com (mk io M P)) x₁ = refl
       toto (com (mk io M P)) end x₁ = refl
-      toto (com (mk In M P)) (com (mk In M₁ P₁)) (`L , pq) = Σ-ext refl (Π-ext λ x → toto (P x) (com' In M₁ P₁) (pq x))
-      toto (com (mk In M P)) (com (mk Out M₁ P₁)) (`L , pq) = Σ-ext refl (Π-ext λ x → toto (P x) (com' Out M₁ P₁) (pq x))
+      toto (com (mk In M P)) (com (mk In M₁ P₁)) (`L , pq) = Σ-ext refl (funExt λ x → toto (P x) (com' In M₁ P₁) (pq x))
+      toto (com (mk In M P)) (com (mk Out M₁ P₁)) (`L , pq) = Σ-ext refl (funExt λ x → toto (P x) (com' Out M₁ P₁) (pq x))
       toto (com (mk Out M P)) (com (mk In M₁ P₁)) (`L , m , pq) = Σ-ext refl (Σ-ext refl (toto (P m) (com' In M₁ P₁) pq))
       toto (com (mk Out M P)) (com (mk Out M₁ P₁)) (`L , m , pq) = Σ-ext refl (Σ-ext refl (toto (P m) (com' Out M₁ P₁) pq))
-      toto (com (mk In M P)) (com (mk In M₁ P₁)) (`R , pq) = Σ-ext refl (Π-ext (λ x → toto (com' In M P) (P₁ x) (pq x)))
+      toto (com (mk In M P)) (com (mk In M₁ P₁)) (`R , pq) = Σ-ext refl (funExt (λ x → toto (com' In M P) (P₁ x) (pq x)))
       toto (com (mk In M P)) (com (mk Out M₁ P₁)) (`R , m , pq) = Σ-ext refl (Σ-ext refl (toto (com' In M P) (P₁ m) pq))
-      toto (com (mk Out M P)) (com (mk In M₁ P₁)) (`R , pq) = Σ-ext refl (Π-ext (λ x → toto (com' Out M P) (P₁ x) (pq x)))
+      toto (com (mk Out M P)) (com (mk In M₁ P₁)) (`R , pq) = Σ-ext refl (funExt (λ x → toto (com' Out M P) (P₁ x) (pq x)))
       toto (com (mk Out M P)) (com (mk Out M₁ P₁)) (`R , m , pq) = Σ-ext refl (Σ-ext refl (toto (com' Out M P) (P₁ m) pq))
 
       equiv : ∀ P Q → Equiv (to P Q)
@@ -915,52 +967,71 @@ module _
   ⅋ᴾ-∘ P Q R pq qr = ⅋ᴾ-∘-view (view-∘ P Q R pq qr)
    where
     ⅋ᴾ-∘-view : ∀ {P Q R}{pq : ⟦ P ⅋ᴾ Q ⟧}{qr : ⟦ dual Q ⅋ᴾ R ⟧} → View-∘ P Q R pq qr → ⟦ P ⅋ᴾ R ⟧
-    ⅋ᴾ-∘-view (sendLL P Q R m p qr) = ⅋ᴾ-sendL R m (⅋ᴾ-∘ (P m) (com Q) R p qr)
-    ⅋ᴾ-∘-view (recvLL P Q R p qr) = ⅋ᴾ-recvL R (λ m → ⅋ᴾ-∘ (P m) (com Q) R (p m) qr)
-    ⅋ᴾ-∘-view (sendRR P Q R m pq q) = ⅋ᴾ-sendR (com P) m (⅋ᴾ-∘ (com P) (com Q) (R m) pq q)
-    ⅋ᴾ-∘-view (recvRR P Q R pq q) = ⅋ᴾ-recvR (com P) (λ m₁ → ⅋ᴾ-∘ (com P) (com Q) (R m₁) pq (q m₁))
+    ⅋ᴾ-∘-view (sendLL P Q R m p qr)     = ⅋ᴾ-sendL R m (⅋ᴾ-∘ (P m) (com Q) R p qr)
+    ⅋ᴾ-∘-view (recvLL P Q R p qr)       = ⅋ᴾ-recvL R (λ m → ⅋ᴾ-∘ (P m) (com Q) R (p m) qr)
+    ⅋ᴾ-∘-view (sendRR P Q R m pq q)     = ⅋ᴾ-sendR (com P) m (⅋ᴾ-∘ (com P) (com Q) (R m) pq q)
+    ⅋ᴾ-∘-view (recvRR P Q R pq q)       = ⅋ᴾ-recvR (com P) (λ m₁ → ⅋ᴾ-∘ (com P) (com Q) (R m₁) pq (q m₁))
     ⅋ᴾ-∘-view (sendR-recvL P Q R m p q) = ⅋ᴾ-∘ (com P) (Q m) (com R) p (q m)
     ⅋ᴾ-∘-view (recvR-sendL P Q R p m q) = ⅋ᴾ-∘ (com P) (Q m) (com R) (p m) q
-    ⅋ᴾ-∘-view (endL Q R pq qr) = ⅋ᴾ-apply' {Q} {R} qr pq
-    ⅋ᴾ-∘-view (endM P R pq qr) = par (com P) R pq qr
-    ⅋ᴾ-∘-view (endR P Q pq qr) = {!⅋ᴾ-apply {?} {?} pq qr!}
-
-    {-
-  ⅋ᴾ-map : ∀ P Q R S → (⟦ P ⟧ → ⟦ Q ⟧) → (⟦ R ⟧ → ⟦ S ⟧) → ⟦ P ⅋ᴾ R ⟧ → ⟦ Q ⅋ᴾ S ⟧
-  ⅋ᴾ-map P Q R S f g p with view-⅋ P R p
-  ⅋ᴾ-map .(com (mk Out M P)) Q₁ .(com Q) S f g .(`L , m , p) | sendL' M P Q m p = {!!}
-  ⅋ᴾ-map .(com P) Q₁ .(com (mk Out M Q)) S f g .(`R , m , p) | sendR' P M Q m p = {!!}
-  ⅋ᴾ-map .(com (mk In M P)) Q₁ .(com Q) S f g .(`L , p) | recvL' M P Q p = {!!}
-  ⅋ᴾ-map .(com P) Q₁ .(com (mk In M Q)) S f g .(`R , p) | recvR' P M Q p = {!!}
-  ⅋ᴾ-map .end Q R S f g p | endL .R .p = {!!}
-  ⅋ᴾ-map .(com P) Q .end S f g p | endR P .p = {!!}
+    ⅋ᴾ-∘-view (endL Q R pq qr)          = ⅋ᴾ-apply' {Q} {R} qr pq
+    ⅋ᴾ-∘-view (endM P R pq qr)          = par (com P) R pq qr
+    ⅋ᴾ-∘-view (endR P Q pq qr)          = ⅋ᴾ-apply {com Q} {com P} (proj₁ (⅋ᴾ-comm (com P) (com Q)) pq) qr
 
   oxᴾ-map : ∀ P Q R S → (⟦ P ⟧ → ⟦ Q ⟧) → (⟦ R ⟧ → ⟦ S ⟧) → ⟦ P oxᴾ R ⟧ → ⟦ Q oxᴾ S ⟧
   oxᴾ-map P Q R S f g p = commaᴾ Q S (f (oxᴾ-fst P R p)) (g (oxᴾ-snd P R p))
 
-  switchL' : ∀ P Q R → ⟦ P ⅋ᴾ Q ⟧ → ⟦ R ⟧ → ⟦ P ⅋ᴾ (Q oxᴾ R) ⟧
-  switchL' P Q R p⅋q r with view-⅋ P Q p⅋q
-  switchL' ._ ._ R .(`L , m , p) r | sendL' M P Q m p = ⅋ᴾ-sendL (com Q oxᴾ R) m (switchL' (P m) (com Q) R p r)
-  switchL' ._ ._ R .(`R , m , p) r | sendR' P M Q m p = ⅋ᴾ-map (com P) (com P) (Q m oxᴾ R) (Σᴾ M Q oxᴾ R) id
-                                                          (oxᴾ-map (Q m) (Σᴾ M Q) R R (_,_ m) id)
-                                                             (switchL' (com P) (Q m) R p r)
-  switchL' ._ ._ R .(`L , p) r | recvL' M P Q p = ⅋ᴾ-recvL (com Q oxᴾ R) λ m → switchL' (P m) (com Q) R (p m) r
-  switchL' ._ ._ R .(`R , p) r | recvR' (Πᶜ M' P) M Q p = {!!} -- ⅋ᴾ-map (com P) (com P) {!!} (Πᴾ M Q oxᴾ R) id {!!} {!!}
-  switchL' ._ ._ R .(`R , p) r | recvR' (Σᶜ M' P) M Q p = {!!} -- ⅋ᴾ-map (com P) (com P) {!!} (Πᴾ M Q oxᴾ R) id {!!} {!!}
-  switchL' ._ ._ R p⅋q r | endL Q .p⅋q = commaᴾ Q R p⅋q r
-  switchL' .(com P) .end R p⅋q r | endR P .p⅋q = par (com P) R p⅋q r
-
+  {-
   switchL : ∀ P Q R → ⟦ (P ⅋ᴾ Q) oxᴾ R ⟧ → ⟦ P ⅋ᴾ (Q oxᴾ R) ⟧
   switchL P Q R pqr = switchL' P Q R (oxᴾ-fst (P ⅋ᴾ Q) R pqr) (oxᴾ-snd (P ⅋ᴾ Q) R pqr)
   -}
 
   {-
-  ⊕ᴾ-map : ∀ P Q R S → (⟦ P ⟧ → ⟦ Q ⟧) → (⟦ R ⟧ → ⟦ S ⟧) → ⟦ P ⊕ᴾ R ⟧ → ⟦ Q ⊕ᴾ S ⟧
-  ⊕ᴾ-map = {!!}
+  switchL' : ∀ P Q R (pq : ⟦ P ⅋ᴾ Q ⟧) (r : ⟦ R ⟧) → ⟦ P ⅋ᴾ (Q oxᴾ R) ⟧
+  switchL' P Q R pq r = {!switchL-view {!!}!}
+   where
+    switchL-view : ∀ {P Q R}{pq : ⟦ P ⅋ᴾ Q ⟧}{r : ⟦ R ⟧} → ⟦ P ⅋ᴾ (Q oxᴾ R) ⟧
+    switchL-view {P} {Q} {R} {p⅋q} {r} with view-⅋ P Q p⅋q | view-proc R r
+    switchL-view | sendL' P₁ Q₁ m p | vr = {!!}
+    switchL-view | sendR' P₁ Q₁ m p | send M₁ P₂ m₁ p₁ = {!!}
+    switchL-view | sendR' P₁ Q₁ m p | recv M₁ P₂ r₁ = {!!}
+    switchL-view | sendR' P₁ Q₁ m p | end = {!!}
+    switchL-view | recvL' P₁ Q₁ p | send M₁ P₂ m p₁ = {!!}
+    switchL-view | recvL' P₁ Q₁ p | recv M₁ P₂ r₁ = {!!}
+    switchL-view | recvL' P₁ Q₁ p | end = {!!}
+    switchL-view | recvR' P₁ Q₁ p | send M₁ P₂ m p₁ = {!!}
+    switchL-view | recvR' P₁ Q₁ p | recv M₁ P₂ r₁ = {!!}
+    switchL-view | recvR' P₁ Q₁ p | end = {!!}
+    switchL-view | endL Q₁ pq₁ | send M P₁ m p = {!!}
+    switchL-view | endL Q₁ pq₁ | recv M P₁ r₁ = {!!}
+    switchL-view | endL Q₁ pq₁ | end = {!!}
+    switchL-view | endR P₁ pq₁ | send M P₂ m p = {!!}
+    switchL-view | endR P₁ pq₁ | recv M P₂ r₁ = {!!}
+    switchL-view | endR P₁ pq₁ | end = {!!}
+    {-
+    switchL-view {R = R}{r = r} | sendL' P Q m p = ⅋ᴾ-sendL {!!} m (switchL' {!!} {!!} {!!} p r)
+    switchL-view {R = R}{r = r} | sendR' P Q m p with view-proc R r
+    switchL-view | sendR' {M₁} P₁ Q m₁ p₁ | send M P m p = {!!}
+    switchL-view | sendR' {M₁} P₁ Q m p | recv M P r = {!!}
+    switchL-view | sendR' {M} P Q m p | end = {!!}
+    -- {!⅋ᴾ-map (com P) (com P) (Q m oxᴾ R) (Σᴾ M Q oxᴾ R) id (oxᴾ-map (Q m) (Σᴾ M Q) R R (_,_ m) id) (switchL-view (com P) (Q m) R p r)!}
+    switchL-view {R = R}{r = r} | recvL' P Q p = ⅋ᴾ-recvL (com Q oxᴾ R) λ m → switchL' (P m) (com Q) R (p m) r
+    switchL-view {R = R}{r = r} | recvR' (Πᶜ M' P) Q p = {!!} -- ⅋ᴾ-map (com P) (com P) {!!} (Πᴾ M Q oxᴾ R) id {!!} {!!}
+    switchL-view {R = R}{r = r} | recvR' (Σᶜ M' P) Q p = {!!} -- ⅋ᴾ-map (com P) (com P) {!!} (Πᴾ M Q oxᴾ R) id {!!} {!!}
+    switchL-view {R = R}{r = r} | endL Q p⅋q = commaᴾ Q R p⅋q r
+    switchL-view {R = R}{r = r} | endR P p⅋q = par (com P) R p⅋q r
+  -}
+  -}
 
-  &ᴾ-map : ∀ P Q R S → (⟦ P ⟧ → ⟦ Q ⟧) → (⟦ R ⟧ → ⟦ S ⟧) → ⟦ P &ᴾ R ⟧ → ⟦ Q &ᴾ S ⟧
-  &ᴾ-map = {!!}
+  ⊕ᴾ-map : ∀ {P Q R S} → (⟦ P ⟧ → ⟦ Q ⟧) → (⟦ R ⟧ → ⟦ S ⟧) → ⟦ P ⊕ᴾ R ⟧ → ⟦ Q ⊕ᴾ S ⟧
+  ⊕ᴾ-map f g (`L , pr) = `L , f pr
+  ⊕ᴾ-map f g (`R , pr) = `R , g pr
 
+  &ᴾ-map : ∀ {P Q R S} → (⟦ P ⟧ → ⟦ Q ⟧) → (⟦ R ⟧ → ⟦ S ⟧) → ⟦ P &ᴾ R ⟧ → ⟦ Q &ᴾ S ⟧
+  &ᴾ-map f g p `L = {!!}
+  &ᴾ-map f g p `R = {!!}
+  -}
+
+  {-
 
     {-
 _⟹_ : Proto → Proto → ★₁
