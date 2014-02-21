@@ -688,20 +688,26 @@ module _
   ⅋ᴾ-sendR (Σᴾ M P) m p = inr m , p
   ⅋ᴾ-sendR (Πᴾ M P) m p = λ x → ⅋ᴾ-sendR (P x) m (p x)
 
+  ⅋ᴾ-isendR : ∀ {M'} P Q → ⟦ P ⅋ᴾ Πᴾ M' Q ⟧ → (m' : M') → ⟦ P ⅋ᴾ Q m' ⟧
+  ⅋ᴾ-isendR end Q s m' = s m'
+  ⅋ᴾ-isendR (Πᴾ M P) Q s m' = λ m → ⅋ᴾ-isendR (P m) Q (s m) m'
+  ⅋ᴾ-isendR (Σᴾ M P) Q s m' = s m'
+
   ⅋ᴾ-sendL : ∀ {M}{P : M → Proto} Q (m : M) → ⟦ P m ⅋ᴾ Q ⟧ → ⟦ Σᴾ M P ⅋ᴾ Q ⟧
   ⅋ᴾ-sendL {P = P} end      m p = m , ⅋ᴾ-rend (P m) p
-  ⅋ᴾ-sendL         (Πᴾ M Q) m p = λ m' → ⅋ᴾ-sendL (Q m') m {!p!}
-  ⅋ᴾ-sendL         (Σᴾ M Q) m p = {!!} , p
+  ⅋ᴾ-sendL {P = P} (Πᴾ M Q) m p = λ m' → ⅋ᴾ-sendL (Q m') m (⅋ᴾ-isendR (P m) _ p m')
+  ⅋ᴾ-sendL         (Σᴾ M Q) m p = inl m , p
 
-  {-
-  ⅋ᴾ-sendR : ∀ {M} P Q → ⟦ P ⅋ᴾ Πᴾ M Q ⟧ → (m : M) → ⟦ P ⅋ᴾ Q m ⟧
-  ⅋ᴾ-sendR P Q s m = {!!}
-  -}
 
   ⅋ᴾ-recvR : ∀ {M} P Q → ((m : M) → ⟦ P ⅋ᴾ Q m ⟧) → ⟦ P ⅋ᴾ Πᴾ M Q ⟧
   ⅋ᴾ-recvR end      Q s = s
   ⅋ᴾ-recvR (Πᴾ M P) Q s = λ x → ⅋ᴾ-recvR (P x) Q (λ m → s m x)
   ⅋ᴾ-recvR (Σᴾ M P) Q s = s
+
+  ⅋ᴾ-id : ∀ P → ⟦ dual P ⅋ᴾ P ⟧
+  ⅋ᴾ-id end = 0₁
+  ⅋ᴾ-id (Πᴾ M P) = λ x → ⅋ᴾ-sendL (P x) x (⅋ᴾ-id (P x))
+  ⅋ᴾ-id (Σᴾ M P) = λ x → ⅋ᴾ-sendR (dual (P x)) x (⅋ᴾ-id (P x))
 
   mutual
     ⅋ᴾ-! : ∀ P Q → ⟦ P ⅋ᴾ Q ⟧ → ⟦ Q ⅋ᴾ P ⟧
