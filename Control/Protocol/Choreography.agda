@@ -622,6 +622,23 @@ module _
   P      ⅋ᴾ Πᴾ M  Q = Πᴾ M λ m → P ⅋ᴾ Q m
   Σᴾ M P ⅋ᴾ Σᴾ M' Q = Σᴾ (M ⊎ M') [inl: (λ m → P m ⅋ᴾ Σᴾ M' Q)
                                   ,inr: (λ m' → Σᴾ M P ⅋ᴾ Q m') ]
+  _⊗ᴾ_ : Proto → Proto → Proto
+  end    ⊗ᴾ Q       = Q
+  Σᴾ M P ⊗ᴾ Q       = Σᴾ M λ m → P m ⊗ᴾ Q
+  P      ⊗ᴾ end     = P
+  P      ⊗ᴾ Σᴾ M  Q = Σᴾ M λ m → P ⊗ᴾ Q m
+  Πᴾ M P ⊗ᴾ Πᴾ M' Q = Πᴾ (M ⊎ M') [inl: (λ m → P m ⊗ᴾ Πᴾ M' Q)
+                                  ,inr: (λ m' → Πᴾ M P ⊗ᴾ Q m') ]
+
+  ⊗⅋-dual : ∀ P Q → dual (P ⅋ᴾ Q) ≡ᴾ dual P ⊗ᴾ dual Q
+  ⊗⅋-dual end Q = ≡ᴾ-refl _
+  ⊗⅋-dual (Πᴾ M P) Q = com refl M (λ m → ⊗⅋-dual (P m) _)
+  ⊗⅋-dual (Σᴾ M P) end = ≡ᴾ-refl _
+  ⊗⅋-dual (Σᴾ M P) (Πᴾ M' Q) = com refl M' (λ m' → ⊗⅋-dual (Σᴾ M P) (Q m'))
+  ⊗⅋-dual (Σᴾ M P) (Σᴾ M' Q) = com refl (M ⊎ M')
+    [inl: (λ m → ⊗⅋-dual (P m) (Σᴾ M' Q))
+    ,inr: (λ m' → ⊗⅋-dual (Σᴾ M P) (Q m'))
+    ]
 
   data View-⅋ : ∀ P Q → ⟦ P ⅋ᴾ Q ⟧ → ★₁ where
     sendL' : ∀ {M M'}(P : M → Proto)(Q : M' → Proto)(m  : M )(p : ⟦ P m ⅋ᴾ Σᴾ M' Q ⟧) → View-⅋ (Σᴾ M P) (Σᴾ M' Q) (inl m  , p)
