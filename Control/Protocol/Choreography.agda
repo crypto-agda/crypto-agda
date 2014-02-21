@@ -4,7 +4,7 @@ open import Coinduction
 open import Function.NP
 open import Type
 open import Level.NP
-open import Data.Product.NP renaming (map to ×-map)
+open import Data.Product.NP renaming (map to ×-map; proj₁ to fst; proj₂ to snd)
 open import Data.Zero
 open import Data.Sum renaming (inj₁ to inl; inj₂ to inr; [_,_] to [inl:_,inr:_])
 open import Data.One hiding (_≟_)
@@ -149,11 +149,16 @@ data Proto☐ : Proto → ★₁ where
 ⟦_⟧ᴵᴼ Out = Σ
 
 ⟦_⟧ : Proto → ★
-⟦ end       ⟧ = 𝟙
+⟦ end        ⟧ = 𝟙
 ⟦ com' q M P ⟧ = ⟦ q ⟧ᴵᴼ M λ m → ⟦ P m ⟧
 
 ⟦_⊥⟧ : Proto → ★
 ⟦ P ⊥⟧ = ⟦ dual P ⟧
+
+⟦_⟧⟨_≈_⟩ : (P : Proto) (p q : ⟦ P ⟧) → ★
+⟦ end    ⟧⟨ p ≈ q ⟩ = 𝟙
+⟦ Πᴾ M P ⟧⟨ p ≈ q ⟩ = (m : M) → ⟦ P m ⟧⟨ p m ≈ q m ⟩
+⟦ Σᴾ M P ⟧⟨ p ≈ q ⟩ = Σ (fst p ≡ fst q) λ e → ⟦ P (fst q) ⟧⟨ subst (⟦_⟧ ∘ P) e (snd p) ≈ snd q ⟩
 
 _×'_ : ★ → Proto → Proto
 M ×' P = Σᴾ M λ _ → P
@@ -583,7 +588,7 @@ module Equivalences
   A ≃ B = Σ (A → B) Equiv
 
   module _ {a}{b}{A : ★_ a}{B : A → ★_ b} where
-    Σ-ext : ∀ {x y : Σ A B} → (p : proj₁ x ≡ proj₁ y) → subst B p (proj₂ x) ≡ proj₂ y → x ≡ y
+    Σ-ext : ∀ {x y : Σ A B} → (p : fst x ≡ fst y) → subst B p (snd x) ≡ snd y → x ≡ y
     Σ-ext refl = cong (_,_ _)
 
 data ViewProc : ∀ P → ⟦ P ⟧ → ★₁ where
@@ -975,7 +980,7 @@ module V4
     ⅋ᴾ-∘-view (recvR-sendL P Q R p m q) = ⅋ᴾ-∘ (com P) (Q m) (com R) (p m) q
     ⅋ᴾ-∘-view (endL Q R pq qr)          = ⅋ᴾ-apply' {Q} {R} qr pq
     ⅋ᴾ-∘-view (endM P R pq qr)          = par (com P) R pq qr
-    ⅋ᴾ-∘-view (endR P Q pq qr)          = ⅋ᴾ-apply {com Q} {com P} (proj₁ (⅋ᴾ-comm (com P) (com Q)) pq) qr
+    ⅋ᴾ-∘-view (endR P Q pq qr)          = ⅋ᴾ-apply {com Q} {com P} (fst (⅋ᴾ-comm (com P) (com Q)) pq) qr
 
   oxᴾ-map : ∀ P Q R S → (⟦ P ⟧ → ⟦ Q ⟧) → (⟦ R ⟧ → ⟦ S ⟧) → ⟦ P oxᴾ R ⟧ → ⟦ Q oxᴾ S ⟧
   oxᴾ-map P Q R S f g p = commaᴾ Q S (f (oxᴾ-fst P R p)) (g (oxᴾ-snd P R p))
