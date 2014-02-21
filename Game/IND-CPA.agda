@@ -1,4 +1,4 @@
-{-# OPTIONS --without-K #-}
+{-# OPTIONS --without-K --copatterns #-}
 open import Type
 open import Function
 open import Data.Product
@@ -7,6 +7,7 @@ open import Data.One
 open import Data.Two
 open import Game.GenChal as GenChal
 open import Control.Protocol.Core
+open import Relation.Binary.PropositionalEquality
 
 module Game.IND-CPA
   (PubKey     : ★)
@@ -24,8 +25,9 @@ module Game.IND-CPA
 challenge : PubKey → 𝟚 → Message ² → Rₑ → CipherText
 challenge pk b m rₑ = Enc pk (m b) rₑ
 
-module CPA-Proto = GenChal PubKey (const 𝟘) (λ()) (Message ²)  CipherText end
-module CPA-ProtoImplem = CPA-Proto.Implementation SecKey 𝟚 {𝟙} _ (λ _ ()) challenge
+-- Using the generic protocol
+module CPA-Proto = GenChal PubKey (const 𝟘) (λ()) (Message ²)  CipherText 𝟚
+module CPA-challenger = CPA-Proto.Challenger-implementation 𝟙 𝟚 (λ _ ()) challenge
 
 -- IND-CPA adversary in two parts
 record Adversary : ★ where
@@ -42,6 +44,17 @@ record Adversary : ★ where
     -- computed by the challenger. The adversary has to guess which
     -- message (m₀, m₁) has been encrypted.
     b′ : Rₐ → PubKey → CipherText → 𝟚
+
+Adversaryᴳ : ★
+Adversaryᴳ = Rₐ → El 𝟙 (CPA-Proto.Adversary-proto.Main)
+
+Adversary→Adversaryᴳ : Adversary → Adversaryᴳ
+Adversary→Adversaryᴳ A rₐ pk = done (A.m rₐ pk , (λ c → done (A.b′ rₐ pk c , _)))
+  where module A = Adversary A
+
+Adversaryᴳ→Adversary : Adversaryᴳ → Adversary
+Adversary.m  (Adversaryᴳ→Adversary Aᴳ) rₐ pk   = proj₁ (un-client0 (Aᴳ rₐ pk))
+Adversary.b′ (Adversaryᴳ→Adversary Aᴳ) rₐ pk c = proj₁ (un-client0 (proj₂ (un-client0 (Aᴳ rₐ pk)) c))
 
 -- IND-CPA randomness supply
 R : ★
@@ -76,11 +89,24 @@ EXP₁ = EXP 1₂
 game : Adversary → (𝟚 × R) → 𝟚
 game A (b , r) = b == EXP b A r
 
-open import Relation.Binary.PropositionalEquality
-{-
-pf : ∀ b pk sk rₑ → CPA-ProtoImplem.main b pk sk rₑ ≡ (pk , ((λ m → Enc pk (m b) rₑ , (_ , (λ()))) , (λ())))
-pf b pk sk rₑ = cong₂ _,_ refl {!cong₂ _,_!}
--}
+-- Generic
+module _ where
+    Experimentᴳ : ★
+    Experimentᴳ = Adversaryᴳ → R → 𝟚
+
+    EXPᴳ : 𝟚 → Experimentᴳ
+    EXPᴳ b A (rₐ , rₖ , rₑ , _rₓ) = CPA-challenger.main-com b pk _ rₑ (A rₐ)
+      where
+        pk  = proj₁ (KeyGen rₖ)
+
+    EXP≡EXPᴳ : EXP ≡ (λ b → EXPᴳ b ∘ Adversary→Adversaryᴳ)
+    EXP≡EXPᴳ = refl
+
+    gameᴳ : Adversaryᴳ → (𝟚 × R) → 𝟚
+    gameᴳ Aᴳ (b , r) = b == EXPᴳ b Aᴳ r
+
+    game≡gameᴳ : game ≡ gameᴳ ∘ Adversary→Adversaryᴳ
+    game≡gameᴳ = refl
 
 module _
   (Dist : ★)

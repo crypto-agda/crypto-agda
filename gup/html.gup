@@ -1,2 +1,2 @@
 #!/bin/bash -eu
-exec agda-pkg -cagda-pkg.conf --html crypto-agda.agda
+exec agda-pkg -cagda-pkg.conf +RTS -M2G -RTS --html crypto-agda.agda

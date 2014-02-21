@@ -1,6 +1,8 @@
+{-# OPTIONS --without-K --copatterns #-}
 open import Function
 open import Type
 open import Level
+open import Data.Zero
 open import Data.Product
 
 module Control.Protocol.Core where
@@ -71,3 +73,11 @@ module _ {A B} where
   com (Σ' A B) (x , y) f = com (B x) y (f x)
   com (Client' Q R P) c s = let (x , y) = Server-Com s c in com P y x
   com (Server' Q R P) s c = let (x , y) = Server-Com s c in com P x y
+
+un-client0 : ∀ {R P} → Client 𝟘 R P → P
+un-client0 (done x) = x
+un-client0 (ask () _)
+
+server0 : ∀ {R P} → P → Server 𝟘 R P
+srv-done (server0 p) = p
+srv-ask  (server0 _) ()
