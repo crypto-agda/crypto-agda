@@ -721,6 +721,22 @@ module _
     ⅋ᴾ-!-view (endL Q pq) = {!!}
     ⅋ᴾ-!-view (endR P pq) = {!!}
 
+  commaᴾ : ∀ P Q → ⟦ P ⟧ → ⟦ Q ⟧ → ⟦ P ⊗ᴾ Q ⟧
+  commaᴾ P Q p q with view-proc P p | view-proc Q q
+  commaᴾ .(com (mk Out M P)) Q .(m , p) q | send M P m p | q' = m , commaᴾ (P m) Q p q
+  commaᴾ .(com (mk In M P)) .(com (mk Out M₁ P₁)) p .(m , p₁) | recv M P .p | send M₁ P₁ m p₁ = m , commaᴾ (Πᴾ M P) (P₁ m) p p₁
+  commaᴾ ._ ._ ._ ._ | recv M P p | recv M₁ P₁ x = [inl: (λ m → commaᴾ (P m) (Πᴾ _ P₁) (p m) x)
+                                                   ,inr: (λ m' → commaᴾ (Πᴾ _ P) (P₁ m') p (x m') ) ]
+  commaᴾ ._ ._ ._ ._ | recv M P x | end = x
+  commaᴾ .end Q .0₁ q | end | q' = q
+
+  ⊗ᴾ-fst : ∀ P Q → ⟦ P ⊗ᴾ Q ⟧ → ⟦ P ⟧
+  ⊗ᴾ-fst end      Q        pq       = _
+  ⊗ᴾ-fst (Σᴾ M P) Q        (m , pq) = m , ⊗ᴾ-fst (P m) Q pq
+  ⊗ᴾ-fst (Πᴾ M P) end      pq       = pq
+  ⊗ᴾ-fst (Πᴾ M P) (Σᴾ _ Q) (_ , pq) = ⊗ᴾ-fst (Πᴾ M P) (Q _) pq
+  ⊗ᴾ-fst (Πᴾ M P) (Πᴾ N Q) pq       = λ m → ⊗ᴾ-fst (P m) (Πᴾ N Q) (pq (inl m))
+
   {-
   end Q p = ⅋ᴾ-rend' Q p
   {-
