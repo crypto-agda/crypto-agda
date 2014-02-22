@@ -17,12 +17,14 @@ open import Relation.Binary.PropositionalEquality.NP as ≡
 
 module Control.Protocol.Choreography where
 
+postulate
+    FunExt : ★
+    funExt : ∀ {a}{b}{A : ★_ a}{B : A → ★_ b}{f g : (x : A) → B x} → (∀ x → f x ≡ g x) → {{fe : FunExt}} → f ≡ g
+
 Contractible : ∀ {a}{A : ★_ a}(x : A) → ★_ a
 Contractible x = ∀ y → x ≡ y
 
-module Equivalences
-  (funExt : ∀ {a}{b}{A : ★_ a}{B : A → ★_ b}{f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g)
-  where
+module Equivalences where
 
   record Equiv {A B : ★}(f : A → B) : ★ where
     field
@@ -83,6 +85,7 @@ module Equivalences
   module _ {a}{b}{A : ★_ a}{B : A → ★_ b} where
     Σ-ext : ∀ {x y : Σ A B} → (p : fst x ≡ fst y) → subst B p (snd x) ≡ snd y → x ≡ y
     Σ-ext refl = cong (_,_ _)
+open Equivalences
 
 Π· : ∀ {a b}(A : ★_ a) → (B : ..(_ : A) → ★_ b) → ★_ (a ⊔ b)
 Π· A B = ..(x : A) → B x
@@ -309,9 +312,7 @@ M →' P = Πᴾ M λ _ → P
 
 _∙ᴾ_ = ≡ᴾ-trans
 
-module _
-  (funExt : ∀ {a}{b}{A : ★_ a}{B : A → ★_ b}{f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g)
-  where
+module _ {{_ : FunExt}} where
     ≡ᴾ-sound : ∀ {P Q} → P ≡ᴾ Q → P ≡ Q
     ≡ᴾ-sound end              = refl
     ≡ᴾ-sound (com refl M P≡Q) = cong (com' _ M) (funExt λ m → ≡ᴾ-sound (P≡Q m))
@@ -354,10 +355,7 @@ sink : ∀ P → Sink P
 sink end            = _
 sink (com' _ M P) x = sink (P x)
 
-module _
-  (funExt : ∀ {a}{b}{A : ★_ a}{B : A → ★_ b}{f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g)
-  where
-    open Equivalences funExt
+module _ {{_ : FunExt}} where
     sink-contr : ∀ P → Contractible (sink P)
     sink-contr end          s = refl
     sink-contr (com' _ _ P) s = funExt λ m → sink-contr (P m) (s m)
@@ -629,7 +627,7 @@ El : (P : Proto) → (Log P → ★) → ★
 El end         X = X _
 El (com' q M P) X = ⟦ q ⟧ᴵᴼ M λ x → El (P x) (λ y → X (x , y))
 
-module ElBind (funExt : ∀ {a b}{A : ★_ a}{B : A → ★_ b}{f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g)where
+module ElBind {{_ : FunExt}} where
 
   El->>= : (P : Proto){Q : Log P → Proto}{X : Log (P >>= Q) → ★} → El (P >>= Q) X ≡ El P (λ x → El (Q x) (λ y → X (++Log P x y)))
   El->>= end         = refl
@@ -679,9 +677,9 @@ module ClientServerV2 (Query : ★₀) (Resp : Query → ★₀) where
       server zero      = _
       server (suc n) q = serve q , server n
 
-module _ (funExt : ∀ {a b}{A : ★_ a}{B : A → ★_ b}{f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g)where
+module _ {{_ : FunExt}} where
   dual-Log : ∀ P → Log (dual P) ≡ Log P
-  dual-Log P = cong ⟦_⟧ (≡ᴾ-sound funExt (source-of-dual-oblivious P))
+  dual-Log P = cong ⟦_⟧ (≡ᴾ-sound (source-of-dual-oblivious P))
 
 dual->> : ∀ P Q → dual (P >> Q) ≡ᴾ dual P >> dual Q
 dual->> end Q = ≡ᴾ-refl _
@@ -695,27 +693,26 @@ dual->> (Σᴾ M P) Q = com refl M (λ m → dual->> (P m) Q)
   dual->>= (Σᴾ M P) Q = ProtoRel.com refl M (λ m → {!!})
   -}
 
-module _
-  (funExt : ∀ {a}{b}{A : ★_ a}{B : A → ★_ b}{f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g)
-  (P : Proto) where
+module _ {{_ : FunExt}} (P : Proto) where
     dual-replicateᴾ : ∀ n → dual (replicateᴾ n P) ≡ᴾ replicateᴾ n (dual P)
     dual-replicateᴾ zero    = end
-    dual-replicateᴾ (suc n) = dual->> P (replicateᴾ n P) ∙ᴾ ≡ᴾ-cong funExt (_>>_ (dual P)) (dual-replicateᴾ n)
+    dual-replicateᴾ (suc n) = dual->> P (replicateᴾ n P) ∙ᴾ ≡ᴾ-cong (_>>_ (dual P)) (dual-replicateᴾ n)
 
 data ProcessF (this : Proto → ★₁): Com → ★₁ where
   recv : ∀ {M P} (s : (m : M) → this (P m)) → ProcessF this (Πᶜ M P)
   send : ∀ {M P} (m : M) (s : this (P m)) → ProcessF this (Σᶜ M P)
 
-recvS : ∀ {this : Proto → ★₁}{M}{P : ☐ M → Proto} → (..(m : M) → this (P [ m ])) → ProcessF this (Πᶜ (☐ M) P)
-recvS = recv ∘ un☐
+recv☐ : ∀ {this : Proto → ★₁}{M}{P : ☐ M → Proto} → (..(m : M) → this (P [ m ])) → ProcessF this (Πᶜ (☐ M) P)
+recv☐ = recv ∘′ un☐
 
-sendS : ∀ {this : Proto → ★₁}{M}{P : ☐ M → Proto} ..(m : M) → this (P [ m ]) → ProcessF this (Σᶜ (☐ M) P)
-sendS m = send [ m ]
+send☐ : ∀ {this : Proto → ★₁}{M}{P : ☐ M → Proto} ..(m : M) → this (P [ m ]) → ProcessF this (Σᶜ (☐ M) P)
+send☐ m = send [ m ]
 
 data Process : Proto → ★₁ where
   end : Process end
   com : ∀ {P} → ProcessF Process P → Process (com P)
 
+{-
 mutual
   SimL : Com → Proto → ★₁
   SimL P Q = ProcessF (flip Sim Q) P
@@ -816,7 +813,7 @@ postulate
 ≈ˢ-trans (≈-sendR m x) (≈-sendR .m x₁) = ≈-sendR m (≈ˢ-trans x x₁)
 ≈ˢ-trans (≈-recvL x) (≈-recvL x₁) = ≈-recvL (λ m → ≈ˢ-trans (x m) (x₁ m))
 ≈ˢ-trans (≈-recvR x) (≈-recvR x₁) = ≈-recvR (λ m → ≈ˢ-trans (x m) (x₁ m))
-
+-}
 data LR : ★ where
   `L `R : LR
 
@@ -830,23 +827,29 @@ l ⊕ᴾ r = Σᴾ LR [L: l R: r ]
 _&ᴾ_ : (l r : Proto) → Proto
 l &ᴾ r = Πᴾ LR [L: l R: r ]
 
-⊕ᴾ-map : ∀ {P Q R S} → (⟦ P ⟧ → ⟦ Q ⟧) → (⟦ R ⟧ → ⟦ S ⟧) → ⟦ P ⊕ᴾ R ⟧ → ⟦ Q ⊕ᴾ S ⟧
-⊕ᴾ-map f g (`L , pr) = `L , f pr
-⊕ᴾ-map f g (`R , pr) = `R , g pr
+module _ {P Q R S} where
+    ⊕ᴾ-map : (⟦ P ⟧ → ⟦ Q ⟧) → (⟦ R ⟧ → ⟦ S ⟧) → ⟦ P ⊕ᴾ R ⟧ → ⟦ Q ⊕ᴾ S ⟧
+    ⊕ᴾ-map f g (`L , pr) = `L , f pr
+    ⊕ᴾ-map f g (`R , pr) = `R , g pr
 
-&ᴾ-map : ∀ {P Q R S} → (⟦ P ⟧ → ⟦ Q ⟧) → (⟦ R ⟧ → ⟦ S ⟧) → ⟦ P &ᴾ R ⟧ → ⟦ Q &ᴾ S ⟧
-&ᴾ-map f g p `L = f (p `L)
-&ᴾ-map f g p `R = g (p `R)
+    &ᴾ-map : (⟦ P ⟧ → ⟦ Q ⟧) → (⟦ R ⟧ → ⟦ S ⟧) → ⟦ P &ᴾ R ⟧ → ⟦ Q &ᴾ S ⟧
+    &ᴾ-map f g p `L = f (p `L)
+    &ᴾ-map f g p `R = g (p `R)
+
+module _ {P Q} where
+    ⊕ᴾ→⊎ : ⟦ P ⊕ᴾ Q ⟧ → ⟦ P ⟧ ⊎ ⟦ Q ⟧
+    ⊕ᴾ→⊎ (`L , p) = inl p
+    ⊕ᴾ→⊎ (`R , q) = inr q
+
+    ⊎→⊕ᴾ : ⟦ P ⟧ ⊎ ⟦ Q ⟧ → ⟦ P ⊕ᴾ Q ⟧
+    ⊎→⊕ᴾ (inl p) = `L , p
+    ⊎→⊕ᴾ (inr q) = `R , q
 
 _>>ᶜ_ : (P : Com) → (Proto → Proto) → Com
 Pᶜ >>ᶜ S = record Pᶜ { P = λ m → S (P m) }
   where open Com_ Pᶜ
 
-module _
-  (funExt : ∀ {a}{b}{A : ★_ a}{B : A → ★_ b}{f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g)
-  where
-
-  open Equivalences funExt
+module _ where
 
   _⅋ᴾ_ : Proto → Proto → Proto
   end    ⅋ᴾ Q       = Q
@@ -997,8 +1000,9 @@ module _
   ⅋ᴾ-apply (Σᴾ M P) (Σᴾ M' Q) (inl m , s) p       = ⅋ᴾ-apply (P m) (Σᴾ M' Q) s (p m)
   ⅋ᴾ-apply (Σᴾ M P) (Σᴾ M' Q) (inr m , s) p       = m , ⅋ᴾ-apply (Σᴾ M P) (Q m) s p
 
+module _ {{_ : FunExt}} where
   ⅋ᴾ-apply' : ∀ {P Q} → ⟦ dual P ⅋ᴾ Q ⟧ → ⟦ P ⟧ → ⟦ Q ⟧
-  ⅋ᴾ-apply' {P} {Q} pq p = ⅋ᴾ-apply (dual P) Q pq (subst ⟦_⟧ (≡.sym (≡ᴾ-sound funExt (dual-involutive P))) p)
+  ⅋ᴾ-apply' {P} {Q} pq p = ⅋ᴾ-apply (dual P) Q pq (subst ⟦_⟧ (≡.sym (≡ᴾ-sound (dual-involutive P))) p)
 
   -- left-biased “strategy”
   par : ∀ P Q → ⟦ P ⟧ → ⟦ Q ⟧ → ⟦ P ⅋ᴾ Q ⟧
@@ -1089,9 +1093,7 @@ module _
   ⅋ᴾ-! (Σᴾ M P) (Σᴾ M' Q) (inr m , p) = inl m , (⅋ᴾ-! (com (mk Out M P)) (Q m) p)
 
   {-
-module V4
-  (funExt : ∀ {a}{b}{A : ★_ a}{B : A → ★_ b}{f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g)
-  where
+module V4 {{_ : FunExt}} where
   mutual
     _⅋ᴾ_ : Proto → Proto → Proto
     end   ⅋ᴾ Q     = Q
@@ -1595,9 +1597,7 @@ module _ where
     PQ ≈ PQ' = ∀ {B P' Q' E} → (P'-P : Dual P' P)(Q-Q' : Dual Q Q')(BP : Sim (Trace B) P')(QE : Sim Q' (Trace E))
        → trace (sim-comp P'-P BP (sim-comp Q-Q' PQ QE)) ≡ trace (sim-comp P'-P BP (sim-comp Q-Q' PQ' QE))
 
-module _
-  (funExt : ∀ {a}{b}{A : ★_ a}{B : A → ★_ b}{f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g)
-  where
+module _ {{_ : FunExt}} where
 
   Dual-sym-sym : ∀ {P Q} (P-Q : Dual P Q) → P-Q ≡ Dual-sym (Dual-sym P-Q)
   Dual-sym-sym end = refl
@@ -1608,9 +1608,7 @@ module _
   Dual-sym-sym (Σ·Π☐ x) = cong Σ·Π☐ (funExt (λ y → Dual-sym-sym (x y)))
   -}
 
-module _
-  (funExt : ∀ {a}{b}{A : ★_ a}{B : A → ★_ b}{f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g)
-  where
+module _ {{_ : FunExt}} where
 
   open ≡-Reasoning
   sim-comp-assoc : ∀ {W P P' Q Q' R}(P-P' : Dual P P')(Q-Q' : Dual Q Q')
@@ -1667,8 +1665,7 @@ module _
   sim-comp-id end = refl
   -}
 
-module _
-  (funExt : ∀ {a}{b}{A : ★_ a}{B : A → ★_ b}{f g : (x : A) → B x} → (∀ x → f x ≡ g x) → f ≡ g)
+module _ {{_ : FunExt}}
   where
 
   sim-!! : ∀ {P Q}(PQ : Sim P Q) → PQ ≡ !ˢ (!ˢ PQ)
