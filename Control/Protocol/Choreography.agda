@@ -60,6 +60,7 @@ module Equivalences where
         module G = Equiv gᴱ
         module F = Equiv fᴱ
 
+  infix 0 _≃_
   _≃_ : ★ → ★ → ★
   A ≃ B = Σ (A → B) Equiv
 
@@ -270,10 +271,25 @@ End = End_ _
 ⟦_⊥⟧ : Proto → ★
 ⟦ P ⊥⟧ = ⟦ dual P ⟧
 
-⟦_⟧⟨_≈_⟩ : ∀{ℓ}(P : Proto_ ℓ) (p q : ⟦ P ⟧) → ★_ ℓ
-⟦ end    ⟧⟨ p ≈ q ⟩ = End
-⟦ Πᴾ M P ⟧⟨ p ≈ q ⟩ = (m : M) → ⟦ P m ⟧⟨ p m ≈ q m ⟩
-⟦ Σᴾ M P ⟧⟨ p ≈ q ⟩ = Σ (fst p ≡ fst q) λ e → ⟦ P (fst q) ⟧⟨ subst (⟦_⟧ ∘ P) e (snd p) ≈ snd q ⟩
+ℛ⟦_⟧ : ∀{ℓ}(P : Proto_ ℓ) (p q : ⟦ P ⟧) → ★_ ℓ
+ℛ⟦ end    ⟧ p q = End
+ℛ⟦ Πᴾ M P ⟧ p q = (m : M) → ℛ⟦ P m ⟧ (p m) (q m)
+ℛ⟦ Σᴾ M P ⟧ p q = Σ (fst p ≡ fst q) λ e → ℛ⟦ P (fst q) ⟧ (subst (⟦_⟧ ∘ P) e (snd p)) (snd q)
+
+ℛ⟦_⟧-refl : ∀ {ℓ}(P : Proto_ ℓ) → Reflexive ℛ⟦ P ⟧
+ℛ⟦ end    ⟧-refl     = end
+ℛ⟦ Πᴾ M P ⟧-refl     = λ m → ℛ⟦ P m ⟧-refl
+ℛ⟦ Σᴾ M P ⟧-refl {x} = refl , ℛ⟦ P (fst x) ⟧-refl
+
+ℛ⟦_⟧-sym : ∀ {ℓ}(P : Proto_ ℓ) → Symmetric ℛ⟦ P ⟧
+ℛ⟦ end    ⟧-sym p          = end
+ℛ⟦ Πᴾ M P ⟧-sym p          = λ m → ℛ⟦ P m ⟧-sym (p m)
+ℛ⟦ Σᴾ M P ⟧-sym (refl , q) = refl , ℛ⟦ P _ ⟧-sym q    -- TODO HoTT
+
+ℛ⟦_⟧-trans : ∀ {ℓ}(P : Proto_ ℓ) → Transitive ℛ⟦ P ⟧
+ℛ⟦ end    ⟧-trans p          q          = end
+ℛ⟦ Πᴾ M P ⟧-trans p          q          = λ m → ℛ⟦ P m ⟧-trans (p m) (q m)
+ℛ⟦ Σᴾ M P ⟧-trans (refl , p) (refl , q) = refl , ℛ⟦ P _ ⟧-trans p q    -- TODO HoTT
 
 data ViewProc {ℓ} : ∀ (P : Proto_ ℓ) → ⟦ P ⟧ → ★_(ₛ ℓ) where
   send : ∀ M(P : M → Proto_ ℓ)(m : M)(p : ⟦ P m ⟧) → ViewProc (Σᴾ M P) (m , p)
@@ -814,6 +830,7 @@ postulate
 ≈ˢ-trans (≈-recvL x) (≈-recvL x₁) = ≈-recvL (λ m → ≈ˢ-trans (x m) (x₁ m))
 ≈ˢ-trans (≈-recvR x) (≈-recvR x₁) = ≈-recvR (λ m → ≈ˢ-trans (x m) (x₁ m))
 -}
+
 data LR : ★ where
   `L `R : LR
 
@@ -844,6 +861,35 @@ module _ {P Q} where
     ⊎→⊕ᴾ : ⟦ P ⟧ ⊎ ⟦ Q ⟧ → ⟦ P ⊕ᴾ Q ⟧
     ⊎→⊕ᴾ (inl p) = `L , p
     ⊎→⊕ᴾ (inr q) = `R , q
+
+    ⊎→⊕ᴾ→⊎ : ∀ x → ⊎→⊕ᴾ (⊕ᴾ→⊎ x) ≡ x
+    ⊎→⊕ᴾ→⊎ (`L , _) = refl
+    ⊎→⊕ᴾ→⊎ (`R , _) = refl
+
+    ⊕ᴾ→⊎→⊕ᴾ : ∀ x → ⊕ᴾ→⊎ (⊎→⊕ᴾ x) ≡ x
+    ⊕ᴾ→⊎→⊕ᴾ (inl _) = refl
+    ⊕ᴾ→⊎→⊕ᴾ (inr _) = refl
+
+    ⊕ᴾ≃⊎ : ⟦ P ⊕ᴾ Q ⟧ ≃ ⟦ P ⟧ ⊎ ⟦ Q ⟧
+    ⊕ᴾ≃⊎ = ⊕ᴾ→⊎ , record { linv = ⊎→⊕ᴾ ; is-linv = ⊎→⊕ᴾ→⊎ ; rinv = ⊎→⊕ᴾ ; is-rinv = ⊕ᴾ→⊎→⊕ᴾ }
+
+    &ᴾ→× : ⟦ P &ᴾ Q ⟧ → ⟦ P ⟧ × ⟦ Q ⟧
+    &ᴾ→× p = p `L , p `R
+
+    ×→&ᴾ : ⟦ P ⟧ × ⟦ Q ⟧ → ⟦ P &ᴾ Q ⟧
+    ×→&ᴾ (p , q) `L = p
+    ×→&ᴾ (p , q) `R = q
+
+    &ᴾ→×→&ᴾ : ∀ x → &ᴾ→× (×→&ᴾ x) ≡ x
+    &ᴾ→×→&ᴾ (p , q) = refl
+
+    module _ {{_ : FunExt}} where
+        ×→&ᴾ→× : ∀ x → ×→&ᴾ (&ᴾ→× x) ≡ x
+        ×→&ᴾ→× p = funExt λ { `L → refl ; `R → refl }
+
+        &ᴾ≃× : ⟦ P &ᴾ Q ⟧ ≃ ⟦ P ⟧ × ⟦ Q ⟧
+        &ᴾ≃× = &ᴾ→× , record { linv = ×→&ᴾ ; is-linv = ×→&ᴾ→× ; rinv = ×→&ᴾ ; is-rinv = &ᴾ→×→&ᴾ }
+
 
 _>>ᶜ_ : (P : Com) → (Proto → Proto) → Com
 Pᶜ >>ᶜ S = record Pᶜ { P = λ m → S (P m) }
@@ -1081,6 +1127,35 @@ module _ {{_ : FunExt}} where
   ⊗ᴾ-snd (Πᴾ M P) (Σᴾ _ Q) (m , pq) = m , ⊗ᴾ-snd (Πᴾ M P) (Q m) pq
   ⊗ᴾ-snd (Πᴾ M P) (Πᴾ N Q) pq       = λ m → ⊗ᴾ-snd (Πᴾ M P) (Q m) (pq (inr m))
 
+  ×→⊗ᴾ : ∀ P Q → ⟦ P ⟧ × ⟦ Q ⟧ → ⟦ P ⊗ᴾ Q ⟧
+  ×→⊗ᴾ P Q (p , q) = commaᴾ P Q p q
+
+  ⊗ᴾ→× : ∀ P Q → ⟦ P ⊗ᴾ Q ⟧ → ⟦ P ⟧ × ⟦ Q ⟧
+  ⊗ᴾ→× P Q p = ⊗ᴾ-fst P Q p , ⊗ᴾ-snd P Q p
+
+  ⊗ᴾ-comma-fst : ∀ P Q (p : ⟦ P ⟧)(q : ⟦ Q ⟧) → ⊗ᴾ-fst P Q (commaᴾ P Q p q) ≡ p
+  ⊗ᴾ-comma-fst end      Q        p q = refl
+  ⊗ᴾ-comma-fst (Σᴾ M P) Q        (m , p) q = Σ-ext refl (⊗ᴾ-comma-fst (P m) Q p q)
+  ⊗ᴾ-comma-fst (Πᴾ M P) end      p q = refl
+  ⊗ᴾ-comma-fst (Πᴾ M P) (Σᴾ _ Q) p (m , q) = {!Σ-ext!}
+  ⊗ᴾ-comma-fst (Πᴾ M P) (Πᴾ N Q) p q = {!!}
+  {-
+  ⊗ᴾ-comma-fst end      Q       p  q = refl
+  ⊗ᴾ-comma-fst (com P)  end     p  q = refl
+  ⊗ᴾ-comma-fst (com P)  (com Q) p  q with view-com P p
+  ⊗ᴾ-comma-fst (com ._) (com Q) ._ q | send P m p = cong (_,_ m) (⊗ᴾ-comma-fst (P m) (com Q) p q)
+  ⊗ᴾ-comma-fst (com ._) (com Q) ._ q | recv P p   = funExt λ m → ⊗ᴾ-comma-fst (P m) (com Q) (p m) q
+
+  ⊗ᴾ-comma-snd : ∀ P Q (p : ⟦ P ⟧)(q : ⟦ Q ⟧) → ⊗ᴾ-snd P Q (commaᴾ P Q p q) ≡ q
+  ⊗ᴾ-comma-snd end     Q        p  q = refl
+  ⊗ᴾ-comma-snd (com P) end      p  q = refl
+  ⊗ᴾ-comma-snd (com P) (com Q)  p  q with view-com Q q
+  ⊗ᴾ-comma-snd (Πᴾ _ P) (com ._) p ._ | send Q m q = cong (_,_ m) (⊗ᴾ-comma-snd (Πᴾ _ P) (Q m) p q)
+  ⊗ᴾ-comma-snd (Σᴾ _ P) (com ._) p ._ | send Q m q = cong (_,_ m) (⊗ᴾ-comma-snd (Σᴾ _ P) (Q m) p q)
+  ⊗ᴾ-comma-snd (Πᴾ _ P) (com ._) p ._ | recv Q q   = funExt λ m → ⊗ᴾ-comma-snd (Πᴾ _ P) (Q m) p (q m)
+  ⊗ᴾ-comma-snd (Σᴾ _ P) (com ._) p ._ | recv Q q   = funExt λ m → ⊗ᴾ-comma-snd (Σᴾ _ P) (Q m) p (q m)
+  -}
+
   {-
   end Q p = ⅋ᴾ-rend' Q p
   ⅋ᴾ-! end Q p = ⅋ᴾ-rend' Q p
@@ -1091,6 +1166,55 @@ module _ {{_ : FunExt}} where
   ⅋ᴾ-! (Σᴾ M P) (Πᴾ M' Q) p = λ m' → ⅋ᴾ-! (com (mk Out M P)) (Q m') (p m')
   ⅋ᴾ-! (Σᴾ M P) (Σᴾ M' Q) (inl m , p) = inr m , (⅋ᴾ-! (P m) (com (mk Out M' Q)) p)
   ⅋ᴾ-! (Σᴾ M P) (Σᴾ M' Q) (inr m , p) = inl m , (⅋ᴾ-! (com (mk Out M P)) (Q m) p)
+  -}
+
+module _ {{_ : FunExt}} where
+    Π𝟘-uniq : ∀ (F G : 𝟘 → ★) → Π 𝟘 F ≡ Π 𝟘 G
+    Π𝟘-uniq F G = cong (Π 𝟘) (funExt (λ()))
+
+{-
+A `⊗ B 'times', context chooses how A and B are used
+A `⅋ B 'par', "we" chooses how A and B are used
+A `⊕ B 'plus', select from A or B
+A `& B 'with', offer choice of A or B
+`! A   'of course!', server accept
+`? A   'why not?', client request
+`1     unit for `⊗
+`⊤     unit for `⅋
+`0     unit for `⊕
+`⊥     unit for `&
+-}
+data CLL : ★ where
+  `1 `⊤ `0 `⊥ : CLL
+  _`⊗_ _`⅋_ _`⊕_ _`&_ : (A B : CLL) → CLL
+  -- `!_ `?_ : (A : CLL) → CLL
+
+_⊥ : CLL → CLL
+`1 ⊥ = `⊤
+`⊤ ⊥ = `1
+`0 ⊥ = `⊥
+`⊥ ⊥ = `0
+(A `⊗ B)⊥ = A ⊥ `⅋ B ⊥
+(A `⅋ B)⊥ = A ⊥ `⊗ B ⊥
+(A `⊕ B)⊥ = A ⊥ `& B ⊥
+(A `& B)⊥ = A ⊥ `⊕ B ⊥
+{-
+(`! A)⊥ = `?(A ⊥)
+(`? A)⊥ = `!(A ⊥)
+-}
+
+CLL-proto : CLL → Proto
+CLL-proto `1       = end  -- TODO
+CLL-proto `⊤       = end  -- TODO
+CLL-proto `0       = Πᴾ 𝟘 λ()
+CLL-proto `⊥       = Σᴾ 𝟘 λ()
+CLL-proto (A `⊗ B) = CLL-proto A ⊗ᴾ CLL-proto B
+CLL-proto (A `⅋ B) = CLL-proto A ⅋ᴾ CLL-proto B
+CLL-proto (A `⊕ B) = CLL-proto A ⊕ᴾ CLL-proto B
+CLL-proto (A `& B) = CLL-proto A &ᴾ CLL-proto B
+
+{- The point of this could be to devise a particular equivalence
+   relation for processes. It could properly deal with ⅋. -}
 
   {-
 module V4 {{_ : FunExt}} where
