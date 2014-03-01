@@ -3,7 +3,7 @@ open import Type
 open import Function
 open import Data.Two
 
-open import Control.Protocol.Core
+open import Control.Protocol.CoreOld
 
 module Game.ReceiptFreeness.Protocol
   (PubKey SerialNumber² Receipt Ballot BB Tally CO : ★)
@@ -38,8 +38,10 @@ module Explicit-definitions where
 module Derived-from-IND-CCA2-gen where -- TODO remove
   open import Game.IND-CCA2-gen.Protocol PubKey Q Resp (Receipt ²) SerialNumber²
 
+{-
 module Derived-from-GenChal where -- TODO switch to this one
-  open import Game.GenChal PubKey (const Q) Resp (Receipt ²) SerialNumber² end
+  open import Game.Generic PubKey (const Q) Resp (Receipt ²) SerialNumber² end
+-}
 
 -- -}
 -- -}

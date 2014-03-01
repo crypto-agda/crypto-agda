@@ -12,7 +12,7 @@ open L using (List; _∷_ ; [])
 open import Data.Vec
 
 open import Game.Challenge
-open import Control.Protocol.Core
+open import Control.Protocol.CoreOld
 open import Control.Strategy
 
 open import Relation.Binary.PropositionalEquality.NP as ≡

@@ -5,7 +5,7 @@ open import Data.One
 open import Data.Product
 import Game.IND-CCA2-gen.Protocol
 
-open import Control.Protocol.Core
+open import Control.Protocol.CoreOld
 
 module Game.IND-CCA2-gen.ProtocolImplementation
   -- could be Secret Key

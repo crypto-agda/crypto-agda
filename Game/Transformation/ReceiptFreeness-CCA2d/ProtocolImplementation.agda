@@ -18,7 +18,7 @@ import Game.ReceiptFreeness.ProtocolImplementation
 import Game.IND-CCA2-dagger.ProtocolImplementation
 import Game.Transformation.ReceiptFreeness-CCA2d.Protocol
 
-open import Control.Protocol.Core
+open import Control.Protocol.CoreOld
 open import Control.Protocol.BiSim
 open import Control.Protocol.Reduction
 

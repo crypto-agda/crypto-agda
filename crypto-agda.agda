@@ -9,7 +9,7 @@ import Composition.Horizontal
 import Composition.Vertical
 import Control.Beh
 import Control.Protocol.BiSim
-import Control.Protocol.Core
+import Control.Protocol.CoreOld
 import Control.Protocol.Reduction
 import Control.Strategy
 import Control.Strategy.Utils

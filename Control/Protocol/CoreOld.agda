@@ -5,7 +5,7 @@ open import Level
 open import Data.Zero
 open import Data.Product
 
-module Control.Protocol.Core where
+module Control.Protocol.CoreOld where
 open import Control.Strategy renaming (Strategy to Client) public
 
 Π : ∀ {ℓ ℓ'}(A : ★_ ℓ)(B : A → ★_ ℓ') → ★_ (ℓ ⊔ ℓ')

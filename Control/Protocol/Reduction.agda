@@ -1,6 +1,6 @@
 {-# OPTIONS --copatterns #-}
 open import Type
-open import Control.Protocol.Core
+open import Control.Protocol.CoreOld
 open import Data.Product
 
 module Control.Protocol.Reduction where

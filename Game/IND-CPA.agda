@@ -5,8 +5,8 @@ open import Data.Product
 open import Data.Zero
 open import Data.One
 open import Data.Two
-open import Game.GenChal as GenChal
-open import Control.Protocol.Core
+open import Game.Generic as GenChal
+open import Control.Protocol.CoreOld
 open import Relation.Binary.PropositionalEquality
 
 module Game.IND-CPA

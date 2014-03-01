@@ -1,5 +1,5 @@
 open import Type
-open import Control.Protocol.Core
+open import Control.Protocol.CoreOld
 open import Relation.Binary.PropositionalEquality.NP
 open import Data.Product
 

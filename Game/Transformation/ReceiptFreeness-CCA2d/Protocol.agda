@@ -12,7 +12,7 @@ import Game.IND-CCA2-dagger.Protocol
 
 import Game.ReceiptFreeness.Definitions.Receipt as Receipt
 
-open import Control.Protocol.Core
+open import Control.Protocol.CoreOld
 open import Control.Protocol.Reduction
 
 module Game.Transformation.ReceiptFreeness-CCA2d.Protocol

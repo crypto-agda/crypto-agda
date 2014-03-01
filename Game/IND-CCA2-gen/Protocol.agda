@@ -1,6 +1,6 @@
 
 open import Type
-open import Control.Protocol.Core
+open import Control.Protocol.CoreOld
 open import Function
 
 module Game.IND-CCA2-gen.Protocol

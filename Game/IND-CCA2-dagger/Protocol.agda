@@ -15,7 +15,7 @@ open import Explore.Explorable
 open import Explore.Product
 open Operators
 open import Control.Strategy renaming (run to runStrategy)
-open import Control.Protocol.Core
+open import Control.Protocol.CoreOld
 open import Game.Challenge
 import Game.IND-CPA-utils
 
