@@ -1,7 +1,13 @@
 The HTML highlighted version (not necessarily up to date):
   * http://crypto-agda.github.io/crypto-agda/html/README.html
 
+  Otherwise, a good starting point is README.agda
+
 This development is based on two other sub-projects:
+  * https://github.com/crypto-agda/protocols
+
+    Dependent protocols for communication
+
   * https://github.com/crypto-agda/explore
 
     Big operators as exploration functions in Agda
