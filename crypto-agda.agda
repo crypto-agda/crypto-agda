@@ -48,6 +48,7 @@ import Game.Challenge
 import Game.DDH
 import Game.EntropySmoothing
 import Game.EntropySmoothing.WithKey
+import Game.Generic
 import Game.IND-CCA
 import Game.IND-CCA2-dagger
 import Game.IND-CCA2-dagger.Adversary
@@ -92,6 +93,7 @@ import Game.Transformation.ReceiptFreeness-CCA2d.Simulator
 import Game.Transformation.ReceiptFreeness-CCA2d.SimulatorInst
 --import Game.Transformation.ReceiptFreeness-CCA2d.Valid
 import Language.Simple.Abstract
+import Language.Simple.Free
 import Language.Simple.Interface
 import Language.Simple.Two.Mux
 import Language.Simple.Two.Mux.Normalise
