@@ -1,9 +1,10 @@
 module Control.Strategy where
 
-open import Function
+open import Function.NP
 open import Type using (★)
 open import Category.Monad
 open import Data.Product hiding (map)
+open import Data.List using (List; []; _∷_)
 open import Relation.Binary.PropositionalEquality.NP
 
 data Strategy (Q : ★) (R : Q → ★) (A : ★) : ★ where
@@ -103,6 +104,13 @@ module _ {Q : ★} {R : Q → ★} where
 
     execS : ∀ {A} → M A → S → S
     execS x s = proj₂ (runS x s)
+
+  private
+    Transcript = List (Σ Q R)
+  module TranscriptRun (Oracle : Transcript → Π Q R){A} where
+    runT : M A → Transcript → A × Transcript
+    runT (ask q? cont) t = let r = Oracle t q? in runT (cont r) ((q? , r) ∷ t)
+    runT (done x)      t = x , t
 -- -}
 -- -}
 -- -}
