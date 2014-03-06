@@ -1,8 +1,10 @@
 open import Type
+open import Function.NP
 open import Data.Maybe
+open import Data.One
 open import Data.Two
-open import Data.List.NP
-open import Data.Product.NP
+open import Data.List.NP renaming (map to mapᴸ)
+open import Data.Product.NP renaming (proj₁ to fst; proj₂ to snd)
 open import Relation.Nullary.Decidable
 open import Relation.Nullary
 open import Relation.Binary
@@ -12,10 +14,12 @@ open import Control.Strategy
 
 module ZK.Strong-Fiat-Shamir
   {W Λ : ★}{L : W → Λ → ★}{Prf : Λ → ★}
-  {RP RV RS : ★}{Q : ★}{Resp :    ★}
+  {RP RS : ★}{Q : ★}{Resp :    ★}
   (L? : ∀ w Y → Dec (L w Y))
   (L-to-Prf : ∀ {w Y} → L w Y → Prf Y)
-  (Q? : Decidable (_≡_ {A = Q}))
+  (Prf? : ∀ {Y Y'} → Prf Y → Prf Y' → 𝟚)
+  -- (Prf? : ∀ Y → Decidable (_≡_ {A = Prf Y}))
+  -- (Q? : Decidable (_≡_ {A = Q}))
   where
 
 Random-Oracle : ★
@@ -32,28 +36,43 @@ Challenger-Resp : Adversary-Query → ★
 Challenger-Resp (query-H s) = Resp
 Challenger-Resp (query-create-proof w Y) = Maybe (Prf Y)
 
+Adversary : ★ → ★
+Adversary A = Strategy Adversary-Query Challenger-Resp A
+
 Transcript = List (Σ Adversary-Query Challenger-Resp)
+
+Prfs : ★
+Prfs = List (Σ Λ Prf)
+
+Random-Oracle-List : ★
+Random-Oracle-List = List (Q × Resp)
 
 record Proof-System : ★ where
   field
     Prove  : RP → (w : W)(Y : Λ) → Prf Y
-    Verify : RV → (Y : Λ)(π : Prf Y) → 𝟚
+    Verify : (Y : Λ)(π : Prf Y) → 𝟚
 
-module H-def (ro : Random-Oracle)(t : Transcript)(q : Q) where
+    {-
+module H-def (ro : Random-Oracle)(t : Random-Oracle-List)(q : Q) where
   H : Resp
   H with find (λ { (query-H q' , r) → ⌊ Q? q' q ⌋
                  ; (query-create-proof _ _ , _) → 0₂ }) t
   ... | just (query-H q₁ , r) = r
   ... | _ = ro q
+  -}
 
 record Simulator (PF : Proof-System) : ★ where
   open Proof-System PF
 
   field
+    -- Computing the compound patch to the random oracle
+    H-patch  : RS → Transcript → Random-Oracle → Random-Oracle
+
+    -- Simulate does not patch itself but H-patch does
     Simulate : RS → Transcript → (Y : Λ) → Prf Y
-    verify-sim-spec : (rs : RS)(rv : RV)(t : Transcript)(Y : Λ) →
+    verify-sim-spec : ∀ rs t Y →
                       let π = Simulate rs t Y
-                      in Verify rv Y π ≡ 1₂
+                      in Verify Y π ≡ 1₂
 
 module Is-Zero-Knowledge
   (PF : Proof-System)
@@ -62,18 +81,13 @@ module Is-Zero-Knowledge
 
   open Simulator sim
 
-  Adversary : ★
-  Adversary = Strategy Adversary-Query Challenger-Resp 𝟚
-
   module _ (ro : Random-Oracle) where
 
-    open H-def ro
-
     simulated-Challenger : RS → Transcript → ∀ q → Challenger-Resp q
-    simulated-Challenger rs t (query-H q) = H t q
+    simulated-Challenger rs t (query-H q) = H-patch rs t ro q
     simulated-Challenger rs t (query-create-proof w Y) with L? w Y
-    simulated-Challenger rs t (query-create-proof w Y) | yes p = just (Simulate rs t Y)
-    simulated-Challenger rs t (query-create-proof w Y) | no ¬p = nothing
+    ... | yes p = just (Simulate rs t Y)
+    ... | no ¬p = nothing
 
     real-Challenger : ∀ q → Challenger-Resp q
     real-Challenger (query-H q) = ro q
@@ -86,7 +100,7 @@ module Is-Zero-Knowledge
     challenger 1₂ rs t = simulated-Challenger rs t
 
     open TranscriptRun
-    Experiment : 𝟚 → RS → Adversary → 𝟚 × Transcript
+    Experiment : ∀ {A} → 𝟚 → RS → Adversary A → A × Transcript
     Experiment β rs adv = runT (challenger β rs) adv []
 
 {-
@@ -161,22 +175,57 @@ module Sigma-Protocol
     (sim : Simulator PF)
     (open Is-Zero-Knowledge PF sim)
     {RA : ★}
-    (Adv : Adversary)
+
+    {- The malicious prover -}
+    (Adv : RA → Adversary Prfs)
     (ro : Random-Oracle)
     where
 
-    module Initial-run where
-        K-winning-Transcript : Transcript → 𝟚
-        K-winning-Transcript []            = 1₂
-        K-winning-Transcript ((query-H q , r) ∷ t) = K-winning-Transcript t -- nothing else to check right?
-        K-winning-Transcript ((query-create-proof w Y , nothing) ∷ t) = ?
-        K-winning-Transcript ((query-create-proof w Y , just π)  ∷ t) = ?
-        {-with L? w Y
-        ... | yes p = {!!}
-        ... | no ¬p = {!!}-}
+    Prf-in-Q : ∀ {Y} → Prf Y → Σ Adversary-Query Challenger-Resp → 𝟚
+    Prf-in-Q π (query-H _ , _) = 0₂
+    Prf-in-Q π (query-create-proof _ _ , just π') = Prf? π π'
+    Prf-in-Q π (query-create-proof _ _ , nothing) = 0₂
 
-        game : (w : RA)(β : 𝟚)(rs : RS) → {!!}
-        game w β rs = let (β' , t) = Experiment ro β rs Adv in {!!}
+    module Initial-run (t : Transcript) where
+        Prf-in-Transcript : ∀ {Y} → Prf Y → 𝟚
+        Prf-in-Transcript π = any (Prf-in-Q π) t
+
+        K-winning-prf : Σ Λ Prf → 𝟚
+        K-winning-prf (Y , π) = not (Verify Y π)
+                              ∨ Prf-in-Transcript π
+
+        K-winning-prfs : Prfs → 𝟚
+        K-winning-prfs []   = 1₂
+        K-winning-prfs prfs = any K-winning-prf prfs
+
+    initial-run : (w : RA)(β : 𝟚)(rs : RS) → 𝟚 × Prfs × Transcript
+    initial-run w β rs = let (prfs , t) = Experiment ro β rs (Adv w) in
+                         (Initial-run.K-winning-prfs t prfs , prfs , t)
+
+    Extractor : ★
+    Extractor = Prfs → (init-transcript : Transcript)
+                     → (List (Prfs × Transcript) → Transcript → Π Adversary-Query Challenger-Resp)
+                     × Strategy 𝟙 (const (List (Prfs × Transcript) × Prfs)) (List W)
+
+    valid-witness? : W → Λ → 𝟚
+    valid-witness? w Y = ⌊ L? w Y ⌋
+
+    valid-witnesses? : List W → List Λ → 𝟚
+    valid-witnesses? [] [] = 1₂
+    valid-witnesses? (w ∷ ws) (prf ∷ prfs) = valid-witness? w prf ∧ valid-witnesses? ws prfs
+    valid-witnesses? _ _ = 0₂
+
+    open TranscriptRun
+    module Second-run (w : RA)(prfs : Prfs)(t : Transcript)(K : Extractor) where
+        second-run : 𝟚
+        second-run =
+          case K prfs t of
+          λ { (f , s) →
+          case runT (λ t' _ → case runT (λ t q → f {!mapᴸ snd t'!} t q) (Adv w) [] of λ w → {!!}) s [] of
+          λ { (ws , _) →
+          valid-witnesses? ws (mapᴸ fst prfs)
+          } }
+
 
 -- -}
 -- -}
