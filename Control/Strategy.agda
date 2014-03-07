@@ -111,6 +111,12 @@ module _ {Q : ★} {R : Q → ★} where
     runT : M A → Transcript → A × Transcript
     runT (ask q? cont) t = let r = Oracle t q? in runT (cont r) ((q? , r) ∷ t)
     runT (done x)      t = x , t
+
+    open StatefulRun
+    -- runT is runS where the state is the transcript and the Oracle cannot change it
+    runT-runS : ∀ (str : M A) t → runT str t ≡ runS (λ q s → let r = Oracle s q in r , (q , r) ∷ s) str t
+    runT-runS (ask q? cont) t = let r = Oracle t q? in runT-runS (cont r) ((q? , r) ∷ t)
+    runT-runS (done x)      t = refl
 -- -}
 -- -}
 -- -}
