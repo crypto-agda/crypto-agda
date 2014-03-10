@@ -1,72 +1,81 @@
 open import Type
 open import Function.NP
 open import Data.Maybe
+open import Data.Zero
 open import Data.One
 open import Data.Two
+open import Data.Sum using (_⊎_)
 open import Data.List.NP renaming (map to mapᴸ)
 open import Data.Product.NP renaming (proj₁ to fst; proj₂ to snd)
 open import Relation.Nullary.Decidable
 open import Relation.Nullary
 open import Relation.Binary
-open import Relation.Binary.PropositionalEquality
-
-open import Control.Strategy
+open import Relation.Binary.PropositionalEquality.NP
+open import Control.Strategy using (Strategy; module TranscriptRun; done; ask)
 
 module ZK.Strong-Fiat-Shamir
-  {W Λ : ★}{L : W → Λ → ★}{Prf : Λ → ★}
-  {RS : ★}{Q : ★}{Resp :    ★}
+  {W Λ : ★}{L : W → Λ → ★}
+  (any-W : W)
+  {RS : ★}
   (L? : ∀ w Y → Dec (L w Y))
-  (L-to-Prf : ∀ {w Y} → L w Y → Prf Y)
-  (Prf? : ∀ {Y Y'} → Prf Y → Prf Y' → 𝟚)
-  -- (Prf? : ∀ Y → Decidable (_≡_ {A = Prf Y}))
-  -- (Q? : Decidable (_≡_ {A = Q}))
+  (Λ? : Decidable (_≡_ {A = Λ}))
+  (Eps  : ★)
+  (ε[_] : Eps → ★)
+  (ε0 : Eps)
+  (ε[0] : ε[ ε0 ] ≡ 𝟘)
   where
 
-Random-Oracle : ★
-Random-Oracle = Q → Resp
+module _ {R : ★} where
+    _≋_ : (f g : R → 𝟚) → ★₁
+    f ≋ g = (Σ R (✓ ∘ f)) ≡ (Σ R (✓ ∘ g))
 
-State : (S A : ★) → ★
-State S A = S → A × S
+    _≈_ : (f g : R → 𝟚) → ★₁
+    f ≈ g = ∃₂ λ ε₀ ε₁ →
+            (Σ R (✓ ∘ f) ⊎ ε[ ε₀ ]) ≡ (Σ R (✓ ∘ g) ⊎ ε[ ε₁ ])
 
-data Adversary-Query : ★ where
-  query-H : (q : Q) → Adversary-Query
-  query-create-proof : (w : W)(Y : Λ) → Adversary-Query
+    ≋→≈ : ∀ {f g} → f ≋ g → f ≈ g
+    ≋→≈ f≋g = ε0 , ε0 , ap (flip _⊎_ ε[ ε0 ]) f≋g
 
-Challenger-Resp : Adversary-Query → ★
-Challenger-Resp (query-H s) = Resp
-Challenger-Resp (query-create-proof w Y) = Maybe (Prf Y)
-
-Adversary : ★ → ★
-Adversary A = Strategy Adversary-Query Challenger-Resp A
-
-Transcript = List (Σ Adversary-Query Challenger-Resp)
-
-Prfs : ★
-Prfs = List (Σ Λ Prf)
-
+{-
 Random-Oracle-List : ★
 Random-Oracle-List = List (Q × Resp)
+-}
+
+module Game-Types (Q Resp : ★)(Prf : Λ → ★) where
+  Random-Oracle : ★
+  Random-Oracle = Q → Resp
+
+  data Adversary-Query : ★ where
+    query-H : (q : Q) → Adversary-Query
+    query-create-proof : (w : W)(Y : Λ) → Adversary-Query
+
+  Challenger-Resp : Adversary-Query → ★
+  Challenger-Resp (query-H s) = Resp
+  Challenger-Resp (query-create-proof w Y) = Maybe (Prf Y)
+
+  Adversary : ★ → ★
+  Adversary = Strategy Adversary-Query Challenger-Resp
+
+  Transcript = List (Σ Adversary-Query Challenger-Resp)
+
+  Prfs : ★
+  Prfs = List (Σ Λ Prf)
 
 record Proof-System (RP : ★)(Prf : Λ → ★) : ★ where
   field
     Prove  : RP → (w : W)(Y : Λ) → Prf Y
     Verify : (Y : Λ)(π : Prf Y) → 𝟚
 
-Complete-Proof-System : {RP : ★}{Prf : Λ → ★} → Proof-System RP Prf → ★
-Complete-Proof-System PS = ∀ rp w Y → Verify Y (Prove rp w Y) ≡ 1₂
-  where open Proof-System PS
+  Complete : ★
+  Complete = ∀ rp {w Y} → L w Y → Verify Y (Prove rp w Y) ≡ 1₂
 
-    {-
-module H-def (ro : Random-Oracle)(t : Random-Oracle-List)(q : Q) where
-  H : Resp
-  H with find (λ { (query-H q' , r) → ⌊ Q? q' q ⌋
-                 ; (query-create-proof _ _ , _) → 0₂ }) t
-  ... | just (query-H q₁ , r) = r
-  ... | _ = ro q
-  -}
+  -- Not in the paper but...
+  Sound : ★
+  Sound = ∀ rp {w Y} → Verify Y (Prove rp w Y) ≡ 1₂ → L w Y
 
-record Simulator {RP}(PF : Proof-System RP Prf) : ★ where
+record Simulator (Q : ★)(Resp : ★){Prf RP}(PF : Proof-System RP Prf) : ★ where
   open Proof-System PF
+  open Game-Types Q Resp Prf
 
   field
     -- Computing the compound patch to the random oracle
@@ -74,19 +83,20 @@ record Simulator {RP}(PF : Proof-System RP Prf) : ★ where
 
     -- Simulate does not patch itself but H-patch does
     Simulate : RS → Transcript → (Y : Λ) → Prf Y
-    verify-sim-spec : ∀ rs t Y →
-                      let π = Simulate rs t Y
-                      in Verify Y π ≡ 1₂
+    verify-sim-spec : ∀ rs t Y → Verify Y (Simulate rs t Y) ≡ 1₂
+
+  open Proof-System PF public
+  open Game-Types Q Resp Prf public
 
 module Is-Zero-Knowledge
-  {RP}
+  {RP Prf Q Resp}
+  (L-to-Prf : ∀ {w Y} → L w Y → Prf Y)
   (PF : Proof-System RP Prf)
-  (sim : Simulator PF)
+  (open Proof-System PF)
+  (sim : Simulator Q Resp PF)
+  (open Simulator sim)
+  (ro : Random-Oracle)
   where
-
-  open Simulator sim
-
-  module _ (ro : Random-Oracle) where
 
     simulated-Challenger : RS → Transcript → ∀ q → Challenger-Resp q
     simulated-Challenger rs t (query-H q) = H-patch rs t ro q
@@ -107,8 +117,15 @@ module Is-Zero-Knowledge
     open TranscriptRun
     -- β = 0₂ is real
     -- β = 1₂ is simulated
-    Experiment : ∀ {A} → 𝟚 → RS → Adversary A → A × Transcript
-    Experiment β rs adv = runT (challenger β rs) adv []
+    Experiment : ∀ {Output} → 𝟚 → Adversary Output → RS → Output × Transcript
+    Experiment β adv rs = runT (challenger β rs) adv []
+
+    EXP₀ EXP₁ : Adversary 𝟚 → RS → 𝟚
+    EXP₀ Adv = fst ∘ Experiment 0₂ Adv
+    EXP₁ Adv = fst ∘ Experiment 1₂ Adv
+
+    -- Too strong
+    IsZK = ∀ Adv → EXP₀ Adv ≈ EXP₁ Adv
 
 {-
 -- there exists a simulator, such that for all adversaries they are clueless if
@@ -117,13 +134,93 @@ Zero-Knowledge : Proof-System → ★
 Zero-Knowledge PF = Σ (Simulator PF) (λ sim → {!!})
 -}
 
+module Simulation-Sound-Extractability
+           {RP}{Prf : Λ → ★}
+           (PF : Proof-System RP Prf)
+           (Prf? : ∀ {Y Y'} → Prf Y → Prf Y' → 𝟚)
+           (Q Resp : ★)
+  -- (Prf? : ∀ Y → Decidable (_≡_ {A = Prf Y}))
+           where
+    open Proof-System PF
+    open Game-Types Q Resp Prf
+
+    Prf-in-Q : ∀ {Y} → Prf Y → Σ Adversary-Query Challenger-Resp → 𝟚
+    Prf-in-Q π (query-create-proof _ _ , just π') = Prf? π π'
+    Prf-in-Q π _                                  = 0₂
+
+    HistoryForExtractor = List (Prfs × Transcript)
+
+    ExtractorServerPart =
+         (past-history : HistoryForExtractor) {- previous invocations of Adv -}
+         (on-going-transcript : Transcript)   {- about the current invocation of Adv -}
+       → Π Adversary-Query Challenger-Resp
+
+    Extractor : ★
+    Extractor = Prfs → (init-transcript : Transcript)
+                     → ExtractorServerPart
+                     × Strategy 𝟙 (const (Prfs × Transcript)) (List W)
+
+    valid-witness? : W → Λ → 𝟚
+    valid-witness? w Y = ⌊ L? w Y ⌋
+
+    valid-witnesses? : List W → List Λ → 𝟚
+    valid-witnesses? [] [] = 1₂
+    valid-witnesses? (w ∷ ws) (prf ∷ prfs) = valid-witness? w prf ∧ valid-witnesses? ws prfs
+    valid-witnesses? _ _ = 0₂
+
+    open TranscriptRun
+
+    module _ (t : Transcript) where
+        Prf-in-Transcript : ∀ {Y} → Prf Y → 𝟚
+        Prf-in-Transcript π = any (Prf-in-Q π) t
+
+        K-winning-prf : Σ Λ Prf → 𝟚
+        K-winning-prf (Y , π) = not (Verify Y π)
+                              ∨ Prf-in-Transcript π
+
+        K-winning-prfs : Prfs → 𝟚
+        K-winning-prfs []   = 1₂
+        K-winning-prfs prfs = any K-winning-prf prfs
+
+    module Game
+        (L-to-Prf : ∀ {w Y} → L w Y → Prf Y)
+        (sim : Simulator Q Resp PF)
+        (open Is-Zero-Knowledge L-to-Prf PF sim)
+        {RA : ★}
+
+        {- The malicious prover -}
+        (Adv : RA → Adversary Prfs)
+        (w : RA)(rs : RS)(ro : Q → Resp)(K' : Extractor) where
+
+        initial-result = Experiment ro 1₂ (Adv w) rs
+
+        initial-prfs : Prfs
+        initial-prfs = fst initial-result
+
+        initial-transcript : Transcript
+        initial-transcript = snd initial-result
+
+        K-winning-intial-run : 𝟚
+        K-winning-intial-run = K-winning-prfs initial-transcript initial-prfs
+
+        -- Second run
+
+        K = K' initial-prfs initial-transcript
+
+        Kf = fst K
+        Ks = snd K
+
+        ws = fst (runT (λ h _ → runT (λ t q → Kf (mapᴸ snd h) t q) (Adv w) []) Ks [])
+
+        K-winning-second-run : 𝟚
+        K-winning-second-run = valid-witnesses? ws (mapᴸ fst initial-prfs)
+
 module Sigma-Protocol
   (Commitment Challenge : ★)
   (Σ-Prf : Λ → ★)
   {RP RΣP : ★}
-  (PF : Proof-System RP Prf)
+  (any-RΣP : RΣP)
   where
-  open Proof-System PF
 
   record Σ-Prover : ★ where
     field
@@ -161,109 +258,51 @@ module Sigma-Protocol
     let open Σ-Prover p
     in v Y (mk (get-A r Y) c (get-f r Y c)) ≡ 1₂
 
-  module Special-Honest-Verifier-Zero-Knowledge where
+  record Special-Honest-Verifier-Zero-Knowledge (Σ-proto : Σ-Protocol) : ★ where
+    open Σ-Protocol Σ-proto
+    field
+      Simulate : (Y : Λ)(c : Challenge)(f : Σ-Prf Y) → Commitment
+      Simulate-ok : ∀ Y c f → Σ-verifier Y (mk (Simulate Y c f) c f) ≡ 1₂
+      -- If (c,f) uniformly distributed then (Simulate Y c f , c , f) is
+      -- distributed equaly to ((Σ-verifier ⇄ Σ-prover) r Y c)
 
-    record SHVZK (Σ-proto : Σ-Protocol) : ★ where
-      open Σ-Protocol Σ-proto
-      field
-        Simulate : (Y : Λ)(c : Challenge)(f : Σ-Prf Y) → Commitment
-        Simulate-ok : ∀ Y c f → Σ-verifier Y (mk (Simulate Y c f) c f) ≡ 1₂
-        -- If (c,f) uniformly distributed then (Simulate Y c f , c , f) is
-        -- distributed equaly to ((Σ-verifier ⇄ Σ-prover) r Y c)
+  -- A pair of "Σ-Transcript"s such that the commitment is shared
+  -- and the challenges are different.
+  record Σ-Transcript² Y : ★ where
+    constructor mk
+    field
+      -- The commitment is shared
+      get-A         : Commitment
 
-  module Special-Soundness where
+      -- The challenges...
+      get-c₀ get-c₁ : Challenge
 
-    record SpSo : ★ where
-      field
-        Extract : (Y : Λ)(t₀ t₁ : Σ-Transcript Y) → W
-        Extract-ok : ∀ Y A c₀ c₁ f₀ f₁ → (c₀ ≢ c₁) → L (Extract Y (mk A c₀ f₀) (mk A c₁ f₁)) Y
+      -- ...are different
+      c₀≢c₁         : get-c₀ ≢ get-c₁
 
-  module Simulation-Sound-Extractability where
+      -- The proofs are arbitrary
+      get-f₀ get-f₁ : Σ-Prf Y
 
-    Prf-in-Q : ∀ {Y} → Prf Y → Σ Adversary-Query Challenger-Resp → 𝟚
-    Prf-in-Q π (query-H _ , _) = 0₂
-    Prf-in-Q π (query-create-proof _ _ , just π') = Prf? π π'
-    Prf-in-Q π (query-create-proof _ _ , nothing) = 0₂
-
-    HistoryForExtractor = List (Prfs × Transcript)
-
-    ExtractorServerPart =
-         (past-history : HistoryForExtractor) {- previous invocations of Adv -}
-         (on-going-transcript : Transcript)   {- about the current invocation of Adv -}
-       → Π Adversary-Query Challenger-Resp
-
-    Extractor : ★
-    Extractor = Prfs → (init-transcript : Transcript)
-                     → ExtractorServerPart
-                     × Strategy 𝟙 (const (Prfs × Transcript)) (List W)
-
-    valid-witness? : W → Λ → 𝟚
-    valid-witness? w Y = ⌊ L? w Y ⌋
-
-    valid-witnesses? : List W → List Λ → 𝟚
-    valid-witnesses? [] [] = 1₂
-    valid-witnesses? (w ∷ ws) (prf ∷ prfs) = valid-witness? w prf ∧ valid-witnesses? ws prfs
-    valid-witnesses? _ _ = 0₂
-
-    open TranscriptRun
-    open StatefulRun
-
-    module _ (t : Transcript) where
-        Prf-in-Transcript : ∀ {Y} → Prf Y → 𝟚
-        Prf-in-Transcript π = any (Prf-in-Q π) t
-
-        K-winning-prf : Σ Λ Prf → 𝟚
-        K-winning-prf (Y , π) = not (Verify Y π)
-                              ∨ Prf-in-Transcript π
-
-        K-winning-prfs : Prfs → 𝟚
-        K-winning-prfs []   = 1₂
-        K-winning-prfs prfs = any K-winning-prf prfs
-
-    module Game
-        (sim : Simulator PF)
-        (open Is-Zero-Knowledge PF sim)
-        {RA : ★}
-
-        {- The malicious prover -}
-        (Adv : RA → Adversary Prfs)
-        (w : RA)(rs : RS)(ro : Random-Oracle)(K' : Extractor) where
-
-        initial-result = Experiment ro 1₂ rs (Adv w)
-
-        initial-prfs : Prfs
-        initial-prfs = fst initial-result
-
-        initial-transcript : Transcript
-        initial-transcript = snd initial-result
-
-        K-winning-intial-run : 𝟚
-        K-winning-intial-run = K-winning-prfs initial-transcript initial-prfs
-
-        -- Second run
-
-        K = K' initial-prfs initial-transcript
-
-        Kf = fst K
-        Ks = snd K
-
-        ws = fst (runT (λ h _ → runT (λ t q → Kf (mapᴸ snd h) t q) (Adv w) []) Ks [])
-
-        K-winning-second-run : 𝟚
-        K-winning-second-run = valid-witnesses? ws (mapᴸ fst initial-prfs)
+  record Special-Soundness : ★ where
+    field
+      Extract    : ∀ {Y}(t : Σ-Transcript² Y) → W
+      Extract-ok : ∀ {Y}(t : Σ-Transcript² Y) → L (Extract t) Y
 
   module Fiat-Shamir-Transformation
               (Σ-proto : Σ-Protocol)
-              (shvzk : Special-Honest-Verifier-Zero-Knowledge.SHVZK Σ-proto)
+              (shvzk : Special-Honest-Verifier-Zero-Knowledge Σ-proto)
               where
 
       open Σ-Protocol Σ-proto
-      open Special-Honest-Verifier-Zero-Knowledge.SHVZK shvzk
+      open Special-Honest-Verifier-Zero-Knowledge shvzk
 
-      sFS : (H : (Λ × Commitment) → Challenge) → Proof-System RΣP (λ Y → Challenge × Σ-Prf Y)
+      FS-Prf : Λ → ★
+      FS-Prf Y = Challenge × Σ-Prf Y
+
+      sFS : (H : (Λ × Commitment) → Challenge) → Proof-System RΣP FS-Prf
       sFS H = record { Prove = sFS-Prove ; Verify = sFS-Verify }
         where
-          sFS-Prove : RΣP → W → (Y : Λ) → (Challenge × Σ-Prf Y)
+          sFS-Prove : RΣP → W → (Y : Λ) → FS-Prf Y
           sFS-Prove r w Y = let c = H (Y , get-A r Y) in c , get-f r Y c
           sFS-Verify : ∀ Y → Challenge × Σ-Prf Y → 𝟚
           sFS-Verify Y (c , π) = Σ-verifier Y (mk (Simulate Y c π) c π)
@@ -275,16 +314,91 @@ module Sigma-Protocol
 
   module Theorem1
               (Σ-proto : Σ-Protocol)
-              (shvzk : Special-Honest-Verifier-Zero-Knowledge.SHVZK Σ-proto)
-              (ssound : Special-Soundness.SpSo)
+              -- (Σ-correct : Correct Σ-proto)
+              (shvzk   : Special-Honest-Verifier-Zero-Knowledge Σ-proto)
+              (ssound  : Special-Soundness)
+              (open Σ-Protocol Σ-proto)
+              (H : (Λ × Commitment) → Challenge)
               where
-      open Simulation-Sound-Extractability
-      {-
-      S : Simulator PF
-      S = record { H-patch = {!!}
-                 ; Simulate = {!!}
-                 ; verify-sim-spec = {!!} }
-      -}
+      module SHVZK = Special-Honest-Verifier-Zero-Knowledge shvzk
+
+      module FST = Fiat-Shamir-Transformation Σ-proto shvzk
+      open FST using (FS-Prf)
+
+      Q = Λ × Commitment
+      Resp = Challenge
+
+      sFS : Proof-System RΣP FS-Prf
+      sFS = FST.sFS H
+      module SFS = Proof-System sFS
+
+      FS-Prf? : {Y Y' : Λ} → FS-Prf Y → FS-Prf Y' → 𝟚
+      FS-Prf? π π' = {!!}
+
+      open Simulation-Sound-Extractability sFS FS-Prf? Q Resp
+
+      L-to-FS-Prf : ∀ {w Y} → L w Y → FS-Prf Y
+      L-to-FS-Prf {w} w∈Y = SFS.Prove any-RΣP w _
+
+      FS-Random-Oracle = (Λ × Commitment) → Challenge
+      FS-Patch = FS-Random-Oracle → FS-Random-Oracle
+
+      open Special-Soundness ssound
+      open Game-Types Q Resp FS-Prf
+
+      module _ (rnd-c : Λ → Challenge)(rnd-Σ-Prf : ∀ Y → Σ-Prf Y) where
+
+        module _ (rs : RS) where
+        {-
+          Σ-t² : ∀{Y} → SFS.Transcript → Maybe (Σ-Transcript² Y)
+          Σ-t² t = {!!}
+          -}
+
+
+    {-
+module H-def (ro : Random-Oracle)(t : Random-Oracle-List)(q : Q) where
+  H : Resp
+  H with find (λ { (query-H q' , r) → ⌊ Q? q' q ⌋
+                 ; (query-create-proof _ _ , _) → 0₂ }) t
+  ... | just (query-H q₁ , r) = r
+  ... | _ = ro q
+  -}
+          H-patch-1 : (q : Adversary-Query) → Challenger-Resp q → FS-Random-Oracle → FS-Random-Oracle
+          H-patch-1 (query-H q) r = id
+          H-patch-1 (query-create-proof w Y) r ro (Y' , c')
+            = ro (Y' , case ⌊ Λ? Y Y' ⌋ 0: c' 1: SHVZK.Simulate Y (rnd-c Y) (rnd-Σ-Prf Y))
+
+          H-patch : Transcript → FS-Patch
+          H-patch []            = id
+          H-patch ((q , r) ∷ t) = H-patch-1 q r ∘ H-patch t
+
+          module _ (t : Transcript)(Y : Λ) where
+              Simulate : FS-Prf Y
+              Simulate = rnd-c Y , rnd-Σ-Prf Y
+              -- SFS.Prove any-RΣP (maybe′ (Extract {Y}) any-W (Σ-t² t)) Y
+
+              c : Challenge
+              c = fst Simulate
+
+              Σ-prf : Σ-Prf Y
+              Σ-prf = snd Simulate
+
+              verify-sim-spec : SFS.Verify Y Simulate ≡ 1₂
+              verify-sim-spec = SHVZK.Simulate-ok Y c Σ-prf
+
+        S : Simulator (Λ × Commitment) Challenge sFS
+        S = record { H-patch = H-patch
+                   ; Simulate = Simulate
+                   ; verify-sim-spec = verify-sim-spec }
+
+        open Is-Zero-Knowledge L-to-FS-Prf sFS S {!!}
+
+        module _ Adv where
+          is-zk' : EXP₀ Adv ≋ EXP₁ Adv
+          is-zk' = {!!}
+
+        is-zk : IsZK
+        is-zk Adv = ≋→≈ (is-zk' Adv)
 
 -- -}
 -- -}
