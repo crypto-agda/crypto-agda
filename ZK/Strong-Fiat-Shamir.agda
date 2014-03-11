@@ -393,6 +393,16 @@ module H-def (ro : Random-Oracle)(t : Random-Oracle-List)(q : Q) where
 
         open Is-Zero-Knowledge L-to-FS-Prf sFS S {!!}
 
+        K0 : Prfs → Transcript → ExtractorServerPart
+        K0 prfs init-transcript past-history on-going-transcript q = {!!}
+
+        K1 : Prfs → Transcript → Strategy 𝟙 (const (Prfs × Transcript)) (List W)
+        K1 [] init-transcript = done {!!}
+        K1 ((Y , π) ∷ prfs) init-transcript = ask _ (λ pt → {!!})
+
+        K : Extractor
+        K prfs init-transcript = K0 prfs init-transcript , K1 prfs init-transcript
+
         module _ Adv where
           is-zk' : EXP₀ Adv ≋ EXP₁ Adv
           is-zk' = {!!}
