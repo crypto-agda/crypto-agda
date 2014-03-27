@@ -218,7 +218,7 @@ module Simulation-Sound-Extractability
 module Sigma-Protocol
   (Commitment Challenge : ★)
   (Σ-Prf : Λ → ★)
-  {RP RΣP : ★}
+  {RΣP : ★}
   (any-RΣP : RΣP)
   where
 
@@ -251,12 +251,12 @@ module Sigma-Protocol
         f = get-f r Y c
 
   _⇄_ : Σ-Verifier → Σ-Prover → RΣP → Λ → Challenge → 𝟚
-  (v ⇄ p) r Y c = Σ-Protocol.Σ-game (v , p) r Y c
+  v ⇄ p = Σ-Protocol.Σ-game (v , p)
 
   Correct : Σ-Protocol → ★
-  Correct (v , p) = ∀ {Y w} → L w Y → (r : RΣP)(c : _) →
-    let open Σ-Prover p
-    in v Y (mk (get-A r Y) c (get-f r Y c)) ≡ 1₂
+  Correct p = ∀ {Y w} → L w Y → (r : RΣP)(c : _) →
+    let open Σ-Protocol p
+    in Σ-game r Y c ≡ 1₂
 
   record Special-Honest-Verifier-Zero-Knowledge (Σ-proto : Σ-Protocol) : ★ where
     open Σ-Protocol Σ-proto
@@ -268,8 +268,9 @@ module Sigma-Protocol
 
   -- A pair of "Σ-Transcript"s such that the commitment is shared
   -- and the challenges are different.
-  record Σ-Transcript² Y : ★ where
+  record Σ-Transcript² Σ-proto Y : ★ where
     constructor mk
+    open Σ-Protocol Σ-proto using (Σ-verifier)
     field
       -- The commitment is shared
       get-A         : Commitment
@@ -283,13 +284,19 @@ module Sigma-Protocol
       -- The proofs are arbitrary
       get-f₀ get-f₁ : Σ-Prf Y
 
-  record Special-Soundness : ★ where
+      -- The Σ-transcript verify
+      verify₀ : Σ-verifier Y (mk get-A get-c₀ get-f₀) ≡ 1₂
+      verify₁ : Σ-verifier Y (mk get-A get-c₁ get-f₁) ≡ 1₂
+
+  record Special-Soundness Σ-proto : ★ where
     field
-      Extract    : ∀ {Y}(t : Σ-Transcript² Y) → W
-      Extract-ok : ∀ {Y}(t : Σ-Transcript² Y) → L (Extract t) Y
+      Extract    : ∀ {Y}(t : Σ-Transcript² Σ-proto Y) → W
+      Extract-ok : ∀ {Y}(t : Σ-Transcript² Σ-proto Y) → L (Extract t) Y
 
   module Fiat-Shamir-Transformation
               (Σ-proto : Σ-Protocol)
+              -- For the transformation we technically only need Simulate, no proofs...
+              -- but we take the proofs as well
               (shvzk : Special-Honest-Verifier-Zero-Knowledge Σ-proto)
               where
 
@@ -304,7 +311,7 @@ module Sigma-Protocol
         where
           sFS-Prove : RΣP → W → (Y : Λ) → FS-Prf Y
           sFS-Prove r w Y = let c = H (Y , get-A r Y) in c , get-f r Y c
-          sFS-Verify : ∀ Y → Challenge × Σ-Prf Y → 𝟚
+          sFS-Verify : ∀ Y → FS-Prf Y → 𝟚
           sFS-Verify Y (c , π) = Σ-verifier Y (mk (Simulate Y c π) c π)
 
       -- The weak fiat-shamir is like the strong one but the H function do not get to see
@@ -316,7 +323,7 @@ module Sigma-Protocol
               (Σ-proto : Σ-Protocol)
               -- (Σ-correct : Correct Σ-proto)
               (shvzk   : Special-Honest-Verifier-Zero-Knowledge Σ-proto)
-              (ssound  : Special-Soundness)
+              (ssound  : Special-Soundness Σ-proto)
               (open Σ-Protocol Σ-proto)
               (H : (Λ × Commitment) → Challenge)
               where
