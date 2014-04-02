@@ -1,10 +1,11 @@
 module Control.Strategy where
 
+open import Data.Nat
 open import Function.NP
 open import Type using (★)
 open import Category.Monad
 open import Data.Product hiding (map)
-open import Data.List using (List; []; _∷_)
+open import Data.List as List using (List; []; _∷_)
 open import Relation.Binary.PropositionalEquality.NP
 
 data Strategy (Q : ★) (R : Q → ★) (A : ★) : ★ where
@@ -89,6 +90,34 @@ module _ {Q : ★} {R : Q → ★} where
         run-≈ (ask-ask q? cont) = run-≈ (cont (Oracle q?))
         run-≈ (done-done x)     = refl
 
+  module Repeat {I O : ★} where
+
+    ind : (I → M O) → List I → M (List O)
+    ind g [] = done []
+    ind g (x ∷ xs) = g x >>= (λ o → map (_∷_ o) (ind g xs))
+
+    module _ (Oracle : (q : Q) → R q)(g : I → M O) where
+      run-ind : ∀ xs → run Oracle (ind g xs) ≡ List.map (run Oracle ∘ g) xs
+      run-ind [] = refl
+      run-ind (x ∷ xs) = run->>= Oracle (λ o → map (_∷_ o) (ind g xs)) (g x)
+                       ∙ run-map Oracle (_∷_ (run Oracle (g x))) (ind g xs)
+                       ∙ ap (_∷_ (run Oracle (g x))) (run-ind xs)
+
+  module RepeatIndex {O : ★} where
+
+    map-list : (ℕ → (q : Q) → R q → O) → List Q → M (List O)
+    map-list _ [] = done []
+    map-list f (x ∷ xs) = ask x λ r → map (_∷_ (f 0 x r)) (map-list (f ∘ suc) xs)
+
+    mapIndex : {A B : Set} → (ℕ → A → B) → List A → List B
+    mapIndex f []       = []
+    mapIndex f (x ∷ xs) = f 0 x ∷ mapIndex (f ∘ suc) xs
+
+    module _ (Oracle : (q : Q) → R q) where
+      run-map-list : ∀ xs (g : ℕ → (q : Q) → R q → O) → run Oracle (map-list g xs) ≡ mapIndex (λ i q → g i q (Oracle q)) xs
+      run-map-list [] _       = refl
+      run-map-list (x ∷ xs) g = run-map Oracle (_∷_ (g 0 x (Oracle x))) (map-list (g ∘ suc) xs) ∙ ap (_∷_ (g 0 x (Oracle x))) (run-map-list xs (g ∘ suc))
+
   private
     State : (S A : ★) → ★
     State S A = S → A × S
@@ -117,6 +146,12 @@ module _ {Q : ★} {R : Q → ★} where
     runT-runS : ∀ (str : M A) t → runT str t ≡ runS (λ q s → let r = Oracle s q in r , (q , r) ∷ s) str t
     runT-runS (ask q? cont) t = let r = Oracle t q? in runT-runS (cont r) ((q? , r) ∷ t)
     runT-runS (done x)      t = refl
+
+  module TranscriptConstRun (Oracle : Π Q R){A} where
+    open TranscriptRun
+    runT-run : ∀ (str : M A) {t} → proj₁ (runT (const Oracle) str t) ≡ run Oracle str
+    runT-run (ask q? cont) = let r = Oracle q? in runT-run (cont r)
+    runT-run (done x) = refl
 -- -}
 -- -}
 -- -}

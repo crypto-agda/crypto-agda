@@ -4,14 +4,18 @@ open import Data.Maybe
 open import Data.Zero
 open import Data.One
 open import Data.Two
+open import Data.Nat
 open import Data.Sum using (_⊎_)
 open import Data.List.NP renaming (map to mapᴸ)
+open import Data.List.Any using (module Membership-≡ ; Any ; here ; there)
+open Membership-≡ using (_∈_)
 open import Data.Product.NP renaming (proj₁ to fst; proj₂ to snd)
 open import Relation.Nullary.Decidable
 open import Relation.Nullary
 open import Relation.Binary
 open import Relation.Binary.PropositionalEquality.NP
-open import Control.Strategy using (Strategy; module TranscriptRun; done; ask)
+open import Control.Strategy using (Strategy; module TranscriptRun; module TranscriptConstRun; module RepeatIndex ; done; ask ; run)
+  renaming (map to mapS)
 
 module ZK.Strong-Fiat-Shamir
   {W Λ : ★}{L : W → Λ → ★}
@@ -138,7 +142,7 @@ module Simulation-Sound-Extractability
            {RP}{Prf : Λ → ★}
            (PF : Proof-System RP Prf)
            (Prf? : ∀ {Y Y'} → Prf Y → Prf Y' → 𝟚)
-           (Q Resp : ★)
+           (Q Resp E-State : ★)
   -- (Prf? : ∀ Y → Decidable (_≡_ {A = Prf Y}))
            where
     open Proof-System PF
@@ -151,6 +155,7 @@ module Simulation-Sound-Extractability
     HistoryForExtractor = List (Prfs × Transcript)
 
     ExtractorServerPart =
+         (state : E-State)                    {- The current query -}
          (past-history : HistoryForExtractor) {- previous invocations of Adv -}
          (on-going-transcript : Transcript)   {- about the current invocation of Adv -}
        → Π Adversary-Query Challenger-Resp
@@ -158,7 +163,7 @@ module Simulation-Sound-Extractability
     Extractor : ★
     Extractor = Prfs → (init-transcript : Transcript)
                      → ExtractorServerPart
-                     × Strategy 𝟙 (const (Prfs × Transcript)) (List W)
+                     × Strategy E-State (const (Prfs × Transcript)) (List W)
 
     valid-witness? : W → Λ → 𝟚
     valid-witness? w Y = ⌊ L? w Y ⌋
@@ -200,8 +205,8 @@ module Simulation-Sound-Extractability
         initial-transcript : Transcript
         initial-transcript = snd initial-result
 
-        K-winning-intial-run : 𝟚
-        K-winning-intial-run = K-winning-prfs initial-transcript initial-prfs
+        K-winning-initial-run : 𝟚
+        K-winning-initial-run = K-winning-prfs initial-transcript initial-prfs
 
         -- Second run
 
@@ -210,10 +215,156 @@ module Simulation-Sound-Extractability
         Kf = fst K
         Ks = snd K
 
-        ws = fst (runT (λ h _ → runT (λ t q → Kf (mapᴸ snd h) t q) (Adv w) []) Ks [])
+        ws = fst (runT (λ h e-s → runT (λ t q → Kf e-s (mapᴸ snd h) t q) (Adv w) []) Ks [])
 
         K-winning-second-run : 𝟚
         K-winning-second-run = valid-witnesses? ws (mapᴸ fst initial-prfs)
+
+-- This module changes the game from the paper to be simpler to understand
+-- this is done purely for educational reasons, we make no claim about the security implications
+module Simulation-Sound-Extractability-[EXPERIMENTAL]
+           {RP}{Prf : Λ → ★}
+           (PF : Proof-System RP Prf)
+           (Prf? : ∀ {Y Y'} → Prf Y → Prf Y' → 𝟚)
+           (Q Resp : ★)
+  -- (Prf? : ∀ Y → Decidable (_≡_ {A = Prf Y}))
+           where
+    open Proof-System PF
+    open Game-Types Q Resp Prf hiding (Prfs)
+
+    Prf-in-Q : ∀ {Y} → Prf Y → Σ Adversary-Query Challenger-Resp → 𝟚
+    Prf-in-Q π (query-create-proof _ _ , just π') = Prf? π π'
+    Prf-in-Q π _                                  = 0₂
+
+    Res = Σ Λ Prf
+
+    ExtractorServerPart : ★
+    ExtractorServerPart =
+         (on-going-transcript : Transcript)   {- about the current invocation of Adv -}
+       → Π Adversary-Query Challenger-Resp
+
+    Extractor : ★
+    Extractor = Res → (init-transcript : Transcript) → ExtractorServerPart × (Res × Transcript → W)
+
+    valid-witness? : W → Λ → 𝟚
+    valid-witness? w Y = ⌊ L? w Y ⌋
+
+
+    module _ (t : Transcript) where
+        Prf-in-Transcript : ∀ {Y} → Prf Y → 𝟚
+        Prf-in-Transcript π = any (Prf-in-Q π) t
+
+        K-winning-prf : Σ Λ Prf → 𝟚
+        K-winning-prf (Y , π) = not (Verify Y π)
+                              ∨ Prf-in-Transcript π
+
+    module Game
+        (L-to-Prf : ∀ {w Y} → L w Y → Prf Y)
+        (sim : Simulator Q Resp PF)
+        (open Is-Zero-Knowledge L-to-Prf PF sim)
+        {RA : ★}
+
+        {- The malicious prover -}
+        (Adv : RA → Adversary Res)
+        (ω : RA)(rs : RS)(ro : Q → Resp)(K' : Extractor) where
+
+        initial-result = Experiment ro 1₂ (Adv ω) rs
+
+        initial-prf : Res
+        initial-prf = fst initial-result
+
+        initial-transcript : Transcript
+        initial-transcript = snd initial-result
+
+        K-winning-intial-run : 𝟚
+        K-winning-intial-run = K-winning-prf initial-transcript initial-prf
+
+        -- Second run
+
+        K = K' initial-prf initial-transcript
+
+        Kf = fst K
+        Ks = snd K
+
+        open TranscriptRun
+        w : W
+        w = Ks (runT Kf (Adv ω) [])
+
+        K-winning-second-run : 𝟚
+        K-winning-second-run = valid-witness? w (fst initial-prf)
+
+module Lift-to-list
+           {RP}{Prf : Λ → ★}
+           (PF : Proof-System RP Prf)
+           (Prf? : ∀ {Y Y'} → Prf Y → Prf Y' → 𝟚)
+           (Q Resp : ★)
+  where
+
+  E-State : ★
+  E-State = Σ Λ Prf
+
+  open Game-Types Q Resp Prf
+  module Normal = Simulation-Sound-Extractability-[EXPERIMENTAL] PF Prf? Q Resp
+  module Lifted = Simulation-Sound-Extractability                PF Prf? Q Resp E-State
+  open RepeatIndex
+
+  lookup : {A : Set} → ℕ → List A → Maybe A
+  lookup n [] = nothing
+  lookup zero (x ∷ xs) = just x
+  lookup (suc n) (x ∷ xs) = lookup n xs
+
+  trans-server : Normal.Extractor → Transcript → Lifted.ExtractorServerPart
+  trans-server K sim-tran Σπ _ this-tran q = fst (K Σπ sim-tran) this-tran q
+
+  trans-strat : Normal.Extractor → List Normal.Res → Transcript → Strategy E-State (const (Prfs × Transcript)) (List W)
+  trans-strat K xs tran = map-list (λ { i Σπ (p , t) → snd (K Σπ tran) (maybe′ id Σπ (lookup i p) , t)}) xs
+  {-
+  trans-strat K []         tran = done []
+  trans-strat K (Σπ ∷ res) tran = ask Σπ (λ { (p , t) → let w = snd (K Σπ tran) ({!p!} , t) in mapS (_∷_ w) (trans-strat K res tran) } )
+  -}
+
+  transformation : Normal.Extractor → Lifted.Extractor
+  transformation K res tran = trans-server K tran , trans-strat K res tran
+
+  module Game
+      (L-to-Prf : ∀ {w Y} → L w Y → Prf Y)
+      (sim : Simulator Q Resp PF)
+      (open Is-Zero-Knowledge L-to-Prf PF sim)
+      {RA : ★}
+
+      {- The malicious prover -}
+      (Adv : RA → Adversary Prfs)
+      (ω : RA)(rs : RS)(ro : Q → Resp)(K' : Normal.Extractor) where
+
+      module LGame = Lifted.Game L-to-Prf sim Adv ω rs ro (transformation K')
+      open TranscriptRun
+      open ≡-Reasoning
+
+
+      Oracle : E-State → Prfs × Transcript
+      Oracle e-s = runT (LGame.Kf e-s []) (Adv ω) []
+
+      ws' : List W
+      ws' = run Oracle LGame.Ks
+
+      ws'-correct : LGame.ws ≡ {!!}
+      ws'-correct =
+         LGame.ws
+        ≡⟨ TranscriptConstRun.runT-run _ LGame.Ks ⟩
+          run Oracle LGame.Ks
+        ≡⟨ run-map-list Oracle LGame.initial-prfs _ ⟩
+          mapIndex
+            (λ i q →
+               let (p , t) = Oracle q
+                in snd (K' q LGame.initial-transcript)
+                       (maybe′ id q (lookup i p) , t))
+            LGame.initial-prfs
+        ≡⟨ {!!} ⟩
+          {!!}
+        ∎
+
+      thm : LGame.K-winning-initial-run ≡ 0₂ → LGame.K-winning-second-run ≡ 1₂
+      thm eq = {!λ e → LGame.Kf e []!}
 
 module Sigma-Protocol
   (Commitment Challenge : ★)
@@ -342,7 +493,10 @@ module Sigma-Protocol
       FS-Prf? : {Y Y' : Λ} → FS-Prf Y → FS-Prf Y' → 𝟚
       FS-Prf? π π' = {!!}
 
-      open Simulation-Sound-Extractability sFS FS-Prf? Q Resp
+      E-State : ★
+      E-State = 𝟙
+
+      open Simulation-Sound-Extractability sFS FS-Prf? Q Resp E-State
 
       L-to-FS-Prf : ∀ {w Y} → L w Y → FS-Prf Y
       L-to-FS-Prf {w} w∈Y = SFS.Prove any-RΣP w _
