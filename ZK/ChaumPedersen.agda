@@ -1,10 +1,16 @@
+{-# OPTIONS --without-K #-}
 open import Type
-open import Data.Two
+open import Data.Zero
+open import Data.Two.Core
+open import Data.ShapePolymorphism
 open import Relation.Binary.PropositionalEquality.NP
-import ZK.Sigma-Protocol
+import ZK.SigmaProtocol as ΣProto
+open import ZK.Types
+open import ZK.Statement
 
-module ZK.Chaum-Pedersen
-    (G ℤq : ★)
+module ZK.ChaumPedersen
+    {G ℤq : ★}
+    -- (cyclic-group : Cyclic-group G ℤq)
     (g    : G)
     (_^_  : G  → ℤq → G)
     (_·_  : G  → G  → G)
@@ -14,6 +20,38 @@ module ZK.Chaum-Pedersen
     (_==_ : (x y : G) → 𝟚)
     where
 
+  -- TODO: Re-use another module
+  module ElGamal-encryption where
+    record CipherText : ★ where
+      constructor _,_
+      field
+        get-α get-β : G
+
+    PubKey  = G
+    EncRnd  = ℤq {- randomness used for encryption of ct -}
+    Message = G {- plain text message -}
+
+    enc : PubKey → EncRnd → Message → CipherText
+    enc y r M = α , β where
+      α = g ^ r
+      β = (y ^ r) · M
+  open ElGamal-encryption
+
+  module _ (y : PubKey) (M : Message) (ct : CipherText) where
+    Statement : Set
+    Statement =
+      -- Reads as follows:
+      -- A value `r` (of type `EncRnd`) is known to be
+      -- the encryption randomness used to produce the
+      -- cipher-text `c` of message `M` using public-key `y`.
+      ZKStatement EncRnd λ { [ r ] → ct ≡☐ enc y r M }
+
+  -- Assume the randomness `r` is known
+  module _ (y : PubKey) (M : Message) (r : EncRnd) where
+    -- Then the Statement holds
+    Statement-complete : Statement y M (enc y r M)
+    Statement-complete = [ r ] , refl
+
   record Commitment : ★ where
     constructor _,_
     field
@@ -22,21 +60,7 @@ module ZK.Chaum-Pedersen
   Challenge  = ℤq
   Response   = ℤq
 
-  open ZK.Sigma-Protocol Commitment Challenge Response public
-
-  record CipherText : ★ where
-    constructor _,_
-    field
-      get-α get-β : G
-
-  PubKey = G
-  EncRnd = ℤq {- randomness used for encryption of ct -}
-  Message = G {- plain text message -}
-
-  enc : PubKey → EncRnd → Message → CipherText
-  enc y r M = α , β where
-    α = g ^ r
-    β = (y ^ r) · M
+  open ΣProto Commitment Challenge Response public
 
   module _ (y : PubKey) (r : EncRnd) (w : ℤq) where
     prover-commitment : Commitment
@@ -61,7 +85,7 @@ module ZK.Chaum-Pedersen
 
     -- This simulator shows why it is so important for the
     -- challenge to be picked once the commitment is known.
-    
+
     -- To fake a transcript, the challenge and response can
     -- be arbitrarily chosen. However to be indistinguishable
     -- from a valid proof it they need to be picked at random.
@@ -92,8 +116,7 @@ module ZK.Chaum-Pedersen
            (y : PubKey) (r : EncRnd) (w : ℤq) (M : Message) where
     open ≡-Reasoning
 
-    correctness : Correctness (prover y r w)
-                              (verifier y M (enc y r M))
+    correctness : Correct (prover y r w , verifier y M (enc y r M))
     correctness c = ✓∧ (✓-== pf1) (✓-== pf2)
       where
         gʷ = g ^ w
@@ -115,7 +138,6 @@ module ZK.Chaum-Pedersen
             ≡⟨ ap (λ z → (y ^ w) · z) pf3 ⟩
              (y ^ w) · ((((y ^ r) · M) / M) ^ c)
             ∎
-            
 
 -- -}
 -- -}

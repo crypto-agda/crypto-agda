@@ -1,4 +1,5 @@
-open import Type
+-- http://www.uclouvain.be/crypto/services/download/publications.pdf.87e67d05ee05000b.6d61696e2e706466.pdf
+open import Type using (Type; Type₁)
 open import Function.NP
 open import Data.Maybe
 open import Data.Zero
@@ -9,7 +10,7 @@ open import Data.Sum using (_⊎_)
 open import Data.List.NP renaming (map to mapᴸ)
 open import Data.List.Any using (module Membership-≡ ; Any ; here ; there)
 open Membership-≡ using (_∈_)
-open import Data.Product.NP renaming (proj₁ to fst; proj₂ to snd)
+open import Data.Product.NP
 open import Relation.Nullary.Decidable
 open import Relation.Nullary
 open import Relation.Binary
@@ -18,22 +19,30 @@ open import Control.Strategy using (Strategy; module TranscriptRun; module Trans
   renaming (map to mapS)
 
 module ZK.Strong-Fiat-Shamir
-  {W Λ : ★}{L : W → Λ → ★}
+  {W Λ : Type}{L : W → Λ → Type}
   (any-W : W)
-  {RS : ★}
+  {RS : Type}
   (L? : ∀ w Y → Dec (L w Y))
   (Λ? : Decidable (_≡_ {A = Λ}))
-  (Eps  : ★)
-  (ε[_] : Eps → ★)
+  (Eps  : Type)
+  (ε[_] : Eps → Type)
   (ε0 : Eps)
   (ε[0] : ε[ ε0 ] ≡ 𝟘)
   where
 
-module _ {R : ★} where
-    _≋_ : (f g : R → 𝟚) → ★₁
+valid-witness? : W → Λ → 𝟚
+valid-witness? w Y = ⌊ L? w Y ⌋
+
+valid-witnesses? : List W → List Λ → 𝟚
+valid-witnesses? [] [] = 1₂
+valid-witnesses? (w ∷ ws) (prf ∷ prfs) = valid-witness? w prf ∧ valid-witnesses? ws prfs
+valid-witnesses? _ _ = 0₂
+
+module _ {R : Type} where
+    _≋_ : (f g : R → 𝟚) → Type₁
     f ≋ g = (Σ R (✓ ∘ f)) ≡ (Σ R (✓ ∘ g))
 
-    _≈_ : (f g : R → 𝟚) → ★₁
+    _≈_ : (f g : R → 𝟚) → Type₁
     f ≈ g = ∃₂ λ ε₀ ε₁ →
             (Σ R (✓ ∘ f) ⊎ ε[ ε₀ ]) ≡ (Σ R (✓ ∘ g) ⊎ ε[ ε₁ ])
 
@@ -41,43 +50,64 @@ module _ {R : ★} where
     ≋→≈ f≋g = ε0 , ε0 , ap (flip _⊎_ ε[ ε0 ]) f≋g
 
 {-
-Random-Oracle-List : ★
+Random-Oracle-List : Type
 Random-Oracle-List = List (Q × Resp)
 -}
 
-module Game-Types (Q Resp : ★)(Prf : Λ → ★) where
-  Random-Oracle : ★
-  Random-Oracle = Q → Resp
-
-  data Adversary-Query : ★ where
-    query-H : (q : Q) → Adversary-Query
-    query-create-proof : (w : W)(Y : Λ) → Adversary-Query
-
-  Challenger-Resp : Adversary-Query → ★
-  Challenger-Resp (query-H s) = Resp
-  Challenger-Resp (query-create-proof w Y) = Maybe (Prf Y)
-
-  Adversary : ★ → ★
-  Adversary = Strategy Adversary-Query Challenger-Resp
-
-  Transcript = List (Σ Adversary-Query Challenger-Resp)
-
-  Prfs : ★
-  Prfs = List (Σ Λ Prf)
-
-record Proof-System (RP : ★)(Prf : Λ → ★) : ★ where
+record Proof-System (RP : Type)(Prf : Λ → Type) : Type where
   field
     Prove  : RP → (w : W)(Y : Λ) → Prf Y
     Verify : (Y : Λ)(π : Prf Y) → 𝟚
 
-  Complete : ★
+  Complete : Type
   Complete = ∀ rp {w Y} → L w Y → Verify Y (Prove rp w Y) ≡ 1₂
 
   -- Not in the paper but...
-  Sound : ★
+  Sound : Type
   Sound = ∀ rp {w Y} → Verify Y (Prove rp w Y) ≡ 1₂ → L w Y
 
-record Simulator (Q : ★)(Resp : ★){Prf RP}(PF : Proof-System RP Prf) : ★ where
+module Game-Types (Q Resp : Type){Λ : Type}(Prf : Λ → Type) where
+  Random-Oracle : Type
+  Random-Oracle = Q → Resp
+
+  data Adversary-Query : Type where
+    query-H : (q : Q) → Adversary-Query
+    query-create-proof : (w : W)(Y : Λ) → Adversary-Query
+
+  Challenger-Resp : Adversary-Query → Type
+  Challenger-Resp (query-H s) = Resp
+  Challenger-Resp (query-create-proof w Y) = Maybe (Prf Y)
+
+  Adversary : Type → Type
+  Adversary = Strategy Adversary-Query Challenger-Resp
+
+  Transcript = List (Σ Adversary-Query Challenger-Resp)
+
+  Prfs : Type
+  Prfs = List (Σ Λ Prf)
+
+  Res = Σ Λ Prf
+
+  module With-Prf? (Prf? : ∀ {Y Y'} → Prf Y → Prf Y' → 𝟚) where
+    Prf-in-Q : ∀ {Y} → Prf Y → Σ Adversary-Query Challenger-Resp → 𝟚
+    Prf-in-Q π (query-create-proof _ _ , just π') = Prf? π π'
+    Prf-in-Q π _                                  = 0₂
+
+
+    module Prf-Transcript (Verify : (Y : Λ)(π : Prf Y) → 𝟚) (t : Transcript) where
+
+        Prf-in-Transcript : ∀ {Y} → Prf Y → 𝟚
+        Prf-in-Transcript π = any (Prf-in-Q π) t
+
+        K-winning-prf : Σ Λ Prf → 𝟚
+        K-winning-prf (Y , π) = not (Verify Y π)
+                              ∨ Prf-in-Transcript π
+
+        K-winning-prfs : Prfs → 𝟚
+        K-winning-prfs []   = 1₂
+        K-winning-prfs prfs = any K-winning-prf prfs
+
+record Simulator (Q : Type)(Resp : Type){Prf RP}(PF : Proof-System RP Prf) : Type where
   open Proof-System PF
   open Game-Types Q Resp Prf
 
@@ -134,23 +164,20 @@ module Is-Zero-Knowledge
 {-
 -- there exists a simulator, such that for all adversaries they are clueless if
 -- they are in the real or simulated Experiment
-Zero-Knowledge : Proof-System → ★
+Zero-Knowledge : Proof-System → Type
 Zero-Knowledge PF = Σ (Simulator PF) (λ sim → {!!})
 -}
 
 module Simulation-Sound-Extractability
-           {RP}{Prf : Λ → ★}
+           {RP}{Prf : Λ → Type}
            (PF : Proof-System RP Prf)
            (Prf? : ∀ {Y Y'} → Prf Y → Prf Y' → 𝟚)
-           (Q Resp E-State : ★)
-  -- (Prf? : ∀ Y → Decidable (_≡_ {A = Prf Y}))
+           (Q Resp E-State : Type)
            where
     open Proof-System PF
     open Game-Types Q Resp Prf
-
-    Prf-in-Q : ∀ {Y} → Prf Y → Σ Adversary-Query Challenger-Resp → 𝟚
-    Prf-in-Q π (query-create-proof _ _ , just π') = Prf? π π'
-    Prf-in-Q π _                                  = 0₂
+    open With-Prf? Prf?
+    open Prf-Transcript Verify
 
     HistoryForExtractor = List (Prfs × Transcript)
 
@@ -160,38 +187,23 @@ module Simulation-Sound-Extractability
          (on-going-transcript : Transcript)   {- about the current invocation of Adv -}
        → Π Adversary-Query Challenger-Resp
 
-    Extractor : ★
+    Extractor : Type
     Extractor = Prfs → (init-transcript : Transcript)
                      → ExtractorServerPart
                      × Strategy E-State (const (Prfs × Transcript)) (List W)
 
-    valid-witness? : W → Λ → 𝟚
-    valid-witness? w Y = ⌊ L? w Y ⌋
-
-    valid-witnesses? : List W → List Λ → 𝟚
-    valid-witnesses? [] [] = 1₂
-    valid-witnesses? (w ∷ ws) (prf ∷ prfs) = valid-witness? w prf ∧ valid-witnesses? ws prfs
-    valid-witnesses? _ _ = 0₂
+    {-
+    wip : Extractor → Σ Λ Prf → {!!} → W
+    wip K Yπ = {!K (Yπ ∷ [])!}
+    -}
 
     open TranscriptRun
-
-    module _ (t : Transcript) where
-        Prf-in-Transcript : ∀ {Y} → Prf Y → 𝟚
-        Prf-in-Transcript π = any (Prf-in-Q π) t
-
-        K-winning-prf : Σ Λ Prf → 𝟚
-        K-winning-prf (Y , π) = not (Verify Y π)
-                              ∨ Prf-in-Transcript π
-
-        K-winning-prfs : Prfs → 𝟚
-        K-winning-prfs []   = 1₂
-        K-winning-prfs prfs = any K-winning-prf prfs
 
     module Game
         (L-to-Prf : ∀ {w Y} → L w Y → Prf Y)
         (sim : Simulator Q Resp PF)
         (open Is-Zero-Knowledge L-to-Prf PF sim)
-        {RA : ★}
+        {RA : Type}
 
         {- The malicious prover -}
         (Adv : RA → Adversary Prfs)
@@ -220,68 +232,47 @@ module Simulation-Sound-Extractability
         K-winning-second-run : 𝟚
         K-winning-second-run = valid-witnesses? ws (mapᴸ fst initial-prfs)
 
--- This module changes the game from the paper to be simpler to understand
--- this is done purely for educational reasons, we make no claim about the security implications
-module Simulation-Sound-Extractability-[EXPERIMENTAL]
-           {RP}{Prf : Λ → ★}
+module Simulation-Sound-Extractability-Unary-Forced
+           {RP}{Prf : Λ → Type}
            (PF : Proof-System RP Prf)
            (Prf? : ∀ {Y Y'} → Prf Y → Prf Y' → 𝟚)
-           (Q Resp : ★)
-  -- (Prf? : ∀ Y → Decidable (_≡_ {A = Prf Y}))
+           (Q Resp : Type)
+           (Y : Λ)
            where
     open Proof-System PF
-    open Game-Types Q Resp Prf hiding (Prfs)
+    open Game-Types Q Resp Prf public hiding (Prfs)
+    open With-Prf? Prf?
+    open Prf-Transcript Verify
 
-    Prf-in-Q : ∀ {Y} → Prf Y → Σ Adversary-Query Challenger-Resp → 𝟚
-    Prf-in-Q π (query-create-proof _ _ , just π') = Prf? π π'
-    Prf-in-Q π _                                  = 0₂
-
-    Res = Σ Λ Prf
-
-    ExtractorServerPart : ★
+    ExtractorServerPart : Type
     ExtractorServerPart =
          (on-going-transcript : Transcript)   {- about the current invocation of Adv -}
        → Π Adversary-Query Challenger-Resp
 
-    Extractor : ★
-    Extractor = Res → (init-transcript : Transcript) → ExtractorServerPart × (Res × Transcript → W)
-
-    valid-witness? : W → Λ → 𝟚
-    valid-witness? w Y = ⌊ L? w Y ⌋
-
-
-    module _ (t : Transcript) where
-        Prf-in-Transcript : ∀ {Y} → Prf Y → 𝟚
-        Prf-in-Transcript π = any (Prf-in-Q π) t
-
-        K-winning-prf : Σ Λ Prf → 𝟚
-        K-winning-prf (Y , π) = not (Verify Y π)
-                              ∨ Prf-in-Transcript π
+    Extractor : Type
+    Extractor = Prf Y → (init-transcript : Transcript) → ExtractorServerPart × ((Prf Y × Transcript) → W)
 
     module Game
         (L-to-Prf : ∀ {w Y} → L w Y → Prf Y)
         (sim : Simulator Q Resp PF)
         (open Is-Zero-Knowledge L-to-Prf PF sim)
-        {RA : ★}
+        {RA : Type}
 
         {- The malicious prover -}
-        (Adv : RA → Adversary Res)
+        (Adv : RA → Adversary (Prf Y))
         (ω : RA)(rs : RS)(ro : Q → Resp)(K' : Extractor) where
 
         initial-result = Experiment ro 1₂ (Adv ω) rs
-
-        initial-prf : Res
-        initial-prf = fst initial-result
 
         initial-transcript : Transcript
         initial-transcript = snd initial-result
 
         K-winning-intial-run : 𝟚
-        K-winning-intial-run = K-winning-prf initial-transcript initial-prf
+        K-winning-intial-run = K-winning-prf (snd initial-result) (Y , fst initial-result)
 
         -- Second run
 
-        K = K' initial-prf initial-transcript
+        K = uncurry K' initial-result
 
         Kf = fst K
         Ks = snd K
@@ -291,20 +282,70 @@ module Simulation-Sound-Extractability-[EXPERIMENTAL]
         w = Ks (runT Kf (Adv ω) [])
 
         K-winning-second-run : 𝟚
-        K-winning-second-run = valid-witness? w (fst initial-prf)
+        K-winning-second-run = valid-witness? w Y
 
-module Lift-to-list
-           {RP}{Prf : Λ → ★}
+-- This module changes the game from the paper to be simpler to understand
+-- this is done purely for educational reasons, we make no claim about the security implications
+module Simulation-Sound-Extractability-[EXPERIMENTAL]
+           {RP}{Prf : Λ → Type}
            (PF : Proof-System RP Prf)
            (Prf? : ∀ {Y Y'} → Prf Y → Prf Y' → 𝟚)
-           (Q Resp : ★)
+           (Q Resp : Type)
+           where
+    open Proof-System PF
+    open Game-Types Q Resp Prf public hiding (Prfs)
+    open With-Prf? Prf?
+    open Prf-Transcript Verify
+
+    ExtractorServerPart : Type
+    ExtractorServerPart =
+         (on-going-transcript : Transcript)   {- about the current invocation of Adv -}
+       → Π Adversary-Query Challenger-Resp
+
+    Extractor : Type
+    Extractor = Res → (init-transcript : Transcript) → ExtractorServerPart × ((Res × Transcript) → W)
+
+    module Game
+        (L-to-Prf : ∀ {w Y} → L w Y → Prf Y)
+        (sim : Simulator Q Resp PF)
+        (open Is-Zero-Knowledge L-to-Prf PF sim)
+        {RA : Type}
+
+        {- The malicious prover -}
+        (Adv : RA → Adversary Res)
+        (ω : RA)(rs : RS)(ro : Q → Resp)(K' : Extractor) where
+
+        initial-result = Experiment ro 1₂ (Adv ω) rs
+
+        K-winning-intial-run : 𝟚
+        K-winning-intial-run = K-winning-prf (snd initial-result) (fst initial-result)
+
+        -- Second run
+
+        K = uncurry K' initial-result
+
+        Kf = fst K
+        Ks = snd K
+
+        open TranscriptRun
+        w : W
+        w = Ks (runT Kf (Adv ω) [])
+
+        K-winning-second-run : 𝟚
+        K-winning-second-run = valid-witness? w (fst (fst initial-result))
+
+module Lift-to-list
+           {RP}{Prf : Λ → Type}
+           (PF : Proof-System RP Prf)
+           (Prf? : ∀ {Y Y'} → Prf Y → Prf Y' → 𝟚)
+           (Q Resp : Type)
   where
 
-  E-State : ★
+  E-State : Type
   E-State = Σ Λ Prf
 
   open Game-Types Q Resp Prf
-  module Normal = Simulation-Sound-Extractability-[EXPERIMENTAL] PF Prf? Q Resp
+  module Unary  = Simulation-Sound-Extractability-[EXPERIMENTAL] PF Prf? Q Resp
   module Lifted = Simulation-Sound-Extractability                PF Prf? Q Resp E-State
   open RepeatIndex
 
@@ -313,28 +354,28 @@ module Lift-to-list
   lookup zero (x ∷ xs) = just x
   lookup (suc n) (x ∷ xs) = lookup n xs
 
-  trans-server : Normal.Extractor → Transcript → Lifted.ExtractorServerPart
+  trans-server : Unary.Extractor → Transcript → Lifted.ExtractorServerPart
   trans-server K sim-tran Σπ _ this-tran q = fst (K Σπ sim-tran) this-tran q
 
-  trans-strat : Normal.Extractor → List Normal.Res → Transcript → Strategy E-State (const (Prfs × Transcript)) (List W)
+  trans-strat : Unary.Extractor → List Unary.Res → Transcript → Strategy E-State (const (Prfs × Transcript)) (List W)
   trans-strat K xs tran = map-list (λ { i Σπ (p , t) → snd (K Σπ tran) (maybe′ id Σπ (lookup i p) , t)}) xs
   {-
   trans-strat K []         tran = done []
   trans-strat K (Σπ ∷ res) tran = ask Σπ (λ { (p , t) → let w = snd (K Σπ tran) ({!p!} , t) in mapS (_∷_ w) (trans-strat K res tran) } )
   -}
 
-  transformation : Normal.Extractor → Lifted.Extractor
+  transformation : Unary.Extractor → Lifted.Extractor
   transformation K res tran = trans-server K tran , trans-strat K res tran
 
   module Game
       (L-to-Prf : ∀ {w Y} → L w Y → Prf Y)
       (sim : Simulator Q Resp PF)
       (open Is-Zero-Knowledge L-to-Prf PF sim)
-      {RA : ★}
+      {RA : Type}
 
       {- The malicious prover -}
       (Adv : RA → Adversary Prfs)
-      (ω : RA)(rs : RS)(ro : Q → Resp)(K' : Normal.Extractor) where
+      (ω : RA)(rs : RS)(ro : Q → Resp)(K' : Unary.Extractor) where
 
       module LGame = Lifted.Game L-to-Prf sim Adv ω rs ro (transformation K')
       open TranscriptRun
@@ -347,6 +388,7 @@ module Lift-to-list
       ws' : List W
       ws' = run Oracle LGame.Ks
 
+      {-
       ws'-correct : LGame.ws ≡ {!!}
       ws'-correct =
          LGame.ws
@@ -362,54 +404,55 @@ module Lift-to-list
         ≡⟨ {!!} ⟩
           {!!}
         ∎
+      -}
 
       thm : LGame.K-winning-initial-run ≡ 0₂ → LGame.K-winning-second-run ≡ 1₂
       thm eq = {!λ e → LGame.Kf e []!}
 
 module Sigma-Protocol
-  (Commitment Challenge : ★)
-  (Σ-Prf : Λ → ★)
-  {RΣP : ★}
+  (Commitment Challenge : Type)
+  (Σ-Prf : Λ → Type)
+  {RΣP : Type}
   (any-RΣP : RΣP)
   where
 
-  record Σ-Prover : ★ where
+  record Σ-Prover : Type where
     field
       get-A : RΣP → (Y : Λ) → Commitment
       get-f : RΣP → (Y : Λ) → (c : Challenge) → Σ-Prf Y
 
-  record Σ-Transcript (Y : Λ) : ★ where
+  record Σ-Transcript (Y : Λ) : Type where
     constructor mk
     field
       get-A : Commitment
       get-c : Challenge
       get-f : Σ-Prf Y
 
-  Σ-Verifier : ★
+  Σ-Verifier : Type
   Σ-Verifier = (Y : Λ)(t : Σ-Transcript Y) → 𝟚
 
-  record Σ-Protocol : ★ where
+  record Σ-Protocol : Type where
     constructor _,_
     field
       Σ-verifier : Σ-Verifier
       Σ-prover   : Σ-Prover
     open Σ-Prover Σ-prover public
 
-    Σ-game : (r : RΣP)(Y : Λ)(c : Challenge) → 𝟚
-    Σ-game r Y c = Σ-verifier Y (mk A c f)
+    Σ-game : (r : RΣP)(rc : Challenge)(Y : Λ) → 𝟚
+    Σ-game r rc Y = Σ-verifier Y (mk A rc f)
       where
         A = get-A r Y
-        f = get-f r Y c
+        f = get-f r Y rc
 
   _⇄_ : Σ-Verifier → Σ-Prover → RΣP → Λ → Challenge → 𝟚
-  v ⇄ p = Σ-Protocol.Σ-game (v , p)
+  (v ⇄ p) r Y rc = Σ-Protocol.Σ-game (v , p) r rc Y
 
-  Correct : Σ-Protocol → ★
+  Correct : Σ-Protocol → Type
   Correct p = ∀ {Y w} → L w Y → (r : RΣP)(c : _) →
     let open Σ-Protocol p
-    in Σ-game r Y c ≡ 1₂
+    in Σ-game r c Y ≡ 1₂
 
-  record Special-Honest-Verifier-Zero-Knowledge (Σ-proto : Σ-Protocol) : ★ where
+  record Special-Honest-Verifier-Zero-Knowledge (Σ-proto : Σ-Protocol) : Type where
     open Σ-Protocol Σ-proto
     field
       Simulate : (Y : Λ)(c : Challenge)(f : Σ-Prf Y) → Commitment
@@ -419,7 +462,7 @@ module Sigma-Protocol
 
   -- A pair of "Σ-Transcript"s such that the commitment is shared
   -- and the challenges are different.
-  record Σ-Transcript² Σ-proto Y : ★ where
+  record Σ-Transcript² Σ-proto (Y : Λ) : Type where
     constructor mk
     open Σ-Protocol Σ-proto using (Σ-verifier)
     field
@@ -435,11 +478,18 @@ module Sigma-Protocol
       -- The proofs are arbitrary
       get-f₀ get-f₁ : Σ-Prf Y
 
-      -- The Σ-transcript verify
-      verify₀ : Σ-verifier Y (mk get-A get-c₀ get-f₀) ≡ 1₂
-      verify₁ : Σ-verifier Y (mk get-A get-c₁ get-f₁) ≡ 1₂
+    -- The two transcripts
+    t₀ : Σ-Transcript Y
+    t₀ = mk get-A get-c₀ get-f₀
+    t₁ : Σ-Transcript Y
+    t₁ = mk get-A get-c₁ get-f₁
 
-  record Special-Soundness Σ-proto : ★ where
+    field
+      -- The Σ-transcripts verify
+      verify₀ : Σ-verifier Y t₀ ≡ 1₂
+      verify₁ : Σ-verifier Y t₁ ≡ 1₂
+
+  record Special-Soundness Σ-proto : Type where
     field
       Extract    : ∀ {Y}(t : Σ-Transcript² Σ-proto Y) → W
       Extract-ok : ∀ {Y}(t : Σ-Transcript² Σ-proto Y) → L (Extract t) Y
@@ -454,7 +504,7 @@ module Sigma-Protocol
       open Σ-Protocol Σ-proto
       open Special-Honest-Verifier-Zero-Knowledge shvzk
 
-      FS-Prf : Λ → ★
+      FS-Prf : Λ → Type
       FS-Prf Y = Challenge × Σ-Prf Y
 
       sFS : (H : (Λ × Commitment) → Challenge) → Proof-System RΣP FS-Prf
@@ -493,7 +543,7 @@ module Sigma-Protocol
       FS-Prf? : {Y Y' : Λ} → FS-Prf Y → FS-Prf Y' → 𝟚
       FS-Prf? π π' = {!!}
 
-      E-State : ★
+      E-State : Type
       E-State = 𝟙
 
       open Simulation-Sound-Extractability sFS FS-Prf? Q Resp E-State

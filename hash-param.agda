@@ -48,6 +48,10 @@ module PRNG where
       prng : Key → List D
       prng k = PRNG.prng (H k) mkB
 
+-- Remark that the HMAC specification requires to pad the key in the following
+-- way:
+--   key size <= block size: pad to the right with zeros
+--   key size >  block size: hash the key
 module HMAC where
   module HMAC-mono
     {B : Set}

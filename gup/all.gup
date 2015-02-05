@@ -1,2 +1,3 @@
 #!/bin/bash -eu
+#gup -u crypto-agda.agda
 exec agda-pkg -cagda-pkg.conf crypto-agda.agda

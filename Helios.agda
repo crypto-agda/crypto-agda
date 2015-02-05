@@ -3,7 +3,7 @@ open import Function
 open import Data.List
 open import Data.Vec using (Vec; []; _∷_)
 open import Data.Fin using (Fin; zero; suc) renaming (toℕ to Fin▹ℕ)
-open import Data.Product.NP renaming (proj₁ to fst; proj₂ to snd) hiding (zip; map)
+open import Data.Product.NP hiding (zip; map)
 {-
 open import Data.Zero
 open import Data.One
