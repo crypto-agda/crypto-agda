@@ -5,21 +5,22 @@ open import Relation.Binary.PropositionalEquality.NP
 
 module Cipher.ElGamal.Generic
   (Message : ★)
+  (Message' : ★)
   (ℤq      : ★)
   (G       : ★)
   (g       : G)
   (_^_     : G → ℤq → G)
 
   -- Required for encryption
-  (_♦_     : G → Message → Message)
+  (_♦_     : G → Message → Message')
 
   -- Required for decryption
-  (_/_     : Message → G → Message)
+  (_/_     : Message' → G → Message)
   where
 
 PubKey     = G
 SecKey     = ℤq
-CipherText = G × Message
+CipherText = G × Message'
 Rₖ         = ℤq
 Rₑ         = ℤq
 
@@ -39,7 +40,7 @@ Dec : SecKey → CipherText → Message
 Dec x (gʸ , ζ) = ζ / (gʸ ^ x)
 
 module FunctionalCorrectness
-    (/-♦    : ∀ {x y} → (x ♦ y) / x ≡ y)
+    (/-♦    : ∀ {α m} → (α ♦ m) / α ≡ m)
     (comm-^ : ∀ {α x y} → (α ^ x)^ y ≡ (α ^ y)^ x)
     where
 

@@ -1,7 +1,9 @@
+open import Algebra.FunctionProperties
 open import Function
 open import Type using (★)
 open import Data.Product
 open import Relation.Binary.PropositionalEquality.NP
+open import HoTT
 
 module Cipher.ElGamal.Homomorphic
   (ℤq  : ★)
@@ -51,7 +53,7 @@ module ReencCorrectness
   open HomomorphicCorrectness /-♦ comm-^ interchange-♦ ^-⊞
 
   Reenc-Combine-g⁰ : ∀ pk c r → Reenc pk c r ≡ Combine (Enc pk g⁰ r) c
-  Reenc-Combine-g⁰ pk c r = cong₂ _,_ refl (ap (flip _♦_ (proj₂ c)) (! (g⁰-idr _)))
+  Reenc-Combine-g⁰ pk c r = pair= refl (ap (flip _♦_ (proj₂ c)) (! (g⁰-idr _)))
 
   Reenc-correct : ∀ sk m r₀ r₁ →
                   let pk = PubKeyGen sk in

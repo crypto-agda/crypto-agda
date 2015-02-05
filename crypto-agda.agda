@@ -1,4 +1,8 @@
 module crypto-agda where
+
+--import Control.Protocol
+import Explore.README
+
 import Attack.Compression
 import Attack.Reencryption
 import Attack.Reencryption.OneBit

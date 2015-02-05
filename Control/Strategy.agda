@@ -109,6 +109,7 @@ module _ {Q : ★} {R : Q → ★} where
     map-list _ [] = done []
     map-list f (x ∷ xs) = ask x λ r → map (_∷_ (f 0 x r)) (map-list (f ∘ suc) xs)
 
+    -- belongs to list
     mapIndex : {A B : Set} → (ℕ → A → B) → List A → List B
     mapIndex f []       = []
     mapIndex f (x ∷ xs) = f 0 x ∷ mapIndex (f ∘ suc) xs
