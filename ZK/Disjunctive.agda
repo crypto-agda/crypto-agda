@@ -13,8 +13,8 @@ import Data.List as L
 open L using (List; []; _∷_)
 open import Relation.Nullary
 open import Relation.Binary.PropositionalEquality.NP
-import ZK.Sigma-Protocol
-import ZK.Chaum-Pedersen
+import ZK.SigmaProtocol
+import ZK.ChaumPedersen
 
 module ZK.Disjunctive
     (G ℤq : ★)
@@ -389,8 +389,8 @@ module ZK.Disjunctive
   sumℤq-fun : ∀ {n} (f : Fin n → ℤq) → ℤq
   sumℤq-fun = iterate _ _+_ 0q
 
-  module CP = ZK.Chaum-Pedersen G ℤq g _^_ _·_ _/_ _+_ _*_ _==_
-  open CP using (PubKey; CipherText; EncRnd; enc)
+  module CP = ZK.ChaumPedersen {G} {ℤq} g _^_ _·_ _/_ _+_ _*_ _==_
+  open CP.ElGamal-encryption using (PubKey; CipherText; EncRnd; enc)
 
   VecCommitments = Vec CP.Commitment (suc max)
   VecChallenges  = Vec CP.Challenge  (suc max)
@@ -399,7 +399,7 @@ module ZK.Disjunctive
   module Interactive (y : PubKey) where
     Response   = VecChallenges × VecResponses
 
-    open ZK.Sigma-Protocol VecCommitments ℤq Response public
+    open ZK.SigmaProtocol VecCommitments ℤq Response public
 
     private
       M = λ i → g ^ Fin▹ℤq i
@@ -450,7 +450,7 @@ module ZK.Disjunctive
         open Structure structure
         CPcs = λ M c s → CP.Correct-simulation.correct-simulation y M ct c s ✓-== /-·
         CPcp = CP.Correctness-proof.correctness ✓-== ^-+ ^-* ·-/ y r w
-        correctness : Correctness prover (verifier ct)
+        correctness : Correct (prover , verifier ct)
         correctness Hcommitments = ✓∧ (✓-all3 {p = verifier1 ct} helper) helper'
           where
             open Prover-response Hcommitments
@@ -504,7 +504,7 @@ module ZK.Disjunctive
     where
     module I = Interactive y
 
-    open ZK.Sigma-Protocol VecCommitments VecChallenges VecResponses public
+    open ZK.SigmaProtocol VecCommitments VecChallenges VecResponses public
       using (Transcript; mk; Verifier)
 
     module _ (ct : CipherText) where
