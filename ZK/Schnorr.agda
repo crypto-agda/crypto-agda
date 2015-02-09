@@ -1,5 +1,5 @@
 open import Type using (Type)
-open import Data.Bool.Minimal using (Bool) renaming (T to ✓)
+open import Data.Bool.Base using (Bool) renaming (T to ✓)
 open import Relation.Binary.PropositionalEquality.NP using (_≡_; idp; ap; ap₂; !_; module ≡-Reasoning)
 open import ZK.Types using (Cyclic-group; module Cyclic-group
                            ; Cyclic-group-properties; module Cyclic-group-properties)
