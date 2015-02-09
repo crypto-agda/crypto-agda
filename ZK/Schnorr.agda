@@ -54,10 +54,13 @@ module ZK.Schnorr
     extractor : ∀ a → Extractor verifier
     extractor a t² = prover (witness-extractor t²) a
 
+  Schnorr : ∀ x a → Σ-Protocol
+  Schnorr x a = (prover x a , let y = g ^ x in verifier y)
+  
   module Proofs (cg-props : Cyclic-group-properties cg) where
     open Cyclic-group-properties cg-props
 
-    correct : ∀ x a → Correct (prover x a) (let y = g ^ x in verifier y)
+    correct : ∀ x a → Correct (Schnorr x a)
     correct x a c
       = ✓-== (g ^(a + (x * c))
            ≡⟨ ^-+ ⟩
@@ -70,10 +73,10 @@ module ZK.Schnorr
         gʷ = g ^ a
         y  = g ^ x
 
-    module _ (y : G) where
-      shvzk : Special-Honest-Verifier-Zero-Knowledge (verifier y)
-      shvzk = record { simulator = simulator y
+    shvzk : ∀ x a → Special-Honest-Verifier-Zero-Knowledge (Schnorr x a)
+    shvzk x a = record { simulator = simulator y
                      ; correct-simulator = λ _ _ → ✓-== /-· }
+      where y = g ^ x
 
     module _ (x : ℤq) (t² : Transcript² (verifier (g ^ x))) where
       private
@@ -105,9 +108,10 @@ module ZK.Schnorr
       extractor-exact : ∀ a → EqProver (extractor y a t²) (prover x a)
       extractor-exact a = idp , (λ c → ap (λ z → _+_ a (_*_ z c)) (! x≡x'))
 
-      special-soundness : Special-Soundness (verifier y)
-      special-soundness = record { extractor = extractor y a
-                                 ; extractor-correct = extractor-correct }
+    special-soundness : ∀ x a → Special-Soundness (Schnorr x a)
+    special-soundness x a = record { extractor = extractor y a
+                                 ; extractor-exact = λ t² → extractor-exact x t² a }
+       where y = g ^ x
 -- -}
 -- -}
 -- -}

@@ -1,7 +1,7 @@
 {-# OPTIONS --without-K #-}
 open import Type
 open import Data.Zero
-open import Data.Two.Core
+open import Data.Two.Base
 open import Data.ShapePolymorphism
 open import Relation.Binary.PropositionalEquality.NP
 import ZK.SigmaProtocol as ΣProto

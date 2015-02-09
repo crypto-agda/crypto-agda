@@ -3,8 +3,8 @@ open import Type
 open import Function
 open import Algebra.FunctionProperties.Eq
 open import Data.Zero
-open import Data.Two hiding (_≟_)
-open import Data.Nat.NP as ℕ hiding (_≟_)
+open import Data.Two.Base hiding (_≟_)
+open import Data.Nat as ℕ hiding (_≟_)
 open import Data.Product renaming (proj₁ to fst) hiding (map)
 open import Data.Fin.NP as Fin
 open import Data.Vec
