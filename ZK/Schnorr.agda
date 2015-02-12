@@ -1,6 +1,7 @@
 open import Type using (Type)
+open import Data.Product renaming (proj₁ to fst; proj₂ to snd)
 open import Data.Bool.Base using (Bool) renaming (T to ✓)
-open import Relation.Binary.PropositionalEquality.NP using (_≡_; idp; ap; ap₂; !_; module ≡-Reasoning)
+open import Relation.Binary.PropositionalEquality.NP using (_≡_; idp; ap; ap₂; !_; _∙_; module ≡-Reasoning)
 open import ZK.Types using (Cyclic-group; module Cyclic-group
                            ; Cyclic-group-properties; module Cyclic-group-properties)
 import ZK.SigmaProtocol
@@ -14,74 +15,71 @@ module ZK.Schnorr
   Commitment = G
   Challenge  = ℤq
   Response   = ℤq
+  Witness    = ℤq
+  Randomness = ℤq
+  Statement  = G
+  _∈_ : Witness → Statement → Type
+  x ∈ y = g ^ x ≡ y
 
-  open ZK.SigmaProtocol Commitment Challenge Response
+  open ZK.SigmaProtocol Commitment Challenge Response Witness Statement _∈_
 
-  module _ (x a : ℤq) where
-    prover-commitment : Commitment
-    prover-commitment = g ^ a
+  prover : (a : Randomness) → Prover
+  prover a x _y = (g ^ a) , response
+     where response : Challenge → Response
+           response c = (a + (x * c))
 
-    prover-response : Challenge → Response
-    prover-response c = a + (x * c)
+  verifier : Verifier
+  verifier y (mk A c s) = (g ^ s) == (A · (y ^ c))
 
-    prover : Prover
-    prover = prover-commitment , prover-response
+  -- This simulator shows why it is so important for the
+  -- challenge to be picked once the commitment is known.
 
-  module _ (y : G) where
-    verifier : Verifier
-    verifier (mk A c s) = (g ^ s) == (A · (y ^ c))
-
-    -- This simulator shows why it is so important for the
-    -- challenge to be picked once the commitment is known.
-
-    -- To fake a transcript, the challenge and response can
-    -- be arbitrarily chosen. However to be indistinguishable
-    -- from a valid proof it they need to be picked at random.
-    simulator : Simulator
-    simulator c s = A
+  -- To fake a transcript, the challenge and response can
+  -- be arbitrarily chosen. However to be indistinguishable
+  -- from a valid proof they need to be picked at random.
+  simulator : Simulator
+  simulator y c s = A
       where
         -- Compute A, such that the verifier accepts!
         A = (g ^ s) / (y ^ c)
 
-    witness-extractor : Transcript² verifier → ℤq
-    witness-extractor t² = x
+  extractor : Extractor verifier
+  extractor y t² = x
       module Witness-extractor where
         open Transcript² t²
         fd = get-f₀ - get-f₁
         cd = get-c₀ - get-c₁
         x  = fd * modinv cd
 
-    extractor : ∀ a → Extractor verifier
-    extractor a t² = prover (witness-extractor t²) a
-
-  Schnorr : ∀ x a → Σ-Protocol
-  Schnorr x a = (prover x a , let y = g ^ x in verifier y)
+  Schnorr : ∀ a → Σ-Protocol
+  Schnorr a = (prover a , verifier)
   
-  module Proofs (cg-props : Cyclic-group-properties cg) where
+  module Proofs (cg-props : Cyclic-group-properties cg)
+                -- TODO move dlog and dlog-ok in Cyclic-group-properties but beware it is not computable
+                (dlog : G → ℤq) 
+                (dlog-ok : (y : G) → g ^ dlog y ≡ y) where
     open Cyclic-group-properties cg-props
 
-    correct : ∀ x a → Correct (Schnorr x a)
-    correct x a c
+    correct : ∀ a → Correct (Schnorr a)
+    correct a {x} {y} c w rewrite ! w
       = ✓-== (g ^(a + (x * c))
            ≡⟨ ^-+ ⟩
-              gʷ · (g ^(x * c))
-           ≡⟨ ap (λ z → gʷ · z) ^-* ⟩
-              gʷ · (y ^ c)
+              gᵃ · (g ^(x * c))
+           ≡⟨ ap (λ z → gᵃ · z) ^-* ⟩
+              gᵃ · ((g ^ x) ^ c)
            ∎)
       where
         open ≡-Reasoning
-        gʷ = g ^ a
-        y  = g ^ x
+        gᵃ = g ^ a
 
-    shvzk : ∀ x a → Special-Honest-Verifier-Zero-Knowledge (Schnorr x a)
-    shvzk x a = record { simulator = simulator y
-                     ; correct-simulator = λ _ _ → ✓-== /-· }
-      where y = g ^ x
+    shvzk : ∀ a → Special-Honest-Verifier-Zero-Knowledge (Schnorr a)
+    shvzk a = record { simulator = simulator
+                     ; correct-simulator = λ _ _ _ → ✓-== /-· }
 
-    module _ (x : ℤq) (t² : Transcript² (verifier (g ^ x))) where
+    module _ (y : G) (t² : Transcript² verifier y) where
       private
-        y = g ^ x
-        x' = witness-extractor y t²
+        x  = dlog y
+        x' = extractor y t²
 
       open Transcript² t² renaming (get-A to A; get-c₀ to c₀; get-c₁ to c₁
                                    ;get-f₀ to f₀; get-f₁ to f₁)
@@ -90,6 +88,8 @@ module ZK.Schnorr
 
       g^xcd≡g^fd = g ^(x * cd)
                  ≡⟨ ^-* ⟩
+                   (g ^ x) ^ (c₀ - c₁)
+                 ≡⟨ ap₂ _^_ (dlog-ok y) idp ⟩
                    y ^ (c₀ - c₁)
                  ≡⟨ ^-- ⟩
                    (y ^ c₀) / (y ^ c₁)
@@ -102,16 +102,12 @@ module ZK.Schnorr
                  ∎
 
       -- The extracted x is correct
-      x≡x' : x ≡ x'
-      x≡x' = left-*-to-right-/ (^-inj g^xcd≡g^fd)
+      extractor-ok : g ^ x' ≡ y 
+      extractor-ok = ! ap (_^_ g) (left-*-to-right-/ (^-inj g^xcd≡g^fd)) ∙ dlog-ok y
 
-      extractor-exact : ∀ a → EqProver (extractor y a t²) (prover x a)
-      extractor-exact a = idp , (λ c → ap (λ z → _+_ a (_*_ z c)) (! x≡x'))
-
-    special-soundness : ∀ x a → Special-Soundness (Schnorr x a)
-    special-soundness x a = record { extractor = extractor y a
-                                 ; extractor-exact = λ t² → extractor-exact x t² a }
-       where y = g ^ x
+    special-soundness : ∀ a → Special-Soundness (Schnorr a)
+    special-soundness a = record { extractor = extractor
+                                 ; extract-valid-witness = extractor-ok }
 -- -}
 -- -}
 -- -}
