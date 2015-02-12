@@ -37,7 +37,8 @@ module ZK.ChaumPedersen
       β = (y ^ r) · M
   open ElGamal-encryption
 
-  module _ (y : PubKey) (M : Message) (ct : CipherText) where
+  module Tmp where
+   module _ (y : PubKey) (M : Message) (ct : CipherText) where
     Statement : Set
     Statement =
       -- Reads as follows:
@@ -46,8 +47,8 @@ module ZK.ChaumPedersen
       -- cipher-text `c` of message `M` using public-key `y`.
       ZKStatement EncRnd λ { [ r ] → ct ≡☐ enc y r M }
 
-  -- Assume the randomness `r` is known
-  module _ (y : PubKey) (M : Message) (r : EncRnd) where
+   -- Assume the randomness `r` is known
+   module _ (y : PubKey) (M : Message) (r : EncRnd) where
     -- Then the Statement holds
     Statement-complete : Statement y M (enc y r M)
     Statement-complete = [ r ] , refl
@@ -59,18 +60,33 @@ module ZK.ChaumPedersen
 
   Challenge  = ℤq
   Response   = ℤq
+  Randomness = ℤq
+  Witness    = EncRnd
 
-  open ΣProto Commitment Challenge Response public
+  record Statement : Type where
+    constructor mk
+    field
+      y  : PubKey
+      M  : Message
+      ct : CipherText
+    open CipherText ct public renaming (get-α to α; get-β to β)
 
+  _∈_ : Witness → Statement → Type
+  r ∈ (mk y M ct) = {!!}
+
+  open ΣProto Commitment Challenge Response Randomness Witness Statement _∈_ public
+
+{-
   module _ (y : PubKey) (r : EncRnd) (w : ℤq) where
+  prover : (w : ℤq) → Prover
+  prover r w  = prover-commitment , prover-response
+    where
     prover-commitment : Commitment
     prover-commitment = (g ^ w) , (y ^ w)
 
     prover-response : Challenge → Response
     prover-response c = w + (r * c)
 
-    prover : Prover
-    prover = prover-commitment , prover-response
 
   module _ (y : PubKey) (M : Message) (ct : CipherText) where
     private
