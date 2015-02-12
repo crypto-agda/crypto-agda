@@ -4,8 +4,9 @@ open import Relation.Binary.Core using (_≡_; _≢_)
 
 module ZK.SigmaProtocol
           (Commitment : Type) -- Prover commitments
-          (Challenge  : Type) -- Verifier challenges
+          (Challenge  : Type) -- Verifier challenges, picked at random
           (Response   : Type) -- Prover responses/proofs to challenges
+          (Randomness : Type) -- Prover's randomness
           (Witness    : Type) -- Prover's witness
           (Statement  : Type) -- Set of possible statements of the zk-proof
           (_∈_ : Witness → Statement → Type) -- Valid witness for a given statement
@@ -31,7 +32,7 @@ record Prover-Interaction : Type where
     get-f : Challenge → Response
 
 Prover : Type
-Prover = (w : Witness)(Y : Statement) → Prover-Interaction
+Prover = (r : Randomness)(w : Witness)(Y : Statement) → Prover-Interaction
 
 -- A transcript of the interaction between the prover and the
 -- verifier.
@@ -82,7 +83,7 @@ record Σ-Protocol : Type where
 -- to be correct if for any challenge, the (honest) verifier accepts what
 -- the (honest) prover returns.
 Correct : Σ-Protocol → Type
-Correct (prover , verifier) = ∀ {w Y} c → w ∈ Y → ✓ (verifier Y (run (prover w Y) c))
+Correct (prover , verifier) = ∀ r {w Y} c → w ∈ Y → ✓ (verifier Y (run (prover r w Y) c))
 
 -- A simulator takes a challenge and a response and returns a commitment.
 --

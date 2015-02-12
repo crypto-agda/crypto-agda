@@ -21,9 +21,9 @@ module ZK.Schnorr
   _∈_ : Witness → Statement → Type
   x ∈ y = g ^ x ≡ y
 
-  open ZK.SigmaProtocol Commitment Challenge Response Witness Statement _∈_
+  open ZK.SigmaProtocol Commitment Challenge Response Randomness Witness Statement _∈_
 
-  prover : (a : Randomness) → Prover
+  prover : Prover
   prover a x _y = (g ^ a) , response
      where response : Challenge → Response
            response c = (a + (x * c))
@@ -51,8 +51,8 @@ module ZK.Schnorr
         cd = get-c₀ - get-c₁
         x  = fd * modinv cd
 
-  Schnorr : ∀ a → Σ-Protocol
-  Schnorr a = (prover a , verifier)
+  Schnorr : Σ-Protocol
+  Schnorr = (prover , verifier)
   
   module Proofs (cg-props : Cyclic-group-properties cg)
                 -- TODO move dlog and dlog-ok in Cyclic-group-properties but beware it is not computable
@@ -60,7 +60,7 @@ module ZK.Schnorr
                 (dlog-ok : (y : G) → g ^ dlog y ≡ y) where
     open Cyclic-group-properties cg-props
 
-    correct : ∀ a → Correct (Schnorr a)
+    correct : Correct Schnorr
     correct a {x} {y} c w rewrite ! w
       = ✓-== (g ^(a + (x * c))
            ≡⟨ ^-+ ⟩
@@ -72,9 +72,9 @@ module ZK.Schnorr
         open ≡-Reasoning
         gᵃ = g ^ a
 
-    shvzk : ∀ a → Special-Honest-Verifier-Zero-Knowledge (Schnorr a)
-    shvzk a = record { simulator = simulator
-                     ; correct-simulator = λ _ _ _ → ✓-== /-· }
+    shvzk : Special-Honest-Verifier-Zero-Knowledge Schnorr
+    shvzk = record { simulator = simulator
+                   ; correct-simulator = λ _ _ _ → ✓-== /-· }
 
     module _ (y : G) (t² : Transcript² verifier y) where
       private
@@ -105,9 +105,9 @@ module ZK.Schnorr
       extractor-ok : g ^ x' ≡ y 
       extractor-ok = ! ap (_^_ g) (left-*-to-right-/ (^-inj g^xcd≡g^fd)) ∙ dlog-ok y
 
-    special-soundness : ∀ a → Special-Soundness (Schnorr a)
-    special-soundness a = record { extractor = extractor
-                                 ; extract-valid-witness = extractor-ok }
+    special-soundness : Special-Soundness Schnorr
+    special-soundness = record { extractor = extractor
+                               ; extract-valid-witness = extractor-ok }
 -- -}
 -- -}
 -- -}
