@@ -6,6 +6,9 @@ module ZK.SigmaProtocol
           (Commitment : Type) -- Prover commitments
           (Challenge  : Type) -- Verifier challenges
           (Response   : Type) -- Prover responses/proofs to challenges
+          (Witness    : Type) -- Prover's witness
+          (Statement  : Type) -- Set of possible statements of the zk-proof
+          (_∈_ : Witness → Statement → Type) -- Valid witness for a given statement
        where
 
 -- The prover is made of two steps.
@@ -18,13 +21,17 @@ module ZK.SigmaProtocol
 --
 -- Note that one might wish the function get-f to be partial.
 --
+-- This covers any kind of prover, either honest or dishonest
 -- Notice as well that such should depend on some randomness.
 -- So such a prover as type: SomeRandomness → Prover
-record Prover : Type where
+record Prover-Interaction : Type where
   constructor _,_
   field
     get-A : Commitment
     get-f : Challenge → Response
+
+Prover : Type
+Prover = (w : Witness)(Y : Statement) → Prover-Interaction
 
 -- A transcript of the interaction between the prover and the
 -- verifier.
@@ -33,11 +40,11 @@ record Prover : Type where
 -- proof the transcript alone does not prove anything. It can usually
 -- be simulated if one knows the challenge before the commitment.
 --
--- The only to be convinced by an interactive prover is to be/trust the verifier,
+-- The only way to be convinced by an interactive prover is to be/trust the verifier,
 -- namely to receive the commitment first and send a randomly picked challenge
--- thereafter.
+-- thereafter. So the proof is not transferable.
 --
--- The other way is the non-interactive zero-knowledge proof which forces the
+-- The other way is by making the zero-knowledge proof non-interactive, which forces the
 -- challenge to be a cryptographic hash of the commitment and the statement.
 -- See the StrongFiatShamir module and the corresponding paper for more details.
 record Transcript : Type where
@@ -48,18 +55,19 @@ record Transcript : Type where
     get-f : Response
 
 -- The actual behavior of an interactive verifier is as follows:
+-- * Given a statement
 -- * Receive a commitment from the prover
 -- * Send a randomly chosen challenge to the prover
 -- * Receive a response to that challenge
 -- Since the first two points are common to all Σ-protocols we describe
 -- the verifier behavior as a computable test on the transcript.
 Verifier : Type
-Verifier = Transcript → Bool
+Verifier = (Y : Statement)(t : Transcript) → Bool
 
--- To run the interaction, one only need the prover and a randomly
+-- To run the interaction, one only needs the prover and a randomly
 -- chosen challenge. The returned transcript is then checked by the
 -- verifier afterwards.
-run : Prover → Challenge → Transcript
+run : Prover-Interaction → Challenge → Transcript
 run (A , f) c = mk A c (f c)
 
 -- A Σ-protocol is made of the code for honest prover
@@ -70,10 +78,11 @@ record Σ-Protocol : Type where
     prover   : Prover
     verifier : Verifier
 
--- Correctness: a Σ-protocol is said to be correct if for any challenge,
--- the (honest) verifier accepts what the (honest) prover returns.
+-- Correctness (also called completeness in some papers): a Σ-protocol is said
+-- to be correct if for any challenge, the (honest) verifier accepts what
+-- the (honest) prover returns.
 Correct : Σ-Protocol → Type
-Correct (prover , verifier) = ∀ c → ✓ (verifier (run prover c))
+Correct (prover , verifier) = ∀ {w Y} c → w ∈ Y → ✓ (verifier Y (run (prover w Y) c))
 
 -- A simulator takes a challenge and a response and returns a commitment.
 --
@@ -83,13 +92,13 @@ Correct (prover , verifier) = ∀ c → ✓ (verifier (run prover c))
 -- Notice that generally, to make a valid looking transcript one should
 -- randomly pick the challenge and the response.
 Simulator : Type
-Simulator = (c : Challenge) (s : Response) → Commitment
+Simulator = (Y : Statement) (c : Challenge) (s : Response) → Commitment
 
 -- A correct simulator always convinces the honest verifier.
 Correct-simulator : Verifier → Simulator → Type
 Correct-simulator verifier simulator
-  = ∀ c s → let A = simulator c s in
-            ✓(verifier (mk A c s))
+  = ∀ Y c s → let A = simulator Y c s in
+              ✓(verifier Y (mk A c s))
 
 {-
   A Σ-protocol, more specifically a verifier which is equipped with
@@ -97,15 +106,15 @@ Correct-simulator verifier simulator
   This property is one of the condition to apply the Strong Fiat Shamir
   transformation.
 
-  The Special part of Special-Honest-Verifier-Zero-Knowledge is coverd by the
+  The Special part of Special-Honest-Verifier-Zero-Knowledge is covered by the
   simulator being correct.
 
   The Honest part is not covered yet, the definition is informally adapted from
   the paper "How not to prove yourself":
 
-  Furthermore, if c and s where chosen uniformly at random from their respective
+  Furthermore, if the challenge c and response s where chosen uniformly at random from their respective
   domains then the triple (A, c, s) is distributed identically to that of an execution
-  between the prover and the verifier (run prover c).
+  between the (honest) prover and the (honest) verifier (run prover c).
 
   where A = simulator c s
 -}
@@ -115,18 +124,9 @@ record Special-Honest-Verifier-Zero-Knowledge (Σ-proto : Σ-Protocol) : Type wh
     simulator         : Simulator
     correct-simulator : Correct-simulator verifier simulator
 
--- Two provers being equivalent, namely pointwise equal.
-record EqProver (p₀ p₁ : Prover) : Type where
-  constructor _,_
-  module P₀ = Prover p₀
-  module P₁ = Prover p₁
-  field
-    eq-A : P₀.get-A ≡ P₁.get-A
-    eq-f : ∀ c → P₀.get-f c ≡ P₁.get-f c
-
 -- A pair of "Transcript"s such that the commitment is shared
 -- and the challenges are different.
-record Transcript² (verifier : Verifier) : Type where
+record Transcript² (verifier : Verifier) (Y : Statement) : Type where
   constructor mk
   field
     -- The commitment is shared
@@ -149,17 +149,17 @@ record Transcript² (verifier : Verifier) : Type where
 
   field
     -- The transcripts verify
-    verify₀ : ✓ (verifier t₀)
-    verify₁ : ✓ (verifier t₁)
+    verify₀ : ✓ (verifier Y t₀)
+    verify₁ : ✓ (verifier Y t₁)
 
 -- Remark: What if the underlying witnesses are different? Nothing is enforced here.
 -- At least in the case of the Schnorr protocol it does not matter and yield a unique
 -- witness.
 Extractor : Verifier → Type
-Extractor verifier = Transcript² verifier → Prover
+Extractor verifier = ∀ Y → Transcript² verifier Y → Witness
 
-Extractor-Exact : (prover : Prover) (verifier : Verifier) → Extractor verifier → Type
-Extractor-Exact prover verifier extractor = ∀ t² → EqProver (extractor t²) prover
+Extract-Valid-Witness : (verifier : Verifier) → Extractor verifier → Type
+Extract-Valid-Witness verifier extractor = ∀ Y t² → extractor Y t² ∈ Y
 
 -- A Σ-protocol, more specifically a verifier which is equipped with
 -- a correct extractor is said to have the Special Soundness property.
@@ -168,20 +168,8 @@ Extractor-Exact prover verifier extractor = ∀ t² → EqProver (extractor t²)
 record Special-Soundness Σ-proto : Type where
   open Σ-Protocol Σ-proto
   field
-    extractor       : Extractor verifier
-    extractor-exact : Extractor-Exact prover verifier extractor
-
-  {- In the module StrongFiatShamir the extractor is as follows:
-
-    Extract    : (t : Σ-Transcript² verifier) → W
-    Extract-ok : (t : Σ-Transcript² verifier) → L (Extract t) Y
-
-    This version does not include the language of statements (Λ : Type),
-    the statements (Y : Δ), the witnesses (W : Type), nor the witnesses
-    relation (L : W → Λ → Type).
-    Therefor the extraction is described as extracting a honest prover
-    from the pair of transcripts.
-  -}
+    extractor             : Extractor verifier
+    extract-valid-witness : Extract-Valid-Witness verifier extractor
 
 record Special-Σ-Protocol : Type where
   field
