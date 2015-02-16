@@ -2,15 +2,21 @@ open import Type                 using (Type)
 open import Data.Bool.Base       using (Bool) renaming (T to ✓)
 open import Relation.Binary.Core using (_≡_; _≢_)
 
+-- See ZK.SigmaProtocol.KnownStatement for a simpler version which assumes the statement to
+-- be known already by all parties.
+
 module ZK.SigmaProtocol
-          (Commitment : Type) -- Prover commitments
-          (Challenge  : Type) -- Verifier challenges, picked at random
-          (Response   : Type) -- Prover responses/proofs to challenges
-          (Randomness : Type) -- Prover's randomness
-          (Witness    : Type) -- Prover's witness
           (Statement  : Type) -- Set of possible statements of the zk-proof
-          (_∈_ : Witness → Statement → Type) -- Valid witness for a given statement
+          (Commitment : Statement → Type) -- Prover commitments
+          (Challenge  : Statement → Type) -- Verifier challenges, picked at random
+          (Response   : Statement → Type) -- Prover responses/proofs to challenges
+          (Randomness : Statement → Type) -- Prover's randomness
+          (Witness    : Statement → Type) -- Prover's witness
+          (_∋_        : (Y : Statement) → Witness Y → Type) -- Valid witness for a given statement
        where
+
+import ZK.SigmaProtocol.Types as Common
+open Common public using (_,_; mk)
 
 -- The prover is made of two steps.
 -- * First, send the commitment.
@@ -25,35 +31,18 @@ module ZK.SigmaProtocol
 -- This covers any kind of prover, either honest or dishonest
 -- Notice as well that such should depend on some randomness.
 -- So such a prover as type: SomeRandomness → Prover
-record Prover-Interaction : Type where
-  constructor _,_
-  field
-    get-A : Commitment
-    get-f : Challenge → Response
+Prover-Interaction : (Y : Statement) → Type
+Prover-Interaction Y = Common.Prover-Interaction (Commitment Y) (Challenge Y) (Response Y)
+
+module Prover-Interaction Y = Common.Prover-Interaction (Commitment Y) (Challenge Y) (Response Y)
 
 Prover : Type
-Prover = (r : Randomness)(w : Witness)(Y : Statement) → Prover-Interaction
+Prover = (Y : Statement)(r : Randomness Y)(w : Witness Y) → Prover-Interaction Y
 
--- A transcript of the interaction between the prover and the
--- verifier.
---
--- Note that in the case of an interactive zero-knowledge
--- proof the transcript alone does not prove anything. It can usually
--- be simulated if one knows the challenge before the commitment.
---
--- The only way to be convinced by an interactive prover is to be/trust the verifier,
--- namely to receive the commitment first and send a randomly picked challenge
--- thereafter. So the proof is not transferable.
---
--- The other way is by making the zero-knowledge proof non-interactive, which forces the
--- challenge to be a cryptographic hash of the commitment and the statement.
--- See the StrongFiatShamir module and the corresponding paper for more details.
-record Transcript : Type where
-  constructor mk
-  field
-    get-A : Commitment
-    get-c : Challenge
-    get-f : Response
+Transcript : (Y : Statement) → Type
+Transcript Y = Common.Transcript (Commitment Y) (Challenge Y) (Response Y)
+
+module Transcript Y = Common.Transcript (Commitment Y) (Challenge Y) (Response Y)
 
 -- The actual behavior of an interactive verifier is as follows:
 -- * Given a statement
@@ -63,13 +52,14 @@ record Transcript : Type where
 -- Since the first two points are common to all Σ-protocols we describe
 -- the verifier behavior as a computable test on the transcript.
 Verifier : Type
-Verifier = (Y : Statement)(t : Transcript) → Bool
+Verifier = (Y : Statement)(t : Transcript Y) → Bool
 
 -- To run the interaction, one only needs the prover and a randomly
 -- chosen challenge. The returned transcript is then checked by the
 -- verifier afterwards.
-run : Prover-Interaction → Challenge → Transcript
-run (A , f) c = mk A c (f c)
+run : (Y : Statement) → Prover-Interaction Y → Challenge Y → Transcript Y
+run Y prover c = mk get-A c (get-f c)
+  where open Prover-Interaction Y prover
 
 -- A Σ-protocol is made of the code for honest prover
 -- and honest verifier.
@@ -79,11 +69,20 @@ record Σ-Protocol : Type where
     prover   : Prover
     verifier : Verifier
 
+  Verified : (Y : Statement)(t : Transcript Y) → Type
+  Verified Y t = ✓ (verifier Y t)
+
+  prover-commitment : (Y : Statement)(r : Randomness Y)(w : Witness Y) → Commitment Y
+  prover-commitment Y r w = Prover-Interaction.get-A Y (prover Y r w)
+
+  prover-response : (Y : Statement)(r : Randomness Y)(w : Witness Y)(c : Challenge Y) → Response Y
+  prover-response Y r w = Prover-Interaction.get-f Y (prover Y r w)
+
 -- Correctness (also called completeness in some papers): a Σ-protocol is said
 -- to be correct if for any challenge, the (honest) verifier accepts what
 -- the (honest) prover returns.
 Correct : Σ-Protocol → Type
-Correct (prover , verifier) = ∀ r {w Y} c → w ∈ Y → ✓ (verifier Y (run (prover r w Y) c))
+Correct (prover , verifier) = ∀ Y w r c → Y ∋ w → ✓ (verifier Y (run Y (prover Y r w) c))
 
 -- A simulator takes a challenge and a response and returns a commitment.
 --
@@ -93,7 +92,7 @@ Correct (prover , verifier) = ∀ r {w Y} c → w ∈ Y → ✓ (verifier Y (run
 -- Notice that generally, to make a valid looking transcript one should
 -- randomly pick the challenge and the response.
 Simulator : Type
-Simulator = (Y : Statement) (c : Challenge) (s : Response) → Commitment
+Simulator = (Y : Statement) (c : Challenge Y) (s : Response Y) → Commitment Y
 
 -- A correct simulator always convinces the honest verifier.
 Correct-simulator : Verifier → Simulator → Type
@@ -122,45 +121,22 @@ Correct-simulator verifier simulator
 record Special-Honest-Verifier-Zero-Knowledge (Σ-proto : Σ-Protocol) : Type where
   open Σ-Protocol Σ-proto
   field
-    simulator         : Simulator
-    correct-simulator : Correct-simulator verifier simulator
+    simulator          : Simulator
+    .correct-simulator : Correct-simulator verifier simulator
 
--- A pair of "Transcript"s such that the commitment is shared
--- and the challenges are different.
-record Transcript² (verifier : Verifier) (Y : Statement) : Type where
-  constructor mk
-  field
-    -- The commitment is shared
-    get-A         : Commitment
+Transcript² : (verifier : Verifier) (Y : Statement) → Type
+Transcript² verifier Y = Common.Transcript² (Commitment Y) (Challenge Y) (Response Y) (verifier Y)
 
-    -- The challenges...
-    get-c₀ get-c₁ : Challenge
-
-    -- ...are different
-    c₀≢c₁         : get-c₀ ≢ get-c₁
-
-    -- The responses/proofs are arbitrary
-    get-f₀ get-f₁ : Response
-
-  -- The two transcripts
-  t₀ : Transcript
-  t₀ = mk get-A get-c₀ get-f₀
-  t₁ : Transcript
-  t₁ = mk get-A get-c₁ get-f₁
-
-  field
-    -- The transcripts verify
-    verify₀ : ✓ (verifier Y t₀)
-    verify₁ : ✓ (verifier Y t₁)
+module Transcript² (Y : Statement) = Common.Transcript² (Commitment Y) (Challenge Y) (Response Y)
 
 -- Remark: What if the underlying witnesses are different? Nothing is enforced here.
 -- At least in the case of the Schnorr protocol it does not matter and yield a unique
 -- witness.
 Extractor : Verifier → Type
-Extractor verifier = ∀ Y → Transcript² verifier Y → Witness
+Extractor verifier = (Y : Statement) → Transcript² verifier Y → Witness Y
 
 Extract-Valid-Witness : (verifier : Verifier) → Extractor verifier → Type
-Extract-Valid-Witness verifier extractor = ∀ Y t² → extractor Y t² ∈ Y
+Extract-Valid-Witness verifier extractor = ∀ Y t² → Y ∋ extractor Y t²
 
 -- A Σ-protocol, more specifically a verifier which is equipped with
 -- a correct extractor is said to have the Special Soundness property.
@@ -169,15 +145,21 @@ Extract-Valid-Witness verifier extractor = ∀ Y t² → extractor Y t² ∈ Y
 record Special-Soundness Σ-proto : Type where
   open Σ-Protocol Σ-proto
   field
-    extractor             : Extractor verifier
-    extract-valid-witness : Extract-Valid-Witness verifier extractor
+  -- TODO Challenge should exp large wrt the security param
+    extractor              : Extractor verifier
+    .extract-valid-witness : Extract-Valid-Witness verifier extractor
 
 record Special-Σ-Protocol : Type where
   field
     Σ-protocol : Σ-Protocol
-    correct : Correct Σ-protocol
+    .correct : Correct Σ-protocol
     shvzk   : Special-Honest-Verifier-Zero-Knowledge Σ-protocol
     ssound  : Special-Soundness Σ-protocol
   open Σ-Protocol Σ-protocol public
   open Special-Honest-Verifier-Zero-Knowledge shvzk public
   open Special-Soundness ssound public
+-- -}
+-- -}
+-- -}
+-- -}
+-- -}
