@@ -8,7 +8,6 @@ open import Data.List.Base using (List; []; _∷_; and; foldr)
 open import Data.String.Base  using (String)
 
 open import FFI.JS as JS hiding (_+_; zero; one; join)
-import FFI.JS.FS as FS
 open import FFI.JS.BigI as BigI
 import FFI.JS.Console as Console
 import FFI.JS.Process as Process
@@ -21,8 +20,10 @@ join : String → List String → String
 join sep []       = ""
 join sep (x ∷ xs) = x ++ foldr (λ y z → sep ++ y ++ z) "" xs
 
+{-
 instance
   showBigI = mk λ _ → showString ∘ BigI.toString
+-}
 
 G  = BigI
 ℤq = BigI
@@ -38,7 +39,7 @@ non0I x with equals x 0I
 ... | true  = throw "Should be non zero!" 0I
 ... | false = x
 
-module BigICG (g p q : BigI) where
+module BigICG (p q : BigI) where
   _^_  : G  → ℤq → G
   _·_  : G  → G  → G
   _/_  : G  → G  → G
@@ -68,9 +69,6 @@ print : {A : Set}{{_ : Show A}} → A → Callback0
 print = Console.log ∘ show
 -}
 
-_+,+_ : String → String → String
-x +,+ y = x ++ "," ++ y
-
 PubKey         = G
 EncRnd         = ℤq {- randomness used for encryption of ct -}
 Message        = G {- plain text message -}
@@ -79,27 +77,31 @@ Response       = ℤq
 CommitmentPart = G
 CipherTextPart = G
 
-module HeliosVerifyV3 g p q (y : PubKey) where
-  open BigICG g p q
+module HeliosVerifyV3 (g : G) p q (y : PubKey) where
+  open BigICG p q
 
-  -- module _ (α β : CipherTextPart) where
   verify-chaum-pedersen : (α β : CipherTextPart)(M : Message)(A B : G)(c : Challenge)(s : Response) → Bool
   verify-chaum-pedersen α β M A B c s
-      = {- trace "α=" α λ _ →
+      = trace "α=" α λ _ →
         trace "β=" β λ _ →
         trace "M=" M λ _ →
         trace "A=" A λ _ →
         trace "B=" B λ _ →
         trace "c=" c λ _ →
-        trace "s=" s λ _ → -}
+        trace "s=" s λ _ →
         (g ^ s) == (A · (α ^ c))
       ∧ (y ^ s) == (B · ((β / M) ^ c))
 
   verify-individual-proof : (α β : CipherTextPart)(ix : Number)(π : JSValue) → Bool
-  verify-individual-proof α β ix π =
-        
-      -- where
-      let
+  verify-individual-proof α β ix π
+      = trace "m=" m λ _ →
+        trace "M=" M λ _ →
+        trace "commitmentA=" A λ _ →
+        trace "commitmentB=" B λ _ →
+        trace "challenge=" c λ _ →
+        trace "response=" s λ _ →
+        res
+      where
         m  = bignum ix
         M  = g ^ m
         A  = bigdec (π ·« "commitment" » ·« "A" »)
@@ -107,58 +109,50 @@ module HeliosVerifyV3 g p q (y : PubKey) where
         c  = bigdec (π ·« "challenge" »)
         s  = bigdec (π ·« "response" »)
         res = verify-chaum-pedersen α β M A B c s
-      in trace "ix=" ix λ _ →
-        trace "m=" m λ _ →
-        trace "M=" M λ _ →
-        trace "commitmentA=" A λ _ →
-        trace "commitmentB=" B λ _ →
-        trace "challenge=" c λ _ →
-        trace "response=" s λ _ →
-        trace "p=" p λ _ →
-        trace "g=" g λ _ →
-        trace "y=" y λ _ →
-        res
 
-  -- Conform to HeliosV3 but too weak.
+  -- Conform to HeliosV3 but it is too weak.
   -- One should follow a "Strong Fiat Shamir" transformation
   -- from interactive ZK proof to non-interactive ZK proofs.
   -- Namely one should hash the statement as well.
   --
   -- SHA1(A0 + "," + B0 + "," + A1 + "," + B1 + ... + "Amax" + "," + Bmax)
   hash-commitments : JSArray JSValue → BigI
-  hash-commitments is =
+  hash-commitments πs =
     fromHex $
-    trace-call "SHA1(commitments)=" SHA1 $
-    trace-call "commitments=" (join ",") $
-    decodeJSArray is λ _ π →
+    trace-call "SHA1(commitments)=" SHA1       $
+    trace-call "commitments="       (join ",") $
+    decodeJSArray πs λ _ π →
       (castString (π ·« "commitment" » ·« "A" »))
-      +,+
+      ++ "," ++
       (castString (π ·« "commitment" » ·« "B" »))
 
   sum-challenges : JSArray JSValue → BigI
-  sum-challenges is =
-    sumI $ decodeJSArray is λ _ π → bigdec (π ·« "challenge" »)
+  sum-challenges πs =
+    sumI $ decodeJSArray πs λ _ π → bigdec (π ·« "challenge" »)
 
   verify-challenges : JSArray JSValue → Bool
-  verify-challenges is =
+  verify-challenges πs =
       trace "hash(commitments)=" h λ _ →
       trace "sum(challenge)="    c λ _ →
       h == c
     where
-      h = hash-commitments is
-      c = sum-challenges   is
+      h = hash-commitments πs
+      c = sum-challenges   πs
 
-  verify-choice : (v : JSValue)(is : JSArray JSValue) → Bool
-  verify-choice v is =
+  verify-choice : (v : JSValue)(πs : JSArray JSValue) → Bool
+  verify-choice v πs =
       trace "α=" α λ _ →
       trace "β=" β λ _ →
-      verify-challenges is ∧ and (decodeJSArray is $ verify-individual-proof α β)
+      verify-challenges πs
+      ∧
+      and (decodeJSArray πs $ verify-individual-proof α β)
     where
       α = bigdec (v ·« "alpha" »)
       β = bigdec (v ·« "beta"  »)
 
   verify-choices : (choices πs : JSArray JSValue) → Bool
   verify-choices choices πs =
+    trace "TODO: check the array size of choices πs together election data" "" λ _ →
     and $ decodeJSArray choices λ ix choice →
       trace "verify choice " ix λ _ →
       verify-choice choice (castJSArray (πs Array[ ix ]))
@@ -195,7 +189,7 @@ module HeliosVerifyV3 g p q (y : PubKey) where
         trace "TODO: CHECK the election_uuid: " election_uuid λ _ →
         verify-answers answers
       where
-        answers       = castJSArray $ ballot ·« "answers" »
+        answers       = ballot ·« "answers" »A
         election_hash = ballot ·« "election_hash" »
         election_uuid = ballot ·« "election_uuid" »
 
@@ -217,10 +211,9 @@ verify-helios-election arg = trace "res=" res id
     q  = bigdec (pk ·« "q" »)
     y  = bigdec (pk ·« "y" »)
     res =
-        trace "p=" p λ _ →
-        trace "ed=" (JSON-stringify ed) λ _ →
-        trace "p=" (ed ·« "p" ») λ _ →
         trace "g=" g λ _ →
+        trace "p=" p λ _ →
+        trace "q=" q λ _ →
         trace "y=" y λ _ →
         HeliosVerifyV3.verify-ballots g p q y bs
 
