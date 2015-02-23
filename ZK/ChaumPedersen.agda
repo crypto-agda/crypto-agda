@@ -21,6 +21,12 @@ module ZK.ChaumPedersen
     {G ℤq : ★}
     (cg : Cyclic-group G ℤq)
     where
+  {-
+  -- Hint: Postulates yield nicer goals than parameters
+  postulate
+    G ℤq : ★
+    cg : Cyclic-group G ℤq
+  -}
   open Cyclic-group cg
 
   Challenge  = ℤq
@@ -345,6 +351,7 @@ module ZK.ChaumPedersen
         α β : G
 
     PubKey  = G
+    PrivKey = ℤq
     EncRnd  = ℤq {- randomness used for encryption of ct -}
     Message = G {- plain text message -}
 
@@ -352,6 +359,11 @@ module ZK.ChaumPedersen
     enc y r M = α , β where
       α = g ^ r
       β = (y ^ r) · M
+
+    dec : PrivKey → CipherText → Message
+    dec x ct = β / (α ^ x) where
+      open CipherText ct
+
   open ElGamal-encryption
 
   -- CP : (g₀ g₁ u₀ u₁ : G) (w : ℤq) → Type
@@ -371,9 +383,9 @@ module ZK.ChaumPedersen
     KnownEncRnd : EncRnd → Type
     KnownEncRnd r = enc y r M ≡ ct
 
-    module σCP = Generic (g ∷ y ∷ []) (CT.α ∷ (CT.β / M) ∷ [])
+    module GenKnownEncRnd = Generic (g ∷ y ∷ []) (CT.α ∷ (CT.β / M) ∷ [])
 
-    mapEncRnd : W-Map σCP.Valid KnownEncRnd
+    mapEncRnd : W-Map GenKnownEncRnd.Valid KnownEncRnd
     mapEncRnd = record { →Witness = id ; ←Witness = id
                        ; →Valid = λ w₀? → let (p₀ , p₁₂) = ✓∧× w₀?
                                               (p₁ , p₂)  = ✓∧× p₁₂ in
@@ -388,7 +400,29 @@ module ZK.ChaumPedersen
       pf! : ∀ {M yr β} → yr · M ≡ β → yr ≡ β / M
       pf! {M} e = ·-/ ∙ ap (flip _/_ M) e
 
-    module σEncRndKnowledge = Apply-W-Map mapEncRnd (σCP.Proofs.Σ-structure cg-props)
+    module σEncRndKnowledge = Apply-W-Map mapEncRnd (GenKnownEncRnd.Proofs.Σ-structure cg-props)
+
+    KnownDec : PrivKey → Type
+    KnownDec x = (g ^ x ≡ y) × (dec x ct ≡ M)
+
+    module GenKnownDec = Generic (g ∷ CT.α ∷ []) (y ∷ (CT.β / M) ∷ [])
+
+    mapDec : W-Map GenKnownDec.Valid KnownDec
+    mapDec = record { →Witness = id ; ←Witness = id
+                    ; →Valid = λ w₀? → let (p₀ , p₁₂) = ✓∧× w₀?
+                                           (p₁ , p₂)  = ✓∧× p₁₂ in
+                                       ==-✓ p₀ , pf (==-✓ p₁)
+                    ; ←Valid = λ w₁? → ✓∧ (✓-== (fst w₁?))
+                                          (✓∧ (✓-== (pf! (snd w₁?))) _)
+                    }
+     where
+      pf : ∀ {w M} → CT.α ^ w ≡ CT.β / M → dec w ct ≡ M
+      pf {w} {M} e = ap (_/_ CT.β) e ∙ ! /-/
+
+      pf! : ∀ {w M} → dec w ct ≡ M → CT.α ^ w ≡ CT.β / M
+      pf! {w} {M} e = /-/ ∙ ap (_/_ CT.β) e
+
+    module σKnownDec = Apply-W-Map mapEncRnd (GenKnownEncRnd.Proofs.Σ-structure cg-props)
 -- -}
 -- -}
 -- -}

@@ -32,6 +32,7 @@ record Cyclic-group-properties {G ℤq} (cg : Cyclic-group G ℤq) : Type where
     *--  : ∀ {x y z} → x * (y - z) ≡ (x * y) - (x * z)
     /-·  : ∀ {P Q} → P ≡ (P / Q) · Q
     ·-/  : ∀ {P Q} → P ≡ (P · Q) / Q
+    /-/  : ∀ {P Q} → P ≡ Q / (Q / P)
     cancels-/ : ∀ {P Q R} → (P · Q) / (P · R) ≡ Q / R
     /-inj : ∀ {P Q R} → P / R ≡ Q / R → P ≡ Q
     ^-inj : ∀ {b x y} → b ^ x ≡ b ^ y → x ≡ y

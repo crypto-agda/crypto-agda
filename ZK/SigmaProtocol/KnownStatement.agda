@@ -7,6 +7,7 @@ import ZK.SigmaProtocol.Types
 -- known by all parties.
 module ZK.SigmaProtocol.KnownStatement
           (Commitment : Type) -- Prover commitments
+  -- TODO Challenge should exp large wrt the security param
           (Challenge  : Type) -- Verifier challenges, picked at random
           (Response   : Type) -- Prover responses/proofs to challenges
           (Randomness : Type) -- Prover's randomness
@@ -109,7 +110,6 @@ Extract-Valid-Witness verifier extractor = ∀ t² → ValidWitness (extractor t
 record Special-Soundness Σ-proto : Type where
   open Σ-Protocol Σ-proto
   field
-  -- TODO Challenge should exp large wrt the security param
     extractor              : Extractor verifier
     .extract-valid-witness : Extract-Valid-Witness verifier extractor
 

@@ -63,7 +63,7 @@ module ZK.Schnorr.KnownStatement
     open ≡-Reasoning
 
     correct : Correct Schnorr
-    correct x a c w -- rewrite ! w
+    correct x a c w
       = ✓-== (g ^(a + (x * c))
            ≡⟨ ^-+ ⟩
               A · (g ^(x * c))
@@ -81,7 +81,7 @@ module ZK.Schnorr.KnownStatement
 
     module _ (t² : Transcript² verifier) where
       private
-        x  = dlog g y
+        x = dlog g y
 
       open Transcript² t² renaming (get-A to A; get-c₀ to c₀; get-c₁ to c₁
                                    ;get-f₀ to f₀; get-f₁ to f₁)
