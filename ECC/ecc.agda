@@ -1,6 +1,6 @@
 --open import prelude renaming (Bool to 𝟚; true to 1₂; false to 0₂)
 open import Relation.Binary.PropositionalEquality.NP
-open import Data.Two
+open import Data.Two.Base
 open import Data.List
 open import Function
 open import Algebra.FunctionProperties.Eq
