@@ -1,6 +1,6 @@
 {-# OPTIONS --without-K #-}
 open import Function.NP
-open import Data.Product
+open import Data.Product.NP
 open import Relation.Nullary
 open import Relation.Binary.PropositionalEquality.NP hiding ([_])
 open import cycle using (here; there; [_]; _∷_)
@@ -17,9 +17,9 @@ Fun = 𝟛 → 𝟛
 module M (f : Fun) where
   open cycle 𝟛 f public hiding (here; there; [_]; _∷_)
 
-  ↺0 = ↺ 0₃
-  ↺1 = ↺ 1₃
-  ↺2 = ↺ 2₃
+  0↦*0 = 0₃ ↦* 0₃
+  1↦*1 = 1₃ ↦* 1₃
+  2↦*2 = 2₃ ↦* 2₃
   0↦*1 = 0₃ ↦* 1₃
   0↦*2 = 0₃ ↦* 2₃
   1↦*0 = 1₃ ↦* 0₃
@@ -47,7 +47,7 @@ module Suc₃ where
   -- open cycle 𝟛 suc₃ hiding (here; there)
 
   module L00 where
-    c : ↺0
+    c : 0↦*0
     c = [ 0₃ ]
 
     c-is-chain : is-chain c
@@ -61,6 +61,9 @@ module Suc₃ where
 
     2∉c : 2₃ ∉ c
     2∉c ()
+
+    c-no-club : ¬(is-club c)
+    c-no-club (_ , ())
 
   module C20 where
     c : 2↦*0
@@ -81,6 +84,9 @@ module Suc₃ where
     2∈c : 2₃ ∈ c
     2∈c = here
 
+    c-no-club : ¬(is-club c)
+    c-no-club (_ , there ())
+
   module C120 where
 
     c : 1↦*0
@@ -95,11 +101,17 @@ module Suc₃ where
     0∈c : 0₃ ∈ c
     0∈c = there (there here)
 
+    1∈c : 1₃ ∈ c
+    1∈c = here
+
     2∈c : 2₃ ∈ c
     2∈c = there here
 
+    c-is-club : is-club c
+    c-is-club = c-is-chain , 1∈c
+
   module C0120 where
-    c : ↺0
+    c : 0↦*0
     c = 0₃ ∷ 1₃ ∷ 2₃ ∷ [ 0₃ ]
 
     0∈c : 0₃ ∈ c
@@ -111,11 +123,14 @@ module Suc₃ where
     c-no-chain : ¬(is-chain c)
     c-no-chain pf = case pf 0∈c 0∈c' of λ { () }
 
+    c-no-club : ¬(is-club c)
+    c-no-club = c-no-chain ∘ fst
+
 module [01]₃ where
   open M [01]₃
 
   module L00 where
-    c : ↺0
+    c : 0↦*0
     c = [ 0₃ ]
 
     c-is-chain : is-chain c
@@ -129,6 +144,9 @@ module [01]₃ where
 
     2∉c : 2₃ ∉ c
     2∉c ()
+
+    c-no-club : ¬(is-club c)
+    c-no-club (_ , ())
 
   module C10 where
     c : 1↦*0
@@ -149,6 +167,9 @@ module [01]₃ where
     2∉c : 2₃ ∉ c
     2∉c (there ())
 
+    c-is-club : is-club c
+    c-is-club = c-is-chain , 1∈c
+
   module C01 where
     c : 0↦*1
     c = 0₃ ∷ [ 1₃ ]
@@ -168,8 +189,11 @@ module [01]₃ where
     2∉c : 2₃ ∉ c
     2∉c (there ())
 
+    c-no-club : is-club c
+    c-no-club = c-is-chain , 0∈c
+
   module L2 where
-    c : ↺2
+    c : 2↦*2
     c = [ 2₃ ]
 
     c-is-chain : is-chain c
@@ -184,8 +208,11 @@ module [01]₃ where
     2∈c : 2₃ ∈ c
     2∈c = here
 
+    c-no-club : is-club c
+    c-no-club = c-is-chain , 2∈c
+
   module L010 where
-    c : ↺0
+    c : 0↦*0
     c = 0₃ ∷ 1₃ ∷ [ 0₃ ]
 
     0∈c : 0₃ ∈ c
@@ -203,8 +230,11 @@ module [01]₃ where
     c-no-chain : ¬(is-chain c)
     c-no-chain is = case is 0∈c 0∈c' of λ { () }
 
+    c-no-club : ¬(is-club c)
+    c-no-club = c-no-chain ∘ fst
+
   module L101 where
-    c : ↺1
+    c : 1↦*1
     c = 1₃ ∷ 0₃ ∷ [ 1₃ ]
 
     0∈c : 0₃ ∈ c
@@ -230,8 +260,11 @@ module [01]₃ where
     c-no-chain : ¬(is-chain c)
     c-no-chain is = case is 1∈c-h 1∈c-t of λ { () }
 
+    c-no-club : ¬(is-club c)
+    c-no-club = c-no-chain ∘ fst
+
   module L222 where 
-    c : ↺2
+    c : 2↦*2
     c = 2₃ ∷ [ 2₃ ]
 
     2∈c : 2₃ ∈ c
@@ -243,8 +276,11 @@ module [01]₃ where
     c-no-chain : ¬(is-chain c)
     c-no-chain is = case is 2∈c 2∈c' of λ { () }
 
+    c-no-club : ¬(is-club c)
+    c-no-club = c-no-chain ∘ fst
+
   module L2222 where 
-    c : ↺2
+    c : 2↦*2
     c = 2₃ ∷ 2₃ ∷ [ 2₃ ]
 
     2∈c : 2₃ ∈ c
@@ -256,11 +292,14 @@ module [01]₃ where
     c-no-chain : ¬(is-chain c)
     c-no-chain is = case is 2∈c 2∈c' of λ { () }
 
+    c-no-club : ¬(is-club c)
+    c-no-club = c-no-chain ∘ fst
+
 module Is0₃? where
   open M is0₃?
 
   module L00 where
-    c : ↺0
+    c : 0↦*0
     c = [ 0₃ ]
 
     c-is-chain : is-chain c
@@ -294,6 +333,9 @@ module Is0₃? where
     2∉c : 2₃ ∉ c
     2∉c (there ())
 
+    c-no-club : is-club c
+    c-no-club = c-is-chain , 1∈c
+
   module C01 where
     c : 0↦*1
     c = 0₃ ∷ [ 1₃ ]
@@ -313,8 +355,11 @@ module Is0₃? where
     2∉c : 2₃ ∉ c
     2∉c (there ())
 
+    c-no-club : is-club c
+    c-no-club = c-is-chain , 0∈c
+
   module L22 where
-    c : ↺2
+    c : 2↦*2
     c = [ 2₃ ]
 
     c-is-chain : is-chain c
@@ -329,8 +374,11 @@ module Is0₃? where
     2∈c : 2₃ ∈ c
     2∈c = here
 
+    c-no-club : ¬(is-club c)
+    c-no-club (_ , ())
+
   module L010 where
-    c : ↺0
+    c : 0↦*0
     c = 0₃ ∷ 1₃ ∷ [ 0₃ ]
 
     0∈c-h : 0₃ ∈ c
@@ -342,8 +390,11 @@ module Is0₃? where
     c-no-chain : ¬(is-chain c)
     c-no-chain is = case is 0∈c-h 0∈c-t of λ { () }
 
+    c-no-club : ¬(is-club c)
+    c-no-club = c-no-chain ∘ fst
+
   module L101 where
-    c : ↺1
+    c : 1↦*1
     c = 1₃ ∷ 0₃ ∷ [ 1₃ ]
 
     0∈c : 0₃ ∈ c
@@ -369,6 +420,9 @@ module Is0₃? where
     c-no-chain : ¬(is-chain c)
     c-no-chain is = case is 1∈c-h 1∈c-t of λ { () }
 
+    c-no-club : ¬(is-club c)
+    c-no-club = c-no-chain ∘ fst
+
   module C20 where
     c : 2↦*0
     c = 2₃ ∷ [ 0₃ ]
@@ -387,6 +441,9 @@ module Is0₃? where
 
     2∈c : 2₃ ∈ c
     2∈c = here
+
+    c-no-club : ¬(is-club c)
+    c-no-club (_ , there ())
 
   module C201 where 
     c : 2↦*1

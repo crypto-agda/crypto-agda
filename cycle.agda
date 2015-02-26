@@ -44,7 +44,7 @@ data _↦*_ : (x z : A) → Set ℓ where
   _∷_ : (x : A) {z : A} → f x ↦* z → x ↦* z
 
 ↺ : (x : A) → Set ℓ
-↺ x = x ↦* x
+↺ x = f x ↦* x
 
 listC : ∀ {x z} → x ↦* z → List A
 listC [ y ] = []
@@ -61,13 +61,8 @@ C-specl : ∀ {x z}(c : x ↦* z) → f $⟨ lenC c ⟩l x ≡ z
 C-specl [ _ ]   = refl
 C-specl (_ ∷ c) = C-specl c
 
--- Not used yet
 uniq-↦* : (x z : A) → Set _
-uniq-↦* x z = is-prop (x ↦* z)
-
--- Not used yet
-uniq-↦*' : (x : A) → Set _
-uniq-↦*' x = ∀ z → uniq-↦* x z
+uniq-↦* x z = is-contr (x ↦* z)
 
 ∈iterate→↦* : ∀ {x z} → z ∈ˢ S.iterate f x → x ↦* z
 ∈iterate→↦* here = [ _ ]
@@ -194,6 +189,9 @@ is-chain c = ∀ {y} → y ∈? c
 is-cycle : {x : A} → ↺ x → Set _
 is-cycle = is-chain
 
+_↦C_ : (x z : A) → Set ℓ
+x ↦C z = Σ (x ↦* z) is-chain
+
 -- a cycle of even size is split in two, a cycle of odd size is reordered
 -- [1] --> [1]
 -- [1,2] --> [1],[2]
@@ -220,6 +218,10 @@ module _ {x z : A} where
 
     club→∈! : is-club c → f z ∈! c
     club→∈! (ch , p) = chain→⊆! ch p
+
+↺-club : ∀ {x}{c : ↺ x} → is-chain c → is-club c
+↺-club ch = ch , here
+
 
 -- -}
 -- -}
