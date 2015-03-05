@@ -41,6 +41,7 @@ module _ (Q : ★)(R : Q → ★)(A : ★) where
       srv-ask  : ∀ q → ServerResponse q
 
   record ServerResponse q where
+    inductive
     constructor _,_
     field
       srv-resp : R q
