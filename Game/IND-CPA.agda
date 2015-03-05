@@ -31,6 +31,7 @@ module CPA-challenger = CPA-Proto.Challenger-implementation 𝟙 𝟚 (λ _ ()) 
 
 -- IND-CPA adversary in two parts
 record Adversary : ★ where
+  constructor _,_
   field
     -- In the step 'm', the adversary receives some randomness,
     -- the public key, the message we want (m₀ or m₁). The adversary
@@ -46,7 +47,7 @@ record Adversary : ★ where
     b′ : Rₐ → PubKey → CipherText → 𝟚
 
 Adversaryᴳ : ★
-Adversaryᴳ = Rₐ → El 𝟙 (CPA-Proto.Adversary-proto.Main)
+Adversaryᴳ = Rₐ → El 𝟙 CPA-Proto.Adversary-proto.Main
 
 Adversary→Adversaryᴳ : Adversary → Adversaryᴳ
 Adversary→Adversaryᴳ A rₐ pk = done (A.m rₐ pk , (λ c → done (A.b′ rₐ pk c , _)))
