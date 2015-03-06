@@ -10,6 +10,7 @@ open Fin using (Fin; zero; suc; Fin▹ℕ) renaming (#_ to ##_)
 open import Data.Nat.NP hiding (_^_; _==_)
 open import Data.Nat.Distance
 open import Data.Bit
+open import Data.Zero
 open import Data.Two
 open import Relation.Binary.NP
 open import Data.Bits hiding (_==_)
@@ -19,11 +20,11 @@ open Equivalences
 
 open import Explore.Core
 open import Explore.Explorable
+open import Explore.Universe.Type {𝟘}
 open import Explore.Universe.Base
-open import Explore.Sum -- renaming (μBit to μ𝟚)
+open import Explore.Sum
 open import Explore.Product
 import Explore.GroupHomomorphism as GH
---open import Explore.Fin
 
 import Game.DDH
 import Game.IND-CPA
