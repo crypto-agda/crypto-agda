@@ -13,7 +13,6 @@ open import Game.EntropySmoothing
 open import Game.EntropySmoothing.WithKey
 open import Game.ReceiptFreeness
 
-open import Game.Transformation.InternalExternal
 open import Game.Transformation.CCA-CPA
 open import Game.Transformation.CCA2-CCA
 --open import Game.Transformation.CCA2-CCA2d

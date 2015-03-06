@@ -86,7 +86,6 @@ import Game.Transformation.CCA2-CCA
 import Game.Transformation.CCA2d-CCA2
 import Game.Transformation.CPA-CPAd
 import Game.Transformation.CPAd-CPA
-import Game.Transformation.InternalExternal
 import Game.Transformation.Naor-Yung-proof
 import Game.Transformation.Naor-Yung
 import Game.Transformation.ReceiptFreeness-CCA2d
