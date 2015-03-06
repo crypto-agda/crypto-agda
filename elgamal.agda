@@ -123,7 +123,7 @@ module ℤq-count
   lem x Adv = sym (⊞-stable x (Bit▹ℕ ∘ Adv))
 
   -- ∀ (A : ℤq → Bit) → # (A ⁇)
-
+-}
 
 module El-Gamal-Generic
   (ℤqᵁ : U)
