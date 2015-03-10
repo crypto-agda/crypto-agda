@@ -4,11 +4,16 @@ open import Type
 open import Data.Bit
 open import Data.Maybe
 open import Data.Product
+open import Data.Zero
 open import Control.Strategy renaming (run to runStrategy; map to mapStrategy)
 
 open import Function
 
 open import Relation.Binary.PropositionalEquality
+
+open import Explore.Universe.Type {𝟘}
+open import Explore.Universe.Base
+
 
 import Game.IND-CPA-utils
 import Game.IND-CCA2-dagger
@@ -22,18 +27,21 @@ module Game.Transformation.CCA2d-CCA2
   (CipherText : ★)
 
   -- randomness supply for, encryption, key-generation, adversary, adversary state
-  (Rₑ Rₖ Rₐ : ★)
+  (Rₑᵁ Rₖᵁ Rₐᵁ : U)
+  (let Rₑ = El Rₑᵁ ; Rₖ = El Rₖᵁ ; Rₐ = El Rₐᵁ)
   (KeyGen : Rₖ → PubKey × SecKey)
   (Enc    : PubKey → Message → Rₑ → CipherText)
   (Dec    : SecKey → CipherText → Message)
-  
+
   where
 
-module CCA2d = Game.IND-CCA2-dagger PubKey SecKey Message CipherText Rₑ Rₖ Rₐ KeyGen Enc Dec 
-module CCA2  = Game.IND-CCA2        PubKey SecKey Message CipherText Rₑ Rₖ Rₐ KeyGen Enc Dec
+module CCA2d = Game.IND-CCA2-dagger PubKey SecKey Message CipherText Rₑᵁ Rₖᵁ Rₐᵁ KeyGen Enc Dec
+module CCA2  = Game.IND-CCA2        PubKey SecKey Message CipherText Rₑᵁ Rₖᵁ Rₐᵁ KeyGen Enc Dec
 open Game.IND-CPA-utils Message CipherText
+
 {-
 open TransformAdversaryResponse {DecRound Bit} {CipherText → DecRound Bit} (λ x _ → x)
+-}
 
 A-transform : (adv : CCA2.Adversary) → CCA2d.Adversary
 A-transform adv rₐ pk = mapStrategy A* (adv rₐ pk)
@@ -42,6 +50,7 @@ A-transform adv rₐ pk = mapStrategy A* (adv rₐ pk)
 If we are able to do the transformation, then we get the same advantage
 -}
 
+{-
 decRound = runStrategy ∘ Dec
 
 correct : ∀ {rₑ rₑ' rₖ rₐ } b adv
