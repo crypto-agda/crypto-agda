@@ -4,12 +4,12 @@ open import Function
 open import Data.One
 open import Data.Two
 open import Data.Maybe
-open import Data.Product
+open import Data.Product renaming (proj₁ to fst; proj₂ to snd)
 open import Data.Nat
 open import Data.Vec hiding (_>>=_ ; _∈_)
 open import Data.List as L
 open import Data.Fin as Fin using (Fin)
-open import Relation.Binary.PropositionalEquality.NP as ≡
+open import Relation.Binary.PropositionalEquality.NP as ≡ using (_≡_; _≗_; ap₂; refl; !_; _∙_; ap; module ≡-Reasoning)
 open import Control.Strategy renaming (map to mapS)
 open import Control.Strategy.Utils
 open import Game.Challenge
@@ -40,12 +40,15 @@ module Game.Transformation.ReceiptFreeness-CCA2d.Proof
             SecKey → CipherText → Message)
   (Check    : let open Game.ReceiptFreeness PubKey SecKey CipherText SerialNumber Rₑ Rₖ Rₐ #q max#q KeyGen Enc Dec
                in BB → Receipt → 𝟚)
-  (CheckMem : ∀ bb r → ✓ (Check bb r) → proj₁ (proj₂ r) ∉ L.map (proj₁ ∘ proj₂) bb)
+  (CheckMem : ∀ bb r → ✓ (Check bb r) → fst (snd r) ∉ L.map (fst ∘ snd) bb)
   -- (CheckEnc : ∀ pk m rₑ → Check (Enc pk m rₑ) ≡ 1₂)
   where
 
 _²' : ★ → ★
 X ²' = X × X
+
+cons= : ∀ {a} {A : ★_ a}{x x' : A}{xs xs' : List A}(px : x ≡ x')(pxs : xs ≡ xs') → (x List.∷ xs) ≡ (x' ∷ xs')
+cons= = ap₂ _∷_
 
 module RFSim = Game.Transformation.ReceiptFreeness-CCA2d.SimulatorInst PubKey SecKey CipherText SerialNumber Rₑ Rₖ Rₐ #q max#q KeyGen Enc Dec Check hiding (module CCA2†)
 
@@ -68,9 +71,10 @@ module SimulatorProof
   (DecEnc : ∀ rₑ m → Dec sk (Enc pk m rₑ) ≡ m)
   (rₐ : Rₐ) (rgb : Rgb ²)
   (rgbs : PhaseNumber → Vec Rgb #q) (sn : SerialNumber ²)
-  (ext𝟚 : ∀ {A : ★} {f g : 𝟚 → A} → f ≗ g → f ≡ g) where
+  (ext𝟚 : ∀ {A : ★} {f g : 𝟚 → A} → f ≗ g → f ≡ g)
 
- module PB (b : 𝟚) where
+  -- Secret random bit
+  (b : 𝟚) where
 
   module Sim = Simulator RFA
   module Tr = Sim.SecondLayer rgbs pk
@@ -78,10 +82,12 @@ module SimulatorProof
   open Sim.AdversaryParts rgbs pk rₐ using (A†1; A†2; A†3)
   A† = Sim.A†
 
-  rₑ = proj₂ ∘ proj₂ ∘ rgb
+  rₑ = snd ∘ snd ∘ rgb
 
   module RFEXP = RFC.EXP b RFA pk sk rₐ rgbs rₑ
   module EXP†  = CCA2†.EXP b A† (rₐ , rgbs) pk sk rₑ
+
+  open RFEXP using (BBrfc; Aphase1; Aphase2; BBphase1; AdversaryRFChallenge)
 
   open RFC.OracleS sk pk rgbs
 
@@ -103,46 +109,46 @@ module SimulatorProof
     ... | 1₂ = pf-phase (Fin.pred n) (r ∷ bb) (cont accept)
     pf-phase n bb (done x) = refl , refl , refl
 
-  pf-phase1 : Bisim' 0₂ max#q [] RFEXP.Aphase1 A†1
-  pf-phase1 = pf-phase 0₂ max#q [] RFEXP.Aphase1
+  pf-phase1 : Bisim' 0₂ max#q [] Aphase1 A†1
+  pf-phase1 = pf-phase 0₂ max#q [] Aphase1
 
   MITM1 : MITMState _
   MITM1 = run (Dec sk) A†1
   MITM-S1 : _
-  MITM-S1 = proj₂ MITM1
+  MITM-S1 = snd MITM1
   MITM-BB1 : BB
-  MITM-BB1 = proj₁ MITM-S1
+  MITM-BB1 = fst MITM-S1
   MITM-tally1 : Tally
-  MITM-tally1 = proj₂ MITM-S1
+  MITM-tally1 = snd MITM-S1
 
-  tally1 = tally sk RFEXP.BBphase1
+  tally1 = tally sk BBphase1
 
-  BBphase1-pf : RFEXP.BBphase1 ≡ MITM-BB1
-  BBphase1-pf = proj₁ pf-phase1
+  BBphase1-pf : BBphase1 ≡ MITM-BB1
+  BBphase1-pf = fst pf-phase1
 
   -- unused
   CPA†Challenge : CPA†Adversary (RFPhase Candidate × Receipt ²)
-  CPA†Challenge = Tr.hack-challenge RFEXP.AdversaryRFChallenge
+  CPA†Challenge = Tr.hack-challenge AdversaryRFChallenge
 
-  tally-pf : tally sk RFEXP.BBrfc ≡ (1 , 1) +,+ tally1
+  tally-pf : tally sk BBrfc ≡ (1 , 1) +,+ tally1
   tally-pf rewrite
-             DecEnc (proj₂ (proj₂ (rgb 0₂))) b
-           | DecEnc (proj₂ (proj₂ (rgb 1₂))) (not b)
-           with b
+             DecEnc (snd (snd (rgb 0₂))) b
+           | DecEnc (snd (snd (rgb 1₂))) (not b)
+           with not b
   ... | 0₂ = refl
   ... | 1₂ = refl
 
   tally1-pf : tally1 ≡ MITM-tally1
-  tally1-pf rewrite BBphase1-pf = !(proj₂ (proj₂ pf-phase1))
+  tally1-pf rewrite BBphase1-pf = !(snd (snd pf-phase1))
 
-  tally1-pf' : tally sk RFEXP.BBrfc ≡ (1 , 1) +,+ MITM-tally1
+  tally1-pf' : tally sk BBrfc ≡ (1 , 1) +,+ MITM-tally1
   tally1-pf' = tally-pf ∙ ap (_+,+_ (1 , 1)) tally1-pf
 
   A†4 : BB → _
   A†4 bb = Tr.decRoundAdv2 bb ((1 , 1) +,+ MITM-tally1)
 
-  pf-phase2 : Bisim' 1₂ max#q RFEXP.BBrfc RFEXP.Aphase2 (A†4 RFEXP.BBrfc RFEXP.Aphase2)
-  pf-phase2 rewrite ! tally1-pf' = pf-phase 1₂ max#q RFEXP.BBrfc RFEXP.Aphase2
+  pf-phase2 : Bisim' 1₂ max#q BBrfc Aphase2 (A†4 BBrfc Aphase2)
+  pf-phase2 rewrite ! tally1-pf' = pf-phase 1₂ max#q BBrfc Aphase2
   -- TODO it might be convenient to rewrite the BB equalities here as well
 
   pf-A† : run (Dec sk) (A† (rₐ , rgbs) pk) ≡ A†2 (run (Dec sk) A†1)
@@ -151,46 +157,53 @@ module SimulatorProof
   open ≡-Reasoning
   open Receipts 0₂
 
-  put-c = put-resp (Tr.hack-challenge (proj₁ (run (Dec sk) A†1))) EXP†.c
-  MITM-phase2 = proj₁ put-c
-  MITM-receipts = proj₂ put-c
-  MITM-BB-RFC = MITM-receipts ∷² MITM-BB1
+  put-c = put-resp (Tr.hack-challenge (fst (run (Dec sk) A†1))) EXP†.c
+  MITM-phase2 = fst put-c
+  MITM-receipts = snd put-c
+  MITM-bb-rfc = MITM-receipts ∷² MITM-BB1
 
-  sn' = get-chal (proj₁ (runS (OracleS 0₂) RFEXP.Aphase1 ([] , max#q)))
+  sn' = get-chal (fst (runS (OracleS 0₂) Aphase1 ([] , max#q)))
 
-  ct-pf : ∀ i → EXP†.c i ≡ (Enc pk ∘ flip _xor_ b ˢ rₑ) i
-  ct-pf i = ap (λ x → Enc pk (get-chal x (i xor b)) (proj₂ (proj₂ (rgb i)))) pf-A†
+  E = Enc pk
+  D = Dec sk
+
+  ct-pf : ∀ i → EXP†.c i ≡ (E ∘ flip _xor_ b ˢ rₑ) i
+  ct-pf i = ap (λ x → E (get-chal x (i xor b)) (snd (snd (rgb i)))) pf-A†
+
+  Aphase2-pf : Aphase2 ≡ MITM-phase2
+  Aphase2-pf = ap₂ (λ rfc ct → put-resp rfc (receipts (get-chal rfc) ct))
+                   (fst (snd pf-phase1))
+                   (ext𝟚 (!_ ∘ ct-pf))
 
   receipts-pf : RFEXP.receipts ≗ receipts sn' EXP†.c
-  receipts-pf i = ap (λ x → marked 0₂ , sn' i , x) (!(ct-pf i))
+  receipts-pf i = ap (λ x → marked 0₂ , sn' i , x) (! ct-pf i)
 
-  BBrfc-pf = RFEXP.BBrfc
-           ≡⟨ cong₂ _∷_ (receipts-pf 0₂) (cong₂ _∷_ (receipts-pf 1₂) (proj₁ pf-phase1)) ⟩
+  BBrfc-pf = BBrfc
+           ≡⟨ cons= (receipts-pf 0₂)
+             (cons= (receipts-pf 1₂) (fst pf-phase1)) ⟩
              receipts sn' EXP†.c ∷² MITM-BB1
-           ≡⟨ ap (λ x → receipts (get-chal x) EXP†.c ∷² MITM-BB1) (proj₁ (proj₂ pf-phase1)) ⟩
-             MITM-BB-RFC
+           ≡⟨ ap (λ x → receipts (get-chal x) EXP†.c ∷² MITM-BB1)
+                 (fst (snd pf-phase1)) ⟩
+             MITM-bb-rfc
            ∎
-
-  Aphase2-pf : RFEXP.Aphase2 ≡ MITM-phase2
-  Aphase2-pf = cong₂ (λ rfc ct → put-resp rfc (receipts (get-chal rfc) ct)) (proj₁ (proj₂ pf-phase1)) (ext𝟚 (!_ ∘ ct-pf))
 
   pf-b′ : RFEXP.b′ ≡ EXP†.b′
   pf-b′ = RFEXP.b′
-        ≡⟨ refl ⟩
-          proj₁ (runS (OracleS 1₂) RFEXP.Aphase2 (RFEXP.BBrfc , max#q))
-        ≡⟨ proj₁ (proj₂ pf-phase2) ⟩
-          proj₁ (run (Dec sk) (A†4 RFEXP.BBrfc RFEXP.Aphase2))
-        ≡⟨ ap (λ bb → proj₁ (run (Dec sk) (A†4 bb RFEXP.Aphase2))) BBrfc-pf ⟩
-          proj₁ (run (Dec sk) (A†4 MITM-BB-RFC RFEXP.Aphase2))
-        ≡⟨ ap (λ x → proj₁ (run (Dec sk) (A†4 MITM-BB-RFC x))) Aphase2-pf ⟩
-          proj₁ (run (Dec sk) (A†4 MITM-BB-RFC MITM-phase2))
-        ≡⟨ ! (run-map (Dec sk) proj₁ (A†4 MITM-BB-RFC MITM-phase2)) ⟩
-          run (Dec sk) (mapS proj₁ (A†4 MITM-BB-RFC MITM-phase2))
-        ≡⟨ refl ⟩
-          run (Dec sk) (put-resp (A†2 (run (Dec sk) A†1)) EXP†.c)
-        ≡⟨ ap (λ x → run (Dec sk) (put-resp x EXP†.c)) (! pf-A†) ⟩
-          run (Dec sk) (put-resp (run (Dec sk) (A† (rₐ , rgbs) pk)) EXP†.c)
-        ≡⟨ refl ⟩
+        ≡⟨by-definition⟩
+          fst (runS (OracleS 1₂) Aphase2 (BBrfc , max#q))
+        ≡⟨ fst (snd pf-phase2) ⟩
+          fst (run D (A†4 BBrfc Aphase2))
+        ≡⟨ ap (λ bb → fst (run D (A†4 bb Aphase2))) BBrfc-pf ⟩
+          fst (run D (A†4 MITM-bb-rfc Aphase2))
+        ≡⟨ ap (fst ∘ run D ∘ A†4 MITM-bb-rfc) Aphase2-pf ⟩
+          fst (run D (A†4 MITM-bb-rfc MITM-phase2))
+        ≡⟨ ! run-map D fst (A†4 MITM-bb-rfc MITM-phase2) ⟩
+          run D (mapS fst (A†4 MITM-bb-rfc MITM-phase2))
+        ≡⟨by-definition⟩
+          run D (put-resp (A†2 (run D A†1)) EXP†.c)
+        ≡⟨ ap (λ x → run D (put-resp x EXP†.c)) (! pf-A†) ⟩
+          run D (put-resp (run D (A† (rₐ , rgbs) pk)) EXP†.c)
+        ≡⟨by-definition⟩
           EXP†.b′
         ∎
 

@@ -52,23 +52,9 @@ run : 𝟚 → Adversary → ℕ
 run b adv = count Rᵁ (EXP b adv)
 
 {-
-module Advantage
-  (μₑ : Explore₀ Rₑ)
-  (μₖ : Explore₀ Rₖ)
-  (μₐ : Explore₀ Rₐ)
-  where
-  -- μR : Explore₀ R
-  μR = μₐ ×ᵉ μₖ ×ᵉ μₑ ×ᵉ μₑ
-
-  module μR = FromExplore μR
-
-  run : 𝟚 → Adversary → ℕ
-  run b adv = μR.count (EXP b adv)
-
-  {-
   Advantage : Adv → ℚ
-  Advantage adv = dist (run 0b adv) (run 1b adv) / μR.Card
-  -}
+  Advantage adv = dist (run 0b adv) (run 1b adv) / Card Rᵁ
+-}
 
 -- -}
 -- -}
