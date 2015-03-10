@@ -14,7 +14,7 @@ open import Control.Strategy renaming (map to mapS)
 open import Control.Strategy.Utils
 open import Game.Challenge
 import Game.ReceiptFreeness
-import Game.IND-CCA2-dagger
+import Game.IND-CCA2-dagger.Experiment
 import Game.IND-CPA-utils
 import Game.Transformation.ReceiptFreeness-CCA2d.SimulatorInst
 
@@ -44,9 +44,6 @@ module Game.Transformation.ReceiptFreeness-CCA2d.Proof
   -- (CheckEnc : ∀ pk m rₑ → Check (Enc pk m rₑ) ≡ 1₂)
   where
 
-_²' : ★ → ★
-X ²' = X × X
-
 cons= : ∀ {a} {A : ★_ a}{x x' : A}{xs xs' : List A}(px : x ≡ x')(pxs : xs ≡ xs') → (x List.∷ xs) ≡ (x' ∷ xs')
 cons= = ap₂ _∷_
 
@@ -61,7 +58,7 @@ open RFC
 open RF renaming (Phase to RFPhase; Q to RFQ; Resp to RFResp)
 open StatefulRun
 
-module CCA2† = Game.IND-CCA2-dagger PubKey SecKey Message CipherText Rₑ Rₖ Rₐ† KeyGen Enc Dec
+module CCA2† = Game.IND-CCA2-dagger.Experiment PubKey SecKey Message CipherText Rₑ Rₖ Rₐ† KeyGen Enc Dec
 
 DecRoundChallenger : (Next : ★) → ★
 DecRoundChallenger = Server CCAProto

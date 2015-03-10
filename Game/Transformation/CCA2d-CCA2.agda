@@ -5,6 +5,7 @@ open import Data.Bit
 open import Data.Maybe
 open import Data.Product
 open import Data.Zero
+open import Data.Two
 open import Control.Strategy renaming (run to runStrategy; map to mapStrategy)
 
 open import Function
@@ -14,7 +15,7 @@ open import Relation.Binary.PropositionalEquality
 open import Explore.Universe.Type {𝟘}
 open import Explore.Universe.Base
 
-
+open import Game.Challenge
 import Game.IND-CPA-utils
 import Game.IND-CCA2-dagger
 import Game.IND-CCA2
@@ -44,7 +45,7 @@ open TransformAdversaryResponse {DecRound Bit} {CipherText → DecRound Bit} (λ
 -}
 
 A-transform : (adv : CCA2.Adversary) → CCA2d.Adversary
-A-transform adv rₐ pk = mapStrategy A* (adv rₐ pk)
+A-transform adv rₐ pk = mapStrategy (Map.A* id (λ f → f 0₂) id) (adv rₐ pk)
 
 {-
 If we are able to do the transformation, then we get the same advantage
