@@ -31,6 +31,9 @@ Prover = (r : Randomness)(w : Witness) → Prover-Interaction
 run : Prover-Interaction → Challenge → Transcript
 run (A , f) c = mk A c (f c)
 
+_⇆_ : Verifier → Prover → (r : Randomness)(w : Witness)(c : Challenge) → Bool
+(verifier ⇆ prover) r w c = verifier (run (prover r w) c)
+
 -- A Σ-protocol is made of the code for honest prover
 -- and honest verifier.
 record Σ-Protocol : Type where
@@ -52,7 +55,8 @@ record Σ-Protocol : Type where
 -- to be correct if for any challenge, the (honest) verifier accepts what
 -- the (honest) prover returns.
 Correct : Σ-Protocol → Type
-Correct (prover , verifier) = ∀ w r c (w? : ValidWitness w) → ✓ (verifier (run (prover r w) c))
+Correct (prover , verifier) = ∀ w r c (w? : ValidWitness w) →
+                              ✓ ((verifier ⇆ prover) r w c)
 
 -- A simulator takes a challenge and a response and returns a commitment.
 --
@@ -107,6 +111,7 @@ Extract-Valid-Witness verifier extractor = ∀ t² → ValidWitness (extractor t
 -- a correct extractor is said to have the Special Soundness property.
 -- This property is one of the condition to apply the Strong Fiat Shamir
 -- transformation.
+-- Also called 2-extractable
 record Special-Soundness Σ-proto : Type where
   open Σ-Protocol Σ-proto
   field
