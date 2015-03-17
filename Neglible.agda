@@ -83,8 +83,120 @@ prf (+ℕℚ-neg {εM} {μM} ε μ) c n n>nc = ≤-*-cancel {x = n} (OR.trans (s
            n * (εD n * μD n)
         ∎
 
+infix 4 _≤→_
+record _≤→_ (f g : ℕ→ℚ) : Set where
+  constructor mk
+  open ℕ→ℚ f renaming (εN to fN; εD to fD)
+  open ℕ→ℚ g renaming (εN to gN; εD to gD)
+  field
+    -- fN k / fD k ≤ gN k / gD k
+    ≤→ : ∀ k → fN k * gD k ≤ gN k * fD k
 
-module _ (Rᵁ : ℕ → U)(let R = λ n → El (Rᵁ n)) where
+≤→-trans : ∀ {f g h} → f ≤→ g → g ≤→ h → f ≤→ h
+_≤→_.≤→ (≤→-trans {fN / fD [ fD-pos ]} {gN / gD [ gD-pos ]} {hN / hD [ hD-pos ]} (mk fg) (mk gh)) k
+  = ≤-*-cancel (gD-pos k) lemma
+  where
+    open ≤-Reasoning
+    lemma : gD k * (fN k * hD k) ≤ gD k * (hN k * fD k)
+    lemma = gD k * (fN k * hD k)
+          ≡⟨ ! prop.*-assoc (gD k) (fN k) (hD k)
+             ∙ ap (flip _*_ (hD k)) (prop.*-comm (gD k) (fN k))
+           ⟩
+            (fN k * gD k) * hD k
+          ≤⟨ fg k *-mono OR.refl ⟩
+            (gN k * fD k) * hD k
+          ≡⟨ prop.*-assoc (gN k) (fD k) (hD k)
+             ∙ ap (_*_ (gN k)) (prop.*-comm (fD k) (hD k))
+             ∙ ! prop.*-assoc (gN k) (hD k) (fD k)
+           ⟩
+            (gN k * hD k) * fD k
+          ≤⟨ gh k *-mono OR.refl ⟩
+            (hN k * gD k) * fD k
+          ≡⟨ ap (flip _*_ (fD k)) (prop.*-comm (hN k) (gD k))
+             ∙ prop.*-assoc (gD k) (hN k) (fD k)
+           ⟩
+            gD k * (hN k * fD k)
+          ∎
+
++ℕℚ-mono : ∀ {f f' g g'} → f ≤→ f' → g ≤→ g' → f +ℕℚ g ≤→ f' +ℕℚ g'
+_≤→_.≤→ (+ℕℚ-mono {fN / fD [ _ ]} {f'N / f'D [ _ ]} {gN / gD [ _ ]} {g'N / g'D [ _ ]} (mk ff) (mk gg)) k
+  = (fN k * gD k + gN k * fD k) * (f'D k * g'D k)
+  ≡⟨ proj₂ prop.distrib (f'D k * g'D k) (fN k * gD k) (gN k * fD k)  ⟩
+    fN k * gD k * (f'D k * g'D k) + gN k * fD k * (f'D k * g'D k)
+  ≡⟨ ap₂ _+_ (*-interchange (fN k) (gD k) (f'D k) (g'D k) ∙ ap (_*_ (fN k * f'D k)) (prop.*-comm (gD k) (g'D k)))
+             (ap (_*_ (gN k * fD k)) (prop.*-comm (f'D k) (g'D k)) ∙ *-interchange (gN k) (fD k) (g'D k) (f'D k))
+   ⟩
+    fN k * f'D k * (g'D k * gD k) + gN k * g'D k * (fD k * f'D k)
+  ≤⟨ (ff k *-mono OR.refl) +-mono (gg k *-mono OR.refl) ⟩
+    f'N k * fD k * (g'D k * gD k) + g'N k * gD k * (fD k * f'D k)
+  ≡⟨ ap₂ _+_ (*-interchange (f'N k) (fD k) (g'D k) (gD k))
+             (ap (_*_ (g'N k * gD k)) (prop.*-comm (fD k) (f'D k))
+             ∙ *-interchange (g'N k) (gD k) (f'D k) (fD k)
+             ∙ ap (_*_ (g'N k * f'D k)) (prop.*-comm (gD k) (fD k)))
+   ⟩
+    f'N k * g'D k * (fD k * gD k) + g'N k * f'D k * (fD k * gD k)
+  ≡⟨ ! proj₂ prop.distrib (fD k * gD k) (f'N k * g'D k) (g'N k * f'D k) ⟩
+    (f'N k * g'D k + g'N k * f'D k) * (fD k * gD k)
+  ∎
+  where
+    open ≤-Reasoning
+
+record NegBounded (f : ℕ→ℚ) : Set where
+    constructor mk
+    field
+      ε : ℕ→ℚ
+      ε-neg : Is-Neg ε
+      bounded : f ≤→ ε
+
+module _ where
+  open NegBounded
+  ≤-NB : {f g : ℕ→ℚ} → f ≤→ g → NegBounded g → NegBounded f
+  ε (≤-NB le nb) = ε nb
+  ε-neg (≤-NB le nb) = ε-neg nb
+  bounded (≤-NB le nb) = ≤→-trans le (bounded nb)
+
+  _+NB_ : {f g : ℕ→ℚ} → NegBounded f → NegBounded g → NegBounded (f +ℕℚ g)
+  ε (fNB +NB gNB) = ε fNB +ℕℚ ε gNB
+  ε-neg (fNB +NB gNB) = +ℕℚ-neg (ε-neg fNB) (ε-neg gNB)
+  bounded (fNB +NB gNB) = +ℕℚ-mono (bounded fNB) (bounded gNB)
+
+module ~-NegBounded (Rᵁ : ℕ → U)(let R = λ n → El (Rᵁ n))(inh : ∀ x → 0 < Card (Rᵁ x)) where
+
+  # : ∀ {n} → Count (R n)
+  # {n} = count (Rᵁ n)
+
+  ~dist : (f g : (x : ℕ) → R x → 𝟚) → ℕ→ℚ
+  ℕ→ℚ.εN (~dist f g) n = dist (# (f n)) (# (g n))
+  ℕ→ℚ.εD (~dist f g) n = Card (Rᵁ n)
+  ℕ→ℚ.εD-pos (~dist f g) n = inh n
+
+  ~dist-sum : ∀ f g h → ~dist f h ≤→ ~dist f g +ℕℚ ~dist g h
+  _≤→_.≤→ (~dist-sum f g h) k
+      = #fh * (|R| * |R|)
+      ≤⟨ dist-sum #f #g #h *-mono OR.refl ⟩
+        (#fg + #gh) * (|R| * |R|)
+      ≡⟨ ! prop.*-assoc (#fg + #gh) |R| |R| ∙ ap (flip _*_ |R|) (proj₂ prop.distrib |R| #fg #gh) ⟩
+        (#fg * |R| + #gh * |R|) * |R|
+      ∎
+    where
+      open ≤-Reasoning
+      |R| = Card (Rᵁ k)
+      #f = # (f k)
+      #g = # (g k)
+      #h = # (h k)
+      #fh = dist #f #h
+      #fg = dist #f #g
+      #gh = dist #g #h
+
+  record _~_ (f g : (x : ℕ) → R x → 𝟚) : Set where
+    constructor mk
+    field
+      ~ : NegBounded (~dist f g)
+
+  ~-trans : Transitive _~_
+  _~_.~ (~-trans {f}{g}{h} fg gh) = ≤-NB (~dist-sum f g h) (_~_.~ fg +NB _~_.~ gh)
+
+module ~-Inlined (Rᵁ : ℕ → U)(let R = λ n → El (Rᵁ n)) where
 
   # : ∀ {n} → Count (R n)
   # {n} = count (Rᵁ n)
