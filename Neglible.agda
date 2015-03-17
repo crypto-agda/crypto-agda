@@ -2,6 +2,7 @@
 open import Algebra
 
 open import Function
+open import Function.Extensionality
 
 open import Data.Nat.NP
 open import Data.Nat.Distance
@@ -92,6 +93,9 @@ record _≤→_ (f g : ℕ→ℚ) : Set where
     -- fN k / fD k ≤ gN k / gD k
     ≤→ : ∀ k → fN k * gD k ≤ gN k * fD k
 
+≤→-refl : ∀ {f} → f ≤→ f
+_≤→_.≤→ ≤→-refl k = OR.refl
+
 ≤→-trans : ∀ {f g h} → f ≤→ g → g ≤→ h → f ≤→ h
 _≤→_.≤→ (≤→-trans {fN / fD [ fD-pos ]} {gN / gD [ gD-pos ]} {hN / hD [ hD-pos ]} (mk fg) (mk gh)) k
   = ≤-*-cancel (gD-pos k) lemma
@@ -150,6 +154,12 @@ record NegBounded (f : ℕ→ℚ) : Set where
 
 module _ where
   open NegBounded
+
+  fromNeg : {f : ℕ→ℚ} → Is-Neg f → NegBounded f
+  ε (fromNeg f-neg) = _
+  ε-neg (fromNeg f-neg) = f-neg
+  bounded (fromNeg f-neg) = ≤→-refl
+
   ≤-NB : {f g : ℕ→ℚ} → f ≤→ g → NegBounded g → NegBounded f
   ε (≤-NB le nb) = ε nb
   ε-neg (≤-NB le nb) = ε-neg nb
@@ -195,6 +205,23 @@ module ~-NegBounded (Rᵁ : ℕ → U)(let R = λ n → El (Rᵁ n))(inh : ∀ x
 
   ~-trans : Transitive _~_
   _~_.~ (~-trans {f}{g}{h} (mk fg) (mk gh)) = ≤-NB (~dist-sum f g h) (fg +NB gh)
+
+  ~-Inv : {{_ : FunExt}}{{_ : UA}}(π : ∀ n → R n ≃ R n)(f g : ∀ x → R x → 𝟚)
+          (eq : ∀ x (r : R x) → f x r ≡ g x (proj₁ (π x) r)) → f ~ g
+  _~_.~ (~-Inv π f g eq) = ≤-NB lemma (fromNeg 0ℕℚ-neg)
+    where
+      open ≤-Reasoning
+      lemma : ~dist f g ≤→ 0ℕℚ
+      _≤→_.≤→ lemma k = dist (# (f k)) (# (g k)) * 1
+                      ≡⟨ proj₂ prop.*-identity _ ⟩
+                        dist (# (f k)) (# (g k))
+                      ≡⟨ ap (flip dist (# (g k))) (count-ext (Rᵁ k) (eq k)) ⟩
+                        dist (# (g k ∘ proj₁ (π k))) (# (g k))
+                      ≡⟨ ap (flip dist (# (g k))) (sumStableUnder (Rᵁ k) (π k) (𝟚▹ℕ ∘ g k)) ⟩
+                        dist (# (g k)) (# (g k))
+                      ≡⟨ dist-refl (# (g k)) ⟩
+                        0
+                      ∎
 
 module ~-Inlined (Rᵁ : ℕ → U)(let R = λ n → El (Rᵁ n)) where
 
