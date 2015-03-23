@@ -1,4 +1,4 @@
-{-# OPTIONS --copatterns #-}
+{-# OPTIONS --without-K --copatterns #-}
 open import Algebra
 
 open import Function
@@ -9,7 +9,7 @@ open import Data.Nat.Distance
 open import Data.Nat.Properties
 open import Data.Two
 open import Data.Zero
-open import Data.Product
+open import Data.Product.NP
 
 open import Relation.Binary
 open import Relation.Binary.PropositionalEquality.NP
@@ -21,14 +21,11 @@ open import Explore.Core
 open import Explore.Universe.Type {𝟘}
 open import Explore.Universe.Base
 
-module Neglible where
-
-module prop = CommutativeSemiring commutativeSemiring
-module OR = Poset (DecTotalOrder.poset decTotalOrder)
+module Negligible where
 
 ≤-*-cancel : ∀ {x m n} → 1 ≤ x →  x * m ≤ x * n → m ≤ n
 ≤-*-cancel {suc x} {m} {n} (s≤s le) mn
-  rewrite prop.*-comm (suc x) m | prop.*-comm (suc x) n = cancel-*-right-≤ _ _ _ mn
+  rewrite ℕ°.*-comm (suc x) m | ℕ°.*-comm (suc x) n = cancel-*-right-≤ _ _ _ mn
 
 record ℕ→ℚ : Set where
   constructor _/_[_]
@@ -52,7 +49,7 @@ open Is-Neg
 
 0ℕℚ-neg : Is-Neg 0ℕℚ
 cₙ 0ℕℚ-neg _ = 0
-prf 0ℕℚ-neg c n x = OR.trans (OR.reflexive (proj₂ prop.zero (n ^ c))) z≤n
+prf 0ℕℚ-neg c n x = ℕ≤.trans (ℕ≤.reflexive (snd ℕ°.zero (n ^ c))) z≤n
 
 _+ℕℚ_ : ℕ→ℚ → ℕ→ℚ → ℕ→ℚ
 ℕ→ℚ.εN ((εN / εD [ _ ]) +ℕℚ (μN / μD [ _ ])) n = εN n * μD n + μN n * εD n
@@ -62,7 +59,7 @@ _+ℕℚ_ : ℕ→ℚ → ℕ→ℚ → ℕ→ℚ
 
 +ℕℚ-neg : {ε μ : ℕ→ℚ} → Is-Neg ε → Is-Neg μ → Is-Neg (ε +ℕℚ μ)
 cₙ (+ℕℚ-neg ε μ) n = 1 + cₙ ε n + cₙ μ n
-prf (+ℕℚ-neg {εM} {μM} ε μ) c n n>nc = ≤-*-cancel {x = n} (OR.trans (s≤s z≤n) n>nc) lemma
+prf (+ℕℚ-neg {εM} {μM} ε μ) c n n>nc = ≤-*-cancel {x = n} (ℕ≤.trans (s≤s z≤n) n>nc) lemma
   where
 
   open ≤-Reasoning
@@ -70,17 +67,17 @@ prf (+ℕℚ-neg {εM} {μM} ε μ) c n n>nc = ≤-*-cancel {x = n} (OR.trans (s
   open ℕ→ℚ μM renaming (εN to μN; εD to μD; εD-pos to μD-pos)
 
   lemma =  n * (n ^ c * (εN n * μD n + μN n * εD n))
-        ≡⟨ ! prop.*-assoc n (n ^ c) _
-         ∙ proj₁ prop.distrib (n ^ (1 + c)) (εN n * μD n) (μN n * εD n)
-         ∙ ap₂ _+_ (! prop.*-assoc (n ^ (1 + c)) (εN n) (μD n))
-                   (! (prop.*-assoc (n ^ (1 + c)) (μN n) (εD n))) ⟩
+        ≡⟨ ! ℕ°.*-assoc n (n ^ c) _
+         ∙ fst ℕ°.distrib (n ^ (1 + c)) (εN n * μD n) (μN n * εD n)
+         ∙ ap₂ _+_ (! ℕ°.*-assoc (n ^ (1 + c)) (εN n) (μD n))
+                   (! (ℕ°.*-assoc (n ^ (1 + c)) (μN n) (εD n))) ⟩
            n ^ (1 + c) * εN n * μD n + n ^ (1 + c) * μN n * εD n
-        ≤⟨     (prf ε (1 + c) n (OR.trans (s≤s (≤-step (m≤m+n (cₙ ε n) (cₙ μ n)))) n>nc) *-mono (μD n ∎))
-        +-mono (prf μ (1 + c) n (OR.trans (s≤s (≤-step (n≤m+n (cₙ ε n) (cₙ μ n)))) n>nc) *-mono (εD n ∎)) ⟩
+        ≤⟨     (prf ε (1 + c) n (ℕ≤.trans (s≤s (≤-step (m≤m+n (cₙ ε n) (cₙ μ n)))) n>nc) *-mono (μD n ∎))
+        +-mono (prf μ (1 + c) n (ℕ≤.trans (s≤s (≤-step (n≤m+n (cₙ ε n) (cₙ μ n)))) n>nc) *-mono (εD n ∎)) ⟩
            εD n * μD n + μD n * εD n
-        ≡⟨ ap₂ _+_ (refl {x = εD n * μD n}) (prop.*-comm (μD n) (εD n) ∙ ! proj₂ prop.+-identity (εD n * μD n)) ⟩
+        ≡⟨ ap₂ _+_ (refl {x = εD n * μD n}) (ℕ°.*-comm (μD n) (εD n) ∙ ! snd ℕ°.+-identity (εD n * μD n)) ⟩
            2 * (εD n * μD n)
-        ≤⟨ OR.trans (s≤s (s≤s z≤n)) n>nc *-mono (εD n * μD n ∎) ⟩
+        ≤⟨ ℕ≤.trans (s≤s (s≤s z≤n)) n>nc *-mono (εD n * μD n ∎) ⟩
            n * (εD n * μD n)
         ∎
 
@@ -94,7 +91,7 @@ record _≤→_ (f g : ℕ→ℚ) : Set where
     ≤→ : ∀ k → fN k * gD k ≤ gN k * fD k
 
 ≤→-refl : ∀ {f} → f ≤→ f
-_≤→_.≤→ ≤→-refl k = OR.refl
+_≤→_.≤→ ≤→-refl k = ℕ≤.refl
 
 ≤→-trans : ∀ {f g h} → f ≤→ g → g ≤→ h → f ≤→ h
 _≤→_.≤→ (≤→-trans {fN / fD [ fD-pos ]} {gN / gD [ gD-pos ]} {hN / hD [ hD-pos ]} (mk fg) (mk gh)) k
@@ -103,21 +100,21 @@ _≤→_.≤→ (≤→-trans {fN / fD [ fD-pos ]} {gN / gD [ gD-pos ]} {hN / hD
     open ≤-Reasoning
     lemma : gD k * (fN k * hD k) ≤ gD k * (hN k * fD k)
     lemma = gD k * (fN k * hD k)
-          ≡⟨ ! prop.*-assoc (gD k) (fN k) (hD k)
-             ∙ ap (flip _*_ (hD k)) (prop.*-comm (gD k) (fN k))
+          ≡⟨ ! ℕ°.*-assoc (gD k) (fN k) (hD k)
+             ∙ ap (flip _*_ (hD k)) (ℕ°.*-comm (gD k) (fN k))
            ⟩
             (fN k * gD k) * hD k
-          ≤⟨ fg k *-mono OR.refl ⟩
+          ≤⟨ fg k *-mono ℕ≤.refl ⟩
             (gN k * fD k) * hD k
-          ≡⟨ prop.*-assoc (gN k) (fD k) (hD k)
-             ∙ ap (_*_ (gN k)) (prop.*-comm (fD k) (hD k))
-             ∙ ! prop.*-assoc (gN k) (hD k) (fD k)
+          ≡⟨ ℕ°.*-assoc (gN k) (fD k) (hD k)
+             ∙ ap (_*_ (gN k)) (ℕ°.*-comm (fD k) (hD k))
+             ∙ ! ℕ°.*-assoc (gN k) (hD k) (fD k)
            ⟩
             (gN k * hD k) * fD k
-          ≤⟨ gh k *-mono OR.refl ⟩
+          ≤⟨ gh k *-mono ℕ≤.refl ⟩
             (hN k * gD k) * fD k
-          ≡⟨ ap (flip _*_ (fD k)) (prop.*-comm (hN k) (gD k))
-             ∙ prop.*-assoc (gD k) (hN k) (fD k)
+          ≡⟨ ap (flip _*_ (fD k)) (ℕ°.*-comm (hN k) (gD k))
+             ∙ ℕ°.*-assoc (gD k) (hN k) (fD k)
            ⟩
             gD k * (hN k * fD k)
           ∎
@@ -125,21 +122,21 @@ _≤→_.≤→ (≤→-trans {fN / fD [ fD-pos ]} {gN / gD [ gD-pos ]} {hN / hD
 +ℕℚ-mono : ∀ {f f' g g'} → f ≤→ f' → g ≤→ g' → f +ℕℚ g ≤→ f' +ℕℚ g'
 _≤→_.≤→ (+ℕℚ-mono {fN / fD [ _ ]} {f'N / f'D [ _ ]} {gN / gD [ _ ]} {g'N / g'D [ _ ]} (mk ff) (mk gg)) k
   = (fN k * gD k + gN k * fD k) * (f'D k * g'D k)
-  ≡⟨ proj₂ prop.distrib (f'D k * g'D k) (fN k * gD k) (gN k * fD k)  ⟩
+  ≡⟨ snd ℕ°.distrib (f'D k * g'D k) (fN k * gD k) (gN k * fD k)  ⟩
     fN k * gD k * (f'D k * g'D k) + gN k * fD k * (f'D k * g'D k)
-  ≡⟨ ap₂ _+_ (*-interchange (fN k) (gD k) (f'D k) (g'D k) ∙ ap (_*_ (fN k * f'D k)) (prop.*-comm (gD k) (g'D k)))
-             (ap (_*_ (gN k * fD k)) (prop.*-comm (f'D k) (g'D k)) ∙ *-interchange (gN k) (fD k) (g'D k) (f'D k))
+  ≡⟨ ap₂ _+_ (*-interchange (fN k) (gD k) (f'D k) (g'D k) ∙ ap (_*_ (fN k * f'D k)) (ℕ°.*-comm (gD k) (g'D k)))
+             (ap (_*_ (gN k * fD k)) (ℕ°.*-comm (f'D k) (g'D k)) ∙ *-interchange (gN k) (fD k) (g'D k) (f'D k))
    ⟩
     fN k * f'D k * (g'D k * gD k) + gN k * g'D k * (fD k * f'D k)
-  ≤⟨ (ff k *-mono OR.refl) +-mono (gg k *-mono OR.refl) ⟩
+  ≤⟨ (ff k *-mono ℕ≤.refl) +-mono (gg k *-mono ℕ≤.refl) ⟩
     f'N k * fD k * (g'D k * gD k) + g'N k * gD k * (fD k * f'D k)
   ≡⟨ ap₂ _+_ (*-interchange (f'N k) (fD k) (g'D k) (gD k))
-             (ap (_*_ (g'N k * gD k)) (prop.*-comm (fD k) (f'D k))
+             (ap (_*_ (g'N k * gD k)) (ℕ°.*-comm (fD k) (f'D k))
              ∙ *-interchange (g'N k) (gD k) (f'D k) (fD k)
-             ∙ ap (_*_ (g'N k * f'D k)) (prop.*-comm (gD k) (fD k)))
+             ∙ ap (_*_ (g'N k * f'D k)) (ℕ°.*-comm (gD k) (fD k)))
    ⟩
     f'N k * g'D k * (fD k * gD k) + g'N k * f'D k * (fD k * gD k)
-  ≡⟨ ! proj₂ prop.distrib (fD k * gD k) (f'N k * g'D k) (g'N k * f'D k) ⟩
+  ≡⟨ ! snd ℕ°.distrib (fD k * gD k) (f'N k * g'D k) (g'N k * f'D k) ⟩
     (f'N k * g'D k + g'N k * f'D k) * (fD k * gD k)
   ∎
   where
@@ -183,9 +180,9 @@ module ~-NegBounded (Rᵁ : ℕ → U)(let R = λ n → El (Rᵁ n))(inh : ∀ x
   ~dist-sum : ∀ f g h → ~dist f h ≤→ ~dist f g +ℕℚ ~dist g h
   _≤→_.≤→ (~dist-sum f g h) k
       = #fh * (|R| * |R|)
-      ≤⟨ dist-sum #f #g #h *-mono OR.refl ⟩
+      ≤⟨ dist-sum #f #g #h *-mono ℕ≤.refl ⟩
         (#fg + #gh) * (|R| * |R|)
-      ≡⟨ ! prop.*-assoc (#fg + #gh) |R| |R| ∙ ap (flip _*_ |R|) (proj₂ prop.distrib |R| #fg #gh) ⟩
+      ≡⟨ ! ℕ°.*-assoc (#fg + #gh) |R| |R| ∙ ap (flip _*_ |R|) (snd ℕ°.distrib |R| #fg #gh) ⟩
         (#fg * |R| + #gh * |R|) * |R|
       ∎
     where
@@ -207,16 +204,16 @@ module ~-NegBounded (Rᵁ : ℕ → U)(let R = λ n → El (Rᵁ n))(inh : ∀ x
   _~_.~ (~-trans {f}{g}{h} (mk fg) (mk gh)) = ≤-NB (~dist-sum f g h) (fg +NB gh)
 
   ~-Inv : {{_ : FunExt}}{{_ : UA}}(π : ∀ n → R n ≃ R n)(f g : ∀ x → R x → 𝟚)
-          (eq : ∀ x (r : R x) → f x r ≡ g x (proj₁ (π x) r)) → f ~ g
+          (eq : ∀ x (r : R x) → f x r ≡ g x (fst (π x) r)) → f ~ g
   _~_.~ (~-Inv π f g eq) = ≤-NB lemma (fromNeg 0ℕℚ-neg)
     where
       open ≤-Reasoning
       lemma : ~dist f g ≤→ 0ℕℚ
       _≤→_.≤→ lemma k = dist (# (f k)) (# (g k)) * 1
-                      ≡⟨ proj₂ prop.*-identity _ ⟩
+                      ≡⟨ snd ℕ°.*-identity _ ⟩
                         dist (# (f k)) (# (g k))
                       ≡⟨ ap (flip dist (# (g k))) (count-ext (Rᵁ k) (eq k)) ⟩
-                        dist (# (g k ∘ proj₁ (π k))) (# (g k))
+                        dist (# (g k ∘ fst (π k))) (# (g k))
                       ≡⟨ ap (flip dist (# (g k))) (sumStableUnder (Rᵁ k) (π k) (𝟚▹ℕ ∘ g k)) ⟩
                         dist (# (g k)) (# (g k))
                       ≡⟨ dist-refl (# (g k)) ⟩
@@ -245,20 +242,20 @@ module ~-Inlined (Rᵁ : ℕ → U)(let R = λ n → El (Rᵁ n)) where
       = (b * d) * dist #f #h
       ≤⟨ (b * d ∎) *-mono dist-sum #f #g #h ⟩
         (b * d) * (dist #f #g + dist #g #h)
-      ≡⟨ proj₁ prop.distrib (b * d) (dist #f #g) (dist #g #h)
-         ∙ ap₂ _+_ (ap₂ _*_ (prop.*-comm b d) refl
-         ∙ prop.*-assoc d b (dist #f #g)) (prop.*-assoc b d (dist #g #h))
+      ≡⟨ fst ℕ°.distrib (b * d) (dist #f #g) (dist #g #h)
+         ∙ ap₂ _+_ (ap₂ _*_ (ℕ°.*-comm b d) refl
+         ∙ ℕ°.*-assoc d b (dist #f #g)) (ℕ°.*-assoc b d (dist #g #h))
        ⟩
         d * (b * dist #f #g) + b * (d * dist #g #h)
       ≤⟨ ((d ∎) *-mono fg k) +-mono ((b ∎) *-mono gh k) ⟩
         d * (|R| * a) + b * (|R| * c)
-      ≡⟨ ap₂ _+_ (rot d |R| a) (rot b |R| c) ∙ ! proj₁ prop.distrib |R| (a * d) (c * b) ⟩
+      ≡⟨ ap₂ _+_ (rot d |R| a) (rot b |R| c) ∙ ! fst ℕ°.distrib |R| (a * d) (c * b) ⟩
         |R| * ℕ→ℚ.εN (ε₀ +ℕℚ ε₁) k
       ∎
    where
      open ≤-Reasoning
      rot : ∀ x y z → x * (y * z) ≡ y * (z * x)
-     rot x y z = prop.*-comm x (y * z) ∙ prop.*-assoc y z x
+     rot x y z = ℕ°.*-comm x (y * z) ∙ ℕ°.*-assoc y z x
      |R| = Card (Rᵁ k)
      #f = # (f k)
      #g = # (g k)
