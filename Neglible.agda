@@ -127,15 +127,15 @@ _≤→_.≤→ (+ℕℚ-mono {fN / fD [ _ ]} {f'N / f'D [ _ ]} {gN / gD [ _ ]} 
   = (fN k * gD k + gN k * fD k) * (f'D k * g'D k)
   ≡⟨ proj₂ prop.distrib (f'D k * g'D k) (fN k * gD k) (gN k * fD k)  ⟩
     fN k * gD k * (f'D k * g'D k) + gN k * fD k * (f'D k * g'D k)
-  ≡⟨ ap₂ _+_ (*-interchange {fN k} {gD k} {f'D k} {g'D k} ∙ ap (_*_ (fN k * f'D k)) (prop.*-comm (gD k) (g'D k)))
-             (ap (_*_ (gN k * fD k)) (prop.*-comm (f'D k) (g'D k)) ∙ *-interchange {gN k} {fD k} {g'D k} {f'D k})
+  ≡⟨ ap₂ _+_ (*-interchange (fN k) (gD k) (f'D k) (g'D k) ∙ ap (_*_ (fN k * f'D k)) (prop.*-comm (gD k) (g'D k)))
+             (ap (_*_ (gN k * fD k)) (prop.*-comm (f'D k) (g'D k)) ∙ *-interchange (gN k) (fD k) (g'D k) (f'D k))
    ⟩
     fN k * f'D k * (g'D k * gD k) + gN k * g'D k * (fD k * f'D k)
   ≤⟨ (ff k *-mono OR.refl) +-mono (gg k *-mono OR.refl) ⟩
     f'N k * fD k * (g'D k * gD k) + g'N k * gD k * (fD k * f'D k)
-  ≡⟨ ap₂ _+_ (*-interchange {f'N k} {fD k} {g'D k} {gD k})
+  ≡⟨ ap₂ _+_ (*-interchange (f'N k) (fD k) (g'D k) (gD k))
              (ap (_*_ (g'N k * gD k)) (prop.*-comm (fD k) (f'D k))
-             ∙ *-interchange {g'N k} {gD k} {f'D k} {fD k}
+             ∙ *-interchange (g'N k) (gD k) (f'D k) (fD k)
              ∙ ap (_*_ (g'N k * f'D k)) (prop.*-comm (gD k) (fD k)))
    ⟩
     f'N k * g'D k * (fD k * gD k) + g'N k * f'D k * (fD k * gD k)
