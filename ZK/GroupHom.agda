@@ -1,33 +1,42 @@
+{-# OPTIONS --without-K #-}
 open import Type using (Type)
 open import Function using (flip)
 open import Data.Product renaming (proj₁ to fst; proj₂ to snd)
-open import Data.Sum.NP
 open import Data.Bool.Base using (Bool) renaming (T to ✓)
 open import Relation.Binary.PropositionalEquality.NP using (_≡_; _≢_; idp; ap; ap₂; !_; _∙_; module ≡-Reasoning)
 open import Algebra.Group
-open import ZK.Types using (Cyclic-group; module Cyclic-group
-                           ; Cyclic-group-properties; module Cyclic-group-properties)
+open import Algebra.Group.Homomorphism
 import ZK.SigmaProtocol.KnownStatement
 
-
-module ZK.GroupHom where
+module ZK.GroupHom
+{-
+  where
 postulate
   G+ G* : Type
-  -- grp-G+-comm : Abelian-Group G+
   grp-G+ : Group G+
-  -- grp-G* : Group G*
-  grp-G*-comm : Abelian-Group G*
-module _
---     {G+ G* : Type} (grp-G+ : Group G+) (grp-G* : Group G*)
+  grp-G* : Group G*
 
-    {C : Type} -- ℤ
+module _
+-}
+    {G+ G* : Type} (grp-G+ : Group G+) (grp-G* : Group G*)
+
     (φ : G+ → G*) -- For instance φ(x) = g^x
     (y : G*)
     (_==_ : G* → G* → Bool)
+    {C D : Type} -- e.g. C ⊆ ℕ, D = C/0
     (_^_ : G* → C → G*)
     (_⊗_ : G+ → C → G+)
+    -- (_#_ : C → C → Type)
+    -- (_−ᶜ_[_] : (c₀ c₁ : C) → c₀ # c₁ → D)
+   --  (_−ᶜ_[_] : (c₀ c₁ : C) → c₀ ≢ c₁ → D)
+    (_−ᶜ_ : C → C → D)
+    -- (NonZero : C → Type)
+    -- (≢-NonZero-−ᶜ : ∀ c₀ c₁ → c₀ ≢ c₁ → NonZero (c₀ −ᶜ c₁))
+    -- (1/ : (c : C) → NonZero c → C)
+    (1* 1/ : D → C) -- Two ways to go from D to C, 1*d embeds D in C, 1/d does the inverse operation
+    -- (1/ : C → C)
+--    (on-transcripts : ∀ verifier → Transcript²[ _≢_ ] verifier → Transcript²[ _#_ ] verifier)
 
-    (_−ᶜ_ : C → C → C)
     {-
     -- Coprime m n ↔ GCD m n 1
     (Coprime : (m n : C) → Type)
@@ -40,15 +49,9 @@ module _
     (egcd : (m n : C) → C × C)
     -- (egcd-coprime : ∀ m n → let a , b = egcd m n in {!!})
     -}
-    (modinv : C → C)
     where
-
-  -- grp-G+ = Abelian-Group.grp grp-G+-comm
-  -- open Additive-Abelian-Group grp-G+-comm
-  open Additive-Group grp-G+
-  grp-G* = Abelian-Group.grp grp-G*-comm
-  -- open Multiplicative-Group grp-G*
-  open Multiplicative-Abelian-Group grp-G*-comm
+  open Additive-Group grp-G+ hiding (_⊗_)
+  open Multiplicative-Group grp-G* hiding (_^_)
 
   Commitment = G*
   Challenge  = C
@@ -61,12 +64,12 @@ module _
   open ZK.SigmaProtocol.KnownStatement Commitment Challenge Response Randomness Witness _∈y public
 
   prover : Prover
-  prover a x = (φ a) , response
+  prover a x = φ a , response
      where response : Challenge → Response
-           response c = (a + (x ⊗ c))
+           response c = ((x ⊗ c) + a)
 
   verifier : Verifier
-  verifier (mk A c s) = (φ s) == (A * (y ^ c))
+  verifier (mk A c s) = (φ s) == ((y ^ c) * A)
 
   Schnorr : Σ-Protocol
   Schnorr = (prover , verifier)
@@ -80,7 +83,7 @@ module _
   simulator c s = A
       where
         -- Compute A, such that the verifier accepts!
-        A = (φ s) / (y ^ c)
+        A = (y ^ c)⁻¹ * (φ s)
 
   -- The extractor shows the importance of never reusing a
   -- commitment. If the prover answers to two different challenges
@@ -89,78 +92,62 @@ module _
   extractor : Extractor verifier
   extractor t² = x'
       module Witness-extractor where
-        open Transcript² t²
-        rd = get-f₀ − get-f₁
-        cd = get-c₀ −ᶜ get-c₁
-        {-
-        ab = egcd cd ℓ
-        a = fst ab
-        b = snd ab
-        x' = u ⊗ a + rd ⊗ b
-        -}
-        x' = rd ⊗ modinv cd
-  
+        open Transcript² t² public
+          using (verify₀; verify₁; c₀≢c₁)
+          renaming ( get-A to A
+                   ; get-f₀ to r₀; get-f₁ to r₁
+                   ; get-c₀ to c₀; get-c₁ to c₁
+                   )
+        rd = r₀ − r₁
+        cd = c₀ −ᶜ c₁
+        1/cd = 1/ cd
+        x' = rd ⊗ 1/cd
+
   module Proofs
-    (φ-hom : GroupHomomorphism grp-G+ grp-G* φ)
     (✓-== : ∀ {x y} → x ≡ y → ✓ (x == y))
     (==-✓ : ∀ {x y} → ✓ (x == y) → x ≡ y)
-    (φ⁻¹ : G* → G+)
-    .(φ∘φ⁻¹ : ∀ y → φ (φ⁻¹ y) ≡ y)
-    (φ-inj : ∀ {x y} → φ x ≡ φ y → x ≡ y)
+    (φ-hom : GroupHomomorphism grp-G+ grp-G* φ)
     (φ-hom-iterated : ∀ {x c} → φ (x ⊗ c) ≡ φ x ^ c)
-    (^--  : ∀ {b x y} → b ^(x −ᶜ y) ≡ (b ^ x) / (b ^ y))
-    (left-*-to-right-/ : ∀ {x y c} → x ⊗ c ≡ y → x ≡ y ⊗ modinv c)
+    (^-−ᶜ  : ∀ {b x y}(x≢y : x ≢ y) → b ^ 1*(x −ᶜ y) ≡ (b ^ x) / (b ^ y))
+    (^-^-1/ : ∀ {b x y}(x≢y : x ≢ y) → (b ^ 1*(x −ᶜ y))^(1/(x −ᶜ y)) ≡ b)
      where
     open ≡-Reasoning
-    open GroupHomomorphismProp grp-G+ grp-G* {φ} φ-hom
+    open GroupHomomorphism φ-hom
 
     correct : Correct Schnorr
     correct x a c w
-      = ✓-== (φ(a + (x ⊗ c))
-           ≡⟨ φ-hom ⟩
-              A * (φ(x ⊗ c))
-           ≡⟨ ap (λ z → A * z) φ-hom-iterated ⟩
-              A * ((φ x) ^ c)
-           ≡⟨ ap (λ z → A * (z ^ c)) w ⟩
-              A * (y ^ c)
-           ∎)
+      = ✓-== (φ((x ⊗ c) + a)  ≡⟨ hom ⟩
+              φ(x ⊗ c)  * A   ≡⟨ *= φ-hom-iterated idp ⟩
+              (φ x ^ c) * A   ≡⟨ ap (λ z → (z ^ c) * A) w ⟩
+              (y ^ c)   * A   ∎)
       where
         A = φ a
 
     shvzk : Special-Honest-Verifier-Zero-Knowledge Schnorr
     shvzk = record { simulator = simulator
-                   ; correct-simulator = λ _ _ → ✓-== /-* }
+                   ; correct-simulator =
+                      λ _ _ → ✓-== (! elim-*-!assoc= (snd ⁻¹-inverse)) }
 
     module _ (t² : Transcript² verifier) where
-      private
-        x = φ⁻¹ y
-
-      open Transcript² t² renaming (get-A to A; get-c₀ to c₀; get-c₁ to c₁
-                                   ;get-f₀ to f₀; get-f₁ to f₁)
       open Witness-extractor t²
 
-      .φxcd≡φrd : _
-      φxcd≡φrd = φ(x ⊗ cd)
-                 ≡⟨ φ-hom-iterated ⟩
-                   (φ x) ^ (c₀ −ᶜ c₁)
-                 ≡⟨ ap₂ _^_ (φ∘φ⁻¹ y) idp ⟩
-                   y ^ (c₀ −ᶜ c₁)
-                 ≡⟨ ^-- ⟩
-                   (y ^ c₀) / (y ^ c₁)
-                 ≡⟨ ! cancels-/ ⟩
-                   (A * (y ^ c₀)) / (A * (y ^ c₁))
-                 ≡⟨ /= (! ==-✓ verify₀) (! ==-✓ verify₁) ⟩
-                   (φ f₀) / (φ f₁)
-                 ≡⟨ ! f-−-/ ⟩
-                   φ rd
-                 ∎
-
-      .xcd≡rd : _
-      xcd≡rd = φ-inj φxcd≡φrd
+      φrd≡ycd : _
+      φrd≡ycd
+        = φ rd                        ≡⟨by-definition⟩
+          φ (r₀ − r₁)                 ≡⟨ −-/ ⟩
+          φ r₀ / φ r₁                 ≡⟨ /= (==-✓ verify₀) (==-✓ verify₁) ⟩
+          (y ^ c₀ * A) / (y ^ c₁ * A) ≡⟨ elim-*-right-/ ⟩
+          y ^ c₀ / y ^ c₁             ≡⟨ ! ^-−ᶜ c₀≢c₁ ⟩
+          y ^ 1*(c₀ −ᶜ c₁)            ≡⟨by-definition⟩
+          y ^ 1* cd                   ∎
 
       -- The extracted x is correct
-      .extractor-ok : φ x' ≡ y 
-      extractor-ok = ! ap φ (left-*-to-right-/ xcd≡rd) ∙ φ∘φ⁻¹ y
+      extractor-ok : φ x' ≡ y
+      extractor-ok
+        = φ(rd ⊗ 1/cd)       ≡⟨ φ-hom-iterated ⟩
+          φ rd ^ 1/cd        ≡⟨ ap₂ _^_ φrd≡ycd idp ⟩
+          (y ^ 1* cd)^ 1/cd  ≡⟨ ^-^-1/ c₀≢c₁ ⟩
+          y                  ∎
 
     special-soundness : Special-Soundness Schnorr
     special-soundness = record { extractor = extractor
