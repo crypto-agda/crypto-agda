@@ -8,17 +8,17 @@ open import Algebra.Group.Homomorphism
 import ZK.GroupHom.FieldChal2
 
 module ZK.GroupHom.FieldChal3
-  {F G   : Type}
-  (F-fld : Field F)
-  (G-grp : Group G)
-  (open Field F-fld hiding (_^_; _⊗_))
+  {F G : Type}
+  (𝔽   : Field F)
+  (𝔾   : Group G)
+  (open Field 𝔽 hiding (_^_; _⊗_) renaming (+-grp to 𝔽+))
 
   (_==_ : G → G → Bool)
   (✓-== : ∀ {x y} → x ≡ y → ✓ (x == y))
   (==-✓ : ∀ {x y} → ✓ (x == y) → x ≡ y)
 
   (_^_ : G → F → G)
-  (^-+ : ∀ {b} → GroupHomomorphism +-grp G-grp (_^_ b))
+  (^-+ : ∀ {b} → GroupHomomorphism 𝔽+ 𝔾 (_^_ b))
   (^-* : ∀ {b x y} → b ^(x * y) ≡ (b ^ x)^ y)
   (^-1 : ∀ {b} → b ^ 1# ≡ b)
 
@@ -27,7 +27,7 @@ module ZK.GroupHom.FieldChal3
 
 φ = _^_ g
 
-open ZK.GroupHom.FieldChal2 F-fld G-grp _ ✓-== ==-✓
+open ZK.GroupHom.FieldChal2 𝔽 𝔾 _ ✓-== ==-✓
                             _ ^-+ ^-* ^-1
                             φ ^-+ ^-*
                             y

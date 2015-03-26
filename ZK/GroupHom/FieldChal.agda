@@ -11,11 +11,11 @@ import ZK.GroupHom
 module ZK.GroupHom.FieldChal
   {F G+ G* : Type}
 
-  (fld-F   : Field F)
-  (grp-G+  : Group G+)
-  (grp-G*  : Group G*)
+  (𝔽  : Field F)
+  (𝔾+ : Group G+)
+  (𝔾* : Group G*)
 
-  (open Field fld-F hiding (_^_; _⊗_))
+  (open Field 𝔽 hiding (_^_; _⊗_))
 
   (_==_ : G* → G* → Bool)
   (✓-== : ∀ {x y} → x ≡ y → ✓ (x == y))
@@ -23,12 +23,12 @@ module ZK.GroupHom.FieldChal
 
   (_⊗_ : G+ → F → G+)
   (_^_ : G* → F → G*)
-  (^-+ : ∀ {b} → GroupHomomorphism +-grp grp-G* (_^_ b))
+  (^-+ : ∀ {b} → GroupHomomorphism +-grp 𝔾* (_^_ b))
   (^-* : ∀ {b x y} → b ^(x * y) ≡ (b ^ x)^ y)
   (^-1 : ∀ {b} → b ^ 1# ≡ b)
 
   (φ   : G+ → G*)
-  (φ-+ : GroupHomomorphism grp-G+ grp-G* φ)
+  (φ-+ : GroupHomomorphism 𝔾+ 𝔾* φ)
   (φ-⊗ : ∀ {x n} → φ (x ⊗ n) ≡ φ x ^ n)
 
   (y : G*)
@@ -43,7 +43,7 @@ open ≡-Reasoning
     b ^ 1#                     ≡⟨ ^-1 ⟩
     b                          ∎
 
-open ZK.GroupHom grp-G+ grp-G* _ ✓-== ==-✓ _⊗_ _^_ _−_ id _⁻¹
+open ZK.GroupHom 𝔾+ 𝔾* _ ✓-== ==-✓ _⊗_ _^_ _−_ id _⁻¹
                  (λ _ → GroupHomomorphism.−-/ ^-+) ^-^-1/-id φ φ-+ φ-⊗ y
                public
 -- -}
