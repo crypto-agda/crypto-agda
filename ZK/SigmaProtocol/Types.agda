@@ -56,7 +56,8 @@ module ZK.SigmaProtocol.Types (Commitment Challenge Response : Type) where
 
   -- A pair of "Transcript"s such that the commitment is shared
   -- and the challenges are different.
-  record Transcript² (verifier : Verifier) : Type where
+  record Transcript²[_] (_#_ : Challenge → Challenge → Type)
+                        (verifier : Verifier) : Type where
     constructor mk
     field
       -- The commitment is shared
@@ -66,7 +67,7 @@ module ZK.SigmaProtocol.Types (Commitment Challenge Response : Type) where
       get-c₀ get-c₁ : Challenge
 
       -- ...are different
-      c₀≢c₁         : get-c₀ ≢ get-c₁
+      c₀≢c₁         : get-c₀ # get-c₁
 
       -- The responses/proofs are arbitrary
       get-f₀ get-f₁ : Response
@@ -81,3 +82,7 @@ module ZK.SigmaProtocol.Types (Commitment Challenge Response : Type) where
       -- The transcripts verify
       verify₀ : ✓ (verifier t₀)
       verify₁ : ✓ (verifier t₁)
+
+  Transcript² : (verifier : Verifier) → Type
+  Transcript² = Transcript²[ _≢_ ]
+  module Transcript² = Transcript²[_]

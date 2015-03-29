@@ -19,20 +19,20 @@ module ZK.GroupHom.FieldChal2
   (==-✓ : ∀ {x y} → ✓ (x == y) → x ≡ y)
 
   (_^_ : G → F → G)
-  (^-+ : ∀ {b} → GroupHomomorphism 𝔽+ 𝔾 (_^_ b))
-  (^-* : ∀ {b x y} → b ^(x * y) ≡ (b ^ x)^ y)
-  (^-1 : ∀ {b} → b ^ 1# ≡ b)
 
   (φ   : F → G)
   (φ-+ : GroupHomomorphism 𝔽+ 𝔾 φ)
   (φ-⊗ : ∀ {x n} → φ (x * n) ≡ φ x ^ n)
 
-  (y   : G)
+  (Y : G)
+
+  (^-+ : GroupHomomorphism 𝔽+ 𝔾 (_^_ Y))
+  (^-* : ∀ {a b} → Y ^(a * b) ≡ (Y ^ a)^ b)
+  (^-1 : Y ^ 1# ≡ Y)
   where
 
 open ZK.GroupHom.FieldChal 𝔽 𝔽+ 𝔾 _ ✓-== ==-✓
-                           _ _ ^-+ ^-* ^-1
-                           φ φ-+ φ-⊗
-                           y
+                           _ _^_ φ φ-+ φ-⊗
+                           Y ^-+ ^-* ^-1
   public
 -- -}

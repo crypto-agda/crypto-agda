@@ -22,13 +22,12 @@ module ZK.GroupHom.FieldChal3
   (^-* : ∀ {b x y} → b ^(x * y) ≡ (b ^ x)^ y)
   (^-1 : ∀ {b} → b ^ 1# ≡ b)
 
-  (g y : G)
+  (U Y : G)
   where
 
-φ = _^_ g
+φ = _^_ U
 
 open ZK.GroupHom.FieldChal2 𝔽 𝔾 _ ✓-== ==-✓
-                            _ ^-+ ^-* ^-1
-                            φ ^-+ ^-*
-                            y
+                            _ φ ^-+ ^-*
+                            Y ^-+ ^-* ^-1
   public

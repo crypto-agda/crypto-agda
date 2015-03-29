@@ -2,6 +2,7 @@
 open import Type using (Type)
 open import Function using (id)
 open import Data.Bool.Base using (Bool) renaming (T to ✓)
+open import Data.Sum.NP
 open import Relation.Binary.PropositionalEquality.NP using (_≡_; _≢_; idp; ap; !_; _∙_; module ≡-Reasoning)
 open import Algebra.Field
 open import Algebra.Group
@@ -23,27 +24,29 @@ module ZK.GroupHom.FieldChal
 
   (_⊗_ : G+ → F → G+)
   (_^_ : G* → F → G*)
-  (^-+ : ∀ {b} → GroupHomomorphism +-grp 𝔾* (_^_ b))
-  (^-* : ∀ {b x y} → b ^(x * y) ≡ (b ^ x)^ y)
-  (^-1 : ∀ {b} → b ^ 1# ≡ b)
 
   (φ   : G+ → G*)
   (φ-+ : GroupHomomorphism 𝔾+ 𝔾* φ)
   (φ-⊗ : ∀ {x n} → φ (x ⊗ n) ≡ φ x ^ n)
 
-  (y : G*)
+  (Y : G*)
+
+  (^-+ : GroupHomomorphism +-grp 𝔾* (_^_ Y))
+  (^-* : ∀ {a b} → Y ^(a * b) ≡ (Y ^ a)^ b)
+  (^-1 : Y ^ 1# ≡ Y)
   where
 
 open ≡-Reasoning
 
-^-^-1/-id : ∀ {b x y}(x≢y : x ≢ y) → (b ^ (x − y))^((x − y)⁻¹) ≡ b
-^-^-1/-id {b} {x} {y} x≢y
-  = (b ^(x − y))^((x − y)⁻¹)   ≡⟨ ! ^-* ⟩
-    b ^ ((x − y) * (x − y)⁻¹)  ≡⟨ ap (_^_ b) (⁻¹-right-inverse (x−y≢0 x≢y)) ⟩
-    b ^ 1#                     ≡⟨ ^-1 ⟩
-    b                          ∎
+^-^-1/-id : ∀ {c₀ c₁}(c≢ : c₀ ≢ c₁) → (Y ^ (c₀ − c₁))^((c₀ − c₁)⁻¹) ≡ Y
+^-^-1/-id {c₀} {c₁} c≢
+  = (Y ^ cd)^(cd ⁻¹)  ≡⟨ ! ^-* ⟩
+    Y ^ (cd * cd ⁻¹)  ≡⟨ ap (_^_ Y) (⁻¹-right-inverse (x−y≢0 c≢)) ⟩
+    Y ^ 1#            ≡⟨ ^-1 ⟩
+    Y                 ∎
+    where cd = c₀ − c₁
 
-open ZK.GroupHom 𝔾+ 𝔾* _ ✓-== ==-✓ _⊗_ _^_ _−_ id _⁻¹
-                 (λ _ → GroupHomomorphism.−-/ ^-+) ^-^-1/-id φ φ-+ φ-⊗ y
+open ZK.GroupHom 𝔾+ 𝔾* _ ✓-== ==-✓ _≢_ inl _⊗_ _^_ _−_ _⁻¹
+                 φ φ-+ φ-⊗ Y (λ _ → GroupHomomorphism.−-/ ^-+) ^-^-1/-id
                public
 -- -}
