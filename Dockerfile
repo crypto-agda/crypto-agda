@@ -1,5 +1,4 @@
-FROM agda
-#quay.io/crypto_agda/agda
+FROM quay.io/crypto_agda/agda
 RUN apt-get update && apt-get install -y git
 RUN git  clone https://github.com/np/agda-pkg &&\
     cp agda-pkg/agda-pkg /usr/local/bin/agda-pkg &&\
