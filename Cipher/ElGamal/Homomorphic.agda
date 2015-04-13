@@ -15,7 +15,7 @@ module Cipher.ElGamal.Homomorphic
   (_/_ : G → G → G)
   where
 
-open import Cipher.ElGamal.Generic G ℤq G g _^_ _♦_ _/_
+open import Cipher.ElGamal.Generic G G ℤq G g _^_ _♦_ _/_
 
 Combine : CipherText → CipherText → CipherText
 Combine (a , b) (c , d) = (a ♦ c , b ♦ d)

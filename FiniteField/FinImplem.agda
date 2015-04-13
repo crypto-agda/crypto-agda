@@ -19,18 +19,7 @@ module FiniteField.FinImplem (q-1 : ℕ) ([0]' [1]' : Fin (suc q-1)) where
   ℤq : ★
   ℤq = Fin q
 
-  open Explore.Fin.Regular q
-      renaming ( Finᵉ to ℤqᵉ
-               ; Finⁱ to ℤqⁱ
-               ; Finˡ to ℤqˡ
-               ; Finᶠ to ℤqᶠ
-               ; Finˢ to ℤqˢ
-               ; Finᵖ to ℤqᵖ
-               ; Finʳ to ℤqʳ
-               ; Finᵘ to ℤqᵘ
-               ; Finˢ-ok to ℤqˢ-ok
-               ; Finˢ-stableUnder to ℤqˢ-stableUnder
-               ; μFin to μℤq)
+  module Finᵁ = Explore.Fin.Regular q
 
   [0] : ℤq
   [0] = [0]'

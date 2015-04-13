@@ -17,6 +17,9 @@ open import Data.Bits hiding (_==_)
 open import Relation.Binary.PropositionalEquality.NP as ≡ hiding (_∙_)
 open import HoTT
 open Equivalences
+open import Algebra.Group
+open import Algebra.Group.Homomorphism
+open import Algebra.Group.Isomorphism
 
 open import Explore.Core
 open import Explore.Explorable
@@ -24,107 +27,13 @@ open import Explore.Universe.Type {𝟘}
 open import Explore.Universe.Base
 open import Explore.Sum
 open import Explore.Product
-import Explore.GroupHomomorphism as GH
+import Explore.Group as EG
 
 import Game.DDH
 import Game.IND-CPA
 import Cipher.ElGamal.Generic
 
 module elgamal where
-
-{-
-data `★ : ★ where
-  `⊤   : `★
-  `X   : `★
-  _`×_ : `★ → `★ → `★
-infixr 2 _`×_
-
-module Univ (X : ★) where
-    El : `★ → ★
-    El `⊤         = ⊤
-    El `X         = X
-    El (u₀ `× u₁) = El u₀ × El u₁
-
-    record ↺ (R : `★) (A : ★) : ★ where
-      constructor mk
-      field
-        run↺ : El R → A
-    open ↺ public
-
-    EXP : (R : `★) → ★
-    EXP R = ↺ R Bit
-
-    Det : ★ → ★
-    Det = ↺ `⊤
-
-    μU : Explorable X → ∀ u → Explorable (El u)
-    μU μX `⊤         = μ⊤
-    μU μX `X         = μX
-    μU μX (u₀ `× u₁) = μU μX u₀ ×-μ μU μX u₁
-
-module ℤq-count
-  (ℤq : ★)
-  (_⊞_ : ℤq → ℤq → ℤq)
-  (μℤq : Explorable ℤq)
-  (⊞-stable : ∀ x → SumStableUnder (sum μℤq) (_⊞_ x))
-  where
-
-  -- open Sum
-  open Univ ℤq public
-  open `★ public renaming (`X to `ℤq)
-
-  #_ : ∀ {u} → ↺ u Bit → ℕ
-  #_ {u} f = count (μU μℤq u) (run↺ f)
-
-  #q_ : Count ℤq
-  #q_ = count μℤq
-
-  ⁇ : ∀ R → ↺ R (El R)
-  run↺ (⁇ _) = id
-
-  pure↺ : ∀ {R A} → A → ↺ R A
-  run↺ (pure↺ x) r = x -- turning r to _ produce an error
-
-  ⟪_⟫ : ∀ {R A} → A → ↺ R A
-  ⟪_⟫ = pure↺
-
-  {-
-  ⟪_⟫ᴰ : ∀ {a} {A : Set a} → A → Det A
-  ⟪_⟫ᴰ = pureᴰ
-  -}
-
-  map↺ : ∀ {A B R} → (A → B) → ↺ R A → ↺ R B
-  run↺ (map↺ f x) r = f (run↺ x r)
-
-  infixl 4 _⊛_
-  _⊛_ : ∀ {R S A B} → ↺ R (A → B) → ↺ S A → ↺ (R `× S) B
-  run↺ (af ⊛ ax) rs = run↺ af (fst rs) (run↺ ax (snd rs))
-
-  ⟪_·_⟫ : ∀ {A B R} → (A → B) → ↺ R A → ↺ R B
-  ⟪ f · x ⟫ = map↺ f x
-
-  ⟪_·_·_⟫ : ∀ {A B C} {R S} →
-              (A → B → C) → ↺ R A → ↺ S B → ↺ (R `× S) C
-  ⟪ f · x · y ⟫ = map↺ f x ⊛ y
-
-  _⟨⊞⟩_ : ∀ {R S} → ↺ R ℤq → ↺ S ℤq → ↺ (R `× S) ℤq
-  x ⟨⊞⟩ y = ⟪ _⊞_ · x · y ⟫
-
-  ⟨_⊞⟩_ : ∀ {R} → ℤq → ↺ R ℤq → ↺ R ℤq
-  ⟨ x ⊞⟩ y = ⟪ _⊞_ x · y ⟫
-
-  infix 4 _≈↺_ _≈ᴬ_
-  _≈↺_ : ∀ {R : `★} (f g : EXP R) → ★
-  _≈↺_ = _≡_ on #_
-
-  _≈ᴬ_ : ∀ {A R} (f g : ↺ R A) → Set _
-  _≈ᴬ_ {A} f g = ∀ (Adv : A → Bit) → ⟪ Adv · f ⟫ ≈↺ ⟪ Adv · g ⟫
-
-  lem : ∀ x → ⟨ x ⊞⟩ (⁇ `ℤq) ≈ᴬ ⁇ _
-  lem x Adv = sym (⊞-stable x (Bit▹ℕ ∘ Adv))
-
-  -- ∀ (A : ℤq → Bit) → # (A ⁇)
--}
 
 module El-Gamal-Generic
   (ℤqᵁ : U)
@@ -188,7 +97,7 @@ module El-Gamal-Generic
     f ≈q g = sum ℤqᵁ f ≡ sum ℤqᵁ g
 
     OTP-LEM = ∀ (O : Message → ℕ) m₀ m₁ →
-                              (λ x → O((g ^ x) ∙ m₀)) ≈q (λ x → O((g ^ x) ∙ m₁))
+               (λ x → O((g ^ x) ∙ m₀)) ≈q (λ x → O((g ^ x) ∙ m₁))
 
     1/2 : R → 𝟚
     1/2 (b , _) = b
@@ -245,12 +154,6 @@ module El-Gamal-Generic
                      sumExtℤq λ y →
                        otp-lem (λ m → X (A.b′ rₐ (g ^ x) (g ^ y , m))) (A.m rₐ (g ^ x) 0₂) (A.m rₐ (g ^ x) 1₂)
 
-                     {-
-                      otp-lem (λ m → snd A rₐ (g ^ x) (g ^ y , m))
-                              (fst A rₐ (g ^ x) 1b)
-                              (fst A rₐ (g ^ x) 0b)
-                              (λ c → X (1b == c))
-    -}
 
         module absDist {DIST : ★}(Dist : (f g : R → 𝟚) → DIST)
           (dist-cong : ∀ {f h i} → h ≈ᴿ i → Dist f h ≡ Dist f i) where
@@ -269,35 +172,30 @@ module El-Gamal-Generic
 
 module El-Gamal-Base
     (ℤqᵁ : U)
-    (ℤq-grp : GH.Group (El ℤqᵁ))
+    (ℤq-grp : Group (El ℤqᵁ))
     (G : ★)
-    (G-grp : GH.Group G)
+    (G-grp : Group G)
     (g : G)
     (_^_ : G → El ℤqᵁ → G)
-    (^-gh : GH.GroupHomomorphism ℤq-grp G-grp (_^_ g))
-    (dlog : (b y : G) → El ℤqᵁ)
-    (dlog-ok : (b y : G) → b ^ dlog b y ≡ y)
+    (g^-iso : GroupIsomorphism ℤq-grp G-grp (_^_ g))
     (Rₐᵁ : U)
     (Rₐ : El Rₐᵁ)
     {{_ : FunExt}}
     {{_ : UA}}
-    (open GH.Group ℤq-grp renaming (_∙_ to _⊞_))
-    (⊞-is-equiv : ∀ k → Is-equiv (flip _⊞_ k))
     where
 
-    open GH.Group G-grp using (_∙_) renaming (-_ to _⁻¹)
+    open Group ℤq-grp using () renaming (_∙_ to _⊞_)
+    module g^ = GroupIsomorphism g^-iso
 
-    _/_ : G → G → G
-    x / y = x ∙ (y ⁻¹)
+    open Group G-grp using (_∙_; _⁻¹; _/_)
 
-    open El-Gamal-Generic ℤqᵁ G g _^_ G _∙_ _/_ Rₐᵁ public
+    open El-Gamal-Generic ℤqᵁ G g _^_ G (flip _∙_) _/_ Rₐᵁ public
 
     otp-lem : ∀ (O : G → ℕ) m₀ m₁ →
-        (λ x → O((g ^ x) ∙ m₀)) ≈q (λ x → O((g ^ x) ∙ m₁))
-    otp-lem = GH.thm ℤq-grp G-grp (_^_ g) (explore ℤqᵁ)
-                     ^-gh (dlog g) (dlog-ok g)
-                     (explore-ext ℤqᵁ) 0 _+_
-                     (λ k f → ! sumStableUnder ℤqᵁ (_ , ⊞-is-equiv k) f)
+        (λ x → O(m₀ ∙ (g ^ x))) ≈q (λ x → O(m₁ ∙ (g ^ x)))
+    otp-lem O m₀ m₁ =
+      EG.FromAdequate-sum.k₀*≈k₁* ℤq-grp G-grp (_^_ g) g^-iso (adequate-sum ℤqᵁ) O
+
     open Proof otp-lem
 
     thm : ∀ A →

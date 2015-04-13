@@ -2,8 +2,8 @@
 open import Type
 open import Data.Two
 open import Data.Maybe
-open import Data.Product
-open import Data.One
+open import Data.Product.NP
+open import Data.One using (𝟙)
 open import Data.Two
 open import Control.Strategy renaming (run to runStrategy; map to mapStrategy)
 
@@ -90,7 +90,7 @@ module Transformations (A† : Adversary†) where
   fix[b=]-prop _ _ _ = refl
 
 open import Relation.Binary.PropositionalEquality
-module _
+module M
   (Dist : ★)
   (0d : Dist)
   (dist : (f g : R → 𝟚) → Dist)
@@ -98,8 +98,8 @@ module _
   (dist-≗ : {f g : R → 𝟚} → f ≗ g → dist f g ≡ 0d)
   (Negligible : Dist → ★)
   (0d-Negigible : ∀ {d} → d ≡ 0d → Negligible d)
-  (_+Dist_ : Dist → Dist → Dist)
-  (+Dist-Negligible : ∀ {x y} → Negligible x → Negligible y → Negligible (x +Dist y))
+  -- (_+Dist_ : Dist → Dist → Dist)
+  -- (+Dist-Negligible : ∀ {x y} → Negligible x → Negligible y → Negligible (x +Dist y))
   (neg-dist-trans : {f g h : R → 𝟚} → Negligible (dist f g) → Negligible (dist g h) → Negligible (dist f h))
   (CPA-secure : ∀ b A → Negligible (dist (EXP b A) (EXP (not b) A)))
   where
@@ -114,11 +114,14 @@ module _
   _∙_ : Transitive _~_
   _∙_ = neg-dist-trans
 
-  !_  : Symmetric _~_
-  !_ {f} {g} = subst Negligible (dist-comm f g)
+  module Unused where
+    !_  : Symmetric _~_
+    !_ {f} {g} = subst Negligible (dist-comm f g)
 
   ≗→~ : {f g : R → 𝟚} → f ≗ g → f ~ g
   ≗→~ {f} {g} f≗g = 0d-Negigible (dist-≗ f≗g)
+
+ -- same count f g -> f ∼ g
 
   module _ (A† : Adversary†)
      (SUI : (f : R → R) (f-iso : f ∘ f ≗ id) (h : R → 𝟚) → (h ∘ f) ~ h)

@@ -99,9 +99,10 @@ module _
                             | CheckMem E.BBrfc ballot
           cheatingA-busted | 1₂ | pr with pr _ (there (here refl))
           ... | ()
-          cheatingA-busted | 0₂ | _ with b
-          ... | 0₂ = refl
-          ... | 1₂ = refl
+          cheatingA-busted | 0₂ | _ = helper b
+              where helper : ∀ b → not b xor 1₂ ≡ b
+                    helper 1₂ = refl
+                    helper 0₂ = refl
 
       valid : Valid-Adversary cheatingA
       valid rₐ pk = (λ ()) , (λ ()) , λ _ → λ { accept r → _ ; reject → _ }

@@ -23,6 +23,7 @@ module _ (Q : ★)(R : Q → ★)(A : ★)(_≈ᴬ_ : A → A → ★) where
       sim-srv-ask  : ∀ q → ServerResponseSim (srv-ask x q) (srv-ask y q)
 
   record ServerResponseSim {q} x y where
+    inductive
     constructor _,_
     field
       sim-srv-resp : srv-resp x ≡ srv-resp y
@@ -35,7 +36,7 @@ module _ {X : ★} (_≈_ : X → X → ★) where
   BiSim : {P : Proto} → El X P → El X P → ★
   BiSim {end} p q = p ≈ q
   BiSim {Π' A B} p q = ∀ x → BiSim {B x} (p x) (q x)
-  BiSim {Σ' A B} (x , p) (y , q) = Σ (x ≡ y) (λ eq → BiSim {B y}(subst _ eq p) q)
+  BiSim {Σ' A B} (x , p) (y , q) = Σ (x ≡ y) (λ eq → BiSim {B y}(tr _ eq p) q)
   BiSim {Client' Q R P} x f = ClientSim Q R (El X P) (BiSim {P}) x f
   BiSim {Server' Q R P} x f = ServerSim Q R (El X P) (BiSim {P}) x f
 

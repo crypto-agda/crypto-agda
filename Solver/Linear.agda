@@ -13,7 +13,7 @@ open import Relation.Nullary
 import Data.String as String
 module String≤ = StrictTotalOrder String.strictTotalOrder
 open import Data.Fin using (Fin)
-open import Data.Fin.Props using (strictTotalOrder) renaming (_≟_ to _≟ᶠ_)
+open import Data.Fin.Properties using (strictTotalOrder) renaming (_≟_ to _≟ᶠ_)
 open import Data.Vec using (Vec; lookup)
 open import Data.Vec.N-ary using (N-ary ; _$ⁿ_)
 open import Data.Vec using (allFin) renaming (map to vmap)

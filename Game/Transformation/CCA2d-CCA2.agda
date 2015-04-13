@@ -17,7 +17,7 @@ open import Explore.Universe.Base
 
 open import Game.Challenge
 import Game.IND-CPA-utils
-import Game.IND-CCA2-dagger
+import Game.IND-CCA2-dagger.Adversary
 import Game.IND-CCA2
 import Game.IND-CCA
 
@@ -28,16 +28,17 @@ module Game.Transformation.CCA2d-CCA2
   (CipherText : ★)
 
   -- randomness supply for, encryption, key-generation, adversary, adversary state
-  (Rₑᵁ Rₖᵁ Rₐᵁ : U)
-  (let Rₑ = El Rₑᵁ ; Rₖ = El Rₖᵁ ; Rₐ = El Rₐᵁ)
+  (Rₑ Rₖ Rₐ : ★)
+  --(Rₑᵁ Rₖᵁ Rₐᵁ : U)
+  --(let Rₑ = El Rₑᵁ ; Rₖ = El Rₖᵁ ; Rₐ = El Rₐᵁ)
   (KeyGen : Rₖ → PubKey × SecKey)
   (Enc    : PubKey → Message → Rₑ → CipherText)
   (Dec    : SecKey → CipherText → Message)
 
   where
 
-module CCA2d = Game.IND-CCA2-dagger PubKey SecKey Message CipherText Rₑᵁ Rₖᵁ Rₐᵁ KeyGen Enc Dec
-module CCA2  = Game.IND-CCA2        PubKey SecKey Message CipherText Rₑᵁ Rₖᵁ Rₐᵁ KeyGen Enc Dec
+module CCA2d = Game.IND-CCA2-dagger.Adversary PubKey        Message CipherText      Rₐ
+module CCA2  = Game.IND-CCA2                  PubKey SecKey Message CipherText Rₑ Rₖ Rₐ KeyGen Enc Dec
 open Game.IND-CPA-utils Message CipherText
 
 {-
