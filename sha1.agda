@@ -1,27 +1,27 @@
 {-# OPTIONS --without-K #-}
 -- https://upload.wikimedia.org/wikipedia/commons/e/e2/SHA-1.svg
 -- http://www.faqs.org/rfcs/rfc3174.html
-open import Type
-open import Data.Nat.NP
-open import Data.Bool using (if_then_else_)
+open import Data.Nat.NP using (ℕ; zero; suc; _+_; _∸_)
 import Data.Vec as V
 open V using (Vec; []; _∷_)
---open import Data.Product
-open import Function.NP hiding (id)
+open import Function.NP using (Endo; _∘_)
 open import FunUniverse.Core hiding (_,_)
 open import Data.Fin using (Fin; zero; suc; #_; inject+; raise) renaming (toℕ to Fin▹ℕ)
+
+open import Solver.Linear
 
 module sha1 where
 
 module FunSHA1
   {t}
-  {T : ★_ t}
+  {T : Set t}
   {funU : FunUniverse T}
   (funOps : FunOps funU)
   where
 
     open FunUniverse funU
     open FunOps funOps renaming (_∘_ to _`∘_)
+    module LinSolver = Syntaxᶠ linRewiring
 
     Word : T
     Word = `Bits 32
@@ -53,9 +53,6 @@ module FunSHA1
     _`∨_ : ∀ {Γ} (f₀ f₁ : Γ `→ Word) → Γ `→ Word
     _`∨_ = lift₂ (map²ʷ <or>)
 
-    open import Solver.Linear
-
-    module LinSolver = Syntaxᶠ linRewiring
 
     --iter : ∀ {n A B S} → (S `× A `→ S `× B) → S `× `Vec A n `→ `Vec B n
 
