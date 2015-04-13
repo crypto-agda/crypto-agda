@@ -5,7 +5,7 @@
 module Attack.Compression where
 
 open import Type using (★)
-open import Function
+open import Function.NP
 open import Data.Nat.NP
 open import Data.Two renaming (_==_ to _==ᵇ_)
 open import Data.Product
@@ -20,7 +20,7 @@ record Sized (A : ★) : ★ where
 
 open Sized {{...}}
 
-module _ {A B} {{_ : Sized A}} {{_ : Sized B}} where
+module EqSized {A B : ★} {{_ : Sized A}} {{_ : Sized B}} where
     -- Same size
     _==ˢ_ : A → B → 𝟚
     x ==ˢ y = size x == size y
@@ -35,18 +35,21 @@ module _ {A B} {{_ : Sized A}} {{_ : Sized B}} where
     ==ˢ→≡ˢ : ∀ {x y} → (x ==ˢ y) ≡ 1₂ → x ≡ˢ y
     ==ˢ→≡ˢ p = ==.sound _ _ (≡→✓ p)
 
-module _ {PubKey Message CipherText Rₑ : ★}
-         (Enc  : PubKey → Message → Rₑ → CipherText)
+module EncSized
+         {PubKey Message CipherText Rₑ : ★}
+         (enc  : PubKey → Message → Rₑ → CipherText)
          {{_ : Sized Message}}
          {{_ : Sized CipherText}}
   where
+    open EqSized
+
     -- Encryption size is independant of the randomness
     EncSizeRndInd =
-      ∀ {pk m r₀ r₁} → Enc pk m r₀ ≡ˢ Enc pk m r₁
+      ∀ {pk m r₀ r₁} → enc pk m r₀ ≡ˢ enc pk m r₁
 
     -- Encrypted ciphertexts of the same size, will lead to messages of the same size
     EncLeakSize =
-      ∀ {pk m₀ m₁ r₀ r₁} → Enc pk m₀ r₀ ≡ˢ Enc pk m₁ r₁ → m₀ ≡ˢ m₁
+      ∀ {pk m₀ m₁ r₀ r₁} → enc pk m₀ r₀ ≡ˢ enc pk m₁ r₁ → m₀ ≡ˢ m₁
 
 module M
   {Message CompressedMessage : ★}
@@ -65,20 +68,22 @@ module M
   {{_ : Sized CipherText}}
   (Rₑ Rₖ Rₓ : ★)
   (KeyGen : Rₖ → PubKey × SecKey)
-  (Enc : PubKey → CompressedMessage → Rₑ → CipherText)
-  (EncSizeRndInd : EncSizeRndInd Enc)
-  (EncLeakSize : EncLeakSize Enc)
+  (enc : PubKey → CompressedMessage → Rₑ → CipherText)
+  (open EncSized enc)
+  (encSizeRndInd : EncSizeRndInd)
+  (encLeakSize : EncLeakSize)
   where
 
   -- Our adversary runs one encryption
   Rₐ = Rₑ
 
   CEnc : PubKey → Message → Rₑ → CipherText
-  CEnc pk m rₑ = Enc pk (compress m) rₑ
+  CEnc pk m rₑ = enc pk (compress m) rₑ
 
   module IND-CPA = Game.IND-CPA PubKey SecKey Message CipherText
                                 Rₑ Rₖ Rₐ Rₓ KeyGen CEnc
   open IND-CPA.Adversary
+  open EqSized {CipherText}{CipherText} {{it}} {{it}}
 
   A : IND-CPA.Adversary
   m  A = λ _ _ → [0: m₀ 1: m₁ ]
@@ -86,17 +91,18 @@ module M
 
   -- The adversary A is always winning.
   A-always-wins : ∀ b r → IND-CPA.EXP b A r ≡ b
-  A-always-wins 0₂ _ = ≢1→≡0 (different-compression ∘ EncLeakSize ∘ ==ˢ→≡ˢ)
-  A-always-wins 1₂ _ = ≡ˢ→==ˢ EncSizeRndInd
+  A-always-wins 0₂ _ = ≢1→≡0 (different-compression ∘′ encLeakSize ∘′ ==ˢ→≡ˢ)
+  A-always-wins 1₂ _ = ≡ˢ→==ˢ encSizeRndInd
 
-  lem : ∀ x y → (x ==ᵇ y) ≡ 0₂ → not (x ==ᵇ y) ≡ 1₂
-  lem 1₂ 1₂ = λ ()
-  lem 1₂ 0₂ = λ _ → refl
-  lem 0₂ 1₂ = λ _ → refl
-  lem 0₂ 0₂ = λ ()
-
+  -- One should be able to derive this one from A-always-wins and the game-flipping general lemma in the exploration lib
   {-
   A-always-wins' : ∀ r → IND-CPA.game A r ≡ 1₂
   A-always-wins' (0₂ , r) = {!lem (not (IND-CPA.EXP 0₂ {!A!} r)) (IND-CPA.EXP 1₂ A r) (A-always-wins 0₂ r)!}
+    where
+    lem : ∀ x y → (x ==ᵇ y) ≡ 0₂ → not (x ==ᵇ y) ≡ 1₂
+    lem 1₂ 1₂ = λ ()
+    lem 1₂ 0₂ = λ _ → refl
+    lem 0₂ 1₂ = λ _ → refl
+    lem 0₂ 0₂ = λ ()
   A-always-wins' (1₂ , r) = A-always-wins 1₂ r
   -}
