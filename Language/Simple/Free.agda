@@ -218,7 +218,7 @@ module FreeSemigroup where
                eval-T (map-T (φ f) t) ∙Y eval-T (map-T (φ f) u)
            ≡⟨ ≡.refl ⟩
                to (ψ (φ f)) t ∙Y to (ψ (φ f)) u
-           ≡⟨ ≡.cong₂ _∙Y_ (ψ-φ f t) (ψ-φ f u) ⟩
+           ≡⟨ ≡.ap₂ _∙Y_ (ψ-φ f t) (ψ-φ f u) ⟩
                to f t ∙Y to f u
            ≡⟨ ! (to-∙-cong f t u) ⟩
                to f (t ∙ u)

@@ -7,7 +7,7 @@ open import Data.Bool using (Bool ; true ; false)
 open import Data.Nat.NP
 import Data.Nat.Properties as Props
 open import Data.Fin using (Fin ; Ordering ; less ; equal ; greater)
-import Data.Fin.Props as FP
+import Data.Fin.Properties as FP
 open import Data.List 
 open import Data.Vec hiding ([_] ; _++_)
 
@@ -156,7 +156,7 @@ module NatSyntax (nrVars : ℕ)(G : Vec ℕ nrVars) where
   ... | yes p | just p2 = just (cong₂ _+_ (cong₂ lookup p (refl {x = G})) p2)
   ... | yes p | nothing = nothing
   ... | no  _ | m = nothing
-    where open import Data.Fin.Props
+    where open import Data.Fin.Properties
 
   N2-insert : ∀ {S S'} → N1 S → N2 S' → N2Proof (S :u S')
   N2-insert {S} x (lift x₁) with x ≤1 x₁

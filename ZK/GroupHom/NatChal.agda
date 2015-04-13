@@ -4,6 +4,7 @@ open import Function using (flip)
 open import Data.Product renaming (proj₁ to fst; proj₂ to snd)
 open import Data.Sum.NP
 open import Data.Zero
+open import Data.Fin.NP using (Fin▹ℕ)
 open import Data.Bool.Base using (Bool) renaming (T to ✓)
 open import Relation.Binary
 open import Relation.Binary.PropositionalEquality.NP using (_≡_; _≢_; idp; ap; ap₂; !_; _∙_; module ≡-Reasoning)

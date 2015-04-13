@@ -96,8 +96,8 @@ module Simulator-Valid (RFA : RF.Adversary)(RFA-Valid : RFV.Valid-Adversary RFA)
      Phase2 (ask (RCO x) cont) r0 r1 ((r₀ , r₁) , RF-valid) = r₀ , r₁ , (λ r → Phase2 (cont _) r0 r1 (RF-valid _))
      Phase2 (ask (Vote x) cont) {bb} r0 r1 RF-valid with Check bb x | CheckMem bb x
      ... | 0₂ | _ = Phase2 (cont _) r0 r1 (RF-valid _)
-     ... | 1₂ | not-in-bb = (λ eq → not-in-bb _ (subst (λ x₁ → x₁ ∈ all-sn bb) (WRONG-HYP _ _  eq) r0))
-                            , (λ eq → not-in-bb _ (subst (λ x₁ → x₁ ∈ all-sn bb) (WRONG-HYP _ _ eq) r1))
+     ... | 1₂ | not-in-bb = (λ eq → not-in-bb _ (tr (λ x₁ → x₁ ∈ all-sn bb) (WRONG-HYP _ _  eq) r0))
+                            , (λ eq → not-in-bb _ (tr (λ x₁ → x₁ ∈ all-sn bb) (WRONG-HYP _ _ eq) r1))
                             , λ r → Phase2 (cont _) (there r0) (there r1) (RF-valid _)
                             --Phase2 (cont _) (there r0) (there r1) (RF-valid _)
      Phase2 (done x) r0 r1 RF-valid = RF-valid

@@ -5,7 +5,7 @@ open import Data.Nat.NP using (ℕ)
 open import Data.Fin.NP using (Fin)
 open import Data.Vec.NP using (Vec; []; _∷_; lookup) renaming (map to vmap)
 open import Data.Vec.Properties using (lookup∘tabulate)
-open import Relation.Binary.PropositionalEquality.NP using (_≡_; _≗_; refl; ap; cong₂)
+open import Relation.Binary.PropositionalEquality.NP using (_≡_; _≗_; refl; ap; ap₂)
 open import Category.Monad.NP
 
 open import Language.Simple.Interface
@@ -43,7 +43,7 @@ isMonadic = record { return->>= = return->>=; >>=-return = >>=-return; >>=-assoc
     >>=-return (op o es) = ap (op o) (>>=*-return es)
 
     >>=*-return []       = refl
-    >>=*-return (x ∷ es) = cong₂ _∷_ (>>=-return x) (>>=*-return es)
+    >>=*-return (x ∷ es) = ap₂ _∷_ (>>=-return x) (>>=*-return es)
 
     >>=-assoc : ∀ {A B C} (mx : E A) (my : A → E B) (k : B → E C)
                 → (mx >>= λ x → my x >>= k) ≡ ((mx >>= my) >>= k)
@@ -54,7 +54,7 @@ isMonadic = record { return->>= = return->>=; >>=-return = >>=-return; >>=-assoc
     >>=-assoc (op o mxs) my k = ap (op o) (>>=*-assoc mxs my k)
 
     >>=*-assoc []         my k = refl
-    >>=*-assoc (mx ∷ mxs) my k = cong₂ _∷_ (>>=-assoc mx my k) (>>=*-assoc mxs my k)
+    >>=*-assoc (mx ∷ mxs) my k = ap₂ _∷_ (>>=-assoc mx my k) (>>=*-assoc mxs my k)
 
 monad : Monad E
 monad = _ , isMonadic
@@ -90,7 +90,7 @@ module WithEvalOp {R : ★} (evalOp : ∀ {n} → Op n → Vec R n → R) where
     eval->>=  (var x)   = refl
     eval->>=  (op o es) = ap (evalOp o) (eval->>=* es)
     eval->>=* []        = refl
-    eval->>=* (x ∷ xs)  = cong₂ _∷_ (eval->>= x) (eval->>=* xs)
+    eval->>=* (x ∷ xs)  = ap₂ _∷_ (eval->>= x) (eval->>=* xs)
 
   module _ {A} {f g : A → R} (pf : f ≗ g) where
     eval-ext : eval f ≗ eval g
@@ -98,7 +98,7 @@ module WithEvalOp {R : ★} (evalOp : ∀ {n} → Op n → Vec R n → R) where
     eval-ext  (var x)   = pf x
     eval-ext  (op o es) = ap (evalOp o) (eval-ext* es)
     eval-ext* []        = refl
-    eval-ext* (x ∷ xs)  = cong₂ _∷_ (eval-ext x) (eval-ext* xs)
+    eval-ext* (x ∷ xs)  = ap₂ _∷_ (eval-ext x) (eval-ext* xs)
 
   has-eval : Eval R monad
   has-eval = mk eval eval-return eval->>= eval-ext

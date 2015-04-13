@@ -135,6 +135,55 @@ module M
                 ∙ ≗→~ (λ r → fix[b=]-prop 1₂ 0₂ r)
                 ∙ SUI [rₑ↔rₑ′] [rₑ↔rₑ′]-inv _
 
+open import Data.Nat.NP
+open import Explore.Core
+module N
+ -- (sec : ℕ)
+ (count : Count R)
+-- ()
+
+  where
+
+  import Data.Nat.Distance as D
+
+  |R| = count (λ _ → 1₂)
+
+  Dist : ★
+  Dist = ℕ
+  0d : Dist
+  0d = 0
+  dist : (f g : R → 𝟚) → Dist
+  dist f g = D.dist (count f) (count g)
+
+  dist-comm : (f g : R → 𝟚) → dist f g ≡ dist g f
+  dist-comm f g = D.dist-sym (count f) (count g)
+
+  Negligible : Dist → ★
+  Negligible d = ∀ c → ∃ λ nc → ∀ n → n > nc → (n ^ c) * d ≤ |R|
+
+  {-
+  Negligible→0 : ∀ d → Negligible d → d ≡ 0
+  Negligible→0 d negd = {!snd (negd 1) (|R| + suc (fst (negd 1)))!}
+
+  dist-≗ : {f g : R → 𝟚} → f ≗ g → dist f g ≡ 0d
+  dist-≗ fg = {!!}
+
+  0d-Negigible : ∀ {d} → d ≡ 0d → Negligible d
+  0d-Negigible refl = λ c → 0 , (λ n n>nc → {!!})
+
+  -- _+Dist_ : Dist → Dist → Dist)
+  -- +Dist-Negligible : ∀ {x y} → Negligible x → Negligible y → Negligible (x +Dist y))
+  neg-dist-trans : {f g h : R → 𝟚} → Negligible (dist f g) → Negligible (dist g h) → Negligible (dist f h)
+  neg-dist-trans {f} {g} {h} negfg neggh c = nc , lemma
+    where nc = {!fst (negfg c)!}
+          lemma : ∀ n → n > nc → n ^ c * dist f h ≤ |R|
+          lemma n n>nc = {!!}
+
+  CPA-secure : ∀ b A → Negligible (dist (EXP b A) (EXP (not b) A))
+  CPA-secure = {!!}
+
+  open M {!!} {!!} {!!} {!!} {!!} {!!} {!!}
+  -}
 -- -}
 -- -}
 -- -}

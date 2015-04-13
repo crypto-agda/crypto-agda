@@ -48,9 +48,6 @@ record Interface : Set1 where
     toFun   : ∀ {i X} → Tree X i → (Rep i → X)
     toFun∘fromFun : ∀ {i X}(f : Rep i → X) → f ≗ toFun (fromFun f)
 
-  Is-InjT : ∀ {i A} → Tree A i → Set
-  Is-InjT = Is-Inj ∘ toFun
-
   field
     evalArg  : ∀ {i} → Syn i → Endo (Rep i)
     evalTree : ∀ {i X} → Syn i → Endo (Tree X i)
@@ -75,6 +72,8 @@ record Interface : Set1 where
   field
     mono-inj→id : ∀ {i}(f : Endo (Rep i)) → Is-Inj f → Is-Mono RC RC f → f ≗ id
 
+  Is-InjT : ∀ {i A} → Tree A i → Set
+  Is-InjT = Is-Inj ∘ toFun
 
 module abs (Inter : Interface) where
   open Interface Inter

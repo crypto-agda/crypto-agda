@@ -45,12 +45,6 @@ record RewiringBuilder (C : CircuitType) : ★₁ where
   field
     rewire : ∀ {i o} → RewireFun i o → C i o
 
-  rewireWithTbl : ∀ {i o} → RewireTbl i o → C i o
-  rewireWithTbl = rewire ∘ flip lookup
-
-  idCDefault : ∀ {i} → C i i
-  idCDefault = rewire id
-
   field
     idC : ∀ {i} → C i i
 
@@ -73,6 +67,12 @@ record RewiringBuilder (C : CircuitType) : ★₁ where
                        → is =[ rewireWithTbl t ]= Vec.rewireTbl t is
   rewireWithTbl-spec t is = {!rewire-spec ? ?!}
 -}
+
+  rewireWithTbl : ∀ {i o} → RewireTbl i o → C i o
+  rewireWithTbl = rewire ∘ flip lookup
+
+  idCDefault : ∀ {i} → C i i
+  idCDefault = rewire id
 
   idCDefault-spec : ∀ {i} (bs : Bits i) → bs =[ idCDefault ]= bs
   idCDefault-spec bs

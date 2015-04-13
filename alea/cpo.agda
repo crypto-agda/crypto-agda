@@ -3,6 +3,7 @@
 module alea.cpo where
 
 import Data.Nat.NP as Nat
+open import Data.Two
 
 import Relation.Binary.PropositionalEquality as ≡
 
@@ -33,7 +34,7 @@ _o→_ : ∀ A {B} → Order B → Order (A → B)
 A o→ ob = funOrder {A} ob
   
 record _→m_ {A B}(oa : Order A)(ob : Order B) : Set where
-  coinductive
+  -- coinductive
   constructor mk
   field
     _$_ : A → B
@@ -171,6 +172,7 @@ open continous
 
 module Distr
   (Ur  : Set) -- the set [0,1]
+  (0# : Ur)
   (1/_+1 : Nat.ℕ → Ur)
   (_+_ : Ur → Ur → Ur)
   (_×_ : Ur → Ur → Ur)
@@ -178,6 +180,16 @@ module Distr
   (≤-cong-+ : let open Order oUr in ∀ {x y z w} → x ≤ z → y ≤ w → x + y ≤ z + w)
   (≤-cong-× : let open Order oUr in ∀ {x y z w} → x ≤ z → y ≤ w → x × y ≤ z × w)
   (U   : cpo oUr) where
+
+  1# : Ur
+  1# = 1/ 0 +1
+
+  1/2 : Ur
+  1/2 = 1/ 1 +1
+
+  𝟚▹Ur : 𝟚 → Ur
+  𝟚▹Ur 0₂ = 0#
+  𝟚▹Ur 1₂ = 1#
 
   record distr A : Set where
     constructor mk
@@ -188,6 +200,12 @@ module Distr
   open distr
 
   module _ A where
+    {-
+    uniform : distr A → Set
+    uniform d = ∀ x y → μ d $ (λ z → 𝟚▹Ur (x == z)) ≡ μ d $ (λ z → 𝟚▹Ur (y == z))
+      where open ≡
+    -}
+
     module M = cpo ((A o→ oUr) c→m U)
 
     distrOrder : Order (distr A)
@@ -243,16 +261,14 @@ module Distr
 
     open Order oUr
     open cpo U
-    open import Data.Bool
 
     postulate
       EXPLODE : ∀ {A : Set} → A
 
-
-    flip : distr Bool
-    _$_ (μ flip) f = (1/ 1 +1 × f true) + (1/ 1 +1 × f false)
-    mon (μ flip) r = ≤-cong-+ (≤-cong-× reflexive (r true)) (≤-cong-× reflexive (r false))
-    muContinous flip h = EXPLODE
+    toss : distr 𝟚
+    _$_ (μ toss) f = (1/2 × f 0₂) + (1/2 × f 1₂)
+    mon (μ toss) r = ≤-cong-+ (≤-cong-× reflexive (r 0₂)) (≤-cong-× reflexive (r 1₂))
+    muContinous toss h = EXPLODE
 
     Munit : ∀ {A} → A → distr A
     Munit x = mk (mk (λ f → f x) (λ x≤y → x≤y x)) (λ h → reflexive)
@@ -290,3 +306,8 @@ module Distr
                   (Mlet m1 (λ x → Mlet (m2 x) m3))
     Mlet-assoc m1 m2 m3 f = ≡-reflexive
 
+-- -}
+-- -}
+-- -}
+-- -}
+-- -}
