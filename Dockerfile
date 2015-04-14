@@ -10,4 +10,10 @@ RUN git  clone https://github.com/np/agda-pkg &&\
              -pcrypto-agda/protocols -n
 ADD . /app/
 WORKDIR /app
-RUN agda-pkg -cagda-pkg.conf --js --html crypto-agda.agda
+RUN agda-pkg -cagda-pkg.conf --html crypto-agda.agda
+RUN apt-get update && apt-get install -y nodejs npm
+RUN apt-get install -y coffeescript node-request
+RUN npm install sha256
+RUN ln -s /usr/bin/nodejs /usr/local/bin/node
+RUN npm install requirejs bigi sha1
+RUN ./runjs.sh
