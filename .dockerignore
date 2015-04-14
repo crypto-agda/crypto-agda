@@ -1,0 +1,7 @@
+Dockerfile
+.git/
+*.agdai
+.*.vim
+*~
+*.swp
+\#*\#
