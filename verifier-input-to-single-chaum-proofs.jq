@@ -1,0 +1,1 @@
+[{statement: {type: "chaum-pedersen-pok-elgamal-rnd", data: .election_data.public_key}, aux: .ballots[].answers[] | {"plain": 0, "enc": .choices[0], proof: .individual_proofs[0][] } } | {statement: {type: .statement.type, data: {g: .statement.data.g, p: .statement.data.p, q: .statement.data.q, y: .statement.data.y, plain: .aux.plain, enc: .aux.enc}}, proof: .aux.proof }]
