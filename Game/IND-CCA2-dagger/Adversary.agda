@@ -31,11 +31,13 @@ module Game.IND-CCA2-dagger.Adversary
 
 open Game.IND-CPA-utils Message CipherText
 
+Chal = ChalAdversary      -- choosen plaintext attack (†)
+           (Message ²)    --   the adversary picks two messages
+           (CipherText ²) --   receives the encryption of both of them in a random order
+
 Adversary : ★
 Adversary = Rₐ → PubKey →
                    DecRound            -- first round of decryption queries
-                     (ChalAdversary    -- choosen plaintext attack (†)
-                        (Message ²)    --   the adversary picks two messages
-                        (CipherText ²) --   receives the encryption of both of them in a random order
+                     (Chal
                         (DecRound      -- second round of decryption queries
                            𝟚))         -- the adversary has to guess which message is encrypted as the first ciphertext

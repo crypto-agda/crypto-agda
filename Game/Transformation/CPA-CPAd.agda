@@ -26,7 +26,7 @@ module Game.Transformation.CPA-CPAd
   (KeyGen : Rₖ → PubKey × SecKey)
   (Enc    : PubKey → Message → Rₑ → CipherText)
   (Dec    : SecKey → CipherText → Message)
-  
+
   where
 
 Rₐ = Rₑ × Rₐ†
@@ -56,7 +56,6 @@ R†→R (rₐ† , rₖ , rₑ , rₑ′ , _) = (rₑ′ , rₐ†) , rₖ , r�
 
 module Transformations (A† : Adversary†) where
 
-  --open Adversary
   module A† = Adversary† A†
   m†  = A†.m
   b′† = A†.b′
@@ -64,12 +63,6 @@ module Transformations (A† : Adversary†) where
   -- For these three transformations we just forward the messages
   m : Rₐ → PubKey → 𝟚 → Message
   m (_ , rₐ†) = m† rₐ†
-
-{-
-  fix[t=_] : (t : 𝟚) → Adversary
-  m  fix[t= t ] = m′
-  b′ fix[t= t ] (rₑ , rₐ†) pk cb = b′† rₐ† pk cb (Enc pk (m† rₐ† pk t) rₑ)
--}
 
   fix[t=_] : (t : 𝟚) → Adversary
   fix[t= t ] = record { m = m ; b′ = b′ }

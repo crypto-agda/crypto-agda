@@ -10,7 +10,7 @@ open import Control.Strategy renaming (run to runStrategy; map to mapStrategy)
 
 open import Function
 
-open import Relation.Binary.PropositionalEquality
+open import Relation.Binary.PropositionalEquality.NP
 
 open import Explore.Universe.Type {𝟘}
 open import Explore.Universe.Base
@@ -41,31 +41,39 @@ module CCA2d = Game.IND-CCA2-dagger.Adversary PubKey        Message CipherText  
 module CCA2  = Game.IND-CCA2                  PubKey SecKey Message CipherText Rₑ Rₖ Rₐ KeyGen Enc Dec
 open Game.IND-CPA-utils Message CipherText
 
-{-
-open TransformAdversaryResponse {DecRound Bit} {CipherText → DecRound Bit} (λ x _ → x)
--}
+A-T' = CPAAdversary (DecRound Bit)
+Ad-T' = CCA2d.Chal (DecRound Bit)
+
+A-t' : A-T' -> Ad-T'
+A-t' = Map.A* id (λ f → f 0₂) id
 
 A-transform : (adv : CCA2.Adversary) → CCA2d.Adversary
-A-transform adv rₐ pk = mapStrategy (Map.A* id (λ f → f 0₂) id) (adv rₐ pk)
+A-transform adv rₐ pk = mapStrategy A-t' (adv rₐ pk)
 
 {-
 If we are able to do the transformation, then we get the same advantage
 -}
 
-{-
 decRound = runStrategy ∘ Dec
 
 correct : ∀ {rₑ rₑ' rₖ rₐ } b adv
-        → CCA2.EXP b adv               (rₐ , rₖ , rₑ)
+        → CCA2.EXP  b adv               (rₐ , rₖ , rₑ)
         ≡ CCA2d.EXP b (A-transform adv) (rₐ , rₖ , rₑ , rₑ')
-correct {rₑ} {rₑ'} {rₖ} {rₐ} 0b m with KeyGen rₖ
-... | pk , sk = cong (λ x → decRound sk (put-c x (Enc pk (proj₁ (get-m x)) rₑ)
-                                                 (Enc pk (proj₂ (get-m x)) rₑ')))
-                     (sym (run-map (Dec sk) A* (m rₐ pk)))
-correct {rₑ}{rₑ'}{rₖ} {rₐ} 1b m with KeyGen rₖ
-... | pk , sk = cong (λ x → decRound sk (put-c x (Enc pk (proj₂ (get-m x)) rₑ)
-                                                 (Enc pk (proj₁ (get-m x)) rₑ')))
-                     (sym (run-map (Dec sk) A* (m rₐ pk)))
+correct {rₑ} {rₑ'} {rₖ} {rₐ} b m with KeyGen rₖ
+... | pk , sk =
+  rs (put-resp rm (Enc pk (get-chal rm b) rₑ))
+    ≡⟨ ap (λ x → rs (put-resp rm (Enc pk x rₑ))) rmrmd ⟩
+  rs (put-resp (A-t' (runStrategy (Dec sk) (m rₐ pk))) kd)
+    ≡⟨ ap (\ x -> rs (put-resp x kd)) !rm ⟩
+  rs (put-resp rmd kd) ∎
+  where open ≡-Reasoning
+        rs = runStrategy (Dec sk)
+        md = A-transform m rₐ pk
+        rmd = rs md
+        rm = rs (m rₐ pk)
+        !rm = ! run-map (Dec sk) A-t' (m rₐ pk)
+        rmrmd = ap (λ x → get-chal x b) !rm
+        kd = λ x → Enc pk (get-chal rmd (x xor b)) ([0: rₑ 1: rₑ' ] x)
 {-
 
 Need to show that they are valid transformation aswell:

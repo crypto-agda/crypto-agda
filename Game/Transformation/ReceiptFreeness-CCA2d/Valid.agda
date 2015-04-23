@@ -112,7 +112,8 @@ module Simulator-Valid (RFA : RF.Adversary)(RFA-Valid : RFV.Valid-Adversary RFA)
      Phase1 (ask (Vote x) cont) RF-valid | 1₂ = λ r → Phase1 _ (RF-valid _)
      Phase1 (ask (Vote x) cont) RF-valid | 0₂ = Phase1 _ (RF-valid _)
      Phase1 (done x) {bb = bb'}{ta} (sn₀∉sn , sn₁∉sn , RF-valid) cs
-       = {!Phase2 (put-resp x (proj₂ (put-resp (hack-challenge x) cs))) (here refl) (there (here refl)) (RF-valid _)!}
+       = {!Phase2 (put-resp x (proj₂ (put-resp (hack-challenge x) cs)))!}
+       -- {!Phase2 (put-resp x (proj₂ (put-resp (hack-challenge x) cs))) (here refl) (there (here refl)) (RF-valid _)!}
        -- Phase2 (put-resp x (proj₂ (put-resp (hack-challenge x) cs) ))
        --     ? ? (RF-valid _)
     -- -}

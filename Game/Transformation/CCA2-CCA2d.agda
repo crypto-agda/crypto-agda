@@ -14,8 +14,7 @@ open import Relation.Binary.PropositionalEquality
 
 open import Explore.Core
 open import Explore.Properties
-open import Explore.Explorable renaming (module Explorable₀ to Exp
-                                        ; module FromExplore₀ to FE)
+open import Explore.Explorable
 open import Explore.Product
 open Operators
 
@@ -27,11 +26,13 @@ import Game.IND-CPA-utils
 
 module Game.Transformation.CCA2-CCA2d
 
+{-
 BROKEN
 
 The simulator here is not valid (picking at random)
 
 BROKEN
+-}
 
   (PubKey    : ★)
   (SecKey    : ★)
@@ -54,6 +55,7 @@ module CCA2 = Game.IND-CCA2  PubKey SecKey Message CipherText
     Rₑ Rₖ Rₐ† KeyGen Enc Dec
 open Game.IND-CPA-utils Message CipherText
 
+{-
 CPA-transform : PubKey → Bit → Rₑ
               → CPAAdversary (CipherText → DecRound Bit)
               → CPAAdversary (DecRound Bit)

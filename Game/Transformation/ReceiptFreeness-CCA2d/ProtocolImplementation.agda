@@ -3,11 +3,15 @@
 open import Type
 open import Data.Fin
 open import Data.Nat using (ℕ)
+open import Data.Nat.Properties.Simple
 open import Data.One
 open import Data.Product
 open import Data.Two
 open import Data.Vec using (Vec ; lookup)
 open import Data.List using ([] ; _∷_)
+
+
+open import Function using (flip)
 
 import Game.ReceiptFreeness.Definitions.Encryption as Defs
 import Game.ReceiptFreeness.Definitions.Receipt as Receipt
@@ -23,6 +27,8 @@ open import Control.Protocol.BiSim
 open import Control.Protocol.Reduction
 
 open import Relation.Binary.PropositionalEquality.NP
+
+open import Algebra.FunctionProperties {A = ℕ × ℕ} _≡_
 
 module Game.Transformation.ReceiptFreeness-CCA2d.ProtocolImplementation
   (PubKey SecKey  : ★)
@@ -41,7 +47,7 @@ module Game.Transformation.ReceiptFreeness-CCA2d.ProtocolImplementation
   -- (0,0   : Tally)
   -- (1,1   : Tally)
   -- (_+,+_ : Tally → Tally → Tally)
-  (receipts : let open Receipt CipherText SerialNumber in SerialNumber ² → CipherText ² → Receipt ²)
+  -- (receipts : let open Receipt CipherText SerialNumber in SerialNumber ² → CipherText ² → Receipt ²)
   --(enc-co : Receipt → CipherText)
   --(m?     : Receipt → MarkedReceipt?)
 
@@ -57,16 +63,22 @@ module Game.Transformation.ReceiptFreeness-CCA2d.ProtocolImplementation
   (Check    : let open Defs PubKey SecKey CipherText SerialNumber Rₑ Enc Dec
                   open Receipt CipherText SerialNumber
                in BB → Receipt → 𝟚)
+  (DecEnc : ∀ rₖ rₑ m → let pk , sk = KeyGen rₖ in Dec sk (Enc pk m rₑ) ≡ m)
   -- (tally  : SecKey → BB → Tally)
   where
 
 open Receipt CipherText SerialNumber
 open Tally CipherText SerialNumber
-open Defs PubKey SecKey CipherText SerialNumber Rₑ Enc Dec using (tally ; BB ; Rgb)
+module DEFS = Defs PubKey SecKey CipherText SerialNumber Rₑ Enc Dec
+open DEFS using (tally ; BB ; Rgb)
 
 --_∷²_ : Receipt ² → BB → BB
 -- r ∷² xs = r 0₂ ∷ (r 1₂ ∷ xs)
 
+
+-- Doesn't matter which mark it is, we arbitrary pick 1₂
+receipts : SerialNumber ² → CipherText ² → Receipt ²
+receipts sn cs b = marked 1₂ , sn b , cs b
 
 Message = 𝟚
 -- CO = 𝟚
@@ -91,25 +103,56 @@ open Game.Transformation.ReceiptFreeness-CCA2d.Protocol PubKey CipherText (Seria
 
 open Game.ReceiptFreeness.ProtocolImplementation PubKey SecKey (SerialNumber ²) (Rₑ ²) Rₖ #q max#q KeyGen Receipt EncReceipts DecReceipt Rgb Ballot BB [] _∷_ genBallot Tally tally Check hiding (_∷²_)
 
++,+-assoc : Associative _+,+_
++,+-assoc x y z = ap₂ _,_ (+-assoc (proj₁ x) (proj₁ y) (proj₁ z))
+                          (+-assoc (proj₂ x) (proj₂ y) (proj₂ z))
+
 module proof (rgb : (Vec Rgb #q)²)(b : 𝟚)(rₖ : Rₖ)(rₑ : Rₑ ²) where
 
   pk = proj₁ (KeyGen rₖ)
   sk = proj₂ (KeyGen rₖ)
 
-  postulate
+ -- postulate
  --   tally-naught : tally sk [] ≡ 0,0
-    tally-both : ∀ sn bb
+  tally-both : ∀ sn bb
       → tally sk (EncReceipts pk rₑ sn b ∷² bb) ≡ (1,1 +,+ tally sk bb)
+  tally-both sn bb = ! +,+-assoc a0 a1 (tally sk bb) ∙ ap (flip _+,+_ (tally sk bb)) lemma
+    where
+      a0 = uncurry tallyMarkedReceipt? (DEFS.DecReceipt sk (EncReceipts pk rₑ sn b 0₂))
+      a1 = uncurry tallyMarkedReceipt? (DEFS.DecReceipt sk (EncReceipts pk rₑ sn b 1₂))
 
-  {-
-  each-phase : ∀ {X X'' p#}(bb : BB)(i : Fin #q)(C : _)(C' : _)(C'' : El 𝟙 X) →
-           ServerSim Q Resp _
-           (BiSim _≡_ {X})
-           (Chal.service b pk sk rgb rₑ X p# C bb i)
-           (applySim (service rgb pk p# C' bb i (tally sk bb))
-                     (Challenger.service b pk sk rₑ C''))
-  each-phase = {!!}
-  -}
+      lemma : a0 +,+ a1 ≡ 1,1
+      lemma rewrite DecEnc rₖ (rₑ 0₂) b
+                  | DecEnc rₖ (rₑ 1₂) (not b)
+              with not b
+      ... | 0₂ = refl
+      ... | 1₂ = refl
+
+  module _ {X X'}(p# : 𝟚)(ChalNext : BB → El 𝟙 X)(ChallengerNext : El 𝟙 X')(SimNext : BB → Fin #q → Tally → X' ⊢ X)
+    (BiSimNext : ∀ bb i → BiSim _≡_ {X} (ChalNext bb) (apply (SimNext bb i (tally sk bb)) ChallengerNext)) where
+    mutual
+      service-phase : (bb : BB)(i : Fin #q) →
+               ServerSim Q Resp _
+               (BiSim _≡_ {X})
+               (Chal.service b pk sk rgb rₑ X p# ChalNext bb i)
+               (applySim (service rgb pk p# SimNext bb i (tally sk bb))
+                         (Challenger.service b pk sk rₑ {X'} ChallengerNext))
+      sim-srv-ask (service-phase bb i) (Vote x) = service-phase-vote bb i x -- (Check bb x) refl
+      sim-srv-ask (service-phase bb i) REB = refl , service-phase bb (pred i)
+      sim-srv-ask (service-phase bb i) RBB = refl , service-phase bb (pred i)
+      sim-srv-ask (service-phase bb i) RTally = refl , service-phase bb (pred i)
+      sim-srv-ask (service-phase bb i) (RCO x) = refl , (service-phase bb (pred i))
+      sim-srv-done (service-phase bb i)   = BiSimNext bb i
+
+      service-phase-vote : (bb : BB)(i : Fin #q)(x : _) →
+        ServerResponseSim Q Resp (El 𝟙 X) (BiSim _≡_ {X})
+          (srv-ask (Chal.service b pk sk rgb rₑ X p# ChalNext bb i) (Vote x))
+          (applySimResp (service-vote rgb pk p# SimNext bb i (tally sk bb) x (Check bb x))
+                        (Challenger.service b pk sk rₑ {X'} ChallengerNext))
+      service-phase-vote bb i x with Check bb x
+      ... | 0₂ = refl , service-phase bb (pred i) -- service-phase bb (pred i)
+      ... | 1₂ = refl , service-phase (x ∷ bb) (pred i) -- service-phase (x ∷ bb) (pred i) -- {!!} , {!!}
+
 
   phase2 : (bb : BB)(i : Fin #q) →
            ServerSim Q Resp _
@@ -117,22 +160,7 @@ module proof (rgb : (Vec Rgb #q)²)(b : 𝟚)(rₖ : Rₖ)(rₑ : Rₑ ²) where
            (Chal.phase2 b pk sk rgb rₑ bb i)
            (applySim (sim-phase2 rgb pk bb i (tally sk bb))
                      (Challenger.phase2 b pk sk rₑ))
-  phase2-vote : (bb : BB)(i : Fin #q)(x : _) →
-    ServerResponseSim Q Resp 𝟙 _≡_
-      (srv-ask (Chal.phase2 b pk sk rgb rₑ bb i) (Vote x))
-      (applySimResp (service-vote rgb pk 1₂ (λ _ _ _ → end) bb i (tally sk bb) x (Check bb x))
-                    (Challenger.phase2 b pk sk rₑ))
-
-  sim-srv-ask (phase2 bb i) (Vote x) = phase2-vote bb i x -- (Check bb x) refl
-  sim-srv-ask (phase2 bb i) REB = refl , phase2 bb (pred i)
-  sim-srv-ask (phase2 bb i) RBB = refl , phase2 bb (pred i)
-  sim-srv-ask (phase2 bb i) RTally = refl , phase2 bb (pred i)
-  sim-srv-ask (phase2 bb i) (RCO x) = refl , (phase2 bb (pred i))
-  sim-srv-done (phase2 bb i)   = refl
-
-  phase2-vote bb i x with Check bb x
-  ... | 0₂ = refl , phase2 bb (pred i)
-  ... | 1₂ = refl , phase2 (x ∷ bb) (pred i) -- {!!} , {!!}
+  phase2 = service-phase 1₂ _ _ _ (λ _ _ → refl)
 
   exc : (bb : BB) → BiSim _≡_ {Exchange (Round end)}
         (Chal.exc b pk sk rgb rₑ bb)
@@ -147,23 +175,7 @@ module proof (rgb : (Vec Rgb #q)²)(b : 𝟚)(rₖ : Rₖ)(rₑ : Rₑ ²) where
            (Chal.phase1 b pk sk rgb rₑ bb i)
            (applySim (sim-phase1 rgb pk bb i (tally sk bb))
                      (Challenger.phase1 b pk sk rₑ))
-  phase1-vote : (bb : BB)(i : Fin #q)(x : _) →
-    ServerResponseSim Q Resp (El 𝟙 (Exchange (Round end))) (BiSim _≡_ {Exchange (Round end)})
-      (srv-ask (Chal.phase1 b pk sk rgb rₑ bb i) (Vote x))
-      (applySimResp (service-vote rgb pk 0₂ (λ bb _ ta → sim-chal rgb pk bb ta) bb i (tally sk bb) x (Check bb x))
-                    (Challenger.phase1 b pk sk rₑ))
-
-  sim-srv-ask (phase1 bb i) (Vote x) = phase1-vote bb i x
-  sim-srv-ask (phase1 bb i) REB = refl , phase1 bb (pred i)
-  sim-srv-ask (phase1 bb i) RBB = refl , phase1 bb (pred i)
-  sim-srv-ask (phase1 bb i) RTally = refl , phase1 bb (pred i)
-  sim-srv-ask (phase1 bb i) (RCO x) = refl , phase1 bb (pred i)
-
-  sim-srv-done (phase1 bb i) = exc bb
-
-  phase1-vote bb i x with Check bb x
-  ... | 0₂ = refl , phase1 bb (pred i)
-  ... | 1₂ = refl , phase1 (x ∷ bb) (pred i)
+  phase1 = service-phase 0₂ _ _ _ (λ bb _ sn → exc bb sn)
 
   proof : BiSim _≡_ {P = ReceiptFreeness}(RF-C b rₖ rgb rₑ)
             (apply (simulator rgb) (CCA2d-Chal b rₖ rₑ))
