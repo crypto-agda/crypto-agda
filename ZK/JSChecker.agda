@@ -102,16 +102,16 @@ module [ℤq]ℤp★ (qI pI gI : BigI) where
     check-primality       "p" pI >>
     check-generator-group-order gI qI pI
 
-  open 𝔽 qI
-    public
+  module ℤq = 𝔽 qI
     using (0#; 1#; _+_; _−_; _*_; _/_)
     renaming (𝔽 to ℤq; fromBigI to BigI▹ℤq; repr to ℤq-repr)
-
-  open 𝔽 pI
-    public
+  module ℤp★ = 𝔽 pI
     using (_==_)
     renaming ( fromBigI to BigI▹ℤp★; 𝔽 to ℤp★; _*_ to _·_
              ; repr to ℤp★-repr; _/_ to _·/_)
+
+  open ℤq  -- public -- <- BUG
+  open ℤp★ public
 
   g : ℤp★
   g = BigI▹ℤp★ gI
@@ -139,6 +139,8 @@ zk-check-chaum-pedersen-pok-elgamal-rnd pf
   module Zk-check-chaume-pedersen-pok-elgamal-rnd where
     module I = ZK-chaum-pedersen-pok-elgamal-rnd pf
     open [ℤq]ℤp★ I.q I.p I.g
+    open ℤq
+--  open ℤp★ -- <- BUG
     A = BigI▹ℤp★ I.A
     B = BigI▹ℤp★ I.B
     α = BigI▹ℤp★ I.α
