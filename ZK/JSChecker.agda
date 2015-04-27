@@ -1,24 +1,27 @@
 {-# OPTIONS --without-K #-}
 module ZK.JSChecker where
 
-open import Type
-open import Function hiding (case_of_)
-open import Data.Bool.Base
-open import Data.Product
-open import Data.List.Base using (List; []; _∷_; and; foldr)
-open import Data.String.Base  using (String)
+open import Function         using (id; _∘′_; case_of_)
+open import Data.Bool.Base   using (Bool; true; false; _∧_)
+open import Data.List.Base   using (List; []; _∷_; and; foldr)
+open import Data.String.Base using (String)
 
-open import FFI.JS as JS hiding (_+_)
+open import FFI.JS
+  hiding (check; trace)
+  renaming (_*_ to _*Number_)
+-- open import FFI.JS.Proc using (URI; JSProc; showURI; server)
+-- open import Control.Process.Type
 import FFI.JS.Console as Console
 import FFI.JS.Process as Process
 import FFI.JS.FS as FS
-open import FFI.JS.Proc
-open import Control.Process.Type
 
 import FiniteField.JS as 𝔽
 
 import FFI.JS.BigI as BigI
 open BigI using (BigI; bigI)
+
+trace : {A B : Set}(msg : String)(inp : A)(f : A → B) → B
+trace _ inp f = f inp
 
 bignum : Number → BigI
 bignum n = bigI (Number▹String n) "10"
@@ -29,84 +32,86 @@ bigdec v = bigI (castString v) "10"
 
 record ZK-chaum-pedersen-pok-elgamal-rnd (ℤq ℤp★ : Set) : Set where
   field
-    c s : ℤq
+    m c s : ℤq
     g p q y α β A B : ℤp★
-    m : Number
 
 -- TODO dynamise me
 t : Number
-t = readNumber "1"
+t = readNumber "10"
 
-min-bytes : Number
-min-bytes = readNumber "456"
+-- TODO: check if this is large enough
+min-bits-q : Number
+min-bits-q = 256N
 
-min-bits : Number
-min-bits = readNumber "8" JS.* min-bytes
+min-bits-p : Number
+min-bits-p = 2048N
 
-abstract
-  Checks = Bool → Bool
+check : (title  : String)
+        (pred   : Bool)
+        (errmsg : 𝟙 → String)
+     → JS!
+check title true  errmsg = Console.log (title ++ ": PASS")
+check title false errmsg = Console.log (title ++ ": FAIL [" ++ errmsg _ ++ "]")
 
-  run : Checks → Bool
-  run c = c true
+check-size : Number → String → BigI → JS!
+check-size min-bits name value =
+  check ("check size of " ++ name)
+        (len ≥Number min-bits)
+        (λ _ → name ++ " is not a necessarily a safe prime: "
+             ++ BigI.toString value    ++ " has "
+             ++ Number▹String len      ++ " bits which is less than "
+             ++ Number▹String min-bits ++ " bits")
+  module Check-size where
+    len = BigI.byteLength value *Number 8N
 
-  infixr 9 _&_
-  _&_ : Checks → Checks → Checks
-  _&_ = _∘′_
+check-pq-relation : (p q : BigI) → JS!
+check-pq-relation p q =
+  check ("check p and q relation p-1/q=" ++ BigI.toString s)
+        (equals r 0I)
+        (λ _ → "Not necessarily a safe group: (p-1) mod q != 0\np="
+             ++ BigI.toString p
+             ++ ", q=" ++ BigI.toString q)
+  module Check-pq-relation where
+    open BigI
+    p-1 = subtract p 1I
+    r   = mod    p-1 q
+    s   = divide p-1 q
 
-  check' : (title  : String)
-           (pred   : Bool)
-           (errmsg : 𝟙 → String)
-         → Checks
-  check' title pred errmsg x =
-    trace title pred λ b → warn-check b errmsg (b ∧ x)
+check-primality : String → BigI → JS!
+check-primality name value =
+  check ("check primality of " ++ name)
+        (BigI.isProbablePrime value t)
+        (λ _ → "Not a prime number: " ++ BigI.toString value)
 
-  check-size : String → BigI → Checks
-  check-size name value =
-    check' ("check size of " ++ name ++ ": ")
-           (BigI.byteLength value <Number min-bytes)
-           (λ _ → "Not a necessarily a safe prime: less than " ++ Number▹String min-bits ++ " bits")
-
-  check-pq-relation : (p q : BigI) → Checks
-  check-pq-relation p q =
-    check' "check p and q relation: "
-           (BigI.equals (BigI.add BigI.1I (BigI.multiply BigI.2I q)) p)
-           (λ _ → "Not a necessarily a safe group: 1+2*"
-                ++ BigI.toString q ++ " != " ++ BigI.toString p)
-
-  check-primality : String → BigI → Checks
-  check-primality name value =
-    check' ("check primality of " ++ name ++ ": ")
-           (BigI.isProbablePrime value t)
-           (λ _ → "Not a prime number: " ++ BigI.toString value)
-
-  check-generator-group-order : (g q p : BigI) → Checks
-  check-generator-group-order g q p =
-    check' "check generator & group order: "
-           (BigI.equals (BigI.modPow g q p) BigI.1I)
-           (λ _ → "Not a generator of a group of order q: modPow "
-                ++ BigI.toString g ++ " " ++ BigI.toString q ++ " "
-                ++ BigI.toString p)
+check-generator-group-order : (g q p : BigI) → JS!
+check-generator-group-order g q p =
+  check "check generator & group order"
+        (BigI.equals (BigI.modPow g q p) BigI.1I)
+        (λ _ → "Not a generator of a group of order q: modPow "
+             ++ BigI.toString g ++ " " ++ BigI.toString q ++ " "
+             ++ BigI.toString p)
 
 module [ℤq]ℤp★ (qI pI gI : BigI) where
 
-  checks : Checks
+  checks : JS!
   checks =
-    check-pq-relation pI qI &
-    check-size       "p" pI &
-    check-primality  "q" qI &
-    check-primality  "p" pI &
+    check-pq-relation      pI qI >>
+    check-size min-bits-q "q" qI >>
+    check-size min-bits-p "p" pI >>
+    check-primality       "q" qI >>
+    check-primality       "p" pI >>
     check-generator-group-order gI qI pI
 
   open 𝔽 qI
     public
-    using (ℤq; BigI▹ℤq; 0#; 1#; _+_; _−_; _*_; _/_)
-    renaming (repr to ℤq-repr)
+    using (0#; 1#; _+_; _−_; _*_; _/_)
+    renaming (𝔽 to ℤq; fromBigI to BigI▹ℤq; repr to ℤq-repr)
 
   open 𝔽 pI
     public
     using (_==_)
-    renaming (BigI▹ℤq to BigI▹ℤp★; ℤq to ℤp★; _*_ to _·_; repr to ℤp★-repr
-             ;_/_ to _·/_)
+    renaming ( fromBigI to BigI▹ℤp★; 𝔽 to ℤp★; _*_ to _·_
+             ; repr to ℤp★-repr; _/_ to _·/_)
 
   g : ℤp★
   g = BigI▹ℤp★ gI
@@ -114,7 +119,7 @@ module [ℤq]ℤp★ (qI pI gI : BigI) where
   _^_ : ℤp★ → ℤq → ℤp★
   b ^ e = BigI▹ℤp★ (BigI.modPow (ℤp★-repr b) (ℤq-repr e) pI)
 
-zk-check-chaum-pedersen-pok-elgamal-rnd : ZK-chaum-pedersen-pok-elgamal-rnd BigI BigI → Checks
+zk-check-chaum-pedersen-pok-elgamal-rnd : ZK-chaum-pedersen-pok-elgamal-rnd BigI BigI → JS!
 zk-check-chaum-pedersen-pok-elgamal-rnd pf
       = trace "g=" g λ _ →
         trace "p=" I.p λ _ →
@@ -128,10 +133,10 @@ zk-check-chaum-pedersen-pok-elgamal-rnd pf
         trace "B=" B λ _ →
         trace "c=" c λ _ →
         trace "s=" s λ _ →
-        checks
-      & check' "g^s==A·α^c: "     ((g ^ s) == (A · (α ^ c)))        (λ _ → "")
-      & check' "y^s==B·(β/M)^c: " ((y ^ s) == (B · ((β ·/ M) ^ c))) (λ _ → "")
-  where
+         checks
+      >> check "g^s==A·α^c"     ((g ^ s) == (A · (α ^ c)))        (λ _ → "")
+      >> check "y^s==B·(β/M)^c" ((y ^ s) == (B · ((β ·/ M) ^ c))) (λ _ → "")
+  module Zk-check-chaume-pedersen-pok-elgamal-rnd where
     module I = ZK-chaum-pedersen-pok-elgamal-rnd pf
     open [ℤq]ℤp★ I.q I.p I.g
     A = BigI▹ℤp★ I.A
@@ -141,13 +146,15 @@ zk-check-chaum-pedersen-pok-elgamal-rnd pf
     y = BigI▹ℤp★ I.y
     s = BigI▹ℤq  I.s
     c = BigI▹ℤq  I.c
-    m = BigI▹ℤq  (bignum I.m)
+    m = BigI▹ℤq  I.m
     M = g ^ m
 
-zk-check-one : Number → JSValue → Bool
-zk-check-one ix arg = trace "ix="  ix λ _ →
-                      trace "res=" (run res) id
- where
+zk-check : JSValue → JS!
+zk-check arg =
+    check "type of statement" (typ === fromString "chaum-pedersen-pok-elgamal-rnd")
+                              (λ _ → "")
+ >> zk-check-chaum-pedersen-pok-elgamal-rnd pok
+ module Zk-check where
     stm = arg ·« "statement" »
     typ = stm ·« "type" »
     dat = stm ·« "data" »
@@ -155,7 +162,7 @@ zk-check-one ix arg = trace "ix="  ix λ _ →
     p   = bigdec (dat ·« "p" »)
     q   = bigdec (dat ·« "q" »)
     y   = bigdec (dat ·« "y" »)
-    m   = castNumber (dat ·« "plain" »)
+    m   = bigdec (dat ·« "plain" »)
     enc = dat ·« "enc" »
     α   = bigdec (enc ·« "alpha" »)
     β   = bigdec (enc ·« "beta"  »)
@@ -167,21 +174,17 @@ zk-check-one ix arg = trace "ix="  ix λ _ →
     s   = bigdec (prf ·« "response" »)
     pok = record { g = g; p = p; q = q; y = y; α = α; β = β; A = A; B = B; c = c; s = s; m = m }
 
-    res = check' "type of statement: " (typ === fromString "chaum-pedersen-pok-elgamal-rnd") (λ _ → "")
-        & zk-check-chaum-pedersen-pok-elgamal-rnd pok
-
-zk-check : JSValue → Bool
-zk-check πs = and (decodeJSArray (castJSArray πs) zk-check-one)
-
+{-
 srv : URI → JSProc
 srv d =
   recv d λ q →
   send d (fromBool (zk-check q))
   end
+-}
 
 -- Working around Agda.Primitive.lsuc being undefined
-case_of_ : {A : Set} {B : Set₁} → A → (A → B) → B
-case x of f = f x
+-- case_of_ : {A : Set} {B : Set} → A → (A → B) → B
+-- case x of f = f x
 
 main : JS!
 main =
@@ -190,30 +193,23 @@ main =
     (_node ∷ _run ∷ _test ∷ args') →
       case args' of λ {
         [] →
-          server "127.0.0.1" "1337" srv !₁ λ uri →
-          Console.log (showURI uri) >>
-          end
+        Console.log "usage: No arguments"
+        {- server "127.0.0.1" "1337" srv !₁ λ uri →
+           Console.log (showURI uri)
+         -}
       ; (arg ∷ args'') →
           case args'' of λ {
             [] →
-              let opts =
-                 -- fromJSObject (fromObject (("encoding" , fromString "utf8") ∷ []))
-                 -- nullJS
-                    JSON-parse "{\"encoding\":\"utf8\"}"
-              in
-              Console.log ("readFile=" ++ arg) >>
-              FS.readFile arg opts !₂ λ err dat →
-                Console.log ("readFile: err=" ++ err) >>
-                Console.log (Bool▹String (zk-check (JSON-parse (castString dat)))) >>
-                end
+              FS.readFile arg nullJS !₂ λ err dat →
+                check "reading input file" (is-null err)
+                       (λ _ → "readFile error: " ++ toString err) >>
+                zk-check (JSON-parse (castString dat))
           ; _ →
-              Console.log "usage" >>
-              end
+              Console.log "usage: Too many arguments"
           }
       }
   ; _ →
-      Console.log "usage" >>
-      end
+      Console.log "usage"
   }
 -- -}
 -- -}
