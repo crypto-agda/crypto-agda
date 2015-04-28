@@ -7,7 +7,7 @@ open import Data.List.Base   using (List; []; _∷_; and; foldr)
 open import Data.String.Base using (String)
 
 open import FFI.JS
-  hiding (check; trace)
+  hiding (check)
   renaming (_*_ to _*Number_)
 -- open import FFI.JS.Proc using (URI; JSProc; showURI; server)
 -- open import Control.Process.Type
@@ -20,8 +20,8 @@ import FiniteField.JS as 𝔽
 import FFI.JS.BigI as BigI
 open BigI using (BigI; bigI)
 
-trace : {A B : Set}(msg : String)(inp : A)(f : A → B) → B
-trace _ inp f = f inp
+-- trace : {A B : Set}(msg : String)(inp : A)(f : A → B) → B
+-- trace _ inp f = f inp
 
 bignum : Number → BigI
 bignum n = bigI (Number▹String n) "10"
@@ -30,10 +30,11 @@ bignum n = bigI (Number▹String n) "10"
 bigdec : JSValue → BigI
 bigdec v = bigI (castString v) "10"
 
-record ZK-chaum-pedersen-pok-elgamal-rnd (ℤq ℤp★ : Set) : Set where
+-- TODO bug (undefined)!
+record ZK-chaum-pedersen-pok-elgamal-rnd {--(ℤq ℤp★ : Set)--} : Set where
   field
-    m c s : ℤq
-    g p q y α β A B : ℤp★
+    m c s : BigI {--ℤq--}
+    g p q y α β A B : BigI --ℤp★
 
 -- TODO dynamise me
 t : Number
@@ -119,7 +120,7 @@ module [ℤq]ℤp★ (qI pI gI : BigI) where
   _^_ : ℤp★ → ℤq → ℤp★
   b ^ e = BigI▹ℤp★ (BigI.modPow (ℤp★-repr b) (ℤq-repr e) pI)
 
-zk-check-chaum-pedersen-pok-elgamal-rnd : ZK-chaum-pedersen-pok-elgamal-rnd BigI BigI → JS!
+zk-check-chaum-pedersen-pok-elgamal-rnd : ZK-chaum-pedersen-pok-elgamal-rnd {-BigI BigI-} → JS!
 zk-check-chaum-pedersen-pok-elgamal-rnd pf
       = trace "g=" g λ _ →
         trace "p=" I.p λ _ →
@@ -136,9 +137,9 @@ zk-check-chaum-pedersen-pok-elgamal-rnd pf
          checks
       >> check "g^s==A·α^c"     ((g ^ s) == (A · (α ^ c)))        (λ _ → "")
       >> check "y^s==B·(β/M)^c" ((y ^ s) == (B · ((β ·/ M) ^ c))) (λ _ → "")
-  module Zk-check-chaume-pedersen-pok-elgamal-rnd where
+  module ZK-check-chaum-pedersen-pok-elgamal-rnd where
     module I = ZK-chaum-pedersen-pok-elgamal-rnd pf
-    open [ℤq]ℤp★ I.q I.p I.g
+    open module IM = [ℤq]ℤp★ I.q I.p I.g
     open ℤq
 --  open ℤp★ -- <- BUG
     A = BigI▹ℤp★ I.A
