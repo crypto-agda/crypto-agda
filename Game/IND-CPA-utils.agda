@@ -2,6 +2,7 @@
 open import Type
 open import Control.Strategy
 open import Data.Two
+open import Data.Maybe
 open import Data.Product
 open import Game.Challenge
 
@@ -12,7 +13,7 @@ module Game.IND-CPA-utils (Message CipherText : ★) where
 
 -- This describes a "round" of decryption queries
 DecRound : ★ → ★
-DecRound = Strategy CipherText (λ _ → Message)
+DecRound = Strategy CipherText (λ _ → Maybe Message)
 
 CPAAdversary : (Next : ★) → ★
 CPAAdversary = ChalAdversary (Message ²) CipherText

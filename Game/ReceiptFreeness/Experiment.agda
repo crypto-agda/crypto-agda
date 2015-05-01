@@ -15,16 +15,16 @@ open import Relation.Binary.PropositionalEquality.NP as ≡
 import Game.ReceiptFreeness.Adversary
 
 module Game.ReceiptFreeness.Experiment
-  (PubKey    : ★)
-  (SecKey    : ★)
+  (PubKey    : Type)
+  (SecKey    : Type)
 
-  (SerialNumber² : ★)
+  (SerialNumber² : Type)
 
   -- randomness supply for, encryption, key-generation, adversary, adversary state
-  (Rₑ² Rₖ Rₐ : ★)
+  (Rₑ² Rₖ Rₐ : Type)
   (#q : ℕ) (max#q : Fin #q)
   (KeyGen : Rₖ → PubKey × SecKey)
-  (Receipt : ★)
+  (Receipt : Type)
 
   -- CO is the message
   -- Receipt ² is the ciphertext
@@ -34,13 +34,13 @@ module Game.ReceiptFreeness.Experiment
   (DecReceipt : let CO = 𝟚 in
                 SecKey → Receipt → CO)
 
-  (Rgb : ★)
-  (Ballot : ★)
-  (BB : ★)
+  (Rgb : Type)
+  (Ballot : Type)
+  (BB : Type)
   ([] : BB)
   (_∷_ : Receipt → BB → BB)
   (genBallot : PubKey → Rgb → Ballot)
-  (Tally : ★)
+  (Tally : Type)
   (tally : SecKey → BB → Tally)
   (Check : BB → Receipt → 𝟚)
   where
@@ -53,7 +53,7 @@ CO = 𝟚
 open Game.ReceiptFreeness.Adversary PubKey SerialNumber² Rₐ Receipt Ballot Tally CO BB
 
 private
-  State : (S A : ★) → ★
+  State : (S A : Type) → Type
   State S A = S → A × S
 open StatefulRun
 
@@ -118,7 +118,7 @@ module EXP (b : 𝟚) (A : Adversary) (pk : PubKey) (sk : SecKey)
   -- adversary guess
   b′ = proj₁ phase2
 
-R : ★
+R : Type
 R = Rₖ × Rₐ × 𝟚 × Rₑ² × (Vec Rgb #q)²
 
 game : Adversary → R → 𝟚
@@ -129,7 +129,7 @@ game A (rₖ , rₐ , b , rₑ , rgbs) =
   }
 
 -- Winning condition
-Win : Adversary → R → ★
+Win : Adversary → R → Type
 Win A r = game A r ≡ 1₂
 
         {-

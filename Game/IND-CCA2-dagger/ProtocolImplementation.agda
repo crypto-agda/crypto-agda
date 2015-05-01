@@ -1,6 +1,4 @@
-
-{-# OPTIONS --copatterns #-}
-
+{-# OPTIONS --without-K --copatterns #-}
 open import Type
 open import Function
 open import Data.One
@@ -8,67 +6,44 @@ open import Data.Two
 open import Data.Maybe
 open import Data.Product
 
-open import Data.Nat.NP
---open import Rat
-
-open import Explore.Core
-open import Explore.Explorable
-open import Explore.Product
-open Operators
-open import Control.Strategy renaming (run to runStrategy)
 open import Control.Protocol.CoreOld
-open import Game.Challenge
-import Game.IND-CPA-utils
 
-import Game.IND-CCA2-dagger.Adversary
-import Game.IND-CCA2-dagger.Valid
-import Game.IND-CCA2-dagger.Experiment
+open import Crypto.Schemes
 import Game.IND-CCA2-dagger.Protocol
 
-open import Relation.Binary.PropositionalEquality
-
 module Game.IND-CCA2-dagger.ProtocolImplementation
-  (PubKey    : ★)
-  (SecKey    : ★)
-  (Message   : ★)
-  (CipherText : ★)
-
-  -- randomness supply for, encryption, key-generation, adversary, adversary state
-  (Rₑ Rₖ : ★)
-  (KeyGen : Rₖ → PubKey × SecKey)
-  (Enc    : PubKey → Message → Rₑ → CipherText)
-  (Dec    : SecKey → CipherText → Message)
-
+  (pke : Pubkey-encryption)
   where
 
+open Pubkey-encryption pke
 open Game.IND-CCA2-dagger.Protocol PubKey Message CipherText
 
 module Challenger (b : 𝟚)(pk : PubKey)(sk : SecKey)(rₑ : Rₑ ²) where
+  DecRound = Server CipherText (const (Maybe Message))
 
   module _ {X}(Cont : El 𝟙 X) where
-    service : Server CipherText (const Message) (El 𝟙 X)
-    srv-ask  service q = (Dec sk q) , service
+    service : DecRound (El 𝟙 X)
+    srv-ask  service q = dec sk q , service
     srv-done service   = Cont
 
-  phase2 : Server CipherText (const Message) 𝟙
+  phase2 : DecRound 𝟙
   phase2 = service {end} _
 
   exchange : El 𝟙 (CCAChal (CCARound end))
-  exchange m = (Enc pk ∘ m ∘ flip _xor_ b ˢ rₑ) , phase2
+  exchange m = (enc pk ∘ m ∘ flip _xor_ b ˢ rₑ) , phase2
 
-  phase1 : Server CipherText (const Message) (El 𝟙 (CCAChal (CCARound end)))
+  phase1 : DecRound (El 𝟙 (CCAChal (CCARound end)))
   phase1 = service {CCAChal (CCARound end)} exchange
 
-
 CCA2d-Chal : (b : 𝟚)(rₖ : Rₖ)(rₑ : Rₑ ²) → El 𝟙 CCA2-dagger
-CCA2d-Chal b rₖ rₑ with KeyGen rₖ
+CCA2d-Chal b rₖ rₑ with key-gen rₖ
 ... | pk , sk = pk , Challenger.phase1 b pk sk rₑ
 
 
 {-
 module Capture where
 -- open Game.IND-CCA2-dagger.Adversary PubKey Message CipherText Rₐ
--- open Game.IND-CCA2-dagger.Experiment PubKey SecKey Message CipherText Rₑ Rₖ Rₐ KeyGen Enc Dec
+-- open Game.IND-CCA2-dagger.Experiment PubKey SecKey Message CipherText Rₑ Rₖ Rₐ key-gen enc dec
   open Game.IND-CPA-utils
 
   chal : ChalAdversary (Message ²) (CipherText ²)

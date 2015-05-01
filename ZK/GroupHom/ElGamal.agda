@@ -89,9 +89,9 @@ module Known-enc-rnd
     { φ-hom = < ^-hom g , ^-hom y >-hom
     ; y = ct.α , ct.β / M
     ; φ⇒P = λ _ e → ap₂ (λ p q → fst p , q) e
-                        (ap (flip _*_ M ∘ snd) e ∙ ! /-*)
+                        (ap (flip _*_ M ∘ snd) e ∙ /-*)
     ; P⇒φ = λ _ e → ap₂ _,_ (ap fst e)
-                            (*-/ ∙ ap (flip _/_ M) (ap snd e))
+                            (! *-/ ∙ ap (flip _/_ M) (ap snd e))
     }
 
 open ≡-Reasoning

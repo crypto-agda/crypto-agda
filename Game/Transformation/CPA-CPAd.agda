@@ -1,38 +1,31 @@
 {-# OPTIONS --without-K --copatterns #-}
 open import Type
+open import Function
 open import Data.Two
 open import Data.Maybe
 open import Data.Product.NP
 open import Data.One using (𝟙)
 open import Data.Two
-open import Control.Strategy renaming (run to runStrategy; map to mapStrategy)
-
-open import Function
-
 open import Relation.Binary
 open import Relation.Binary.PropositionalEquality
 
+open import Control.Strategy
+
+open import Crypto.Schemes
 import Game.IND-CPA-dagger
 import Game.IND-CPA
 
 module Game.Transformation.CPA-CPAd
-  (PubKey    : ★)
-  (SecKey    : ★)
-  (Message   : ★)
-  (CipherText : ★)
-
-  -- randomness supply for, encryption, key-generation, adversary, adversary state
-  (Rₑ Rₖ Rₐ† : ★)
-  (KeyGen : Rₖ → PubKey × SecKey)
-  (Enc    : PubKey → Message → Rₑ → CipherText)
-  (Dec    : SecKey → CipherText → Message)
-
+  (pke : Pubkey-encryption)
+  (Rₐ† : Type)
   where
+
+open Pubkey-encryption pke
 
 Rₐ = Rₑ × Rₐ†
 
-module CPA  = Game.IND-CPA        PubKey SecKey Message CipherText Rₑ Rₖ Rₐ  𝟙 KeyGen Enc
-module CPA† = Game.IND-CPA-dagger PubKey SecKey Message CipherText Rₑ Rₖ Rₐ† 𝟙 KeyGen Enc
+module CPA  = Game.IND-CPA        pke Rₐ  𝟙
+module CPA† = Game.IND-CPA-dagger pke Rₐ† 𝟙
 
 open CPA  using (EXP; R; Adversary; module Adversary)
 open CPA† using () renaming (EXP to EXP†; R to R†; Adversary to Adversary†; module Adversary to Adversary†)
@@ -58,7 +51,7 @@ module Transformations (A† : Adversary†) where
 
   module A† = Adversary† A†
   m†  = A†.m
-  b′† = A†.b′
+  b′† = A†.b'
 
   -- For these three transformations we just forward the messages
   m : Rₐ → PubKey → 𝟚 → Message
@@ -68,13 +61,13 @@ module Transformations (A† : Adversary†) where
   fix[t= t ] = record { m = m ; b′ = b′ }
    where
     b′ : ∀ _ _ _ → _
-    b′ (rₑ , rₐ†) pk cb = b′† rₐ† pk cb (Enc pk (m† rₐ† pk t) rₑ)
+    b′ (rₑ , rₐ†) pk cb = b′† rₐ† pk cb (enc pk (m† rₐ† pk t) rₑ)
 
   fix[b=_] : (b : 𝟚) → Adversary
   fix[b= b ] = record { m = m ; b′ = b′ }
    where
     b′ : ∀ _ _ _ → _
-    b′ (rₑ , rₐ†) pk ct = b′† rₐ† pk (Enc pk (m† rₐ† pk b) rₑ) ct
+    b′ (rₑ , rₐ†) pk ct = b′† rₐ† pk (enc pk (m† rₐ† pk b) rₑ) ct
 
   fix[t=]-prop : ∀ b t r → EXP b fix[t= t ] r ≡ EXP† b t A† (R→R† r)
   fix[t=]-prop _ _ _ = refl
@@ -149,7 +142,7 @@ module N
   dist f g = D.dist (count f) (count g)
 
   dist-comm : (f g : R → 𝟚) → dist f g ≡ dist g f
-  dist-comm f g = D.dist-sym (count f) (count g)
+  dist-comm f g = D.dist-comm (count f) (count g)
 
   Negligible : Dist → ★
   Negligible d = ∀ c → ∃ λ nc → ∀ n → n > nc → (n ^ c) * d ≤ |R|

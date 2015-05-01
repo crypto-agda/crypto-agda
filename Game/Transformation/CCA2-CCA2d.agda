@@ -1,5 +1,4 @@
 {-# OPTIONS --without-K --copatterns #-}
-
 open import Type
 open import Data.Bit
 open import Data.Maybe
@@ -18,8 +17,9 @@ open import Explore.Explorable
 open import Explore.Product
 open Operators
 
+open import Crypto.Schemes
 open import Game.Challenge
-import Game.IND-CCA2-dagger
+import Game.IND-CCA2-dagger.Experiment
 import Game.IND-CCA2
 import Game.IND-CCA
 import Game.IND-CPA-utils
@@ -34,25 +34,16 @@ The simulator here is not valid (picking at random)
 BROKEN
 -}
 
-  (PubKey    : ★)
-  (SecKey    : ★)
-  (Message   : ★)
-  (CipherText : ★)
-
-  -- randomness supply for, encryption, key-generation, adversary, adversary state
-  (Rₑ Rₖ Rₐ : ★)
-  (KeyGen : Rₖ → PubKey × SecKey)
-  (Enc    : PubKey → Message → Rₑ → CipherText)
-  (Dec    : SecKey → CipherText → Message)
-  
+  (pke : Pubkey-encryption)
+  (Rₐ : Type)
   where
+
+open Pubkey-encryption pke
 
 Rₐ† = Bit × Rₑ × Rₐ
 
-module CCA2d = Game.IND-CCA2-dagger PubKey SecKey Message CipherText
-    Rₑ Rₖ Rₐ KeyGen Enc Dec 
-module CCA2 = Game.IND-CCA2  PubKey SecKey Message CipherText
-    Rₑ Rₖ Rₐ† KeyGen Enc Dec
+module CCA2d = Game.IND-CCA2-dagger.Experiment pke Rₐ
+module CCA2  = Game.IND-CCA2                   pke Rₐ†
 open Game.IND-CPA-utils Message CipherText
 
 {-
@@ -202,7 +193,6 @@ This is easy, the adversary we are constructing have only a subset
 of the restrictions that the original adversary have
 
 -}
-
 
 
 -- -}

@@ -3,6 +3,7 @@ open import Type
 open import Function
 open import Data.Two
 open import Data.Product
+open import Data.Maybe
 open import Data.Nat
 open import Data.Vec hiding (_>>=_ ; _∈_)
 -- open import Data.List as L
@@ -18,18 +19,18 @@ import Data.List.Any
 open Data.List.Any.Membership-≡ using (_∈_ ; _∉_)
 
 module Game.Transformation.ReceiptFreeness-CCA2d.Simulator
-  (PubKey    : ★)
-  (CipherText : ★)
+  (PubKey    : Type)
+  (CipherText : Type)
 
-  (SerialNumber² : ★)
-  (Receipt : ★)
-  (MarkedReceipt? : ★)
-  (Ballot : ★)
-  (Tally : ★)
-  (BB    : ★)
+  (SerialNumber² : Type)
+  (Receipt : Type)
+  (MarkedReceipt? : Type)
+  (Ballot : Type)
+  (Tally : Type)
+  (BB    : Type)
   ([]    : BB)
   (_∷_ : Receipt → BB → BB)
-  (Rgb   : ★)
+  (Rgb   : Type)
   (genBallot : PubKey → Rgb → Ballot)
   (tallyMarkedReceipt? : let CO = 𝟚 in CO → MarkedReceipt? → Tally)
   (0,0   : Tally)
@@ -40,15 +41,17 @@ module Game.Transformation.ReceiptFreeness-CCA2d.Simulator
   (m?     : Receipt → MarkedReceipt?)
 
   -- randomness supply for, encryption, key-generation, adversary, adversary state
-  (Rₐ : ★)
+  (Rₐ : Type)
   (#q : ℕ) (max#q : Fin #q)
   (Check    : BB → Receipt → 𝟚)
+  (Message : Type)
+  (𝟚→Message : 𝟚 → Message)
+  (Message→𝟚 : Maybe Message → 𝟚)
   where
 
 _∷²_ : Receipt ² → BB → BB
 r ∷² xs = r 0₂ ∷ (r 1₂ ∷ xs)
 
-Message = 𝟚
 CO = 𝟚
 Candidate = 𝟚
 
@@ -56,18 +59,18 @@ open Game.IND-CPA-utils Message CipherText
 module RFA = Game.ReceiptFreeness.Adversary PubKey SerialNumber² Rₐ Receipt Ballot Tally CO BB
 open RFA renaming (Phase to RFPhase; Q to RFQ; Resp to RFResp)
 
-Rₐ† : ★
+Rₐ† : Type
 Rₐ† = Rₐ × (Vec Rgb #q)²
 
 module CCA2† = Game.IND-CCA2-dagger.Adversary PubKey Message CipherText Rₐ†
 
 CCAProto : Proto
-CCAProto = P[ CipherText , const Message ]
+CCAProto = P[ CipherText , const (Maybe Message) ]
 
 RFProto : Proto
 RFProto = P[ RFQ , RFResp ]
 
-MITMState : ★ → ★
+MITMState : Type → Type
 MITMState X = X × BB × Tally
 
 module Simulator (RFA : Adversary) where
@@ -77,7 +80,6 @@ module Simulator (RFA : Adversary) where
     ballot : PhaseNumber → Fin #q → Ballot
     ballot p# n = genBallot pk (lookup n (rgb p#))
 
-
     MITM-phase : (p# : PhaseNumber) → Fin #q → BB → Tally → ∀ {X} → MITM {CCAProto} {RFProto} {MITMState X}
     MITM-phase-vote : ∀ v (p# : PhaseNumber) → Fin #q → BB → Tally → 𝟚 → ∀ {X}
        → Client CCAProto (P'.R {CCAProto} {RFProto} {MITMState X}{X} (Vote v) × MITM {CCAProto} {RFProto} {MITMState X} {X})
@@ -86,19 +88,20 @@ module Simulator (RFA : Adversary) where
     hack-query (MITM-phase p# n bb ta) RTally = done (ta , MITM-phase p# (Fin.pred n) bb ta)
     hack-query (MITM-phase p# n bb ta) (RCO r) =
        -- if receipt in DB then ...
-       ask (enc-co r) λ co → done (co , MITM-phase p# (Fin.pred n) bb ta)
+       ask (enc-co r) λ mco → done (Message→𝟚 mco , MITM-phase p# (Fin.pred n) bb ta)
     hack-query (MITM-phase p# n bb ta) (Vote v) = MITM-phase-vote v p# n bb ta (Check bb v)
     hack-result (MITM-phase p# n bb ta) r = done (r , bb , ta)
 
     MITM-phase-vote _ p# n bb ta 0₂ = done (reject , MITM-phase p# (Fin.pred n) bb ta)
-    MITM-phase-vote r p# n bb ta 1₂ = ask (enc-co r) λ co →
+    MITM-phase-vote r p# n bb ta 1₂ = ask (enc-co r) λ mco →
+      let co = Message→𝟚 mco in
       done (accept , MITM-phase p# (Fin.pred n) (r ∷ bb) (tallyMarkedReceipt? co (m? r) +,+ ta))
 
     MITM-RFChallenge : ∀ {X} → MITM {_} {_} {MITMState X}
     MITM-RFChallenge = MITM-phase 0₂ max#q [] 0,0
 
     hack-challenge : ∀ {X} → RFChallenge X → CPA†Adversary (X × Receipt ²)
-    get-chal (hack-challenge _)     = id
+    get-chal (hack-challenge _)     = 𝟚→Message
     put-resp (hack-challenge rfc) c = put-resp rfc rec , rec
       where rec = receipts (get-chal rfc) c
 

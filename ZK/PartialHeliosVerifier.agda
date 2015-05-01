@@ -7,7 +7,7 @@ open import Data.Product
 open import Data.List.Base using (List; []; _∷_; and; foldr)
 open import Data.String.Base  using (String)
 
-open import FFI.JS as JS hiding (_+_; zero; one; join)
+open import FFI.JS as JS hiding (_+_; _/_; _*_; join)
 open import FFI.JS.BigI as BigI
 import FFI.JS.Console as Console
 import FFI.JS.Process as Process
@@ -224,7 +224,7 @@ srv d =
   end
 
 -- Working around Agda.Primitive.lsuc being undefined
-case_of_ : {A : Set} {B : Set₁} → A → (A → B) → B
+case_of_ : {A : Set} {B : Set} → A → (A → B) → B
 case x of f = f x
 
 main : JS!
@@ -235,8 +235,7 @@ main =
       case args' of λ {
         [] →
           server "127.0.0.1" "1337" srv !₁ λ uri →
-          Console.log (showURI uri) >>
-          end
+          Console.log (showURI uri)
       ; (arg ∷ args'') →
           case args'' of λ {
             [] →
@@ -247,17 +246,14 @@ main =
               in
               Console.log ("readFile=" ++ arg) >>
               FS.readFile arg opts !₂ λ err dat →
-                Console.log ("readFile: err=" ++ err) >>
-                Console.log (Bool▹String (verify-helios-election (JSON-parse (castString dat)))) >>
-                end
+                Console.log ("readFile: err=" ++ JS.toString err) >>
+                Console.log (Bool▹String (verify-helios-election (JSON-parse (castString dat))))
           ; _ →
-              Console.log "usage" >>
-              end
+              Console.log "usage"
           }
       }
   ; _ →
-      Console.log "usage" >>
-      end
+      Console.log "usage"
   }
 -- -}
 -- -}

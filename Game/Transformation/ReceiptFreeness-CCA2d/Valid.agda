@@ -53,6 +53,7 @@ module Game.Transformation.ReceiptFreeness-CCA2d.Valid
   (Rₐ : ★)
   (#q : ℕ) (max#q : Fin #q)
   (Check    : let BB = List Receipt in BB → Receipt → 𝟚)
+  (Message : Type)
   where
 
 _²' : ★ → ★
@@ -71,7 +72,7 @@ open Game.Transformation.ReceiptFreeness-CCA2d.Simulator
   PubKey CipherText (SerialNumber ²) Receipt MarkedReceipt? Ballot Tally BB [] _∷_ Rgb genBallot
   tallyMarkedReceipt? 0,0 1,1 _+,+_ receipts enc-co m? Rₐ #q max#q Check
 
-module CCA2†V = Game.IND-CCA2-dagger.Valid PubKey Message CipherText Rₐ†
+module CCA2†V = Game.IND-CCA2-dagger.Valid PubKey Message CipherText -- Rₐ†
 
 
 module Simulator-Valid (RFA : RF.Adversary)(RFA-Valid : RFV.Valid-Adversary RFA)

@@ -5,9 +5,10 @@ import Explore.README
 
 import Attack.Compression
 import Attack.Reencryption
-import Attack.Reencryption.OneBit
 import Cipher.ElGamal.Generic
 import Cipher.ElGamal.Homomorphic
+import Cipher.ElGamal.Group
+import Cipher.ElGamal.CPA-DDH
 import Composition.Forkable
 import Composition.Horizontal
 import Composition.Vertical
@@ -94,7 +95,7 @@ import Game.Transformation.ReceiptFreeness-CCA2d.Protocol
 import Game.Transformation.ReceiptFreeness-CCA2d.ProtocolImplementation
 import Game.Transformation.ReceiptFreeness-CCA2d.Simulator
 import Game.Transformation.ReceiptFreeness-CCA2d.SimulatorInst
---import Game.Transformation.ReceiptFreeness-CCA2d.Valid
+-- import Game.Transformation.ReceiptFreeness-CCA2d.Valid
 import Language.Simple.Abstract
 import Language.Simple.Free
 import Language.Simple.Interface
@@ -108,10 +109,12 @@ import Solver.Linear.Examples
 import Solver.Linear.Parser
 import Solver.Linear.Syntax
 import ZK.PartialHeliosVerifier
+import ZK.JSChecker
 import ZK.GroupHom
 import ZK.GroupHom.FieldChal
 import ZK.GroupHom.FieldChal2
 import ZK.GroupHom.FieldChal3
+import ZK.GroupHom.ElGamal
 import adder
 import alea.cpo
 import bijection-syntax.Bijection-Fin
@@ -119,5 +122,4 @@ import bijection-syntax.Bijection
 import bijection-syntax.README
 import circuits.bytecode
 import circuits.circuit
-import elgamal
 import sha1

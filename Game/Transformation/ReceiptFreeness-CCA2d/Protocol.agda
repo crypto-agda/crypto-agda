@@ -3,6 +3,7 @@ open import Type
 open import Data.Fin
 open import Data.Nat using (ℕ)
 open import Data.Product
+open import Data.Maybe
 open import Data.Two
 open import Data.Vec using (Vec ; lookup)
 
@@ -41,12 +42,14 @@ module Game.Transformation.ReceiptFreeness-CCA2d.Protocol
   -- randomness supply for, encryption, key-generation, adversary, adversary state
   (#q : ℕ) (max#q : Fin #q)
   (Check    : BB → Receipt → 𝟚)
+  (Message : Type)
+  (𝟚→Message : 𝟚 → Message)
+  (Message→𝟚 : Maybe Message → 𝟚)
   where
 
 _∷²_ : Receipt ² → BB → BB
 r ∷² xs = r 0₂ ∷ (r 1₂ ∷ xs)
 
-Message = 𝟚
 CO = 𝟚
 Candidate = 𝟚
 
@@ -68,22 +71,22 @@ module _ (rgb : (Vec Rgb #q)²)(pk : PubKey) where
     r-ask (service bb i ta) RBB = ret (bb , service bb (pred i) ta)
     r-ask (service bb i ta) RTally = ret (ta , service bb (pred i) ta)
     r-ask (service bb i ta) (RCO r) = LS-ask (enc-co r , λ co →
-      ret (co , (service bb (pred i) ta)))
+      ret (Message→𝟚 co , (service bb (pred i) ta)))
     r-ask (service bb i ta) (Vote x) = service-vote bb i ta x (Check bb x)
     r-done (service bb i ta)  = LS-done (cont bb i ta)
 
     service-vote bb i ta v 0₂ = ret (reject , (service bb (pred i) ta))
     service-vote bb i ta v 1₂ = LS-ask (enc-co v , (λ co →
-      ret (accept , service (v ∷ bb) (pred i) (tallyMarkedReceipt? co (m? v) +,+ ta))))
+      ret (accept , service (v ∷ bb) (pred i) (tallyMarkedReceipt? (Message→𝟚 co) (m? v) +,+ ta))))
 
   sim-phase2 : BB → Fin #q → Tally → RServerSim (CCARound end) Q Resp end
   sim-phase2 = service 1₂ (λ _ _ _ → end)
 
   sim-chal : BB → Tally → (Message ² →' (CipherText ² ×' CCARound end))
            ⊢ (SerialNumber² →' (Receipt ² ×' Round end))
-  sim-chal bb ta = RΠ (λ sn → LΠ ((λ x → x) , LΣ (λ c →
+  sim-chal bb ta = RΠ (λ sn → LΠ (𝟚→Message , LΣ (λ c →
      let r = receipts sn c
-      in RΣ (r , RS (sim-phase2 (r ∷² bb) max#q (1,1 +,+ ta))))))
+     in RΣ (r , RS (sim-phase2 (r ∷² bb) max#q (1,1 +,+ ta))))))
 
   sim-phase1 : BB → Fin #q → Tally
              → RServerSim (CCARound (Message ² →' (CipherText ² ×' CCARound end)))

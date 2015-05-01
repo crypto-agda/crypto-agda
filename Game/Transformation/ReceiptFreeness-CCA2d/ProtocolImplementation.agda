@@ -1,11 +1,11 @@
-
-{-# OPTIONS --copatterns #-}
+{-# OPTIONS --without-K --copatterns #-}
 open import Type
 open import Data.Fin
 open import Data.Nat using (ℕ)
 open import Data.Nat.Properties.Simple
 open import Data.One
 open import Data.Product
+open import Data.Maybe
 open import Data.Two
 open import Data.Vec using (Vec ; lookup)
 open import Data.List using ([] ; _∷_)
@@ -29,67 +29,46 @@ open import Control.Protocol.Reduction
 open import Relation.Binary.PropositionalEquality.NP
 
 open import Algebra.FunctionProperties {A = ℕ × ℕ} _≡_
+open import Crypto.Schemes
 
 module Game.Transformation.ReceiptFreeness-CCA2d.ProtocolImplementation
-  (PubKey SecKey  : ★)
-  (CipherText : ★)
-
-  (SerialNumber : ★)
-  --(Receipt : ★)
-  --(MarkedReceipt? : ★)
-  --(Ballot : ★)
-  -- (Tally : ★)
-  --(BB    : ★)
-  --([]    : BB)
-  --(_∷_ : Receipt → BB → BB)
-  --(Rgb   : ★)
-  -- (tallyMarkedReceipt? : let CO = 𝟚 in CO → MarkedReceipt? → Tally)
-  -- (0,0   : Tally)
-  -- (1,1   : Tally)
-  -- (_+,+_ : Tally → Tally → Tally)
-  -- (receipts : let open Receipt CipherText SerialNumber in SerialNumber ² → CipherText ² → Receipt ²)
-  --(enc-co : Receipt → CipherText)
-  --(m?     : Receipt → MarkedReceipt?)
-
-  -- randomness supply for, encryption, key-generation, adversary, adversary state
-  (Rₑ Rₖ : ★)
+  (pke : Pubkey-encryption)
+  (open Pubkey-encryption pke)
+  (SerialNumber : Type)
+ -- (Rₑ Rₖ : ★)
+  (𝟚→Message : 𝟚 → Message)
+  (Message→𝟚 : Maybe Message → 𝟚)
+  (𝟚→Message→𝟚 : ∀ m → Message→𝟚 (just (𝟚→Message m)) ≡ m)
   (#q : ℕ) (max#q : Fin #q)
-  (KeyGen : Rₖ → PubKey × SecKey)
-  (Enc    : PubKey → 𝟚 → Rₑ → CipherText)
-  (Dec    : SecKey → CipherText → 𝟚)
-  (genBallot : let open Defs PubKey SecKey CipherText SerialNumber Rₑ Enc Dec
-                   open Receipt CipherText SerialNumber
-                in PubKey → Rgb → Ballot) -- this one should be abstract?
-  (Check    : let open Defs PubKey SecKey CipherText SerialNumber Rₑ Enc Dec
-                  open Receipt CipherText SerialNumber
-               in BB → Receipt → 𝟚)
-  (DecEnc : ∀ rₖ rₑ m → let pk , sk = KeyGen rₖ in Dec sk (Enc pk m rₑ) ≡ m)
+  (open Defs pke SerialNumber 𝟚→Message Message→𝟚 using (tally ; BB ; Rgb))
+  (open Receipt CipherText SerialNumber)
+  (genBallot : PubKey → Rgb → Ballot) -- this one should be abstract?
+  (Check    : BB → Receipt → 𝟚)
   -- (tally  : SecKey → BB → Tally)
   where
 
-open Receipt CipherText SerialNumber
+functionally-correct' : ∀ rₖ rₑ m → let pk , sk = key-gen rₖ in Message→𝟚 (dec sk (enc pk (𝟚→Message m) rₑ)) ≡ m
+functionally-correct' rₖ rₑ m rewrite functionally-correct rₖ rₑ (𝟚→Message m) = 𝟚→Message→𝟚 m
+
 open Tally CipherText SerialNumber
-module DEFS = Defs PubKey SecKey CipherText SerialNumber Rₑ Enc Dec
-open DEFS using (tally ; BB ; Rgb)
+module DEFS = Defs pke SerialNumber 𝟚→Message Message→𝟚
 
 --_∷²_ : Receipt ² → BB → BB
 -- r ∷² xs = r 0₂ ∷ (r 1₂ ∷ xs)
-
 
 -- Doesn't matter which mark it is, we arbitrary pick 1₂
 receipts : SerialNumber ² → CipherText ² → Receipt ²
 receipts sn cs b = marked 1₂ , sn b , cs b
 
-Message = 𝟚
 -- CO = 𝟚
 -- Candidate = 𝟚
 EncReceipts : let CO = 𝟚 in
                  PubKey → Rₑ ² → SerialNumber ² → CO → Receipt ²
-EncReceipts pk re sn co = receipts sn (λ x → Enc pk (x xor co) (re x))
+EncReceipts pk re sn co = receipts sn (λ x → enc pk (𝟚→Message (x xor co)) (re x))
 
 DecReceipt : let CO = 𝟚 in
                 SecKey → Receipt → CO
-DecReceipt sk c = Dec sk (enc-co c)
+DecReceipt sk c = Message→𝟚 (dec sk (enc-co c))
 
 
 open Game.ReceiptFreeness.Protocol PubKey (SerialNumber ²) Receipt Ballot BB Tally CO
@@ -97,11 +76,11 @@ open Explicit-definitions
 open Game.IND-CCA2-dagger.Protocol PubKey Message CipherText
 
 -- open Game.ReceiptFreeness.Protocol PubKey SerialNumber² Receipt Ballot BB Tally
-open Game.IND-CCA2-dagger.ProtocolImplementation PubKey SecKey Message CipherText Rₑ Rₖ KeyGen Enc Dec
+open Game.IND-CCA2-dagger.ProtocolImplementation pke
 
-open Game.Transformation.ReceiptFreeness-CCA2d.Protocol PubKey CipherText (SerialNumber ²) Receipt MarkedReceipt? Ballot Tally BB [] _∷_ Rgb genBallot tallyMarkedReceipt? 0,0 1,1 _+,+_ receipts enc-co m? #q max#q Check
+open Game.Transformation.ReceiptFreeness-CCA2d.Protocol PubKey CipherText (SerialNumber ²) Receipt MarkedReceipt? Ballot Tally BB [] _∷_ Rgb genBallot tallyMarkedReceipt? 0,0 1,1 _+,+_ receipts enc-co m? #q max#q Check Message 𝟚→Message Message→𝟚
 
-open Game.ReceiptFreeness.ProtocolImplementation PubKey SecKey (SerialNumber ²) (Rₑ ²) Rₖ #q max#q KeyGen Receipt EncReceipts DecReceipt Rgb Ballot BB [] _∷_ genBallot Tally tally Check hiding (_∷²_)
+open Game.ReceiptFreeness.ProtocolImplementation PubKey SecKey (SerialNumber ²) (Rₑ ²) Rₖ #q max#q key-gen Receipt EncReceipts DecReceipt Rgb Ballot BB [] _∷_ genBallot Tally tally Check hiding (_∷²_)
 
 +,+-assoc : Associative _+,+_
 +,+-assoc x y z = ap₂ _,_ (+-assoc (proj₁ x) (proj₁ y) (proj₁ z))
@@ -109,8 +88,8 @@ open Game.ReceiptFreeness.ProtocolImplementation PubKey SecKey (SerialNumber ²)
 
 module proof (rgb : (Vec Rgb #q)²)(b : 𝟚)(rₖ : Rₖ)(rₑ : Rₑ ²) where
 
-  pk = proj₁ (KeyGen rₖ)
-  sk = proj₂ (KeyGen rₖ)
+  pk = proj₁ (key-gen rₖ)
+  sk = proj₂ (key-gen rₖ)
 
  -- postulate
  --   tally-naught : tally sk [] ≡ 0,0
@@ -122,8 +101,8 @@ module proof (rgb : (Vec Rgb #q)²)(b : 𝟚)(rₖ : Rₖ)(rₑ : Rₑ ²) where
       a1 = uncurry tallyMarkedReceipt? (DEFS.DecReceipt sk (EncReceipts pk rₑ sn b 1₂))
 
       lemma : a0 +,+ a1 ≡ 1,1
-      lemma rewrite DecEnc rₖ (rₑ 0₂) b
-                  | DecEnc rₖ (rₑ 1₂) (not b)
+      lemma rewrite functionally-correct' rₖ (rₑ 0₂) b
+                  | functionally-correct' rₖ (rₑ 1₂) (not b)
               with not b
       ... | 0₂ = refl
       ... | 1₂ = refl

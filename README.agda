@@ -27,7 +27,6 @@ open import Game.Transformation.Naor-Yung
 --TODO[could be trivially based on Attack.BruteForce.Randomness] open import Attack.Deterministic
 open import Attack.Compression
 open import Attack.Reencryption
-open import Attack.Reencryption.OneBit
 
 open import Crypto.Schemes
 

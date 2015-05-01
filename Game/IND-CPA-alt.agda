@@ -1,28 +1,21 @@
-
 {-# OPTIONS --without-K #-}
 open import Type
-open import Data.Product
-open import Data.Bit
+open import Data.Product.NP
+open import Data.Two
+
+open import Crypto.Schemes
 
 module Game.IND-CPA-alt
-  (PubKey     : ★)
-  (SecKey     : ★)
-  (Message    : ★)
-  (CipherText : ★)
-
-  -- randomness supply for: encryption, key-generation, adversary, extensions
-  (Rₑ Rₖ Rₐ : ★)
-
-  (KeyGen : Rₖ → PubKey × SecKey)
-  (Enc    : PubKey → Message → Rₑ → CipherText)
-
+  (pke : Pubkey-encryption)
+  (Rₐ : Type)
   where
 
-M² = Bit → Message
+open Pubkey-encryption pke
+M² = Message ²
 
 -- IND-CPA adversary in two parts
 Adv : ★
-Adv = Rₐ → PubKey → (M² × (CipherText → Bit))
+Adv = Rₐ → PubKey → (M² × (CipherText → 𝟚))
 
 -- IND-CPA randomness supply
 R : ★
@@ -30,9 +23,9 @@ R = (Rₐ × Rₖ × Rₑ)
 
 -- IND-CPA games:
 --   * input: adversary and randomness supply
---   * output b: adversary claims we are in game ⅁ b
+--   * output b: adversary claims we are in game b
 Game : ★
-Game = Adv → R → Bit
+Game = Adv → R → 𝟚
 
 -- The game step by step:
 -- (pk) key-generation, only the public-key is needed
@@ -41,15 +34,18 @@ Game = Adv → R → Bit
 -- (c)  encrypt the message
 -- (b′) send randomness, public-key and ciphertext
 --      receive the guess from the adversary
-⅁ : Bit → Game
-⅁ b m (rₐ , rₖ , rₑ) = b′
+EXP : 𝟚 → Game
+EXP b m (rₐ , rₖ , rₑ) = b'
   where
-  pk = proj₁ (KeyGen rₖ)
+  pk = fst (key-gen rₖ)
   ad = m rₐ pk
-  mb = proj₁ ad b
-  c  = Enc pk mb rₑ
-  b′ = proj₂ ad c
+  mb = fst ad b
+  c  = enc pk mb rₑ
+  b' = snd ad c
 
-⅁₀ ⅁₁ : Game
-⅁₀ = ⅁ 0b
-⅁₁ = ⅁ 1b
+EXP₀ EXP₁ : Game
+EXP₀ = EXP 0₂
+EXP₁ = EXP 1₂
+
+game : Adv → (𝟚 × R) → 𝟚
+game A (b , r) = b == EXP b A r

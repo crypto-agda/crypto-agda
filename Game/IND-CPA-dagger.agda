@@ -1,24 +1,20 @@
 {-# OPTIONS --without-K #-}
 open import Type
-open import Data.Product
+open import Data.Product.NP
 open import Data.Two
 
+open import Crypto.Schemes
+
 module Game.IND-CPA-dagger
-  (PubKey     : ★)
-  (SecKey     : ★)
-  (Message    : ★)
-  (CipherText : ★)
-
-  -- randomness supply for: encryption, key-generation, adversary, extensions
-  (Rₑ Rₖ Rₐ Rₓ : ★)
-
-  (KeyGen : Rₖ → PubKey × SecKey)
-  (Enc    : PubKey → Message → Rₑ → CipherText)
-
+  (pke : Pubkey-encryption)
+  -- randomness supply for: adversary, extensions
+  (Rₐ Rₓ : Type)
   where
 
+open Pubkey-encryption pke
+
 -- IND-CPA† adversary in two parts
-record Adversary : ★ where
+record Adversary : Type where
   field
     -- Same as in IND-CPA:
     -- In the step 'm', the adversary receives some randomness,
@@ -34,16 +30,16 @@ record Adversary : ★ where
     -- the encryption of m₀ and the other of m₁.
     -- The adversary has to guess in which order they are, namely
     -- is the first ciphertext the encryption of m₀.
-    b′ : Rₐ → PubKey → CipherText → CipherText → 𝟚
+    b' : Rₐ → PubKey → CipherText → CipherText → 𝟚
 
 -- IND-CPA randomness supply
-R : ★
+R : Type
 R = (Rₐ × Rₖ × Rₑ × Rₑ × Rₓ)
 
 -- IND-CPA experiments:
 --   * input: adversary and randomness supply
 --   * output b: adversary claims we are in experiment EXP b
-Experiment : ★
+Experiment : Type
 Experiment = Adversary → R → 𝟚
 
 -- The game step by step:
@@ -54,14 +50,14 @@ Experiment = Adversary → R → 𝟚
 -- (b′) send randomness, public-key and ciphertext
 --      receive the guess from the adversary
 EXP : (b t : 𝟚) → Experiment
-EXP b t A (rₐ , rₖ , rₑ , rₑ′ , _rₓ) = b′
+EXP b t A (rₐ , rₖ , rₑ , rₑ' , _rₓ) = b'
   where
   module A = Adversary A
-  pk = proj₁ (KeyGen rₖ)
+  pk = fst (key-gen rₖ)
   mb = A.m rₐ pk
-  c  = Enc pk (mb b) rₑ
-  c′ = Enc pk (mb t) rₑ′
-  b′ = A.b′ rₐ pk c c′
+  c  = enc pk (mb b) rₑ
+  c' = enc pk (mb t) rₑ'
+  b' = A.b' rₐ pk c c'
 
 EXP₀ EXP₁ : Experiment
 EXP₀ = EXP 0₂ 1₂
@@ -72,7 +68,7 @@ game A (b , r) = b == EXP b (not b) A r
 
 open import Relation.Binary.PropositionalEquality
 module _
-  (Dist : ★)
+  (Dist : Type)
   (|Pr[_≡1]-Pr[_≡1]| : (f g : R → 𝟚) → Dist)
   (dist-comm : ∀ f g → |Pr[ f ≡1]-Pr[ g ≡1]| ≡ |Pr[ g ≡1]-Pr[ f ≡1]|)
   where

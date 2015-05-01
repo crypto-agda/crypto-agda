@@ -1,19 +1,17 @@
-
 {-# OPTIONS --without-K #-}
 open import Function
 open import Type
-open import Data.Product renaming (zip to zip-×)
+open import Data.Product.NP renaming (zip to zip-×)
 open import Data.Two
 open import Data.List as L
 open import Data.Nat.NP hiding (_==_)
 
 module Game.ReceiptFreeness.Definitions.Receipt
-  (CipherText : ★)
-
-  (SerialNumber : ★)
+  (CipherText : Type)
+  (SerialNumber : Type)
   where
 
-Candidate : ★
+Candidate : Type
 Candidate = 𝟚 -- as in the paper: "for simplicity"
 
 alice bob : Candidate
@@ -29,34 +27,34 @@ alice-then-bob bob-then-alice : CO
 alice-then-bob = alice
 bob-then-alice = bob
 
-data CO-spec : CO → Candidate → Candidate → ★ where
+data CO-spec : CO → Candidate → Candidate → Type where
   alice-then-bob-spec : CO-spec alice-then-bob alice bob
   bob-then-alice-spec : CO-spec bob-then-alice bob alice
 
-MarkedReceipt : ★
+MarkedReceipt : Type
 MarkedReceipt = 𝟚
 
 marked-on-first-cell marked-on-second-cell : MarkedReceipt
 marked-on-first-cell  = 0₂
 marked-on-second-cell = 1₂
 
-data MarkedReceipt-spec : CO → MarkedReceipt → Candidate → ★ where
+data MarkedReceipt-spec : CO → MarkedReceipt → Candidate → Type where
   m1 : MarkedReceipt-spec alice-then-bob marked-on-first-cell  alice
   m2 : MarkedReceipt-spec alice-then-bob marked-on-second-cell bob
   m3 : MarkedReceipt-spec bob-then-alice marked-on-first-cell  bob
   m4 : MarkedReceipt-spec bob-then-alice marked-on-second-cell alice
 
-data MarkedReceipt? : ★ where
+data MarkedReceipt? : Type where
   not-marked : MarkedReceipt?
   marked     : MarkedReceipt → MarkedReceipt?
 
 -- Receipt or also called RHS
 -- Made of a potential mark, a serial number, and an encrypted candidate order
-Receipt : ★
+Receipt : Type
 Receipt = MarkedReceipt? × SerialNumber × CipherText
 
 markedReceipt? : Receipt → MarkedReceipt?
-markedReceipt? = proj₁
+markedReceipt? = fst
 
 -- Marked when there is a 1
 marked? : MarkedReceipt? → 𝟚
@@ -72,27 +70,27 @@ marked-on-second-cell? not-marked = 0₂
 marked-on-second-cell? (marked x) = x == 1₂
 
 enc-co : Receipt → CipherText
-enc-co = proj₂ ∘ proj₂
+enc-co = snd ∘ snd
 
 m? : Receipt → MarkedReceipt?
-m? = proj₁
+m? = fst
 
 r-sn : Receipt → SerialNumber
-r-sn = proj₁ ∘ proj₂
+r-sn = fst ∘ snd
 
-Ballot : ★
+Ballot : Type
 Ballot = CO × Receipt
 
 b-sn : Ballot → SerialNumber
-b-sn = r-sn ∘ proj₂
+b-sn = r-sn ∘ snd
 
 -- co or also called LHS
 co : Ballot → CO
-co = proj₁
+co = fst
 
 -- receipt or also called RHS
 receipt : Ballot → Receipt
-receipt = proj₂
+receipt = snd
 
 mark : CO → Candidate → MarkedReceipt
 mark co c = co xor c
@@ -108,8 +106,8 @@ fillBallot c (co , _ , sn , enc-co) = co , marked (mark co c) , sn , enc-co
 
 -- TODO Ballot-spec c (fillBallot b)
 
-ClearReceipt : ★
+ClearReceipt : Type
 ClearReceipt = CO × MarkedReceipt?
 
-ClearBB : ★
+ClearBB : Type
 ClearBB = List ClearReceipt

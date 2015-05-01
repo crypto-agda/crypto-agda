@@ -112,12 +112,12 @@ record Simulator (Q : Type)(Resp : Type){Prf RP}(PF : Proof-System RP Prf) : Typ
   open Game-Types Q Resp Prf
 
   field
-    -- Computing the compound patch to the random oracle
-    H-patch  : RS → Transcript → Random-Oracle → Random-Oracle
-
     -- Simulate does not patch itself but H-patch does
     Simulate : RS → Transcript → (Y : Λ) → Prf Y
     verify-sim-spec : ∀ rs t Y → Verify Y (Simulate rs t Y) ≡ 1₂
+
+    -- Computing the compound patch to the random oracle
+    H-patch  : RS → Transcript → Random-Oracle → Random-Oracle
 
   open Proof-System PF public
   open Game-Types Q Resp Prf public

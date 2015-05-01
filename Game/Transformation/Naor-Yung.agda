@@ -1,44 +1,58 @@
+{-# OPTIONS --without-K #-}
 open import Type
-open import Data.Bit
+open import Data.Two
 open import Data.Maybe
-open import Data.Product
+open import Data.Product.NP
+open import Relation.Binary.PropositionalEquality
+
+open import Crypto.Schemes
 
 module Game.Transformation.Naor-Yung
-  (PubKey    : ★)
-  (SecKey    : ★)
-  (Message   : ★)
-  (CipherText : ★)
-  (Proof      : ★)
-  
-
-  -- randomness supply for, encryption, key-generation, adversary, adversary state
-  (Rₑ Rₖ  : ★)
-  (KeyGen : Rₖ → PubKey × SecKey)
-  (Enc    : PubKey → Message → Rₑ → CipherText)
-  (Dec    : SecKey → CipherText → Message)
-  (Prove  : Message → PubKey → PubKey → Rₑ → Rₑ → CipherText → CipherText → Proof)
-  (Verify : (Bit → CipherText) → Proof → Bit)
+  (pke : Pubkey-encryption)
+  (pok : PoK-message-equality-enc pke)
   where
 
-PubKey' = Bit → PubKey
+open Pubkey-encryption pke
+open PoK-message-equality-enc pok
+
+PubKey' = PubKey ²
 SecKey' = SecKey
 Message' = Message
-CipherText' = (Bit → CipherText) × Proof
+CipherText' = CipherText ² × Proof
 
-Rₑ' = Rₑ × Rₑ
+Rₑ' = Rₑ ²
 Rₖ' = Rₖ × Rₖ
 
-KeyGen' : Rₖ' → PubKey' × SecKey'
-KeyGen' (ra , rb) = let (pa , sa) = KeyGen ra
-                        (pb , sb) = KeyGen rb
+key-gen' : Rₖ' → PubKey' × SecKey'
+key-gen' (ra , rb) = let (pa , sa) = key-gen ra
+                         (pb , sb) = key-gen rb
                      in proj (pa , pb) , sa
 
-Enc' : PubKey' → Message' → Rₑ' → CipherText'
-Enc' pp m (ra , rb) = let pa = pp 0b
-                          pb = pp 1b
-                          ca = Enc pa m ra
-                          cb = Enc pb m rb
-                       in proj′ (ca , cb) , Prove m pa pb ra rb ca cb
+enc' : PubKey' → Message' → Rₑ' → CipherText'
+enc' pp m rₑ = let c_ = λ b → enc (pp b) m (rₑ b)
+                      in c_ , prove m pp rₑ c_
 
-Dec' : SecKey' → CipherText' → Maybe Message'
-Dec' sa (cc , pi) = [0: nothing 1: (just (Dec sa (cc 0b))) ]′ (Verify cc pi)
+dec' : SecKey' → CipherText' → Maybe Message'
+dec' sa (cc , pi) = [0: nothing 1: dec sa (cc 0₂) ]′ (verify cc pi)
+
+functionally-correct' :
+    ∀ rₖ rₑ m → let (pk , sk) = key-gen' rₖ in
+                dec' sk (enc' pk m rₑ) ≡ just m
+functionally-correct' rₖ rₑ m
+  rewrite functionally-correct (fst rₖ) (rₑ 0₂) m
+        | functionally-correct (snd rₖ) (rₑ 1₂) m
+        | correct-pok m (fst (key-gen' rₖ)) rₑ = refl
+
+NY-encryption : Pubkey-encryption
+NY-encryption = record
+                  { pko = record
+                    { key-gen = key-gen'
+                    ; enc = enc'
+                    ; dec = dec'
+                    }
+                  ; functionally-correct = functionally-correct'
+                  }
+-- -}
+-- -}
+-- -}
+-- -}

@@ -1,50 +1,60 @@
-
+{-# OPTIONS --without-K #-}
 open import Type
 open import Function
 open import Data.Zero
-open import Data.One
 open import Data.Two
-open import Data.Maybe
 open import Data.Product
-
+open import Data.Maybe
 open import Data.Nat.NP
---open import Rat
+open import Relation.Binary.PropositionalEquality
 
-open import Explore.Core
-open import Explore.Explorable
-open import Explore.Product
 open import Explore.Universe.Type {𝟘}
 open import Explore.Universe.Base
-open Operators
-open import Control.Strategy renaming (run to runStrategy)
+
+open import Crypto.Schemes
 open import Game.Challenge
 import Game.IND-CPA-utils
-
 import Game.IND-CCA2-dagger.Adversary
 import Game.IND-CCA2-dagger.Valid
 import Game.IND-CCA2-dagger.Experiment
 
-open import Relation.Binary.PropositionalEquality
-
 module Game.IND-CCA2-dagger
-  (PubKey    : ★)
-  (SecKey    : ★)
-  (Message   : ★)
-  (CipherText : ★)
+  (PubKey    : Type)
+  (SecKey    : Type)
+  (Message   : Type)
+  (CipherText : Type)
 
   -- randomness supply for, encryption, key-generation, adversary, adversary state
   (Rₑᵁ Rₖᵁ Rₐᵁ : U)
   (let Rₑ = El Rₑᵁ ; Rₖ = El Rₖᵁ ; Rₐ = El Rₐᵁ)
-  (KeyGen : Rₖ → PubKey × SecKey)
-  (Enc    : PubKey → Message → Rₑ → CipherText)
-  (Dec    : SecKey → CipherText → Message)
+  (key-gen : Rₖ → PubKey × SecKey)
+  (enc    : PubKey → Message → Rₑ → CipherText)
+  (dec    : SecKey → CipherText → Maybe Message)
 
+  (functionally-correct :
+    ∀ rₖ rₑ m → let (pk , sk) = key-gen rₖ in
+               dec sk (enc pk m rₑ) ≡ just m)
   where
 
-open Game.IND-CCA2-dagger.Adversary PubKey Message CipherText Rₐ public
+pke : Pubkey-encryption
+pke = record
+        { pkt = record
+          { PubKey = PubKey
+          ; SecKey = SecKey
+          ; Message = Message
+          ; CipherText = CipherText
+          ; Rₖ = Rₖ
+          ; Rₑ = Rₑ }
+        ; pko = record
+          { key-gen = key-gen
+          ; enc = enc
+          ; dec = dec
+          }
+        ; functionally-correct = functionally-correct
+        }
 
 open Game.IND-CCA2-dagger.Valid PubKey Message CipherText Rₐ public
-open Game.IND-CCA2-dagger.Experiment PubKey SecKey Message CipherText Rₑ Rₖ Rₐ KeyGen Enc Dec public
+open Game.IND-CCA2-dagger.Experiment pke Rₐ public
 
 Rᵁ = Rₐᵁ ×ᵁ Rₖᵁ ×ᵁ Rₑᵁ ×ᵁ Rₑᵁ
 
