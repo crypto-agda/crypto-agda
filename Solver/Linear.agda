@@ -3,8 +3,8 @@ module Solver.Linear where
 
 open import FunUniverse.Types
 open import FunUniverse.Rewiring.Linear
-open import Data.Two hiding (_≟_)
-open import Data.Nat as ℕ using (ℕ)
+open import Data.Two.Base hiding (_≟_)
+open import Data.Nat.Base as ℕ using (ℕ)
 import Solver.Linear.Syntax as LinSyn
 open import Relation.Nullary.Decidable
 open import Relation.Binary

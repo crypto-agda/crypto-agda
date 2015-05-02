@@ -1,16 +1,19 @@
 {-# OPTIONS --without-K #-}
 -- https://upload.wikimedia.org/wikipedia/commons/e/e2/SHA-1.svg
 -- http://www.faqs.org/rfcs/rfc3174.html
-open import Data.Nat.NP using (ℕ; zero; suc; _+_; _∸_)
+open import Data.Nat.Base using (ℕ; zero; suc; _+_; _∸_)
 import Data.Vec as V
 open V using (Vec; []; _∷_)
-open import Function.NP using (Endo; _∘_)
+open import Function using (_∘_)
 open import FunUniverse.Core hiding (_,_)
 open import Data.Fin using (Fin; zero; suc; #_; inject+; raise) renaming (toℕ to Fin▹ℕ)
 
 open import Solver.Linear
 
 module sha1 where
+
+Endo : Set → Set
+Endo A = A → A
 
 module FunSHA1
   {t}
@@ -209,6 +212,17 @@ module AgdaSHA1 where
   open FunSHA1 agdaFunOps
   open import Data.Two
 
+import FunUniverse.Cost as Cost
+sha1-cost : ℕ
+sha1-cost = FunSHA1.SHA1-on-0s Cost.timeOps
+
+open import Data.Nat.Show
+open import FFI.JS using (JS!)
+import FFI.JS.Console as Console
+main : JS!
+main = Console.log (show sha1-cost)
+
+{-
 open import IO
 import IO.Primitive
 open import Data.One
@@ -230,12 +244,9 @@ main = IO.run (put× putBits (put× putBits (put× putBits (put× putBits
 -}
 firstBit : ∀ {A : Set} → (V.Vec 𝟚 32 × A) → 𝟚
 firstBit ((b ∷ _) , _) = b
-import FunUniverse.Cost as Cost
-open import Data.Nat.Show
-sha1-cost : ℕ
-sha1-cost = FunSHA1.SHA1-on-0s Cost.timeOps
 main : IO.Primitive.IO 𝟙
 --main = IO.run (putBit (firstBit (AgdaSHA1.SHA1-on-0s _)))
 main = IO.run (putStrLn (show sha1-cost))
+-}
 
 -- -}
