@@ -6,7 +6,7 @@ open Fin using (Fin; zero; suc)
 open import Data.Nat.NP hiding (_≥_)
 open import Data.Two hiding (_²; _==_)
 open import Data.Product renaming (proj₁ to fst; proj₂ to snd)
-open import Relation.Binary.PropositionalEquality.NP renaming (subst to tr)
+open import Relation.Binary.PropositionalEquality.NP
 open import HoTT
 
 module rewind-on-success where
@@ -137,9 +137,11 @@ module _
       Pr[_∥_] : {Ω : ★}(f g : Ω → 𝟚) → ℝ
       Pr[_∥_]-spec : ∀ {Ω} (f g : Ω → 𝟚) → Pr[ f ∥ g ] ≡ (Pr[ f ∧° g ] / Pr[ g ])
       sum : {A : ★} → (A → ℝ) → ℝ
+      {-
       ttt : ∀ {Ω}(f : Ω → 𝟚)
                          (p : Partition Ω)
-                       → Pr[ sum λ (n : ℕ) → Partition.B p n ] ≡ sum λ (n : ℕ) → Pr[ Partition.B p n ]
+                       → Pr[ (λ o → {!sum (λ (n : ℕ) → {!Partition.B p n!})!}) ] ≡ sum λ (n : ℕ) → Pr[ Partition.B p n ]
+     -}
       law-total-prob : ∀ {Ω}(f : Ω → 𝟚)
                          (p : Partition Ω)
                        → Pr[ f ] ≡ sum λ (n : ℕ) → Pr[ Partition.B p n ] · Pr[ f ∥ Partition.B p n ]
