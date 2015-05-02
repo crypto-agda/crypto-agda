@@ -64,15 +64,16 @@ invLinRewiring linRewiring = mk (CatOp.op L.cat)
     uncons = L.<∷>
 
 invHasBijFork : HasBijFork funU → HasBijFork opU
-invHasBijFork hasBijFork = mk F.bijFork
+invHasBijFork hasBijFork = ⟨ F.bijFork ⟩
   where module F = HasBijFork hasBijFork
 
 invHasXor : HasXor funU → HasXor opU
-invHasXor hasXor = mk H.⟨⊕_⟩
+invHasXor hasXor = ⟨ H.⟨⊕_⟩ ⟩
   where module H = HasXor hasXor
 
 invU : Bijective funU → Bijective opU
-invU bijective = mk (invLinRewiring linRewiring)
-                    (invHasBijFork hasBijFork)
-                    (invHasXor hasXor)
+invU bijective = record { linRewiring = invLinRewiring linRewiring
+                        ; hasBijFork  = invHasBijFork hasBijFork
+                        ; hasXor      = invHasXor hasXor
+                        }
   where open Bijective bijective

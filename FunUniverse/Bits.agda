@@ -25,7 +25,12 @@ open Cong-*1 _`→_
 open Defaults bitsFunU
 
 bitsFunOps : FunOps bitsFunU
-bitsFunOps = mk rewiring (cond , forkᵇ) (const [ 0b ]) (const [ 1b ])
+bitsFunOps = record
+             { rewiring = rewiring
+             ; hasFork = (cond , forkᵇ)
+             ; <0₂> = const [ 0b ]
+             ; <1₂> = const [ 1b ]
+             }
   where
   fstᵇ : ∀ {A B} → A `× B `→ A
   fstᵇ {A} = take A
@@ -43,12 +48,33 @@ bitsFunOps = mk rewiring (cond , forkᵇ) (const [ 0b ]) (const [ 1b ])
   cat = id , _∘′_
 
   lin : LinRewiring bitsFunU
-  lin = mk cat first (λ {x} → swap {x}) (λ {x} → assoc {x}) id id
-           <_×_> (λ {x} → second {x}) id id id id
+  lin = record
+        { cat = cat
+        ; first = first
+        ; swap = (λ {x} → swap {x})
+        ; assoc = (λ {x} → assoc {x})
+        ; <tt,id> = id
+        ; snd<tt,> = id
+        ; <_×_>  = <_×_>
+        ; second = (λ {x} → second {x})
+        ; tt→[] = id
+        ; []→tt = id
+        ; <∷> = id
+        ; uncons = id
+        }
 
   rewiring : Rewiring bitsFunU
-  rewiring = mk lin (const []) dup (const []) <_,_>ᵇ fstᵇ (λ {x} → sndᵇ x)
-                (cong-*1 ∘′ rewire) (cong-*1 ∘′ rewireTbl)
+  rewiring = record
+             { linRewiring = lin
+             ; tt = const []
+             ; dup = dup
+             ; <[]> = const []
+             ; <_,_> = <_,_>ᵇ
+             ; fst = fstᵇ
+             ; snd = λ {x} → sndᵇ x
+             ; rewire = cong-*1 ∘′ rewire
+             ; rewireTbl = cong-*1 ∘′ rewireTbl
+             }
 
 bitsFunRewiring : Rewiring bitsFunU
 bitsFunRewiring = FunOps.rewiring bitsFunOps

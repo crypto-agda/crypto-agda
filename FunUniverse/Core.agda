@@ -23,7 +23,7 @@ import FunUniverse.Defaults.FirstPart as Defaults⟨first-part⟩
 open import FunUniverse.Rewiring.Linear
 
 record HasBijFork {t} {T : Set t} (funU : FunUniverse T) : Set t where
-  constructor mk
+  constructor ⟨_⟩
   open FunUniverse funU
   field
     -- bijFork f₀ f₁ (0₂ , x) = 0₂ , f₀ x
@@ -53,7 +53,7 @@ record HasFork {t} {T : Set t} (funU : FunUniverse T) : Set t where
   fork′ f = fork (f 0₂) (f 1₂)
 
 record HasXor {t} {T : Set t} (funU : FunUniverse T) : Set t where
-  constructor mk
+  constructor ⟨_⟩
   open FunUniverse funU
   field
     xor : ∀ {n} → Bits n → `Endo (`Bits n)
@@ -65,8 +65,6 @@ record HasXor {t} {T : Set t} (funU : FunUniverse T) : Set t where
   ⟨⊕ xs ⟩ = xor xs
 
 record Bijective {t} {T : Set t} (funU : FunUniverse T) : Set t where
-  constructor mk
-
   field
     linRewiring : LinRewiring funU
     hasBijFork  : HasBijFork  funU
@@ -172,13 +170,13 @@ record FunOps {t} {T : Set t} (funU : FunUniverse T) : Set t where
 
   -- We might want it to be part of the interface
   hasXor : HasXor funU
-  hasXor = mk (DefaultXor.xor id not <_⊛>)
+  hasXor = ⟨ DefaultXor.xor id not <_⊛> ⟩
 
   hasBijFork : HasBijFork funU
-  hasBijFork = mk (DefaultBijForkFromFork.bijFork <_,_> fst fork)
+  hasBijFork = ⟨ DefaultBijForkFromFork.bijFork <_,_> fst fork ⟩
 
   bijective : Bijective funU
-  bijective = mk linRewiring hasBijFork hasXor
+  bijective = record { linRewiring = linRewiring; hasBijFork = hasBijFork; hasXor = hasXor }
 
   open HasXor     hasXor public
   open HasBijFork hasBijFork public

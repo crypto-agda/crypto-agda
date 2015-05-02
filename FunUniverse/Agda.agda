@@ -5,10 +5,10 @@ open import Type
 open import Data.Two using (proj′)
 import Data.Vec.NP as V
 import Function as F
-import Data.Product as ×
+import Data.Product.NP as ×
 open F using (const; _∘′_)
 open V using ([]; _∷_)
-open × using (_×_; _,_; proj₁; proj₂; uncurry)
+open × using (_×_; _,_; fst; snd; uncurry; Δ)
 
 open import Data.One using (𝟙)
 open import Data.Two using (𝟚)
@@ -38,15 +38,33 @@ module Abstract𝟚 (some𝟚 : ★) where
     module AgdaFunUniverse = FunUniverse agdaFunU
  
     funLin : LinRewiring agdaFunU
-    funLin = mk funCat
-                (λ f → ×.map f F.id)
-                ×.swap (λ {((x , y) , z) → x , (y , z) }) (λ x → _ , x) proj₂
-                (λ f g → ×.map f g) (λ f → ×.map F.id f)
-                (F.const []) _ (uncurry _∷_) V.uncons
+    funLin = record
+               { cat = funCat
+               ; first = ×.first
+               ; swap = ×.swap
+               ; assoc = λ {((x , y) , z) → x , (y , z) }
+               ; <tt,id> = λ x → _ , x
+               ; snd<tt,> = snd
+               ; <_×_> = λ f g → ×.map f g
+               ; second = ×.second′
+               ; tt→[] = F.const []
+               ; []→tt = _
+               ; <∷> = uncurry _∷_
+               ; uncons = V.uncons
+               }
 
     funRewiring : Rewiring agdaFunU
-    funRewiring = mk funLin _ (λ x → x , x) (F.const []) ×.<_,_> proj₁ proj₂
-                     V.rewire V.rewireTbl
+    funRewiring = record
+                    { linRewiring = funLin
+                    ; tt = _
+                    ; dup = Δ
+                    ; <[]> = F.const []
+                    ; <_,_> = ×.<_,_>
+                    ; fst = fst
+                    ; snd = snd
+                    ; rewire = V.rewire
+                    ; rewireTbl = V.rewireTbl
+                    }
 
 open Abstract𝟚 𝟚 public
 
@@ -55,6 +73,7 @@ funFork = (λ { (b , xy)    → proj′ xy b })
         , (λ { f g (b , x) → proj′ (f , g) b x })
 
 agdaFunOps : FunOps agdaFunU
-agdaFunOps = mk funRewiring funFork (F.const 0b) (F.const 1b)
+agdaFunOps = record { rewiring = funRewiring ; hasFork = funFork ; <0₂> = F.const 0b ; <1₂> = F.const 1b }
 
 module AgdaFunOps = FunOps agdaFunOps
+-- -}

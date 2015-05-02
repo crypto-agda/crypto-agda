@@ -5,6 +5,7 @@ open import Data.Bits hiding (rewire; rewireTbl)
 open import Data.Fin using (Fin)
 open import FunUniverse.Data
 open import FunUniverse.Core
+open import FunUniverse.Rewiring.Linear
 
 module FunUniverse.State {t} {T : Set t} (S : T) (funU : FunUniverse T) where
 
@@ -48,16 +49,16 @@ module LinRewiringˢ (linRewiring : LinRewiring funU) where
   assocˢ : ∀ {A B C} → ((A `× B) `× C) →ˢ (A `× (B `× C))
   assocˢ = first assoc
 
-  <tt,id>ˢ : ∀ {A} → A →ˢ (`⊤ `× A)
+  <tt,id>ˢ : ∀ {A} → A →ˢ (`𝟙 `× A)
   <tt,id>ˢ = first <tt,id>
 
-  snd<tt,>ˢ : ∀ {A} → (`⊤ `× A) →ˢ A
+  snd<tt,>ˢ : ∀ {A} → (`𝟙 `× A) →ˢ A
   snd<tt,>ˢ = {!first snd<tt,>ˢ!}
 
-  tt→[]ˢ : ∀ {A} → `⊤ →ˢ `Vec A 0
+  tt→[]ˢ : ∀ {A} → `𝟙 →ˢ `Vec A 0
   tt→[]ˢ = first tt→[]
 
-  []→ttˢ : ∀ {A} → `Vec A 0 →ˢ `⊤
+  []→ttˢ : ∀ {A} → `Vec A 0 →ˢ `𝟙
   []→ttˢ = first []→tt
 
   <∷>ˢ : ∀ {n A} → (A `× `Vec A n) →ˢ `Vec A (1 + n)
@@ -75,7 +76,7 @@ module Rewiringˢ (rewiring : Rewiring funU) where
 
   -- All the remainings are defined with 'first'
 
-  ttˢ : ∀ {_⊤} → _⊤ →ˢ `⊤
+  ttˢ : ∀ {_⊤} → _⊤ →ˢ `𝟙
   ttˢ = first tt
 
   dupˢ : ∀ {A} → A →ˢ (A `× A)
@@ -111,11 +112,11 @@ module FunOpsˢ (funOps : FunOps funU) where
 
   -- All the remainings are defined with 'first'
 
-  <0b>ˢ : ∀ {_⊤} → _⊤ →ˢ `Bit
-  <0b>ˢ = first <0b>
+  <0₂>ˢ : ∀ {_⊤} → _⊤ →ˢ `Bit
+  <0₂>ˢ = first <0₂>
 
-  <1b>ˢ : ∀ {_⊤} → _⊤ →ˢ `Bit
-  <1b>ˢ = first <1b>
+  <1₂>ˢ : ∀ {_⊤} → _⊤ →ˢ `Bit
+  <1₂>ˢ = first <1₂>
 
   condˢ : ∀ {A} → `Bit `× A `× A →ˢ A
   condˢ = first cond
