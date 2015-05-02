@@ -1,15 +1,12 @@
--- NOTE with-K
-open import Data.Sum using (_⊎_ ; inj₁ ; inj₂ )
-open import Data.Unit
-open import Data.Empty
+{-# OPTIONS --without-K #-}
+open import Data.Zero
+open import Data.One
+import Algebra.FunctionProperties.Eq
+open Algebra.FunctionProperties.Eq.Implicits
 open import Function.NP hiding (Cmp)
-open import Function.Injection hiding (id ; _∘_)
-open import Relation.Binary.PropositionalEquality
+open import Relation.Binary.PropositionalEquality.NP
 
 module bijection-syntax.Bijection where
-
-Is-Inj : ∀ {A B : Set} → (A → B) → Set
-Is-Inj f = ∀ x y → f x ≡ f y → x ≡ y
 
 data Ord : Set where lt eq gt : Ord
 
@@ -17,24 +14,18 @@ Cmp : Set → Set
 Cmp X = X → X → Ord
 
 l-mono : Ord → Ord → Set
-l-mono lt lt = ⊤
-l-mono lt eq = ⊤
-l-mono lt gt = ⊥
-l-mono eq lt = ⊥
-l-mono eq eq = ⊤
-l-mono eq gt = ⊥
-l-mono gt lt = ⊥
-l-mono gt eq = ⊤
-l-mono gt gt = ⊤
+l-mono lt lt = 𝟙
+l-mono lt eq = 𝟙
+l-mono lt gt = 𝟘
+l-mono eq lt = 𝟘
+l-mono eq eq = 𝟙
+l-mono eq gt = 𝟘
+l-mono gt lt = 𝟘
+l-mono gt eq = 𝟙
+l-mono gt gt = 𝟙
 
 Is-Mono : ∀ {A B} → Cmp A → Cmp B → (A → B) → Set
 Is-Mono AC BC f = ∀ x y → l-mono (AC x y) (BC (f x) (f y))
-{-case AC x y of λ 
-  { lt → (lt ≡ BC (f x) (f y)) ⊎ (eq ≡ BC (f x) (f y))
-  ; eq → eq ≡ BC (f x) (f y)
-  ; gt → (gt ≡ BC (f x) (f y)) ⊎ (eq ≡ BC (f x) (f y))
-  }
--}
 
 record Interface : Set1 where
   constructor mk
@@ -70,10 +61,10 @@ record Interface : Set1 where
     sort-mono  : ∀ {i} T → Is-MonoT (RC {i}) (sort {i} RC T)
 
   field
-    mono-inj→id : ∀ {i}(f : Endo (Rep i)) → Is-Inj f → Is-Mono RC RC f → f ≗ id
+    mono-inj→id : ∀ {i}(f : Endo (Rep i)) → Injective f → Is-Mono RC RC f → f ≗ id
 
   Is-InjT : ∀ {i A} → Tree A i → Set
-  Is-InjT = Is-Inj ∘ toFun
+  Is-InjT = Injective ∘ toFun
 
 module abs (Inter : Interface) where
   open Interface Inter
@@ -85,28 +76,27 @@ module abs (Inter : Interface) where
   sortFun : ∀ {i} → Endo (Endo (Rep i))
   sortFun = toFun ∘ sort RC ∘ fromFun
 
-  fromFun-inj : ∀ {i} (f : Endo (Rep i)) → Is-Inj f → Is-InjT (fromFun f)
-  fromFun-inj f f-inj x y rewrite 
-    sym (toFun∘fromFun f x) |
-    sym (toFun∘fromFun f y) = f-inj x y
+  fromFun-inj : ∀ {i} (f : Endo (Rep i)) → Injective f → Is-InjT (fromFun f)
+  fromFun-inj f f-inj {x} {y} rewrite
+    ! toFun∘fromFun f x |
+    ! toFun∘fromFun f y = f-inj {x} {y}
 
   eval-proof` : ∀ {i X} S T → toFun {i}{X} (evalTree S T) ≗ toFun T ∘ evalArg (inv S)
-  eval-proof` S T x = begin 
+  eval-proof` S T x =
       toFun (evalTree S T) x 
-    ≡⟨ cong (toFun (evalTree S T)) (sym (inv-proof S x)) ⟩
+    ≡⟨ ap (toFun (evalTree S T)) (! inv-proof S x) ⟩
       toFun (evalTree S T) (evalArg S (evalArg (inv S) x)) 
-    ≡⟨ sym (eval-proof S T (evalArg (inv S) x)) ⟩ 
+    ≡⟨ ! eval-proof S T (evalArg (inv S) x) ⟩
       toFun T (evalArg (inv S) x) 
     ∎
     where open ≡-Reasoning
 
-
   sort-from-inj : ∀ {i} (T : Tree (Rep i) i) → Is-InjT T → Is-InjT (sort RC T)
-  sort-from-inj T T-inj x y prf rewrite sort-proof RC T = begin 
+  sort-from-inj T T-inj {x}{y} prf rewrite sort-proof RC T =
       x 
-    ≡⟨ sym (inv-proof (sort-syn RC T) x) ⟩ 
+    ≡⟨ ! inv-proof (sort-syn RC T) x ⟩
       evalArg (sort-syn RC T) (evalArg (inv (sort-syn RC T)) x)
-    ≡⟨ cong (evalArg (sort-syn RC T)) p3 ⟩
+    ≡⟨ ap (evalArg (sort-syn RC T)) p3 ⟩
       evalArg (sort-syn RC T) (evalArg (inv (sort-syn RC T)) y)
     ≡⟨ inv-proof (sort-syn RC T) y ⟩
       y 
@@ -114,23 +104,22 @@ module abs (Inter : Interface) where
     where
       open ≡-Reasoning
       p3 : evalArg (inv (sort-syn RC T)) x ≡ evalArg (inv (sort-syn RC T)) y
-      p3 = T-inj (evalArg (inv (sort-syn RC T)) x) (evalArg (inv (sort-syn RC T)) y)
-             (trans (sym (eval-proof` (sort-syn RC T) T x)) (trans prf (eval-proof` (sort-syn RC T) T y)))
+      p3 = T-inj (trans (! eval-proof` (sort-syn RC T) T x) (trans prf (eval-proof` (sort-syn RC T) T y)))
 
-  sortFun-inj : ∀ {i} (f : Endo (Rep i)) → Is-Inj f → Is-Inj (sortFun f)
+  sortFun-inj : ∀ {i} (f : Endo (Rep i)) → Injective f → Injective (sortFun f)
   sortFun-inj f f-inj = sort-from-inj (fromFun f) (fromFun-inj f f-inj)
 
   sortFun-mono : ∀ {i} (f : Endo (Rep i)) → Is-Mono RC RC (sortFun f)
   sortFun-mono f = sort-mono (fromFun f)
 
-  thm : ∀ {i} (f : Endo (Rep i)) → Is-Inj f → f ≗ evalArg (sort-bij f)
-  thm f f-inj x = begin 
+  thm : ∀ {i} (f : Endo (Rep i)) → Injective f → f ≗ evalArg (sort-bij f)
+  thm f f-inj x =
         f x 
       ≡⟨ toFun∘fromFun f x ⟩ 
         toFun (fromFun f) x
       ≡⟨ eval-proof (sort-bij f) (fromFun f) x ⟩
         toFun (evalTree (sort-bij f) (fromFun f)) (evalArg (sort-bij f) x)
-      ≡⟨ cong (λ p → toFun p (evalArg (sort-bij f) x)) (sym (sort-proof RC (fromFun f))) ⟩
+      ≡⟨ ap (λ p → toFun p (evalArg (sort-bij f) x)) (! sort-proof RC (fromFun f)) ⟩
         toFun (sort RC (fromFun f)) (evalArg (sort-bij f) x)
       ≡⟨ mono-inj→id (toFun (sort RC (fromFun f))) (sortFun-inj f f-inj) (sortFun-mono f) (evalArg (sort-bij f) x) ⟩
         evalArg (sort-bij f) x 
@@ -150,8 +139,6 @@ module Concrete-Bool where
 
   `Tree : Set → Set
   `Tree X = X × X
-
-
 
   `fromFun : ∀ {X} → (Bool → X) → `Tree X
   `fromFun f = (f false) , (f true)
@@ -226,22 +213,21 @@ module Concrete-Bool where
   `sort-mono (true , false) false false = _
   `sort-mono (false , false) false false = _
 
-  `mono-inj→id : (f : Endo Bool) → Is-Inj f → Is-Mono `RC `RC f 
+  `mono-inj→id : (f : Endo Bool) → Injective f → Is-Mono `RC `RC f
                → f ≗ id
   `mono-inj→id f f-inj f-mono x with f-mono false true
-  `mono-inj→id f f-inj f-mono true | r  with f false | f true | f-inj false true 
+  `mono-inj→id f f-inj f-mono true | r  with f false | f true | f-inj {false}{true}
   `mono-inj→id f f-inj f-mono true | r | p | true | r2 = refl
   `mono-inj→id f f-inj f-mono true | () | true | false | r2
   `mono-inj→id f f-inj f-mono true | r | false | false | r2 = r2 refl
-  `mono-inj→id f f-inj f-mono false | r with f false | f true | f-inj true false 
+  `mono-inj→id f f-inj f-mono false | r with f false | f true | f-inj {true}{false}
   `mono-inj→id f f-inj f-mono false | r | true | true | r2 = r2 refl
   `mono-inj→id f f-inj f-mono false | () | true | false | r2
   `mono-inj→id f f-inj f-mono false | r | false | q | r2 = refl
 
-
   interface : Interface
   interface = record 
-    { Ix            = ⊤
+    { Ix            = 𝟙
     ; Rep           = λ _ → Bool
     ; Syn           = λ _ → SBool
     ; Tree          = λ X i → `Tree X
@@ -263,7 +249,7 @@ module Concrete-Bool where
 
   open abs interface
 
-  theorem : (f : Endo Bool) → Is-Inj f → f ≗ `evalArg (sort-bij f)
+  theorem : (f : Endo Bool) → Injective f → f ≗ `evalArg (sort-bij f)
   theorem = thm
 
 -- -}

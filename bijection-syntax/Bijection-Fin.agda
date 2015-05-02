@@ -5,15 +5,18 @@ module bijection-syntax.Bijection-Fin where
 
   open import bijection-syntax.Bijection
   open import Function.NP hiding (Cmp)
-  open import Relation.Binary.PropositionalEquality
+  open import Relation.Binary.PropositionalEquality.NP
 
   open import Data.Empty
-  open import Data.Nat.NP
+  open import Data.Nat.NP hiding (suc-injective)
   open import Data.Two
-  open import Data.Fin using (Fin ; zero ; suc ; fromℕ ; inject₁)
+  open import Data.Fin.NP
+    using ( Fin ; zero ; suc ; ℕ▹Fin ; inject₁; suc-injective; _≤F_; z≤i; s≤s
+          ; module From-mono-inj )
   open import Data.Vec hiding ([_])
+  open import Data.Sum
 
-  data `Syn : ℕ → ★ where
+  data `Syn : ℕ → Type where
     `id   : ∀ {n} → `Syn n
     `swap : ∀ {n} → `Syn (2 + n)
     `tail : ∀ {n} → `Syn n → `Syn (1 + n)
@@ -23,7 +26,7 @@ module bijection-syntax.Bijection-Fin where
 
   `Ix = ℕ
 
-  `Tree : ★ → `Ix → ★
+  `Tree : Type → `Ix → Type
   `Tree X = Vec X
 
   `fromFun : ∀ {i X} → (`Rep i → X) → `Tree X i
@@ -52,10 +55,10 @@ module bijection-syntax.Bijection-Fin where
   `evalArg (`tail f) = fin-tail (`evalArg f)
   `evalArg (S `∘ S₁) = `evalArg S ∘ `evalArg S₁
 
-  vec-swap : ∀ {n}{X : ★} → Endo (Vec X (2 + n))
+  vec-swap : ∀ {n}{X : Type} → Endo (Vec X (2 + n))
   vec-swap xs = head (tail xs) ∷ head xs ∷ tail (tail xs)
 
-  vec-tail : ∀ {n}{X : ★} → Endo (Vec X n) → Endo (Vec X (1 + n))
+  vec-tail : ∀ {n}{X : Type} → Endo (Vec X n) → Endo (Vec X (1 + n))
   vec-tail f xs = head xs ∷ f (tail xs)
 
   `evalTree : ∀ {i X} → `Syn i → Endo (`Tree X i)
@@ -130,11 +133,11 @@ module bijection-syntax.Bijection-Fin where
   `sort-proof : ∀ {i X}(X-cmp : Cmp X)(T : `Tree X i) → `sort X-cmp T ≡ `evalTree (`sort-syn X-cmp T) T
   `sort-proof X-cmp [] = refl
   `sort-proof X-cmp (x ∷ T) rewrite 
-    sym (`sort-proof X-cmp T)= insert-proof X-cmp x (`sort X-cmp T)
+    ! `sort-proof X-cmp T = insert-proof X-cmp x (`sort X-cmp T)
 
   module Alt-Syn where
 
-    data ``Syn : ℕ → ★ where
+    data ``Syn : ℕ → Type where
       `id : ∀ {n} → ``Syn n
       _`∘_ : ∀ {n} → ``Syn n → ``Syn n → ``Syn n
       `swap : ∀ {n} m → ``Syn (m + 2 + n)
@@ -180,9 +183,9 @@ module bijection-syntax.Bijection-Fin where
     ``tail-p `id zero = refl
     ``tail-p `id (suc x) = refl
     ``tail-p (S `∘ S₁) zero rewrite ``∘-p (``tail S) (``tail S₁) zero
-                                  | sym (``tail-p S₁ zero) = ``tail-p S zero
+                                  | ! ``tail-p S₁ zero = ``tail-p S zero
     ``tail-p (S `∘ S₁) (suc x) rewrite ``∘-p (``tail S) (``tail S₁) (suc x)
-                                     | sym (``tail-p S₁ (suc x)) = ``tail-p S (suc (``evalArg S₁ x))
+                                     | ! ``tail-p S₁ (suc x) = ``tail-p S (suc (``evalArg S₁ x))
     ``tail-p (`swap m) zero = refl
     ``tail-p (`swap m) (suc x) = refl
 
@@ -193,31 +196,14 @@ module bijection-syntax.Bijection-Fin where
     `eval`` `swap (suc (suc x)) = refl
     `eval`` (`tail S) zero = ``tail-p (translate S) zero
     `eval`` (`tail S) (suc x) rewrite `eval`` S x = ``tail-p (translate S) (suc x)
-    `eval`` (S `∘ S₁) x rewrite ``∘-p (translate S) (translate S₁) x | sym (`eval`` S₁ x) | `eval`` S (`evalArg S₁ x) = refl
+    `eval`` (S `∘ S₁) x rewrite ``∘-p (translate S) (translate S₁) x | ! `eval`` S₁ x | `eval`` S (`evalArg S₁ x) = refl
 
 
-  data Fin-View : ∀ {n} → Fin n → ★ where
-    max : ∀ {n} → Fin-View (fromℕ n)
+  data Fin-View : ∀ {n} → Fin n → Type where
+    max : ∀ {n} → Fin-View (ℕ▹Fin n)
     inject : ∀ {n} → (i : Fin n) → Fin-View (inject₁ i)
 
-  data _≤F_ : ∀ {n} → Fin n → Fin n → ★ where
-    z≤i : {n : ℕ}{i : Fin (suc n)} → zero ≤F i
-    s≤s : {n : ℕ}{i j : Fin n} → i ≤F j → suc i ≤F suc j
-
-  ≤F-refl : ∀ {n} (x : Fin n) → x ≤F x
-  ≤F-refl zero = z≤i
-  ≤F-refl (suc i) = s≤s (≤F-refl i)
-
-  _<F_ : ∀ {n} → Fin n → Fin n → ★
-  i <F j = suc i ≤F inject₁ j
-
-  nsuc-inj : ∀ {x y} → Data.Nat.NP.suc x ≡ suc y → x ≡ y
-  nsuc-inj refl = refl
-
-  suc-inj : ∀ {n}{i j : Fin n} → Data.Fin.suc i ≡ suc j → i ≡ j
-  suc-inj refl = refl 
-
-  data Sorted {X}(XC : Cmp X) : ∀ {l} → Vec X l  → ★ where
+  data Sorted {X}(XC : Cmp X) : ∀ {l} → Vec X l  → Type where
     []  : Sorted XC []
     sing : ∀ x → Sorted XC (x ∷ [])
     dbl-lt  : ∀ {l} x y {xs : Vec X l} → lt ≡ XC x y → Sorted XC (y ∷ xs) → Sorted XC (x ∷ y ∷ xs)
@@ -279,7 +265,7 @@ module bijection-syntax.Bijection-Fin where
 
     open import Data.Sum
 
-    _≤X_ : X → X → ★
+    _≤X_ : X → X → Type
     x ≤X y = XC x y ≡ lt ⊎ XC x y ≡ eq
 
     ≤X-trans : ∀ {x y z} → x ≤X y → y ≤X z → x ≤X z
@@ -288,7 +274,7 @@ module bijection-syntax.Bijection-Fin where
     ≤X-trans {x}{y} (inj₂ y₁) y≤z rewrite eq≡ x y y₁ = y≤z
 
     h≤t : ∀ {n}{T : `Tree X (2 + n)} → Sorted XC T → head T ≤X head (tail T)
-    h≤t (dbl-lt x y x₁ ST) = inj₁ (sym x₁)
+    h≤t (dbl-lt x y x₁ ST) = inj₁ (! x₁)
     h≤t (dbl-eq x ST) rewrite XC-refl x = inj₂ refl
 
     head-p : ∀ {n}{T : `Tree X (suc n)} i → Sorted XC T → head T ≤X `toFun T i
@@ -306,8 +292,8 @@ module bijection-syntax.Bijection-Fin where
     sort-proof T zero (suc y) | inj₁ x rewrite x = _
     sort-proof T zero (suc y) | inj₂ y₁ rewrite y₁ = _
     sort-proof {T = T} T₁ (suc x) zero with toFun-p (z≤i {i = suc x}) T₁ | XC-flip (head T) (`toFun (tail T) x)
-    sort-proof T (suc x) zero | inj₁ x₁ | l rewrite x₁ | sym l = _
-    sort-proof T (suc x) zero | inj₂ y | l rewrite y | sym l = _
+    sort-proof T (suc x) zero | inj₁ x₁ | l rewrite x₁ | ! l = _
+    sort-proof T (suc x) zero | inj₂ y | l rewrite y | ! l = _
     sort-proof T₁ (suc x) (suc y) = sort-proof (STail T₁) x y
 
   lt-trans-RC : ∀ {i} (x y z : Fin i) → `RC x y ≡ lt → `RC y z ≡ lt → `RC x z ≡ lt
@@ -321,27 +307,21 @@ module bijection-syntax.Bijection-Fin where
   lt-trans-RC (suc x) (suc y) (suc z) x<y y<z = lt-trans-RC x y z x<y y<z
 
   `sort-mono : ∀ {i}(T : `Tree (`Rep i) i) → Is-Mono `RC `RC (`toFun (`sort `RC T))
-  `sort-mono T x y = sproof.sort-proof `RC RC-refl (λ x₁ y₁ x₂ → eq=>≡ x₁ y₁ (sym x₂)) lt-trans-RC flip-RC (sort-Sorted T) x y
+  `sort-mono T x y = sproof.sort-proof `RC RC-refl (λ x₁ y₁ x₂ → eq=>≡ x₁ y₁ (! x₂)) lt-trans-RC flip-RC (sort-Sorted T) x y
 
+  move-to-RC : ∀ {n}{x y : Fin n} → x ≤F y → `RC x y ≡ lt ⊎ `RC x y ≡ eq
+  move-to-RC {y = zero} z≤i = inj₂ refl
+  move-to-RC {y = suc y} z≤i = inj₁ refl
+  move-to-RC (s≤s x≤Fy) = move-to-RC x≤Fy
 
+  move-from-RC : ∀ {n}(x y : Fin n) → lt ≡ `RC x y ⊎ eq ≡ `RC x y → x ≤F y
+  move-from-RC zero zero prf = z≤i
+  move-from-RC zero (suc y) prf = z≤i
+  move-from-RC (suc x) zero (inj₁ ())
+  move-from-RC (suc x) zero (inj₂ ())
+  move-from-RC (suc x) (suc y) prf = s≤s (move-from-RC x y prf)
 
-  module toNat n (f : Endo (Fin (suc n)))(f-inj : Is-Inj f)(f-mono : Is-Mono `RC `RC f) where
-  
-    open import Data.Nat.BoundedMonoInj-is-Id
-    open import Data.Sum
-
-    move-to-RC : ∀ {n}{x y : Fin n} → x ≤F y → `RC x y ≡ lt ⊎ `RC x y ≡ eq
-    move-to-RC {y = zero} z≤i = inj₂ refl
-    move-to-RC {y = suc y} z≤i = inj₁ refl
-    move-to-RC (s≤s x≤Fy) = move-to-RC x≤Fy
-
-    move-from-RC : ∀ {n}(x y : Fin n) → lt ≡ `RC x y ⊎ eq ≡ `RC x y → x ≤F y
-    move-from-RC zero zero prf = z≤i
-    move-from-RC zero (suc y) prf = z≤i
-    move-from-RC (suc x) zero (inj₁ ())
-    move-from-RC (suc x) zero (inj₂ ())
-    move-from-RC (suc x) (suc y) prf = s≤s (move-from-RC x y prf)
-
+  module toNatRC n (f : Endo (Fin (suc n)))(f-inj : Is-Inj f)(f-mono : Is-Mono `RC `RC f) where
     proper-mono : ∀ {x y} → x ≤F y → f x ≤F f y
     proper-mono {x} {y} x≤Fy with `RC x y | `RC (f x) (f y) | move-to-RC x≤Fy | f-mono x y | move-from-RC (f x) (f y)
     proper-mono x≤Fy | .lt | lt | inj₁ refl | r4 | r5 = r5 (inj₁ refl)
@@ -350,95 +330,33 @@ module bijection-syntax.Bijection-Fin where
     proper-mono x≤Fy | .eq | lt | inj₂ refl | () | r5
     proper-mono x≤Fy | .eq | eq | inj₂ refl | r4 | r5 = r5 (inj₂ refl)
     proper-mono x≤Fy | .eq | gt | inj₂ refl | () | r5
-
-    getFrom : ∀ n → ℕ → Fin (suc n)
-    getFrom zero i = zero
-    getFrom (suc n₁) zero = zero
-    getFrom (suc n₁) (suc i) = suc (getFrom n₁ i)
-
-    getInj : {n x y : ℕ} → x ≤ n → y ≤ n → getFrom n x ≡ getFrom n y → x ≡ y
-    getInj z≤n z≤n prf = refl
-    getInj z≤n (s≤s y≤n) ()
-    getInj (s≤s x≤n) z≤n ()
-    getInj (s≤s x≤n) (s≤s y≤n) prf rewrite (getInj x≤n y≤n (suc-inj prf)) = refl
-
-    getMono : {n x y : ℕ} → x ≤ y → y ≤ n → getFrom n x ≤F getFrom n y
-    getMono z≤n z≤n = ≤F-refl _
-    getMono z≤n (s≤s y≤n) = z≤i
-    getMono (s≤s x≤y) (s≤s y≤n) = s≤s (getMono x≤y y≤n)
-
-    forget : ∀ {n} → Fin n → ℕ
-    forget zero = zero
-    forget (suc i) = suc (forget i)
-
-    forgetInj : ∀ {n}{i j : Fin n} → forget i ≡ forget j → i ≡ j
-    forgetInj {.(suc _)} {zero} {zero} prf = refl
-    forgetInj {.(suc _)} {zero} {suc j} ()
-    forgetInj {.(suc _)} {suc i} {zero} ()
-    forgetInj {.(suc _)} {suc i} {suc j} prf rewrite forgetInj (nsuc-inj prf) = refl
-
-    getForget : ∀ {n}(i : Fin (suc n)) → getFrom n (forget i) ≡ i
-    getForget {zero} zero = refl
-    getForget {zero} (suc ())
-    getForget {suc n₁} zero = refl
-    getForget {suc n₁} (suc i) rewrite getForget i = refl
-
-
-    forget< : ∀ {n} → (i : Fin n) → forget i < n
-    forget< {zero} ()
-    forget< {suc n₁} zero = s≤s z≤n
-    forget< {suc n₁} (suc i) = s≤s (forget< i)
-
-    forget-mono : ∀ {n}{i j : Fin n} → i ≤F j → forget i ≤ forget j
-    forget-mono z≤i = z≤n
-    forget-mono (s≤s i≤F) = s≤s (forget-mono i≤F)
-
-    fn : Endo ℕ
-    fn = forget ∘ f ∘ getFrom n
-
-    return : f ≗ getFrom n ∘ fn ∘ forget
-    return x rewrite getForget x | getForget (f x) = refl
-
-    fn-monotone : Monotone (suc n) fn
-    fn-monotone {x} {y} x≤y (s≤s y≤n) = forget-mono (proper-mono (getMono x≤y y≤n))
-
-    fn-inj : IsInj (suc n) fn
-    fn-inj {x}{y} (s≤s sx≤sn) (s≤s sy≤sn) prf = getInj sx≤sn sy≤sn (f-inj (getFrom n x) (getFrom n y) (forgetInj prf))
-
-    fn-bounded : Bounded (suc n) fn
-    fn-bounded x _ = forget< (f (getFrom n x))
-
-    fn≗id : ∀ x → x < (suc n) → fn x ≡ x
-    fn≗id = M.is-id fn fn-monotone fn-inj fn-bounded 
-
-    f≗id : f ≗ id
-    f≗id x rewrite return x | fn≗id (forget x) (forget< x) = getForget x
+    open From-mono-inj f f-inj proper-mono public
 
   fin-view : ∀ {n} → (i : Fin (suc n)) → Fin-View i
   fin-view {zero} zero = max
   fin-view {zero} (suc ())
   fin-view {suc n} zero = inject _
   fin-view {suc n} (suc i) with fin-view i
-  fin-view {suc n} (suc .(fromℕ n)) | max = max
+  fin-view {suc n} (suc .(ℕ▹Fin n)) | max = max
   fin-view {suc n} (suc .(inject₁ i)) | inject i = inject _
 
-  absurd : {X : ★} → .⊥ → X
+  absurd : {X : Type} → .⊥ → X
   absurd ()
 
-  drop₁ : ∀ {n} → (i : Fin (suc n)) → .(i ≢ fromℕ n) → Fin n
+  drop₁ : ∀ {n} → (i : Fin (suc n)) → .(i ≢ ℕ▹Fin n) → Fin n
   drop₁ i neq with fin-view i
-  drop₁ {n} .(fromℕ n) neq | max = absurd (neq refl)
+  drop₁ {n} .(ℕ▹Fin n) neq | max = absurd (neq refl)
   drop₁ .(inject₁ i) neq | inject i = i
 
-  drop₁→inject₁ : ∀ {n}(i : Fin (suc n))(j : Fin n).(p : i ≢ fromℕ n) → drop₁ i p ≡ j → i ≡ inject₁ j
+  drop₁→inject₁ : ∀ {n}(i : Fin (suc n))(j : Fin n).(p : i ≢ ℕ▹Fin n) → drop₁ i p ≡ j → i ≡ inject₁ j
   drop₁→inject₁ i j p q with fin-view i
-  drop₁→inject₁ {n} .(fromℕ n) j p q | max = absurd (p refl)
-  drop₁→inject₁ .(inject₁ i) j p q | inject i = cong inject₁ q
+  drop₁→inject₁ {n} .(ℕ▹Fin n) j p q | max = absurd (p refl)
+  drop₁→inject₁ .(inject₁ i) j p q | inject i = ap inject₁ q
 
 
   `mono-inj→id : ∀{i}(f : Endo (`Rep i)) → Is-Inj f → Is-Mono `RC `RC f → f ≗ id
   `mono-inj→id {zero}  = λ f x x₁ ()
-  `mono-inj→id {suc i} = toNat.f≗id i 
+  `mono-inj→id {suc i} = toNatRC.f≗id i
 
 
   interface : Interface
@@ -474,13 +392,13 @@ module bijection-syntax.Bijection-Fin where
   #⟨ f ⟩ = count (𝟚▹ℕ ∘ f)
 
   #-ext : ∀ {n} → (f g : Fin n → 𝟚) → f ≗ g → #⟨ f ⟩ ≡ #⟨ g ⟩
-  #-ext f g f≗g = count-ext (𝟚▹ℕ ∘ f) (𝟚▹ℕ ∘ g) (cong 𝟚▹ℕ ∘ f≗g)
+  #-ext f g f≗g = count-ext (𝟚▹ℕ ∘ f) (𝟚▹ℕ ∘ g) (ap 𝟚▹ℕ ∘ f≗g)
 
   com-assoc : ∀ x y z → x + (y + z) ≡ y + (x + z)
   com-assoc x y z rewrite 
-    sym (ℕ°.+-assoc x y z) |
-    ℕ°.+-comm x y    |
-    ℕ°.+-assoc y x z = refl
+    ! ℕ°.+-assoc x y z |
+    ℕ°.+-comm x y      |
+    ℕ°.+-assoc y x z   = refl
     
   syn-pres : ∀ {n}(f : Fin n → ℕ)(S : `Syn n)
            → count f ≡ count (f ∘ `evalArg S)
@@ -504,3 +422,4 @@ module bijection-syntax.Bijection-Fin where
 
   test : `Syn 8
   test = abs.sort-bij interface (λ x → `evalArg (`tail `swap) x)
+-- -}

@@ -14,7 +14,8 @@ open import Data.Nat.NP hiding (_==_)
 open import Data.Fin hiding (_+_; pred)
 import Data.Vec.NP as V
 open V using (Vec; []; _∷_)
-open import Algebra.FunctionProperties.Eq
+import Algebra.FunctionProperties.Eq
+open Algebra.FunctionProperties.Eq.Implicits
 open import Relation.Binary.PropositionalEquality.NP
 open import Relation.Binary
 open import Relation.Nullary
