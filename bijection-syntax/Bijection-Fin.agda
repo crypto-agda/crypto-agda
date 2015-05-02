@@ -13,8 +13,11 @@ module bijection-syntax.Bijection-Fin where
   open import Data.Fin.NP
     using ( Fin ; zero ; suc ; ℕ▹Fin ; inject₁; suc-injective; _≤F_; z≤i; s≤s
           ; module From-mono-inj )
+  open import Data.Nat.BoundedMonoInj-is-Id hiding (module From-mono-inj)
   open import Data.Vec hiding ([_])
   open import Data.Sum
+  import Algebra.FunctionProperties.Eq
+  open Algebra.FunctionProperties.Eq.Implicits
 
   data `Syn : ℕ → Type where
     `id   : ∀ {n} → `Syn n
@@ -321,16 +324,16 @@ module bijection-syntax.Bijection-Fin where
   move-from-RC (suc x) zero (inj₂ ())
   move-from-RC (suc x) (suc y) prf = s≤s (move-from-RC x y prf)
 
-  module toNatRC n (f : Endo (Fin (suc n)))(f-inj : Is-Inj f)(f-mono : Is-Mono `RC `RC f) where
-    proper-mono : ∀ {x y} → x ≤F y → f x ≤F f y
-    proper-mono {x} {y} x≤Fy with `RC x y | `RC (f x) (f y) | move-to-RC x≤Fy | f-mono x y | move-from-RC (f x) (f y)
-    proper-mono x≤Fy | .lt | lt | inj₁ refl | r4 | r5 = r5 (inj₁ refl)
-    proper-mono x≤Fy | .lt | eq | inj₁ refl | r4 | r5 = r5 (inj₂ refl)
-    proper-mono x≤Fy | .lt | gt | inj₁ refl | () | r5
-    proper-mono x≤Fy | .eq | lt | inj₂ refl | () | r5
-    proper-mono x≤Fy | .eq | eq | inj₂ refl | r4 | r5 = r5 (inj₂ refl)
-    proper-mono x≤Fy | .eq | gt | inj₂ refl | () | r5
-    open From-mono-inj f f-inj proper-mono public
+  mono-RC : ∀ {n}(f : Endo (Fin n))(f-mono : Is-Mono `RC `RC f)
+              {x y} → x ≤F y → f x ≤F f y
+  mono-RC {n} f f-mono {x} {y} x≤Fy with `RC x y | `RC (f x) (f y) | move-to-RC x≤Fy | f-mono x y | move-from-RC (f x) (f y)
+  mono-RC f f-mono x≤Fy | .lt | lt | inj₁ refl | r4 | r5 = r5 (inj₁ refl)
+  mono-RC f f-mono x≤Fy | .lt | eq | inj₁ refl | r4 | r5 = r5 (inj₂ refl)
+  mono-RC f f-mono x≤Fy | .lt | gt | inj₁ refl | () | r5
+  mono-RC f f-mono x≤Fy | .eq | lt | inj₂ refl | () | r5
+  mono-RC f f-mono x≤Fy | .eq | eq | inj₂ refl | r4 | r5 = r5 (inj₂ refl)
+  mono-RC f f-mono x≤Fy | .eq | gt | inj₂ refl | () | r5
+
 
   fin-view : ∀ {n} → (i : Fin (suc n)) → Fin-View i
   fin-view {zero} zero = max
@@ -354,9 +357,8 @@ module bijection-syntax.Bijection-Fin where
   drop₁→inject₁ .(inject₁ i) j p q | inject i = ap inject₁ q
 
 
-  `mono-inj→id : ∀{i}(f : Endo (`Rep i)) → Is-Inj f → Is-Mono `RC `RC f → f ≗ id
-  `mono-inj→id {zero}  = λ f x x₁ ()
-  `mono-inj→id {suc i} = toNatRC.f≗id i
+  `mono-inj→id : ∀{i}(f : Endo (`Rep i)) → Injective f → Is-Mono `RC `RC f → f ≗ id
+  `mono-inj→id f inj mono = From-mono-inj.f≗id f inj (mono-RC f mono)
 
 
   interface : Interface
@@ -407,7 +409,7 @@ module bijection-syntax.Bijection-Fin where
   syn-pres f (`tail S) rewrite syn-pres (f ∘ suc) S = refl
   syn-pres f (S `∘ S₁) rewrite syn-pres f S = syn-pres (f ∘ `evalArg S) S₁
 
-  count-perm : ∀ {n}(f : Fin n → ℕ)(p : Endo (Fin n)) → Is-Inj p
+  count-perm : ∀ {n}(f : Fin n → ℕ)(p : Endo (Fin n)) → Injective p
          → count f ≡ count (f ∘ p)
   count-perm f p p-inj = trans (syn-pres f (sort-bij p)) (count-ext _ _ f∘eval≗f∘p)
    where
@@ -416,7 +418,7 @@ module bijection-syntax.Bijection-Fin where
      f∘eval≗f∘p x rewrite thm p p-inj x = refl
 
 
-  #-perm : ∀ {n}(f : Fin n → 𝟚)(p : Endo (Fin n)) → Is-Inj p
+  #-perm : ∀ {n}(f : Fin n → 𝟚)(p : Endo (Fin n)) → Injective p
          → #⟨ f ⟩ ≡ #⟨ f ∘ p ⟩
   #-perm f p p-inj = count-perm (𝟚▹ℕ ∘ f) p p-inj
 
