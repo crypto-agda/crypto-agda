@@ -30,8 +30,8 @@ open import Attack.Reencryption
 
 open import Crypto.Schemes
 
-open import Cipher.ElGamal.Generic
-open import Cipher.ElGamal.Homomorphic
+open import Crypto.Cipher.ElGamal.Generic
+open import Crypto.Cipher.ElGamal.Homomorphic
 
 open import Solver.Linear
 open import Solver.AddMax

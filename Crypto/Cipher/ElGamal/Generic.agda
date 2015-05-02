@@ -10,7 +10,7 @@ open import Crypto.Schemes
 -- Note that Message and Blinded could be made equal
 -- to G. Because the code does not require it we keep
 -- the most flexible version.
-module Cipher.ElGamal.Generic
+module Crypto.Cipher.ElGamal.Generic
   (Message : Type) -- The type of messages
   (Blinded : Type) -- The type of blinded messages
   (ℤq      : Type) -- The type of exponenents

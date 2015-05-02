@@ -5,10 +5,10 @@ import Explore.README
 
 import Attack.Compression
 import Attack.Reencryption
-import Cipher.ElGamal.Generic
-import Cipher.ElGamal.Homomorphic
-import Cipher.ElGamal.Group
-import Cipher.ElGamal.CPA-DDH
+import Crypto.Cipher.ElGamal.CPA-DDH
+import Crypto.Cipher.ElGamal.Generic
+import Crypto.Cipher.ElGamal.Group
+import Crypto.Cipher.ElGamal.Homomorphic
 import Composition.Forkable
 import Composition.Horizontal
 import Composition.Vertical

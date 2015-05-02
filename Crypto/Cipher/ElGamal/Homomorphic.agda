@@ -9,10 +9,10 @@ open import Algebra.Group
 open import Algebra.Group.Homomorphism
 open import Algebra.Group.Abelian
 open import Algebra.Field
-import Cipher.ElGamal.Generic
+import Crypto.Cipher.ElGamal.Generic
 open import Crypto.Schemes
 
-module Cipher.ElGamal.Homomorphic where
+module Crypto.Cipher.ElGamal.Homomorphic where
 
 module Minimal
   (F : Type)
@@ -24,7 +24,7 @@ module Minimal
   (_/_ : G → G → G)
   where
 
-  open Cipher.ElGamal.Generic G G F G g _^_ _*_ _/_ public
+  open Crypto.Cipher.ElGamal.Generic G G F G g _^_ _*_ _/_ public
 
   combine : CipherText → CipherText → CipherText
   combine (a , b) (c , d) = (a * c , b * d)

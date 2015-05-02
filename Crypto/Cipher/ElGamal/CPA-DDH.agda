@@ -27,9 +27,9 @@ import Explore.Group as EG
 
 import Game.DDH
 import Game.IND-CPA.Core
-import Cipher.ElGamal.Generic
+import Crypto.Cipher.ElGamal.Generic
 
-module Cipher.ElGamal.CPA-DDH where
+module Crypto.Cipher.ElGamal.CPA-DDH where
 
 module Core
   (ℤqᵁ     : U)
@@ -51,7 +51,7 @@ module Core
   Rₓ : Type
   Rₓ = ℤq
 
-  open Cipher.ElGamal.Generic Message Message ℤq G g _^_ _∙_ _/_
+  open Crypto.Cipher.ElGamal.Generic Message Message ℤq G g _^_ _∙_ _/_
 
   open module IND-CPA = Game.IND-CPA.Core PubKey SecKey Message CipherText Rₑ Rₖ Rₐ Rₓ key-gen enc
          renaming (R to R')
