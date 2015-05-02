@@ -9,7 +9,7 @@ open import FunUniverse.Data
 module FunUniverse.Circuit where
 
 infix 0 _⌥_
-data _⌥_ : ℕ → ℕ → ★ where
+data _⌥_ : ℕ → ℕ → Type where
   rewire : ∀ {i o} → (Fin o → Fin i) → i ⌥ o
     -- cost: 0 time, o space
   _∘_    : ∀ {m n o} → (n ⌥ o) → (m ⌥ n) → (m ⌥ o)
