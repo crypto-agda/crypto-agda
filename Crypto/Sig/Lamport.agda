@@ -22,29 +22,29 @@ module OTS1 = Crypto.Sig.LamportOneBit #secret #digest hash-secret
 
 H = hash-secret
 
-#seckey1    = 2* #secret
-#pubkey1    = 2* #digest
-#signature1 = #secret
-#seckey     = #message * #seckey1
-#pubkey     = #message * #pubkey1
+#signkey1   = OTS1.#signkey
+#verifkey1  = OTS1.#verifkey
+#signature1 = OTS1.#signature
+#signkey    = #message * #signkey1
+#verifkey   = #message * #verifkey1
 #signature  = #message * #signature1
 
 Digest     = Bits #digest
 Seed       = Bits #seed
 Secret     = Bits #secret
-SignKey    = Bits #seckey
+SignKey    = Bits #signkey
 Message    = Bits #message
 Signature  = Bits #signature
-VerifKey   = Bits #pubkey
+VerifKey   = Bits #verifkey
 
 verif-key : SignKey → VerifKey
 verif-key = map* #message OTS1.verif-key
 
 module verifkey (vk : VerifKey) where
-  vk1s = group #message #pubkey1 vk
+  vk1s = group #message #verifkey1 vk
 
 module signkey (sk : SignKey) where
-  sk1s = group #message #seckey1 sk
+  sk1s = group #message #signkey1 sk
   vk   = verif-key sk
   open verifkey vk public
 
@@ -74,19 +74,19 @@ verify-correct-sig : ∀ sk m → verify (verif-key sk) m (sign sk m) ≡ 1b
 verify-correct-sig = lemma
   where
     module lemma {#m} sk b m where
-      skL  = take #seckey1 sk
-      skH  = drop #seckey1 sk
+      skL  = take #signkey1 sk
+      skH  = drop #signkey1 sk
       vkL  = OTS1.verif-key skL
       vkH  = map* #m OTS1.verif-key skH
       sigL = OTS1.sign skL b
-      sigH = concat (map OTS1.sign (group #m #seckey1 skH) ⊛ m)
+      sigH = concat (map OTS1.sign (group #m #signkey1 skH) ⊛ m)
 
-    lemma : ∀ {#m} sk m → and (map OTS1.verify (group #m #pubkey1 (map* #m OTS1.verif-key sk)) ⊛ m ⊛ group #m #signature1
-                               (concat (map OTS1.sign (group #m #seckey1 sk) ⊛ m))) ≡ 1b
+    lemma : ∀ {#m} sk m → and (map OTS1.verify (group #m #verifkey1 (map* #m OTS1.verif-key sk)) ⊛ m ⊛ group #m #signature1
+                               (concat (map OTS1.sign (group #m #signkey1 sk) ⊛ m))) ≡ 1b
     lemma sk [] = refl
     lemma sk (b ∷ m)
-      rewrite (let open lemma sk b m in take-++ #pubkey1 vkL vkH)
-            | (let open lemma sk b m in drop-++ #pubkey1 vkL vkH)
+      rewrite (let open lemma sk b m in take-++ #verifkey1 vkL vkH)
+            | (let open lemma sk b m in drop-++ #verifkey1 vkL vkH)
             | (let open lemma sk b m in take-++ #signature1 sigL sigH)
             | (let open lemma sk b m in drop-++ #signature1 sigL sigH)
             | (let open lemma sk b m in OTS1.verify-correct-sig skL b)
