@@ -28,6 +28,7 @@ module signkey (sk : SignKey) where
   skH = drop #secret sk
   vkL = hash skL
   vkH = hash skH
+  skP = skL , skH
 
 -- Derive the public key by hashing each secret
 verif-key : SignKey → VerifKey
@@ -51,9 +52,15 @@ sign sk b = take2* _ b sk
 verify : VerifKey → Bit → Signature → Bit
 verify vk b sig = take2* _ b vk == hash sig
 
+verifkey-is-hash-sig : ∀ sk b → take2* _ b (verif-key sk) ≡ hash (sign sk b)
+verifkey-is-hash-sig sk 0b = take-++ #digest (hash (take #secret sk)) _
+verifkey-is-hash-sig sk 1b = drop-++ #digest (hash (take #secret sk)) _
+
 verify-correct-sig : ∀ sk b → verify (verif-key sk) b (sign sk b) ≡ 1b
-verify-correct-sig sk 0b = ==-reflexive (take-++ #digest (hash (take #secret sk)) _)
-verify-correct-sig sk 1b = ==-reflexive (drop-++ #digest (hash (take #secret sk)) _)
+verify-correct-sig sk b = ==-reflexive (verifkey-is-hash-sig sk b)
+
+sign-both-reveals-signkey : ∀ sk → sign sk 0b ++ sign sk 1b ≡ sk
+sign-both-reveals-signkey = take-drop-lem #secret
 
 import Algebra.FunctionProperties.Eq
 open Algebra.FunctionProperties.Eq.Implicits
