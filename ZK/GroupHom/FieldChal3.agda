@@ -1,5 +1,6 @@
 {-# OPTIONS --without-K #-}
 open import Type using (Type)
+open import Type.Eq
 open import Data.Bool.Base using (Bool) renaming (T to ✓)
 open import Relation.Binary.PropositionalEquality.NP using (_≡_)
 open import Algebra.Field
@@ -12,10 +13,7 @@ module ZK.GroupHom.FieldChal3
   (𝔽   : Field F)
   (𝔾   : Group G)
   (open Field 𝔽 hiding (_^_; _⊗_) renaming (+-grp to 𝔽+))
-
-  (_==_ : G → G → Bool)
-  (✓-== : ∀ {x y} → x ≡ y → ✓ (x == y))
-  (==-✓ : ∀ {x y} → ✓ (x == y) → x ≡ y)
+  {{eq?-G : Eq? G}}
 
   (_^_ : G → F → G)
   (^-+ : ∀ {b} → GroupHomomorphism 𝔽+ 𝔾 (_^_ b))
@@ -27,7 +25,7 @@ module ZK.GroupHom.FieldChal3
 
 φ = _^_ U
 
-open ZK.GroupHom.FieldChal2 𝔽 𝔾 _ ✓-== ==-✓
+open ZK.GroupHom.FieldChal2 𝔽 𝔾 {{eq?-G}}
                             _ φ ^-+ ^-*
                             Y ^-+ ^-* ^-1
   public

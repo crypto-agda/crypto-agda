@@ -1,5 +1,6 @@
 {-# OPTIONS --without-K #-}
 open import Type using (Type)
+open import Type.Eq
 open import Function using (flip; case_of_)
 open import Data.Sum.NP
 open import Data.Product renaming (proj₁ to fst; proj₂ to snd)
@@ -11,9 +12,7 @@ import ZK.SigmaProtocol.KnownStatement
 
 module ZK.GroupHom
     {G+ G* : Type} (grp-G+ : Group G+) (grp-G* : Group G*)
-    (_==_ : G* → G* → Bool)
-    (✓-== : ∀ {x y} → x ≡ y → ✓ (x == y))
-    (==-✓ : ∀ {x y} → ✓ (x == y) → x ≡ y)
+    {{eq?-G* : Eq? G*}}
 
     (open Additive-Group grp-G+ hiding (_⊗_))
     (open Multiplicative-Group grp-G* hiding (_^_))
@@ -110,7 +109,7 @@ module ZK.GroupHom
 
   correct : Correct Schnorr
   correct x a c w
-    = ✓-== (φ((x ⊗ c) + a)  ≡⟨ hom ⟩
+    = ≡⇒== (φ((x ⊗ c) + a)  ≡⟨ hom ⟩
             φ(x ⊗ c)  * A   ≡⟨ *= φ-hom-iterated idp ⟩
             (φ x ^ c) * A   ≡⟨ ap (λ z → (z ^ c) * A) w ⟩
             (Y ^ c)   * A   ∎)
@@ -120,7 +119,7 @@ module ZK.GroupHom
   shvzk : Special-Honest-Verifier-Zero-Knowledge Schnorr
   shvzk = record { simulator = simulator
                  ; correct-simulator =
-                    λ _ _ → ✓-== (! elim-*-!assoc= (snd ⁻¹-inverse)) }
+                    λ _ _ → ≡⇒== (! elim-*-!assoc= (snd ⁻¹-inverse)) }
 
   module _ (t² : Transcript² verifier) where
     open Witness-extractor t²
@@ -129,7 +128,7 @@ module ZK.GroupHom
     φrd≡ycd
       = φ rd                        ≡⟨by-definition⟩
         φ (r₀ − r₁)                 ≡⟨ −-/ ⟩
-        φ r₀ / φ r₁                 ≡⟨ /= (==-✓ verify₀) (==-✓ verify₁) ⟩
+        φ r₀ / φ r₁                 ≡⟨ /= (==⇒≡ verify₀) (==⇒≡ verify₁) ⟩
         (Y ^ c₀ * A) / (Y ^ c₁ * A) ≡⟨ elim-*-right-/ ⟩
         Y ^ c₀ / Y ^ c₁             ≡⟨ ! ^-−ᶜ c₀>c₁ ⟩
         Y ^(c₀ −ᶜ c₁)               ≡⟨by-definition⟩

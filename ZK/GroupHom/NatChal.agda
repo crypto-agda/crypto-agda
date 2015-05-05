@@ -1,5 +1,6 @@
 {-# OPTIONS --without-K #-}
 open import Type using (Type)
+open import Type.Eq
 open import Function using (flip)
 open import Data.Product renaming (proj₁ to fst; proj₂ to snd)
 open import Data.Sum.NP
@@ -23,9 +24,7 @@ module ZK.GroupHom.NatChal
   (G+ G* : Type)
   (𝔾+ : Group G+)
   (𝔾* : Group G*)
-  (_==_ : G* → G* → Bool)
-  (✓-== : ∀ {x y} → x ≡ y → ✓ (x == y))
-  (==-✓ : ∀ {x y} → ✓ (x == y) → x ≡ y)
+  {{eq?-G* : Eq? G*}}
   (φ : G+ → G*)
   (φ-hom : GroupHomomorphism 𝔾+ 𝔾* φ)
   (Y : G*)
@@ -66,9 +65,7 @@ help! ._ ._ (s≤s (s≤s p)) x = help! _ _ (s≤s p) x
               ; G* = G*
               ; 𝔾+ = 𝔾+
               ; 𝔾* = 𝔾*
-              ; _==_ = _==_
-              ; ✓-== = ✓-==
-              ; ==-✓ = ==-✓
+              ; eq?-G* = eq?-G*
               ; _⊗ⁿ_ = _⊗⁺_
               ; _^ⁿ_ = _^⁺_
               ; 1^ⁿ = 1^⁺

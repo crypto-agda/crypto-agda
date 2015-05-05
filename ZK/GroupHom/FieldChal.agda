@@ -1,5 +1,6 @@
 {-# OPTIONS --without-K #-}
 open import Type using (Type)
+open import Type.Eq
 open import Function using (id)
 open import Data.Bool.Base using (Bool) renaming (T to ✓)
 open import Data.Sum.NP
@@ -18,9 +19,7 @@ module ZK.GroupHom.FieldChal
 
   (open Field 𝔽 hiding (_^_; _⊗_))
 
-  (_==_ : G* → G* → Bool)
-  (✓-== : ∀ {x y} → x ≡ y → ✓ (x == y))
-  (==-✓ : ∀ {x y} → ✓ (x == y) → x ≡ y)
+  {{eq?-G* : Eq? G*}}
 
   (_⊗_ : G+ → F → G+)
   (_^_ : G* → F → G*)
@@ -46,7 +45,7 @@ open ≡-Reasoning
     Y                 ∎
     where cd = c₀ − c₁
 
-open ZK.GroupHom 𝔾+ 𝔾* _ ✓-== ==-✓ _≢_ inl _⊗_ _^_ _−_ _⁻¹
+open ZK.GroupHom 𝔾+ 𝔾* {{eq?-G*}} _≢_ inl _⊗_ _^_ _−_ _⁻¹
                  φ φ-+ φ-⊗ Y (λ _ → GroupHomomorphism.−-/ ^-+) ^-^-1/-id
                public
 -- -}

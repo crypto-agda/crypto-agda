@@ -1,5 +1,6 @@
 {-# OPTIONS --without-K #-}
 open import Type using (Type; Type₁)
+open import Type.Eq
 open import Function using (flip)
 open import Data.Product renaming (proj₁ to fst; proj₂ to snd)
 open import Data.Sum.NP
@@ -42,9 +43,7 @@ record Package : Type₁ where
   open Multiplicative-Group 𝔾* public
 
   field
-    _==_ : G* → G* → Bool
-    ✓-== : ∀ {x y} → x ≡ y → ✓ (x == y)
-    ==-✓ : ∀ {x y} → ✓ (x == y) → x ≡ y
+    {{eq?-G*}} : Eq? G*
 
     _⊗ⁿ_ : G+ → Num → G+
     _^ⁿ_ : G* → Num → G*
@@ -103,7 +102,7 @@ module FromPackage (p : Package) where
   swap? i | tri> ¬a ¬b c = inl c
   swap? i | tri≈ ¬a b ¬c = 𝟘-elim (i b)
 
-  open ZK.GroupHom 𝔾+ 𝔾* _==_ ✓-== ==-✓ _>_ swap? _⊗ⁿ_ _^ⁿ_ _∸ⁿ_ inv-mod-q
+  open ZK.GroupHom 𝔾+ 𝔾* {{eq?-G*}} _>_ swap? _⊗ⁿ_ _^ⁿ_ _∸ⁿ_ inv-mod-q
                    φ φ-hom φ-hom-iterated
                    Y
                    ^ⁿ-∸ⁿ
