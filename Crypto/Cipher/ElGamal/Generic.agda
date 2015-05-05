@@ -2,7 +2,7 @@
 open import Type using (Type)
 open import Function
 open import Data.Maybe
-open import Data.Product using (_×_; _,_)
+open import Data.Product.NP using (_×_; _,_; fst; snd)
 open import Relation.Binary.PropositionalEquality.NP
               using (_≡_; ap; _∙_)
 open import Crypto.Schemes
@@ -34,6 +34,12 @@ CipherText = G × Blinded
 Rₖ         = ℤq
 Rₑ         = ℤq
 
+module CipherText (ct : CipherText) where
+  α : G
+  α = fst ct
+  β : Blinded
+  β = snd ct
+
 pub-of : SecKey → PubKey
 pub-of x = g ^ x
 
@@ -50,6 +56,9 @@ enc pk M r = α , β
 dec : SecKey → CipherText → Message
 dec x (α , β) = β / (α ^ x)
 
+dec? : SecKey → CipherText → Maybe Message
+dec? x ct = just (dec x ct)
+
 module Functional-correctness
     (/-*    : ∀ {α M} → (α * M) / α ≡ M)
     (^-comm : ∀ {α x y} → (α ^ x)^ y ≡ (α ^ y)^ x)
@@ -60,17 +69,10 @@ module Functional-correctness
 
     ElGamal-encryption : Pubkey-encryption
     ElGamal-encryption = record
-                          { pkt = record
-                             { PubKey = PubKey
-                             ; SecKey = SecKey
-                             ; Message = Message
-                             ; CipherText = CipherText
-                             ; Rₖ = Rₖ
-                             ; Rₑ = Rₑ }
-                          ; pko = record
+                          { pko = record
                              { key-gen = key-gen
                              ; enc = enc
-                             ; dec = λ s m → just (dec s m)
+                             ; dec = dec?
                              }
                           ; functionally-correct = λ x r m → ap just (functionally-correct x r m)
                           }

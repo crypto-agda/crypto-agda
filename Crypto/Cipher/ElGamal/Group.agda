@@ -28,6 +28,9 @@ module Crypto.Cipher.ElGamal.Group
 
 open Multiplicative-Group 𝔾 hiding (_^_)
 
-open Crypto.Cipher.ElGamal.Generic G G Zq G g _^_ _*_ _/′_ public
+Message = G
+Blinded = G
+
+open Crypto.Cipher.ElGamal.Generic Message Blinded Zq G g _^_ _*_ _/′_ public
 
 open Functional-correctness /′-* ^-comm public

@@ -1,4 +1,11 @@
 {-# OPTIONS --without-K #-}
+{-
+Four kind of ZK proofs about ElGamal encryption:
+  (1) proof of encryption:       r = enc y M r ≡ ct
+  (2) proof of decryption:       sk = (pub-of sk ≡ y) × (dec sk ct ≡ M)
+  (3) proof of equal encryption: (M , r₀ , r₁) = enc y₀ M r₀ ≡ ct₀ × enc y₁ M r₁ ≡ ct₁
+  (4) proof of equal decryption: sk = pub-of sk ≡ y × dec sk ct₀ ≡ dec sk ct₁
+-}
 open import Type using (Type)
 open import Type.Eq
 open import Function.NP using (flip; _∘_; it)
@@ -19,6 +26,7 @@ module ZK.GroupHom.ElGamal
   (G*-eq? : Eq? G*)
   (_^_ : G* → G+ → G*)
   (^-hom : ∀ b → GroupHomomorphism 𝔾+ 𝔾* (_^_ b))
+  (^-comm : ∀ {α x y} → (α ^ x)^ y ≡ (α ^ y)^ x)
   (g : G*)
   where
 
@@ -30,32 +38,9 @@ module ^ b = GroupHomomorphism (^-hom b)
 _² : Type → Type
 A ² = A × A
 
--- TODO: Re-use another module
-module ElGamal-encryption where
-  PubKey  = G*
-  PrivKey = G+
-  EncRnd  = G+ {- randomness used for encryption of ct -}
-  Message = G* {- plain text message -}
-  CipherText = G* × G*
+open import Crypto.Cipher.ElGamal.Group 𝔾+ 𝔾* g _^_ ^-comm
 
-  module CipherText (ct : CipherText) where
-    α β : G*
-    α = fst ct
-    β = snd ct
-
-  pub-of : PrivKey → PubKey
-  pub-of sk = g ^ sk
-
-  enc : PubKey → Message → EncRnd → CipherText
-  enc y M r = α , β
-    module enc where
-      α = g ^ r
-      β = (y ^ r) * M
-
-  dec : PrivKey → CipherText → Message
-  dec sk (α , β) = (α ^ sk)⁻¹ * β
-
-open ElGamal-encryption
+EncRnd = Rₑ {- randomness used for encryption of ct -}
 
 open Product
 
@@ -89,31 +74,15 @@ module Known-enc-rnd
     { φ-hom = < ^-hom g , ^-hom y >-hom
     ; y = ct.α , ct.β / M
     ; φ⇒P = λ _ e → ap₂ (λ p q → fst p , q) e
-                        (ap (flip _*_ M ∘ snd) e ∙ /-*)
+                         (ap (flip _*_ M ∘ snd) e ∙ /-*)
     ; P⇒φ = λ _ e → ap₂ _,_ (ap fst e)
-                            (! *-/ ∙ ap (flip _/_ M) (ap snd e))
+                             (! *-/ ∙ ap (flip _/_ M) (ap snd e))
     }
 
 open ≡-Reasoning
 
-/⁻¹-* : ∀ {x y} → (x / y)⁻¹ * x ≡ y
-/⁻¹-* {x} {y} =
-  (x / y)⁻¹ * x        ≡⟨ ap (λ z → z * x) ⁻¹-hom′ ⟩
-  y ⁻¹ ⁻¹ * x ⁻¹ * x   ≡⟨ *-assoc ⟩
-  y ⁻¹ ⁻¹ * (x ⁻¹ * x) ≡⟨ ap₂ _*_ ⁻¹-involutive (fst ⁻¹-inverse) ⟩
-  y * 1#               ≡⟨ *1-identity ⟩
-  y                    ∎
-
-/-⁻¹* : ∀ {x y} → x / (y ⁻¹ * x) ≡ y
-/-⁻¹* {x} {y} =
-  x * (y ⁻¹ * x) ⁻¹    ≡⟨ ap (_*_ x) ⁻¹-hom′ ⟩
-  x * (x ⁻¹ * y ⁻¹ ⁻¹) ≡⟨ ! *-assoc ⟩
-  (x * x ⁻¹) * y ⁻¹ ⁻¹ ≡⟨ *= (snd ⁻¹-inverse) ⁻¹-involutive ⟩
-  1# * y               ≡⟨ 1*-identity ⟩
-  y                    ∎
-
-x⁻¹y≡1→x≡y : ∀ {x y} → x ⁻¹ * y ≡ 1# → x ≡ y
-x⁻¹y≡1→x≡y e = cancels-*-left (fst ⁻¹-inverse ∙ ! e)
+x/′y≡1→x≡y : ∀ {x y} → x ⁻¹ * y ≡ 1# → x ≡ y
+x/′y≡1→x≡y e = cancels-*-left (fst ⁻¹-inverse ∙ ! e)
 
 module Known-dec
          (y  : PubKey)
@@ -122,15 +91,15 @@ module Known-dec
          where
   module ct = CipherText ct
 
-  Valid-witness : PrivKey → Type
-  Valid-witness sk = (g ^ sk ≡ y) × (dec sk ct ≡ M)
+  Valid-witness : SecKey → Type
+  Valid-witness sk = (pub-of sk ≡ y) × (dec sk ct ≡ M)
 
   zk-hom : ZK-hom _ _ Valid-witness
   zk-hom = record
     { φ-hom = < ^-hom g , ^-hom ct.α >-hom
     ; y = y , ct.β / M
-    ; φ⇒P = λ x e → ap fst e , ap (λ z → z ⁻¹ * ct.β) (ap snd e) ∙ /⁻¹-*
-    ; P⇒φ = λ x e → ap₂ _,_ (fst e) (! /-⁻¹* ∙ ap (_/_ ct.β) (snd e))
+    ; φ⇒P = λ x e → ap fst e , ap (λ z → z ⁻¹ * ct.β) (ap snd e) ∙ /′-/
+    ; P⇒φ = λ x e → ap₂ _,_ (fst e) (! /-/′ ∙ ap (_/_ ct.β) (snd e))
     }
 
 -- Inverse of ciphertexts
@@ -151,7 +120,10 @@ module From-*-comm
   private
     module 𝔾*-comm = Abelian-Group-Struct (𝔾*.grp-struct , *-comm)
 
-  hom-enc : (y : PubKey) → GroupHomomorphism (×-grp 𝕄 𝔾+) ℂ𝕋 (uncurry (enc y))
+    enc′ : PubKey → (Message × Rₑ) → CipherText
+    enc′ y = uncurry (enc y)
+
+  hom-enc : (y : PubKey) → GroupHomomorphism (×-grp 𝕄 𝔾+) ℂ𝕋 (enc′ y)
   hom-enc y = mk λ { {M₀ , r₀} {M₁ , r₁} →
     ap₂ _,_ (^.hom _)
         (enc.β y (M₀ * M₁) (r₀ + r₁)   ≡⟨by-definition⟩
@@ -211,7 +183,7 @@ module From-*-comm
          where
     module flip-^ x = GroupHomomorphism (flip-^-hom x)
 
-    hom-dec : (x : PrivKey) → GroupHomomorphism ℂ𝕋 𝕄 (dec x)
+    hom-dec : (x : SecKey) → GroupHomomorphism ℂ𝕋 𝕄 (dec x)
     hom-dec x = mk λ { {α₀ , β₀} {α₁ , β₁} →
       dec x (α₀ * α₁ , β₀ * β₁)           ≡⟨by-definition⟩
       ((α₀ * α₁) ^ x)⁻¹ * (β₀ * β₁)       ≡⟨ ap (λ z → _*_ (_⁻¹ z) (_*_ β₀ β₁)) (flip-^.hom x) ⟩
@@ -220,6 +192,14 @@ module From-*-comm
       dec x (α₀ , β₀) * dec x (α₁ , β₁)   ∎ }
 
     module hom-dec x = GroupHomomorphism (hom-dec x)
+
+    -- The decryption of the inverse is the inverse of the decryption
+    dec-⁻¹ : ∀ {x ct} → dec x (ct ⁻¹CT) ≡ dec x ct ⁻¹
+    dec-⁻¹ = hom-dec.pres-inv _
+
+    -- The decryption of the division is the division of the decryptions
+    dec-/ : ∀ {x ct₀ ct₁} → dec x (ct₀ /CT ct₁) ≡ dec x ct₀ / dec x ct₁
+    dec-/ = hom-dec.−-/ _
 
     -- Bob wants to prove to the public that he decrypted two
     -- ciphertexts which decrypt to the same message,
@@ -237,24 +217,24 @@ module From-*-comm
         α/ = ct₀.α / ct₁.α
         β/ = ct₀.β / ct₁.β
 
-      Valid-witness : PrivKey → Type
+      Valid-witness : SecKey → Type
       Valid-witness sk = pub-of sk ≡ y × dec sk ct₀ ≡ dec sk ct₁
 
       zk-hom : ZK-hom _ _ Valid-witness
       zk-hom = record
-        { φ-hom = < ^-hom g , ^-hom (ct₀.α / ct₁.α) >-hom
-        ; y = y , ct₀.β / ct₁.β
+        { φ-hom = < ^-hom g , ^-hom α/ >-hom
+        ; y = y , β/
         ; φ⇒P = λ x e →
                   ap fst e ,
                   x/y≡1→x≡y
-                  (dec x ct₀ / dec x ct₁ ≡⟨ ! hom-dec.−-/ x ⟩
+                  (dec x ct₀ / dec x ct₁ ≡⟨ ! dec-/ ⟩
                    dec x (ct₀ /CT ct₁) ≡⟨by-definition⟩
                    dec x (α/ , β/) ≡⟨ ! ap (λ z → dec x (α/ , snd z)) e ⟩
                    dec x (α/ , (α/)^ x) ≡⟨ fst ⁻¹-inverse ⟩
                    1# ∎)
         ; P⇒φ = λ x e → ap₂ _,_ (fst e)
-                  (x⁻¹y≡1→x≡y
-                     (dec x (α/ , β/)       ≡⟨ hom-dec.−-/ x ⟩
+                  (x/′y≡1→x≡y
+                     (dec x (α/ , β/)       ≡⟨ dec-/ ⟩
                       dec x ct₀ / dec x ct₁ ≡⟨ /= (snd e) idp ⟩
                       dec x ct₁ / dec x ct₁ ≡⟨ snd ⁻¹-inverse ⟩
                       1#                    ∎))
