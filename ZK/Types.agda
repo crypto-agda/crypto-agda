@@ -1,42 +1,39 @@
 open import Type using (Type)
+open import Type.Eq
 open import Data.Bool.Base using (Bool) renaming (T to ✓)
 open import Relation.Binary.Core using (_≡_; _≢_)
+open import Algebra.Group
+open import Algebra.Field
 
 module ZK.Types where
 
 -- Minimal interface needed for cyclic group + base field
 record Cyclic-group (G ℤq : Type) : Type where
-  infix 6 _^_
-  infixl 5 _·_ _/_ _*_
-  infixl 4 _+_ _-_
-  infix 2 _==_
+  infix 8 _^_
   field
+    ℤq-fld : Field ℤq
+    G-grp : Group G
+    eq?-G : Eq? G
     g    : G
-    _^_  : G  → ℤq → G
-    _·_  : G  → G  → G
-    _/_  : G  → G  → G
-    _+_  : ℤq → ℤq → ℤq
-    _-_  : ℤq → ℤq → ℤq
-    _*_  : ℤq → ℤq → ℤq
-    modinv : ℤq → ℤq
-    _==_ : (x y : G) → Bool
 
-record Cyclic-group-properties {G ℤq} (cg : Cyclic-group G ℤq) : Type where
-  open Cyclic-group cg
+  open Eq? eq?-G public
+  open Field ℤq-fld hiding (_/_; _^_) public
+  open Group G-grp renaming (_∙_ to _·_) using (_/_) public
+
   field
-    ✓-== : ∀ {x y} → x ≡ y → ✓ (x == y)
-    ==-✓ : ∀ {x y} → ✓ (x == y) → x ≡ y
+    -- TODO: cleanup
+    _^_  : G  → ℤq → G
     ^-+  : ∀ {b x y} → b ^(x + y) ≡ (b ^ x) · (b ^ y)
     ^-*  : ∀ {b x y} → b ^(x * y) ≡ (b ^ x) ^ y
-    ^--  : ∀ {b x y} → b ^(x - y) ≡ (b ^ x) / (b ^ y)
-    *--  : ∀ {x y z} → x * (y - z) ≡ (x * y) - (x * z)
+    ^--  : ∀ {b x y} → b ^(x − y) ≡ (b ^ x) / (b ^ y)
+    *--  : ∀ {x y z} → x * (y − z) ≡ (x * y) − (x * z)
     /-·  : ∀ {P Q} → P ≡ (P / Q) · Q
     ·-/  : ∀ {P Q} → P ≡ (P · Q) / Q
     /-/  : ∀ {P Q} → P ≡ Q / (Q / P)
     cancels-/ : ∀ {P Q R} → (P · Q) / (P · R) ≡ Q / R
     /-inj : ∀ {P Q R} → P / R ≡ Q / R → P ≡ Q
     ^-inj : ∀ {b x y} → b ^ x ≡ b ^ y → x ≡ y
-    left-*-to-right-/ : ∀ {x y z} → x * y ≡ z → x ≡ (z * modinv y)
+    left-*-to-right-/ : ∀ {x y z} → x * y ≡ z → x ≡ (z * y ⁻¹)
 
     -- This one is not known to be efficiently computable on the groups
     -- which are considered to be secure. However, so far this map

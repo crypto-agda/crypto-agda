@@ -27,7 +27,7 @@ module ZK.ChaumPedersen
     G ℤq : ★
     cg : Cyclic-group G ℤq
   -}
-  open Cyclic-group cg
+  open Cyclic-group cg hiding (suc)
 
   Challenge  = ℤq
   Response   = ℤq
@@ -73,58 +73,56 @@ module ZK.ChaumPedersen
   valid1 w y u = y ^ w == u
 
   verify1 : (c : Challenge)(s : Response)(y u A : G) → 𝟚
-  verify1 c s y u A = y ^ s == A · u ^ c
+  verify1 c s y u A = y ^ s == A · (u ^ c)
 
   -- Compute each part of the commitment, such that the verifier accepts!
   simulator1 : (c : Challenge)(s : Response)(y u : G) → G
-  simulator1 c s y u = y ^ s / u ^ c
+  simulator1 c s y u = (y ^ s) / (u ^ c)
 
-  module Lemmas (cg-props : Cyclic-group-properties cg) where
-    open Cyclic-group-properties cg-props
-    correct-simulator‼ : ∀ {n}(ys us : Vec G n) c s l →
-           let simulator = simulator1 c s <$> ys ⊛ us in
-           ✓((verify1 c s <$> ys ⊛ us ⊛ simulator) ‼ l)
-    correct-simulator‼ (y ∷ ys) (u ∷ us) c s zero    = ✓-== /-·
-    correct-simulator‼ (y ∷ ys) (u ∷ us) c s (suc l) = correct-simulator‼ ys us c s l
+  correct-simulator‼ : ∀ {n}(ys us : Vec G n) c s l →
+         let simulator = simulator1 c s <$> ys ⊛ us in
+         ✓((verify1 c s <$> ys ⊛ us ⊛ simulator) ‼ l)
+  correct-simulator‼ (y ∷ ys) (u ∷ us) c s zero    = ≡⇒== /-·
+  correct-simulator‼ (y ∷ ys) (u ∷ us) c s (suc l) = correct-simulator‼ ys us c s l
 
-    module _ (c₀ c₁ f₀ f₁ : ℤq) where
-      module Lemma = ZK.Lemmas cg cg-props c₀ c₁ f₀ f₁
-      private
-          fd = f₀ - f₁
-          cd = c₀ - c₁
-          w' = fd * modinv cd
-      .extractor-ok‼ : ∀ {n}(ys us : Vec G n)(As : Vec G n)
-                        (l : Fin n)
-                        (verify₀ : ✓((verify1 c₀ f₀ <$> ys ⊛ us ⊛ As)‼ l))
-                        (verify₁ : ✓((verify1 c₁ f₁ <$> ys ⊛ us ⊛ As)‼ l))
-                     → ✓((valid1 w' <$> ys ⊛ us) ‼ l)
-      extractor-ok‼ (y ∷ ys) (u ∷ us) (A ∷ As) zero    v0 v1 = ✓-== (Lemma.proof A u y v0 v1)
-      extractor-ok‼ (y ∷ ys) (u ∷ us) (A ∷ As) (suc l) v0 v1 = extractor-ok‼ ys us As l v0 v1
+  module _ (c₀ c₁ f₀ f₁ : ℤq) where
+    module Lemma = ZK.Lemmas cg c₀ c₁ f₀ f₁
+    private
+        fd = f₀ − f₁
+        cd = c₀ − c₁
+        w' = fd * cd ⁻¹
+    .extractor-ok‼ : ∀ {n}(ys us : Vec G n)(As : Vec G n)
+                      (l : Fin n)
+                      (verify₀ : ✓((verify1 c₀ f₀ <$> ys ⊛ us ⊛ As)‼ l))
+                      (verify₁ : ✓((verify1 c₁ f₁ <$> ys ⊛ us ⊛ As)‼ l))
+                   → ✓((valid1 w' <$> ys ⊛ us) ‼ l)
+    extractor-ok‼ (y ∷ ys) (u ∷ us) (A ∷ As) zero    v0 v1 = ≡⇒== (Lemma.proof A u y v0 v1)
+    extractor-ok‼ (y ∷ ys) (u ∷ us) (A ∷ As) (suc l) v0 v1 = extractor-ok‼ ys us As l v0 v1
 
-    module _ (x w c : ℤq) where
-      private
-        s = x + (w * c)
+  module _ (x w c : ℤq) where
+    private
+      s = x + (w * c)
 
-      module Correct1 (y u : G) (e : ✓(valid1 w y u)) where
-          open ≡-Reasoning
-          A = y ^ x
-          pf₀ = y ^(x + w * c)
-              ≡⟨ ^-+ ⟩
-                A · (y ^(w * c))
-              ≡⟨ ap (λ z → A · z) ^-* ⟩
-                A · ((y ^ w) ^ c)
-              ≡⟨ ap (λ z → A · (z ^ c)) (==-✓ e) ⟩
-                A · (u ^ c)
-              ∎
-          pf : ✓(verify1 c s y u A)
-          pf = ✓-== pf₀
+    module Correct1 (y u : G) (e : ✓(valid1 w y u)) where
+        open ≡-Reasoning
+        A = y ^ x
+        pf₀ = y ^(x + w * c)
+            ≡⟨ ^-+ ⟩
+              A · (y ^(w * c))
+            ≡⟨ ap (λ z → A · z) ^-* ⟩
+              A · ((y ^ w) ^ c)
+            ≡⟨ ap (λ z → A · (z ^ c)) (==⇒≡ e) ⟩
+              A · (u ^ c)
+            ∎
+        pf : ✓(verify1 c s y u A)
+        pf = ≡⇒== pf₀
 
-      correct‼ : ∀ {n} (ys us : Vec G n) l
-                 (es : ✓ ((valid1 w <$> ys ⊛ us) ‼ l)) →
-               let As = (λ y → y ^ x) <$> ys in
-               ✓((verify1 c s <$> ys ⊛ us ⊛ As) ‼ l)
-      correct‼ (y ∷ ys) (u ∷ us) zero    e = Correct1.pf y u e
-      correct‼ (y ∷ ys) (u ∷ us) (suc l) e = correct‼ ys us l e
+    correct‼ : ∀ {n} (ys us : Vec G n) l
+               (es : ✓ ((valid1 w <$> ys ⊛ us) ‼ l)) →
+             let As = (λ y → y ^ x) <$> ys in
+             ✓((verify1 c s <$> ys ⊛ us ⊛ As) ‼ l)
+    correct‼ (y ∷ ys) (u ∷ us) zero    e = Correct1.pf y u e
+    correct‼ (y ∷ ys) (u ∷ us) (suc l) e = correct‼ ys us l e
 
   module Generic {n} (ys us : Vec G n) where
 
@@ -178,45 +176,43 @@ module ZK.ChaumPedersen
     extractor t² = w'
         module Witness-extractor where
           open Transcript² t²
-          fd = get-f₀ - get-f₁
-          cd = get-c₀ - get-c₁
-          w' = fd * modinv cd
+          fd = get-f₀ − get-f₁
+          cd = get-c₀ − get-c₁
+          w' = fd * cd ⁻¹
 
-    module Proofs (cg-props : Cyclic-group-properties cg) where
-      open Cyclic-group-properties cg-props
-      open ≡-Reasoning
+    open ≡-Reasoning
 
-      correct-simulator : Correct-simulator verifier simulator
-      correct-simulator c s = ✓-and (Lemmas.correct-simulator‼ cg-props ys us c s)
+    correct-simulator : Correct-simulator verifier simulator
+    correct-simulator c s = ✓-and (correct-simulator‼ ys us c s)
 
-      shvzk : Special-Honest-Verifier-Zero-Knowledge ChaumPedersen
-      shvzk = record { correct-simulator = correct-simulator }
+    shvzk : Special-Honest-Verifier-Zero-Knowledge ChaumPedersen
+    shvzk = record { correct-simulator = correct-simulator }
 
-      correct : Correct (prover , verifier)
-      correct w x c es = ✓-and (λ l → Lemmas.correct‼ cg-props x w c ys us l (✓-and' es l))
+    correct : Correct (prover , verifier)
+    correct w x c es = ✓-and (λ l → correct‼ x w c ys us l (✓-and' es l))
 
-      module _ (t² : Transcript² verifier) where
-        open Transcript² t² renaming (get-A to As; get-c₀ to c₀; get-c₁ to c₁
-                                     ;get-f₀ to f₀; get-f₁ to f₁)
-        open Witness-extractor t²
+    module _ (t² : Transcript² verifier) where
+      open Transcript² t² renaming (get-A to As; get-c₀ to c₀; get-c₁ to c₁
+                                   ;get-f₀ to f₀; get-f₁ to f₁)
+      open Witness-extractor t²
 
-        -- The extracted w' is correct
-        .extractor-ok : Valid w'
-        extractor-ok = ✓-and λ l → Lemmas.extractor-ok‼ cg-props c₀ c₁ f₀ f₁ ys us As l
-                                      (✓-and' verify₀ l) (✓-and' verify₁ l)
+      -- The extracted w' is correct
+      .extractor-ok : Valid w'
+      extractor-ok = ✓-and λ l → extractor-ok‼ c₀ c₁ f₀ f₁ ys us As l
+                                    (✓-and' verify₀ l) (✓-and' verify₁ l)
 
-      -- All of this should not be in proofs...
-      special-soundness : Special-Soundness ChaumPedersen
-      special-soundness = record { extract-valid-witness = extractor-ok }
+    -- All of this should not be in proofs...
+    special-soundness : Special-Soundness ChaumPedersen
+    special-soundness = record { extract-valid-witness = extractor-ok }
 
-      special-Σ-protocol : Special-Σ-Protocol
-      special-Σ-protocol = record { correct = correct ; shvzk = shvzk ; ssound = special-soundness }
+    special-Σ-protocol : Special-Σ-Protocol
+    special-Σ-protocol = record { correct = correct ; shvzk = shvzk ; ssound = special-soundness }
 
-      Σ-sig : Σ-Signature
-      Σ-sig = _
+    Σ-sig : Σ-Signature
+    Σ-sig = _
 
-      Σ-structure : Σ-Structure Valid
-      Σ-structure = record { Σ-sig = Σ-sig ; special-Σ-protocol = special-Σ-protocol }
+    Σ-structure : Σ-Structure Valid
+    Σ-structure = record { Σ-sig = Σ-sig ; special-Σ-protocol = special-Σ-protocol }
 
   -- This now subsumed by Generic (g₀ ∷ g₁ ∷ []) (u₀ ∷ u₁ ∷ [])
   module Generic2 (g₀ g₁ u₀ u₁ : G) where
@@ -274,74 +270,72 @@ module ZK.ChaumPedersen
     extractor t² = w'
         module Witness-extractor where
           open Transcript² t²
-          fd = get-f₀ - get-f₁
-          cd = get-c₀ - get-c₁
-          w' = fd * modinv cd
+          fd = get-f₀ − get-f₁
+          cd = get-c₀ − get-c₁
+          w' = fd * cd ⁻¹
 
-    module Proofs (cg-props : Cyclic-group-properties cg) where
-      open Cyclic-group-properties cg-props
-      open ≡-Reasoning
+    open ≡-Reasoning
 
-      shvzk : Special-Honest-Verifier-Zero-Knowledge ChaumPedersen
-      shvzk = record { correct-simulator = λ _ _ → ✓∧ (✓-== /-·) (✓-== /-·) }
+    shvzk : Special-Honest-Verifier-Zero-Knowledge ChaumPedersen
+    shvzk = record { correct-simulator = λ _ _ → ✓∧ (≡⇒== /-·) (≡⇒== /-·) }
 
-      correct : Correct (prover , verifier)
-      correct w x c (e₀ , e₁) = ✓∧ (✓-== pf₀) (✓-== pf₁)
-        where
+    correct : Correct (prover , verifier)
+    correct w x c (e₀ , e₁) = ✓∧ (≡⇒== pf₀) (≡⇒== pf₁)
+      where
 
-          A = g₀ ^ x
-          pf₀ = g₀ ^(x + (w * c))
-              ≡⟨ ^-+ ⟩
-                A · (g₀ ^(w * c))
-              ≡⟨ ap (λ z → A · z) ^-* ⟩
-                A · ((g₀ ^ w) ^ c)
-              ≡⟨ ap (λ z → A · (z ^ c)) e₀ ⟩
-                A · (u₀ ^ c)
-              ∎
+        A = g₀ ^ x
+        pf₀ = g₀ ^(x + (w * c))
+            ≡⟨ ^-+ ⟩
+              A · (g₀ ^(w * c))
+            ≡⟨ ap (λ z → A · z) ^-* ⟩
+              A · ((g₀ ^ w) ^ c)
+            ≡⟨ ap (λ z → A · (z ^ c)) e₀ ⟩
+              A · (u₀ ^ c)
+            ∎
 
-          -- TODO repeating the proof above
-          B = g₁ ^ x
-          pf₁ = g₁ ^(x + (w * c))
-              ≡⟨ ^-+ ⟩
-                B · (g₁ ^(w * c))
-              ≡⟨ ap (λ z → B · z) ^-* ⟩
-                B · ((g₁ ^ w) ^ c)
-              ≡⟨ ap (λ z → B · (z ^ c)) e₁ ⟩
-                B · (u₁ ^ c)
-              ∎
+        -- TODO repeating the proof above
+        B = g₁ ^ x
+        pf₁ = g₁ ^(x + (w * c))
+            ≡⟨ ^-+ ⟩
+              B · (g₁ ^(w * c))
+            ≡⟨ ap (λ z → B · z) ^-* ⟩
+              B · ((g₁ ^ w) ^ c)
+            ≡⟨ ap (λ z → B · (z ^ c)) e₁ ⟩
+              B · (u₁ ^ c)
+            ∎
 
-      module _ (t² : Transcript² verifier) where
-        open Transcript² t² renaming (get-A to AB; get-c₀ to c₀; get-c₁ to c₁
-                                     ;get-f₀ to f₀; get-f₁ to f₁)
-        A = fst AB
-        B = snd AB
-        module V₀ = CPVerifier A B c₀ f₀
-        module V₁ = CPVerifier A B c₁ f₁
-        module Lemma = ZK.Lemmas cg cg-props c₀ c₁ f₀ f₁
-        open Witness-extractor t²
+    module _ (t² : Transcript² verifier) where
+      open Transcript² t² renaming (get-A to AB; get-c₀ to c₀; get-c₁ to c₁
+                                   ;get-f₀ to f₀; get-f₁ to f₁)
+      A = fst AB
+      B = snd AB
+      module V₀ = CPVerifier A B c₀ f₀
+      module V₁ = CPVerifier A B c₁ f₁
+      module Lemma' = ZK.Lemmas cg c₀ c₁ f₀ f₁
+      open Witness-extractor t²
 
-        .u₀-ok : g₀ ^ w' ≡ u₀
-        u₀-ok = Lemma.proof A u₀ g₀ (✓∧₁ verify₀) (✓∧₁ verify₁)
+      .u₀-ok : g₀ ^ w' ≡ u₀
+      u₀-ok = Lemma'.proof A u₀ g₀ (✓∧₁ verify₀) (✓∧₁ verify₁)
 
-        .u₁-ok : g₁ ^ w' ≡ u₁
-        u₁-ok = Lemma.proof B u₁ g₁ (✓∧₂ {V₀.check₀} verify₀) (✓∧₂ {V₁.check₀} verify₁)
+      .u₁-ok : g₁ ^ w' ≡ u₁
+      u₁-ok = Lemma'.proof B u₁ g₁ (✓∧₂ {V₀.check₀} verify₀) (✓∧₂ {V₁.check₀} verify₁)
 
-        -- The extracted w' is correct
-        .extractor-ok : w' ∈Y
-        extractor-ok = u₀-ok , u₁-ok
+      -- The extracted w' is correct
+      .extractor-ok : w' ∈Y
+      extractor-ok = u₀-ok , u₁-ok
 
-      -- All of this should not be in proofs...
-      special-soundness : Special-Soundness ChaumPedersen
-      special-soundness = record { extract-valid-witness = extractor-ok }
+    -- All of this should not be in proofs...
+    special-soundness : Special-Soundness ChaumPedersen
+    special-soundness = record { extract-valid-witness = extractor-ok }
 
-      special-Σ-protocol : Special-Σ-Protocol
-      special-Σ-protocol = record { correct = correct ; shvzk = shvzk ; ssound = special-soundness }
+    special-Σ-protocol : Special-Σ-Protocol
+    special-Σ-protocol = record { correct = correct ; shvzk = shvzk ; ssound = special-soundness }
 
-      Σ-sig : Σ-Signature
-      Σ-sig = _
+    Σ-sig : Σ-Signature
+    Σ-sig = _
 
-      Σ-structure : Σ-Structure _∈Y
-      Σ-structure = record { Σ-sig = Σ-sig ; special-Σ-protocol = special-Σ-protocol }
+    Σ-structure : Σ-Structure _∈Y
+    Σ-structure = record { Σ-sig = Σ-sig ; special-Σ-protocol = special-Σ-protocol }
 
   -- TODO: Re-use another module
   module ElGamal-encryption where
@@ -372,12 +366,10 @@ module ZK.ChaumPedersen
   CP : (g₀ g₁ u₀ u₁ : G) (w : ℤq) → Type
   CP g₀ g₁ u₀ u₁ w = ✓ ((g₀ ^ w == u₀) ∧ (g₁ ^ w == u₁))
 
-  module _ (cg-props : Cyclic-group-properties cg)
-           (y  : PubKey)
+  module _ (y  : PubKey)
            (M  : Message)
            (ct : CipherText)
            where
-    open Cyclic-group-properties cg-props
     module CT = CipherText ct
 
     KnownEncRnd : EncRnd → Type
@@ -389,9 +381,9 @@ module ZK.ChaumPedersen
     mapEncRnd = record { →Witness = id ; ←Witness = id
                        ; →Valid = λ w₀? → let (p₀ , p₁₂) = ✓∧× w₀?
                                               (p₁ , p₂)  = ✓∧× p₁₂ in
-                                          ap₂ _,_ (==-✓ p₀) (pf (==-✓ p₁))
-                       ; ←Valid = λ w₁? → ✓∧ (✓-== (ap CipherText.α w₁?))
-                                             (✓∧ (✓-== (pf! (ap CipherText.β w₁?))) _)
+                                          ap₂ _,_ (==⇒≡ p₀) (pf (==⇒≡ p₁))
+                       ; ←Valid = λ w₁? → ✓∧ (≡⇒== (ap CipherText.α w₁?))
+                                             (✓∧ (≡⇒== (pf! (ap CipherText.β w₁?))) _)
                        }
      where
       pf : ∀ {M yr β} → yr ≡ β / M → yr · M ≡ β
@@ -400,7 +392,7 @@ module ZK.ChaumPedersen
       pf! : ∀ {M yr β} → yr · M ≡ β → yr ≡ β / M
       pf! {M} e = ·-/ ∙ ap (flip _/_ M) e
 
-    module σEncRndKnowledge = Apply-W-Map mapEncRnd (GenKnownEncRnd.Proofs.Σ-structure cg-props)
+    module σEncRndKnowledge = Apply-W-Map mapEncRnd GenKnownEncRnd.Σ-structure
 
     KnownDec : PrivKey → Type
     KnownDec x = (g ^ x ≡ y) × (dec x ct ≡ M)
@@ -411,9 +403,9 @@ module ZK.ChaumPedersen
     mapDec = record { →Witness = id ; ←Witness = id
                     ; →Valid = λ w₀? → let (p₀ , p₁₂) = ✓∧× w₀?
                                            (p₁ , p₂)  = ✓∧× p₁₂ in
-                                       ==-✓ p₀ , pf (==-✓ p₁)
-                    ; ←Valid = λ w₁? → ✓∧ (✓-== (fst w₁?))
-                                          (✓∧ (✓-== (pf! (snd w₁?))) _)
+                                       ==⇒≡ p₀ , pf (==⇒≡ p₁)
+                    ; ←Valid = λ w₁? → ✓∧ (≡⇒== (fst w₁?))
+                                          (✓∧ (≡⇒== (pf! (snd w₁?))) _)
                     }
      where
       pf : ∀ {w M} → CT.α ^ w ≡ CT.β / M → dec w ct ≡ M
@@ -422,7 +414,7 @@ module ZK.ChaumPedersen
       pf! : ∀ {w M} → dec w ct ≡ M → CT.α ^ w ≡ CT.β / M
       pf! {w} {M} e = /-/ ∙ ap (_/_ CT.β) e
 
-    module σKnownDec = Apply-W-Map mapEncRnd (GenKnownEncRnd.Proofs.Σ-structure cg-props)
+    module σKnownDec = Apply-W-Map mapEncRnd GenKnownEncRnd.Σ-structure
 -- -}
 -- -}
 -- -}

@@ -3,8 +3,7 @@ open import Function using (flip)
 open import Data.Product renaming (proj₁ to fst; proj₂ to snd)
 open import Data.Bool.Base using (Bool) renaming (T to ✓)
 open import Relation.Binary.PropositionalEquality.NP using (_≡_; idp; ap; ap₂; !_; _∙_; module ≡-Reasoning)
-open import ZK.Types using (Cyclic-group; module Cyclic-group
-                           ; Cyclic-group-properties; module Cyclic-group-properties)
+open import ZK.Types using (Cyclic-group; module Cyclic-group)
 import ZK.SigmaProtocol.KnownStatement
 
 module ZK.Schnorr.KnownStatement
@@ -54,65 +53,63 @@ module ZK.Schnorr.KnownStatement
   extractor t² = x'
       module Witness-extractor where
         open Transcript² t²
-        fd = get-f₀ - get-f₁
-        cd = get-c₀ - get-c₁
-        x' = fd * modinv cd
+        fd = get-f₀ − get-f₁
+        cd = get-c₀ − get-c₁
+        x' = fd * cd ⁻¹
   
-  module Proofs (cg-props : Cyclic-group-properties cg) where
-    open Cyclic-group-properties cg-props
-    open ≡-Reasoning
+  open ≡-Reasoning
 
-    correct : Correct Schnorr
-    correct x a c w
-      = ✓-== (g ^(a + (x * c))
-           ≡⟨ ^-+ ⟩
-              A · (g ^(x * c))
-           ≡⟨ ap (λ z → A · z) ^-* ⟩
-              A · ((g ^ x) ^ c)
-           ≡⟨ ap (λ z → A · (z ^ c)) w ⟩
-              A · (y ^ c)
-           ∎)
-      where
-        A = g ^ a
+  correct : Correct Schnorr
+  correct x a c w
+    = ≡⇒== (g ^(a + (x * c))
+         ≡⟨ ^-+ ⟩
+            A · (g ^(x * c))
+         ≡⟨ ap (λ z → A · z) ^-* ⟩
+            A · ((g ^ x) ^ c)
+         ≡⟨ ap (λ z → A · (z ^ c)) w ⟩
+            A · (y ^ c)
+         ∎)
+    where
+      A = g ^ a
 
-    shvzk : Special-Honest-Verifier-Zero-Knowledge Schnorr
-    shvzk = record { simulator = simulator
-                   ; correct-simulator = λ _ _ → ✓-== /-· }
+  shvzk : Special-Honest-Verifier-Zero-Knowledge Schnorr
+  shvzk = record { simulator = simulator
+                 ; correct-simulator = λ _ _ → ≡⇒== /-· }
 
-    module _ (t² : Transcript² verifier) where
-      private
-        x = dlog g y
+  module _ (t² : Transcript² verifier) where
+    private
+      x = dlog g y
 
-      open Transcript² t² renaming (get-A to A; get-c₀ to c₀; get-c₁ to c₁
-                                   ;get-f₀ to f₀; get-f₁ to f₁)
-      open Witness-extractor t²
+    open Transcript² t² renaming (get-A to A; get-c₀ to c₀; get-c₁ to c₁
+                                 ;get-f₀ to f₀; get-f₁ to f₁)
+    open Witness-extractor t²
 
-      .g^xcd≡g^fd : _
-      g^xcd≡g^fd = g ^(x * cd)
-                 ≡⟨ ^-* ⟩
-                   (g ^ x) ^ (c₀ - c₁)
-                 ≡⟨ ap₂ _^_ (dlog-ok g y) idp ⟩
-                   y ^ (c₀ - c₁)
-                 ≡⟨ ^-- ⟩
-                   (y ^ c₀) / (y ^ c₁)
-                 ≡⟨ ! cancels-/ ⟩
-                   (A · (y ^ c₀)) / (A · (y ^ c₁))
-                 ≡⟨ ap₂ _/_ (! ==-✓ verify₀) (! ==-✓ verify₁) ⟩
-                   (g ^ f₀) / (g ^ f₁)
-                 ≡⟨ ! ^-- ⟩
-                   g ^ fd
-                 ∎
+    .g^xcd≡g^fd : _
+    g^xcd≡g^fd = g ^(x * cd)
+               ≡⟨ ^-* ⟩
+                 (g ^ x) ^ (c₀ − c₁)
+               ≡⟨ ap₂ _^_ (dlog-ok g y) idp ⟩
+                 y ^ (c₀ − c₁)
+               ≡⟨ ^-- ⟩
+                 (y ^ c₀) / (y ^ c₁)
+               ≡⟨ ! cancels-/ ⟩
+                 (A · (y ^ c₀)) / (A · (y ^ c₁))
+               ≡⟨ ap₂ _/_ (! ==⇒≡ verify₀) (! ==⇒≡ verify₁) ⟩
+                 (g ^ f₀) / (g ^ f₁)
+               ≡⟨ ! ^-- ⟩
+                 g ^ fd
+               ∎
 
-      -- The extracted x is correct
-      .extractor-ok : g ^ x' ≡ y 
-      extractor-ok = ! ap (_^_ g) (left-*-to-right-/ (^-inj g^xcd≡g^fd)) ∙ dlog-ok g y
+    -- The extracted x is correct
+    .extractor-ok : g ^ x' ≡ y
+    extractor-ok = ! ap (_^_ g) (left-*-to-right-/ (^-inj g^xcd≡g^fd)) ∙ dlog-ok g y
 
-    special-soundness : Special-Soundness Schnorr
-    special-soundness = record { extractor = extractor
-                               ; extract-valid-witness = extractor-ok }
+  special-soundness : Special-Soundness Schnorr
+  special-soundness = record { extractor = extractor
+                             ; extract-valid-witness = extractor-ok }
 
-    special-Σ-protocol : Special-Σ-Protocol
-    special-Σ-protocol = record { Σ-protocol = Schnorr ; correct = correct ; shvzk = shvzk ; ssound = special-soundness }
+  special-Σ-protocol : Special-Σ-Protocol
+  special-Σ-protocol = record { Σ-protocol = Schnorr ; correct = correct ; shvzk = shvzk ; ssound = special-soundness }
 -- -}
 -- -}
 -- -}
