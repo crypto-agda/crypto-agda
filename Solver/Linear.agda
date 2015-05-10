@@ -12,6 +12,7 @@ open import Relation.Binary.PropositionalEquality using (_≡_ ; refl; _≢_)
 open import Relation.Nullary
 import Data.String as String
 module String≤ = StrictTotalOrder String.strictTotalOrder
+open import Data.One  using (𝟙)
 open import Data.Fin using (Fin)
 open import Data.Fin.Properties using (strictTotalOrder) renaming (_≟_ to _≟ᶠ_)
 open import Data.Vec using (Vec; lookup)
@@ -157,9 +158,6 @@ module Syntax
   ... | t1 ⊢ p1 with sort t1
   ... | t2 ⊢ p2 = t2 ⊢ (p2 ∻ p1)
 
-  import Data.Unit
-  import Data.Empty
-
   id≡ : ∀ {S S'} → S ≡ S' → R S S'
   id≡ refl = `id
 
@@ -192,7 +190,7 @@ module Syntax
 
   CHECK : Syn → Syn → Set
   CHECK s1 s2 with s1 ≟ s2
-  ... | yes p = Data.Unit.⊤
+  ... | yes p = 𝟙
   ... | no  p = equation-not-ok
 
   EqOk? : Eq → Set
