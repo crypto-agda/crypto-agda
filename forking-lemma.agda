@@ -1,6 +1,6 @@
 {-# OPTIONS --without-K #-}
 open import Type using (Type)
-open import Function.NP
+open import Function.NP renaming (const to `_)
 open import Function.Extensionality
 open import Data.Nat.NP hiding (_+_; _==_; pred) renaming (_*_ to _*ℕ_)
 open import Data.Vec.NP hiding (sum)
@@ -11,13 +11,13 @@ open import Data.Fin.NP as Fin hiding (_+_; _-_; _≤_; pred)
 open import Data.Product.NP
 open import Relation.Nullary
 open import Relation.Binary
-open import Relation.Binary.PropositionalEquality.NP hiding (J)
+open import Relation.Binary.PropositionalEquality.NP hiding (J; _≗_)
 open import Algebra.Field
 
 module forking-lemma {{_ : FunExt}} where
 
 open Indexed
-  renaming (_∧°_ to _∩_; _∨°_ to _∪_; not° to ~_)
+  renaming (_∧°_ to _∩_; _∨°_ to _∪_; not° to ~_) -- ; _==°_ to _≗_)
 
 _>=1 : ∀ {n}(x : Fin n) → 𝟚
 zero  >=1 = 0₂
@@ -35,7 +35,7 @@ replace : ∀ {A : Type} {q} (I : Fin q)
 replace zero         hs       hs'  = hs'
 replace (suc I) (h ∷ hs) (_ ∷ hs') = h ∷ replace I hs hs'
 
-test-replace : replace (suc zero) (40 ∷ 41 ∷ 42 ∷ []) (60 ∷ 61 ∷ 62 ∷ []) ≡ 40 ∷ 61 ∷ 62 ∷ []
+test-replace : replace (# 1) (40 ∷ 41 ∷ 42 ∷ []) (60 ∷ 61 ∷ 62 ∷ []) ≡ 40 ∷ 61 ∷ 62 ∷ []
 test-replace = refl
 
 ≡-prefix : ∀ {A : Type} {q} (I : Fin (suc q))
@@ -65,6 +65,10 @@ postulate
   #ρ : ℕ
   instance
     #ρ≥1 : #ρ ≥ 1
+
+instance
+    #h≥1 : #h ≥ 1
+    #h≥1 = ℕ≤.trans (s≤s z≤n) #h≥2
 
 RndAdv : Type -- Coin
 RndAdv = Fin #ρ
@@ -97,14 +101,25 @@ well-def A =
     ∀ hs' → ≡-prefix I hs hs' →  A {-x-} hs' ρ ≡ (I , σ) }
 
 record Ω : Type where
+  constructor mk
   field
     -- rIG : RndIG
     hs hs' : Vec H q
     ρ      : RndAdv
 
-Event = Ω → 𝟚
+dummy-H : H
+dummy-H = zero'
+dummy-ρ : RndAdv
+dummy-ρ = zero'
+dummy-r : Ω
+dummy-r = record { hs = replicate dummy-H ; hs' = replicate dummy-H ; ρ = dummy-ρ }
 
-#Ω = ((#h ^ q) ^2) *ℕ #ρ
+open import probas Ω dummy-r
+
+-- #Ω = ((#h ^ q) ^2) *ℕ #ρ
+
+1/#Ω = (ℕ▹ℝ #Ω)⁻¹
+
 -- Ω ≃ Fin #Ω
 
 -- #Ω ≡ countΩ λ _ → 1₁
@@ -114,6 +129,16 @@ instance
   #Ω≥1 : #Ω ≥ 1
   #Ω≥1 = {!!}
 -}
+
+module frk' (i : Fin q)(r : Ω) where
+  open Ω r
+  res' = A (replace i hs hs') ρ
+  I'   = fst res'
+  σ'   = snd res'
+  h    = hs  ‼ i
+  h'   = hs' ‼ i
+  h=h' = h == h'
+  h≢h' = not h=h'
 
 frk : Ω → Maybe (Res × Res)
 frk r = case cond
@@ -125,21 +150,12 @@ frk r = case cond
     I    = fst res
     σ    = snd res
     I-1  = pred I
-
-    res' = A (replace I-1 hs hs') ρ
-    I'   = fst res'
-    σ'   = snd res'
-    h    = hs  ‼ I-1
-    h'   = hs' ‼ I-1
-    I=I' = I == I'
-    h=h' = h == h'
-    h≢h' = not h=h'
+    open frk' I-1 r public
     I≥1  = I >=1
-
+    I=I' = I == I'
     cond = I≥1 ∧ I=I' ∧ h≢h'
 
 open frk
-
 {-
 ==-refl : ∀ {n}(x : Fin n) → (x == x) ≡ 1₂
 ==-refl x = {!!}
@@ -149,6 +165,28 @@ I-1= I=1+ I'=1+ : (i : Fin q) → Event
 I-1=  i r = I-1 r == i
 I=1+  i r = I   r == suc i
 I'=1+ i r = I'  r == suc i
+
+{-
+fΩ : Fin q → Vec H q → Ω → Ω
+fΩ i hs'' r = mk hs (replace i hs' hs'') ρ
+  where
+    open Ω r
+-}
+
+X-event : Fin q → Vec H q → RndAdv → Event
+X-event i hs'' ρ r = fst (A (replace i r.hs' hs'') ρ) == suc i
+  where module r = Ω r
+-- X-event i hs'' ρ = frk'.I' i (mk {!!} hs'' ρ) {-(fΩ i hs'' r)-} == suc i
+-- X-event i hs'' r = frk'.I' i (fΩ i hs'' r) == suc i
+
+-- X-event ... ≡ I ...
+
+X-pr : Fin q → Vec H q → RndAdv → ℝ
+X-pr i hs'' ρ = Pr[ X-event i hs'' ρ ]
+
+X : Fin q → RndVar
+X i r = X-pr i hs ρ
+  where open Ω r
 
 postulate
   baar : ∀ (I I' : Fin (suc q)) i → pred I == i ∧ I >=1 ∧ I == I' ≡ I' == suc i ∧ pred I == i
@@ -165,55 +203,13 @@ acc = I≥1
 Frk : Event
 Frk = is-just ∘ frk
 
-frk-cond : ∀ r → is-just (frk r) ≡ cond r
+frk-cond : ∀ r → Frk r ≡ cond r
 frk-cond r with cond r
 ... | 0₂ = refl
 ... | 1₂ = refl
-
-instance
-    #h≥1 : #h ≥ 1
-    #h≥1 = ℕ≤.trans (s≤s z≤n) #h≥2
-
-infix 0 _≥'_
-infixr 2 _≥⟨_⟩_ _≡⟨_⟩_ _≡⟨by-definition⟩_
-infix 2 _∎
-
-postulate
-  -- [0,1] : Type
-  ℝ : Type
-  ℝ-fld : Field ℝ
-
-module ℝ = Field ℝ-fld
-  renaming (ℕ[_] to ℕ▹ℝ)
-  hiding (pred; suc)
-
-open ℝ
-
-postulate
-  {- ≥ on ℝ, reflexive and transitive -}
-  _≥'_ : ℝ → ℝ → Type
-  _∎ : ∀ x → x ≥' x
-  _≥⟨_⟩_ : ∀ x {y} → x ≥' y → ∀ {z} → y ≥' z → x ≥' z
-
-_≡⟨_⟩_ : ∀ x {y} → x ≡ y → ∀ {z} → y ≥' z → x ≥' z
-_ ≡⟨ refl ⟩ p = p
-
-_≡⟨by-definition⟩_ : ∀ x {z} → x ≥' z → x ≥' z
-_ ≡⟨by-definition⟩ p = p
-
-import Explore.Fin
-module Finᵉ = Explore.Fin.Regular
-
-abstract
-  sumFin : (n : ℕ)(f : Fin n → ℝ) → ℝ
-  sumFin n = Finᵉ.explore n 0# _+_
-
 {-
   sumVecH : (n : ℕ)(f : Vec H n → ℝ) → ℝ
 -}
-
-postulate
-  sumΩ : (f : Ω → ℝ) → ℝ
 {-
 abstract
   sumΩ f = sumVecH q λ hs → sumVecH q λ hs' → sumFin #ρ λ ρ → f record { hs = hs; hs' = hs'; ρ = ρ }
@@ -222,67 +218,7 @@ abstract
   sumΩ-spec f = refl
 -}
 
-𝟚▹ℝ : 𝟚 → ℝ
-𝟚▹ℝ 0₂ = 0#
-𝟚▹ℝ 1₂ = 1#
-
-countΩ : Event → ℝ
-countΩ A = sumΩ λ r → 𝟚▹ℝ (A r)
-
-countΩ= : ∀ {A B} → (∀ r → A r ≡ B r) → countΩ A ≡ countΩ B
-countΩ= f = ap sumΩ (λ= (ap 𝟚▹ℝ ∘ f))
-
-1° : Event
-1° _ = 1₂
-
-RndVar = Ω → ℝ
-
-_²' : RndVar → RndVar
-(X ²') r = (X r)²
-
--- Non-empty-event
-record NEE (A : Event) : Type where
-  constructor _,_
-  field
-    r  : Ω
-    Ar : A r ≡ 1₂
-
-dummy-H : H
-dummy-H = zero'
-dummy-ρ : RndAdv
-dummy-ρ = zero'
-dummy-r : Ω
-dummy-r = record { hs = replicate dummy-H ; hs' = replicate dummy-H ; ρ = dummy-ρ }
-
-instance
-  nee1 : NEE 1°
-  nee1 = dummy-r , refl
-
-{-
-  nee-count : ∀{A}{{_ : NEE A}} → countΩ A ≥' 1#
-  nee-count = {!!}
--}
-lem-pred : ∀ {n}(x : Fin (1+ n))(y : Fin n){{n>0 : n > 0}} → x ≡ suc y → pred x ≡ y
-lem-pred .(suc y) y refl = refl
-
-{-
-_⊃_ : (A B : Event) → Event
-A ⊃ B = (~ A) ∪ B
-
-∀° : Event → Type
-∀° A = ∀ r → A r ≡ 1₂
--}
-
-_⊃_ : (A B : Event) → Type
-A ⊃ B = ∀ r → A r ≡ 1₂ → B r ≡ 1₂
-
-NEE-⊃ : (A B : Event) → A ⊃ B → NEE A → NEE B
-NEE-⊃ A B i (r , p) = r , i r p
-
-infix 7 _/#Ω _/#h _/q
-
-_/#Ω : ℝ → ℝ
-x /#Ω = x / ℕ▹ℝ #Ω
+infix 7 _/#h _/q
 
 _/#h : ℝ → ℝ
 x /#h = x / ℕ▹ℝ #h
@@ -290,41 +226,14 @@ x /#h = x / ℕ▹ℝ #h
 _/q : ℝ → ℝ
 x /q = x / ℕ▹ℝ q
 
-postulate
-  Pr[_∥_] : (A B : Event){{_ : NEE B}} → ℝ
---Pr[ A ∥ B ] = {!!} -- countΩ (λ r → A r ∧ B r) / countΩ B -- OR: countΩ A / (#Ω - countΩ B)
-
-Pr[_] : Event → ℝ
-Pr[ A ] = countΩ A /#Ω
-
-postulate
-  Pr[_∥1]-spec : ∀ A → Pr[ A ∥ 1° ] ≡ Pr[ A ]
-
-Pr= : ∀ {A B : Event} → (∀ r → A r ≡ B r) → Pr[ A ] ≡ Pr[ B ]
-Pr= f = ap _/#Ω (countΩ= f)
-
-postulate
-  Pr[A∩B∩~C] : ∀ A B C → Pr[ A ∩ B ∩ ~ C ] ≥' Pr[ A ∩ B ] − Pr[ A ∩ C ]
---Pr[A∩B∩~C] A B C = {!!}
+1/#h = (ℕ▹ℝ #h)⁻¹
 
 {-
-postulate
-  integral : (ℝ⁺ → ℝ) → ℝ
+  nee-count : ∀{A}{{_ : NEE A}} → countΩ A ≥' 1#
+  nee-count = {!!}
 -}
-
-postulate
-  E[_] : RndVar → ℝ
---E[ X ] = integral (λ x → Pr[ X ≥° x ])
-
-postulate
-  lemma2 : ∀ X → E[ X ²' ] ≥' E[ X ] ²
-
-postulate
-  conditional : ∀ A B {{_ : NEE B}} → Pr[ A ∩ B ] ≡ Pr[ A ∥ B ] * Pr[ B ]
-
-  sumPr : ∀ {n}(I : Ω → Fin n)(A : Event)
-          → (sumFin n λ i → Pr[ (λ r → I r == i) ∩ A ]) ≡ Pr[ A ]
-
+lem-pred : ∀ {n}(x : Fin (1+ n))(y : Fin n){{n>0 : n > 0}} → x ≡ suc y → pred x ≡ y
+lem-pred .(suc y) y refl = refl
 {-
 lem-NEE-pred' : ∀ {n}(X : Ω → Fin (1+ n))(y : Fin n){{n>0 : n > 0}} → NEE (λ r → X r == suc y) → NEE (λ r → pred (X r) == y)
 lem-NEE-pred' = {!!}
@@ -342,32 +251,107 @@ instance
 lemma1-5 : Pr[ I≥1 ∩ h=h' ] ≡ Pr[ I≥1 ] /#h
 lemma1-5 = {!!}
 
--- Lemma 1, equation (3)
-lemma1-3 : Pr[ Frk ] ≥' Pr[ acc ] * ((Pr[ acc ] /q) − (1# /#h))
-lemma1-3 = Pr[ Frk ]
-       ≡⟨ Pr= frk-cond ⟩
-         Pr[ I≥1 ∩ I=I' ∩ h≢h' ]
-       ≥⟨ Pr[A∩B∩~C] I≥1 I=I' h=h' ⟩
-         Pr[ I≥1 ∩ I=I' ] − Pr[ I≥1 ∩ h=h' ]
-       ≡⟨ ap (λ x → Pr[ I≥1 ∩ I=I' ] − x) lemma1-5 ⟩
-         Pr[ I≥1 ∩ I=I' ] − (Pr[ I≥1 ] /#h)
-       ≡⟨by-definition⟩
-         Pr[ I≥1 ∩ I=I' ] − (Pr[ acc ] /#h)
-       ≡⟨ {!!} ⟩
-         Pr[ acc ] * ((Pr[ acc ] /q) − (1# /#h))
-       ∎
+{-
+I : Ω → Fin q
+B ⊆ A
+∃ r : Ω, I r == i, X-event i
+I == i
+sumFin q (λ i → E[ Pr[ X-event i ] ]) ≡ Pr[ I ≥1 ]
+-}
+
+postulate
+  _==Ω_ : (r₀ r₁ : Ω) → 𝟚
+
+{-
+infixr 7 _≗Ω_
+_≗Ω_ : ∀ {A : Type}(f g : A → Ω) → A → 𝟚
+(f ≗Ω g) a = f a ==Ω g a
+-}
+
+postulate
+  E-spec' : ∀ X → E[ X ] ≡ sumΩ λ r → X r * Pr[ _==Ω_ r ]
+  E-spec2 : ∀ X → E[ X ] ≡ sumΩ λ r → X r * (countΩ (λ r' → r ==Ω r') /#Ω)
+  E-spec3 : ∀ X → E[ X ] ≡ sumΩ λ r → X r * (sumΩ (λ r' → 𝟚▹ℝ (r ==Ω r')) /#Ω)
+  E-spec4 : ∀ X → E[ X ] ≡ (sumΩ λ r → X r * (sumΩ (λ r' → 𝟚▹ℝ (r ==Ω r')))) /#Ω
+
+{-
+sumΩ (λ r' → 𝟚▹ℝ (r ==Ω r'))
+≡
+1
+-}
+
+  E-spec5 : ∀ X → E[ X ] ≡ sumΩ (λ r → X r /#Ω)
+  E-spec6 : ∀ X → E[ X ] ≡ sumΩ (λ r → X r) /#Ω
+
+  sumΩ-lin : ∀ k f → sumΩ (λ r → f r * k) ≡ sumΩ f * k
+  sumΩ≥ : ∀{f g : Ω → ℝ}→ (∀ r → f r ≥' g r) → sumΩ f ≥' sumΩ g
+
+lemma1-6 : sumFin q (λ i → E[ X i ]) ≡ Pr[ acc ]
+lemma1-6 = {!!}
+
+postulate
+  sumFin≥ : ∀ {n}{f g : Fin n → ℝ}→ (∀ r → f r ≥' g r) → sumFin n f ≥' sumFin n g
+
+lemma1-7 : ∀ i → Pr[ I-1= i ] ≡ sumΩ (X i)
+lemma1-7 = {!!}
+
+lemma1-8 : ∀ i → Pr[ I'=1+ i ∥ I-1= i ] ≡ 1/#Ω
+lemma1-8 i = {!!}
+
+record _∈[0,1] (x : ℝ) : Type where
+  field
+    ≥0 : x ≥' 0#
+    ≤1 : 1# ≥' x
+
+postulate
+  Pr∈[0,1] : ∀ A → Pr[ A ] ∈[0,1]
+  ²-mono : ∀ {x} → x ∈[0,1] → x ≥' x ²
+  *-mono : ∀ {x x' y y'} → x ≥' x' → y ≥' y' → (x * y) ≥' (x' * y')
 
 lemma1-4 : Pr[ I≥1 ∩ I=I' ] ≥' Pr[ acc ] ² /q
 lemma1-4
   = Pr[ I≥1 ∩ I=I' ]
   ≡⟨ ! sumPr I-1 (I≥1 ∩ I=I') ⟩
     sumFin q (λ i → Pr[ I-1= i ∩ I≥1 ∩ I=I' ])
-  ≡⟨ ap (sumFin q) (λ= (λ i → Pr= (λ r → baar (I r) (I' r) i))) ⟩
+  ≡⟨ sumFin= (λ i → Pr= (λ r → baar (I r) (I' r) i)) ⟩
     sumFin q (λ i → Pr[ I'=1+ i ∩ I-1= i ])
-  ≡⟨ ap (sumFin q) (λ= (λ i → conditional (I'=1+ i) (I-1= i))) ⟩
+  ≡⟨ sumFin= (λ i → conditional (I'=1+ i) (I-1= i)) ⟩
     sumFin q (λ i → Pr[ I'=1+ i ∥ I-1= i ] * Pr[ I-1= i ])
-  ≡⟨ {!!} ⟩
+  ≡⟨ sumFin= (λ i → *= (lemma1-8 i) (lemma1-7 i)) ⟩
+    sumFin q (λ i → 1/#Ω * sumΩ (X i))
+  ≡⟨ sumFin= (λ i → *-comm) ⟩
+    sumFin q (λ i → sumΩ (X i) /#Ω)
+  ≡⟨ sumFin= (λ i → ! sumΩ-lin (ℕ▹ℝ #Ω ⁻¹) (X i)) ⟩
+    sumFin q (λ i → sumΩ λ r → X i r /#Ω)
+  ≥⟨ sumFin≥ (λ i → sumΩ≥ (λ r → *-mono (²-mono (Pr∈[0,1] (X-event i (Ω.hs r) (Ω.ρ r)))) (1/#Ω ∎))) ⟩
+    sumFin q (λ i → sumΩ λ r → (X i r)² /#Ω)
+  ≡⟨ sumFin= (λ i → ! E-spec5 (X i ²')) ⟩
+    sumFin q (λ i → E[ X i ²' ])
+  ≥⟨ sumFin≥ (λ i → lemma2 (X i)) ⟩
+    sumFin q (λ i → (E[ X i ] ²))
+  ≥⟨ lemma3 (λ i → E[ X i ]) ⟩
+    (sumFin q λ i → E[ X i ])² /q
+  ≡⟨ ap (λ z → z ² /q) lemma1-6 ⟩
     Pr[ acc ] ² /q
+  ∎
+
+-- Lemma 1, equation (3)
+lemma1-3 : Pr[ Frk ] ≥' Pr[ acc ] * ((Pr[ acc ] /q) − (1/#h))
+lemma1-3 = Pr[ Frk ]
+  ≡⟨ Pr= frk-cond ⟩
+    Pr[ I≥1 ∩ I=I' ∩ h≢h' ]
+  ≥⟨ Pr[A∩B∩~C] I≥1 I=I' h=h' ⟩
+    Pr[ I≥1 ∩ I=I' ] − Pr[ I≥1 ∩ h=h' ]
+  ≡⟨ −= refl lemma1-5 ⟩
+    Pr[ I≥1 ∩ I=I' ] − (Pr[ I≥1 ] /#h)
+  ≡⟨by-definition⟩
+    Pr[ I≥1 ∩ I=I' ] − (Pr[ acc ] /#h)
+  ≥⟨ −-mono lemma1-4 ⟩
+    Pr[ acc ] ² /q − (Pr[ acc ] /#h)
+  ≡⟨ −= *-assoc refl ⟩
+  Pr[ acc ] * Pr[ acc ] /q − Pr[ acc ] * 1/#h
+  ≡⟨ ! *-−-distr ⟩
+    Pr[ acc ] * ((Pr[ acc ] /q) − 1/#h)
   ∎
 
 -- -}
