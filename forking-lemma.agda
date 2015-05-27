@@ -118,8 +118,6 @@ open import probas Ω dummy-r
 
 -- #Ω = ((#h ^ q) ^2) *ℕ #ρ
 
-1/#Ω = (ℕ▹ℝ #Ω)⁻¹
-
 -- Ω ≃ Fin #Ω
 
 -- #Ω ≡ countΩ λ _ → 1₁
@@ -209,8 +207,6 @@ frk-cond r with cond r
 ... | 1₂ = refl
 {-
   sumVecH : (n : ℕ)(f : Vec H n → ℝ) → ℝ
--}
-{-
 abstract
   sumΩ f = sumVecH q λ hs → sumVecH q λ hs' → sumFin #ρ λ ρ → f record { hs = hs; hs' = hs'; ρ = ρ }
 
@@ -225,8 +221,6 @@ x /#h = x / ℕ▹ℝ #h
 
 _/q : ℝ → ℝ
 x /q = x / ℕ▹ℝ q
-
-1/#h = (ℕ▹ℝ #h)⁻¹
 
 {-
   nee-count : ∀{A}{{_ : NEE A}} → countΩ A ≥' 1#
@@ -248,8 +242,23 @@ instance
     nee-I=1+ : {i : Fin q} → NEE (I-1= i)
   --nee-I=1+ {i} = lem-NEE-pred I i
 
+indep-I≥1-h=h' : Indep I≥1 h=h'
+indep-I≥1-h=h' = {!!}
+
+h-surj : Surjective h
+h-surj = {!!} , {!!}
+
+lemma1-9 : Pr[ h=h' ] ≡ 1/ #h
+lemma1-9 = Pr-indep h h' {!!} {!!} {!!}
+
 lemma1-5 : Pr[ I≥1 ∩ h=h' ] ≡ Pr[ I≥1 ] /#h
-lemma1-5 = {!!}
+lemma1-5 = Pr[ I≥1 ∩ h=h' ]
+         ≡⟨ Pr-∩-*-indep I≥1 h=h' indep-I≥1-h=h' ⟩
+           Pr[ I≥1 ] * Pr[ h=h' ]
+         ≡⟨ *= refl lemma1-9 ⟩
+           Pr[ I≥1 ] /#h
+         ∎
+  where open ≡-Reasoning
 
 {-
 I : Ω → Fin q
@@ -259,54 +268,14 @@ I == i
 sumFin q (λ i → E[ Pr[ X-event i ] ]) ≡ Pr[ I ≥1 ]
 -}
 
-postulate
-  _==Ω_ : (r₀ r₁ : Ω) → 𝟚
-
-{-
-infixr 7 _≗Ω_
-_≗Ω_ : ∀ {A : Type}(f g : A → Ω) → A → 𝟚
-(f ≗Ω g) a = f a ==Ω g a
--}
-
-postulate
-  E-spec' : ∀ X → E[ X ] ≡ sumΩ λ r → X r * Pr[ _==Ω_ r ]
-  E-spec2 : ∀ X → E[ X ] ≡ sumΩ λ r → X r * (countΩ (λ r' → r ==Ω r') /#Ω)
-  E-spec3 : ∀ X → E[ X ] ≡ sumΩ λ r → X r * (sumΩ (λ r' → 𝟚▹ℝ (r ==Ω r')) /#Ω)
-  E-spec4 : ∀ X → E[ X ] ≡ (sumΩ λ r → X r * (sumΩ (λ r' → 𝟚▹ℝ (r ==Ω r')))) /#Ω
-
-{-
-sumΩ (λ r' → 𝟚▹ℝ (r ==Ω r'))
-≡
-1
--}
-
-  E-spec5 : ∀ X → E[ X ] ≡ sumΩ (λ r → X r /#Ω)
-  E-spec6 : ∀ X → E[ X ] ≡ sumΩ (λ r → X r) /#Ω
-
-  sumΩ-lin : ∀ k f → sumΩ (λ r → f r * k) ≡ sumΩ f * k
-  sumΩ≥ : ∀{f g : Ω → ℝ}→ (∀ r → f r ≥' g r) → sumΩ f ≥' sumΩ g
-
 lemma1-6 : sumFin q (λ i → E[ X i ]) ≡ Pr[ acc ]
 lemma1-6 = {!!}
-
-postulate
-  sumFin≥ : ∀ {n}{f g : Fin n → ℝ}→ (∀ r → f r ≥' g r) → sumFin n f ≥' sumFin n g
 
 lemma1-7 : ∀ i → Pr[ I-1= i ] ≡ sumΩ (X i)
 lemma1-7 = {!!}
 
-lemma1-8 : ∀ i → Pr[ I'=1+ i ∥ I-1= i ] ≡ 1/#Ω
+lemma1-8 : ∀ i → Pr[ I'=1+ i ∥ I-1= i ] ≡ 1/ #Ω
 lemma1-8 i = {!!}
-
-record _∈[0,1] (x : ℝ) : Type where
-  field
-    ≥0 : x ≥' 0#
-    ≤1 : 1# ≥' x
-
-postulate
-  Pr∈[0,1] : ∀ A → Pr[ A ] ∈[0,1]
-  ²-mono : ∀ {x} → x ∈[0,1] → x ≥' x ²
-  *-mono : ∀ {x x' y y'} → x ≥' x' → y ≥' y' → (x * y) ≥' (x' * y')
 
 lemma1-4 : Pr[ I≥1 ∩ I=I' ] ≥' Pr[ acc ] ² /q
 lemma1-4
@@ -318,12 +287,12 @@ lemma1-4
   ≡⟨ sumFin= (λ i → conditional (I'=1+ i) (I-1= i)) ⟩
     sumFin q (λ i → Pr[ I'=1+ i ∥ I-1= i ] * Pr[ I-1= i ])
   ≡⟨ sumFin= (λ i → *= (lemma1-8 i) (lemma1-7 i)) ⟩
-    sumFin q (λ i → 1/#Ω * sumΩ (X i))
+    sumFin q (λ i → 1/ #Ω * sumΩ (X i))
   ≡⟨ sumFin= (λ i → *-comm) ⟩
     sumFin q (λ i → sumΩ (X i) /#Ω)
-  ≡⟨ sumFin= (λ i → ! sumΩ-lin (ℕ▹ℝ #Ω ⁻¹) (X i)) ⟩
+  ≡⟨ sumFin= (λ i → ! sumΩ-lin (1/ #Ω) (X i)) ⟩
     sumFin q (λ i → sumΩ λ r → X i r /#Ω)
-  ≥⟨ sumFin≥ (λ i → sumΩ≥ (λ r → *-mono (²-mono (Pr∈[0,1] (X-event i (Ω.hs r) (Ω.ρ r)))) (1/#Ω ∎))) ⟩
+  ≥⟨ sumFin≥ (λ i → sumΩ≥ (λ r → *-mono (²-mono (Pr∈[0,1] (X-event i (Ω.hs r) (Ω.ρ r)))) (1/ #Ω ∎))) ⟩
     sumFin q (λ i → sumΩ λ r → (X i r)² /#Ω)
   ≡⟨ sumFin= (λ i → ! E-spec5 (X i ²')) ⟩
     sumFin q (λ i → E[ X i ²' ])
@@ -334,9 +303,10 @@ lemma1-4
   ≡⟨ ap (λ z → z ² /q) lemma1-6 ⟩
     Pr[ acc ] ² /q
   ∎
+  where open ≥'-Reasoning
 
 -- Lemma 1, equation (3)
-lemma1-3 : Pr[ Frk ] ≥' Pr[ acc ] * ((Pr[ acc ] /q) − (1/#h))
+lemma1-3 : Pr[ Frk ] ≥' Pr[ acc ] * ((Pr[ acc ] /q) − (1/ #h))
 lemma1-3 = Pr[ Frk ]
   ≡⟨ Pr= frk-cond ⟩
     Pr[ I≥1 ∩ I=I' ∩ h≢h' ]
@@ -349,10 +319,11 @@ lemma1-3 = Pr[ Frk ]
   ≥⟨ −-mono lemma1-4 ⟩
     Pr[ acc ] ² /q − (Pr[ acc ] /#h)
   ≡⟨ −= *-assoc refl ⟩
-  Pr[ acc ] * Pr[ acc ] /q − Pr[ acc ] * 1/#h
+  Pr[ acc ] * Pr[ acc ] /q − Pr[ acc ] * 1/ #h
   ≡⟨ ! *-−-distr ⟩
-    Pr[ acc ] * ((Pr[ acc ] /q) − 1/#h)
+    Pr[ acc ] * ((Pr[ acc ] /q) − 1/ #h)
   ∎
+  where open ≥'-Reasoning
 
 -- -}
 -- -}

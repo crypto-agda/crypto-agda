@@ -1,18 +1,20 @@
 {-# OPTIONS --without-K #-}
-open import Type using (Type)
+open import Type using (Type; Type₁)
 open import Function.NP renaming (const to `_)
 open import Function.Extensionality
 open import Data.Nat.NP hiding (_+_; _==_; pred) renaming (_*_ to _*ℕ_)
 open import Data.Vec.NP hiding (sum)
 open import Data.Maybe.NP
 open import Data.One using (𝟙)
-open import Data.Two hiding (_==_; _²)
+open import Data.Two hiding (_²) renaming (_==_ to _==𝟚_)
 open import Data.Fin.NP as Fin hiding (_+_; _-_; _≤_; pred)
 open import Data.Product.NP
 open import Relation.Nullary
 open import Relation.Binary
 open import Relation.Binary.PropositionalEquality.NP hiding (J; _≗_)
 open import Algebra.Field
+open import HoTT
+open Equivalences
 
 module probas {{_ : FunExt}} (Ω : Type)(dummy-r : Ω) where
 
@@ -22,8 +24,6 @@ open Indexed
 Event = Ω → 𝟚
 
 infix 0 _≥'_
-infixr 2 _≥⟨_⟩_ _≡⟨_⟩_ _≡⟨by-definition⟩_
-infix 2 _∎
 
 postulate
   -- [0,1] : Type
@@ -36,19 +36,27 @@ module ℝ = Field ℝ-fld
 
 open ℝ public
 
+1/_ : ℕ → ℝ
+1/ x = (ℕ▹ℝ x)⁻¹
+
 postulate
   {- ≥ on ℝ, reflexive and transitive -}
   _≥'_ : ℝ → ℝ → Type
-  _∎ : ∀ x → x ≥' x
-  _≥⟨_⟩_ : ∀ x {y} → x ≥' y → ∀ {z} → y ≥' z → x ≥' z
 
   −-mono : ∀ {x y z} → x ≥' y → x − z ≥' y − z
 
-_≡⟨_⟩_ : ∀ x {y} → x ≡ y → ∀ {z} → y ≥' z → x ≥' z
-_ ≡⟨ refl ⟩ p = p
+module ≥'-Reasoning where
+  infixr 2 _≥⟨_⟩_ _≡⟨_⟩_ _≡⟨by-definition⟩_
+  infix 2 _∎
+  postulate
+    _∎ : ∀ x → x ≥' x
+    _≥⟨_⟩_ : ∀ x {y} → x ≥' y → ∀ {z} → y ≥' z → x ≥' z
 
-_≡⟨by-definition⟩_ : ∀ x {z} → x ≥' z → x ≥' z
-_ ≡⟨by-definition⟩ p = p
+  _≡⟨_⟩_ : ∀ x {y} → x ≡ y → ∀ {z} → y ≥' z → x ≥' z
+  _ ≡⟨ refl ⟩ p = p
+
+  _≡⟨by-definition⟩_ : ∀ x {z} → x ≥' z → x ≥' z
+  _ ≡⟨by-definition⟩ p = p
 
 infixr 7 _≗_
 
@@ -136,9 +144,52 @@ postulate
 Pr= : ∀ {A B : Event} → (∀ r → A r ≡ B r) → Pr[ A ] ≡ Pr[ B ]
 Pr= f = ap _/#Ω (countΩ= f)
 
+record IndepFun {O : Type} (A B : Ω → O) : Type₁ where
+  field
+    Ω0 Ω1 : Type
+    α0 : Ω → Ω0
+    α1 : Ω → Ω1
+    α≃ : Is-equiv < α0 , α1 >
+    A0 : Ω0 → O
+    B1 : Ω1 → O
+    A≃ : A ≡ A0 ∘ α0
+    B≃ : B ≡ B1 ∘ α1
+
+-- irrefl : ∀ f → ¬(IndepFun f f)
+
+Surjective : {A B : Type}(f : A → B) → Type
+Surjective {A} {B} f = ∃ λ (g : B → A) → (f ∘ g) ∼ id
+
+postulate
+  countΩ-== : ∀ (A B : Event) → countΩ (λ r → A r ==𝟚 B r) ≡ 1#
+
+  Pr-surj : ∀{n}(f : Ω → Fin n) k → Surjective f → Pr[ (λ r → f r == k) ] ≡ 1/ n
+
+  Pr-indep : ∀{n}(f g : Ω → Fin n) → Surjective f → Surjective g → IndepFun f g → Pr[ (λ r → f r == g r) ] ≡ 1/ n
+
+{-
+  Pr[ (λ r → f r == g r) ]
+  ≡
+  sumΩ (λ r → f r == g r) / #Ω
+  ≡
+  sumΩ (λ r → A0 (α0 r) == B1 (α1 r)) / #Ω
+  ≡
+  sum(Ω0×Ω1) (λ (r0 , r1) → A0 r0 == B1 r1) / #Ω
+  ≡
+  sumΩ0 (λ r0 → sumΩ1 λ r1 → A0 r0 == B1 r1) / #Ω
+  ...
+  ≡
+  1/n
+-}
+
 postulate
   Pr[A∩B∩~C] : ∀ A B C → Pr[ A ∩ B ∩ ~ C ] ≥' Pr[ A ∩ B ] − Pr[ A ∩ C ]
 --Pr[A∩B∩~C] A B C = {!!}
+
+  Indep : (A B : Event) → Type₁
+
+  Pr-∩-*-indep : ∀ A B → Indep A B → Pr[ A ∩ B ] ≡ Pr[ A ] * Pr[ B ]
+
 
 {-
 postulate
@@ -187,3 +238,7 @@ sumΩ (λ r' → 𝟚▹ℝ (r ==Ω r'))
   Pr∈[0,1] : ∀ A → Pr[ A ] ∈[0,1]
   ²-mono : ∀ {x} → x ∈[0,1] → x ≥' x ²
   *-mono : ∀ {x x' y y'} → x ≥' x' → y ≥' y' → (x * y) ≥' (x' * y')
+-- -}
+-- -}
+-- -}
+-- -}
