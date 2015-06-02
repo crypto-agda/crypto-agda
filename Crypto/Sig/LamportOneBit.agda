@@ -6,6 +6,7 @@ open import Data.Bits
 open import Data.Bits.Properties
 open import Data.Vec.NP
 open import Relation.Binary.PropositionalEquality.NP
+open ≡-Reasoning
 
 module Crypto.Sig.LamportOneBit
           (#secret : ℕ)
@@ -114,18 +115,42 @@ module Assuming-invertibility
          where
 
   -- EXERCISES
-  {-
   recover-signkey : VerifKey → SignKey
-  recover-signkey = {!!}
+  recover-signkey = map2* #digest #secret unhash
+
+  -- map2* preserves invertibility of f(g x)
+  map2*-inverse : ∀ m n (f : Vec Bit n → Vec Bit m) (g : Vec Bit m → Vec Bit n)
+    → (∀ x → f (g x) ≡ x)
+    → (∀ xs → map2* n m f (map2* m n g xs) ≡ xs)
+  map2*-inverse m n f g fg xs =
+      map2* n m f (map2* m n g xs)
+      ≡⟨ refl ⟩
+      map2* n m f (g (take m xs) ++ g (drop m xs))
+      ≡⟨ refl ⟩
+      f (take n (g (take m xs) ++ g (drop m xs))) ++ f (drop n ((g (take m xs) ++ g (drop m xs))))
+      ≡⟨ cong (λ lhs → f lhs ++ f (drop n ((g (take m xs) ++ g (drop m xs))))) (take-++ n (g (take m xs)) (g (drop m xs))) ⟩
+      f (g (take m xs)) ++ f (drop n ((g (take m xs) ++ g (drop m xs))))
+      ≡⟨ cong (λ rhs → f (g (take m xs)) ++ f rhs) (drop-++ n (g (take m xs)) (g (drop m xs))) ⟩
+      f (g (take m xs)) ++ f (g (drop m xs))
+      ≡⟨ cong (λ lhs → lhs ++ f (g (drop m xs))) (fg (take m xs)) ⟩
+      take m xs ++ f (g (drop m xs))
+      ≡⟨ cong (λ rhs → take m xs ++ rhs) (fg (drop m xs)) ⟩
+      take m xs ++ drop m xs
+      ≡⟨ take-drop-lem m xs ⟩
+      xs
+      ∎
 
   recover-signkey-correct : ∀ sk → recover-signkey (verif-key sk) ≡ sk
-  recover-signkey-correct = {!!}
+  recover-signkey-correct = map2*-inverse #secret #digest unhash hash unhash-hash
+
+  recover-signkey-correct' : ∀ vk → verif-key (recover-signkey vk) ≡ vk
+  recover-signkey-correct' = map2*-inverse #digest #secret hash unhash hash-unhash
 
   forgesig : VerifKey → Bit → Signature
-  forgesig = {!!}
+  forgesig vk = sign (recover-signkey vk)
+
+  verify-correct-sig' : ∀ vk sk b → vk ≡ verif-key sk → verify vk b (sign sk b) ≡ 1b
+  verify-correct-sig' ._ sk b refl = verify-correct-sig sk b
 
   forgesig-correct : ∀ vk b → verify vk b (forgesig vk b) ≡ 1b
-  forgesig-correct = {!!}
-  -}
-
--- -}
+  forgesig-correct vk b = verify-correct-sig' vk (recover-signkey vk) b (sym (recover-signkey-correct' vk))
