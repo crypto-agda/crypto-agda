@@ -8,6 +8,7 @@ open import Algebra.Raw
 open import Algebra.Field
 -}
 
+-- this module is not used anymore
 module FiniteField.JS (q : BigI) where
 
 abstract

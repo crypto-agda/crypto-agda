@@ -15,7 +15,7 @@ import FFI.JS.Console as Console
 import FFI.JS.Process as Process
 import FFI.JS.FS as FS
 
-import FiniteField.JS as 𝔽
+import FFI.JS.BigI.FiniteField as 𝔽 
 
 import FFI.JS.BigI as BigI
 open BigI using (BigI; bigI)
@@ -130,7 +130,7 @@ zk-check-chaum-pedersen-pok-elgamal-rnd pf
         trace "β=" β λ _ →
         trace "m=" m λ _ →
         trace "M=" M λ _ →
-        trace "A=" A λ _ →
+         trace "A=" A λ _ →
         trace "B=" B λ _ →
         trace "c=" c λ _ →
         trace "s=" s λ _ →
