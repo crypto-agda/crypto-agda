@@ -80,10 +80,11 @@ zk-check-chaum-pedersen-pok-elgamal-rnd! pf
 
 zk-check! : JSValue → JS!
 zk-check! arg =
-    check! "type of statement" (typ === fromString "chaum-pedersen-pok-elgamal-rnd")
-                               (λ _ → "")
+    check! "type of statement" (typ === fromString cpt)
+                               (λ _ → "Expected type of statement: " ++ cpt ++ " not " ++ toString typ)
  >> zk-check-chaum-pedersen-pok-elgamal-rnd! pok
  module Zk-check where
+    cpt = "chaum-pedersen-pok-elgamal-rnd"
     stm = arg ·« "statement" »
     typ = stm ·« "type" »
     dat = stm ·« "data" »
