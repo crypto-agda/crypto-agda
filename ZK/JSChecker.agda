@@ -33,13 +33,12 @@ min-bits-p = 2048N
 bigdec : JSValue → BigI
 bigdec v = bigI (castString v) "10"
 
--- TODO bug (undefined)!
-record ZK-chaum-pedersen-pok-elgamal-rnd {--(ℤq ℤp★ : Set)--} : Set where
+record ZK-chaum-pedersen-pok-elgamal-rnd (ℤq ℤp★ : Set) : Set where
   field
-    m c s : BigI {--ℤq--}
-    g p q y α β A B : BigI --ℤp★
+    m c s : ℤq
+    g p q y α β A B : ℤp★
 
-zk-check-chaum-pedersen-pok-elgamal-rnd! : ZK-chaum-pedersen-pok-elgamal-rnd {-BigI BigI-} → JS!
+zk-check-chaum-pedersen-pok-elgamal-rnd! : ZK-chaum-pedersen-pok-elgamal-rnd BigI BigI → JS!
 zk-check-chaum-pedersen-pok-elgamal-rnd! pf
       = trace "g=" g λ _ →
         trace "p=" I.p λ _ →
