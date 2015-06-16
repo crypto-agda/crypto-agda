@@ -30,7 +30,6 @@ min-bits-q = 256N
 min-bits-p : Number
 min-bits-p = 2048N
 
--- TODO check with undefined
 bigdec : JSValue → BigI
 bigdec v = bigI (castString v) "10"
 
