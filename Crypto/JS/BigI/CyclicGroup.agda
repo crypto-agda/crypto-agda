@@ -1,5 +1,6 @@
 {-# OPTIONS --without-K #-}
 open import FFI.JS using (Bool; trace-call; _++_)
+open import FFI.JS.Check
   renaming (check      to check?)
 --renaming (warn-check to check?)
 
@@ -22,11 +23,11 @@ abstract
     mod-p : BigI → 𝔾
     mod-p x = mod x p
 
-  -- There are two ways to go from BigI to ℤp: check and mod-p
+  -- There are two ways to go from BigI to 𝔾: check and mod-p
   -- Use check for untrusted input data and mod-p for internal
   -- computation.
-  fromBigI : BigI → 𝔾
-  fromBigI = -- trace-call "BigI▹ℤp* "
+  BigI▹𝔾 : BigI → 𝔾
+  BigI▹𝔾 = -- trace-call "BigI▹𝔾 "
     λ x →
       (check? (x <I p)
          (λ _ → "Not below the modulus: p:" ++ toString p ++ " is less than x:" ++ toString x)

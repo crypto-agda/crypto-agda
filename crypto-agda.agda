@@ -14,9 +14,13 @@ import Control.Protocol.CoreOld
 import Control.Protocol.Reduction
 import Control.Strategy
 import Control.Strategy.Utils
+import Crypto.JS.BigI.Checks
+import Crypto.JS.BigI.CyclicGroup
+import Crypto.JS.BigI.FiniteField
+import Crypto.JS.BigI.ZqZp
+import Crypto.JS.BigI.ZqZp.Params
 import Crypto.Schemes
 import FiniteField.FinImplem
-import FiniteField.JS
 import FunUniverse.Agda
 import FunUniverse.BinTree
 import FunUniverse.Bits

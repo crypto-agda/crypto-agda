@@ -1,5 +1,6 @@
 {-# OPTIONS --without-K #-}
 open import FFI.JS using (Bool; trace-call; _++_)
+open import FFI.JS.Check
   renaming (check      to check?)
 --renaming (warn-check to check?)
 
@@ -22,11 +23,11 @@ abstract
     mod-q : BigI → 𝔽
     mod-q x = mod x q
 
-  -- There are two ways to go from BigI to 𝔽: fromBigI and mod-q
-  -- Use fromBigI for untrusted input data and mod-q for internal
+  -- There are two ways to go from BigI to 𝔽: BigI▹𝔽 and mod-q
+  -- Use BigI▹𝔽 for untrusted input data and mod-q for internal
   -- computation.
-  fromBigI : BigI → 𝔽
-  fromBigI = -- trace-call "fromBigI "
+  BigI▹𝔽 : BigI → 𝔽
+  BigI▹𝔽 = -- trace-call "BigI▹𝔽 "
     λ x →
       (check? (x <I q)
          (λ _ → "Not below the modulus: q:" ++ toString q ++ " is less than x:" ++ toString x)

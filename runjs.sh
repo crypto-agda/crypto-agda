@@ -15,6 +15,7 @@ INCL=("${INCL[@]}" -i"$LIBJS"/lib)
 NPLIB="$GITHUB"/crypto-agda/agda-nplib
 INCL=("${INCL[@]}" -i"$NPLIB"/lib)
 
+ORIG_DIR=`pwd`
 BUILD=_build
 mkdir -p "$BUILD"
 
@@ -38,5 +39,8 @@ main : JS!
 main = M.main
 EOF
 agda --js "${INCL[@]}" main.agda
+echo "Running: node run.js jAgda.main $*"
 #echo NODE_PATH="$HOME/node_modules:.:$LIBJS"
-node run.js jAgda.main "$@"
+BUILD_DIR=`pwd`
+cd "$ORIG_DIR"
+NODE_PATH=":$BUILD_DIR" node $BUILD_DIR/run.js jAgda.main "$@"
