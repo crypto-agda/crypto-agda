@@ -149,7 +149,7 @@ import cycle-id
 import cycle
 import cycle3
 import cyclic10
-import forking-lemma
+-- import forking-lemma
 -- import hash-param
 -- import misc.merkle-tree
 -- import misc.secret-sharing
