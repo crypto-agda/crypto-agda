@@ -1,48 +1,27 @@
---open import prelude renaming (Bool to 𝟚; true to 1₂; false to 0₂)
 open import Relation.Binary.PropositionalEquality.NP
 open import Data.Two.Base
 open import Data.List
 open import Function
 open import Algebra.FunctionProperties.Eq
 open Implicits
-open import Algebra.Raw
-open import Algebra.Field
-open import Algebra.Monoid
 open import Algebra.Monoid.Commutative
-open import Algebra.Group
+open import Algebra.Ring
 
 module ecc
-  (ℙ : Set)
-  (ℙ-monoid : Commutative-Monoid ℙ)
-  (Number : Set)
-  (+-comm-mon : Commutative-Monoid Number)
-  (*-mon : Monoid Number)
-  (open Additive-Commutative-Monoid +-comm-mon)
-  (open Multiplicative-Monoid *-mon)
-  (+-*-distr : ∀ {x y z} → (x + y) * z ≡ x * z + y * z)
-  (*-+-distr : ∀ {x y z} → x * (y + z) ≡ x * y + x * z)
-  (0*-zero : ∀ {x} → 0# * x ≡ 0#)
-  (*0-zero : ∀ {x} → x * 0# ≡ 0#)
-   --(modinv-*-distr : ∀ {x y} → modinv (x * y) ≡ modinv x * modinv y)
-   --(modinv-modinv : ∀ {x} → modinv (modinv x) ≡ x)
-   --(*-assoc : ∀ {x y z} → (x * y) * z ≡ x * (y * z))
-   --(*-comm : ∀ {x y} → x * y ≡ y * x)
-   --(modinv-cancel : ∀ {x y} → x * modinv x * y ≡ y)
-   --(2*1ₙ : 2* 1# ≡ 2ₙ)
-   --(2*-spec : ∀ {n} → 2* n ≡ 2ₙ * n)
+  {𝔽 : Set} (𝔽-ring : Ring 𝔽)
+  {ℙ : Set} (ℙ-monoid : Commutative-Monoid ℙ)
   where
 
-module ⊕ = Commutative-Monoid ℙ-monoid
-open ⊕
+open module 𝔽 = Ring 𝔽-ring
+
+open module ⊕ = Commutative-Monoid ℙ-monoid
   renaming
     ( _∙_ to _⊕_
     ; ∙= to ⊕=
     ; ε∙-identity to ε⊕-identity
     ; ∙ε-identity to ⊕ε-identity
+    ; _² to 2·_
     )
-
-2·_ : ℙ → ℙ
-2· P = P ⊕ P
 
 2·-⊕-distr : ∀ {P Q} → 2· (P ⊕ Q) ≡ 2· P ⊕ 2· Q
 2·-⊕-distr = ⊕.interchange
@@ -50,9 +29,9 @@ open ⊕
 2·-⊕ : ∀ {P Q R} → 2· P ⊕ (Q ⊕ R) ≡ (P ⊕ Q) ⊕ (P ⊕ R)
 2·-⊕ = ⊕.interchange
 
-{-
-ec-multiply-bin : List 𝟚 → ℙ → ℙ
-ec-multiply-bin scalar P = go scalar
+-- NOT used yet
+multiply-bin : List 𝟚 → ℙ → ℙ
+multiply-bin scalar P = go scalar
   where
     go : List 𝟚 → ℙ
     go []       = P
@@ -60,26 +39,20 @@ ec-multiply-bin scalar P = go scalar
       where x₀ = 2· go bs
             x₁ = P ⊕ x₀
 
-ec-multiply : Number → ℙ → ℙ
-ec-multiply scalar P =
+{-
+multiply : 𝔽 → ℙ → ℙ
+multiply scalar P =
   -- if scalar == 0 or scalar >= N: raise Exception("Invalid Scalar/Private Key")
-    ec-multiply-bin (bin scalar) P
+    multiply-bin (bin scalar) P
 
-_·_ = ec-multiply
+_·_ = multiply
 infixr 8 _·_
 -}
 
-
-open From-Op₂.From-Assoc-Comm _+_ +-assoc +-comm
-  renaming ( on-sides to +-on-sides)
-
-infixl 6 1+_
-infixl 7 2*_ 1+2*_
-1+_ = λ x → 1# + x
-2*_ = λ x → x + x
+infixl 7 1+2*_
 1+2*_ = λ x → 1+ 2* x
 
-data Parity-View : Number → Set where
+data Parity-View : 𝔽 → Set where
   zero⟨_⟩    : ∀ {n} → n ≡ 0# → Parity-View n
   even_by⟨_⟩ : ∀ {m n} → Parity-View m → n ≡ 2* m    → Parity-View n
   odd_by⟨_⟩  : ∀ {m n} → Parity-View m → n ≡ 1+ 2* m → Parity-View n
@@ -95,7 +68,7 @@ zero⟨ e ⟩      ·ₚ P = ε
 even p by⟨ e ⟩ ·ₚ P = 2· (p ·ₚ P)
 odd  p by⟨ e ⟩ ·ₚ P = P ⊕ (2· (p ·ₚ P))
 
-_+2*_ : 𝟚 → Number → Number
+_+2*_ : 𝟚 → 𝔽 → 𝔽
 0₂ +2* m =   2* m
 1₂ +2* m = 1+2* m
 
@@ -104,7 +77,7 @@ postulate
     bin-2* : ∀ {n} → bin (2* n) ≡ 0₂ ∷ bin n
     bin-1+2* : ∀ {n} → bin (1+2* n) ≡ 1₂ ∷ bin n
 
-bin-+2* : (b : 𝟚)(n : Number) → bin (b +2* n) ≡ b ∷ bin n
+bin-+2* : (b : 𝟚)(n : 𝔽) → bin (b +2* n) ≡ b ∷ bin n
 bin-+2* 1₂ n = bin-1+2*
 bin-+2* 0₂ n = bin-2*
 -}
@@ -115,7 +88,7 @@ binₚ zero⟨ e ⟩      = []
 binₚ even p by⟨ e ⟩ = 0₂ ∷ binₚ p
 binₚ odd  p by⟨ e ⟩ = 1₂ ∷ binₚ p
 
-half : ∀ {n} → Parity-View n → Number
+half : ∀ {n} → Parity-View n → 𝔽
 half zero⟨ _ ⟩            = 0#
 half (even_by⟨_⟩ {m} _ _) = m
 half (odd_by⟨_⟩  {m} _ _) = m
@@ -198,17 +171,17 @@ module _ {P} where
                      ∎
 
 *-1+-distr : ∀ {x y} → x * (1+ y) ≡ x + x * y
-*-1+-distr = *-+-distr ∙ += *1-identity refl
+*-1+-distr = *-+-distrˡ ∙ += *1-identity refl
 
 1+-*-distr : ∀ {x y} → (1+ x) * y ≡ y + x * y
-1+-*-distr = +-*-distr ∙ += 1*-identity refl
+1+-*-distr = *-+-distrʳ ∙ += 1*-identity refl
 
 infixl 7 _*ₚ_
 _*ₚ_ : ∀ {x y} → Parity-View x → Parity-View y → Parity-View (x * y)
 zero⟨ xₑ ⟩       *ₚ yₚ              = zero⟨ *= xₑ refl ∙ 0*-zero ⟩
 xₚ              *ₚ zero⟨ yₑ ⟩       = zero⟨ *= refl yₑ ∙ *0-zero ⟩
-even xₚ by⟨ xₑ ⟩ *ₚ yₚ              = even (xₚ *ₚ yₚ) by⟨ *= xₑ refl ∙ +-*-distr ⟩
-xₚ              *ₚ even yₚ by⟨ yₑ ⟩ = even (xₚ *ₚ yₚ) by⟨ *= refl yₑ ∙ *-+-distr ⟩
+even xₚ by⟨ xₑ ⟩ *ₚ yₚ              = even (xₚ *ₚ yₚ) by⟨ *= xₑ refl ∙ *-+-distrʳ ⟩
+xₚ              *ₚ even yₚ by⟨ yₑ ⟩ = even (xₚ *ₚ yₚ) by⟨ *= refl yₑ ∙ *-+-distrˡ ⟩
 odd xₚ by⟨ xₑ ⟩  *ₚ odd yₚ by⟨ yₑ ⟩  = odd  (xₚ +ₚ yₚ +ₚ 2*ₚ (xₚ *ₚ yₚ)) by⟨ *= xₑ yₑ ∙ helper ⟩
    where
      x = _
@@ -220,7 +193,7 @@ odd xₚ by⟨ xₑ ⟩  *ₚ odd yₚ by⟨ yₑ ⟩  = odd  (xₚ +ₚ yₚ +�
                  (2* x * 1+2* y
                  ≡⟨ *-1+-distr ⟩
                  (2* x + 2* x * 2* y)
-                 ≡⟨ += refl *-+-distr ∙ +-interchange ⟩
+                 ≡⟨ += refl *-+-distrˡ ∙ +-interchange ⟩
                  (2* (x + 2* x * y))
                  ∎) ⟩
               1+2* y + 2* (x + 2* x * y)
@@ -228,7 +201,7 @@ odd xₚ by⟨ xₑ ⟩  *ₚ odd yₚ by⟨ yₑ ⟩  = odd  (xₚ +ₚ yₚ +�
               1+2*(y + (x + 2* x * y))
             ≡⟨ ap 1+2*_ (! +-assoc ∙ += +-comm refl) ⟩
               1+2*(x + y + 2* x * y)
-            ≡⟨ ap (λ z → 1+2*(x + y + z)) +-*-distr ⟩
+            ≡⟨ ap (λ z → 1+2*(x + y + z)) *-+-distrʳ ⟩
               1+2*(x + y + 2* (x * y))
             ∎
 
@@ -261,7 +234,7 @@ module _ {P} where
         ∙ ⊕= (+ₚ-·ₚ-distr xₚ yₚ) (2*ₚ-·ₚ-distr (xₚ *ₚ yₚ))
         ∙ ⊕= ⊕.comm (ap 2·_ (*ₚ-·ₚ-distr xₚ yₚ) ∙ 2·-·ₚ-distr xₚ) ∙ ⊕.assoc
         ∙ ⊕= refl (! ·ₚ-⊕-distr xₚ) ) ∙ 2·-⊕-distr)
-     ∙ ! ⊕.assoc
+     ∙ ⊕.!assoc
 -- -}
 -- -}
 -- -}
