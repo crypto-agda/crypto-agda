@@ -11,15 +11,17 @@ open import Data.Bool.Base renaming (T to ✓)
 open import Relation.Binary.PropositionalEquality
 
 module ZK.GroupHom.JSChal
-  (G+ G* : Type)
+  (q : BigI)
+  {G+ G* : Type}
   (𝔾+ : Group G+)
   (𝔾* : Group G*)
   {{eq?-G* : Eq? G*}}
+  (_⊗ⁿ_ : G+ → BigI → G+)
+  (_^ⁿ_ : G* → BigI → G*)
   (φ : G+ → G*)
   (φ-hom : GroupHomomorphism 𝔾+ 𝔾* φ)
   (Y : G*)
 
-  (q : BigI)
   where
 
 infixl 6 _+ⁿ_ _∸ⁿ_
@@ -44,12 +46,6 @@ _div-q _mod-q inv-mod-q : BigI → BigI
 x div-q     = divide x q
 x mod-q     = mod x q
 inv-mod-q x = modInv x q
-
-postulate
-  _⊗ⁿ_ : G+ → BigI → G+
---_⊗ⁿ_ = {!!}
-  _^ⁿ_ : G* → BigI → G*
---_^ⁿ_ = {!!}
 
 -- TODO
 postulate
@@ -109,3 +105,5 @@ JSPackage = record
               ; ^ⁿ-* = ^ⁿ-*
               ; ^ⁿ-∸ⁿ = ^ⁿ-∸ⁿ
               }
+
+open FromPackage JSPackage public

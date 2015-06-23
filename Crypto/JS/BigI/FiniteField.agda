@@ -1,4 +1,7 @@
 {-# OPTIONS --without-K #-}
+open import Type.Eq
+open import Data.Two hiding (_==_)
+open import Relation.Binary.PropositionalEquality
 open import FFI.JS using (Bool; trace-call; _++_)
 open import FFI.JS.Check
   renaming (check      to check?)
@@ -6,10 +9,8 @@ open import FFI.JS.Check
 
 open import FFI.JS.BigI
 open import Data.List.Base using (List; foldr)
-{-
 open import Algebra.Raw
 open import Algebra.Field
--}
 
 -- TODO carry on a primality proof of q
 module Crypto.JS.BigI.FiniteField (q : BigI) where
@@ -51,24 +52,36 @@ abstract
   _^_ : 𝔽 → BigI → 𝔽
   x ^ y = modPow x y q
 
+_⊗_ : 𝔽 → BigI → 𝔽
+x ⊗ y = mod-q (multiply (repr x) y)
+
 _+_ _−_ _*_ _/_ : 𝔽 → 𝔽 → 𝔽
 
 x + y = mod-q (add      (repr x) (repr y))
 x − y = mod-q (subtract (repr x) (repr y))
-x * y = mod-q (multiply (repr x) (repr y))
+x * y = x ⊗ repr y
 x / y = x * 1/ y
 
 0−_ : 𝔽 → 𝔽
 0− x = mod-q (negate (repr x))
 
-_==_ : (x y : 𝔽) → Bool
-x == y = equals (repr x) (repr y)
-
 sum prod : List 𝔽 → 𝔽
 sum  = foldr _+_ 0#
 prod = foldr _*_ 1#
 
-{-
+instance
+  𝔽-Eq? : Eq? 𝔽
+  𝔽-Eq? = record
+    { _==_ = _=='_
+    ; ≡⇒== = ≡⇒=='
+    ; ==⇒≡ = ==⇒≡' }
+    where
+      _=='_ : 𝔽 → 𝔽 → 𝟚
+      x ==' y = equals (repr x) (repr y)
+      postulate
+        ≡⇒==' : ∀ {x y} → x ≡ y → ✓ (x ==' y)
+        ==⇒≡' : ∀ {x y} → ✓ (x ==' y) → x ≡ y
+
 +-mon-ops : Monoid-Ops 𝔽
 +-mon-ops = _+_ , 0#
 
@@ -89,7 +102,10 @@ postulate
 
 fld : Field 𝔽
 fld = fld-ops , fld-struct
--- -}
+
+module fld = Field fld
+
+open fld using (+-grp) public
 -- -}
 -- -}
 -- -}

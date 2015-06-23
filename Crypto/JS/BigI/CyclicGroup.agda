@@ -1,4 +1,5 @@
 {-# OPTIONS --without-K #-}
+open import Type.Eq
 open import FFI.JS using (Bool; trace-call; _++_)
 open import FFI.JS.Check
   renaming (check      to check?)
@@ -6,10 +7,10 @@ open import FFI.JS.Check
 
 open import FFI.JS.BigI
 open import Data.List.Base using (List; foldr)
-{-
+open import Data.Two hiding (_==_)
+open import Relation.Binary.PropositionalEquality
 open import Algebra.Raw
 open import Algebra.Group
--}
 
 -- TODO carry on a primality proof of p
 module Crypto.JS.BigI.CyclicGroup (p : BigI) where
@@ -55,13 +56,22 @@ _*_ _/_ : 𝔾 → 𝔾 → 𝔾
 x * y = mod-p (multiply (repr x) (repr y))
 x / y = x * 1/ y
 
-_==_ : (x y : 𝔾) → Bool
-x == y = equals (repr x) (repr y)
+instance
+  𝔾-Eq? : Eq? 𝔾
+  𝔾-Eq? = record
+    { _==_ = _=='_
+    ; ≡⇒== = ≡⇒=='
+    ; ==⇒≡ = ==⇒≡' }
+    where
+      _=='_ : 𝔾 → 𝔾 → 𝟚
+      x ==' y = equals (repr x) (repr y)
+      postulate
+        ≡⇒==' : ∀ {x y} → x ≡ y → ✓ (x ==' y)
+        ==⇒≡' : ∀ {x y} → ✓ (x ==' y) → x ≡ y
 
 prod : List 𝔾 → 𝔾
 prod = foldr _*_ 1#
 
-{-
 mon-ops : Monoid-Ops 𝔾
 mon-ops = _*_ , 1#
 
@@ -73,6 +83,8 @@ postulate
 
 grp : Group 𝔾
 grp = grp-ops , grp-struct
+
+module grp = Group grp
 -- -}
 -- -}
 -- -}

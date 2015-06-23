@@ -18,27 +18,49 @@ open import Algebra.Group.Constructions
 open import Algebra.Group.Homomorphism
 import ZK.GroupHom
 open import ZK.GroupHom.Types
+open import SynGrp
+  hiding (_*_; _^_; ^-hom)
 
 module ZK.GroupHom.ElGamal
-  (G+ G* : Type)
+{-
+  {G+ G* : Type}
   (𝔾+ : Group G+)
   (𝔾* : Group G*)
-  (G*-eq? : Eq? G*)
+  {{G*-eq? : Eq? G*}}
   (_^_ : G* → G+ → G*)
   (^-hom : ∀ b → GroupHomomorphism 𝔾+ 𝔾* (_^_ b))
   (^-comm : ∀ {α x y} → (α ^ x)^ y ≡ (α ^ y)^ x)
+-}
+  (`𝔾+ `𝔾* : SynGrp)
+  (let G* = ElGrp `𝔾*)
+  (_`^_ : G* → SynHom `𝔾+ `𝔾*)
   (g : G*)
   where
+
+private
+    𝔾* = El𝔾rp `𝔾*
+    instance
+      G*-eq? : Eq? G*
+      G*-eq? = SynGrp-Eq? `𝔾*
+    G+ = ElGrp `𝔾+
+    𝔾+ = El𝔾rp `𝔾+
+    _^_ : G* → G+ → G*
+    _^_ = ElHom ∘ _`^_
+    ^-hom = Elℍom ∘ _`^_
+    postulate
+      ^-comm : ∀ {α x y} → (α ^ x)^ y ≡ (α ^ y)^ x
 
 module 𝔾* = Group 𝔾*
 open Additive-Group 𝔾+
 open module MG = Multiplicative-Group 𝔾* hiding (_^_; _²)
-module ^ b = GroupHomomorphism (^-hom b)
+
+module ^ b = GroupHomomorphism {f = _^_ b} (^-hom b)
 
 _² : Type → Type
 A ² = A × A
 
 open import Crypto.Cipher.ElGamal.Group 𝔾+ 𝔾* g _^_ ^-comm
+  public
 
 EncRnd = Rₑ {- randomness used for encryption of ct -}
 
@@ -69,9 +91,9 @@ module Known-enc-rnd
   Valid-witness : EncRnd → Type
   Valid-witness r = enc y M r ≡ ct
 
-  zk-hom : ZK-hom _ _ Valid-witness
+  zk-hom : `ZK-hom _ _ Valid-witness
   zk-hom = record
-    { φ-hom = < ^-hom g , ^-hom y >-hom
+    { `φ = `< _`^_ g , _`^_ y >
     ; y = ct.α , ct.β / M
     ; φ⇒P = λ _ e → ap₂ (λ p q → fst p , q) e
                          (ap (flip _*_ M ∘ snd) e ∙ /-*)
@@ -94,9 +116,9 @@ module Known-dec
   Valid-witness : SecKey → Type
   Valid-witness sk = (pub-of sk ≡ y) × (dec sk ct ≡ M)
 
-  zk-hom : ZK-hom _ _ Valid-witness
+  zk-hom : `ZK-hom _ _ Valid-witness
   zk-hom = record
-    { φ-hom = < ^-hom g , ^-hom ct.α >-hom
+    { `φ = `< _`^_ g , _`^_ ct.α >
     ; y = y , ct.β / M
     ; φ⇒P = λ x e → ap fst e , ap (λ z → z ⁻¹ * ct.β) (ap snd e) ∙ /′-/
     ; P⇒φ = λ x e → ap₂ _,_ (fst e) (! /-/′ ∙ ap (_/_ ct.β) (snd e))
@@ -220,9 +242,9 @@ module From-*-comm
       Valid-witness : SecKey → Type
       Valid-witness sk = pub-of sk ≡ y × dec sk ct₀ ≡ dec sk ct₁
 
-      zk-hom : ZK-hom _ _ Valid-witness
+      zk-hom : `ZK-hom _ _ Valid-witness
       zk-hom = record
-        { φ-hom = < ^-hom g , ^-hom α/ >-hom
+        { `φ = `< _`^_ g , _`^_ α/ >
         ; y = y , β/
         ; φ⇒P = λ x e →
                   ap fst e ,
