@@ -1,6 +1,6 @@
 {-# OPTIONS --without-K #-}
 open import Type.Eq
-open import FFI.JS using (JS[_]; return; Bool; _++_; _>>_)
+open import FFI.JS using (JS[_]; return; _++_; _>>_)
 open import FFI.JS.Check using (check!)
 
 open import FFI.JS.BigI
