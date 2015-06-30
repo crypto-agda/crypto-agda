@@ -1,9 +1,7 @@
 {-# OPTIONS --without-K #-}
 open import Type.Eq
-open import FFI.JS using (Bool; trace-call; _++_)
-open import FFI.JS.Check
-  renaming (check      to check?)
---renaming (warn-check to check?)
+open import FFI.JS using (JS[_]; return; Bool; _++_; _>>_)
+open import FFI.JS.Check using (check!)
 
 open import FFI.JS.BigI
 open import Data.List.Base using (List; foldr)
@@ -29,13 +27,19 @@ abstract
   -- There are two ways to go from BigI to ℤp★: check and mod-p
   -- Use check for untrusted input data and mod-p for internal
   -- computation.
-  BigI▹ℤ[_]★ : BigI → ℤp★
-  BigI▹ℤ[_]★ = -- trace-call "BigI▹ℤ[_]★ "
-    λ x →
-      (check? (x <I p)
-         (λ _ → "Not below the modulus: p:" ++ toString p ++ " is less than x:" ++ toString x)
-         (check? (x >I 0I)
-            (λ _ → "Should be strictly positive: " ++ toString x ++ " <= 0") x))
+  BigI▹ℤ[_]★ : BigI → JS[ ℤp★ ]
+  BigI▹ℤ[_]★ x =
+    -- Console.log "BigI▹ℤ[_]★" >>
+    check! "below modulus" (x <I p)
+           (λ _ → "Not below the modulus: p:" ++
+                  toString p ++
+                  " is less than x:" ++
+                  toString x) >>
+    check! "strictcly positive" (x >I 0I)
+           (λ _ → "Should be strictly positive: " ++
+                  toString x ++
+                  " <= 0") >>
+    return x
 
   repr : ℤp★ → BigI
   repr x = x
