@@ -37,10 +37,6 @@ abstract
          (check? (x >I 0I)
             (λ _ → "Should be strictly positive: " ++ toString x ++ " <= 0") x))
 
-  check-non-zero : ℤp★ → BigI
-  check-non-zero = -- trace-call "check-non-zero "
-    λ x → check? (x >I 0I) (λ _ → "Should be non zero") x
-
   repr : ℤp★ → BigI
   repr x = x
 
@@ -48,7 +44,7 @@ abstract
   1# = 1I
 
   1/_ : ℤp★ → ℤp★
-  1/ x = modInv (check-non-zero x) p
+  1/ x = modInv x p
 
   _^_ : ℤp★ → BigI → ℤp★
   x ^ y = modPow x y p
