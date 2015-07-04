@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 open import Type                 using (Type)
 open import Data.Bool.Base       using (Bool) renaming (T to ✓)
 open import Relation.Binary.Core using (_≡_; _≢_)
