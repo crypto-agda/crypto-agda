@@ -230,12 +230,12 @@ case x of f = f x
 
 main : JS!
 main =
-  Process.argv !₁ λ args →
+  Process.argv >>= λ args →
   case JSArray▹ListString args of λ {
     (_node ∷ _run ∷ _test ∷ args') →
       case args' of λ {
         [] →
-          server "127.0.0.1" "1337" srv !₁ λ uri →
+          server "127.0.0.1" "1337" srv >>= λ uri →
           Console.log (showURI uri)
       ; (arg ∷ args'') →
           case args'' of λ {
@@ -246,7 +246,7 @@ main =
                     JSON-parse "{\"encoding\":\"utf8\"}"
               in
               Console.log ("readFile=" ++ arg) >>
-              FS.readFile arg opts !₂ λ err dat →
+              FS.readFile arg opts >>== λ err dat →
                 Console.log ("readFile: err=" ++ JS.toString err) >>
                 Console.log (Bool▹String (verify-helios-election (JSON-parse (castString dat))))
           ; _ →
