@@ -49,8 +49,11 @@ module ZK.GroupHom
      where response : Challenge → Response
            response c = (x ⊗ c) + a
 
+  verifier' : (A : Commitment)(c : Challenge)(s : Response) → _
+  verifier' A c s = φ s == ((Y ^ c) * A)
+
   verifier : Verifier
-  verifier (mk A c s) = φ s == ((Y ^ c) * A)
+  verifier (mk A c s) = verifier' A c s
 
   -- We still call it Schnorr since essentially not much changed.
   -- The scheme abstracts away g^ as an homomorphism called φ
