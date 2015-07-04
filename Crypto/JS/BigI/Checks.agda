@@ -3,6 +3,7 @@ open import FFI.JS renaming (_*_ to _*N_)
 
 open import FFI.JS.Check
 open import FFI.JS.BigI as BigI using (BigI)
+open import Crypto.JS.BigI.Params
 
 module Crypto.JS.BigI.Checks where
 
@@ -47,3 +48,14 @@ check-generator-group-order! g q p =
         (λ _ → "Not a generator of a group of order q: modPow "
              ++ BigI.toString g ++ " " ++ BigI.toString q ++ " "
              ++ BigI.toString p)
+
+check-params! : Params → JS!
+check-params! gpq =
+  check-pq-relation!      pI qI >>
+  check-size! min-bits-q "q" qI >>
+  check-size! min-bits-p "p" pI >>
+  check-primality!       "q" qI primality-test-probability-bound >>
+  check-primality!       "p" pI primality-test-probability-bound >>
+  check-generator-group-order! gI qI pI
+  module check-params where
+    open module gpq = Params gpq
