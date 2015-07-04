@@ -1,5 +1,6 @@
 {-# OPTIONS --without-K #-}
 open import Type
+--open import Type.Eq
 open import Data.Bool.NP as Bool hiding (check)
 open import Data.Nat
 open import Data.Maybe
@@ -28,6 +29,7 @@ module M (Permutation : ★)
          (μRₚ-xtra    : SumProp Rₚ-xtra)
 
          (Problem     : ★)
+        -- {{eq?-Pb : Eq? Problem}}
          (_==_        : Problem → Problem → Bit)
          (==-refl     : ∀ {pb} → (pb == pb) ≡ true)
          (_∙P_        : Permutation → Endo Problem)
@@ -210,6 +212,7 @@ module DLog (ℤq  : ★)
             (^⊟-∙ : ∀ α β x → ((α ^ (⊟ x)) ∙ ((α ^ x) ∙ β)) ≡ β)
             -- (∙-assoc : ∀ α β γ → α ∙ (β ∙ γ) ≡ (α ∙ β) ∙ γ)
             (dist-^-⊞ : ∀ α x y → α ^ (x ⊞ y) ≡ (α ^ x) ∙ (α ^ y))
+        --  (eq?-G : Eq? G)
             (_==_ : G → G → Bool)
             (==-refl    : ∀ {α} → (α == α) ≡ true)
             (==-cong-∙  : ∀ {α β b} γ → α == β ≡ b → (γ ∙ α) == (γ ∙ β) ≡ b)
