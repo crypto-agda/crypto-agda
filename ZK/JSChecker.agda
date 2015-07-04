@@ -17,7 +17,10 @@ import FFI.JS.FS as FS
 import FFI.JS.BigI as BigI
 open BigI using (BigI; bigI)
 
-import Crypto.JS.BigI.ZqZp as ZqZp
+import Crypto.JS.BigI.FiniteField as Zq
+import Crypto.JS.BigI.CyclicGroup as Zp
+open import Crypto.JS.BigI.Params using (Params; module Params)
+open import Crypto.JS.BigI.Checks using (check-params!)
 
 -- TODO dynamise me
 primality-test-probability-bound : Number
@@ -33,74 +36,80 @@ min-bits-p = 2048N
 bigdec : JSValue → BigI
 bigdec v = bigI (castString v) "10"
 
-record ZK-chaum-pedersen-pok-elgamal-rnd (ℤq ℤp★ : Set) : Set where
+-- PoK: (Zero-Knowledge) Proof of Knowledge
+-- CP: Chaum-Pedersen
+-- EG: ElGamal
+-- rnd: Knowledge of the secret, random exponent used in ElGamal encryption
+record PoK-CP-EG-rnd (ℤq ℤp★ : Set) : Set where
+  inductive -- NO_ETA
   field
+    g y α β A B : ℤp★
     m c s : ℤq
-    g p q y α β A B : ℤp★
 
-zk-check-chaum-pedersen-pok-elgamal-rnd! : ZK-chaum-pedersen-pok-elgamal-rnd BigI BigI → JS!
-zk-check-chaum-pedersen-pok-elgamal-rnd! pf
-      = trace "g=" g λ _ →
-        trace "p=" I.p λ _ →
-        trace "q=" I.q λ _ →
-        trace "y=" y λ _ →
-        trace "α=" α λ _ →
-        trace "β=" β λ _ →
-        trace "m=" m λ _ →
-        trace "M=" M λ _ →
-        trace "A=" A λ _ →
-        trace "B=" B λ _ →
-        trace "c=" c λ _ →
-        trace "s=" s λ _ →
-         checks!
-      >> check! "g^s==A·α^c"     ((g ^ s) == (A · (α ^ c)))        (λ _ → "")
-      >> check! "y^s==B·(β/M)^c" ((y ^ s) == (B · ((β ·/ M) ^ c))) (λ _ → "")
-  module ZK-check-chaum-pedersen-pok-elgamal-rnd where
-    module I = ZK-chaum-pedersen-pok-elgamal-rnd pf
-    params = record
-      { primality-test-probability-bound = primality-test-probability-bound
-      ; min-bits-q = min-bits-q
-      ; min-bits-p = min-bits-p
-      ; qI = I.q
-      ; pI = I.p
-      ; gI = I.g
-      }
-    open module [ℤq]ℤp★ = ZqZp params
-    A = BigI▹ℤp★ I.A
-    B = BigI▹ℤp★ I.B
-    α = BigI▹ℤp★ I.α
-    β = BigI▹ℤp★ I.β
-    y = BigI▹ℤp★ I.y
-    s = BigI▹ℤq  I.s
-    c = BigI▹ℤq  I.c
-    m = BigI▹ℤq  I.m
+verify-PoK-CP-EG-rnd :
+  (p q : BigI)
+  (pok : PoK-CP-EG-rnd Zq.ℤ[ q ] Zp.ℤ[ p ]★) → Bool
+verify-PoK-CP-EG-rnd p q pok = gˢ==αᶜ·A ∧ yˢ==⟨β/M⟩ᶜ·B
+  module verify-PoK-CP-EG-rnd where
+    open module ℤq  = Zq q
+    open module ℤp★ = Zp p
+    open module ^-h = ^-hom {q}
+    open module pok = PoK-CP-EG-rnd pok
     M = g ^ m
+    gˢ==αᶜ·A     = g ^ s == (α ^ c) ** A
+    yˢ==⟨β/M⟩ᶜ·B = y ^ s == ((β // M) ^ c) ** B
 
 zk-check! : JSValue → JS!
 zk-check! arg =
-    check! "type of statement" (typ === fromString cpt)
-                               (λ _ → "Expected type of statement: " ++ cpt ++ " not " ++ toString typ)
- >> zk-check-chaum-pedersen-pok-elgamal-rnd! pok
- module Zk-check where
+  check! "type of statement" (typ === fromString cpt)
+         (λ _ → "Expected type of statement: " ++
+                cpt ++ " not " ++ toString typ) >>
+  BigI▹ℤp★ gI >>= λ g →
+  BigI▹ℤp★ (bigdec (dat ·« "y"         »)) >>= λ y →
+  BigI▹ℤp★ (bigdec (enc ·« "alpha"     »)) >>= λ α →
+  BigI▹ℤp★ (bigdec (enc ·« "beta"      »)) >>= λ β →
+  BigI▹ℤp★ (bigdec (com ·« "A"         »)) >>= λ A →
+  BigI▹ℤp★ (bigdec (com ·« "B"         »)) >>= λ B →
+  BigI▹ℤq  (bigdec (prf ·« "challenge" »)) >>= λ c →
+  BigI▹ℤq  (bigdec (prf ·« "response"  »)) >>= λ s →
+  BigI▹ℤq  (bigdec (dat ·« "plain"     »)) >>= λ m →
+  check-params! gpq >>
+  -- Console.log ("pok=" ++ JSON-stringify (fromAny pok)) >>
+  check! "PoK-CP-EG-rnd" (verify-PoK-CP-EG-rnd pI qI
+    (record
+       { g = g
+       ; y = y
+       ; α = α
+       ; β = β
+       ; A = A
+       ; B = B
+       ; c = c
+       ; s = s
+       ; m = m
+       }))
+    (λ _ → "Invalid transcript")
+ module zk-check where
     cpt = "chaum-pedersen-pok-elgamal-rnd"
     stm = arg ·« "statement" »
     typ = stm ·« "type" »
     dat = stm ·« "data" »
-    g   = bigdec (dat ·« "g" »)
-    p   = bigdec (dat ·« "p" »)
-    q   = bigdec (dat ·« "q" »)
-    y   = bigdec (dat ·« "y" »)
-    m   = bigdec (dat ·« "plain" »)
     enc = dat ·« "enc" »
-    α   = bigdec (enc ·« "alpha" »)
-    β   = bigdec (enc ·« "beta"  »)
     prf = arg ·« "proof" »
     com = prf ·« "commitment" »
-    A   = bigdec (com ·« "A" »)
-    B   = bigdec (com ·« "B" »)
-    c   = bigdec (prf ·« "challenge" »)
-    s   = bigdec (prf ·« "response" »)
-    pok = record { g = g; p = p; q = q; y = y; α = α; β = β; A = A; B = B; c = c; s = s; m = m }
+    gI  = bigdec (dat ·« "g" »)
+    pI  = bigdec (dat ·« "p" »)
+    qI  = bigdec (dat ·« "q" »)
+    gpq = record
+            { primality-test-probability-bound = primality-test-probability-bound
+            ; min-bits-q = min-bits-q
+            ; min-bits-p = min-bits-p
+            ; qI = qI
+            ; pI = pI
+            ; gI = gI
+            }
+    open module ℤq  = Zq qI using (BigI▹ℤq)
+    open module ℤp★ = Zp pI using (BigI▹ℤp★)
+    -- open module [ℤq]ℤp★ = ZqZp gpq
 
 {-
 srv : URI → JSProc
@@ -116,20 +125,20 @@ srv d =
 
 main : JS!
 main =
-  Process.argv !₁ λ args →
+  Process.argv >>= λ args →
   case JSArray▹ListString args of λ {
     (_node ∷ _run ∷ _test ∷ args') →
       case args' of λ {
         [] →
         Console.log "usage: No arguments"
-        {- server "127.0.0.1" "1337" srv !₁ λ uri →
+        {- server "127.0.0.1" "1337" srv >>= λ uri →
            Console.log (showURI uri)
          -}
       ; (arg ∷ args'') →
           case args'' of λ {
             [] →
               Console.log ("Reading input file: " ++ arg) >>
-              FS.readFile arg nullJS !₂ λ err dat →
+              FS.readFile arg nullJS >>== λ err dat →
                 check! "reading input file" (is-null err)
                        (λ _ → "readFile error: " ++ toString err) >>
                 zk-check! (JSON-parse (toString dat))

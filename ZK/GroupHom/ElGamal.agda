@@ -18,25 +18,27 @@ open import Algebra.Group.Constructions
 open import Algebra.Group.Homomorphism
 import ZK.GroupHom
 open import ZK.GroupHom.Types
-open import SynGrp
-  hiding (_*_; _^_; ^-hom)
+-- open import SynGrp
+--   hiding (_*_; _^_; ^-hom)
+import Crypto.Cipher.ElGamal.Group
 
 module ZK.GroupHom.ElGamal
-{-
   {G+ G* : Type}
   (𝔾+ : Group G+)
   (𝔾* : Group G*)
   {{G*-eq? : Eq? G*}}
-  (_^_ : G* → G+ → G*)
+  {_^_ : G* → G+ → G*}
   (^-hom : ∀ b → GroupHomomorphism 𝔾+ 𝔾* (_^_ b))
   (^-comm : ∀ {α x y} → (α ^ x)^ y ≡ (α ^ y)^ x)
--}
+{-
   (`𝔾+ `𝔾* : SynGrp)
   (let G* = ElGrp `𝔾*)
   (_`^_ : G* → SynHom `𝔾+ `𝔾*)
+-}
   (g : G*)
   where
 
+{-
 private
     𝔾* = El𝔾rp `𝔾*
     instance
@@ -47,8 +49,9 @@ private
     _^_ : G* → G+ → G*
     _^_ = ElHom ∘ _`^_
     ^-hom = Elℍom ∘ _`^_
-    postulate
+    post--ulate
       ^-comm : ∀ {α x y} → (α ^ x)^ y ≡ (α ^ y)^ x
+-}
 
 module 𝔾* = Group 𝔾*
 open Additive-Group 𝔾+
@@ -59,7 +62,7 @@ module ^ b = GroupHomomorphism {f = _^_ b} (^-hom b)
 _² : Type → Type
 A ² = A × A
 
-open import Crypto.Cipher.ElGamal.Group 𝔾+ 𝔾* g _^_ ^-comm
+open module EG = Crypto.Cipher.ElGamal.Group 𝔾+ 𝔾* g _^_ ^-comm
   public
 
 EncRnd = Rₑ {- randomness used for encryption of ct -}
@@ -91,6 +94,16 @@ module Known-enc-rnd
   Valid-witness : EncRnd → Type
   Valid-witness r = enc y M r ≡ ct
 
+  zk-hom : ZK-hom _ _ Valid-witness
+  zk-hom = record
+    { φ-hom = < ^-hom g , ^-hom y >-hom
+    ; y = ct.α , ct.β / M
+    ; φ⇒P = λ _ e → ap₂ (λ p q → fst p , q) e
+                         (ap (flip _*_ M ∘ snd) e ∙ /-*)
+    ; P⇒φ = λ _ e → ap₂ _,_ (ap fst e)
+                             (! *-/ ∙ ap (flip _/_ M) (ap snd e))
+    }
+{-
   zk-hom : `ZK-hom _ _ Valid-witness
   zk-hom = record
     { `φ = `< _`^_ g , _`^_ y >

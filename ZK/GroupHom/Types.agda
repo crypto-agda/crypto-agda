@@ -4,7 +4,7 @@ open import Type.Eq
 open import Relation.Binary.PropositionalEquality.Base using (_≡_)
 open import Algebra.Group
 open import Algebra.Group.Homomorphism
-open import SynGrp
+-- open import SynGrp
 
 module ZK.GroupHom.Types where
 
@@ -29,6 +29,7 @@ record ZK-hom (G+ G* : Type)(P : G+ → Type) : Type where
     .φ⇒P : ∀ x → φ x ≡ y → P x
     .P⇒φ : ∀ x → P x → φ x ≡ y
 
+{-
 record `ZK-hom (`𝔾+ `𝔾* : SynGrp)(P : ElGrp `𝔾+ → Type) : Type where
 
   G+ : Type
@@ -56,7 +57,8 @@ record `ZK-hom (`𝔾+ `𝔾* : SynGrp)(P : ElGrp `𝔾+ → Type) : Type where
     y : G*
     .φ⇒P : ∀ x → φ x ≡ y → P x
     .P⇒φ : ∀ x → P x → φ x ≡ y
-
+-}
+{-
   zk-hom : ZK-hom G+ G* P
   zk-hom = record
              { 𝔾+ = 𝔾+ ; 𝔾* = 𝔾*
