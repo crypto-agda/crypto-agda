@@ -3,12 +3,11 @@ open import Type using (Type; Type₁)
 open import Type.Eq
 open import Function using (flip)
 open import Data.Product renaming (proj₁ to fst; proj₂ to snd)
-open import Data.Sum.NP
-open import Data.Zero
-open import Data.Fin.NP using (Fin▹ℕ)
+open import Data.Sum.NP using (inl; inr; _⊎_)
+open import Data.Zero using (𝟘-elim)
 open import Data.Bool.Base using (Bool) renaming (T to ✓)
-open import Relation.Binary
-open import Relation.Binary.PropositionalEquality.NP using (_≡_; _≢_; idp; ap; ap₂; !_; _∙_; module ≡-Reasoning)
+open import Relation.Binary.Core using (Trichotomous; tri<; tri≈; tri>)
+open import Relation.Binary.PropositionalEquality.Base using (_≡_; _≢_; idp; ap; !_; module ≡-Reasoning)
 open import Algebra.Group
 open import Algebra.Group.Homomorphism
 import Data.Nat.ModInv

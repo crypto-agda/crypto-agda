@@ -3,9 +3,9 @@ module Crypto.Schemes where
 
 open import Type
 open import Data.Product
-open import Data.Two
-open import Data.Maybe
-open import Relation.Binary.PropositionalEquality
+open import Data.Two.Base
+open import Data.Maybe.Base
+open import Relation.Binary.PropositionalEquality.Base
 
 record Pubkey-encryption-types : Type₁ where
   field

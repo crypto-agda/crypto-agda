@@ -1,11 +1,10 @@
 {-# OPTIONS --without-K #-}
 open import Type using (Type)
-open import Type.Eq
-open import Function using (flip; case_of_)
-open import Data.Sum.NP
+open import Type.Eq using (Eq?; _==_; ≡⇒==; ==⇒≡)
+open import Function using (case_of_)
+open import Data.Sum renaming (inj₁ to inl; inj₂ to inr)
 open import Data.Product renaming (proj₁ to fst; proj₂ to snd)
-open import Data.Bool.Base using (Bool) renaming (T to ✓)
-open import Relation.Binary.PropositionalEquality.NP using (_≡_; _≢_; idp; ap; ap₂; !_; _∙_; module ≡-Reasoning)
+open import Relation.Binary.PropositionalEquality.Base using (_≡_; _≢_; idp; ap; ap₂; !_; _∙_; module ≡-Reasoning)
 open import Algebra.Group
 open import Algebra.Group.Homomorphism
 import ZK.SigmaProtocol.KnownStatement

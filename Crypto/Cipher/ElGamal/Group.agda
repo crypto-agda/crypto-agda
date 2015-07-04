@@ -1,7 +1,7 @@
 {-# OPTIONS --without-K #-}
 open import Type using (Type)
 open import Data.Product using (_×_; _,_)
-open import Relation.Binary.PropositionalEquality.NP
+open import Relation.Binary.PropositionalEquality.Base
               using (_≡_; ap; _∙_)
 import Crypto.Cipher.ElGamal.Generic
 open import Algebra.Group

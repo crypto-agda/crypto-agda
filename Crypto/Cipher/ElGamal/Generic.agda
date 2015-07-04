@@ -1,9 +1,9 @@
 {-# OPTIONS --without-K #-}
 open import Type using (Type)
 open import Function
-open import Data.Maybe
+open import Data.Maybe.Base
 open import Data.Product.NP using (_×_; _,_; fst; snd)
-open import Relation.Binary.PropositionalEquality.NP
+open import Relation.Binary.PropositionalEquality.Base
               using (_≡_; ap; _∙_)
 open import Crypto.Schemes
 

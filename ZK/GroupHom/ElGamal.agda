@@ -8,11 +8,11 @@ Four kind of ZK proofs about ElGamal encryption:
 -}
 open import Type using (Type)
 open import Type.Eq
-open import Function.NP using (flip; _∘_; it)
+open import Function.Base using (flip; _∘_; it)
 open import Data.Product.NP
-open import Data.Two hiding (_²)
-open import Relation.Binary
-open import Relation.Binary.PropositionalEquality.NP using (idp; _≡_; ap; ap₂; !_; _∙_; module ≡-Reasoning)
+open import Data.Two.Base hiding (_²)
+open import Relation.Binary.PropositionalEquality.Base
+  using (idp; _≡_; ap; ap₂; !_; _∙_; module ≡-Reasoning)
 open import Algebra.Group
 open import Algebra.Group.Constructions
 open import Algebra.Group.Homomorphism

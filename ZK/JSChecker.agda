@@ -1,10 +1,10 @@
 {-# OPTIONS --without-K #-}
 module ZK.JSChecker where
 
-open import Function         using (id; _∘′_; case_of_)
-open import Data.Bool.Base   using (Bool; true; false; _∧_)
-open import Data.List.Base   using (List; []; _∷_; and; foldr)
-open import Data.String.Base using (String)
+open import Type.Eq
+open import Function         using (case_of_)
+open import Data.Two.Base    using (_∧_)
+open import Data.List.Base   using ([]; _∷_)
 
 open import FFI.JS
 open import FFI.JS.Check

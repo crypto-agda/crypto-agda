@@ -1,7 +1,7 @@
 {-# OPTIONS --without-K #-}
 open import Type using (Type)
 open import Type.Eq
-open import Relation.Binary.PropositionalEquality.NP using (_≡_)
+open import Relation.Binary.PropositionalEquality.Base using (_≡_)
 open import Algebra.Group
 open import Algebra.Group.Homomorphism
 open import SynGrp
@@ -17,9 +17,9 @@ record ZK-hom (G+ G* : Type)(P : G+ → Type) : Type where
 
     {{G*-eq?}} : Eq? G*
 
-  open Eq? G*-eq?
-  open Additive-Group       𝔾+ hiding (_⊗_) public
-  open Multiplicative-Group 𝔾* hiding (_^_) public
+  module G*-eq? = Eq? G*-eq?
+  module 𝔾+ = Additive-Group       𝔾+ hiding (_⊗_)
+  module 𝔾* = Multiplicative-Group 𝔾* hiding (_^_)
 
   field
     φ : G+ → G*
@@ -42,9 +42,9 @@ record `ZK-hom (`𝔾+ `𝔾* : SynGrp)(P : ElGrp `𝔾+ → Type) : Type where
   instance
     G*-eq? = SynGrp-Eq? `𝔾*
 
-  open Eq? G*-eq?
-  open Additive-Group       𝔾+ hiding (_⊗_) public
-  open Multiplicative-Group 𝔾* hiding (_^_) public
+  module G*-eq? = Eq? G*-eq?
+  module 𝔾+ = Additive-Group       𝔾+ hiding (_⊗_)
+  module 𝔾* = Multiplicative-Group 𝔾* hiding (_^_)
 
   field
     `φ : SynHom `𝔾+ `𝔾*
