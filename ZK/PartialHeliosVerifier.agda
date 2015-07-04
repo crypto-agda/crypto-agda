@@ -1,3 +1,4 @@
+{-# OPTIONS --without-K #-}
 module ZK.PartialHeliosVerifier where
 
 open import Type
