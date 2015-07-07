@@ -18,6 +18,8 @@ module Crypto.Sig.Lamport
           (seed-expansion : Bits #seed   → Bits (#message * 2* #secret))
           where
 
+open ≡-Reasoning
+
 module OTS1 = Crypto.Sig.LamportOneBit #secret #digest hash-secret
 
 H  = hash-secret
@@ -128,6 +130,34 @@ verify-correct-sig sk m = lemma sk m
             | (let open lemma sk b m in OTS1.verify-correct-sig skL b)
             | (let open lemma sk b m in lemma skH m)
             = refl
+
+extract-signkey : (sig₀ sig₁ : Signature) → SignKey
+extract-signkey sig₀ sig₁ = sk
+  module extract-signkey where
+    module sig₀ = signature sig₀
+    module sig₁ = signature sig₁
+    sk1s = map _++_ sig₀.sig1s ⊛ sig₁.sig1s
+    sk   = concat sk1s
+
+extract-signkey-correct :
+  ∀ sk → extract-signkey (sign sk 0ⁿ) (sign sk 1ⁿ) ≡ sk
+extract-signkey-correct sk = sk-lemma
+  where
+    module sk   = signkey sk
+    module sig₀ = sign sk 0ⁿ
+    module sig₁ = sign sk 1ⁿ
+    module sk'  = extract-signkey sig₀.sig sig₁.sig
+
+    sk1s-lemma : sk'.sk1s ≡ sk.sk1s
+    sk1s-lemma = ap₂ (λ x y → map _++_ x ⊛ y)
+                     (sig₀.group-sig ∙ ⊛-replicate _ 0b ∙ map-∘= (λ _ → refl) _)
+                     (sig₁.group-sig ∙ ⊛-replicate _ 1b ∙ map-∘= (λ _ → refl) _)
+               ∙ ⊛-take-drop-lem #secret sk.sk1s
+
+    sk-lemma : sk'.sk ≡ sk
+    sk-lemma = ap concat sk1s-lemma
+             ∙ concat-group #message _ sk
+
 -- -}
 -- -}
 -- -}
