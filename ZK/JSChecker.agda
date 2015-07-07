@@ -21,30 +21,7 @@ import Crypto.JS.BigI.FiniteField as Zq
 import Crypto.JS.BigI.CyclicGroup as Zp
 open import Crypto.JS.BigI.Params using (Params; module Params)
 open import Crypto.JS.BigI.Checks using (check-params!)
-
--- TODO dynamise me
-primality-test-probability-bound : Number
-primality-test-probability-bound = readNumber "10"
-
--- TODO: check if this is large enough
-min-bits-q : Number
-min-bits-q = 256N
-
-min-bits-p : Number
-min-bits-p = 2048N
-
-bigdec : JSValue → BigI
-bigdec v = bigI (castString v) "10"
-
--- PoK: (Zero-Knowledge) Proof of Knowledge
--- CP: Chaum-Pedersen
--- EG: ElGamal
--- rnd: Knowledge of the secret, random exponent used in ElGamal encryption
-record PoK-CP-EG-rnd (ℤq ℤp★ : Set) : Set where
-  inductive -- NO_ETA
-  field
-    g y α β A B : ℤp★
-    m c s : ℤq
+open import ZK.Types
 
 verify-PoK-CP-EG-rnd :
   (p q : BigI)
@@ -59,20 +36,58 @@ verify-PoK-CP-EG-rnd p q pok = gˢ==αᶜ·A ∧ yˢ==⟨β/M⟩ᶜ·B
     gˢ==αᶜ·A     = g ^ s == (α ^ c) ** A
     yˢ==⟨β/M⟩ᶜ·B = y ^ s == ((β // M) ^ c) ** B
 
+-- TODO dynamise me
+primality-test-probability-bound : Number
+primality-test-probability-bound = readNumber "10"
+
+-- TODO: check if this is large enough
+min-bits-q : Number
+min-bits-q = 256N
+
+min-bits-p : Number
+min-bits-p = 2048N
+
+bigdec : JSValue → JS[ BigI ]
+bigdec v = bigI <$> castString v <*> return "10"
+
 zk-check! : JSValue → JS!
 zk-check! arg =
+  arg ·« "statement" »  >>= λ stm →
+  stm ·« "type"  »      >>= λ typ →
+  let
+    cpt = "chaum-pedersen-pok-elgamal-rnd"
+  in
   check! "type of statement" (typ === fromString cpt)
          (λ _ → "Expected type of statement: " ++
                 cpt ++ " not " ++ toString typ) >>
+  stm ·« "data"  »      >>= λ dat →
+  dat ·« "enc"   »      >>= λ enc →
+  arg ·« "proof" »      >>= λ prf →
+  prf ·« "commitment" » >>= λ com →
+  (bigdec =<< dat ·« "g" ») >>= λ gI →
+  (bigdec =<< dat ·« "p" ») >>= λ pI →
+  (bigdec =<< dat ·« "q" ») >>= λ qI →
+  let
+    open module ℤq  = Zq qI using (BigI▹ℤq)
+    open module ℤp★ = Zp pI using (BigI▹ℤp★)
+    gpq = record
+            { primality-test-probability-bound = primality-test-probability-bound
+            ; min-bits-q = min-bits-q
+            ; min-bits-p = min-bits-p
+            ; qI = qI
+            ; pI = pI
+            ; gI = gI
+            }
+  in
   BigI▹ℤp★ gI >>= λ g →
-  BigI▹ℤp★ (bigdec (dat ·« "y"         »)) >>= λ y →
-  BigI▹ℤp★ (bigdec (enc ·« "alpha"     »)) >>= λ α →
-  BigI▹ℤp★ (bigdec (enc ·« "beta"      »)) >>= λ β →
-  BigI▹ℤp★ (bigdec (com ·« "A"         »)) >>= λ A →
-  BigI▹ℤp★ (bigdec (com ·« "B"         »)) >>= λ B →
-  BigI▹ℤq  (bigdec (prf ·« "challenge" »)) >>= λ c →
-  BigI▹ℤq  (bigdec (prf ·« "response"  »)) >>= λ s →
-  BigI▹ℤq  (bigdec (dat ·« "plain"     »)) >>= λ m →
+  (BigI▹ℤp★ =<< bigdec =<< dat ·« "y"         ») >>= λ y →
+  (BigI▹ℤp★ =<< bigdec =<< enc ·« "alpha"     ») >>= λ α →
+  (BigI▹ℤp★ =<< bigdec =<< enc ·« "beta"      ») >>= λ β →
+  (BigI▹ℤp★ =<< bigdec =<< com ·« "A"         ») >>= λ A →
+  (BigI▹ℤp★ =<< bigdec =<< com ·« "B"         ») >>= λ B →
+  (BigI▹ℤq  =<< bigdec =<< prf ·« "challenge" ») >>= λ c →
+  (BigI▹ℤq  =<< bigdec =<< prf ·« "response"  ») >>= λ s →
+  (BigI▹ℤq  =<< bigdec =<< dat ·« "plain"     ») >>= λ m →
   check-params! gpq >>
   -- Console.log ("pok=" ++ JSON-stringify (fromAny pok)) >>
   check! "PoK-CP-EG-rnd" (verify-PoK-CP-EG-rnd pI qI
@@ -88,28 +103,6 @@ zk-check! arg =
        ; m = m
        }))
     (λ _ → "Invalid transcript")
- module zk-check where
-    cpt = "chaum-pedersen-pok-elgamal-rnd"
-    stm = arg ·« "statement" »
-    typ = stm ·« "type" »
-    dat = stm ·« "data" »
-    enc = dat ·« "enc" »
-    prf = arg ·« "proof" »
-    com = prf ·« "commitment" »
-    gI  = bigdec (dat ·« "g" »)
-    pI  = bigdec (dat ·« "p" »)
-    qI  = bigdec (dat ·« "q" »)
-    gpq = record
-            { primality-test-probability-bound = primality-test-probability-bound
-            ; min-bits-q = min-bits-q
-            ; min-bits-p = min-bits-p
-            ; qI = qI
-            ; pI = pI
-            ; gI = gI
-            }
-    open module ℤq  = Zq qI using (BigI▹ℤq)
-    open module ℤp★ = Zp pI using (BigI▹ℤp★)
-    -- open module [ℤq]ℤp★ = ZqZp gpq
 
 {-
 srv : URI → JSProc
@@ -126,17 +119,17 @@ srv d =
 main : JS!
 main =
   Process.argv >>= λ args →
-  case JSArray▹ListString args of λ {
-    (_node ∷ _run ∷ _test ∷ args') →
-      case args' of λ {
-        [] →
+  case JSArray▹List args of λ
+  { (_node ∷ _run ∷ _test ∷ args') →
+      case args' of λ
+      { [] →
         Console.log "usage: No arguments"
         {- server "127.0.0.1" "1337" srv >>= λ uri →
            Console.log (showURI uri)
          -}
       ; (arg ∷ args'') →
-          case args'' of λ {
-            [] →
+          case args'' of λ
+          { [] →
               Console.log ("Reading input file: " ++ arg) >>
               FS.readFile arg nullJS >>== λ err dat →
                 check! "reading input file" (is-null err)
