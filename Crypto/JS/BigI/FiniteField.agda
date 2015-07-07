@@ -5,8 +5,8 @@ open import Relation.Binary.PropositionalEquality.Base using (_≡_; refl; ap)
 open import FFI.JS using (JS[_]; _++_; return; _>>_)
 open import FFI.JS.Check
   using    (check!)
-  renaming (check      to check?)
---renaming (warn-check to check?)
+--renaming (check      to check?)
+  renaming (warn-check to check?)
 
 open import FFI.JS.BigI
 open import Data.List.Base using (List; foldr)
