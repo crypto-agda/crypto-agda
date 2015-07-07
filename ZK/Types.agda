@@ -7,6 +7,16 @@ open import Algebra.Field
 
 module ZK.Types where
 
+-- PoK: (Zero-Knowledge) Proof of Knowledge
+-- CP: Chaum-Pedersen
+-- EG: ElGamal
+-- rnd: Knowledge of the secret, random exponent used in ElGamal encryption
+record PoK-CP-EG-rnd (ℤq ℤp★ : Set) : Set where
+  inductive -- NO_ETA
+  field
+    g y α β A B : ℤp★
+    m c s : ℤq
+
 -- Minimal interface needed for cyclic group + base field
 record Cyclic-group (G ℤq : Type) : Type where
   infix 8 _^_
