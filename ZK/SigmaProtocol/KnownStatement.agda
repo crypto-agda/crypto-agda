@@ -54,12 +54,12 @@ record Σ-Protocol : Type where
 
 -- Correctness (also called completeness in some papers): a Σ-protocol is said
 -- to be correct if for any challenge, the (honest) verifier accepts what
--- the (honest) prover returns.
+-- the honest prover returns.
 Correct : Σ-Protocol → Type
 Correct (prover , verifier) = ∀ w r c (w? : ValidWitness w) →
                               ✓ ((verifier ⇆ prover) r w c)
 
--- A simulator takes a challenge and a response and returns a commitment.
+-- A simulator takes a challenge and a response and returns a commitment (to be used to prove the Special Honest Verifier Zero-Knowledge property).
 --
 -- As defined next, a correct simulator picks the commitment such that
 -- the transcript is accepted by the verifier.
@@ -76,20 +76,16 @@ Correct-simulator verifier simulator
             ✓ (verifier (mk A c s))
 
 {-
-  A Σ-protocol, more specifically a verifier which is equipped with
-  a correct simulator is said to be Special Honest Verifier Zero Knowledge.
-  This property is one of the condition to apply the Strong Fiat Shamir
+  A Σ-protocol is said to be Special Honest Verifier Zero-Knowledge if there is a correct simulator.
+  This property is one of the necessary conditions to apply the Strong Fiat Shamir
   transformation.
-
-  The Special part of Special-Honest-Verifier-Zero-Knowledge is covered by the
-  simulator being correct.
 
   The Honest part is not covered yet, the definition is informally adapted from
   the paper "How not to prove yourself":
 
   Furthermore, if the challenge c and response s where chosen uniformly at random from their respective
   domains then the triple (A, c, s) is distributed identically to that of an execution
-  between the (honest) prover and the (honest) verifier (run prover c).
+  between the honest prover and the (honest) verifier (run prover c).
 
   where A = simulator c s
 -}
@@ -109,8 +105,8 @@ Extract-Valid-Witness : (verifier : Verifier) → Extractor verifier → Type
 Extract-Valid-Witness verifier extractor = ∀ t² → ValidWitness (extractor t²)
 
 -- A Σ-protocol, more specifically a verifier which is equipped with
--- a correct extractor is said to have the Special Soundness property.
--- This property is one of the condition to apply the Strong Fiat Shamir
+-- a correct knowledge extractor is said to have the Special Soundness property.
+-- This property is one of the conditions needed to apply the Strong Fiat Shamir
 -- transformation.
 -- Also called 2-extractable
 record Special-Soundness Σ-proto : Type where
